@@ -82,9 +82,9 @@ serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · 
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
 state: (1)-(3) DONE `6f197f94` (pilot_b.py, harness sustained mark, rule); (4) builder `5d66b69b`; smoke 40.2 decisions/s wall, 25.9/CPU-s → T 300,000 stands.
 state: 11-16 09:24 prereg FROZEN `f0dc9fd7`: `docs/research/prereg/pilot_b_vs_{blr0,floor}.json` (mark sustained, W 1, T 300k; manifest asserted = kernel_groups' 35 runs).
-state: LAUNCHED k0-k3 (B seeds 301-316) as Kaggle CPU kernels jack-cpu-1794821007 / -034 / -068 / -097 09:30; still RUNNING 14:15; pollers write /data/jack-logs/pilot_b/kN.json. LC.02 stale since J9 and regate never re-buys it (648 s > 600 s label) → re-bought on the box 14:14 (log /data/jack-logs/j8/lc02_rebuy.log); `run stale` must be clear of LC.02 before k4.
+state: k0 HARVESTED 14:15 (kaggle 4.6 h, 18 dec/CPU-s): seeds 301-304, 474 lives, **0 sustained**, meals/life first 20 → last 20 ≈ 0.7 → 0.2, every death energy (descriptive; verdict waits for 20+15). k1-k3 RUNNING. LC.02 re-bought clean `fbd47305` (default_cal works) → k4 LAUNCHED 14:50 jack-cpu-1794840642, RUNNING.
 state: harness #4 PASS on the box: seed 301 ×2, 20k decisions → 8/8 lives identical field for field (row in HARNESS_CHECKS.md); 38.05 decisions/s.
-state: next: as kernels free (≤4 sessions), launch k4 then f0-f3 (`launch_detached.sh` waits out the 60 s young-poller busy count — launch one per minute); harvest kN.json; then (6) register the two exploration arms.
+state: next: as k1-k3 free (≤4 sessions), launch f0-f3 one per minute (`pilot_b kernel --name fN` via launch_detached); harvest kN.json; then (6) register the two exploration arms.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
