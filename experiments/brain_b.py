@@ -120,6 +120,43 @@ Order      r3lib first. An SBX (`ours`) or pink-noise variant is a LATER rule,
            held noise draw, not SB3's gSDE — it is a different recipe and
            must pass this row on its own before it is used).
 
+RESULT row 3 (11-16, Kaggle jack-cpu-1794803164): r3lib REPRODUCES — eval
+94.8 94.5 95.5 95.0 93.5, 5 of 5 > 90 (first training episode > 90: ep 2-4);
+r3ctrl -0.3 -2.8 -3.5 -0.9 -0.8, 0 of 5 (run valid). Stack: Python 3.13
+(Kaggle image), SB3 2.9.2, torch 2.11.0+cpu, gymnasium 1.4.0.
+
+=============================================================================
+THE RULE — row 3b, Brain B on row 3, committed before any run (11-16).
+=============================================================================
+Why    §5: "any SBX or pink-noise variant must pass the same row before it is
+       used". Brain B is SBX; r3lib passing says nothing about SBX.
+Arms   r3ours  SBX 0.28.0 `SAC` + policy_kwargs layer_norm=True, with every
+               r3lib setting SBX accepts, values unchanged: lr 3e-4, buffer
+               50,000, batch 512, ent_coef 0.1 (fixed), train_freq 32,
+               gradient_steps 32, gamma 0.9999, tau 0.01, learning_starts 0,
+               use_sde True, net_arch [64, 64], log_std_init -3.67,
+               use_expln True. SBX code unmodified.
+       r3octrl CONTROL THAT MUST FAIL: r3ours with learning_starts = 50,001
+               (uniform random warm-up throughout, no gradient step).
+Task, steps, metric, seeds, threshold: exactly row 3's (above), unchanged.
+Accept r3ours REPRODUCES iff its metric is > 90 on >= 3 of seeds 0-4. VOID if
+       r3octrl scores > 90 on any seed.
+Known before running (read in sbx 0.28.0 source, not guessed):
+       - `SACPolicy.__init__` accepts `log_std_init` and `use_expln` and never
+         uses them: the actor's log-std is a state-dependent Dense head
+         clipped to [-20, 2] (initial std ~ 1, not SB3's exp(-3.67) = 0.025).
+       - SBX `use_sde` is NOT gSDE: it holds the same noise KEY between
+         `reset_noise()` calls, so the standard-normal draw is fixed while
+         mean and std still move with the state. SB3's off-policy loop calls
+         `reset_noise()` at the start of every rollout (each 32 steps here),
+         so the draw is held 32 steps.
+       So r3ours runs a DIFFERENT exploration recipe under the Zoo's numbers.
+       That is the point of the row: B is used only if this recipe solves
+       the sparse task by the same bar.
+A miss  B's exploration is not the published one and is not trusted on
+       sparse reward. Next is then a later rule (pink noise per life,
+       sequence as long as a life, §5 line "never both"), not a re-run.
+
 Ours beside theirs (every setting of `ours` that differs from the reference run)
 | setting        | reference (SB3 SAC, Zoo) | ours (Brain B)          |
 | library        | PyTorch SB3 2.x          | SBX 0.28.0 (JAX)        |
@@ -152,6 +189,7 @@ ROW1_ARMS = ("lib", "ours", "ctrl")
 ROW3_SEEDS = (0, 1, 2, 3, 4)
 ROW3_STEPS = 50_000
 ROW3_ARMS = ("r3lib", "r3ctrl")
+ROW3B_ARMS = ("r3ours", "r3octrl")
 ROW3_EVAL_EPISODES = 10
 ROW3_SOLVED = 90.0
 ROW1B_SEEDS = tuple(range(5, 20))
@@ -349,9 +387,18 @@ def make_row3(arm: str, seed: int, steps: int = ROW3_STEPS):
     torch.set_num_threads(1)
     from stable_baselines3 import SAC
     from stable_baselines3.common.monitor import Monitor
-    if arm not in ROW3_ARMS:
-        raise ValueError(f"arm {arm!r} not in {ROW3_ARMS}")
+    if arm not in ROW3_ARMS + ROW3B_ARMS:
+        raise ValueError(f"arm {arm!r} not in {ROW3_ARMS + ROW3B_ARMS}")
     env = Monitor(gym.make("MountainCarContinuous-v0"))
+    if arm in ROW3B_ARMS:                       # row 3b: Brain B (SBX), rule above
+        from sbx import SAC as SBXSAC
+        return SBXSAC("MlpPolicy", env, learning_rate=3e-4, buffer_size=50_000,
+                      batch_size=512, ent_coef=0.1, train_freq=32, gradient_steps=32,
+                      gamma=0.9999, tau=0.01,
+                      learning_starts=(steps + 1 if arm == "r3octrl" else 0),
+                      use_sde=True, seed=seed,
+                      policy_kwargs=dict(layer_norm=True, log_std_init=-3.67,
+                                         net_arch=[64, 64], use_expln=True))
     return SAC("MlpPolicy", env, learning_rate=3e-4, buffer_size=50_000,
                batch_size=512, ent_coef=0.1, train_freq=32, gradient_steps=32,
                gamma=0.9999, tau=0.01,
@@ -397,10 +444,15 @@ def verdict_row3(cells: list) -> dict:
                     "eval_per_seed": [round(c["eval_mean"], 1) for c in cs],
                     "solved": sum(c["eval_mean"] > ROW3_SOLVED for c in cs),
                     "complete": [c["seed"] for c in cs] == list(ROW3_SEEDS)}
-    ctrl, lib = out.get("r3ctrl"), out.get("r3lib")
+    if "r3ours" in out or "r3octrl" in out:     # row 3b
+        ctrl, arm = out.get("r3octrl"), out.get("r3ours")
+        name, miss = "r3ours", "r3ours MISSES (B's exploration fails the sparse row)"
+    else:
+        ctrl, arm = out.get("r3ctrl"), out.get("r3lib")
+        name, miss = "r3lib", "r3lib MISSES (build broken)"
     void = ctrl is None or not ctrl["complete"] or ctrl["solved"] > 0
-    ok = lib is not None and lib["complete"] and lib["solved"] >= 3
-    out["verdict"] = "VOID" if void else ("r3lib REPRODUCES" if ok else "r3lib MISSES (build broken)")
+    ok = arm is not None and arm["complete"] and arm["solved"] >= 3
+    out["verdict"] = "VOID" if void else (f"{name} REPRODUCES" if ok else miss)
     return out
 
 
@@ -408,33 +460,41 @@ def row3_cells() -> list:
     return [(a, s) for a in ROW3_ARMS for s in ROW3_SEEDS]   # r3lib first
 
 
-def row3_kernel() -> dict:
-    """Submit row 3 (r3lib, r3ctrl x 5 seeds) as one Kaggle CPU kernel."""
+def row3b_cells() -> list:
+    return [(a, s) for a in ROW3B_ARMS for s in ROW3_SEEDS]  # r3ours first
+
+
+def row3_kernel(cells=None, name: str = "row3") -> dict:
+    """Submit row 3 (r3lib, r3ctrl x 5 seeds) — or row 3b's cells — as one
+    Kaggle CPU kernel; write OUT/<name>.json."""
     from experiments.gpu import build_job, result_json, submit
-    body = (_JOB.replace("__CELLS__", repr(row3_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
+    body = (_JOB.replace("__CELLS__", repr(cells or row3_cells())).replace("__PINS__", repr(ROW1_KERNEL_PINS))
             .replace("from experiments.brain_b import run_parallel, verdict_row1",
                      "from experiments.brain_b import run_parallel, verdict_row3")
             .replace("__VERDICT__", "verdict_row3(ok)"))
     sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=3.0,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_row1.json"])
     if not sub.ok:
-        raise RuntimeError(f"brain_b row3 kernel: {sub.message}")
+        raise RuntimeError(f"brain_b {name} kernel: {sub.message}")
     r = result_json(sub, "brain_b_row1.json")
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "row3.json").write_text(json.dumps(r, indent=1))
+    (OUT / f"{name}.json").write_text(json.dumps(r, indent=1))
     print(json.dumps(r.get("verdict"), indent=1), flush=True)
     return r
 
 
 def main(argv):
     if len(argv) >= 5 and argv[1] == "cell":      # cell <arm> <seed> <out.json> [steps]
-        if argv[2] in ROW3_ARMS:
+        if argv[2] in ROW3_ARMS + ROW3B_ARMS:
             steps = int(argv[5]) if len(argv) > 5 else ROW3_STEPS
             rec = run_row3_cell(argv[2], int(argv[3]), steps)
         else:
             steps = int(argv[5]) if len(argv) > 5 else ROW1_STEPS
             rec = run_row1_cell(argv[2], int(argv[3]), steps)
         Path(argv[4]).write_text(json.dumps(rec))
+        return 0
+    if len(argv) >= 2 and argv[1] == "row3b-kernel":
+        row3_kernel(row3b_cells(), "row3b")
         return 0
     if len(argv) >= 2 and argv[1] == "row3-kernel":
         row3_kernel()
