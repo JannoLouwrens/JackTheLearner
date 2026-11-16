@@ -182,6 +182,9 @@ that list; do not flip any default.
 serves: M2→M3 · PLAN stage 1 line 1, "honest limits" 1 · philosophy 5, 6.
 **done when:** the speed table and the re-certification list are committed.
 state: open — ordered 11-15 16:57. 11-16: item (3) now also serves his first eye (§12: a ray retina from the same one call) — measure 16 rays AND a 16×16 and 32×32 [depth, material] grid.
+state: (1) DONE `7f3af75d` 11-16 13:50: `jack_env.make_vec(n, seeds=…)` (AsyncVectorEnv, SAME_STEP autoreset, terminal obs in info["final_obs"]); proof `experiments/tests/test_jack_env_vec.py` PASS: 3 seeds × 300 steps, 144 ends, streams == single env exactly (reborn + dying 6/6), controls differ 2/2. World untouched → stales nothing (`run stale`: 0 jack_env lines).
+state: box speed at load 3.8: single 35.3 dec/wall-s, vec2 56.2 (1.59×), per CPU-s unchanged (35.9 vs 33.3). Hand cal j0=alpha=1.0 (default_cal refuses while LC.02 stale; identity is cal-independent).
+state: next: (2) all sub-steps of a decision in one native call — read `W0.decide`'s per-sub-step Python first; the 4-process row rides the first Kaggle CPU kernel free after J8.
 
 ### J10 — The walking layer starts now, by reproducing a published walk (owner, 11-15 19:18)
 part: Body and movement · stage: 1 side job (stage 3's part, independent of the brain) · step: 3 (reproduce) · prior: §4 "Reproduce first", "Take as-is"

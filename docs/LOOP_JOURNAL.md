@@ -1768,3 +1768,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Kaggle CPU kernel (unmodified `dreamer_v3_5_1M`, cartpole-swingup, 2,227 s steady): 0.853 gradient steps/s = 1.71 decisions/s = 16.3 h per 100k decisions; 4 threads 0.831 (no gain). The shipped T4 run (2.64) is only 3.1× faster; §2's rows × 3 seeds ≈ 150 CPU-kernel-h vs ≈ 47 T4-h.
 - `speed.py colab2`: compiled (+10 min for compilation), `bf16-mixed`, and 3 runs sharing one T4 at once (new `copies`, throughput summed); box smoke of copies=2 harvested both runs. First submit hit a Colab ReadTimeout; the retry holds a T4 (ladder-1794835683, ~1.6 h).
 - Philosophy served: 3 (A's cost measured, not taken from the record's 8–19× too optimistic arithmetic), 6 (free compute only: whether a free T4 can carry A at all is what these arms decide).
+
+## 2026-11-16 13:51 · JACK · J6 (1): a 4-process vector of his world that changes nothing in it (`7f3af75d`)
+- J8 k0–k3 still on Kaggle (pollers alive, no session for k4); J3's row-4d extension running on the box (~37/60 cells); J5 waits on the Colab T4 → J6 per the order of work.
+- `jack_env.make_vec(n)`: n JackEnvs in n processes, SAME_STEP autoreset, terminal obs in info["final_obs"]; default off. Proof: 3 seeds × 300 steps, 144 life/cap ends, every worker's stream equals a single env's exactly (reborn and dying 6/6); shifted-action control differs 2/2.
+- Box at load 3.8: single 35.3 dec/s, vec2 56.2 dec/s wall (1.59×), per-CPU-s unchanged. The 4-core row is owed on a Kaggle CPU kernel. Stales nothing.
+- Philosophy served: 5 (the loop that makes him gets faster without touching his world), 4 (identity proven exact, with a control that must fail).
