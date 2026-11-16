@@ -82,6 +82,36 @@ out by touching things and watching its own energy (needs[0]) jump. Rules:
   wander   with no target: head along the most open of 16 ray directions
            (random among the >= 70th-percentile distances), hold it <= 25
            decisions or until that ray reads < 0.8 m.
+
+=============================================================================
+THE ENTRY-RUNG RULE (ORDERS J2 item 5) — committed 2026-11-16 before any run.
+=============================================================================
+Question   d0: the hardest dial d at which the best random row (d8, J1) eats
+           >= 1 floor meal in >= 50% of lives AND do-nothing (a) still dies.
+World      `JackEnv(seed, difficulty=d)`, every other option default (fixed
+           W0 layout; random_layout / random_needs OFF, so the dial is the
+           only thing moved). Grid d in {0.75, 0.5, 0.25, 0.0}; d = 1 is
+           J1's registered rows a and d8 (same seeds, same world, and at
+           d = 1 obj0+obj1 ARE all the floor food), not re-run.
+Seeds      201..220, 10 lives each, cap 9,000 decisions — J1's exactly.
+Rows       a_dXX (do-nothing) and d8_dXX (uniform held 8), XX = 100*d.
+Per life   as J1, plus floor_eats_all = eat events on EVERY floor food the
+           dial made (env.floor_foods), and floor_bouts = those eat events
+           not preceded by an eat of the same food within the 5 previous
+           decisions (1 s) — a body resting on a food at d=0 eats every
+           decision (J2 item 1 caveat); a bout is one visit.
+Counted    "eats >= 1 meal" = floor_bouts >= 1 in that life.
+           "a still dies"   = <= 1 of a's 200 lives reaches the cap (§8's
+           floor-arm rule: <= 1 success in total).
+d0         the LARGEST grid d (incl. J1's d = 1) where both hold. If none:
+           "no entry rung on this grid", reported, not interpolated.
+Also       (INBOX 11-16: the rule is already met at d = 1) reported beside
+reported   d0, never replacing it: d_sus = the largest d at which >= 1 of
+           d8's 200 lives reaches the cap (a capped life of 1,800 s burns
+           >= 3 bars of basal drain at 0.0017/s, so it cannot be birth
+           energy), and per d: share of d8 lives capped, bouts/life, eats/life.
+Where      Kaggle CPU, one kernel per d: children = a (20 seeds) + d8 in
+           three cells (7, 7, 6 seeds); worst case 630k decisions a child.
 """
 from __future__ import annotations
 
@@ -106,6 +136,17 @@ BAR_SEEDS = 18
 ROWS = ("a", "b", "c", "d8", "d32", "e", "f", "g", "f2", "g2", "b2")
 F2_ROWS = ("f2", "g2", "b2")
 F2_SEEDS = tuple(range(221, 241))   # fresh: never run by any row before f2's registered launch
+ENTRY_DS = (0.75, 0.5, 0.25, 0.0)   # J2 item 5 grid; d = 1 is J1's rows
+ENTRY_ROWS = tuple(f"{b}_d{int(round(100 * d)):02d}" for d in ENTRY_DS for b in ("a", "d8"))
+BOUT_GAP = 5                        # decisions: an eat within this of the last eat of the same food is the same visit
+
+
+def split_row(row: str):
+    """'d8_d25' -> ('d8', 0.25); a J1 row -> (row, None)."""
+    if row in ENTRY_ROWS:
+        base, dd = row.rsplit("_d", 1)
+        return base, int(dd) / 100.0
+    return row, None
 
 # observation layout (jack_env SENSES order; widths from cores.MODALITIES)
 N_RAYS = 16
@@ -463,6 +504,7 @@ class PrivilegedServe:
 
 
 def make_policy(row: str, seed: int, env=None):
+    row = split_row(row)[0]
     if row == "a":
         return DoNothing(seed)
     if row == "b":
@@ -490,7 +532,8 @@ def make_policy(row: str, seed: int, env=None):
 def run_seed(row: str, seed: int, lives: int = LIVES,
              cap: int = LIFE_CAP_DECISIONS) -> list:
     from experiments.jack_env import JackEnv
-    env = JackEnv(seed=seed)
+    d = split_row(row)[1]
+    env = JackEnv(seed=seed) if d is None else JackEnv(seed=seed, difficulty=d)
     o, info = env.reset(seed=seed)
     pol = make_policy(row, seed, env)
     out = []
@@ -499,10 +542,22 @@ def run_seed(row: str, seed: int, lives: int = LIVES,
         ate0 = dict(info["ate_total"])
         rew, n, t0 = 0.0, 0, env.w.sim_seconds
         cause = "censored"
+        foods = tuple(env.floor_foods)
+        prev = {k: info["ate_total"].get(k, 0) for k in foods}
+        last = {k: -10 ** 9 for k in foods}
+        eats_all = bouts = 0
         while n < cap:
             o, r, term, trunc, info = env.step(pol.act(o))
             rew += r
             n += 1
+            for k in foods:
+                c = info["ate_total"].get(k, 0)
+                if c > prev[k]:
+                    eats_all += c - prev[k]
+                    if n - last[k] > BOUT_GAP:
+                        bouts += 1
+                    last[k] = n
+                prev[k] = c
             if term:
                 cause = info["death_cause"]
                 break
@@ -511,7 +566,8 @@ def run_seed(row: str, seed: int, lives: int = LIVES,
                     "lifetime_s": round(env.w.sim_seconds - t0, 1),
                     "floor_meals": int(ate.get("obj0", 0) + ate.get("obj1", 0)),
                     "apples": int(ate.get("apple", 0)), "drinks": "n/a",
-                    "cause": cause, "reward": round(rew, 5), "decisions": n})
+                    "cause": cause, "reward": round(rew, 5), "decisions": n,
+                    "floor_eats_all": int(eats_all), "floor_bouts": int(bouts)})
         if term:
             o, info = env.reset()
         else:
@@ -544,8 +600,8 @@ REMOTE_TIMEOUT_S = int(12.2 * 3600)
 
 
 def kernel_cells(row: str, seeds=None) -> list:
-    if row not in ROWS:
-        raise ValueError(f"kernel: row {row!r} not in {ROWS}")
+    if row not in ROWS + ENTRY_ROWS:
+        raise ValueError(f"kernel: row {row!r} not in {ROWS + ENTRY_ROWS}")
     if seeds is None:
         seeds = F2_SEEDS if row in F2_ROWS else REGISTERED_SEEDS
     seeds = list(seeds)
@@ -614,7 +670,41 @@ def kernel(row: str) -> dict:
     return r
 
 
+def entry_cells(d: float) -> list:
+    """J2 item 5: one kernel per d — a on all 20 seeds, d8 in 7/7/6."""
+    x = int(round(100 * d))
+    s = list(REGISTERED_SEEDS)
+    return [(f"a_d{x:02d}", s), (f"d8_d{x:02d}", s[:7]),
+            (f"d8_d{x:02d}", s[7:14]), (f"d8_d{x:02d}", s[14:])]
+
+
+def entry_kernel(d: float) -> dict:
+    """Submit one dial setting as one Kaggle CPU kernel; write the lives to
+    OUT/entry_dXX.jsonl (partial cells kept)."""
+    from experiments.gpu import build_job, result_json, submit
+    if d not in ENTRY_DS:
+        raise ValueError(f"entry d {d!r} not in {ENTRY_DS}")
+    body = _JOB.replace("__CELLS__", repr(entry_cells(d)))
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=5.0,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["world_card_cells.json"])
+    if not sub.ok:
+        raise RuntimeError(f"world_card entry d={d}: {sub.message}")
+    r = result_json(sub, "world_card_cells.json")
+    OUT.mkdir(parents=True, exist_ok=True)
+    with open(OUT / f"entry_d{int(round(100 * d)):02d}.jsonl", "w") as fh:
+        for name, rec in r.items():
+            for life in rec["lives"]:
+                fh.write(json.dumps(life) + "\n")
+            print(f"{name}: {len(rec['lives'])} lives"
+                  + (f" ERROR {rec['error']}" if "error" in rec else ""), flush=True)
+    return r
+
+
 def main(argv):
+    if len(argv) >= 3 and argv[1] == "entry":     # entry <d>
+        r = entry_kernel(float(argv[2]))
+        print(json.dumps({k: ("error" in v) for k, v in r.items()}))
+        return 0
     if len(argv) >= 5 and argv[1] == "cell":      # cell <row> <s1,s2,..> <out.jsonl>
         for s in argv[3].split(","):
             res = run_seed(argv[2], int(s))
