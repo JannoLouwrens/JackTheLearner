@@ -380,7 +380,9 @@ FLOOR_ARMS = ("noop", "held8", "blr0")
 # §5's pins exactly (brain_b.PINS) for what a cell imports; mujoco pinned for W0.
 # No dm-control: Kaggle is Python 3.13 and labmaze has no wheel (brain_b scar).
 KERNEL_PINS = ["stable-baselines3==2.9.2", "sbx-rl==0.28.0", "gymnasium==1.4.0",
-               "mujoco==3.17.0"]
+               "mujoco==3.17.0", "pink-noise-rl==2.0.1"]
+# pink-noise-rl (§5 pin, numpy-only) for bpink: e1's first kernel (11-16 23:22)
+# died at import, `No module named 'pink'` — the box smoke had it, Kaggle did not.
 # Box smoke: 25.9 decisions per CPU-s, JAX ~1.55 cores -> 300k = 3.2 CPU-h a
 # run; 4 runs on Kaggle's 4 cores (~6.2 cores asked) ~ 3.2-5 h wall.
 CHILD_TIMEOUT_S = int(8.5 * 3600)
