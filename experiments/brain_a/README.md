@@ -88,7 +88,12 @@ one policy step of one environment. Raw result: `/data/jack-logs/brain_a/speed_c
 | Colab T4 (2 vCPU, torch 2.14.1+cu130, py 3.13) | default (not compiled) | **2.64** (runner's own timer 2.67) | **5.28** | **5.26 h** | GPU 27% busy, 475 MiB: the Python loop on 2 vCPUs is the limit, not the T4. One 95 s interval (steps 2000→2500) — thin |
 | same | `algo.compile.enabled=True` | not measured | — | — | no training step logged in 520 s: compilation ate the whole budget |
 | this box (ARM, nice 19, 1 thread) | default | 0.64 | 1.28 | 21.6 h | 109 s smoke |
-| Kaggle CPU kernel | 4 threads; 1 thread | owed | owed | owed | `jack-cpu-1794813567` RUNNING at 07:41; watcher writes `speed_kaggle-cpu.json` |
+| Kaggle CPU kernel (4 vCPU, torch 2.11.0+cpu, py 3.13) | default threads | **0.853** (runner's own timer 0.858) | **1.71** | **16.3 h** | `jack-cpu-1794813567`, 2,227 s steady (steps 1200→5000) |
+| same | `num_threads=4` | 0.831 | 1.66 | 16.7 h | same kernel, 2,227 s steady; extra threads buy nothing |
+
+**A free CPU kernel trains A at 0.85 gradient steps/s — a T4 as shipped is only 3.1× faster.** 100k decisions
+on one Kaggle CPU kernel ≈ 16.5 h, past the 9-hour kernel limit; §2's three rows × 3 seeds ≈ 150
+CPU-kernel-hours. "A CPU cannot" now has its number: it can, at a third of the T4's rate.
 
 **The record's arithmetic was 20–50 gradient steps/s on a T4 for `size1m`; the unmodified port
 does 2.6 — 8 to 19 times slower.** The achieved ratio is the configured one (the runner enforces
@@ -111,5 +116,5 @@ Install note: on Python 3.13 (Colab and Kaggle) `pip install dm_control` fails b
 
 ## What comes next in J5
 
-4. Harvest the Kaggle CPU row. Then the compiled / `bf16-mixed` / 3-runs-per-T4 arms on Colab,
+4. Kaggle CPU row harvested (11-16 13:26). LAUNCHED `speed colab2`: the compiled / `bf16-mixed` / 3-runs-per-T4 arms on Colab,
    25 min of training each, and re-do the two cost lines. Do not wire A to his world in J5.

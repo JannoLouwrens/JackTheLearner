@@ -43,7 +43,10 @@ ratio is enforced synchronously by the runner, so "achieved ratio" is checked
 A second arm, reported only, turns on the runner's own `algo.compile.enabled`
 (torch.compile) — a shipped switch, default off.
 
-Usage:  python -m experiments.brain_a.speed colab|kaggle-cpu|local [budget_s]
+Usage:  python -m experiments.brain_a.speed colab|colab2|kaggle-cpu|local [budget_s]
+
+`colab2` = the second round: compiled (budget + 10 min for compilation), `bf16-mixed`, and three
+default runs sharing one T4 at once (seeds 42-44; throughput = their sum).
 """
 from __future__ import annotations
 
@@ -156,36 +159,7 @@ def _params(logdir):
         return {"error": repr(e)[:200]}
 
 
-def one(name, budget_s, extra):
-    logdir = os.path.join(WORK, "logs_" + name)
-    cmd = ([sys.executable, "-m", "sheeprl"] + BASE + ["fabric.accelerator=" + DEV, "log_root=" + logdir] + extra)
-    print("RUN", name, " ".join(cmd), flush=True)
-    t0 = time.time()
-    log = open(os.path.join(WORK, name + ".log"), "w")
-    p = subprocess.Popen(cmd, cwd=WORK, stdout=log, stderr=subprocess.STDOUT)
-    smi = ""
-    while p.poll() is None and time.time() - t0 < budget_s:
-        time.sleep(10)
-        if DEV == "cuda" and not smi and time.time() - t0 > budget_s * 0.6:
-            try:
-                smi = subprocess.run(["nvidia-smi", "--query-gpu=utilization.gpu,memory.used",
-                                      "--format=csv,noheader"], capture_output=True, text=True,
-                                     timeout=30).stdout.strip()
-            except Exception:
-                pass
-    early_rc = p.poll()
-    if early_rc is None:
-        # the event writer flushes every 120 s at worst: read what is on disk, then stop the run
-        p.send_signal(signal.SIGINT)
-        try:
-            p.wait(60)
-        except subprocess.TimeoutExpired:
-            p.kill()
-    wall = time.time() - t0
-    log.close()
-    tail = open(os.path.join(WORK, name + ".log")).read()[-1500:]
-    rec = {"name": name, "budget_s": budget_s, "wall_s": round(wall, 1), "extra": extra,
-           "exited_early_rc": early_rc, "gpu_util_mem": smi}
+def _harvest(rec, logdir):
     try:
         rec["config"] = _cfg(logdir)
         sc = _scalars(logdir)
@@ -220,16 +194,73 @@ def one(name, budget_s, extra):
         rec["params"] = _params(logdir)
     except Exception as e:
         rec["error"] = repr(e)[:400]
-    if "steady" not in rec:
-        rec["log_tail"] = tail
+    return rec
+
+
+def one(name, budget_s, extra, copies=1):
+    # copies > 1: that many identical runs (seeds 42, 43, ...) share the one device at once; the
+    # throughput figure is their SUM. Copy 0 keeps the runner's default seed and the old log path.
+    logdirs = [os.path.join(WORK, "logs_" + name + ("" if i == 0 else "_%d" % i)) for i in range(copies)]
+    t0 = time.time()
+    procs, logs = [], []
+    for i, logdir in enumerate(logdirs):
+        cmd = ([sys.executable, "-m", "sheeprl"] + BASE + ["fabric.accelerator=" + DEV, "log_root=" + logdir]
+               + extra + ([] if i == 0 else ["seed=%d" % (42 + i)]))
+        print("RUN", name, i, " ".join(cmd), flush=True)
+        log = open(os.path.join(WORK, name + ("" if i == 0 else "_%d" % i) + ".log"), "w")
+        procs.append(subprocess.Popen(cmd, cwd=WORK, stdout=log, stderr=subprocess.STDOUT))
+        logs.append(log)
+    smi = ""
+    while any(p.poll() is None for p in procs) and time.time() - t0 < budget_s:
+        time.sleep(10)
+        if DEV == "cuda" and not smi and time.time() - t0 > budget_s * 0.6:
+            try:
+                smi = subprocess.run(["nvidia-smi", "--query-gpu=utilization.gpu,memory.used",
+                                      "--format=csv,noheader"], capture_output=True, text=True,
+                                     timeout=30).stdout.strip()
+            except Exception:
+                pass
+    early = [p.poll() for p in procs]
+    for p in procs:
+        if p.poll() is None:
+            # the event writer flushes every 120 s at worst: read what is on disk, then stop the run
+            p.send_signal(signal.SIGINT)
+    for p in procs:
+        try:
+            p.wait(60)
+        except subprocess.TimeoutExpired:
+            p.kill()
+    wall = time.time() - t0
+    for log in logs:
+        log.close()
+    recs = []
+    for i, logdir in enumerate(logdirs):
+        rec = {"name": name if i == 0 else "%s_%d" % (name, i), "budget_s": budget_s, "wall_s": round(wall, 1),
+               "extra": extra, "exited_early_rc": early[i], "gpu_util_mem": smi}
+        _harvest(rec, logdir)
+        if "steady" not in rec:
+            rec["log_tail"] = open(os.path.join(WORK, rec["name"] + ".log")).read()[-1500:]
+        recs.append(rec)
+    if copies == 1:
+        rec = recs[0]
+    else:
+        st = [r.get("steady") for r in recs]
+        rec = {"name": name, "copies": copies, "budget_s": budget_s, "wall_s": round(wall, 1), "extra": extra,
+               "gpu_util_mem": smi, "runs": recs}
+        if all(st):
+            dps = sum(x["decisions_per_s"] for x in st)
+            rec["sum"] = {"decisions_per_s": round(dps, 2),
+                          "gradient_steps_per_s": round(sum(x["gradient_steps_per_s"] for x in st), 3),
+                          "wall_s_per_100k_decisions_each": [x["wall_s_per_100k_decisions"] for x in st],
+                          "device_s_per_100k_decisions": round(1e5 / dps, 0)}
     print("REC", json.dumps(rec), flush=True)
     return rec
 
 
 res = {"device": DEV, "versions": _versions(), "runs": []}
 print("VERSIONS", json.dumps(res["versions"]), flush=True)
-for name, budget_s, extra in RUNS:
-    res["runs"].append(one(name, budget_s, extra))
+for run in RUNS:
+    res["runs"].append(one(*run))
     json.dump(res, open(os.path.join(WORK, "brain_a_speed.json"), "w"))
 print("RESULT " + json.dumps(res), flush=True)
 print("DONE", flush=True)
@@ -262,6 +293,15 @@ def main(argv) -> int:
                 ("t4_compile", budget + 120, ["metric.log_every=500", "algo.compile.enabled=True"])]
         sub = submit(build_job(body("cuda", runs)), prefer="colab", est_hours=0.45,
                      timeout_s=2 * budget + 120 + 600, fetch=["brain_a_speed.json"])
+    elif where == "colab2":
+        # J5 step 2, second round: the three arms the first left owed, each with a budget that
+        # outlasts compilation. Same unmodified runner; shipped switches only.
+        budget = int(argv[2]) if len(argv) > 2 else 1500
+        runs = [("t4_compile", budget + 600, ["metric.log_every=500", "algo.compile.enabled=True"]),
+                ("t4_bf16", budget, ["metric.log_every=500", "fabric.precision=bf16-mixed"]),
+                ("t4_default_x3", budget, ["metric.log_every=500"], 3)]
+        sub = submit(build_job(body("cuda", runs)), prefer="colab", est_hours=1.4,
+                     timeout_s=3 * budget + 600 + 1800, fetch=["brain_a_speed.json"])
     elif where == "kaggle-cpu":
         budget = int(argv[2]) if len(argv) > 2 else 2400
         runs = [("cpu_4threads", budget, ["metric.log_every=100", "num_threads=4"]),
