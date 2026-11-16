@@ -1756,3 +1756,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Proofs 3/3 PASS (seeds 153–155): identity vs run_survival 12/12 off and on; streams identical off/on except the 6 terminal steps; planted: dying e 0.0 vs reborn 0.05, proprio+needs equal a draw-free spy on respawn; control (default terminal obs) fails 3/3.
 - The edit stales 9 certificates incl. LC.02 → default_cal() refuses until regate re-buys it; INBOX warns J8 not to launch k4/f0–f3 before then. Tests take a hand-given cal in the window.
 - Philosophy served: 4 (a world model would have learned a lie about death; fixed with tests that could fail), 1 (death in his world now looks like dying).
+
+## 2026-11-16 13:15 · JACK · J3: row 4d n=20 harvested (INCONCLUSIVE → extension launched); step (4) rule + adapter committed (`8591dec1`, `3054fbe6`)
+- J8 k0–k3 still RUNNING on Kaggle (13:08, all four; no free session for k4) → J3.
+- Row 4d, 20/arm, both stacks on box: ours 74.2 ± 16.0 vs published stack 81.8 ± 15.8; HL −7.0, 90% CI [−15.7, −0.8] (wholly below 0, unlike 4c's [−6.6, +2.7]); MW p .064, collapses 4 vs 1 (p .34); control holds 1/20. INCONCLUSIVE by rule → the one pre-registered extension (seeds 40–59) launched detached 13:07, ~14:00.
+- J3 (4): `experiments/inhouse_rows.py` — every in-house core with the seated tanh-AWR update, reusing survival's ring/GAE/cadence (no update re-implemented, survival.py untouched so no LC stales); obs→proprio, action dim 0. Rule before any run: ≥ 3/5 seeds reach the band within 3× published steps, frozen-twin ctrl ≤ 1/5. Smoke: ctrl row 1 −1275.7 (SAC's untrained −1228); ppo-needs 5.7 ms/step, wm-latent 15.9.
+- Philosophy served: 3 (the home-made arms get the same published bar B met, not a home-made one), 4 (rule and the control's distribution fixed before a number exists).
