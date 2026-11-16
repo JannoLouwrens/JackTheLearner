@@ -1715,3 +1715,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Rule (before any kernel): B ×20, three floor arms ×5, floor gate ≤ 1/15, three readings, W/T fix. Next: kernel builder + launch.
 - Smoke found JAX ignores the single-thread flags (~1.55 cores) — sized by CPU-seconds.
 - Philosophy served: 4 (the mark and its must-fail case written before any run), 1 (the first plain published learner living in his world).
+
+## 2026-11-16 08:55 · JACK · J8 (4): the pilot's Kaggle kernel builder (`5d66b69b`)
+- `experiments/pilot_b.py`: `run_cell` (b / blr0 = B at lr 0 / noop / held8), `kernel_groups` (B in k0–k4 ×4 seeds; floor in f0–f3, interleaved so no kernel carries more than 2 learners), `run_parallel`, job body pinned to §5's versions + mujoco 3.17.0, child timeout 8.5 h, remote 9.5 h.
+- Test: the split launches exactly the rule's 35 runs once (seeds 301–320 / 301–305), ≤4 per kernel, job compiles; harness suite 35/35.
+- Box plumbing, b/blr0/noop seed 301 at 5,200 decisions (past the 5,000 warm-up, so B and blr0 did train): all three rc 0, 4/4/2 lives logged. No kernel launched: the prereg freeze (B vs blr0) comes first and did not fit a 27-minute slot.
+- Philosophy served: 4 (the runs launched are mechanically the runs registered), 6 (free Kaggle CPU sized to fit).
