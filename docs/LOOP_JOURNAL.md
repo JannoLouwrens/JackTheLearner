@@ -1906,3 +1906,4 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Box smoke (`--quick --procs 1,2`): decisions/s shipped 50.2, implicitfast 73.0, +lazy audio 124.3 (agrees with J6's 41/70/108 per CPU-s); 2 procs 98.8 / 234.3; raw sub-steps/s RK4 4,876, implicitfast 16,561; SAC upd/s SB3 t1 32.7, t4 55.6, SBX 63.3.
 - Found: one SBX worker spreads over cores (2 runs scale 1.28×), so the "1–6 runs at once" row would measure contention, not scaling; XLA single-thread flags added to the worker.
 - Philosophy served: 6 and 7 (the Mac's hours go to the decisive test, not to setup; the finished Jack runs on owners' Apple machines, and this measures that ground first).
+- 22:47 addendum: the re-run checking the XLA single-thread fix (SBX 2 runs) was cut by its own 300 s timeout at box load ~5 and wrote no row → the fix is UNVERIFIED; next box slot: `--quick --procs 2 --only 6` with a 600 s timeout and compare per-run rate with 1 run (61.5).
