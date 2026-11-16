@@ -1875,3 +1875,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - NE.01 new row FAIL (2,836 s). The 11-15 fatigue edge probe works: spread_f 0.81, every rest undoes ≥ 0.87 of the rise, frozen-f control 0. Reds: gate 5, 5/5 random deaths hyperthermia (share 1.0, the world's standing fault since NEEDS_CLOCK_RACE); gate 4, the hand-written forager died of heat at ~1,180 s on 1 of 3 seeds (3/3 alive on the previous run).
 - W1.04 refused: W1.02 stale since J9's w0.py edit and regate skips it (692 s vs its 600 s label) — LC.02's hole again, INBOX. Waited out the load guard (6.12) and NE.01's lock, re-bought W1.02 → PASS, launched W1.04 20:39 — it dispatches itself to Kaggle CPU (3 sequential seed kernels) and took the 5th session against "use 4"; left running, INBOX.
 - Philosophy served: 4 (a world test re-run honestly and its red named, not filed; a silent stale block found and cleared). Weakly 5: heat, not the needs clock, is what kills everything in his world — that wants a world order.
+
+## 2026-11-16 21:10 · SYSTEM · S7 (3): a reattach serves one submission only
+- `JACK_REUSE_KERNEL` outlived its first use: a multi-seed reattach would hand seed 1's kernel output to seeds 2..n as their own. `gpu._claim_reuse` now grants the first ask per process and refuses later asks for that slug before any Kaggle call (no Colab failover). `8d7388a1`.
+- Planted `experiments/tests/test_reuse_kernel_once.py` 4/4 with a control. T0.12's reattach probe reattaches one fixture slug twice → resets the claim per recovery; probe re-checked 2x in one process, all True. Not run as a spec (would write the ledger) — regate re-buys T0.12 on the gpu.py change.
+- Growth: +~20 lines guard +1 test, −2 comment lines; ordered by S7. Next: S7 (4).
+- Philosophy served: 4 (a recovered result can no longer be credited to a seed that never ran).

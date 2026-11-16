@@ -274,7 +274,7 @@ serves: philosophy 4, 5 · objective 3.
 state: 11-16 (1) DONE `36e20081`: guard refuses only dirt the VM could load (under `experiments/`, or named by experiment code); dashboard/status-script dirt goes into the attempt row as `foreign_dirt`. Planted test `experiments/tests/test_gpu_dirt_guard.py` 4/4.
 state: 11-16 (2) DONE `9a322df6`: `JACK_REPO=<worktree> launch_detached.sh` runs the child in the worktree; a non-worktree is refused; CPU day stays main's file. Planted `scripts/test_launch_detached_repo.sh` 3/3 (2/3 FAIL on the old launcher).
 state: caveat for (2): `run.py` inside a worktree still writes that worktree's `ledger.json` — the receipt symlink J1 used is still by hand.
-state: next: (3) `JACK_REUSE_KERNEL` first submit only; (4) `test_lane_guard.sh` with two live jobs.
+state: 11-16 (3) DONE `8d7388a1`: first kaggle submit in a process claims the slug; any later ask for it is refused before a Kaggle call. Planted `experiments/tests/test_reuse_kernel_once.py` 4/4; T0.12's reattach probe resets the claim per recovery (regate re-buys it). Next: (4) `test_lane_guard.sh` with two live jobs.
 
 ### S6 — A video the owner can watch (owner request 11-12) — split so one slot finishes one step
 part: (machine — he can be known) · stage: — · step: —
