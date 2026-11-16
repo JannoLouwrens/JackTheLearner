@@ -159,7 +159,38 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          byte; s=1/6 starts e 0.842-0.952, s=0.5 e
                          0.526-0.857, all in bounds, every life a new draw;
                          W0's RNG states equal the default's; control (s=0.5)
-                         stream differs. PASS. Random LAYOUT each life: owed.
+                         stream differs. PASS.
+  random_layout=False   J2 item 2 (rest). False = today (foods lie where
+                         W0 put them and where eating shoves them). True: at
+                         birth and at EVERY respawn, every floor food (the
+                         dial's extras too) is re-placed at a uniformly random
+                         cell of W0's body-legal spawn grid (0.44 m pitch), at
+                         its own W0 rest height and pose, >= LAYOUT_SEP 0.5 m
+                         from the other foods, touching nothing but ground;
+                         then legal cells within 0.8 m of a food are re-tested
+                         with W0's own penetration test and dropped if the body
+                         would overlap a food; then the body is drawn by
+                         today's rule (uniform) or the dial's. Food cells come
+                         from the env's own stream (seed, 3); the body's from
+                         W0's spawn stream. Other objects never move.
+                         Theirs: §3 "every life is a new layout; no level
+                         repeats" (Crafter, Avalon, Neural MMO). DIFFERS: they
+                         build a new world each life; ours moves only the food
+                         inside the persistent W0 room (walls, decoys, apple
+                         and clocks stay), on W0's grid, not continuous; the
+                         grid is the one computed against the ORIGINAL food
+                         places, so cells next to those stay excluded. With
+                         the dial at d=0 the body lands exactly one grid cell
+                         (0.44 m) from a food every time (the proof's 12/12).
+                         LAYOUT PROOF (2026-11-16, `python -m experiments.
+                         tests.test_jack_env_layout 600`, seeds 153-155, 3
+                         forced respawns each, 3.0 CPU-min): False == default
+                         byte for byte; on (alone and with d=0) every life's
+                         foods on grid, at rest height, >= 0.5 m apart, body
+                         not penetrating, 0 placement failures, 4/4 layouts
+                         distinct per run; same seed same layout, next seed
+                         differs; control: the same check on today's world
+                         FAILS on all 3 seeds, layout stream differs. PASS.
   OPTIONS PROOF (measured 2026-11-15, `python -m
   experiments.tests.test_jack_env_options 300`, seeds 153/154/155): (a)
   explicit defaults == JackEnv() byte for byte; (b) dr100-eat == 100*homeo-dr
@@ -168,7 +199,7 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
   K=40: 6 truncations + 2 deaths per seed, observations/rewards/deaths equal
   the uncapped run, meals_this_life carries; control stream differs. PASS.
   The J1 proof (test_jack_env) re-run after the change: PASS, unchanged.
-  Still owed for J2: item 1 (the dial d), item 2 (random needs/layout), 5.
+  Still owed for J2: item 5 (measure d0).
 
 PROOF (measured 2026-11-15, `python -m experiments.tests.test_jack_env 300`):
   check_env PASS. Seeds 153/154/155 x 300 random decisions, against
@@ -187,6 +218,7 @@ SPEED (measured): one env on the box, nice 19, 400 random decisions:
 """
 from __future__ import annotations
 
+import math
 from typing import Optional
 
 import gymnasium as gym
@@ -203,6 +235,12 @@ NEEDS_S_TRP = 1.0 / 6.0  # trp_env: start state uniform within +/-1/6 of setpoin
 MEAL_AT_D0 = 1.0     # Avalon: a food fills the bar (PUBLISHED_PRIORS §3 table)
 SPAWN_R_D0 = 0.5     # m; Avalon eat: food 0.5 m in front of the agent at d=0
 SPAWN_R_SPAN = 17.0  # m; ~ the arena diagonal (2*sqrt(2)*6): r(1) covers all
+
+
+# J2 item 2, random layout each life (see OPTIONS).
+LAYOUT_TRIES = 50          # random cells tried per food before it stays put
+LAYOUT_SEP = 0.5           # m between floor foods (no stacked foods)
+LAYOUT_BODY_CHECK = 0.8    # m: legal cells this near a food are re-tested
 
 
 def dial_spawn_radius(d: float) -> float:
@@ -237,7 +275,8 @@ class JackEnv(gym.Env):
                  eat_pay: float = 100.0,
                  max_episode_decisions: Optional[int] = None,
                  difficulty: Optional[float] = None,
-                 random_needs: Optional[float] = None):
+                 random_needs: Optional[float] = None,
+                 random_layout: bool = False):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -260,6 +299,7 @@ class JackEnv(gym.Env):
             if float(e0) != 1.0:
                 raise ValueError("random_needs replaces e0; leave e0 = 1.0")
         self.random_needs = None if random_needs is None else float(random_needs)
+        self.random_layout = bool(random_layout)
         self._ep_decisions = 0
         self._truncated = False
         self._seed = int(seed)
@@ -274,16 +314,34 @@ class JackEnv(gym.Env):
     def _build(self, seed: int) -> None:
         from experiments import drives
         from experiments.w0 import W0
+        sampler = None
+        if self.random_layout:
+            sampler = self._layout_spawn
+        elif self.difficulty is not None:
+            sampler = self._near_food_spawn
         self.w = W0(seed=seed, j0=self.j0, alpha=self.alpha, lethal=True,
-                    diary=self.diary,
-                    spawn_sampler=(None if self.difficulty is None
-                                   else self._near_food_spawn))
+                    diary=self.diary, spawn_sampler=sampler)
         self.floor_foods = FLOOR_FOODS
         if self.difficulty is not None:
             # J2 item 1, food count: extras are food before birth is placed.
             self._add_extra_foods()
-            # J2 item 1: birth too is placed by the dial (W0's own respawn,
-            # drawn from W0's spawn stream); d=1 never reaches here.
+        if self.random_layout:
+            # J2 item 2: own stream; each food keeps its W0 rest height/pose.
+            self._layout_rng = np.random.default_rng([seed, 3])
+            m = self.w.model
+            self._food_rest = {}
+            for name in self.floor_foods:
+                if name not in self.w.drives._food:
+                    continue
+                ja = int(m.body_jntadr[m.body(name).id])
+                qa, da = int(m.jnt_qposadr[ja]), int(m.jnt_dofadr[ja])
+                self._food_rest[name] = (qa, da, self.w.data.qpos[qa + 2],
+                                         self.w.data.qpos[qa + 3:qa + 7].copy())
+            self.layout_failed = 0
+        if self.difficulty is not None or self.random_layout:
+            # J2 items 1/2: birth too is placed by the dial and/or the layout
+            # (W0's own respawn, body drawn from W0's spawn stream); with
+            # both options off this is never reached.
             self.w.respawn()
         if self.e0 != 1.0:      # survival.run_survival's e0, applied the same way
             self.w.drives.state = drives.DriveState(e=self.e0)
@@ -359,6 +417,72 @@ class JackEnv(gym.Env):
         k = int(cand[rng.randint(len(cand))])
         self.last_spawn_food_dist = float(dist[k])
         return float(legal[k][0]), float(legal[k][1])
+
+    def _place_foods(self, legal: np.ndarray) -> None:
+        """J2 item 2: re-place every floor food at a random LEGAL cell (W0's
+        body-legal grid), uniformly, from the env's own stream; keep the
+        first draw at which the food touches nothing but ground (his old body
+        excepted: it is about to move) and is >= LAYOUT_SEP m from the foods
+        already placed. LAYOUT_TRIES misses -> the food stays where it lies
+        (counted in layout_failed)."""
+        w = self.w
+        m, d = w.model, w.data
+        placed = []
+        for name, (qa, da, z0, quat0) in self._food_rest.items():
+            gid = int(m.geom(name).id)
+            for _ in range(LAYOUT_TRIES):
+                x, y = legal[int(self._layout_rng.integers(len(legal)))]
+                if any(math.hypot(x - px, y - py) < LAYOUT_SEP for px, py in placed):
+                    continue
+                d.qpos[qa:qa + 3] = (x, y, z0)
+                d.qpos[qa + 3:qa + 7] = quat0
+                d.qvel[da:da + 6] = 0.0
+                w.mujoco.mj_forward(m, d)
+                clash = False
+                for i in range(d.ncon):
+                    g1, g2 = int(d.contact[i].geom1), int(d.contact[i].geom2)
+                    if gid not in (g1, g2):
+                        continue
+                    o = g2 if g1 == gid else g1
+                    if o not in w.ground_gids and o not in w.body_gids \
+                            and float(d.contact[i].dist) < -1e-3:
+                        clash = True
+                        break
+                if not clash:
+                    placed.append((x, y))
+                    break
+            else:
+                self.layout_failed += 1
+                xy = d.xpos[m.body(name).id][:2]
+                placed.append((float(xy[0]), float(xy[1])))
+        self.last_layout = {n: tuple(map(float, w.data.qpos[v[0]:v[0] + 2]))
+                            for n, v in self._food_rest.items()}
+
+    def _layout_spawn(self, legal: np.ndarray, rng: np.random.RandomState,
+                      death_xy) -> tuple:
+        """W0 spawn_sampler under random_layout: lay the foods out first,
+        then drop the legal cells his body would now penetrate a food from
+        (tested by placing the body there, as W0.legal_spawns does), then
+        draw the body by today's rule (uniform) or the dial's, from W0's
+        own spawn stream."""
+        from experiments.w0 import uniform_legal_spawn
+        self._place_foods(legal)
+        w = self.w
+        foods = np.array(list(self.last_layout.values()))
+        near = np.min(np.linalg.norm(legal[:, None, :] - foods[None, :, :],
+                                     axis=2), axis=1) < LAYOUT_BODY_CHECK
+        keep = []
+        for k, (x, y) in enumerate(legal):
+            if near[k]:
+                w._place(float(x), float(y))
+                w.mujoco.mj_forward(w.model, w.data)
+                if w._penetrating():
+                    continue
+            keep.append(k)
+        legal = legal[keep]
+        if self.difficulty is not None:
+            return self._near_food_spawn(legal, rng, death_xy)
+        return uniform_legal_spawn(legal, rng, death_xy)
 
     def _dial_respawn(self, ate_before: dict) -> None:
         """Shorten the floor-food regrowth timer just set by an eat event.
