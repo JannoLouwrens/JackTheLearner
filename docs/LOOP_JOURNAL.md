@@ -1856,3 +1856,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Corrected a state line: seed 315's "recovery" is one life cut off by T while eating 24 meals at 3.2× its drain; its finished lives end at 0.10 meals/life. The table now shows every cut-off life.
 - PILOT_B.md Results: PARTIAL, 16 of 35 (B: 1,878 lives, 0 capped, median life 496 s, 0.42 meals/life). Harness #6 and #9 written down as not payable on the pilot (no resume, no probe).
 - Philosophy served: 4 (the verdict will be read by a tested transcription of a rule fixed in advance, not by hand after seeing the numbers), 5 (harvest → reading in one step).
+
+## 2026-11-16 19:40 · JACK · J8 (5): harness #8's second half registered — B's critic must find its fixed point
+- k4 f0 f1 f2 all RUNNING (checked on Kaggle, not just the watchers) → nothing to launch/harvest; J3/J6/J10/J7's runs all need a Kaggle session or exceed 15 CPU-min. Took J8 (5)'s last owed item that needs no session to write.
+- Rule `79e465bf` first: reward +1 forever, constant observation, `make_b` unchanged (γ .995, α .1 fixed, gSDE), 200k decisions; PASS iff Q within 5% of (1 − γα·E[logπ])/(1 − γ); control = cap reported as terminated (fixed point ~86–132) must fail.
+- Probe (12k decisions, not a verdict): 30 ms per update on the box → ~3.3 CPU-h for both arms → a Kaggle CPU kernel after f3/e0–e2. Probe Q 50 vs 309: unconverged, as the 40k-update time constant predicts; E[logπ] −5.5 makes the entropy term worth +54% of Q*.
+- Found: `_single_thread` let the learner use ~2.4 cores at nice 19 (INBOX).
+- Philosophy served: 4 (a check that could fail — a wrong done flag or entropy term moves Q off its predicted value — sized honestly before it is paid).
