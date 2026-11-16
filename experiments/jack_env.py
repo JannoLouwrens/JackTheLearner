@@ -605,3 +605,32 @@ class JackEnv(gym.Env):
                 drive = max(0.0, drive)
             r = drive + self.eat_pay * eats
         return o, r, self._died, self._truncated, info
+
+
+def make_vec(n: int = 4, *, seeds=None, asynchronous: bool = True, **kw):
+    """J6(1): `n` JackEnvs stepped in `n` worker processes — default OFF
+    (nothing uses it unless asked). It changes nothing in the world: each
+    worker holds an ordinary `JackEnv(seed=seeds[i], **kw)`, and the proof
+    (`experiments/tests/test_jack_env_vec.py`) checks every worker's stream
+    equals a single env's, field for field.
+
+    gymnasium `AsyncVectorEnv` (`SyncVectorEnv` if `asynchronous=False`) with
+    `autoreset_mode=SAME_STEP`: on the step that ends a life (or a cap) the
+    returned observation is the next life's first one (what `reset()` hands
+    out) and the transition's own last observation is in
+    `info["final_obs"][i]` — so a learner bootstraps from the right body, and
+    with `terminal_obs="dying"` that is the body that died.
+
+    Speed (decisions per wall-second, random actions; box = 4 shared ARM
+    cores under load, so the box rows are a floor, not a measurement of the
+    vector): single 35.3/s, make_vec(2) 56.2/s wall (1.59x), per CPU-second
+    unchanged (35.9 vs 33.3) — 11-16, load 3.8. Kaggle 4-core row owed.
+    """
+    import functools
+    from gymnasium.vector import AsyncVectorEnv, SyncVectorEnv, AutoresetMode
+    seeds = list(range(n)) if seeds is None else [int(x) for x in seeds]
+    if len(seeds) != n:
+        raise ValueError(f"need {n} seeds, got {len(seeds)}")
+    fns = [functools.partial(JackEnv, seed=s, **kw) for s in seeds]
+    cls = AsyncVectorEnv if asynchronous else SyncVectorEnv
+    return cls(fns, autoreset_mode=AutoresetMode.SAME_STEP)
