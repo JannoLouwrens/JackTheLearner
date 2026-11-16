@@ -112,7 +112,8 @@ state: 11-16 (1)(2) DONE: `/data/venvs/jack-std` (§5 pins exact); `experiments/
 state: row 1 PASSED on 1b (15 seeds): lib −309.3, ours −302.0, ctrl −1227.7; lib vs reference MW p 0.011. Row 3 REPRODUCES 5/5 (lib) and 3b 5/5 (Brain B, eval 94.9–96.0); ctrl 0/5 both.
 state: row 2 (5 seeds) MISSED −221.5; row 2b (15 fresh seeds, band unchanged) REPRODUCES: r2lib mean −199.5 ± 24.1 in [−213.2, −162.0]; ctrl ≈ −1239 valid (`5d794fba`).
 state: row 4 (rule `5d794fba`, jack-cpu-1794809416) MISSED: 87.4 92.9 84.0 82.1 44.9, mean 78.2 vs [80.6, 94.4]; seed 4 solved then collapsed late; ctrl −1…−8 valid.
-state: 06:24 row 4b RULE `9147eef5` (15 fresh seeds 5..19, ctrl 5..9, band STRICTER = formula at k 15 → [82.4, 92.6]) RUNNING jack-cpu-1794810241 → /data/jack-logs/brain_b/row4b.json. next: harvest 4b into KNOWN_ANSWERS.md (miss → stack hunt, not row 5); then (4) the adapter + rule, arms in the order listed.
+state: row 4b (rule `9147eef5`, band STRICTER [82.4, 92.6], jack-cpu-1794810241) MISSED: 15-seed mean 72.6 ± 25.7, median 84.9; seeds 6, 7, 19 solved then collapsed (4 of 20 across 4+4b; public sd 4.2 fits none); ctrl valid. Row 4 NOT reproduced.
+state: next (the rule's own): stack hunt for row 4 — diff our SB3 2.9.2 / gymnasium 1.4 / VecNormalize wiring against the public runs' versions and Zoo exp_manager; one changed factor per test, rule first. Not row 5. Then (4) the in-house tanh-AWR arm on rows 1 and 3.
 
 ### J9 — What death looks like: the dying body's last observation (before brain A touches his world)
 part: His world (the interface) · stage: 1 (ready-list item 3) · step: 2 (combine) · prior: §5 "next observation at episode ends", §8 self-check 8; INBOX code review 11-15 17:02

@@ -1698,3 +1698,4 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J3 row 4 (jack-cpu-1794809416): Zoo PPO MountainCarContinuous 87.4 92.9 84.0 82.1 44.9, mean 78.2 vs [80.6, 94.4] → MISS; seed 4 solved then collapsed to ≈0 over its last 12 episodes; ctrl valid.
 - Row 4b `9147eef5`: 15 fresh seeds, band TIGHTENED to the formula's own k=15 value [82.4, 92.6] (rows 1b/2b kept their k=5 bands; this one does not get the looser one). Kaggle jack-cpu-1794810241 RUNNING. A 4b miss → stack hunt.
 - Philosophy served: 4 (a miss recorded, the re-test stronger not looser), 5 (his world's dial measured to its floor).
+- 06:47 addendum: row 4b HARVESTED — MISSES: 15-seed mean 72.6 ± 25.7 (median 84.9) vs [82.4, 92.6]; seeds 6, 7, 19 solved then collapsed; ctrl valid. 4/20 seeds collapse across 4+4b where the public store's sd 4.2 admits none → row 4 is not reproduced; the rule sends it to a stack hunt, not row 5.

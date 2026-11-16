@@ -259,6 +259,16 @@ Accept  r4lib REPRODUCES iff the 15-seed mean lies in [82.4, 92.6]. VOID unless
 If r4lib misses 4b: the collapse is the suspect — the stack hunt (SB3 2.9.2 /
 gymnasium 1.4 vs the public runs) comes next, not row 5.
 
+ROW 4B RESULT (11-16, kernel jack-cpu-1794810241): r4lib per seed 86.4 18.0
+22.3 84.9 72.4 85.1 92.3 79.7 66.5 92.0 82.6 90.1 87.3 92.7 35.9, mean 72.6
+(sd 25.7, median 84.9) — MISSES [82.4, 92.6] (and the k=5 band). Collapses
+(< 60): seeds 6, 7, 19 — each solved (returns 84-98) then fell to -30..-100
+for its last episodes. r4ctrl 18.7 -1.5 -4.4 -9.5 -6.3 (all < 82.4: valid).
+Across rows 4 + 4b, 4 of 20 seeds collapse; the public store's 10 seeds have
+sd 4.2, which no collapse fits. Row 4 is NOT reproduced: per the rule, the
+stack hunt comes next (SB3 2.9.2 / gymnasium 1.4 / the Zoo's VecNormalize
+handling vs the public runs' versions), not row 5.
+
 Ours beside theirs (every setting of `ours` that differs from the reference run)
 | setting        | reference (SB3 SAC, Zoo) | ours (Brain B)          |
 | library        | PyTorch SB3 2.x          | SBX 0.28.0 (JAX)        |

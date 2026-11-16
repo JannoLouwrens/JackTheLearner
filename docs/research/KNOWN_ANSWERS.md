@@ -22,7 +22,8 @@ Rules are in that file's docstring, committed before each run.
 | 3b | MountainCarContinuous-v0 | control `r3octrl` (SBX, no gradient step), must fail | 50,000 | VOID if > 90 on any seed | −0.3 −0.1 −20.6 −0.1 −0.0 — 0 of 5 | 0–4 | holds |
 | 4 | MountainCarContinuous-v0 | SB3 PPO, Zoo `ppo.yml` entry unmodified (`r4lib`; rule `5d794fba`), ctrl `r4ctrl` lr 0 | 20,000 | training return 87.5 ± 4.2 (n 10); accept 80.6…94.4 (m ± 3s√(1/5+1/10)) | 78.2 (87.4 92.9 84.0 82.1 44.9; seed 4 solved, then collapsed to ≈0 over its last 12 episodes; Kaggle jack-cpu-1794809416) | 0–4 | **MISSES** |
 | 4 | MountainCarContinuous-v0 | control `r4ctrl`, must fail | 20,000 | VOID unless every seed < 80.6 | −1.0 −7.8 −2.2 −6.2 −4.9 | 0–4 | holds |
-| 4b | MountainCarContinuous-v0 | re-registration, 15 fresh seeds, `r4lib` (rule `9147eef5`) | 20,000 | STRICTER: formula at k 15 → 82.4…92.6 (k 5 band reported only) | RUNNING jack-cpu-1794810241 | 5–19 (ctrl 5–9) | — |
+| 4b | MountainCarContinuous-v0 | re-registration, 15 fresh seeds, `r4lib` (rule `9147eef5`) | 20,000 | STRICTER: formula at k 15 → 82.4…92.6 (k 5 band reported only) | 72.6 ± 25.7 (86.4 18.0 22.3 84.9 72.4 85.1 92.3 79.7 66.5 92.0 82.6 90.1 87.3 92.7 35.9; median 84.9; seeds 6, 7, 19 solved then collapsed; Kaggle jack-cpu-1794810241) | 5–19 | **MISSES** → stack hunt |
+| 4b | MountainCarContinuous-v0 | control `r4ctrl`, must fail | 20,000 | VOID unless every seed < 82.4 | 18.7 −1.5 −4.4 −9.5 −6.3 | 5–9 | holds |
 
 ## Row 1 — the miss, and what it is not (11-16)
 
