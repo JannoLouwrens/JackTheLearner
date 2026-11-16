@@ -204,7 +204,8 @@ Design note for stage 3 (owner's correction 19:21): inside him the layer
 KEEPS LEARNING (§4 arm c); the frozen layer (arm b) is a scored reference only.
 serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked in parallel from now" · philosophy 1, 2.
 **done when:** rows (1) and (2) are in `KNOWN_ANSWERS.md`, pass or fail.
-state: open — ordered 11-16 06:41.
+state: (1) DONE 11-16 17:40 (rule `c4dfd21c`, `experiments/humanoid_floor.py`): Humanoid-v5 floor, 100 eps each — random 109.9 (SD 30.3) in 23.47 steps, zero 198.5 (SD 3.2) in 40.3 steps → REPRODUCES §4's line (which is an earlier on-box measurement, not a paper; its ± is the per-episode SD). Ran on the box (3 CPU-s) because all 4 Kaggle CPU sessions held J8. Row J10-1 in KNOWN_ANSWERS.
+state: next: (2) Yu et al. 2018's CPU recipe — pin the published code + settings, rule first (accept band from §4 long form, never-trains control), one Kaggle CPU kernel when a session frees after J8/J3/J6.
 
 ### J7 — Close what is in flight (cut down 11-16: two days of state lines bought one harvest)
 part: His world, needs and lessons · stage: 1 · step: repairs (PLAN "continues")

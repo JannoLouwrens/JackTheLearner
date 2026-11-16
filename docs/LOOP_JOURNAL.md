@@ -1816,3 +1816,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J8: k3 back (16:43): 16 of 20 B seeds, 1,894 lives, 0 sustained; meals/life fell in 15 of 16 seeds. s315 is the exception: near zero from life 30 to 109, then 4.3 meals/life over its last 6 lives (descriptive; hints that T matters). f2 launched 17:07 into k3's session (k4 f0 f1 f2 busy; f3, e0-e2 wait).
 - J6 (3): `jack_env(multiray_vision=True)`, default OFF, stales nothing. `tests/test_multiray.py` 300 steps × 4 worlds (incl. J8's pilot world with dying obs): identity 4/4, 824 panel noise draws consumed identically, control differs. Speed 39.3 → 39.2 dec/CPU-s: today's eye is 0.057 ms of a decision, so this was never a speed lever. Its value is the one-call retina §12 needs.
 - Philosophy served: 4 (a speed claim checked and found to be ~0, said plainly), 5 (the instrument for his first eye is proven identical before it is used).
+
+## 2026-11-16 17:40 · JACK · J10 (1): the Humanoid-v5 floor reproduces
+- J8: k4 f0 f1 f2 hold all 4 Kaggle CPU sessions (watchers alive) → nothing to launch or harvest; J3 and J6 also wait for a session; J9, J5 done → J10.
+- Rule `c4dfd21c` first (`experiments/humanoid_floor.py`), then run on the box (3 CPU-s, nice 19): random 109.9 (SD 30.3) in 23.47 steps, zero 198.5 (SD 3.2) in 40.3 steps, 100 episodes each → REPRODUCES. Labelled honestly: §4's reference is an earlier on-box measurement, not a paper figure; this is the floor walking rows are read against, not a published reproduction.
+- Philosophy served: 3 (the walking layer starts from a measured floor, not an assumed one), 4 (rule committed before the run; the reference's provenance stated).
