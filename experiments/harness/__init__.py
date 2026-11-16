@@ -15,6 +15,11 @@ Ours beside theirs (§8 "Take as-is"):
                                                     permutation_test
   sensitivity scipy.stats.boschloo_exact on crossed-by-T
                                                   | same
+  mark 2      ruling 22 (11-16): PRIMARY = decisions until W consecutive
+              lives are each SUSTAINED (capped AND intake >= basal drain),
+              `outcome_sustained`; the theta = 5 mark stays as a reported
+              secondary                          | ours (the record has no
+                                                   survival-world mark)
   crash/NaN   "is an outcome" (ruling 19): a run whose log ends in a crash
               or NaN never crossed and is censored at T — it stays in the
               risk set to the end, i.e. it counts against its arm. This is
@@ -84,6 +89,48 @@ def outcome(lives, W: int, T: float, theta: float = THETA) -> Outcome:
             break
         meals.append(m)
         if len(meals) >= W and sum(meals[-W:]) / W >= theta:
+            return Outcome(cum, True)
+    return Outcome(float(T), False)
+
+
+def sustained_life(capped, intake: float, drain: float) -> bool:
+    """Ruling 22's mark on one life: it reached the time cap (`capped` True)
+    AND its food intake over the life >= its basal drain (both in energy
+    bars, `drain` = drives.BASAL_B x seconds lived at the rung being run).
+    A NaN in either quantity is not a sustained life."""
+    intake, drain = float(intake), float(drain)
+    if math.isnan(intake) or math.isnan(drain):
+        return False
+    return bool(capped is True and intake >= drain)
+
+
+def outcome_sustained(lives, W: int, T: float) -> Outcome:
+    """Ruling 22's PRIMARY outcome: decisions until W CONSECUTIVE lives are
+    each sustained (`sustained_life`), censored at T.
+
+    `lives`: list of (decisions_in_life, capped, intake, drain) in order. The
+    crossing time is the cumulative decision count at the END of the W-th
+    sustained life in a row; it counts only if <= T. Crash/NaN rules are
+    `outcome`'s (ruling 19): the string "crash" or a NaN/negative decision
+    count ends the run, never crossed. Unlike the theta mark (a window MEAN),
+    every life of the window must be sustained: one unsustained life resets
+    the run of consecutive lives to zero. The theta mark (`outcome`, theta =
+    5) stays as the reported secondary, "first signs of eating".
+    """
+    if W < 1 or not T > 0:
+        raise ValueError("W >= 1 and T > 0 required")
+    cum, streak = 0.0, 0
+    for life in lives:
+        if isinstance(life, str):
+            break
+        d = float(life[0])
+        if math.isnan(d) or d < 0:
+            break
+        cum += d
+        if cum > T:
+            break
+        streak = streak + 1 if sustained_life(life[1], life[2], life[3]) else 0
+        if streak >= W:
             return Outcome(cum, True)
     return Outcome(float(T), False)
 

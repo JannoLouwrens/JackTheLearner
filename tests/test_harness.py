@@ -241,6 +241,84 @@ def test_logrank_all_tied_identical_arms_not_distinguished():
     assert perm_logrank(tied[:10], tied[:10], 200, 0) == 1.0
     assert compare(tied, list(tied), n_perm=200, rng=0).decision == "NOT_DISTINGUISHED"
 
+# ---- #10 re-run on ruling 22's sustained mark (J8 item 3) ------------------
+from experiments.harness import outcome_sustained, sustained_life  # noqa: E402
+
+CAP = 9000
+
+
+def _s(d=CAP, capped=True, intake=1.0, drain=0.5):
+    return (d, capped, intake, drain)
+
+
+def test_22_life_needs_cap_and_intake_at_least_drain():
+    assert sustained_life(True, 3.0, 3.0)            # exactly at drain counts
+    assert not sustained_life(True, 2.999, 3.0)      # just below does not
+    assert not sustained_life(False, 99.0, 3.0)      # died rich: not sustained
+    assert not sustained_life(True, float("nan"), 3.0)
+    assert not sustained_life(True, 3.0, float("nan"))
+    assert not sustained_life(1, 3.0, 1.0)           # capped must be True itself
+
+
+def test_22_crosses_at_end_of_Wth_consecutive():
+    lives = [_s(), _s(intake=0.1), _s(), _s(), _s()]
+    # streak: 1, 0, 1, 2, 3 -> crosses at the end of life 5
+    assert outcome_sustained(lives, 3, 10 * CAP) == Outcome(5.0 * CAP, True)
+
+
+def test_22_every_life_not_window_mean():
+    # theta-style mean would pass (two rich lives carry a poor one); this must not
+    lives = [_s(intake=9.0), _s(intake=0.0), _s(intake=9.0)] * 3
+    assert outcome_sustained(lives, 3, 100 * CAP).event is False
+
+
+def test_22_a_death_breaks_the_streak():
+    lives = [_s(), _s(), (500, False, 0.0, 0.1), _s(), _s()]
+    assert outcome_sustained(lives, 3, 100 * CAP).event is False
+    assert outcome_sustained(lives + [_s()], 3, 100 * CAP) == Outcome(5 * CAP + 500.0, True)
+
+
+def test_22_T_bound_crash_nan_and_few_lives():
+    assert outcome_sustained([_s()] * 3, 3, 3 * CAP).event          # exactly T counts
+    assert outcome_sustained([_s()] * 3, 3, 3 * CAP - 1).event is False
+    assert outcome_sustained([_s()] * 2, 3, 10 * CAP).event is False
+    assert outcome_sustained([_s(), "crash", _s(), _s()], 3, 10 * CAP).event is False
+    assert outcome_sustained([_s(), (float("nan"), True, 1, 0), _s(), _s()], 3,
+                             10 * CAP).event is False
+
+
+def test_22_planted_known_positive_and_theta_disagree():
+    # f2-like capped lives that ate below drain: theta says crossed, sustained says no
+    f2 = [(CAP, True, 2.4, 3.0, 30)] * 3
+    assert outcome([(l[0], l[4]) for l in f2], 3, 10 * CAP).event
+    assert outcome_sustained([l[:4] for l in f2], 3, 10 * CAP).event is False
+    # row-e-like fed lives: both marks cross
+    e = [(CAP, True, 4.3, 3.0, 53)] * 3
+    assert outcome_sustained([l[:4] for l in e], 3, 10 * CAP) == Outcome(3.0 * CAP, True)
+
+
+def test_22_bad_args_raise():
+    for w, t in [(0, CAP), (3, 0)]:
+        try:
+            outcome_sustained([_s()], w, t)
+        except ValueError:
+            continue
+        raise AssertionError("bad args accepted")
+
+
+def test_22_judge_scores_the_frozen_mark():
+    prereg, d, pre, _ = _prereg_setup()
+    ids = {"A": [f"a{i}" for i in range(20)], "B": [f"b{i}" for i in range(20)]}
+    fed = [(9000, True, 4.0, 3.0)] * 3          # sustained
+    hungry = [(9000, True, 2.0, 3.0)] * 3       # capped, below drain
+    runs = {"A": {r: fed for r in ids["A"]}, "B": {r: hungry for r in ids["B"]}}
+    prereg.freeze(pre, question="fed vs hungry", launched=ids, W=3, T=60_000,
+                  n_perm=200, root=d, mark="sustained")
+    assert prereg.judge(pre, runs, require_committed=False, root=d).decision == "A_DIFFERS"
+    runs["A"] = {r: hungry for r in ids["A"]}   # control: both hungry -> nothing crosses
+    assert prereg.judge(pre, runs, require_committed=False, root=d).decision == "FUTILE"
+
+
 if __name__ == "__main__":
     import sys
     fails = 0

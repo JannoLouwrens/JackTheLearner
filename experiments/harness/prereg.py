@@ -31,7 +31,10 @@ import json
 import subprocess
 from pathlib import Path
 
-from experiments.harness import THETA, Verdict, check_runs_accounted, compare, outcome
+from experiments.harness import (THETA, Verdict, check_runs_accounted, compare, outcome,
+                                 outcome_sustained)
+
+MARKS = ("theta", "sustained")   # ruling 19's mark; ruling 22's (the primary from 11-16)
 
 HERE = Path(__file__).resolve().parent
 ANALYSIS_FILES = ("__init__.py", "calibration.py")
@@ -48,11 +51,13 @@ def file_hashes(root: Path = HERE, names=ANALYSIS_FILES) -> dict:
 
 def freeze(path, *, question: str, launched: dict, W: int, T: float,
            theta: float = THETA, n_perm: int = 2000, seed: int = 0,
-           root: Path = HERE) -> dict:
+           root: Path = HERE, mark: str = "theta") -> dict:
     if len(launched) != 2:
         raise ValueError("a comparison has exactly two arms (A, B)")
+    if mark not in MARKS:
+        raise ValueError(f"mark must be one of {MARKS}")
     pre = dict(question=question, arms=list(launched), launched=launched,
-               W=W, T=T, theta=theta, n_perm=n_perm, seed=seed,
+               W=W, T=T, theta=theta, n_perm=n_perm, seed=seed, mark=mark,
                analysis_sha256=file_hashes(root))
     Path(path).write_text(json.dumps(pre, indent=1, sort_keys=True) + "\n")
     return pre
@@ -69,8 +74,9 @@ def _committed_and_clean(path: Path) -> bool:
 
 def judge(path, runs: dict, *, require_committed: bool = True,
           root: Path = HERE) -> Verdict:
-    """`runs`: {arm: {run_id: [(decisions, meals), ...] lives}} (a crashed
-    run's lives end with "crash", as `outcome` reads them)."""
+    """`runs`: {arm: {run_id: [lives]}}; a life is (decisions, meals) under
+    mark "theta", (decisions, capped, intake, drain) under "sustained" (a
+    crashed run's lives end with "crash", as both outcome functions read)."""
     path = Path(path)
     if not path.is_file():
         raise Refused(f"no pre-registration at {path}")
@@ -81,7 +87,12 @@ def judge(path, runs: dict, *, require_committed: bool = True,
         raise Refused(f"analysis code moved since pre-registration: {moved or 'file set changed'}")
     if require_committed and not _committed_and_clean(path):
         raise Refused(f"pre-registration {path} is not committed and clean in git")
-    scored = {arm: {rid: outcome(lives, pre["W"], pre["T"], pre["theta"])
+    mark = pre.get("mark", "theta")   # files frozen before 11-16 carry no mark
+    if mark == "sustained":
+        score = lambda lives: outcome_sustained(lives, pre["W"], pre["T"])  # noqa: E731
+    else:
+        score = lambda lives: outcome(lives, pre["W"], pre["T"], pre["theta"])  # noqa: E731
+    scored = {arm: {rid: score(lives)
                     for rid, lives in runs.get(arm, {}).items()} for arm in set(runs) | set(pre["arms"])}
     check_runs_accounted(pre["launched"], scored)
     a, b = ([scored[arm][rid] for rid in pre["launched"][arm]] for arm in pre["arms"])
