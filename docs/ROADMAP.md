@@ -30,9 +30,9 @@ stage 2); tree → wood → fire → shelter being USED — hands (M4).
 stage: mechanics repairs now; curriculum and W2 in stage 3, after research.
 done when: `W1.00`–`W1.04`, `W.1`–`W.8`, `NE.01` PASS; `DP.05`'s question
 passes in W1; the curriculum test has a winner; W2 exists as specs and PASSES.
-status (11-15): `W.1`, `W1.02` pass; `W.2`, `NE.01`, `W1.00`, `W1.04` FAIL;
-`CR.01` FAIL. Research filed (§3): a floor meal is 8% of the bar, the
-outlier of every teachable world. Ordered: test card J1, difficulty dial J2.
+status (11-16): `W.1`, `W1.02` pass; `W.2`, `NE.01`, `W1.00`, `W1.04`,
+`CR.01` FAIL. Measured (J1, J2): floor food sustains him only at 70% of a
+perfect harvest; difficulty dial built; entry rung d0 = 0.75 (ruling 22).
 
 **M3 — His brain, by evidence.** First the instrument (stage 1): his world
 behind the standard interface; brain A (Dreamer-style world model) and B
@@ -43,11 +43,11 @@ against B, 1,000,000 decisions, rule written first. Then every other seat in
 needs: M1; research review 2. · stage: 1 now, then 2.
 done when: stage 2's rule names a brain; `D1.1`, `LC.07`, `UB.10`/`BO.01`,
 `DP.01`–`DP.03` and a size test are held by evidence; END-FIT's gates pass.
-status (11-15): stage 1. Built: his world behind the standard interface
-(`jack_env`). Ordered: B's known answers (J3), harness self-checks (J4), A's
-speed (J5). Stage 2's rule written (ruling 19); verdict mid-Jan to Feb 2027
-on free GPU. Working memory BY VERDICT; fusion UNDECIDED; control VACANT
-(`D1.0` closed by the record, ruling 20).
+status (11-16): stage 1. Done: `jack_env`, harness checks (J4), B's two
+SAC rows (J3). **Learnable from his senses at d = 1: NEGATIVE so far**
+(hand foragers 6/20, 13/20 vs 18; ruling 23). Next: B's pilot at d0 (J8),
+A's speed (J5). Stage-2 mark = a sustained life (ruling 22); verdict
+mid-Jan to Feb 2027. Fusion UNDECIDED; control VACANT (ruling 20).
 
 **M4 — One body that moves.** He moves well in the same body he survives in;
 hands that hold, carry and strike.
