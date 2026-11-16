@@ -84,10 +84,10 @@ No seat moves on a pilot; it fixes W and T for the decisive test.
 serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · philosophy 1, 4.
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
 state: (1)-(3) DONE `6f197f94`; prereg FROZEN `f0dc9fd7` (mark sustained, W 1, T 300k, 35 runs); harness #4 #5 #7 PASS, #8 death/cap half PASS, fixed-point half RULE `79e465bf` (~3.3 CPU-h → a Kaggle CPU kernel later); #2 at harvest from blr0; #6 #9 not payable. (6) REGISTERED `da8bc163` (e0-e2).
-state: B k0-k3 (16/20): **0 sustained** in 1,878 lives, every death energy, meals/life fell in 15/16 seeds. Floor f0 f1 harvested 21:20 → 24/35 in (`pilot_b_report` PARTIAL).
-state: 21:30 FOUND (`14ed3429`, PILOT_B.md §Seen at f0/f1): noop_s302 life 33 capped with 36 contact meals (born touching a food; regrowth 50.2 s × 36 = 1,800 s) = a do-nothing crossing. 1 per 322 floor lives; the rule's "floor ≤ 1" is used up, P(second → VOID) ≈ 0.49. W 1 lottery 0.28/run vs W 2 0.001 — the decisive test's W must be ≥ 2. B 0/1,878 is below the do-nothing rate (P 0.003).
-state: in flight: k4 (14:50), f2 (17:07), f3 (21:22, jack-cpu-1794864168) + W1.04 = 4 sessions.
-state: next: as sessions free, launch e0, e1, e2 (`launch_detached.sh /data/jack-logs/pilot_b/launch_eX.log /data/venvs/jack-std/bin/python -m experiments.pilot_b kernel --name eX`); harvest k4/f2/f3 (json lands by itself); when 20+15 are in: `$PY -m experiments.pilot_b_report --write`, commit PILOT_B.md.
+state: B arm COMPLETE (k4 21:29): **0 sustained in 2,350 lives**, all energy deaths; late meals/life ≤ 0.41 in 20/20 vs blr0 (same net, never updated) 0.61/1.50 and held8 1.58–1.71 — learning made him eat less (fell 18/20), unfed life lengthened 20/20 (lie-still). PILOT_B.md §Seen at k4. 28/35 in.
+state: floor: noop_s302 crossed once by contact-eating (f0/f1 §); P(VOID on s304/s305) ≈ 0.49. Decisive test needs W ≥ 2.
+state: in flight (4 sessions): f2 (17:07), f3 (21:22), W1.04, e0 (21:37, jack-cpu-1794865062).
+state: next: as sessions free, launch e1 then e2 (`scripts/launch_detached.sh /data/jack-logs/pilot_b/launch_eX.log /data/venvs/jack-std/bin/python -m experiments.pilot_b kernel --name eX`); harvest f2/f3 (json lands itself); at 35/35 `$PY -m experiments.pilot_b_report --write`, commit PILOT_B.md with the reading.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5

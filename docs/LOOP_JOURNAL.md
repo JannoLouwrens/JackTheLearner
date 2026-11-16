@@ -1886,3 +1886,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - f0 f1 had exited (json in) → 24/35 runs; one of the 4 Kaggle sessions free → launched f3 21:22 (k4, f2, f3, W1.04 hold the 4).
 - Found in the harvest: noop_s302 life 33 capped with 36 meals and no action — born touching a food, eating by contact each 50.2 s regrowth (36 × 50.2 = 1,800 s). 1 per 322 floor lives; the frozen rule allows ≤ 1 floor crossing, so P(VOID) ≈ 0.49 on s304/s305. W 1 makes a lucky spawn a whole run's success (0.28/run); W 2 cuts it to 0.001 → the decisive test's W. B's 0/1,878 is below the do-nothing rate (P 0.003). Written in PILOT_B.md before f2/f3 land; rule unchanged; INBOX.
 - Philosophy served: 4 (a control that can pass by luck found and priced before the reading, not after it).
+
+## 2026-11-16 21:45 · JACK · J8: k4 harvested — B's 20 seeds are all in, and learning made him eat less
+- k4 json landed 21:29 → B arm 20/20, total 28/35. Freed session → launched e0 (exploration, reported-only) 21:37.
+- B: 0 sustained in 2,350 lives, every death energy. Late meals/life ≤ 0.41 in all 20 seeds; the same network never updated (blr0) eats 0.61/1.50, held-8 random 1.58–1.71. Meals fell early→late in 18/20, unfed life lengthened in 20/20 — the lie-still slide on every seed. Written as PILOT_B.md §Seen at k4 (descriptive; rule reads at 35/35).
+- Next: e1, e2 as sessions free; f2/f3 harvest; then the reading. The record's predicted fix is the cost curriculum (KAPPA ramped with d).
+- Philosophy served: 4 (a failure measured against its own untrained control, not filed) and 3 (points the decisive test at the change the record predicts).
