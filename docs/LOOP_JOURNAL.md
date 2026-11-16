@@ -1881,3 +1881,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Planted `experiments/tests/test_reuse_kernel_once.py` 4/4 with a control. T0.12's reattach probe reattaches one fixture slug twice → resets the claim per recovery; probe re-checked 2x in one process, all True. Not run as a spec (would write the ledger) — regate re-buys T0.12 on the gpu.py change.
 - Growth: +~20 lines guard +1 test, −2 comment lines; ordered by S7. Next: S7 (4).
 - Philosophy served: 4 (a recovered result can no longer be credited to a seed that never ran).
+
+## 2026-11-16 21:35 · JACK · J8: f0/f1 harvested, f3 launched — the do-nothing body met the mark once, by luck
+- f0 f1 had exited (json in) → 24/35 runs; one of the 4 Kaggle sessions free → launched f3 21:22 (k4, f2, f3, W1.04 hold the 4).
+- Found in the harvest: noop_s302 life 33 capped with 36 meals and no action — born touching a food, eating by contact each 50.2 s regrowth (36 × 50.2 = 1,800 s). 1 per 322 floor lives; the frozen rule allows ≤ 1 floor crossing, so P(VOID) ≈ 0.49 on s304/s305. W 1 makes a lucky spawn a whole run's success (0.28/run); W 2 cuts it to 0.001 → the decisive test's W. B's 0/1,878 is below the do-nothing rate (P 0.003). Written in PILOT_B.md before f2/f3 land; rule unchanged; INBOX.
+- Philosophy served: 4 (a control that can pass by luck found and priced before the reading, not after it).
