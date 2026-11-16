@@ -516,3 +516,7 @@ Long form: `/data/jack-research/reports/Porting Dreamer to Apple MLX.md` (62-ite
 - Real T4 and 4090 Dreamer steps/s, and the gain from packing several runs on one card.
 
 **Not verified:** Kaggle's glibc and driver for MLX; the optax first-step-LR semantics (rung 3 settles it); the dependency versions of the published runs (unrecorded); rental speeds (scaled from one 3080 Ti figure); the 1e-4 unroll tolerance; whether owners' devices other than Macs can use MLX.
+
+## 12. His eye: sight from his own camera, and a sense added later (2026-11-16; serves the decisive test in PLAN, M-eye, stage 3; answers the INBOX `RESEARCH:` line on his eye)
+
+**Question.** What does the record say about giving a small from-scratch agent sight: the resolution and frame cost learners need, losses with no decoder, the cost of rendering, richer rays as a cheaper first eye, and how "a sense added later against present from birth" has been tested? *(Skeleton, 04:10 UTC; the findings land in this slot.)*
