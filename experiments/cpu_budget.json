@@ -1184,19 +1184,24 @@
         "T2.08": 408.08,
         "VO.01": 144.32,
         "W0.DIAG": 661.97,
-        "detached:entry_d00.log": 276.51,
-        "detached:entry_d25.log": 276.46,
-        "detached:entry_d50.log": 286.56,
+        "detached:entry_d00.log": 456.01,
+        "detached:entry_d25.log": 394.31,
+        "detached:entry_d50.log": 589.54,
         "detached:entry_d75.log": 692.02,
         "detached:row1.log": 344.2,
         "detached:row1b.log": 246.83,
+        "detached:row2.log": 9.67,
+        "detached:row2b.log": 28.47,
         "detached:row3.log": 30.18,
+        "detached:row3b.log": 12.06,
+        "detached:row4.log": 10.54,
+        "detached:row4b.log": 11.15,
         "detached:svs2_S1.log": 2490.37,
         "detached:svs2_S2.log": 2417.71,
         "detached:svs_S1.log": 2461.57,
         "detached:svs_S2.log": 2385.86
       },
-      "used_s": 14403.08
+      "used_s": 15075.3
     }
   },
   "last_child_s": {
