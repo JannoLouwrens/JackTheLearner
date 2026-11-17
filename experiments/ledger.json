@@ -52725,8 +52725,8 @@
     },
     "PG.6": {
       "amended": [],
-      "attempt": 7,
-      "commit": "8d623b3",
+      "attempt": 8,
+      "commit": "441ac2f1",
       "compute_s": null,
       "control_metrics": {
         "control_canary_stable": 1.0,
@@ -52738,7 +52738,8 @@
         "oof_radius_r2": -0.00393333,
         "oof_radius_r2_std": 0.00200389
       },
-      "duration_s": 552.38,
+      "dirty_files": null,
+      "duration_s": 537.44,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -52866,10 +52867,70 @@
             2
           ],
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 7,
+          "commit": "8d623b3",
+          "compute_s": null,
+          "control_metrics": {
+            "control_canary_stable": 1.0,
+            "control_canary_stable_std": 0.0,
+            "control_seed_gates_ok": 1.0,
+            "control_seed_gates_ok_std": 0.0,
+            "oof_bearing_med_deg": 57.198667,
+            "oof_bearing_med_deg_std": 0.270215,
+            "oof_radius_r2": -0.00393333,
+            "oof_radius_r2_std": 0.00200389
+          },
+          "duration_s": 552.38,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "306308f02a951644",
+          "message": "",
+          "metrics": {
+            "bearing_med_const": 11.45,
+            "bearing_med_const_std": 0.391807,
+            "bearing_med_deg": 1.596667,
+            "bearing_med_deg_std": 0.0499489,
+            "bearing_med_grey": 11.45,
+            "bearing_med_grey_std": 0.391807,
+            "bearing_med_shuffled": 11.009,
+            "bearing_med_shuffled_std": 0.343988,
+            "canary_stable": 1.0,
+            "canary_stable_std": 0.0,
+            "geometric_col_err_deg": 0.628667,
+            "geometric_col_err_deg_std": 0.0112645,
+            "occluded_frac": 0.349033,
+            "occluded_frac_std": 0.00768433,
+            "radius_r2": 0.962267,
+            "radius_r2_fixed_dist": 0.958433,
+            "radius_r2_fixed_dist_std": 0.0178405,
+            "radius_r2_grey": -0.0044,
+            "radius_r2_grey_std": 0.00420079,
+            "radius_r2_shuffled": -0.1606,
+            "radius_r2_shuffled_std": 0.0240476,
+            "radius_r2_std": 0.00181904,
+            "seed_gates_ok": 1.0,
+            "seed_gates_ok_std": 0.0,
+            "visible_frac": 1.0,
+            "visible_frac_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 2073.4,
+          "preserved_impl": null,
+          "ran_at": "2026-09-04T00:39:45",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "02c5a3bd26aee617",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "306308f02a951644",
-      "message": "",
+      "impl_sha": "849884a6a03711fd",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 4 deciding metric(s) reproduced exactly in a fresh process (+1252.3s)",
       "metrics": {
         "bearing_med_const": 11.45,
         "bearing_med_const_std": 0.391807,
@@ -52899,9 +52960,9 @@
         "visible_frac_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 2073.4,
+      "peak_rss_mb": 2138.8,
       "preserved_impl": null,
-      "ran_at": "2026-09-04T00:39:45",
+      "ran_at": "2026-11-17T21:47:45",
       "seeds": [
         0,
         1,
