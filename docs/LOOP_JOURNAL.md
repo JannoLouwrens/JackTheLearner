@@ -2225,3 +2225,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Box smoke: 0.45–0.53 grad steps/s on one Ampere core (641,641 weights). Check at 30 steps: 18 series, REP == REF bit for bit, planted bug caught (reward-loss ratio 314) → APPARATUS_OK. The first smoke was VOID: sheeprl's aggregator silently drops unregistered keys (3 series, control 1.27); fixed with a collector.
 - `mac_first_day.py` now runs 9 (sheeprl arms) and 10 through `JACK_SHEEPRL_PY`; only the official-JAX arm of row 9 stays by hand. Judge test `test_mac_dreamer_judge.py` 7/7 (PASS, both DIVERGENCE kinds, both VOIDs reachable).
 - Philosophy served: 3 and 4 (the Mac's GPU earns its seat only through a test that could fail, with a control proven to fail); 6 (free hardware measured before it is trusted). It is the instrument, not Jack.
+
+## 2026-11-17 18:37–18:50 UTC · JACK · J11 (3) prep — J11/J12/J6/J3/J13/J10 wait (c4..c7 hold all 4 Kaggle sessions, RUNNING 18:38), J14 waits for 11-21, Next-up 1–2 done
+- `pilot_b2 rule-inputs` (`96d062fc`): the arithmetic J11's rule is written from — planned floor lives (5 seeds × 300k ÷ decisions/life), predicted crossings and Poisson 95% upper at W = 1/2/3, smallest W ≤ 0.5 — committed while only 4 of 8 kernels are home, so the derivation cannot be fitted to the full card.
+- Partial reading (1000 lives/arm, NOT for the rule): smallest W = 2 for noop and held8 with movement drain, 3 for held8 with movement free (9.4 predicted single crossings). Open for the rule writer: K at learning rate 0 has no card twin.
+- cpu_budget receipts committed as the header asks.
+- Philosophy served: 4 (the bar a learner must clear is derived by a rule fixed before the data that sets it).
