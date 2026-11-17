@@ -282,7 +282,7 @@ def _stored_now(core):
 
 
 def run_cell_rec(arm: str, row: int, seed: int, train: bool = True,
-                 steps: int | None = None) -> dict:
+                 steps: int | None = None, return_core: bool = False) -> dict:
     import gymnasium as gym
     from .survival_rec import REC_ARMS as _RA, _StateRing
     assert tuple(_RA) == REC_ARMS
@@ -373,6 +373,8 @@ def run_cell_rec(arm: str, row: int, seed: int, train: bool = True,
         out["metric"] = max(checkpoints.values())
     out["reached"] = (out["metric"] is not None and
                       (out["metric"] >= R["reach"] if row == 1 else out["metric"] > R["reach"]))
+    if return_core:
+        out["core"] = core
     return out
 
 
