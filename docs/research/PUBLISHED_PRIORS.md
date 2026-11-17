@@ -541,3 +541,11 @@ Long form: `/data/jack-research/research_notes/smell/`. [V] = read in paper or c
 - O2 puffs with vs without a wind sense: predicted no learning without.
 
 **Not verified:** OdorSpaces' total steps (30M is the ramp), net sizes, PPO settings, figures. Singh's success counts (plot). Verano's table; Alonso's step count (SI); FlyGym RL's score; EVAAA's smell ablation (secondary: "least useful sense"). Biology except Findley: abstracts. Not found: any RL test of one nose point vs two. Not searched: auxiliary losses for an ignored input.
+
+## 15. The home-made brains on the two textbook rows: what each kind of learner is on record to need (2026-11-17; serves order J3 (4), M3; rule 2 pick — J3 had no `prior:` lines)
+
+Long form: `/data/jack-research/research_notes/inhouse_rows/` (three parts). SKELETON — the published side is being read this slot.
+
+**Question.** J3 (4) puts every in-house arm on Pendulum-v1 (band edge −314.7 within 60,000 steps = 3× SAC's 20,000) and sparse MountainCarContinuous-v0 (> 90 within 150,000). Three arms have failed both (`KNOWN_ANSWERS.md` Row J3-4, J3-4b); four wait (`dreamer-xs`, `wm-efe`, `wm-dyn`, `wm-latent+ring`). What is each KIND of learner on record to need on these two tasks, so a miss can be read as "broken" or as "this class is that slow"?
+
+**What ours are (read 11-17).** All seven share ONE policy learner: tanh-squashed advantage-weighted regression on GAE targets (`cores.py:540` `lc_update`), a 256-row ring, batch 16, 0.25 updates per decision, γ 0.95 (`survival.py:63`), i.i.d. Gaussian exploration std 0.5 → 0.1 (`survival.py:66`). The names differ only in the auxiliary ("binding") loss on the shared state: none (`ppo-needs`), learning-progress critic (`ppo-lp`), RSSM + decoder (`dreamer-xs`, `cores.py:304`), + 5-head disagreement (`wm-efe`, `cores.py:410`), latent prediction against an EMA encoder (`wm-latent`), stored recurrent state (`wm-dyn`, `wm-latent+ring`). None plans or learns in imagination.
