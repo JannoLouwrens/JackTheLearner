@@ -2167,3 +2167,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Box smoke (A2, compile off, 7 min, 0.19 grad-steps/s): runner imports and steps; step-0 reward loss 5.541, value/return 0 = §2's code check. No episode by policy step 1,100 → policy_step counts decisions × envs (inferred from an absence; the kernel asserts it positively).
 - (3) was already done 11-16 (README line diff). Left: the kernel body. Nothing launched.
 - Philosophy served: 3, 4 (brain A's chair is earned by a published number under a rule written before the data, with a control that must fail).
+
+## 2026-11-17 14:07–14:20 UTC · JACK · J14 (1)(4) — J11/J12/J6/J3 wait (c0..c3 hold all 4 Kaggle sessions, RUNNING at 14:14)
+- Brain A's row kernel written (`31286dac`): one Kaggle GPU kernel per row, control first, seeds 0–2, results rewritten after every run, 9 h in-kernel cut; extension and scoring commands; per-episode returns read from the runner's own per-episode stdout line (the TensorBoard rew_avg is a 5,000-step interval mean — the rule scores episodes).
+- Box smoke: the unit question is now measured, not inferred — first episode at policy_step 2,000 on all 4 envs, so env steps = 2 × policy_step.
+- Found and fixed before any seed: the frozen "never-trains" control (`learning_starts = total+1`) took ~2 gradient steps on its last iteration (the runner floors to whole iterations). Now `2 × total`: replay_ratio 0.0, no loss logged. Stronger than the rule's text required in practice; no reading could have moved.
+- `test_brain_a_rows` PASS 5/5, each with a control that must fail. J14 is ready for 11-21; nothing launched.
+- Philosophy served: 4 (the control now does what its rule says — a twin that never learns) and 3 (brain A's chair earned only by a published number).
