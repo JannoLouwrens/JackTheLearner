@@ -150,11 +150,27 @@ TRAIN_FREQ = 32
 OUT = Path("/data/jack-logs/pilot_b")
 
 
-def _single_thread():
+def _single_thread(pin_cpu=None):
+    """Thread hygiene. MEASURED 11-17 (harness/single_thread_probe.py): the
+    XLA_FLAGS below do NOT bound jax 0.11 — its `tf_XLAEigen` intra-op pool
+    is sized to the CPUs in the affinity mask (4 threads here) and did ~46%
+    of a learning run's CPU at 1.6 cores; that is INBOX 11-16 19:40's "2.4
+    cores". The one lever that bounds it is the affinity mask itself, set
+    BEFORE jax's backend starts: pin_cpu=<cpu id> (or env JACK_PIN_CPU)
+    -> 1 pool thread, 1.00 cores, 9% less CPU, 1.46x the wall, and the
+    learned actor + every life bit-identical to unpinned (probe docstring).
+    Default None = unchanged (no box run of B without it)."""
     os.environ.setdefault("XLA_FLAGS", "--xla_cpu_multi_thread_eigen=false "
                           "intra_op_parallelism_threads=1")
     os.environ.setdefault("OMP_NUM_THREADS", "1")
     os.environ.setdefault("JAX_PLATFORMS", "cpu")
+    if pin_cpu is None and os.environ.get("JACK_PIN_CPU", "") != "":
+        pin_cpu = int(os.environ["JACK_PIN_CPU"])
+    if pin_cpu is not None:
+        xb = sys.modules.get("jax._src.xla_bridge")
+        if xb is not None and getattr(xb, "_backends", None):
+            raise RuntimeError("pin_cpu must be set before jax's backend starts")
+        os.sched_setaffinity(0, {int(pin_cpu)})
 
 
 def make_world(seed: int):
