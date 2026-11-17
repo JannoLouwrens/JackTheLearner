@@ -118,7 +118,9 @@ learns to. Not yet: `row128` under brain B — that is an arm pair once J11
 shows B moves at all.
 serves: M3, M5 · PLAN parts "Eye" (1 → 2) and "Learning to eat" last-10% question "can 16 rays tell food from a wall?" · philosophy 3, 4.
 **done when:** the option, its two tests and the gate's row (both rungs) are committed.
-state: open — ordered 11-17 06:50.
+state: (1) DONE 11-17 07:58 `9e4031bb`: `jack_env(eye="row128")` (fast_sim.apply_row_vision, one mj_multiRay, vision 256 wide; default "rays16" untouched). `tests/test_jack_env_eye.py` PASS: identity 4/4, row ray 8j == old ray j on 4/4 seeds (control 8j+4 differs), any ray on floor food .287 → .905 at d 0.75 (400 decisions), 0.089 vs 0.058 CPU-ms a look (+0.15% of a decision).
+state: scar: with hand cal j0=alpha=1 + random_needs the body dies every ~3 decisions and never settles to eye height — NO eye sees food; use the shipped cal for any eye measurement.
+state: next: (2) freeze the gate text in WORLD_CARD.md BEFORE any run — f2's forager reading `eye="row128"`, 20 fresh seeds, ≥ 5 floor meals/life on ≥ 18/20, shuffled-ray twin must miss, d0 AND d=1; state the one extension clause (or none); then size the run (box < 15 CPU-min or a Kaggle kernel at rank 2).
 
 ### J6 — Make the simulator fast, once, and say what it costs to re-certify
 part: His world (the instrument's speed) · stage: 1 · step: 2 (combine) · prior: §4 "Take as-is"; INBOX measurement 11-15 15:55
