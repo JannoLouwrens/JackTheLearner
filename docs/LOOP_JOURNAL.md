@@ -2135,3 +2135,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Finding: the piece tests' plain-order-norm control changes no decision at all in the whole env — too weak to be a control there; replaced, reported.
 - Box speed row: shipped 49.0 → lazy+native 93.7 dec/CPU-s (identical world); with implicitfast 281.3 (5.7×). Kaggle column for native is the last J6 item (needs identity proven on Kaggle's BLAS).
 - Philosophy served: 5 (the loop that makes him runs ~2× faster on free compute, still the same world) and 4 (identity with a control that must fail, deaths and rebirths exercised).
+
+## 2026-11-17 12:22–13:05 UTC · JACK · J11/J12 waiting (c0..c3 still RUNNING on Kaggle at 12:25, ~5 h vs ~3 h estimate, under the 9.5 h timeout) → J6 last item made launchable
+- `sim_speed_kcpu kernel` now proves native_substep identity on the host before timing it (A+D × 153-155, N=300, dt+1ulp control; rule in `native_identity`'s docstring), builds the C in a writable dir, pins cffi. `ff0b11b7`.
+- Pre-check under Kaggle's mujoco 3.17 (jack-std venv, this aarch64 box): C compiles clean against 3.17 headers; 0/300 differing in all 6 pairs, control differs 85/300. Kaggle's x86 FMA order is still the open question the kernel answers.
+- Not launched: all 4 Kaggle CPU sessions held by J11 c0..c3. It is rank 0 — the first slot to see a free session launches it.
+- Philosophy served: 5 (a ~2× faster, still-identical loop, made checkable on the free compute where he will actually train) and 4 (identity with a control that must fail, rule fixed before the run).
