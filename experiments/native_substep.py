@@ -55,6 +55,22 @@ Control (plain-order norm) differs on 370-775 sub-steps a seed.
 Speed (box, nice 19, seeds 153-155, 20,000 calls): Python 44.4 us, C 1.17 us
 a call -> 1.73 ms of a decision.
 
+Piece 3, MEASURED 11-17 10:45: `jn_water_apply` == `playground.Water.apply`
+(per-body pool test, lazy held-dry contact scan, spherical-cap buoyancy,
+quadratic + linear drag, the W0.PL additive write into xfrc_applied; `r**3`
+is C pow(), speed is the FMA-order norm). `NativeWater` loads `_last`,
+`_written`, `_last_any` ONCE per env and evolves alone for the whole run.
+`tests/test_native_water.py` PASS: 54,000/54,000 sub-steps identical (whole
+xfrc_applied + state, exact): seeds 153-155 x {random actions; dropped in
+the pool at surface 0 — held dry on 5,571/6,000 calls; surface raised to
+0.5 m with the dry set recomputed — force on 6,000/6,000}. Control (plain
+norm) differs on 5,487-5,492 a seed (float case). FINDING: in today's
+world the water force DOES fire — seeds 154/155 put force on 68/63
+sub-steps of 6,000 (a limb whose bounding sphere dips below z=0 over the
+pool while not touching the floor), though `drives` never sees him wet.
+Speed (box, nice 19, 20,000 calls): Python 14.7-18.5 us, C 0.90 us a call
+-> 0.55-0.70 ms of a decision.
+
 Usage: $PY -m experiments.native_substep   # build + timing on one live env
 """
 from __future__ import annotations
@@ -88,6 +104,15 @@ typedef struct {
     int n_onsets, touching_world, has_prev_speed, has_submerged, wet_in;
 } jn_dstate;
 void jn_drives_substep(uintptr_t d, const jn_dcfg* c, jn_dstate* s, double dt);
+typedef struct {
+    int nbody, ngeom, fma_norm, enabled;
+    const double* radius; const double* mass; const uint8_t* dry;
+    const int* geom_body;
+    double x, y, half, surf, cd, c_lin, rho, g;
+    double* last; double* written; int last_any;
+    double* newf; uint8_t* held;
+} jn_water;
+void jn_water_apply(uintptr_t d, jn_water* w);
 """
 
 SRC = r"""
@@ -200,6 +225,71 @@ void jn_drives_substep(uintptr_t dp, const jn_dcfg* c, jn_dstate* s, double dt) 
     if (wet) w += (1.0 - w) * dt / c->tau_wet;
     else     w -= w * dt / c->tau_dry;
     s->w = w < 0.0 ? 0.0 : (w > 1.0 ? 1.0 : w);
+}
+
+typedef struct {
+    int nbody, ngeom, fma_norm, enabled;
+    const double* radius; const double* mass; const uint8_t* dry;
+    const int* geom_body;
+    double x, y, half, surf, cd, c_lin, rho, g;
+    double* last; double* written; int last_any;
+    double* newf; uint8_t* held;
+} jn_water;
+
+/* playground.Water.apply, line for line, same float order.  Python `x ** 3`
+   on floats is C pow(); np.linalg.norm(3) is the box BLAS's FMA order. */
+void jn_water_apply(uintptr_t dp, jn_water* w) {
+    mjData* d = (mjData*)dp;
+    if (!w->enabled) return;
+    int nb = w->nbody, any_new = 0, held_done = 0;
+    const double PI = 3.141592653589793;
+    for (int bid = 1; bid < nb; bid++) {
+        const double* pos = d->xipos + 3 * bid;
+        double r = w->radius[bid];
+        if (r <= 0 || w->mass[bid] <= 0) continue;
+        if (!(fabs(pos[0] - w->x) < w->half && fabs(pos[1] - w->y) < w->half
+              && pos[2] - r < w->surf)) continue;
+        if (!held_done) {
+            memset(w->held, 0, (size_t)nb);
+            for (int k = 0; k < d->ncon; k++) {
+                int g1 = d->contact[k].geom[0], g2 = d->contact[k].geom[1];
+                if (w->dry[g1]) w->held[w->geom_body[g2]] = 1;
+                else if (w->dry[g2]) w->held[w->geom_body[g1]] = 1;
+            }
+            held_done = 1;
+        }
+        if (w->held[bid]) continue;
+        double dd = w->surf - pos[2], frac;
+        if (dd >= r) frac = 1.0;
+        else if (dd <= -r) continue;
+        else { double h = dd + r; frac = (h * h * (3 * r - h)) / (4.0 * pow(r, 3.0)); }
+        double vol = (4.0 / 3.0) * PI * pow(r, 3.0) * frac;
+        double buoy = w->rho * vol * w->g;
+        const double* vel = d->cvel + 6 * bid + 3;
+        double speed = jn_norm(vel, 3, w->fma_norm);
+        double area = PI * r * r * frac;
+        double k1 = -0.5 * w->rho * w->cd * area * speed;
+        double k2 = w->c_lin * w->rho * vol;
+        if (!any_new) { memset(w->newf, 0, sizeof(double) * 3 * nb); any_new = 1; }
+        for (int i = 0; i < 3; i++) w->newf[3 * bid + i] = k1 * vel[i] - k2 * vel[i];
+        w->newf[3 * bid + 2] += buoy;
+    }
+    if (!any_new) {
+        if (!w->last_any) return;
+        memset(w->newf, 0, sizeof(double) * 3 * nb);
+    }
+    int la = 0;
+    for (int b = 0; b < nb; b++)
+        for (int i = 0; i < 3; i++) {
+            double cur = d->xfrc_applied[6 * b + i];
+            double base = (cur == w->written[3 * b + i]) ? cur - w->last[3 * b + i] : cur;
+            double out = base + w->newf[3 * b + i];
+            d->xfrc_applied[6 * b + i] = out;
+            w->written[3 * b + i] = out;
+            w->last[3 * b + i] = w->newf[3 * b + i];
+            if (w->newf[3 * b + i] != 0.0) la = 1;
+        }
+    w->last_any = la;
 }
 """
 
@@ -339,6 +429,63 @@ class NativeDrives:
                 bad.append("respawn_at:" + n)
             if int(self.ate_total[k]) != L.ate_total[n]:
                 bad.append("ate_total:" + n)
+        return bad
+
+
+class NativeWater:
+    """C twin of `playground.Water.apply` for ONE Water (piece 3 of 4).
+
+    Config (radii, masses, dry-geom mask, pool box, coefficients) and the
+    additive-write state (`_last`, `_written`, `_last_any`) are copied from
+    the Python object by `load()`; `diff()` compares the state exactly.
+    `fma_norm=False` is the identity test's control only."""
+
+    def __init__(self, water, fma_norm: bool = True):
+        import playground as pg
+        self.ffi, self.lib = build()
+        f, m = self.ffi, water.model
+        self.water = water
+        keep = self._keep = []
+
+        def buf(a, ct):
+            keep.append(a)
+            return f.from_buffer(ct, a)
+        dry = np.zeros(m.ngeom, dtype=np.uint8)
+        dry[sorted(water._dry_geoms)] = 1
+        self.last = np.zeros(m.nbody * 3)
+        self.written = np.zeros(m.nbody * 3)
+        w = self.cfg = f.new("jn_water*")
+        w.nbody, w.ngeom, w.fma_norm = m.nbody, m.ngeom, int(bool(fma_norm))
+        w.radius = buf(np.ascontiguousarray(water._radius, dtype=float), "double[]")
+        w.mass = buf(np.ascontiguousarray(m.body_mass, dtype=float), "double[]")
+        w.dry = buf(dry, "uint8_t[]")
+        w.geom_body = buf(np.ascontiguousarray(m.geom_bodyid, dtype=np.int32), "int[]")
+        w.rho, w.g = pg.WATER_DENSITY, pg.GRAVITY
+        w.last, w.written = buf(self.last, "double[]"), buf(self.written, "double[]")
+        w.newf = buf(np.zeros(m.nbody * 3), "double[]")
+        w.held = buf(np.zeros(m.nbody, dtype=np.uint8), "uint8_t[]")
+        self.load()
+
+    def load(self) -> None:
+        W, w = self.water, self.cfg
+        w.enabled = int(bool(W.enabled))
+        w.x, w.y, w.half, w.surf = W.x, W.y, W.half, W.surface_z
+        w.cd, w.c_lin = W.cd, W.c_lin
+        self.last[:] = np.asarray(W._last, dtype=float).ravel()
+        self.written[:] = np.asarray(W._written, dtype=float).ravel()
+        w.last_any = int(bool(W._last_any))
+
+    def apply(self, data) -> None:
+        self.lib.jn_water_apply(data._address, self.cfg)
+
+    def diff(self) -> list:
+        W, bad = self.water, []
+        if not np.array_equal(self.last, np.asarray(W._last).ravel()):
+            bad.append("last")
+        if not np.array_equal(self.written, np.asarray(W._written).ravel()):
+            bad.append("written")
+        if bool(self.cfg.last_any) != bool(W._last_any):
+            bad.append("last_any")
         return bad
 
 
