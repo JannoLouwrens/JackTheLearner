@@ -2113,3 +2113,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Measured how piece 2 must sum: power = plain loop (matches), norm = sequential FMA (matches 20,000/20,000; no plain order does).
 - Not wired into jack_env (one edit when all four pieces are proven). Commits 48f44bc2 + this.
 - Philosophy 5 (a faster, true loop) and 4 (identity proven with a control that fails).
+
+## 2026-11-17 10:07–10:50 UTC · JACK · J11/J12 waiting (c0..c3 RUNNING on Kaggle, all 4 sessions) → J6 (2b) piece 2
+- `drives.substep` in C (`jn_drives_substep` + `NativeDrives` state struct): identical 54,000/54,000 sub-steps, exact equality on every field, C loaded once a decision then on its own for 40 sub-steps.
+- Three cases × seeds 153-155: random actions (onsets, rest); body set on live floor food (meals + timers); pool (wet + drowning). Control (plain-order norm) differs 370-775 a seed.
+- Finding: W0's floor plane covers the pool, so no geom of his is ever wet in today's world — the wet/drown branch had to be planted (surface raised in both implementations, test only).
+- 44.4 → 1.17 us a call = 1.73 ms of a ~19 ms decision. Not wired into jack_env yet. `853adc87`.
+- Philosophy served: 5 (a faster, still-true loop on free compute) and 4 (identity with a control that must fail; every branch shown exercised).
