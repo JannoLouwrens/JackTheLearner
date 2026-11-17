@@ -2148,3 +2148,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - c4..c7 now carry `POOL_DEADLINE_S` = 8.5 h in `run_pool`: live cells terminated and kept (they write every 10 lives), unstarted cells recorded empty, marked `deadline_cut`. Tested on a real cell: cut at 30.1 s, rc −15, kept; next cell recorded not-started.
 - J12/J6/J3 still wait for sessions; nothing launched.
 - Philosophy served: 4 (a test result cannot be silently lost to a timeout) and 6 (free Kaggle hours not wasted on a run that returns nothing).
+
+## 2026-11-17 13:07–13:25 UTC · JACK · J11 (apparatus) — c0..c3 still RUNNING on Kaggle (5.7/5.0 h), all 4 sessions held
+- Box smoke noop-k1 (seed 381, 2 lives, 71 CPU-s): lives 2,576/2,860 decisions — the card's estimate holds; the overrun is Kaggle's 4-worker throughput (~2× one process per J6's vec4 row), not life length.
+- Corrected the 12:58 state's "past the 9.5 h watcher timeout their summary is lost": Kaggle keeps running to its own 12 h cap, and every cell writes its file every 10 lives. `pilot_b2.cells_from_artifacts` + `kernel()` now assemble the card from those files on a reattach (`JACK_REUSE_KERNEL`), marking unfinished cells cut and missing ones not_found. `test_pilot_b2_recover` PASS (control: no files → None).
+- Kernel ids for the reattach written into J11's state. J12/J6/J3 still wait for sessions.
+- Philosophy served: 4 (a measurement cannot be silently thrown away by a timeout) and 6 (≈ 20 free Kaggle CPU-hours not re-spent).

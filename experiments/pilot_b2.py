@@ -202,15 +202,44 @@ def kernel(name: str) -> dict:
     cells = card_groups()[name]
     sub = submit(build_job(job_body(cells)), prefer="kaggle-cpu", est_hours=4.0,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["pilot_b2_card.json"])
-    if not sub.ok:
-        raise RuntimeError(f"pilot_b2 kernel {name}: {sub.message}")
-    r = result_json(sub, "pilot_b2_card.json")
+    if "pilot_b2_card.json" in sub.artifacts and sub.ok:
+        r = result_json(sub, "pilot_b2_card.json")
+    else:
+        r = cells_from_artifacts(sub.artifacts, cells)
+        if r is None:
+            raise RuntimeError(f"pilot_b2 kernel {name}: {sub.message}")
+        print(f"pilot_b2 kernel {name}: no summary ({sub.message or 'missing'}); "
+              f"assembled from per-cell files", flush=True)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / f"{name}.json").write_text(json.dumps(r, indent=1) + "\n")
     for k, rec in r["cells"].items():
         print(f"{k}: {len(rec['lives'])} lives"
+              + (" (cut)" if rec.get("deadline_cut") else "")
               + (f" ERROR {rec['error']}" if "error" in rec else ""), flush=True)
     return r
+
+
+def cells_from_artifacts(artifacts: dict, cells: list) -> dict | None:
+    """RECOVERY (11-17 13:20): a kernel that outlived its watcher (c0..c3 have
+    no in-kernel stop) or hit Kaggle's own 12 h cap leaves no summary file, but
+    every cell wrote `card_<arm>_s<seed>.json` to /kaggle/working every 10
+    lives. Reattach with JACK_REUSE_KERNEL=<user>/<slug> (zero quota; fetches
+    output for any terminal status) and this assembles the card from those.
+    A cell is `done` only if its own file says so; a missing file is recorded
+    `not_found`, never invented. None when no cell file came back at all."""
+    res, found = {}, 0
+    for arm, seed in cells:
+        key, fn = f"{arm}_s{seed}", f"card_{arm}_s{seed}.json"
+        if fn in artifacts:
+            rec = json.loads(Path(artifacts[fn]).read_text())
+            found += 1
+            if not rec.get("done"):
+                rec["deadline_cut"] = True
+        else:
+            rec = {"arm": arm, "seed": seed, "lives": [], "not_found": True}
+        rec["from_cell_file"] = True
+        res[key] = rec
+    return {"cells": res, "assembled": True} if found else None
 
 
 def card_table(paths) -> str:
@@ -219,7 +248,7 @@ def card_table(paths) -> str:
     for p in paths:
         for rec in json.loads(Path(p).read_text())["cells"].values():
             by[rec["arm"]].append(rec)
-    lines = ["| arm | worlds | lives | sustained | rate (95% upper) | runs W=1/2/3 "
+    lines = ["| arm | worlds (cut) | lives | sustained | rate (95% upper) | runs W=1/2/3 "
              "| life s median (5-95%) | meals/life mean | lives fed | max meals |",
              "|---|---|---|---|---|---|---|---|---|---|"]
     for arm, recs in by.items():
@@ -238,7 +267,8 @@ def card_table(paths) -> str:
         secs = np.array([l["seconds"] for l in L])
         meals = np.array([l["floor_meals"] + l["apples"] for l in L])
         lines.append(
-            f"| {arm} | {len(recs)} | {len(L)} | {s} | {s / len(L):.5f} ({up:.5f}) "
+            f"| {arm} | {sum(bool(r['lives']) for r in recs)} "
+            f"({sum(bool(r.get('deadline_cut')) for r in recs)}) | {len(L)} | {s} | {s / len(L):.5f} ({up:.5f}) "
             f"| {runs[0]}/{runs[1]}/{runs[2]} | {np.median(secs):.0f} "
             f"({np.percentile(secs, 5):.0f}-{np.percentile(secs, 95):.0f}) "
             f"| {meals.mean():.3f} | {(meals > 0).mean():.3f} | {int(meals.max())} |")
