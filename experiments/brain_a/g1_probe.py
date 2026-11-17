@@ -10,7 +10,9 @@ Same config as 0.2b (`defaults debug`, float32, Dummy74 obs/act spaces, seed 0).
 fixed numpy draw (seed 1234) over `agent.spaces`; the batch is device_put and the per-step seed is
 `agent._seeds(i, ...)`, exactly what `agent.stream()` does. N train calls; dumps sha256 of every param (by name) plus
 the metrics each call returns. Run twice in separate processes and compare the JSONs.
-0.4c iii: `--noise-file` (file_noise.py) feeds the two samplers from an .npz, eager only. Not yet: intermediates.
+0.4c iii: `--noise-file` (file_noise.py) feeds the two samplers from an .npz, eager only.
+0.4d: `--dump-step N --dump X.npz` records call N's grads by name, loss and aux outs (install_capture);
+`--compare-npz A B` checks two dumps bit for bit.
 0.4c: `--jit False` = compiler off; needs `PYTHONPATH=/data/tmp/ninjax362` (ninjax 3.6.2) + the AOT skip below.
 
 0.4b controls (must DIFFER from the seed-0 run, or the identity above proves nothing):
@@ -47,7 +49,13 @@ def main(argv=None):
                     help="0.4c: comma list of param-name substrings hashed after EVERY step")
     ap.add_argument("--noise-file", help="0.4c iii: .npz noise for the two samplers (made if absent)")
     ap.add_argument("--noise-seed", type=int, default=0, help="seed used only when making the file")
+    ap.add_argument("--dump-step", type=int, default=None,
+                    help="0.4d: 1-based train call whose intermediates are dumped (eager only)")
+    ap.add_argument("--dump", help="0.4d: .npz path for the intermediates")
+    ap.add_argument("--compare-npz", nargs=2, metavar=("A", "B"))
     a = ap.parse_args(argv)
+    if a.compare_npz:
+        return compare_npz(*a.compare_npz)
     if a.compare:
         return compare(*a.compare)
     sys.path.insert(0, str(pathlib.Path(a.src).resolve()))
@@ -81,6 +89,10 @@ def main(argv=None):
         from embodied.jax import outs as ejouts
         from experiments.brain_a.file_noise import FileNoise
         noise = FileNoise(a.noise_file, seed=a.noise_seed).install(ejouts)
+    cap = None
+    if a.dump_step:
+        assert a.jit == "False", "intermediates need --jit False (concrete arrays)"
+        cap = install_capture()
     agent = dv3main.make_agent(config)
     noise_at_init = noise.snapshot() if noise else None
 
@@ -112,6 +124,8 @@ def main(argv=None):
     for i in range(a.steps):
         data = internal.device_put({k: v.copy() for k, v in batch.items()}, agent.train_sharded)
         data["seed"] = agent._seeds(i + a.step_seed_offset, agent.train_mirrored)
+        if cap is not None:
+            cap["on"] = (i + 1 == a.dump_step)
         if a.disable_jit:
             with jax.disable_jit():
                 carry, _, mets = agent.train(carry, data)
@@ -122,6 +136,9 @@ def main(argv=None):
         trace.append(traced())
         if noise:
             draws.append(noise.snapshot())
+    if cap is not None:
+        np.savez(a.dump, **cap["arrays"])
+        print("DUMP", a.dump, "arrays", len(cap["arrays"]))
     # first step after which each traced param differs from its init (None = never moved)
     first_move = {k: next((i for i, h in enumerate(trace) if h[k] != trace[0][k]), None)
                   for k in trace[0]}
@@ -135,6 +152,62 @@ def main(argv=None):
     print("G1_PROBE", a.out, "n_params", len(params), "metric calls", len(mets_all))
     for k, v in first_move.items():
         print("FIRST_MOVE", k, v)
+    return 0
+
+
+def install_capture():
+    """0.4d: wrap `ninjax.grad` as seen by `embodied/jax/opt.py` (a module-attribute proxy; the
+    official file is not edited). On the armed call it records, as concrete eager arrays: every
+    gradient by param name (`grad/<name>`), the scaled loss (`loss/total_scaled`), and the agent
+    loss's aux `outs` — encoder tokens, the posterior features `repfeat` (deter/stoch/logit) and the
+    per-element losses (`outs/losses/<k>`). Not reached without editing the agent: the imagined
+    features and returns (inside `Agent.loss`, not returned)."""
+    import numpy as np
+    import jax
+    import ninjax
+    from embodied.jax import opt as ejopt
+    cap = {"on": False, "arrays": {}}
+
+    def flat(prefix, tree):
+        for path, leaf in jax.tree_util.tree_flatten_with_path(tree)[0]:
+            key = prefix + "/".join(str(getattr(p, "key", getattr(p, "idx", p))) for p in path)
+            cap["arrays"][key] = np.asarray(jax.device_get(leaf))
+
+    def grad(fn, modules, has_aux=False, **kw):
+        inner = ninjax.grad(fn, modules, has_aux=has_aux, **kw)
+
+        def run(*args, **kwargs):
+            out = inner(*args, **kwargs)
+            if cap["on"] and not ninjax.creating():
+                loss, params, grads, aux = out
+                cap["arrays"]["loss/total_scaled"] = np.asarray(jax.device_get(loss))
+                flat("grad/", grads)
+                if isinstance(aux, tuple) and len(aux) == 4 and isinstance(aux[2], dict):
+                    flat("outs/", aux[2])
+            return out
+        return run
+
+    class Proxy:
+        def __getattr__(self, k):
+            return grad if k == "grad" else getattr(ninjax, k)
+    ejopt.nj = Proxy()
+    return cap
+
+
+def compare_npz(pa, pb):
+    """0.4d: arrays equal bit for bit between two dumps; IDENTICAL iff same keys and all equal."""
+    import numpy as np
+    A, B = np.load(pa), np.load(pb)
+    keys = sorted(set(A.files) | set(B.files))
+    eq = sum(k in A.files and k in B.files and A[k].shape == B[k].shape
+             and A[k].tobytes() == B[k].tobytes() for k in keys)
+    groups = {}
+    for k in keys:
+        groups.setdefault(k.split("/")[0], []).append(k)
+    for g, ks in sorted(groups.items()):
+        ge = sum(k in A.files and k in B.files and A[k].tobytes() == B[k].tobytes() for k in ks)
+        print(f"  {g}: {ge}/{len(ks)} equal")
+    print(f"COMPARE_NPZ arrays_equal {eq}/{len(keys)} -> " + ("IDENTICAL" if eq == len(keys) else "DIFFER"))
     return 0
 
 

@@ -2012,3 +2012,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Schedule fixed: init 68+108 calls (5,440/5,472 values), then exactly 34 normal + 54 categorical calls (21,760/21,888 values) per train call; actor head moves at step 8.
 - Next: 0.4d intermediates dump, twice; G0 kernel when a Kaggle session frees.
 - Philosophy served: 4 (the port can only be judged equal if both sides eat the same noise; the control proves the file is what they eat).
+
+## 2026-11-17 04:48 · JACK · Next up 1 (MLX port 0.4d): one call's intermediates repeat bit for bit; the prior's gradient is zero at call 20
+- J8 e0/e1/e2 RUNNING (kaggle status 04:38, nothing to harvest); J3/J6/J10 wait on a Kaggle session; J7 waits on W1.04 → "Next up" 1.
+- `g1_probe --dump-step/--dump/--compare-npz`: ninjax proxy in opt.py records 57 grads by name, total loss, tokens, posterior deter/stoch/logit, 8 per-element losses (70 arrays).
+- Eager file-noise, 20 calls, dump call 20: r1 vs r2 IDENTICAL 70/70 (+183/183 params, 570/570 metrics; capture perturbs nothing vs 0.4c iii). Control noise s1: DIFFERS 10/70.
+- The 10 equal: dyn/rep losses at the free-nats floor (1.0 everywhere) → all 8 `dyn/prior*` grads exactly 0. Off the floor only at calls 1, 2, 9. A call-20 golden file cannot catch a wrong prior backward.
+- Next: 0.4d ii — dump calls 1, 2, 20 (or a structured batch) + assert no captured grad is all-zero unless listed; then G0.
+- Philosophy served: 4 (a test that could not have failed — a zero gradient compared equal — found before it became a gate).

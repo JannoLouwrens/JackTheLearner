@@ -288,3 +288,24 @@ noise files `/data/jack-logs/mlx/g1_noise_{r1,r2,c1}.*`, `noise_s{0,1}.npz` = 4M
 Next (0.4d): dump one step's intermediates (RSSM posterior/prior logits, imagined features, returns,
 the 8 losses, grads by name) as .npz from the same eager file-noise run, twice → identical; then G0
 (`g0_kernel.py`) at the first free Kaggle CPU session closes stage 0.
+
+**0.4d MEASURED 11-17 04:43 — one train call's intermediates, twice, on the box** (`g1_probe
+--dump-step 20 --dump X.npz`, `--compare-npz`; eager, ninjax 3.6.2, file noise; logs
+`/data/jack-logs/mlx/g1_dump_{r1,r2,c1,smoke}.*`). Capture = a proxy for `ninjax` as seen by
+`embodied/jax/opt.py` (module attribute swapped; no official file edited; listed difference) that, on
+the armed call, records every gradient by name (57), the scaled total loss, and the loss's aux
+`outs`: encoder tokens, posterior `repfeat` deter/stoch/logit, the 8 per-element losses (con dyn
+policy rep repval rew value vector) — 70 arrays, 5,859 values.
+- r1 vs r2 (noise s0): **IDENTICAL 70/70 arrays** and 183/183 params, 570/570 metrics. The capture
+  perturbs nothing: r1's params/metrics equal 0.4c iii's g1_noise_r1 183/183, 570/570.
+- Control c1 (noise s1 only): **DIFFERS 10/70** equal (and 10/183 params, 209/570 metrics).
+- **The 10 that stay equal are a hole, not luck:** at call 20 `loss/dyn` and `loss/rep` sit at the
+  free-nats floor (exactly 1.0 in all 80 cells) so **every `dyn/prior*` gradient is exactly 0** (8
+  arrays). Over 20 calls the dyn loss leaves the floor only at calls 2 (1.0064) and 9 (1.0005); call 1
+  (smoke) has prior grads up to 0.0151. Cause: the fixed batch is uniform noise, so the posterior has
+  nothing to say that the prior cannot. A golden file dumped at call 20 would pass an MLX port whose
+  prior backward is wrong.
+- Not reached without editing the agent: imagined features and λ-returns (local to `Agent.loss`).
+Next (0.4d ii): dump calls 1, 2 and 20 (prior active + actor head moved) — or a batch with
+structure so KL stays above 1 — and assert in the probe that no captured gradient is all-zero
+except ones named in a list; then G0 at the first free Kaggle CPU session.
