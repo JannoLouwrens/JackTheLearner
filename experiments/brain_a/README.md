@@ -219,3 +219,13 @@ differ are in its docstring. Logs `/data/jack-logs/mlx/official_debug_r{1,2}{,.l
 **Next: G0** (`g0_kernel.py`) at the first free Kaggle CPU session; then 0.4, the golden-file
 generator (≤ 60-line patch: file noise for the two samplers, direct `agent.train` on a stored batch,
 compiler off), run twice → G1.
+
+**0.4a MEASURED 11-17 02:58 — G1 pre-probe, on the box** (`experiments/brain_a/g1_probe.py`, logs
+`/data/jack-logs/mlx/g1_probe_r{1,2}.{json,log}`): the official agent built by `make_agent`
+(`defaults debug`, float32, seed 0, compiler AS-IS), a fixed numpy batch (B 8 × T 11), seeds via
+`agent._seeds(i)` exactly as `stream()`, 5 direct `agent.train()` calls, two separate processes:
+**all 183 params bit-identical (sha256), all 4×30 returned metrics identical.** So 0.2b's
+non-repeat is the loop, not the agent: G1 is reachable by calling train directly. NOT yet shown: a
+control that must differ (different per-step seed → different params), file noise for the two
+samplers, compiler off, intermediates. Next (0.4b): add the seed-changed control, then the
+file-noise patch + intermediate dumps on `debug`, twice → G1.
