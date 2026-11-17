@@ -1307,15 +1307,20 @@
         "detached:box_ppo-needs.log": 3340.95,
         "detached:detached.log": 2.47,
         "detached:full.log": 0.83,
+        "detached:g1_dump20_w0.log": 211.96,
+        "detached:g1_dump20_w0r2.log": 199.51,
         "detached:lane-guard-seat1": 0.02,
         "detached:lane-guard-seat2": 0.04,
-        "detached:launch_e0.log": 289.36,
-        "detached:launch_e1.log": 289.75,
-        "detached:launch_e2.log": 156.55,
+        "detached:launch_e0.log": 576.39,
+        "detached:launch_e1.log": 432.15,
+        "detached:launch_e2.log": 267.89,
         "detached:launch_f3.log": 619.17,
-        "detached:w104.log": 293.44
+        "detached:launch_kcpu_speed.log": 6.75,
+        "detached:launch_ppo-lp.log": 12.5,
+        "detached:launch_wm-latent.log": 97.67,
+        "detached:w104.log": 420.65
       },
-      "used_s": 6290.56
+      "used_s": 7486.93
     }
   },
   "last_child_s": {
