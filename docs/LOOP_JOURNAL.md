@@ -2296,3 +2296,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Stranger's memory: compass .79/.88, no compass .40/.47 — with the compass he reads the shared room. Coverage limits him: 15/60/360 lives = .31/.65/.93.
 - Follow-on rule first (`2a6ffa69`, worlds 720–724): turn-free spectrum key hit .845 vs turn search .932 but VOID — scrambled control .157 > .121; post-hoc cause: the look's mean alone recalls .31 (dropped: control .03, key .795).
 - Scar: `until pgrep -f X` matches the waiting shell's own command line and never ends; 10 min lost. INBOX line asks for a body-frame eye option. Philosophy 1, 3, 4.
+
+## 2026-11-17 23:37–23:50 UTC · JACK · J11 (the R = 1.55 m leak) — probe harvested VOID; instrument bug found; run 2 launched
+- `statue_leak_probe read` → VOID by its frozen rule: lives 51/54 replayed 1–2 decisions off the card under native_substep (life 64 itself matched: 9,000 dec, 36 meals). Rule kept, not argued.
+- Worse: the trace's "root" was static to 1e-11 for 9,000 decisions — `qpos[:3]` is the APPLE's freejoint (z 1.89), not his body. Fixed to `xpos[rover_bid]`, native_substep off as the card ran, relaunched detached (`e0781254`, → `_r2.json`).
+- Still readable from run 1: obj1 eaten at k = 49, 300, 551, 801… = the respawn period — he sits in contact with it the whole life.
+- c5 already harvested 23:08; card 10/16 worlds: the 2nd statue life (seed 612, life 111) also spawned 1.577 m with 36 meals — one grid cell just past R, systematic.
+- Scar: in jack_env the first freejoint is the apple; any body reading must use `rover_bid`.
+- Philosophy served: 4 (a VOID instrument was diagnosed and repaired, not explained around) and 5 (his world's floor is repaired before a learner is judged on it).
