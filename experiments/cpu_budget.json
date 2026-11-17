@@ -1296,13 +1296,13 @@
         "PG.5": 22.69,
         "PG.8": 15.81,
         "T2.08": 421.53,
-        "detached:box_ppo-needs.log": 1800.03,
-        "detached:launch_e0.log": 52.18,
-        "detached:launch_e1.log": 51.86,
-        "detached:launch_f3.log": 61.94,
-        "detached:w104.log": 52.66
+        "detached:box_ppo-needs.log": 3340.95,
+        "detached:launch_e0.log": 83.68,
+        "detached:launch_e1.log": 83.22,
+        "detached:launch_f3.log": 83.25,
+        "detached:w104.log": 84.94
       },
-      "used_s": 2625.14
+      "used_s": 4282.51
     }
   },
   "last_child_s": {

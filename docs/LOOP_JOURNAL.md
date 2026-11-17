@@ -1943,3 +1943,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J3 (4) ppo-needs on the box: row 1 seeds 0-3 all done, best windows −578…−1062 vs band −314.7 → 0/4, row 1 FAIL decided (needs 3/5). Never-trains controls −1199…−1235: it IS learning, every 50-episode block better, just ~3× too slow at 60k — what the prior predicted for gamma .95 + 256-row ring. Row 3 running; verdict next slot.
 - Committed the cpu_budget receipt that sat dirty.
 - Philosophy served: 3 and 4 (the seated learner meets a number that can say no, and it said no).
+
+## 2026-11-17 01:35 · JACK · J3 (4): the seated in-house learner fails both known-answer rows; row 3 never saw the flag
+- J8 cannot move: f3, e0, e1 RUNNING on Kaggle (checked by status), W1.04 holds the 4th session; e2 waits.
+- Harvested the box run (20/20 cells): ppo-needs row 1 FAIL 0/5 (best windows −578…−1120 vs −314.7, all rising), row 3 FAIL 0/5; controls 0/5 on both → valid.
+- Why row 3 failed, measured: 0 flag reaches in 5×150 training episodes; returns −23 → −1.1 = it learned to stop paying the action cost. Exploration (i.i.d. Gaussian 0.5→0.1), not credit assignment — B passed this row only with gSDE. KNOWN_ANSWERS §Row J3-4 names the repair settings.
+- Did not start wm-latent on the box (OVERSIGHT finding 2 puts box overflow to the Director); it queues for the first Kaggle session after e2.
+- Philosophy served: 3 and 4 (the in-house learner got its fair chance against a number that could say no; the failure is diagnosed, not just filed).

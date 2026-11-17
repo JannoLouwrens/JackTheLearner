@@ -31,6 +31,10 @@ Rules are in that file's docstring, committed before each run.
 | 4d | MountainCarContinuous-v0 | control lr 0, 10 per stack | 20,000 | VOID if > 3/20 reach 60 or learners-vs-ctrl Fisher p ≥ .001 | 1/20 ≥ 60; learners vs ctrl Fisher p 2.3e−10 | 20–29 | holds |
 | 4d | MountainCarContinuous-v0 | control lr 0, 10 per stack, on its distribution | 20,000 | VOID if > 3/20 reach 60 or learners-vs-ctrl Fisher p ≥ .001 | 1/20 ≥ 60 (pub seed 29 = 86.4; two more at 53.6, 50.4); Fisher p 3.7e−10 | 20–29 | holds |
 | J10-1 | Humanoid-v5 (Gymnasium 1.4.0, MuJoCo 3.17.0, defaults) | floor: random actions / zero actions, 100 episodes each, reset seeds 0–99 (rule `c4dfd21c`, `experiments/humanoid_floor.py`, box, 3 CPU-s) | ≤ 1,000 per episode | §4: random 110 ± 30 in 23.5 steps; zero 199 ± 3 in 40 steps — an EARLIER ON-BOX measurement, not a literature figure; accept random mean in [80, 140], zero in [196, 202] | random 109.9 (SD 30.3, SE 3.0) in 23.47 steps (16–58); zero 198.5 (SD 3.2) in 40.32 steps (40–41); zero beats random | 0–99 | **REPRODUCES** (the floor; the reference's ± is the per-episode SD) |
+| J3-4 | Pendulum-v1 | in-house `ppo-needs` (the seated tanh-AWR learner) through the one adapter (rule `3054fbe6`, `experiments/inhouse_rows.py`, box) | 60,000 (3× 20,000) | a 100-episode training window ≥ −314.7 on ≥ 3 of 5 | best windows −578.4 −937.8 −1005.4 −1062.0 −1119.8 — 0 of 5 | 0–4 | **FAIL** (set aside, ruling 24) |
+| J3-4 | Pendulum-v1 | control: same core, optimiser never stepped | 60,000 | reaches on ≤ 1 of 5 | −1215.5 −1199.1 −1227.4 −1214.6 −1234.7 — 0 of 5 | 0–4 | holds |
+| J3-4 | MountainCarContinuous-v0 | in-house `ppo-needs`, same rule | 150,000 (3× 50,000) | deterministic eval > 90 at 50k/100k/150k on ≥ 3 of 5 | best checkpoints −0.016 −0.004 −0.001 −0.016 −0.008 — 0 of 5; **0 goals in 750 training episodes** | 0–4 | **FAIL** (set aside) |
+| J3-4 | MountainCarContinuous-v0 | control, optimiser never stepped | 150,000 | reaches on ≤ 1 of 5 | −0.0004 −0.0012 −0.0001 −0.0009 −0.0006 — 0 of 5 | 0–4 | holds |
 
 ## Row 1 — the miss, and what it is not (11-16)
 
@@ -233,3 +237,30 @@ reported only until its definition is pinned from the paper text. Pins:
 DART v6.3.0 = `8090aaec`, pydart2 `113132ac`, TF 1.15.5 on Python 3.7 (uv),
 FCL 0.5.0 from source as the one automatic fallback if the image's FCL 0.7
 breaks DART 6.3.
+
+## Row J3-4 — the seated in-house learner (`ppo-needs`) misses both rows (11-17 01:30, box)
+
+Rule `3054fbe6` (committed before any cell), run on the box when all four Kaggle
+CPU sessions were held (log `/data/jack-logs/j3_inhouse/box_ppo-needs.log`,
+cells in `/data/jack-logs/j3_inhouse/cells/`). Both rows FAIL; both controls hold,
+so the rows are valid. Predicted in the rule's Prior line.
+
+- **Row 1 (Pendulum): learning, too slowly.** Every seed's three windows improve
+  monotonically (e.g. s0 −1254 → −968 → −578; s4 −1229 → −1146 → −1120); the
+  frozen twin stays at −1199…−1235. Best seed is 1.8× short of the band edge at
+  3× the published budget. Reads as rate: 0.25 updates/decision, batch 16 from a
+  256-row ring, γ 0.95 vs SAC's 1 update/step, batch 256, 1e6 replay, γ 0.99.
+- **Row 3 (sparse MountainCar): never sampled the reward.** Across 5 seeds × 150
+  training episodes the car reached the flag **0 times** (max training return
+  −0.98). Returns climb from ≈ −23 to ≈ −1.1: the learner correctly learned to
+  stop paying the action cost, the "do nothing" optimum. This is an exploration
+  failure before it is a credit-assignment one — i.i.d. Gaussian noise (std
+  0.5 → 0.1) does not produce the sustained push that reaches the flag; the
+  published recipe uses gSDE (state-dependent, temporally correlated), and
+  Brain B passed this row only with it (row 3b). γ 0.95 (~20-step horizon on a
+  999-step task) would bite next, but it was never reached.
+- **What would repair it (not run; a repaired arm returns under the same rule):**
+  temporally correlated exploration (gSDE or pink noise at action choice) for
+  row 3; replay/update ratio and γ for row 1. Those are the same settings the
+  record says separate it from SAC, i.e. a repaired `ppo-needs` converges
+  toward Brain B.
