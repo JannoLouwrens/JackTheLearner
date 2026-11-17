@@ -3562,3 +3562,94 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
+
+## 2026-11-17 06:50 UTC — Director, DAILY sitting: rulings
+
+**30. Brain B's first pilot is VOID, the negative inside it stands, and the
+next rule is written from the record and a learner-free floor card — never
+from the 35 runs.** The VOID came from two of our own rules disagreeing:
+ruling 22 lets a do-nothing body reach the cap in up to 1 of 200 lives, the
+pilot's floor clause allowed 1 crossing in 1,198 floor lives; a body born
+touching food is fed by contact. Nothing of J8 is re-run and no W or T is
+taken from it. What stays on every page that says VOID: brain B crossed 0
+times in 2,350 lives where the floor rate predicts 7.8, and ate less the
+more it learned. Two causes are separated and repaired in this order.
+(a) The statue fed by contact — a world rule (`spawn_clear`), repaired
+first because it needs no learner to verify. (b) The body charged for
+moving — the record's cure (`PUBLISHED_PRIORS.md` §13: ramp the cost with
+the dial; then pay for distance closed; then a longer discount), each as a
+5-seed reported arm. The next pilot (J11) fixes its W from a floor card of
+≥ 2,000 learner-free lives per floor arm measured BEFORE the rule, sizes its
+floor clause as a Poisson 95% bound on that card's rate, and runs on seeds
+401 and up. It chooses the setup the decisive test uses; it moves no seat.
+The decisive test's own rule is written after J11, before its first run.
+
+**31. The Kaggle CPU queue is ranked.** Four sessions. Order for a free
+session: any kernel under one hour; J11; J12; J3's in-house arms (one
+session); the MLX gate G0; J10's smoke; `W1.04`'s remaining seeds. `W1.04`
+yields between seeds when anything above it waits. A reported-only arm
+never holds a session that a ranked order waits for. Reason: on 11-16 two
+arms of an already-void pilot and a 15-hour repair held all four sessions
+while four orders waited and two slots could not steer.
+
+**32. The box, asked twice (11-16 12:10, auditor 11-17 finding 2).** The
+unit is the whole run, not the cell. Under 15 CPU-minutes: the box, nice
+19. 15 to 60 CPU-minutes: the box only when all four Kaggle sessions are
+held, one worker, nice 19, stated in the order's state line. Over 60
+CPU-minutes: Kaggle or it waits — the in-house arms (2.4 to 7 CPU-hours
+each) never run on the box again. The box serves paying customers (card
+line 6); "when Kaggle is full, use the box" is not a default.
+
+**33. Known-answer rows: one extension, written before the first seed; and
+row 4 is closed.** Rows 1, 2 and 4 each missed at 5 seeds and were
+re-registered at 15 against an unmoved band. Nothing was hidden and B's
+seat does not rest on the second looks (row 1's own arm was in band both
+times; row 3b is 5 of 5), but a retry the first rule did not name is a
+second look. From today every row's rule names its seeds and at most one
+extension before any seed runs; brain A's rows (J14) are written that way.
+Row 4 (the PPO reference): the published code itself gives 76.4 with 7 of
+60 collapses on this box against the store's 87.5 ± 4.2 at n = 10; ours
+72.6 against that code's 73.4 at 40 per arm. It is closed as "the reference
+does not reproduce its own stored number here; ours matches the reference
+code". Not re-registered at 100 per arm: three Kaggle CPU-hours for a row
+no seat rests on. It is reported as a miss of the stored number, not as a
+pass.
+
+**34. Simulator speed: the identical option is used now; the integrator is
+not switched yet.** `lazy_contact_audio=True` is field-for-field identical
+and is passed by every new run. `integrator="implicitfast"` is a world
+change (trajectories part at the first decision; injury deaths move) and
+would stale 22 certificates. J11 runs on the same integrator as J8 so the
+two pilots can be read side by side. The switch is ruled once, when J6's
+table is complete (Kaggle column, the one-native-call item), and before the
+decisive test's rule is written; if adopted, the world test card (J1) is
+re-run on it as its certificate.
+
+**35. `NE.01` is parked to stage 3, with a date.** Its two red gates are
+heat: 5 of 5 random deaths are hyperthermia, and the scripted forager died
+of heat on 1 of 3 seeds. Keeping warm is a stage-3 need under PLAN ("eat,
+drink, keep warm" on the chosen brain); stage 1's world for the brain test
+carries food only. S9 writes the `FAIL-DISPOSED` note. It is re-read at the
+first stage-3 sitting or on 2027-01-15, whichever comes first; the eight
+specs it blocks wait with it. This is a parking, not a pass.
+
+**36. The researcher's two answers and the reference's size.** §13
+(movement cost) is adopted as J11's prior. §14 (smell): our three smell
+kills tested the one configuration the record says does not learn (a
+two-point nose, no memory, 13k–52k decisions). No run now; when smell is
+next tested, in stage 3, it is §14's form — the same human nose re-encoded,
+a brain with memory, at least 500,000 decisions, a shuffled-nose control.
+The 1 m multi-point nose is not adopted as his body (END-FIT). The
+reference's cap: 6 KB per section stays; the whole-file cap of 70 KB is
+lifted, because a worker reads one section and thirteen sections cannot fit
+it. No older section is cut to make room.
+
+**37. The lab's eye probe: yes to the 128-ray row, with the forager gate.**
+At the entry rung a level row of 128 azimuths finds floor food .909 against
+.528 for today's 16 rays; a 16×16 grid does no better than 16 rays. J12
+builds `row128` as an option (default off). Ruling 23 barred a third
+hand-written forager on the OLD eye; it is lifted for the new eye only,
+because this is a different sense, not a re-tuned ruler: the same forager,
+the unmoved bar (at least 5 floor meals a life on at least 18 of 20 fresh
+seeds, shuffled twin must miss), frozen before the run, at d0 and at d = 1.
+`row128` against 16 rays under brain B waits until J11 shows B moves.
