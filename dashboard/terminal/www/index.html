@@ -104,7 +104,15 @@ button{font:inherit;color:inherit}
 .copyrow{display:flex;gap:8px;margin-bottom:4px}
 .copyrow .key{flex:1;min-width:0;height:46px;padding:0 6px;font-size:15px}
 .copyrow .key:disabled{opacity:.4}
-#stage{-webkit-touch-callout:none}
+@media (pointer:coarse){
+  /* let the phone's own selector work on the terminal: xterm sets
+     user-select:none, so a long press cannot select. Override it (touch only,
+     desktop keeps Shift-drag) so a long press selects real text with the OS
+     Copy/Share menu. */
+  #stage{-webkit-touch-callout:default}
+  .xterm,.xterm .xterm-screen,.xterm .xterm-rows,.xterm .xterm-rows>div,.xterm .xterm-rows span{-webkit-user-select:text!important;user-select:text!important;-webkit-touch-callout:default!important}
+}
+@media (pointer:fine){#stage{-webkit-touch-callout:none}}
 #toast{cursor:pointer}
 .crow{display:flex;align-items:center;gap:8px;margin-top:8px}
 .crow .hint{flex:1;min-width:0;font-size:13px;line-height:1.3;color:var(--ink2)}
@@ -235,7 +243,7 @@ html:not(.app) #menu [data-m="dash"]{display:none}
       <h2>How to use this</h2>
       <ul class="tips">
         <li><b>Your chat</b><span>Type <code>jackchat</code> and press return, or choose “Open my Claude chat” in the menu. It keeps running when you close this page.</span></li>
-        <li><b>Copy</b><span>Press and hold the screen, or tap the copy key, for a view of everything as plain text, including what has scrolled away. Select there and copy. On a computer, drag across text: it is copied when you let go.</span></li>
+        <li><b>Copy</b><span>Press and hold the screen to select text with your phone's own selector, then use its Copy. Tap a link to open it. The <b>Copy</b> button up top shows everything as plain text, including what scrolled away. On a computer, select text and press Ctrl/⌘-C.</span></li>
         <li><b>Windows</b><span>The tabs at the top are your windows. Tap one to switch, + for another, \u00d7 to close the one you are in, or swipe the screen sideways. They all keep running on the server.</span></li>
         <li><b>Write</b><span>On a phone, tap the screen or the pencil for a message box where suggestions and autocorrect work. Send with nothing in it is the return key. The keyboard key types straight into the terminal instead.</span></li>
         <li><b>Speak</b><span>Tap the microphone. Your words appear in a box you can correct, then Send puts them in the terminal.</span></li>
@@ -737,14 +745,16 @@ row.addEventListener("scroll",edges,{passive:true});window.addEventListener("res
   st.addEventListener("touchstart",function(e){if(raf){cancelAnimationFrame(raf);raf=null}if(e.touches.length===1){y0=ys=e.touches[0].clientY;xs=e.touches[0].clientX;dxs=0;side=false;t0=ts=e.timeStamp;acc=0;vel=0;far=0;
       lpFired=false;clearTimeout(lp);var cy=ys,tg=e.target;
       lp=setTimeout(function(){if(y0===null||far>=8||Math.abs(dxs)>=8||!(tg.closest&&tg.closest("#term")))return;
-        lpFired=true;if(navigator.vibrate){try{navigator.vibrate(8)}catch(_){}}openReader(lineAt(cy))},520)}},{passive:true,capture:true});
+        /* a still hold hands the touch to the phone's own text selection; from
+           here we never scroll or preventDefault, so the OS selector takes it */
+        lpFired=true;if(navigator.vibrate){try{navigator.vibrate(6)}catch(_){}}},520)}},{passive:true,capture:true});
   st.addEventListener("touchcancel",function(){clearTimeout(lp);lpFired=false;y0=null},{passive:true,capture:true});
   st.addEventListener("touchmove",function(e){
     if(y0===null||e.touches.length!==1)return;
     var y=e.touches[0].clientY,dy=y-y0,dt=Math.max(1,e.timeStamp-t0);y0=y;t0=e.timeStamp;
     dxs=e.touches[0].clientX-xs;
     if(Math.abs(y-ys)>7||Math.abs(dxs)>7)clearTimeout(lp);
-    if(lpFired){if(e.cancelable)e.preventDefault();e.stopPropagation();return}
+    if(lpFired||(window.getSelection&&String(window.getSelection())))return;   /* selecting: let the phone handle the touch, do not scroll */
     if(!side&&far<12&&Math.abs(dxs)>24&&Math.abs(dxs)>2*Math.abs(y-ys))side=true;
     if(side){if(e.cancelable)e.preventDefault();e.stopPropagation();return}
     far=Math.max(far,Math.abs(y-ys));if(far<6)return;
@@ -753,9 +763,9 @@ row.addEventListener("scroll",edges,{passive:true});window.addEventListener("res
   },{passive:false,capture:true});
   st.addEventListener("touchend",function(e){
     clearTimeout(lp);
-    if(lpFired){lpFired=false;side=false;y0=null;if(e.cancelable)e.preventDefault();e.stopPropagation();return}
+    if(lpFired){lpFired=false;side=false;y0=null;return}   /* end of a selection hold: leave the selection and its menu alone */
     if(side){side=false;y0=null;if(Math.abs(dxs)>70)input("\x02"+(dxs<0?"n":"p"));if(e.cancelable)e.preventDefault();e.stopPropagation();return}
-    if(y0!==null&&far<6&&e.timeStamp-ts<450&&coarse&&!LS.get(DIRECT)&&$("#compose").hidden&&e.target.closest("#term")){
+    if(y0!==null&&far<6&&e.timeStamp-ts<450&&coarse&&!LS.get(DIRECT)&&$("#compose").hidden&&e.target.closest("#term")&&!(window.getSelection&&String(window.getSelection()))){
       if(e.cancelable)e.preventDefault();e.stopPropagation();y0=null;openCompose(false);return}
     if(y0!==null&&e.timeStamp-t0<80&&Math.abs(vel)>0.25)raf=requestAnimationFrame(glide);y0=null},{passive:false,capture:true});
 })();

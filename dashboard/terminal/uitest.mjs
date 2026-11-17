@@ -465,18 +465,25 @@ for (const p of PROFILES) {
     if (p.touch) await page.tap('#copy [data-close]'); else await page.click('#copy [data-close]');
     await sleep(250);
     if (p.touch && engineName === 'chromium') {
-      // press and hold on a line: the copy view opens with that line selected, and no message box
+      // press and hold hands off to the phone's own selector: no copy box, no message box,
+      // and the terminal text is natively selectable (user-select:text, a range selects)
       const cdp3 = await ctx.newCDPSession(page);
       const pos = await page.evaluate((mk) => { const t = window.jackTerm, b = t.buffer.active; let row = -1; for (let i = 0; i < t.rows; i++) { const l = b.getLine(b.viewportY + i); if (l && l.translateToString(true).trim() === 'END-' + mk) row = i; } const r = document.querySelector('#term').getBoundingClientRect(); return { row, x: Math.round(r.left + 90), y: Math.round(r.top + (row + 0.5) * (r.height / t.rows)) }; }, mark);
       await sleep(600);
       await cdp3.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: pos.x, y: pos.y }] });
-      await sleep(800);
+      await sleep(800);   // past the long-press threshold
       await cdp3.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-      const lpOpen = await page.waitForSelector('#copy:not([hidden])', { timeout: 3000 }).then(() => true, () => false);
-      await sleep(500);
-      const lp = await page.evaluate(() => ({ sel: String(getSelection()), compose: !document.querySelector('#compose').hidden }));
-      check(C, 'Press and hold on a line opens the copy view with that line selected, and no message box', pos.row >= 0 && lpOpen && lp.sel === `END-${mark}` && !lp.compose, JSON.stringify({ row: pos.row, lpOpen, ...lp }));
-      await sleep(500); await page.tap('#copy [data-close]'); await sleep(250);
+      await sleep(400);
+      const lp = await page.evaluate((mk) => {
+        const box = !document.querySelector('#copy').hidden, compose = !document.querySelector('#compose').hidden;
+        const rows = document.querySelector('.xterm-rows');
+        const cs = rows ? getComputedStyle(rows) : null, us = cs ? (cs.webkitUserSelect || cs.userSelect) : '';
+        let sel = '';
+        try { const w = document.createTreeWalker(rows, NodeFilter.SHOW_TEXT); let node = null; while (w.nextNode()) { if (w.currentNode.nodeValue.includes('END-' + mk)) { node = w.currentNode; break; } } if (node) { const rng = document.createRange(); rng.selectNodeContents(node); const s = getSelection(); s.removeAllRanges(); s.addRange(rng); sel = String(s); } } catch (e) {}
+        return { box, compose, us, sel };
+      }, mark);
+      check(C, 'Press and hold hands off to the phone selector: no copy box, no message box, terminal text selectable', pos.row >= 0 && !lp.box && !lp.compose && /text/.test(lp.us) && lp.sel.includes(`END-${mark}`), JSON.stringify(lp));
+      await page.evaluate(() => { try { getSelection().removeAllRanges(); } catch (e) {} }); await sleep(250);
     }
     if (!p.touch) {
       // on a computer: drag across a line, and it is on the clipboard when the button is released
