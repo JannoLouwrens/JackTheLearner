@@ -1963,3 +1963,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `experiments/brain_a/g0_kernel.py`: one Kaggle CPU kernel, PyPI mlx[cpu]==0.32.4: smoke, then spike 1m and 12m × compiled/eager, each its own process and timeout; verdict = the report's G0 exactly (12m compiled cold first step < 600 s AND peak < 8 GB, finite). Verdict function checked on PASS / TIMEOUT / slow-compile dicts. Not launched — no free session.
 - 0.2b (official debug preset on a dummy world) is not in it: needs a driver wrapper; next.
 - Philosophy served: 3 and 7 (A's Mac route gets a gate that can say no before any port code is written).
+
+## 2026-11-17 02:10 · JACK · J8: all 35 pilot runs in, reading VOID; the last exploration arm launched
+- f3 landed 01:51 and freed a Kaggle CPU session → launched e2 (pink-noise/white-noise exploration arm, reported only) 02:07.
+- Harvested f3 (noop/held8/blr0 seed 305): noop_s305 crossed the sustained mark, the third do-nothing crossing, again 36 contact meals after being born touching food.
+- `pilot_b_report --write` at 35/35: VOID by the frozen rule (floor 5/15 runs cross vs ≤ 1); B 0 sustained in 2,350 lives; harness #2 paid: B not told apart from its never-updated twin (p 0.201).
+- Next pilot needs W ≥ 2 or a spawn rule that never starts him on food, plus the cost curriculum. J8 now only harvests e0–e2.
+- Philosophy served: 4 (the rule was frozen before the runs and read as written; a floor that can pass by luck voids the test instead of flattering it).

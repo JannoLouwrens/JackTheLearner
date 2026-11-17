@@ -83,11 +83,10 @@ exploration is the right default for the decisive test.
 No seat moves on a pilot; it fixes W and T for the decisive test.
 serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · philosophy 1, 4.
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
-state: (1)-(3) DONE `6f197f94`; prereg FROZEN `f0dc9fd7` (mark sustained, W 1, T 300k, 35 runs); harness #4 #5 #7 PASS, #8 death/cap half PASS, fixed-point half RULE `79e465bf` (~3.3 CPU-h → a Kaggle CPU kernel later); #2 at harvest from blr0; #6 #9 not payable. (6) REGISTERED `da8bc163` (e0-e2).
-state: B arm COMPLETE (k4 21:29): **0 sustained in 2,350 lives**, all energy deaths; late meals/life ≤ 0.41 in 20/20 vs blr0 (same net, never updated) 0.61/1.50 and held8 1.58–1.71 — learning made him eat less (fell 18/20), unfed life lengthened 20/20 (lie-still). PILOT_B.md §Seen at k4. 28/35 in.
-state: floor gate FAILED at f2 (23:25): 4 floor runs cross W 1 (noop_s302, noop_s304 [36 meals again, born on food], held8_s304, blr0_s304) vs ≤ 1 → **pilot VOID, decided** (f3 only adds). 4 in 1,198 floor lives (0.0033/life); B 0 in 2,350 (7.8 expected). PILOT_B.md §Seen at f2. Decisive test needs W ≥ 2 (chance ~0.1%/run vs ~28% at W 1).
-state: e1's first kernel died at import in 2 min (no `pink` on Kaggle; 0 lives, 4/4 cells) → pinned pink-noise-rl==2.0.1 `85838831`, e1 RELAUNCHED 23:38 (jack-cpu-1794872304). In flight: f3 (21:22), W1.04, e0 (21:37), e1.
-state: next: if e1.json shows cells with lives (not `pink` errors), it is good; when a session frees, launch e2 (`scripts/launch_detached.sh /data/jack-logs/pilot_b/launch_e2.log /data/venvs/jack-std/bin/python -m experiments.pilot_b kernel --name e2`); at 35/35 `$PY -m experiments.pilot_b_report --write` → reading VOID, commit, order done.
+state: (1)-(3) DONE `6f197f94`; prereg FROZEN `f0dc9fd7` (sustained, W 1, T 300k, 35 runs); harness #4 #5 #7 PASS, #8 half PASS, fixed-point half RULE `79e465bf`; #2 paid at 35/35 (B vs lr-0 twin p 0.201, NOT told apart); #6 #9 not payable.
+state: **35/35 IN, READING VOID** (f3 harvested 11-17 02:10; `pilot_b_report --write` → PILOT_B.md §Results + §Seen at f3): B 0 sustained in 2,350 lives; floor 5 of 15 runs cross W 1 vs ≤ 1 — noop_s305 the third do-nothing crossing, same 36 contact meals born on food. No W/T fixed; next pilot needs W ≥ 2 or a no-food-at-spawn rule, plus the cost curriculum.
+state: (6) e2 LAUNCHED 02:07 (jack-cpu-1794881266, `launch_e2.log`); e0 (21:37), e1 (23:38, pink pinned) RUNNING. Sessions: e0 e1 e2 W1.04 = all 4.
+state: next: harvest e0/e1/e2 as each `/data/jack-logs/pilot_b/eN.json` lands (check e1 cells have lives, not `pink` errors), re-run `$PY -m experiments.pilot_b_report --write` (it re-inserts §Results; keep §Seen sections above it), commit → order DONE. Harvest only; ≤ 5 min a slot.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
