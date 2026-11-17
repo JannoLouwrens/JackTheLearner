@@ -2285,3 +2285,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The partial floor card's only do-nothing sustained life (seed 601, life 64, 36 meals, both noop arms) was born 1.577 m from food — past R. A statue fed is a world fault (cause a), learner-free, so it is repaired before the rule, not explained in it.
 - Foods are free bodies ("where eating shoves them"); R was measured on 250-decision lives, the card's lives run 9,000. `experiments/statue_leak_probe.py` (`d6ca4615`) replays the exact cell (native_substep, identical world) to life 64, self-checking each life vs c0.json (life 0 matched: 2,836 decisions, 0 meals), and logs root + food xy through life 64. Detached ~45 min; next slot harvests.
 - Philosophy served: 4 (the floor must be clean before a learner is judged against it) and 5 (his world is part of what makes him).
+
+## 2026-11-17 22:37–22:50 UTC · JACK · J11 (the R = 1.55 m leak) — probe at life 16/64, c4..c7 RUNNING on Kaggle (22:40, by numeric slug `jack-cpu-<id>`; `jack-cpu-c4` is a 403, not a lost kernel)
+- The statue-leak probe finishes ~23:20, after this slot. Wrote its reading rule BEFORE the trace exists (`0fa3d7f0`): at the first meal, body travel ≥ 2× the eaten food's travel = slide (R too short), the reverse = shove (a food came to him), else both; any card mismatch = VOID. Planted test 4/4 PASS.
+- Next slot: `statue_leak_probe read` → the R fix it names, before the rule (3).
+- Philosophy served: 4 (the reading is fixed before the data, so the floor's repair cannot be fitted to it).
