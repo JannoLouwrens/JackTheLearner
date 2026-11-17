@@ -264,3 +264,32 @@ so the rows are valid. Predicted in the rule's Prior line.
   row 3; replay/update ratio and γ for row 1. Those are the same settings the
   record says separate it from SAC, i.e. a repaired `ppo-needs` converges
   toward Brain B.
+
+## Row J3-4b — `wm-latent` and `ppo-lp` miss both rows; wm-latent's row 1 is a near-miss (11-17, Kaggle CPU)
+
+Rule `3054fbe6`, unchanged. Kernels jack-cpu-1794892152 (wm-latent) and
+jack-cpu-1794896687 (ppo-lp); results `/data/jack-logs/j3_inhouse/{wm-latent,ppo-lp}.json`.
+Both controls reach 0/5 on both rows, so all four readings are valid FAILs.
+
+| arm | row 1 best 100-ep window per seed (band edge −314.7) | reached | row 3 flag reaches in training (5 × 150 eps) | reached |
+|---|---|---|---|---|
+| wm-latent | −396.7, −321.0, −397.2, −349.2, −358.0 | 0/5 | 0 | 0/5 |
+| ppo-lp | −880.6, −867.2, −1058.8, −960.3, −823.8 | 0/5 | 0 | 0/5 |
+| controls (both) | −1194…−1254 | 0/5 | 0 | 0/5 |
+
+- **wm-latent row 1 learns; the 3× budget is the binding clause.** Its last 10
+  training episodes average −231…−335 on all 5 seeds (in or at the band), but no
+  aligned 100-episode window reaches −314.7 (best s1 −321.0, 6.3 short). The rule
+  names no extension, so this is a miss (ruling 33). Cost: ~1,190 CPU-s a seed.
+- **ppo-lp row 1 learns slowly** (first 10 eps ≈ −1,240 → last 10 −366…−958).
+- **Row 3, both arms: the reward is never sampled** — 0 flag reaches in 1,500
+  training episodes per arm, same as ppo-needs.
+- **Correction to Row J3-4's reading.** The rise of row 3 training returns from
+  ≈ −22 to ≈ −1.3 is shared by the NEVER-TRAINED controls (ctrl first 10 −22.0,
+  last 10 −1.3 on every seed, every arm). It is the exploration-noise schedule
+  shrinking the action, not learning. "The learner learned to stop paying the
+  action cost" (J3-4, ppo-needs) is therefore not evidenced by these data; the
+  exploration failure stands.
+- Set aside with numbers (ruling 24). A repaired arm returns under this rule:
+  row 3 needs temporally correlated exploration (gSDE / pink); wm-latent row 1
+  needs only to be ~2× faster in sample terms.

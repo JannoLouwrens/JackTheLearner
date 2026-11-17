@@ -14,6 +14,22 @@ columns are comparable to each other — not to a learner's decisions/s
 CPU-s = this process + reaped children (vec workers are closed before reading).
 Identity is NOT re-proven here (the box tests own that); this is speed only.
 
+RESULT — Kaggle CPU column (kernel jack-cpu-1794897525, 11-17 06:44, mujoco
+3.17.0, python 3.13, 4 cpus, T=3000 decisions each, `/data/jack-logs/j6/kcpu_speed.json`):
+  config                    dec/CPU-s   x shipped   (box T=40 smoke, x)
+  shipped                      72.7       1.00
+  lazy_contact_audio           88.0       1.21      (1.27)
+  implicitfast (WORLD CHANGE)  98.6       1.36      (1.60)
+  lazy + implicitfast         124.1       1.71      (2.44)
+  multiray_vision              72.5       1.00      (not a speed lever)
+  vec4 shipped                145.3 wall  41.6/CPU-s (incl. worker start-up)
+  vec4 lazy + implicitfast    263.4 wall  77.9/CPU-s (incl. worker start-up)
+  Kaggle's shipped core is ~1.4-1.8x the box's per CPU-s; the levers' ratios
+  are smaller there (1.71x vs 2.44x at T=40 on the box; T=3000 is the
+  sturdier figure). One Kaggle kernel, 4 envs, lazy+implicitfast: 263
+  decisions/s wall -> 1M decisions ~1.05 h; shipped vec4 ~1.9 h; shipped
+  single ~3.8 h. Item (2b) (40 sub-steps in one native call) not measured.
+
 Usage: $PY -m experiments.sim_speed_kcpu box [T]     # local, small T
        $PY -m experiments.sim_speed_kcpu kernel      # one Kaggle CPU kernel
 """

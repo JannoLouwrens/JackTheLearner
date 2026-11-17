@@ -1311,10 +1311,10 @@
         "detached:g1_dump20_w0r2.log": 199.51,
         "detached:lane-guard-seat1": 0.02,
         "detached:lane-guard-seat2": 0.04,
-        "detached:launch_c0.log": 53.44,
-        "detached:launch_c1.log": 53.6,
-        "detached:launch_c2.log": 21.82,
-        "detached:launch_c3.log": 11.23,
+        "detached:launch_c0.log": 64.0,
+        "detached:launch_c1.log": 64.5,
+        "detached:launch_c2.log": 32.52,
+        "detached:launch_c3.log": 21.73,
         "detached:launch_e0.log": 576.39,
         "detached:launch_e1.log": 432.15,
         "detached:launch_e2.log": 267.89,
@@ -1325,7 +1325,7 @@
         "detached:launch_wm-latent.log": 254.25,
         "detached:w104.log": 522.5
       },
-      "used_s": 8389.04
+      "used_s": 8431.7
     }
   },
   "last_child_s": {
