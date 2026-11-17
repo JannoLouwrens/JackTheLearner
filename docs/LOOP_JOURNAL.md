@@ -2051,3 +2051,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `port_gate.py`: each tensor vs its own norm (dyn/ 1e-3, else 1e-4, cos ≥ 0.9999). Selftest 8/8 planted verdicts on both files; official-warmup run vs golden FAILS 931/1,140.
 - Open: per-loss-term grads (needs Agent.loss opened); tolerance on ~1e-8 tensors uncalibrated until a real MLX run. Next: G0 on Kaggle CPU.
 - Philosophy served: 4 (a parity gate that could not have failed on the actor's backward now fails on it, proven by planted cases).
+
+## 2026-11-17 06:32 · JACK · J8 DONE (e1/e2 harvested); J3 ppo-lp and J6 Kaggle speed column launched
+- J8 (6): e1 (pink s301–304) and e2 (white s305, pink s305) landed 06:17–06:19, rc 0, 295k pink draws per pink cell. Pink 0 sustained in 602 lives, white 0 in 684 (5/5); pink meals first→last 20 fell 5/5, unfed life 272–285 → 476–498 s 5/5. Last-50k meals/1k: pink 0.074, white 0.118, gSDE 0.100 vs untrained twin 0.374. No exploration scheme stops the lie-still slide; gSDE stays default. PILOT_B §Seen at e1/e2; order DONE, reading VOID.
+- J3 (4): `inhouse_rows kernel ppo-lp` → jack-cpu-1794896687 (wm-latent still RUNNING). First launch died: $PY unset in the shell (log kept as launch_ppo-lp_nopy.log).
+- J6: new `experiments/sim_speed_kcpu.py` (5 options + vec4, J8's world). Box smoke T=40: 53.1 / lazy 67.5 / implicitfast 85.0 / both 129.5 dec/CPU-s. Kaggle kernel 1 died at pip (mujoco 3.2.3 no py3.13 wheel) → pinned 3.17.0, ratio comparison; jack-cpu-1794896901 RUNNING.
+- Sessions now: W1.04, wm-latent, ppo-lp, J6 speed = 4.
+- Philosophy served: 4 (a raced default answered on all its seeds, reported without moving a seat) and 5 (the simulator's speed priced on the free compute that will run him).
