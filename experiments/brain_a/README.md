@@ -164,3 +164,28 @@ Two traps measured (each re-checked every run, so a fixed MLX flips them):
 **Next: 0.2** (one Kaggle CPU session): PyPI `mlx[cpu]==0.32.4` + official `dreamerv3@e01491f` (JAX
 CPU), `debug` preset 200 steps on a dummy 74-in/8-out world, losses + versions logged; run
 `mlx_smoke.py` there too (the PyPI binary's traps may differ).
+
+**0.3 server half MEASURED 11-17 01:26** — `mlx_spike.py --size 1m` (shape-faithful dummy of the
+official train step, random weights: 64-step observe pass + 15-step imagination from 1,024 starts,
+both unrolled in Python, full gradients + clipped LaProp-like update inside the step; settings that
+differ from the official step listed in its docstring). **647,705 trainable parameters = the
+contract's `size1m` count exactly** (shapes right). One core (`taskset -c 0`), nice 19, conda-forge
+mlx 0.32.4:
+
+| mode | first step | steady step (median) | peak MLX mem | max RSS |
+|---|---|---|---|---|
+| eager | 2.33 s | 2.26 s | 408 MB | 560 MB |
+| `mx.compile`, cold JIT cache | **37.1 s** | 2.34 s | 341 MB | 537 MB |
+| `mx.compile`, warm cache | 2.85 s | 2.33 s | 403 MB | 544 MB |
+
+- Compile of the FULL unrolled step is 37 s cold, of which ~0.5 s is tracing and the rest MLX's
+  one-time g++ build of fused kernels (cached under `$TMPDIR/mlx`). G0's size1m half: 37 s ≪ 10 min,
+  0.34 GB ≪ 8 GB — no per-step fallback needed at this size.
+- Compiled loss equals eager to 7 significant digits (−24786.33 vs −24786.32 at step 0).
+- On CPU `mx.compile` buys **no speed** at size1m (2.34 vs 2.26 s): the step is not op-overhead bound.
+- Not measured here (the report gives it to Kaggle, and it would need ~16× the activations of a box
+  that has ~1.5 GB to spare): **`size12m`, which is what G0 actually decides on.** G0 stays OPEN.
+
+**Next: 0.2 + 0.3 Kaggle half** in one Kaggle CPU session: PyPI `mlx[cpu]==0.32.4`, `mlx_smoke.py`,
+`mlx_spike.py --size 1m` and `--size 12m` (compiled and eager), plus the official `debug` preset 200
+steps → G0 decided.

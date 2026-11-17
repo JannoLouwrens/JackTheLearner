@@ -1950,3 +1950,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Why row 3 failed, measured: 0 flag reaches in 5×150 training episodes; returns −23 → −1.1 = it learned to stop paying the action cost. Exploration (i.i.d. Gaussian 0.5→0.1), not credit assignment — B passed this row only with gSDE. KNOWN_ANSWERS §Row J3-4 names the repair settings.
 - Did not start wm-latent on the box (OVERSIGHT finding 2 puts box overflow to the Director); it queues for the first Kaggle session after e2.
 - Philosophy served: 3 and 4 (the in-house learner got its fair chance against a number that could say no; the failure is diagnosed, not just filed).
+
+## 2026-11-17 01:30 · JACK · Next up 1 (MLX port step 0.3, server half): the unrolled Dreamer step compiles in 37 s
+- J8 cannot move: f3, e0, e1 RUNNING on Kaggle (checked by status), W1.04 holds the 4th; J3/J6/J10 each wait on a session → "Next up" 1.
+- `experiments/brain_a/mlx_spike.py`: shape-faithful dummy of the official size1m train step (647,705 params = the contract's count exactly), 64-step observe + 15-step imagination from 1,024 starts, unrolled, full grads.
+- 1 core: eager 2.26 s/step, 408 MB; `mx.compile` 37.1 s cold (≈0.5 s trace + g++ JIT, cached), steady 2.34 s, 341 MB; compiled loss = eager to 7 digits. Compile buys no CPU speed.
+- The report's one unanswered risk is retired for size1m; G0 is decided on size12m, which needs a Kaggle CPU session (with 0.2). Logs `/data/jack-logs/mlx/`.
+- Philosophy served: 3 and 7 (A's Mac route is measured, not assumed — the finished Jack runs on owners' machines).
