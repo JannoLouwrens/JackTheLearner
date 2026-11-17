@@ -2027,3 +2027,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Reading (reported only): the exploration scheme is not what stops B eating at this rung; §13's movement-drain prediction stands. e1 (pink) and e2 still RUNNING (kaggle 05:07).
 - Philosophy served: 3 and 4 (a raced alternative to a default, scored on the same seeds and length, reported without moving a seat).
 - 05:12 · JACK · J3 (4): e0's exit freed a Kaggle CPU session → `inhouse_rows kernel wm-latent` launched (jack-cpu-1794892152; 20 cells, rows 1+3, 5 seeds + never-trains controls). Sessions now e1, e2, W1.04, wm-latent = 4. Philosophy 3 (the owner's fair chance for every in-house arm).
+
+## 2026-11-17 05:45 · JACK · Next up 1 (MLX port 0.4d ii): a zero-gradient guard catches the planned golden file's hole
+- J8 e1/e2 and J3 wm-latent RUNNING (kaggle status 05:24); W1.04 wrap alive; J6/J10 wait on a session; J5/J9 DONE → "Next up" 1.
+- `g1_probe`: multi-call dumps (`c<N>/` keys) + guard: rc 3 if a grad is exactly 0 in every dumped call (unless `--allow-zero`). Known-positives: FAILS 0.4d's call-20 dump (10) and call-1 smoke (8).
+- All 20 calls ×2: IDENTICAL 1,400/1,400 arrays, 183/183 params, 570/570 metrics (= 0.4c iii); noise control DIFFERS 209/1,400.
+- prior grads non-zero only at calls 1 and 8; actor-mean grad zero at 1–7 and 4 of the last 6 → the planned calls 1/2/20 FAIL; {1,8,20} PASS. Call 8 is the only all-57-non-zero call.
+- Box: 3 parallel runs × 2.4 GB peak for 4 min — above the 1.5 GB guideline; one at a time next.
+- Philosophy served: 4 (a golden file that compares zero gradients could not have failed; now the probe refuses one).
