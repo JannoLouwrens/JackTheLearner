@@ -2273,3 +2273,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `PG.6` (playground eyes, recorded PASS on code 306308f0, now 849884a6) re-run launched detached at nice 19 — too long for regate's cpu<10min, killed at the 20-min ceiling when tried in-session 11-15. No result yet; next slot harvests. It gates `PG.9`.
 - Scar: `PY` set in one Bash call does not carry to the next — an unset `$PY -m …` prints only "-m: command not found" to stderr, and `2>/dev/null` hides it as an empty result.
 - Philosophy served: 4 (a certificate about older code is re-tested, not trusted). Small slot, small step.
+
+## 2026-11-17 22:10–22:55 UTC · JACK · Next-up 7 (the dial's success gate) — every order waits (c4..c7 RUNNING on Kaggle 22:10)
+- Built the record's largest-effect staging method from its published code, not a paraphrase: Avalon's `CurriculumWrapper` (godot_gym.py L609-635) + generator draw (world_generator.py L524/L561) @1c8f9fec → `experiments/dial_curriculum.py` (`d9caa5eb`). Each life a new world at d ~ U[0.75, ceiling]; ceiling ±0.01 on pilot_b's `sustained`; uniform arm = Avalon's no-curriculum contrast. Every difference listed (lo 0.75 by ruling 22, clipping at lo, one worker, no buffer lag).
+- test_dial_curriculum PASS (313 CPU-s): ceilings equal a verbatim transcription of Avalon over 20,000 lives (sign-flip control differs); planted always-success climbs .75→1.0 with each rebuilt world's foods/meal/move-cost matching its draw, always-failure control holds .75; a rebuilt world steps identically to a fresh one for 3,000 decisions incl. deaths (seed+1 differs). 44 ms a rebuild.
+- Scar: W0 seeds `RandomState(seed*104729+7)` — any world seed ≥ 41,010 raises; rebuilt worlds draw from [20k, 40k).
+- Harvested last slot's PG.6: PASS on current code (537 s), no longer stale; PG.9 and its dependents un-gated.
+- Philosophy served: 3 (the curriculum is now a raceable arm built from the published design, not assumed) and 5 (his world can teach in stages). Nothing run under a learner — it waits for J11 to say B moves.
