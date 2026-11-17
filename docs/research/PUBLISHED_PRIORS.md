@@ -13,16 +13,16 @@
 
 **Already known**
 - One Dreamer configuration learned 150+ tasks in 8 domains from scratch, incl. Minecraft diamonds from image plus health/hunger scalars (DreamerV3, Nature 2025). DayDreamer learned on real robots in 1–8 h (~57k–72k decisions, inf) where SAC, Rainbow and PPO failed.
-- Replay learners collect food on ray/lidar tasks in ~60k–170k decisions (Banana DQN ~138k, community result; lidar Goal SAC/TD3 ~100k). PPO needs 0.8–2M on the same tasks. Sparse or homeostatic versions: 2–50M and more.
-- At 25–50k steps Crafter agents eat in 2–9% of episodes; at 40–50k steps Animal-AI agents sit inside the random range. **40,000 decisions is below every published foraging budget, whatever the design.**
-- Avalon (3-D survival): with a curriculum 0.716, without 0.001: larger than any gap between architectures in the record.
-- Tiny or no replay: SAC/PPO score 0.04–0.07 of normal across 50 tasks. White action noise vs correlated noise on the closest sparse task with an action cost (MountainCarContinuous, PPO): 0 vs ~94.
+- Replay learners collect food on ray/lidar tasks in ~60k–170k decisions (Banana DQN ~138k, community result; lidar Goal SAC/TD3 ~100k). PPO: 0.8–2M, same tasks. Sparse or homeostatic versions: 2–50M+.
+- At 25–50k steps Crafter agents eat in 2–9% of episodes; at 40–50k steps Animal-AI agents sit in the random range. **40,000 decisions is below every published foraging budget, for any design.**
+- Avalon (3-D survival): with a curriculum 0.716, without 0.001: larger than any architecture gap on record.
+- Tiny or no replay: SAC/PPO score 0.04–0.07 of normal over 50 tasks. White vs correlated action noise on the closest sparse action-cost task (MountainCarContinuous, PPO): 0 vs ~94.
 - Drive-before-minus-drive-after is the published homeostatic reward, best of five forms in the one comparison; only the discount separates eating from not eating, so a 4 s horizon leaves almost no signal.
 - A one-SD difference takes ~20 seeds; two rank nothing.
-- No large from-scratch result exists for active inference, predictive coding or curiosity-only agents. Naively bigger networks get worse (BBF, AdA).
+- No large from-scratch result for active inference, predictive coding or curiosity-only agents. Naively bigger networks get worse (BBF, AdA).
 
 **Candidates**
-- **A. Dreamer-style recurrent world model — recommended main brain.** One encoder per sense into one GRU state, trained mostly to predict its next sensations; actor and critic learn in imagined 15-step futures. Strengths: broadest from-scratch record; uses extra senses and words where model-free agents get worse (Dynalang); scales without retuning; replay built in. Weaknesses: compute per step (~2,100 min vs 15 for tuned PPO at 1M steps on Craftax-classic); long memory; high-joint bodies; small details. Needs: action-conditioned dynamics, imagination, a large replay trained hundreds of times per step, the robustness kit (symlog, two-hot, KL balance, scale-down-only return normalisation). Smallest published: `size1m` preset (no published score), 8M/12M with scores. **Our nets are 10–100× smaller than any published Dreamer score, and nobody has published its speed on a T4, a CPU or Apple silicon.** Expect on the rover: first meals in 10^4–10^5 decisions, regular foraging by 10^5–10^6 (inf).
+- **A. Dreamer-style recurrent world model — recommended main brain.** One encoder per sense into one GRU state, trained mostly to predict its next sensations; actor and critic learn in imagined 15-step futures. Strengths: broadest from-scratch record; uses extra senses and words where model-free agents get worse (Dynalang); scales without retuning; replay built in. Weak at: compute per step (~2,100 min vs 15 for tuned PPO at 1M steps on Craftax-classic); long memory; high-joint bodies; small details. Needs: action-conditioned dynamics, imagination, a large replay trained hundreds of times per step, the robustness kit (symlog, two-hot, KL balance, scale-down-only return normalisation). Smallest published: `size1m` preset (no published score), 8M/12M with scores. **Our nets are 10–100× smaller than any published Dreamer score, and nobody has published its speed on a T4, a CPU or Apple silicon.** Expect on the rover: first meals in 10^4–10^5 decisions, regular foraging by 10^5–10^6 (inf).
 - **B. Replay-based model-free actor-critic (SAC family, LayerNorm, optional small GRU) — the cheap control.** Most direct evidence on our task. Needs: §5's settings. Weak at: sample efficiency vs world models (10–200×), getting worse with added senses. Expect on the rover: improvement by 10k–50k, reliable by 100k–200k (inf).
 - **C. Decoder-free latent world model (TD-MPC2 lineage) — for the human-like body later.** Best published efficiency on Humanoid/Dog; no discrete actions, no memory, needs informative reward; not a whole-creature candidate today.
 - Watch list: transformer world models (best Crafter numbers, too costly).
@@ -45,11 +45,11 @@
 
 **Known-answer checks** (before an arm may race): the five probe environments (seconds each); CartPole-v1 500 in 50–100k steps; §5's Pendulum and MountainCar rows (not the one-run −157); bsuite deep_sea / umbrella_length / memory_len (< 30 CPU-min each). A Dreamer arm has no published small score: its gate is matching a model-free learner on the same tasks and the official code's outputs on one seed.
 
-**Learnable?** Not yet shown. Three checks: a hand-written forager using only his senses; a behaviour clone of it into the learner's own network and inputs (closed loop, DAgger); a "cheat" learner given the vector to food. Nothing in print says whether 16 undifferentiated rays can tell food from a wall.
+**Learnable?** Not yet shown. Three checks: a hand-written forager using only his senses; a behaviour clone of it into the learner's own network and inputs (closed loop, DAgger); a "cheat" learner given the vector to food. Nothing in print says if 16 undifferentiated rays can tell food from a wall.
 
-**What the record does NOT answer** (E0–E9; long form): E0 pure-noise exploration probe (CPU minutes); E1 known-answer gate per learner; E2 learnability; E3 Dreamer `size1m` speed on the T4 and the Mac; E4 the first fair race, B vs A at 10^6 decisions; E5 distance-to-food curriculum; E6 reward and horizon ablation; E7 memory across death; E8 adding a sense; E9 plasticity watch. **Do not spend on:** more 40k races; curiosity bonuses while persistent noise reaches food; an active-inference or predictive-coding stack; bigger networks without stabilisers.
+**What the record does NOT answer** (E0–E9; long form): E0 pure-noise exploration probe (CPU minutes); E1 known-answer gate per learner; E2 learnability; E3 Dreamer `size1m` speed on T4 and Mac; E4 the first fair race, B vs A at 10^6 decisions; E5 distance-to-food curriculum; E6 reward and horizon ablation; E7 memory across death; E8 adding a sense; E9 plasticity watch. **Do not spend on:** more 40k races; curiosity bonuses while persistent noise reaches food; an active-inference or predictive-coding stack; bigger networks without stabilisers.
 
-**Not verified** (long form): Yoshida et al. 2024 full text (setup from abstract and code; see §13); R2D2 and D'Oro second-hand; Banana Collector is a community report; Food Collector steps rest on an inferred unit conversion; T4-vs-A100 speed assumed; "2.5–4× more food contacts" for persistent noise is a toy calculation. No paper ablates our settings jointly (the ranking is a synthesis); no published system combines all of Jack's requirements.
+**Not verified** (long form): Yoshida et al. 2024 full text (setup from abstract and code; see §13); R2D2 and D'Oro second-hand; Banana Collector is a community report; Food Collector steps rest on an inferred unit conversion; T4-vs-A100 speed assumed; "2.5–4× more food contacts" for persistent noise is a toy sum. No paper ablates our settings jointly (the ranking is a synthesis); no published system combines all of Jack's requirements.
 
 ## 2. Building brain A (a Dreamer-style world model) correctly (2026-11-15; serves order J3, M3; plan part "His brain")
 
@@ -158,36 +158,36 @@ Long form: `$N/body_motor_simulation.md` (106 sources; a few figures measured he
 Long form: `$N/control_arm_engineering.md` (223 KB; timings measured here under load).
 
 **Already known**
-- **The RL Zoo benchmark table is ONE run per entry, often the best case.** The public Open RL Benchmark run store holds 10–22 seeds of the same configurations, and those are the references: SAC Pendulum-v1 at 20,000 steps, mean of all 100 training episodes −298.4 ± 10.3 (13 seeds); SAC on sparse MountainCarContinuous-v0 at 50,000 solved on 9 of 10 seeds; PPO Pendulum-v1 at 102,400, −184.5 ± 80.7; DQN CartPole-v1 392 ± 150 where the table says 500. **§1's "Pendulum ~−157 in 20k" came from that one-run table: use the rows below.**
-- Plain SAC (2×256, 2 updates per decision) is strong on easy low-dimensional tasks, unreliable early on sparse ones: DMC cartpole-swingup 853.0 ± 9.2 at 50K decisions; swingup_sparse 93.8 ± 166.1 at 50K and 776.5 ± 30.2 at 150K (10 seeds, SimBa repository).
-- PPO is the slow, seed-fragile reference: default SB3 PPO has a median of 127 over 28 DMC tasks at 500K decisions where replay and model-based learners have 613–927; on sparse swing-up three sources give 7, 76 and 391. About four parallel environments is its published optimum.
-- **Gradient updates are not free on our CPUs** (measured here under load, upper bounds): one SAC update at batch 256 is ~50 ms of an ARM core in PyTorch SB3, ~20 ms in SBX (JAX) with 2×256 networks, ~1.9 ms in SBX with 2×64. Big-critic methods (CrossQ, SimBa, BRO, MR.Q) are GPU methods.
-- Exploration that holds a direction is what solves the sparse classic task: the Zoo recipe is gSDE with a FIXED entropy coefficient 0.1, discount 0.9999, no random warm-up. Traps: the pink-noise package also changes the noise inside SAC's updates and consumes its sequence three times per step; SBX implements `use_sde` as a held noise draw, not SB3's gSDE.
-- Memory in a replay learner has one well-documented design (Ni et al. 2022): separate GRU-128 encoders for actor and critic, 64-step windows; −168.6 ± 3.5 on velocity-only Pendulum at 51,000 steps; it fails with a 5-step window (~−1,380) or a shared encoder (~−422). Costly: ~0.3 s per update on a CPU. A stack of 4 observations equals a GRU on position-only tasks and fails on recalling an early cue.
-- A Q-learner over 9 joint actions is a legitimate alternative for a 2-dimensional drive (DecQN matches D4PG on 1- and 2-dimensional tasks). No maintained library has prioritised replay or a recurrent off-policy learner.
+- **The RL Zoo benchmark table is ONE run per entry, often the best case.** Open RL Benchmark's public run store holds 10–22 seeds per configuration; use those: SAC Pendulum-v1 (row 1; 13 seeds); SAC on sparse MountainCarContinuous-v0 at 50,000 solved on 9 of 10 seeds; PPO Pendulum-v1 at 102,400, −184.5 ± 80.7; DQN CartPole-v1 392 ± 150 where the table says 500. **§1's "Pendulum ~−157 in 20k" came from that one-run table: use the rows below.**
+- Plain SAC (2×256, 2 updates per decision): strong on easy low-dimensional tasks, unreliable early on sparse ones (rows 5–6; swingup_sparse 93.8 ± 166.1 at 50K; 10 seeds, SimBa repository).
+- PPO is slow & seed-fragile: default SB3 PPO has median 127 over 28 DMC tasks at 500K decisions vs 613–927 for replay & model-based learners; on sparse swing-up three sources give 7, 76, 391. Published optimum: About four parallel environments.
+- **Gradient updates are not free on our CPUs** (upper bounds): one SAC update at batch 256 ≈ 50 ms of an ARM core in PyTorch SB3, ~20 ms in SBX (JAX) at 2×256, ~1.9 ms in SBX at 2×64. Big-critic methods (CrossQ, SimBa, BRO, MR.Q) need a GPU.
+- Direction-holding exploration solves the sparse classic task: Zoo recipe = gSDE, FIXED entropy coefficient 0.1, discount 0.9999, no random warm-up. Traps: the pink-noise package also changes the noise inside SAC's updates & consumes its sequence three times per step; SBX's `use_sde` is a held noise draw, not SB3's gSDE.
+- Memory in a replay learner has one well-documented design (Ni et al. 2022): separate GRU-128 encoders for actor & critic, 64-step windows (row 7); fails with a 5-step window (~−1,380) or a shared encoder (~−422). Costly: ~0.3 s per CPU update. Stacking 4 observations equals a GRU on position-only tasks, fails on recalling an early cue.
+- A Q-learner over 9 joint actions is a legitimate alternative for a 2-dimensional drive (DecQN matches D4PG on 1- & 2-dimensional tasks). No maintained library has prioritised replay or a recurrent off-policy learner.
 - Silent bugs to test: time limit vs death, next observation at episode ends, tanh correction, action scaling, target updates, normalisation statistics, evaluation mode, recurrent state.
 
 **Take as-is** (code, never weights)
-- A fresh venv for the checks (not his world's): Python 3.12; `stable-baselines3`, `sb3-contrib`, `rl-zoo3` 2.9.2; `sbx-rl` 0.28.0; `gymnasium` 1.4.0; `mujoco` 3.17.0 with `dm-control` 1.0.50 (later ones need MuJoCo 4.0); `shimmy` 2.0.1; `pink-noise-rl` 2.0.1. No `box2d` wheel for Linux aarch64 (LunarLander only on Kaggle).
-- **Arm B:** SBX `SAC` (SB3's SAC does not expose LayerNorm), `policy_kwargs=dict(layer_norm=True)`, 2×256, learning rate 3e-4, batch 256, replay ≥ the whole run, tau 0.005, gamma 0.99 to start, 5,000–10,000 warm-up decisions, 1–2 updates per decision, observations normalised, no resets. Death is `terminated=True`, every administrative stop `truncated=True`.
+- Fresh venv for the checks (not his world's): Python 3.12; `stable-baselines3`, `sb3-contrib`, `rl-zoo3` 2.9.2; `sbx-rl` 0.28.0; `gymnasium` 1.4.0; `mujoco` 3.17.0 with `dm-control` 1.0.50 (later need MuJoCo 4.0); `shimmy` 2.0.1; `pink-noise-rl` 2.0.1. No `box2d` wheel for Linux aarch64 (LunarLander only on Kaggle).
+- **Arm B:** SBX `SAC` (SB3's lacks LayerNorm), `policy_kwargs=dict(layer_norm=True)`, 2×256, learning rate 3e-4, batch 256, replay ≥ whole run, tau 0.005, gamma 0.99 to start, 5,000–10,000 warm-up decisions, 1–2 updates per decision, observations normalised, no resets. Death is `terminated=True`, every administrative stop `truncated=True`.
 - Exploration for B: the Zoo's sparse-task recipe (PyTorch SB3 holds its public record) or pink noise with a life-long sequence; never both; either must pass row 3 in the library actually used.
-- B with memory: first the last 4 observations stacked; then Ni et al.'s design with its published sizes. PPO reference: SB3 defaults with `VecNormalize`, four simulator processes, gSDE sample period 4. A teacher showing food: keep the demonstrations in replay for good and draw a fixed share of each batch from them (RLPD, DDPGfD).
+- B with memory: first the last 4 observations stacked; then Ni et al.'s design, published sizes. PPO reference: SB3 defaults, `VecNormalize`, four simulator processes, gSDE sample period 4. A teacher showing food: keep demonstrations in replay for good, draw a fixed share of each batch from them (RLPD, DDPGfD).
 
-**Reproduce first** (references are distributions; "accept" is the range for a 5-seed mean)
+**Reproduce first** (references are distributions; "accept" = range for a 5-seed mean)
 
 | # | task | run | steps | target |
 |---|---|---|---|---|
-| 1 | Pendulum-v1 | SAC, Zoo entry (lr 1e-3): unmodified library first, then ours | 20,000 | mean of all 100 training episodes −298.4 ± 10.3; accept −314.7 to −282.1 |
+| 1 | Pendulum-v1 | SAC, Zoo entry (lr 1e-3): unmodified library, then ours | 20,000 | mean of all 100 training episodes −298.4 ± 10.3; accept −314.7 to −282.1 |
 | 2 | Pendulum-v1 | PPO, Zoo entry | 102,400 | last-100-episode training return −187.6 ± 17.0; accept −213.2 to −162.0 |
 | 3 | MountainCarContinuous-v0 (sparse) | SAC, Zoo entry with gSDE, PyTorch SB3; any SBX or pink-noise variant too | 50,000 | deterministic evaluation > 90 on ≥ 3 of 5 seeds (public: 9 of 10 in 93.4–95.3) |
 | 4 | MountainCarContinuous-v0 | PPO, Zoo entry | 20,000 | training return 87.5 ± 4.2 |
 | 5 | DMC cartpole-swingup, action repeat 2 | plain SAC 2×256, 2 updates per decision | 50K decisions | 853.0 ± 9.2 |
 | 6 | DMC cartpole-swingup_sparse, reacher-easy, reacher-hard | same | 150K decisions | 776.5 ± 30.2, 968.0 ± 23.2, 955.8 ± 30.5; sparse near zero at 50K on most seeds |
-| 7 | velocity-only Pendulum | recurrent SAC, Ni et al.'s configuration | 51,000 | −168.6 ± 3.5, and both controls must fail |
+| 7 | velocity-only Pendulum | recurrent SAC, Ni et al.'s configuration | 51,000 | −168.6 ± 3.5; both controls must fail |
 
-**The last 10%** (5 seeds per arm, fixed budget, one outcome: meals per 1,000 decisions over the last 50,000; costs in the long form). First, ~2 kernel-hours: how often a random and a noise-driven policy reaches food in a life; the gap between meals for a hand-written ray-follower (it sets the discount); whether four simulator processes give 4× the decisions; Kaggle update timings. Then: narrow network at a high update ratio vs standard; which exploration finds food first (predicted: SAC's automatic entropy coefficient collapses below 0.01 before the first meal); whether the rover needs memory; continuous actor vs nine discrete actions; the gap to PPO; whether one demonstration of eating helps; 3-step returns; discount 0.99 vs 0.995.
+**The last 10%** (5 seeds per arm, fixed budget, one outcome: meals per 1,000 decisions over the last 50,000; costs in the long form). First, ~2 kernel-hours: how often a random & a noise-driven policy reach food in a life; gap between meals for a hand-written ray-follower (sets the discount); whether four simulator processes give 4× the decisions; Kaggle update timings. Then: narrow network at high update ratio vs standard; which exploration finds food first (predicted: SAC's automatic entropy coefficient collapses below 0.01 before the first meal); whether the rover needs memory; continuous actor vs nine discrete actions; gap to PPO; whether one demonstration of eating helps; 3-step returns; discount 0.99 vs 0.995.
 
-**Not verified:** the pink-noise paper's tables and the replay-ratio-barrier paper (blocked); all our timings (one sample, load 5–13). Three note sections were condensed from sub-drafts, 12 values spot-checked.
+**Not verified:** the pink-noise paper's tables & the replay-ratio-barrier paper (blocked); all our timings (one sample, load 5–13). Three note sections condensed from sub-drafts, 12 values spot-checked.
 
 ## 6. Memory, sleep and learning for a lifetime (2026-11-15; serves M7; plan part "Memory and sleep")
 
@@ -366,78 +366,78 @@ Order: rows 1–6 and 11 (no GPU) catch most B and PPO bugs; row 7 is A's first 
 
 ## 10. The Mac mini M6: expected speeds, the software path, and the first day (2026-11-15; serves the decisive test in PLAN, order J5, and the move to the Mac)
 
-Long form: `/data/jack-research/reports/Mac mini M6 speed for Jack.md`. No MuJoCo, SAC or Dreamer timing exists for any M6; every workload number is scaled **(inf)**.
+Long form: `/data/jack-research/reports/Mac mini M6 speed for Jack.md`. No MuJoCo, SAC or Dreamer timing exists for any M6; all workload numbers are scaled **(inf)**.
 
 **Already known**
-- **Measured on the M6:** Geekbench 6 4,698 / 21,302 (A1 core ≈ 1,100; our VM ≈ 3,500; Kaggle 786 / 1,687). Cores: 2 super + 4 performance (4.5–4.8 GHz) + 6 efficiency (2.9 GHz). Wall power 2.1–4 W idle, ~55 W sustained, 70–74 W peak; fan ≤ 42 dB(A). 32 GB is the ceiling and cannot be added later.
-- **MuJoCo, scaled:** a fast M6 core is 2.5–4× an Ampere core. The basis is Geekbench discounted by the one Apple MuJoCo figure (M3 Max 650K humanoid steps/s, all cores). Jack's world per fast core: RK4 7,000–12,500 sub-steps/s, implicitfast 26,000–48,000. Loop today 85–150 decisions/s (RK4) and 160–250 (implicitfast); after the loop fixes 300–800. Whole chip 4.5–8× our VM and 10–16× a Kaggle session; the efficiency cores add +15–35%.
-- **SAC update (2×256, batch 256), scaled:** SB3 on the processor 3–15 ms; SBX 2–7 ms; MPS no faster. A 1M-decision B run takes 1.7–5.6 h; **20 runs take 6–22 h on six fast cores (inf).**
-- **Dreamer, scaled, steps/s for 0.64M / 9.7M:** JAX on the processor 2–6 / 0.15–0.4; PyTorch on the processor 3–10 / 0.2–0.6; MPS 3–12 / 0.8–2.5; MLX (not yet written) 6–25 / 1.5–5. T4 arithmetic: 20–50 / 2–5. So the Mac is **0.2–0.6× a T4 on PyTorch and 0.3–1× on MLX**. Basis: T4 beat an M3 Pro 1.6–1.8× on ResNet-50; a GRU cell ran 2.1–3.5× slower on MPS than on the processor (M3 Max).
-- **Decisive test for A at 0.64M, full ratio (inf):** 460–1,860 Mac h (3–11 weeks). The T4 alone needs 4–9 weeks; **the two together need 1.6–5 weeks.** 9.7M at full ratio: 2,200–7,000 Mac h, not affordable anywhere.
-- **No Dreamer code has been reported running on Apple silicon.** JAX has no Mac GPU route (jax-metal abandoned). MuJoCo on the Mac GPU is not usable.
+- **Measured on the M6:** Geekbench 6 4,698 / 21,302 (A1 core ≈ 1,100; our VM ≈ 3,500; Kaggle 786 / 1,687). Cores: 2 super + 4 performance (4.5–4.8 GHz) + 6 efficiency (2.9 GHz). Wall power 2.1–4 W idle, ~55 W sustained, 70–74 W peak; fan ≤ 42 dB(A). 32 GB max, not upgradable.
+- **MuJoCo, scaled:** fast M6 core = 2.5–4× an Ampere core (Geekbench discounted by the one Apple MuJoCo figure: M3 Max 650K humanoid steps/s, all cores). Jack's world per fast core: RK4 7,000–12,500 sub-steps/s, implicitfast 26,000–48,000. Loop today 85–150 decisions/s (RK4), 160–250 (implicitfast); after loop fixes 300–800. Whole chip 4.5–8× our VM, 10–16× a Kaggle session; efficiency cores add +15–35%.
+- **SAC update (2×256, batch 256), scaled:** SB3 on CPU 3–15 ms; SBX 2–7 ms; MPS no faster. 1M-decision B run: 1.7–5.6 h; **20 runs take 6–22 h on six fast cores (inf).**
+- **Dreamer, scaled, steps/s for 0.64M / 9.7M:** JAX on CPU 2–6 / 0.15–0.4; PyTorch on CPU 3–10 / 0.2–0.6; MPS 3–12 / 0.8–2.5; MLX (unwritten) 6–25 / 1.5–5. T4 arithmetic: 20–50 / 2–5. So the Mac is **0.2–0.6× a T4 on PyTorch and 0.3–1× on MLX**. Basis: T4 beat M3 Pro 1.6–1.8× on ResNet-50; a GRU cell ran 2.1–3.5× slower on MPS than CPU (M3 Max).
+- **Decisive test for A at 0.64M, full ratio (inf):** 460–1,860 Mac h (3–11 weeks). T4 alone: 4–9 weeks; **the two together need 1.6–5 weeks.** 9.7M at full ratio: 2,200–7,000 Mac h, unaffordable anywhere.
+- **No Dreamer code has been reported running on Apple silicon.** JAX has no Mac GPU route (jax-metal abandoned). MuJoCo on Mac GPU: unusable.
 
 **Take as-is**
-- Physics: native MuJoCo on the processor, one process per world, 6 on fast cores (≤ 12 in all), `nstep=40` in one call. No GPU physics.
-- B: SBX on the processor, `OMP_NUM_THREADS=1`, 4–6 runs side by side; SB3 on the processor as the reference. Not MPS.
-- A 0.64M: keep the fastest of official JAX (processor), sheeprl `dreamer_v3_5_1M` (processor) and sheeprl on MPS. A 9.7M: sheeprl on MPS. An MLX port only after it reproduces §2's DMC rows.
-- **Never `nice 19`, `taskpolicy -b` or a launchd `ProcessType` of Background**: background priority pins work to efficiency cores (2–3× loss, no error). Cap worker counts in code instead.
+- Physics: native MuJoCo on CPU, one process per world, 6 on fast cores (≤ 12 total), `nstep=40` in one call. No GPU physics.
+- B: SBX on CPU, `OMP_NUM_THREADS=1`, 4–6 runs side by side; SB3 on CPU as reference. Not MPS.
+- A 0.64M: keep the fastest of official JAX (CPU), sheeprl `dreamer_v3_5_1M` (CPU), sheeprl on MPS. A 9.7M: sheeprl on MPS. MLX port only after it reproduces §2's DMC rows.
+- **Never `nice 19`, `taskpolicy -b` or a launchd `ProcessType` of Background**: background priority pins work to efficiency cores (2–3× loss, no error). Cap worker counts in code.
 - `sudo pmset -a sleep 0 disksleep 0 autorestart 1`; App Nap off; long runs under `caffeinate -dimsu`.
-- **The camera needs a logged-in desktop session** (the CGL renderer hangs otherwise). Auto-login a dedicated user (FileVault off, or `fdesetup authrestart`), add an HDMI dummy plug, and run GPU and render jobs as that user's LaunchAgents; processor-only services as LaunchDaemons. A ray-cast eye needs neither.
-- Data on an external case-sensitive APFS drive; paths from env vars; float32 before MPS; checkpoint and restart every N hours; compare with Linux statistically.
+- **The camera needs a logged-in desktop session** (else the CGL renderer hangs). Auto-login a dedicated user (FileVault off, or `fdesetup authrestart`), add an HDMI dummy plug, run GPU & render jobs as that user's LaunchAgents; CPU-only services as LaunchDaemons. A ray-cast eye needs neither.
+- Data on external case-sensitive APFS drive; paths from env vars; float32 before MPS; checkpoint & restart every N hours; compare with Linux statistically.
 
-**Reproduce first** (first day: twelve measurements, each replacing an estimate above; commands in the long form, "The first day"): core layout; `testspeed humanoid.xml` (50–90K steps/s per fast core); Jack's world under integrators 0/1/3; the decision loop on 1–12 processes (750–1,300/s today); SAC updates/s on SB3 / SBX / SB3-MPS (70–300 / 150–500 / 50–200), then 1–6 runs at once; 4096² matmul (2.5–5 TFLOPS); a GRU cell on processor, MPS, MLX (15–30 µs per GPU job); Dreamer steps/s on JAX, sheeprl and sheeprl-MPS at 1M then 12M, same script on the T4; 2,000 sheeprl steps processor vs MPS (any divergence bars MPS, PyTorch issue 204359); 64×64 renders logged in, over SSH, from a LaunchAgent and a LaunchDaemon (300–2,000 fps; which contexts work); a 24 h soak, 6 worlds + 1 MPS learner, behind a wall meter (55 W, ~$7 a month, no throttling or creep).
+**Reproduce first** (first day: twelve measurements, each replacing an estimate above; commands in long form, "The first day"): core layout; `testspeed humanoid.xml` (50–90K steps/s per fast core); Jack's world under integrators 0/1/3; decision loop on 1–12 processes (750–1,300/s today); SAC updates/s on SB3 / SBX / SB3-MPS (70–300 / 150–500 / 50–200), then 1–6 runs at once; 4096² matmul (2.5–5 TFLOPS); GRU cell on CPU, MPS, MLX (15–30 µs per GPU job); Dreamer steps/s on JAX, sheeprl, sheeprl-MPS at 1M then 12M, same script on T4; 2,000 sheeprl steps CPU vs MPS (any divergence bars MPS, PyTorch issue 204359); 64×64 renders logged in, over SSH, from a LaunchAgent and a LaunchDaemon (300–2,000 fps; which contexts work); 24 h soak, 6 worlds + 1 MPS learner, behind a wall meter (55 W, ~$7/month, no throttling or creep).
 
-**The last 10%** (first anywhere; publish the logs): MuJoCo per-core speed on an M4-or-later core and on the M6's two tiers; SAC and Dreamer timings on any Apple chip; MPS vs processor vs MLX on a recurrent world model; Apple vs T4 on the same Dreamer script; offscreen render fps on macOS; whether MPS runs in a no-login LaunchDaemon; whether two Dreamer learners (one on MPS, one on the processor) beat one; a multi-day training soak on a Mac mini.
+**The last 10%** (first anywhere; publish logs): MuJoCo per-core speed on an M4-or-later core and the M6's two tiers; SAC & Dreamer timings on any Apple chip; MPS vs CPU vs MLX on a recurrent world model; Apple vs T4 on the same Dreamer script; offscreen render fps on macOS; whether MPS runs in a no-login LaunchDaemon; whether two Dreamer learners (one MPS, one CPU) beat one; multi-day training soak on a Mac mini.
 
-**Not verified:** prices ($1,499 for 32/512 per Abt and AppleInsider; $1,299 for 32/256 per one blog; not Apple's store); the M6 GPU's 4.9 TFLOPS (an estimate); T4 datasheet figures (not re-read); the clock and per-clock speed of the performance cores; MLX's 1.3–2.5× gain over MPS (one M5 repository); launchd key names; multi-day thermals.
+**Not verified:** prices ($1,499 for 32/512 per Abt and AppleInsider; $1,299 for 32/256 per one blog; not Apple's store); M6 GPU's 4.9 TFLOPS (estimate); T4 datasheet figures (not re-read); performance cores' clock and per-clock speed; MLX's 1.3–2.5× gain over MPS (one M5 repository); launchd key names; multi-day thermals.
 
 ## 11. Porting Dreamer to MLX, and renting a GPU for the large runs (2026-11-15; serves order J5, the decisive test in PLAN, and the move to the Mac)
 
 Long form: `/data/jack-research/reports/Porting Dreamer to Apple MLX.md` (62-item contract with line links: `research_notes/Porting Dreamer to Apple MLX/dreamer_port_spec.md` §2).
 
 **Already known**
-- **Reference:** `danijar/dreamerv3` at `e01491f`; agent unchanged since Dec 2024; ~1,130 of 10,360 lines are the algorithm. Port for 74 inputs and 8 continuous actions: ~1,170 lines translated, 430 fresh plumbing lines, 700 test lines (~2,300). Faithful PyTorch ports: 2,300–2,800 lines plus tests.
+- **Reference:** `danijar/dreamerv3` at `e01491f`; agent unchanged since Dec 2024; ~1,130 of 10,360 lines are algorithm. Port for 74 inputs, 8 continuous actions: ~1,170 lines translated, 430 fresh plumbing, 700 test (~2,300). Faithful PyTorch ports: 2,300–2,800 lines plus tests.
 - **Sizes for Jack:** `size1m` 647,705 trainable parameters, `size12m` 9,765,209 (slow critic 66,111 / 853,503). Rule matches r2dreamer's and TorchRL's counts exactly.
-- **Corrections:** latents are 32 variables × **4 classes (1M) / 16 (12M)**, not 32 × 32. The 12M recurrent width is 2,048, not 1,024. The optimiser constant is 0.999 (paper 0.99). There is a 1,000-update warm-up, and the first update uses learning rate 0. Two-hot is computed in raw space on exponential bins (the paper says otherwise). Actor samples are not squashed. The return scale is not debiased.
-- **MLX 0.32.4** (14 Oct 2026): has grad, compile, stop_gradient, JAX-style keys, sort, gather/scatter. **Lacks** scan, percentile and LaProp. Its GRU is the PyTorch cell; its norm eps default is 1e-5 (Dreamer 1e-4). Compile freezes any state not passed in. Gradient fixes landed in 0.32.0–0.32.1. No MLX Dreamer or RL agent exists.
-- **Where it runs:** Linux wheels need glibc ≥ 2.35. On our server it runs only in a Debian 12 container (checked). CUDA needs SM ≥ 7.5, so the T4 is at the floor.
-- **Earlier ports:** ~20 bookkeeping bugs vs ~18 maths bugs; bookkeeping bugs lived longest (~8 months). Fidelity came only from same-weights, same-batch loss and gradient comparison (sheeprl PR #377).
-- **Rent, $/h (RunPod / Vast median, 11-12 / 11-15):** 3090 0.22–0.50 / 0.26; A5000 0.16–0.27 / 0.23; 4090 0.34–0.89 / 0.54; 5090 0.69–1.39 / 0.87; A100 1.39–2.19 / 0.80. Per-second, prepaid. **(inf)** job costs: Job 1, reproduction at 9.7M, $5–18; Job 2, decisive test, $4–34 at 0.64M and $72–409 at 9.7M; Job 3, a month-long lifetime, $115–266 (3090) to $338–511 (4090).
+- **Corrections:** latents are 32 variables × **4 classes (1M) / 16 (12M)**, not 32 × 32. 12M recurrent width 2,048, not 1,024. Optimiser constant 0.999 (paper 0.99). 1,000-update warm-up; first update uses learning rate 0. Two-hot computed in raw space on exponential bins (paper says otherwise). Actor samples not squashed. Return scale not debiased.
+- **MLX 0.32.4** (14 Oct 2026): has grad, compile, stop_gradient, JAX-style keys, sort, gather/scatter. **Lacks** scan, percentile, LaProp. GRU is the PyTorch cell; norm eps default 1e-5 (Dreamer 1e-4). Compile freezes any state not passed in. Gradient fixes landed in 0.32.0–0.32.1. No MLX Dreamer or RL agent exists.
+- **Where it runs:** Linux wheels need glibc ≥ 2.35; on our server only in a Debian 12 container (checked). CUDA needs SM ≥ 7.5: T4 is at the floor.
+- **Earlier ports:** ~20 bookkeeping vs ~18 maths bugs; bookkeeping lived longest (~8 months). Fidelity came only from same-weights, same-batch loss & gradient comparison (sheeprl PR #377).
+- **Rent, $/h (RunPod / Vast median, 11-12 / 11-15):** 3090 0.22–0.50 / 0.26; A5000 0.16–0.27 / 0.23; 4090 0.34–0.89 / 0.54; 5090 0.69–1.39 / 0.87; A100 1.39–2.19 / 0.80. Per-second, prepaid. **(inf)** job costs: Job 1, reproduction at 9.7M, $5–18; Job 2, decisive test, $4–34 at 0.64M, $72–409 at 9.7M; Job 3, month-long lifetime, $115–266 (3090) to $338–511 (4090).
 
 **Take as-is**
-- Reference commit `e01491f`. Pin `mlx==0.32.4` and re-run rungs 1–11 on any upgrade. Port the config values, never class defaults. Import official weights by name (MLX kernels are transposed; the decoder input is [stoch, deter]); never re-seed.
-- **Build order** (each step 1–2 slots; no step before the rung below it passes): stage 0 spike (container; Kaggle install; compile time and memory at both sizes; golden v0 reproducible) → config → maths → returns/normaliser → optimiser → layers → names → golden v1 → RSSM step → 64-step pass → heads and world-model loss → imagination and actor-critic → gradients → train step → acting step → compiled re-run → replay → driver → ratio loop → checkpoint → smoke. ~60–110 slots **(inf)**. Policy-only slice for owners' devices: ~15–25 slots.
-- **Minimal plumbing:** in-memory replay of 65-step samples with stored latents, write-back and online queue; one-world driver; Ratio loop starting at 1,024 items; full-state checkpoint. Leave out images, discrete actions, multi-device, the logger and prioritised replay.
-- **Staging:** official JAX only on paid cards; the port never sits on the paid path. Order: free proving → 1–2 h test on a 4090 with ≥ 24 cores (about $1–2) → Job 1 → Job 2 (only after reproduction, resume on a rented host, watchdog fired once, run sheet frozen) → Job 3. Self-destruct on exit or after 20–30 min stalled; small prepaid balance; delete, never stop. No spend authorised.
+- Reference commit `e01491f`. Pin `mlx==0.32.4`; re-run rungs 1–11 on any upgrade. Port config values, never class defaults. Import official weights by name (MLX kernels are transposed; decoder input is [stoch, deter]); never re-seed.
+- **Build order** (each step 1–2 slots; none before the rung below it passes): stage 0 spike (container; Kaggle install; compile time and memory at both sizes; golden v0 reproducible) → config → maths → returns/normaliser → optimiser → layers → names → golden v1 → RSSM step → 64-step pass → heads and world-model loss → imagination and actor-critic → gradients → train step → acting step → compiled re-run → replay → driver → ratio loop → checkpoint → smoke. ~60–110 slots **(inf)**. Policy-only slice for owners' devices: ~15–25 slots.
+- **Minimal plumbing:** in-memory replay of 65-step samples with stored latents, write-back, online queue; one-world driver; Ratio loop starting at 1,024 items; full-state checkpoint. Omit images, discrete actions, multi-device, logger, prioritised replay.
+- **Staging:** official JAX only on paid cards; the port never on the paid path. Order: free proving → 1–2 h test on a 4090 with ≥ 24 cores (≈ $1–2) → Job 1 → Job 2 (only after reproduction, resume on a rented host, watchdog fired once, run sheet frozen) → Job 3. Self-destruct on exit or after 20–30 min stalled; small prepaid balance; delete, never stop. No spend authorised.
 
-**Reproduce first** (fourteen rungs against G, a golden file from the official code: Kaggle CPU, float32, compiler off, noise from file; per-rung detail in the long form, "A fourteen-rung ladder"): names, shapes, counts exact → maths 1e-6 (decode exactly 0, also under `mx.compile`) → λ-returns and normaliser 1e-6 → optimiser over 5 steps 1e-6, warm-up exact → initialisers within 2%, zero heads exact → layers and one RSSM step 1e-5 → 64-step pass 1e-4, no flips → world-model losses 1e-5 → imagination and actor-critic losses 1e-4 → gradients: norm 1e-4 (1e-3 for RSSM leaves), cosine ≥ 0.9999 → five optimiser steps, step 1 changes nothing → bookkeeping exact (action alignment, reset flags, queue, write-back, death vs time-out, ratio count, bit-identical resume) → step-0 answers ln 255 = 5.541263, std 0.8927, scale 1 → curves: ≥ 5 seeds × 2–3 tasks, port vs official, intervals overlap (official runs shared with §2's `size1m` test).
+**Reproduce first** (fourteen rungs against G, a golden file from the official code: Kaggle CPU, float32, compiler off, noise from file; per-rung detail in long form, "A fourteen-rung ladder"): names, shapes, counts exact → maths 1e-6 (decode exactly 0, also under `mx.compile`) → λ-returns and normaliser 1e-6 → optimiser over 5 steps 1e-6, warm-up exact → initialisers within 2%, zero heads exact → layers and one RSSM step 1e-5 → 64-step pass 1e-4, no flips → world-model losses 1e-5 → imagination and actor-critic losses 1e-4 → gradients: norm 1e-4 (1e-3 for RSSM leaves), cosine ≥ 0.9999 → five optimiser steps, step 1 changes nothing → bookkeeping exact (action alignment, reset flags, queue, write-back, death vs time-out, ratio count, bit-identical resume) → step-0 answers ln 255 = 5.541263, std 0.8927, scale 1 → curves: ≥ 5 seeds × 2–3 tasks, port vs official, intervals overlap (official runs shared with §2's `size1m` test).
 
 **The last 10%** (first anywhere)
-- MLX trace and compile time and peak memory for the full unrolled step (64-step pass + 15-step imagination from 1,024 starts, with gradients) at both sizes. This is gate G0: proceed if `size12m` compiles in under 10 min and peaks under 8 GB **(threshold is ours)**.
-- MLX speed on CUDA (T4, rented cards) and on the M6. Projected 6–25 / 1.5–5 steps/s on the Mac **(inf)**.
+- MLX trace & compile time and peak memory for the full unrolled step (64-step pass + 15-step imagination from 1,024 starts, with gradients) at both sizes. Gate G0: proceed if `size12m` compiles in < 10 min and peaks < 8 GB **(threshold is ours)**.
+- MLX speed on CUDA (T4, rented cards) and the M6. Projected 6–25 / 1.5–5 steps/s on the Mac **(inf)**.
 - Agreement between chip types (CPU, Metal, CUDA) over a 64-step unroll.
 - Dreamer of any kind on Apple silicon.
-- Real T4 and 4090 Dreamer steps/s, and the gain from packing several runs on one card.
+- Real T4 and 4090 Dreamer steps/s; gain from packing several runs on one card.
 
-**Not verified:** Kaggle's glibc and driver for MLX; the optax first-step-LR semantics (rung 3 settles it); the dependency versions of the published runs (unrecorded); rental speeds (scaled from one 3080 Ti figure); the 1e-4 unroll tolerance; whether owners' devices other than Macs can use MLX.
+**Not verified:** Kaggle's glibc and driver for MLX; optax first-step-LR semantics (rung 3 settles it); dependency versions of the published runs (unrecorded); rental speeds (scaled from one 3080 Ti figure); the 1e-4 unroll tolerance; whether owners' devices other than Macs can use MLX.
 
 ## 12. His eye, and a sense added later (2026-11-16; serves PLAN's decisive test, stage 3)
 
 Long form: `/data/jack-research/reports/PRIORS section 12.md`.
 
 **Already known**
-- Dreamer's eye is 64x64x3 everywhere (V1-V3; Minecraft, Crafter). Vision runs use the 200M-class size, `size1m` only proprio; the size ablation is 12M-400M, bigger better. **No 1M-from-pixels, T4 or CPU pixel result exists.**
+- Dreamer's eye is 64x64x3 everywhere (V1-V3; Minecraft, Crafter). Vision runs use the 200M-class size, `size1m` only proprio; size ablation 12M-400M, bigger better. **No 1M-from-pixels, T4 or CPU pixel result exists.**
 - DreamerV3, DMC task mean (official score files): proprio 456/675/758 at 100k/250k/500k; pixels 381/522/675/787 at 100k/250k/500k/1M: ~2x the steps; small targets lose most (reacher_hard 339 vs 949 at 500k).
 - SAC on raw pixels fails (walker 42 vs 948 from state, 500k, CURL T1). Random shift alone repairs it (DrQ 921 vs 964); no auxiliary loss beats it (Li 2022).
 - Cost: DrQ-v2 96 fps, DreamerV2 24 fps on a V100: 3 / 12 GPU-h per 1M steps.
-- Dreamer with image gradients cut dies (V2 T2: 0.25 -> 0.01, worse on 51 of 55 games). Replacements that hold: R2-Dreamer (2026; Barlow Twins, no augmentation; Walker 4.4 h vs 7.0 h, curves only), MuDreamer (784.7 vs 739.6 on 20 DMC tasks; with video backgrounds 517 vs 84), TD-MPC (Cup Catch 933 at 100k). Contrastive is worse (TPC 222 vs 737).
-- Depth beats colour for getting around: Habitat PointNav SPL blind 0.42, RGB 0.46, depth 0.79 at 75M steps; RGB caught up at 2.5B (0.92).
+- Dreamer with image gradients cut dies (V2 T2: 0.25 -> 0.01, worse on 51 of 55 games). Replacements that hold: R2-Dreamer (2026; Barlow Twins, no augmentation; Walker 4.4 h vs 7.0 h, curves only), MuDreamer (784.7 vs 739.6 on 20 DMC tasks; video backgrounds 517 vs 84), TD-MPC (Cup Catch 933 at 100k). Contrastive is worse (TPC 222 vs 737).
+- Depth beats colour for navigation: Habitat PointNav SPL blind 0.42, RGB 0.46, depth 0.79 at 75M steps; RGB caught up at 2.5B (0.92).
 - "What if Eye" (2025, MuJoCo, PPO): navigation evolved ~10 eyes of 4 receptors; detection needed two 15x15 eyes.
-- Measured here, one ARM core: `mj_multiRay` 16x16 0.10 ms, 32x32 0.34, 64x64 1.27 (distance, geom id, normal; 5-7x our `mj_ray` loop). GL 64x64: 14-16 ms tuned, ~20 ms floor even depth-only. MuJoCo >= 3.5.0 has a GL-free camera rangefinder (one ray per pixel). GPU batch renderers are CUDA-only: none on the Mac, T4 untested.
+- Measured here, one ARM core: `mj_multiRay` 16x16 0.10 ms, 32x32 0.34, 64x64 1.27 (distance, geom id, normal; 5-7x our `mj_ray` loop). GL 64x64: 14-16 ms tuned, ~20 ms floor even depth-only. MuJoCo >= 3.5.0 has a GL-free camera rangefinder (one ray per pixel). GPU batch renderers are CUDA-only: none on Mac, T4 untested.
 - **Nobody has compared a sense added at step N with the same sense from birth in RL.** Nearest: a pathway degraded early is never used later (Kleinman 2023, up to 20% lost) unless a cross-sense reconstruction loss exists; adding a modality lowered accuracy (Kinetics 72.6 -> 71.4); OpenAI Five added observations with zero outgoing weights, "without loss", never compared with from-birth; resets restore plasticity (SAC IQM 501 -> 656).
 
 **Candidates**
-- **A. Ray retina, 16x16 to 32x32, [depth, material] in one `mj_multiRay` call.** 3,000-10,000 frames/s per core on every machine, no GL, no login session on the Mac. Support: depth-over-RGB, the 15x15 detection eye. Weak: no colour or shading; not a human eye. Expect: usable by both brains at today's budgets (inf).
+- **A. Ray retina, 16x16 to 32x32, [depth, material] in one `mj_multiRay` call.** 3,000-10,000 frames/s per core on every machine, no GL, no Mac login session. Support: depth-over-RGB, the 15x15 detection eye. Weak: no colour or shading; not a human eye. Expect: usable by both brains at today's budgets (inf).
 - **B. 64x64 RGB camera, random shift (B), decoder or Barlow loss (A).** The published default. 10-20 ms/frame on CPU; ~2x the steps at 200M size, unknown at 1M.
 - **C. Both: rays from birth, camera added later** (the decisive test's added sense).
 
@@ -456,7 +456,7 @@ Long form: `/data/jack-research/reports/PRIORS section 12.md`.
 **What the record does NOT answer**
 - Added later vs from birth: arms from-birth / zero-init at N / random-init / constant placeholder / reset at N / placebo noise sense; measure use (a task only that sense solves; ablate it), cost to old skills at N, catch-up. ~60 kernel-h (6 arms, 5 seeds, 200k decisions; inf) with the ray retina. Predicted: Dreamer catches up (it reconstructs the sense); SAC under-uses it, more so at late N.
 - Does 16x16 depth+material beat 16 rays at telling food from wall? 5 seeds, CPU.
-- `size1m` from 64x64 on the T4: speed, and whether it learns.
+- `size1m` from 64x64 on T4: speed, and whether it learns.
 
 **Not verified:** R2-Dreamer and TD-MPC2 pixel scores (curves); DreamerV3's size table; Mac render speed (unpublished); Achille's loss size (figures); Safety Gym / Animal-AI rays vs pixels (none found).
 
@@ -465,21 +465,21 @@ Long form: `/data/jack-research/reports/PRIORS section 12.md`.
 Long form: `/data/jack-research/research_notes/j8_lie_still/` (three parts).
 
 **Already known**
-- **No published survival world charges the body for moving.** Drain is the same moving or still in the two-resource ant (0.00015/step, `two_resource_env.py` L386-388), EVAAA, Crafter, ForageWorld, Neural MMO, Animal-AI; Avalon's cost is 1e-8 against a 1e-4 frame cost, and 0 at evaluation. A motionless body there lives exactly as long as a random one (Crafter, run here, 40 seeds: no-op 172 steps, random 187). **Ours: 600 s still vs 302 s random. No from-scratch learner is on record eating reliably under a 2–3× movement drain.**
-- **The trap is well recorded in locomotion with an energy price.** Kwiatkowski 2023 (PPO; basal 2.23, movement 1.26·v²): "the global optimum for a typical discount factor around 0.99 is v=0"; pure energy reward failed even from a goal-seeking start. Hwangbo 2019, Solo12 2023, Yu 2018: standing still is the local optimum under a motion penalty. Hollenstein 2022 (SAC/TD3, MountainCarContinuous, +100 goal, force cost): the agent settles on "not performing any action", return 0.
-- **Cures with evidence:** a cost curriculum (Hwangbo: factor from 0.3, k ← k^0.997; Solo12: 0 → 1; Kwiatkowski: worked in 4 of 5 scenarios); γ = 1 or longer (Kwiatkowski); a reward toward the goal (same); noise that holds its direction (Hollenstein: OU σ 0.5 solves, Gaussian σ 0.6 does not); more steps (Fu 2021: stands still to ~5×10^7 steps, then walks; ForageWorld: stationary ~1.3×10^9 steps with NO movement cost).
-- **Cures with negative evidence:** an alive bonus (Reda 2020: bonus 5 "balances but never steps forward"); a white-noise floor alone (Hollenstein).
-- **Rewards that worked:** two-resource ant, 100·(D_t − D_{t+1}) and nothing on eating, PPO γ 0.99, 150M steps (best of five forms, abstract only); Crafter, health change/10 with no hunger charge (eat cow 12–26% of episodes at 1M); Avalon, food − a near-zero frame cost. EVAAA's default is −0.01·Σdev² per step and −100 at death; **its +100-on-eating branch, which `dr100-eat` copies, is OFF by default.** Pure +1-per-food lost Yoshida's five-way and failed on rllab Ant Gather (Duan 2016).
+- **No published survival world charges the body for moving.** Drain is equal moving or still in the two-resource ant (0.00015/step, `two_resource_env.py` L386-388), EVAAA, Crafter, ForageWorld, Neural MMO, Animal-AI; Avalon's cost is 1e-8 vs a 1e-4 frame cost, and 0 at evaluation. A motionless body there lives as long as a random one (Crafter, run here, 40 seeds: no-op 172 steps, random 187). **Ours: 600 s still vs 302 s random. No from-scratch learner is on record eating reliably under a 2–3× movement drain.**
+- **The trap is well recorded in locomotion with an energy price.** Kwiatkowski 2023 (PPO; basal 2.23, movement 1.26·v²): "the global optimum for a typical discount factor around 0.99 is v=0"; pure energy reward failed even from a goal-seeking start. Hwangbo 2019, Solo12 2023, Yu 2018: standing still is the local optimum under a motion penalty. Hollenstein 2022 (SAC/TD3, MountainCarContinuous, +100 goal, force cost): agent settles on "not performing any action", return 0.
+- **Cures with evidence:** cost curriculum (Hwangbo: factor from 0.3, k ← k^0.997; Solo12: 0 → 1; Kwiatkowski: worked in 4 of 5 scenarios); γ = 1 or longer (Kwiatkowski); reward toward the goal (same); noise that holds its direction (Hollenstein: OU σ 0.5 solves, Gaussian σ 0.6 does not); more steps (Fu 2021: stands still to ~5×10^7 steps, then walks; ForageWorld: stationary ~1.3×10^9 steps with NO movement cost).
+- **Cures with negative evidence:** alive bonus (Reda 2020: bonus 5 "balances but never steps forward"); white-noise floor alone (Hollenstein).
+- **Rewards that worked:** two-resource ant, 100·(D_t − D_{t+1}), nothing on eating, PPO γ 0.99, 150M steps (best of five forms, abstract only); Crafter, health change/10, no hunger charge (eat cow 12–26% of episodes at 1M); Avalon, food − a near-zero frame cost. EVAAA's default: −0.01·Σdev² per step, −100 at death; **its +100-on-eating branch, which `dr100-eat` copies, is OFF by default.** Pure +1-per-food lost Yoshida's five-way and failed on rllab Ant Gather (Duan 2016).
 
 **Our arithmetic (inf; `drives.py:66-68, 117-118, 192`, `jack_env.py:282, 606-613`)**
-- Drive is (1 − e)², so a life under `dr100-eat` returns ≈ −100·(1 − d_birth) + ~100–120 per meal however it is lived (pilot: +16 at 1.15 meals, −78 at 0.20: matches). **Lying still does not shrink the bill, it delays it past the 40 s horizon**: 0.067·(1 − e) per decision at rest, 0.133·(1 − e) random. The death step costs ~0 in all three rewards.
-- In ENERGY, random foraging does not pay at d 0.75: a 0.31 meal buys 186 s of movement and random finds one per ~238 s (needs 1.3× random skill; at d 1, 0.08 buys 48 s: 5×). **Stillness is the right answer to the body's own economy until he forages better than random**; only the +100 eat pay makes moving worth it in reward (+0.084 per decision vs 0.067·(1 − e) extra).
+- Drive is (1 − e)², so a life under `dr100-eat` returns ≈ −100·(1 − d_birth) + ~100–120 per meal however lived (pilot: +16 at 1.15 meals, −78 at 0.20: matches). **Lying still does not shrink the bill, it delays it past the 40 s horizon**: 0.067·(1 − e) per decision at rest, 0.133·(1 − e) random. Death step costs ~0 in all three rewards.
+- In ENERGY, random foraging does not pay at d 0.75: a 0.31 meal buys 186 s of movement; random finds one per ~238 s (needs 1.3× random skill; at d 1, 0.08 buys 48 s: 5×). **Stillness is the right answer to the body's own economy until he forages better than random**; only the +100 eat pay makes moving worth it in reward (+0.084 per decision vs 0.067·(1 − e) extra).
 
 **Candidates** (none proven in a survival world with a movement drain)
-- **A. Movement-cost dial tied to d** (KAPPA × d; a world change). The only cure proven on the same failure, 3 papers, 10^7–10^8 PPO steps. Weak: a badly scheduled ramp falls back to stillness (1 of 5 in Kwiatkowski).
-- **B. `dr100-eat-pos`** (exists): no pay for stillness, death ~0, so it is intake-only: Crafter's and Avalon's shape, but the form that lost Yoshida's five-way. Expect: stops the slide to stillness; eating then rests on exploration alone.
+- **A. Movement-cost dial tied to d** (KAPPA × d; a world change). Only cure proven on the same failure, 3 papers, 10^7–10^8 PPO steps. Weak: a badly scheduled ramp falls back to stillness (1 of 5 in Kwiatkowski).
+- **B. `dr100-eat-pos`** (exists): no pay for stillness, death ~0, so intake-only: Crafter's and Avalon's shape, but the form that lost Yoshida's five-way. Expect: stops the slide to stillness; eating then rests on exploration alone.
 - **C. Longer horizon**, γ 0.999 (200 s) or 3-step returns: γ = 1 held in Kwiatkowski; no n-step SAC number found.
-- Not candidates: an alive bonus; plain `homeo-dr` (the ant's reward; with our drain it pays stillness most).
+- Not candidates: alive bonus; plain `homeo-dr` (the ant's reward; with our drain it pays stillness most).
 
 **Ours beside theirs**
 
@@ -491,34 +491,34 @@ Long form: `/data/jack-research/research_notes/j8_lie_still/` (three parts).
 | horizon | 100–333 steps; γ 1 for energy | 200 (`pilot_b.py:39`) | bill hidden past 40 s |
 | steps | 1M–150M | 300k (`pilot_b`) | 3–500× short |
 
-**Known-answer check:** Hollenstein's MountainCarContinuous is §5's row 3, which B passed (5/5 > 90). A closer one is the two-resource ant with drain × (1 + action cost): no published number.
+**Known-answer check:** Hollenstein's MountainCarContinuous is §5's row 3, which B passed (5/5 > 90). Closer: two-resource ant with drain × (1 + action cost): no published number.
 
 **What the record does NOT answer** (5 seeds, 300k; 4 runs per Kaggle CPU kernel)
 - KAPPA 0 vs KAPPA × d vs today, `dr100-eat`: predicted meals/life late ≥ random's 1.15 only in the first two.
 - `dr100-eat-pos` vs `dr100-eat` at today's KAPPA: predicted no slide to stillness (unfed lives stay ~300 s), meals near random.
 - γ 0.999 vs 0.995: predicted smaller effect than either above.
 
-**Not verified:** every paper row came through a fetch summariser (quotes second-hand); only `trp_env`, EVAAA, Crafter and Avalon code were read directly. Yoshida's five-way numbers (abstract only). `trp_env`'s death charge: one reading found −10, another none. EVAAA's steps and published decay rates. n-step SAC, average-reward learners and pay-on-intake-only were never tested against this trap.
+**Not verified:** every paper row came through a fetch summariser (quotes second-hand); only `trp_env`, EVAAA, Crafter and Avalon code read directly. Yoshida's five-way numbers (abstract only). `trp_env`'s death charge: one reading found −10, another none. EVAAA's steps and published decay rates. n-step SAC, average-reward learners and pay-on-intake-only never tested against this trap.
 
 ## 14. Smell: what learned to follow an odour, with which nose, in how many steps (2026-11-17; serves stage 3 "Other senses", seat `SM.02`; INBOX `RESEARCH:` 11-16 06:44)
 
 Long form: `/data/jack-research/research_notes/smell/`. [V] = read in paper or code.
 
 **Already known**
-- **OdorSpaces** (arXiv:2611.05738, CoRL 2026; read in full [V]): PPO, depth eye + nose + pose history into a recurrent core, start distance ramped 1.5 → 9 m over 30M steps, one seed. SPL %: learned 65.3 propane / 24.7 fire; best hand-written searcher 36.1 / 0. **Nose: 5 points on 0.5 m arms × 4 heights, raw samples over 1–2.5 s.** Centre point only: 65 → 12.9. One height: fire 0. No curriculum: 53.6. Reward pays each step for true distance closed; without it 51.6 / 0. Smell alone 49.5; no recurrence 54.0 / 28.7 (fire better). Given GPS + compass; starts inside the plume; fails by pushing into obstacles the odour crosses; **no no-smell control, no curve, no result under 30M, no code.** Nothing pretrained named.
-- **Our field form, the closest test** (Alonso & Kirkegaard 2024, arXiv:2310.10531 [V]; C0·exp(−λ|x|), 5 sensors, log(M+1), PPO, "millions of simulations", distance-shaped): a memoryless policy "performs poorly" when the sensor baseline is small against noise; a recurrent one reading change over time carries that regime.
-- **Intermittent plumes: every published learner had memory AND a wind reference.** Singh 2023 (arXiv:2109.12434 [V]): 1 odour point + egocentric wind, PPO, RNN-64, 5M steps, "RNNs outperform MLPs for every plume tracking task", top 5 of 14 seeds shown. Rando 2024 (arXiv:2404.17495 [V]): tabular Q, actions in the wind frame, 100k episodes: memory of 1 sniff 79% success at 0.14 path efficiency, 20 sniffs 95% at 0.5. Verano 2023: a reactive controller fails "in a large fraction of cases". Piro 2026 (arXiv:2605.21329): wind direction is "key to many proposed algorithms". Windless successes (Loisy 2022–23) carry a full Bayesian map.
-- **Learned smooth-gradient taxis on a body:** FlyGym's RL demo [V, code]: SAC [32,32], 500k decisions, a 1-number turn action over a ready-made walker, reward = distance closed + heading; odour as 2 square-rooted numbers. Its hand-written taxis needs (L−R)/mean × 500 through tanh: "the asymmetry is subtle".
-- **Biology:** two-nostril smell is a near-field cue. Moles: nostril block matters "within 4–5 cm", not farther (Catania 2013). Mice at a distance: "naris occlusion did not significantly impact performance"; they compare sniff to sniff (Findley 2021 [V]). Best human concentration resolution ~5% (Cain 1977).
+- **OdorSpaces** (arXiv:2611.05738, CoRL 2026; [V, in full]): PPO, depth eye + nose + pose history into a recurrent core, start distance ramped 1.5 → 9 m over 30M steps, one seed. SPL %: learned 65.3 propane / 24.7 fire; best hand-written searcher 36.1 / 0. **Nose: 5 points on 0.5 m arms × 4 heights, raw samples over 1–2.5 s.** Centre point only: 65 → 12.9. One height: fire 0. No curriculum: 53.6. Reward pays each step for true distance closed; without it 51.6 / 0. Smell alone 49.5; no recurrence 54.0 / 28.7 (fire better). Given GPS + compass; starts inside the plume; fails by pushing into obstacles the odour crosses; **no no-smell control, no curve, no result under 30M, no code.** Nothing pretrained named.
+- **Our field form, the closest test** (Alonso & Kirkegaard 2024, arXiv:2310.10531 [V]; C0·exp(−λ|x|), 5 sensors, log(M+1), PPO, "millions of simulations", distance-shaped): a memoryless policy "performs poorly" when sensor baseline is small vs noise; a recurrent one reading change over time works there.
+- **Intermittent plumes: every published learner had memory AND a wind reference.** Singh 2023 (arXiv:2109.12434 [V]): 1 odour point + egocentric wind, PPO, RNN-64, 5M steps, "RNNs outperform MLPs for every plume tracking task", top 5 of 14 seeds shown. Rando 2024 (arXiv:2404.17495 [V]): tabular Q, wind-frame actions, 100k episodes: memory of 1 sniff 79% success at 0.14 path efficiency, 20 sniffs 95% at 0.5. Verano 2023: a reactive controller fails "in a large fraction of cases". Piro 2026 (arXiv:2605.21329): wind direction is "key to many proposed algorithms". Windless successes (Loisy 2022–23) carry a full Bayesian map.
+- **Learned smooth-gradient taxis on a body:** FlyGym's RL demo [V, code]: SAC [32,32], 500k decisions, 1-number turn action over a ready-made walker, reward = distance closed + heading; odour as 2 square-rooted numbers. Its hand-written taxis needs (L−R)/mean × 500 through tanh: "the asymmetry is subtle".
+- **Biology:** two-nostril smell is a near-field cue. Moles: nostril block matters "within 4–5 cm", not farther (Catania 2013). Mice at distance: "naris occlusion did not significantly impact performance"; they compare sniff to sniff (Findley 2021 [V]). Best human concentration resolution ~5% (Cain 1977).
 - **No published body learned to climb a static two-point gradient from eat-only reward**, at any budget. Every success: ≥ 500k decisions, pay for distance closed, a 1–4-way action (ours: a whole body).
 
-**Ours (inf, from `odour.py:99-131`):** left–right contrast ≤ 8% (0.16 m / 2 m), ~5% over headings; best-heading signal/noise 7.6 / 4.6 / 2.8 at 4 / 5 / 6 m; the cue is 0.004–0.011 between two raw inputs of 0.05–0.14. Raw, memoryless, 13k–52k decisions, eat-only: the weak end of every published axis. The sense itself suffices: a scripted nose-follower fed .375 = the perfect-map ceiling (`505f7ae8`); `steer` on rising log smell 14/40 vs babble 3/40.
+**Ours (inf, from `odour.py:99-131`):** left–right contrast ≤ 8% (0.16 m / 2 m), ~5% over headings; best-heading signal/noise 7.6 / 4.6 / 2.8 at 4 / 5 / 6 m; cue is 0.004–0.011 between two raw inputs of 0.05–0.14. Raw, memoryless, 13k–52k decisions, eat-only: the weak end of every published axis. The sense suffices: a scripted nose-follower fed .375 = the perfect-map ceiling (`505f7ae8`); `steer` on rising log smell 14/40 vs babble 3/40.
 
 **Candidates** (for `SM.02`; none seats anything)
-- **A. Wide multi-point nose, raw history** (OdorSpaces). Proven at 30M, shaped, one seed. Strength: direction in one sniff. Weak: a 1 m nose is not a human head (END-FIT); never shown under 30M.
+- **A. Wide multi-point nose, raw history** (OdorSpaces). Proven at 30M, shaped, one seed. Strength: direction in one sniff. Weak: a 1 m nose is not a human head (END-FIT).
 - **B. Today's nose re-encoded + memory:** log per nostril, (L−R)/(L+R) with gain, d(log mean)/dt, into a recurrent brain (Alonso; FlyGym; biology). Smallest published: 500k decisions, 1-number action. Expect: nothing at 52k; first sign ≥ 500k.
 - **C. Head sweep (casting):** the animal's far-field answer. Evolved, not RL (Izquierdo 2010, 1 sensor); our klinotaxis script fed .21. Needs memory.
-- Not candidates: a memoryless learner on the raw 12 numbers (three kills here; the record's weak end); O2 puffs with no wind sense.
+- Not candidates: memoryless learner on the raw 12 numbers (three kills here); O2 puffs with no wind sense.
 
 **Ours beside theirs**
 
@@ -532,20 +532,59 @@ Long form: `/data/jack-research/research_notes/smell/`. [V] = read in paper or c
 | wind | given (plumes); none (CFD room) | no wind sense; O2 gusts 0.6 m/s (`odour.py:123`) | O2: no precedent |
 | steps | 500k – 30M | 13k, 52k (`smell_sense.py:40-51`) | 10–2,300× short |
 
-**Known-answer check:** none fits us cleanly. Closest: Alonso's exponential-field cell (memoryless poor at small baseline, recurrent good): code and step count not found. OTTO (`C0PEP0D/otto`, 1-D: mean arrival ≈ 7.15, "several hours" on a laptop) checks a pipeline, not a nose. Singh: 16 h/seed. The cheap check is ours: the scripted follower on the new encoding must still reach the perfect-map ceiling (minutes, box).
+**Known-answer check:** none fits. Closest: Alonso's exponential-field cell: code and step count not found. OTTO (`C0PEP0D/otto`, 1-D: mean arrival ≈ 7.15, "several hours" on a laptop) checks a pipeline, not a nose. Singh: 16 h/seed. Cheap check, ours: scripted follower on the new encoding must still reach the perfect-map ceiling (minutes, box).
 
-**What the record does NOT answer** (stage 3; a brain with memory, start-distance dial, ≥ 500k decisions, 5 seeds, shuffled-nose control; ~1 Kaggle CPU kernel an arm)
+**What the record does NOT answer** (stage 3; a brain with memory, start-distance dial, ≥ 500k decisions, 5 seeds, shuffled-nose control; ~1 Kaggle CPU kernel per arm)
 - Encoding B vs raw, same nose: predicted B out-eats shuffled, raw does not.
-- Does smell add anything once the `row128` eye sees floor food (HIT .909)? Predicted no in the open, yes for hidden food (`SM.02`'s claim; OdorSpaces ran no no-smell control).
+- Does smell add anything once the `row128` eye sees floor food (HIT .909)? Predicted no in the open, yes for hidden food (`SM.02`'s claim).
 - Nose span 0.16 vs 0.5 m: predicted to matter less with memory (Alonso).
 - O2 puffs with vs without a wind sense: predicted no learning without.
 
 **Not verified:** OdorSpaces' total steps (30M is the ramp), net sizes, PPO settings, figures. Singh's success counts (plot). Verano's table; Alonso's step count (SI); FlyGym RL's score; EVAAA's smell ablation (secondary: "least useful sense"). Biology except Findley: abstracts. Not found: any RL test of one nose point vs two. Not searched: auxiliary losses for an ignored input.
 
-## 15. The home-made brains on the two textbook rows: what each kind of learner is on record to need (2026-11-17; serves order J3 (4), M3; rule 2 pick — J3 had no `prior:` lines)
+## 15. The home-made brains on the two textbook rows: what each kind of learner is on record to need (2026-11-17; serves J3 (4), M3)
 
-Long form: `/data/jack-research/research_notes/inhouse_rows/` (three parts). SKELETON — the published side is being read this slot.
+Long form: `/data/jack-research/research_notes/inhouse_rows/` (three parts, `mc_noise.py`).
 
-**Question.** J3 (4) puts every in-house arm on Pendulum-v1 (band edge −314.7 within 60,000 steps = 3× SAC's 20,000) and sparse MountainCarContinuous-v0 (> 90 within 150,000). Three arms have failed both (`KNOWN_ANSWERS.md` Row J3-4, J3-4b); four wait (`dreamer-xs`, `wm-efe`, `wm-dyn`, `wm-latent+ring`). What is each KIND of learner on record to need on these two tasks, so a miss can be read as "broken" or as "this class is that slow"?
+**Question.** J3 (4): each in-house arm on Pendulum-v1 (a 100-episode window ≥ −314.7 inside 60,000 steps, 3× SAC's) and sparse MountainCarContinuous-v0 (> 90 inside 150,000). Three failed both; four wait. Is a miss "broken" or "this class is that slow"?
 
-**What ours are (read 11-17).** All seven share ONE policy learner: tanh-squashed advantage-weighted regression on GAE targets (`cores.py:540` `lc_update`), a 256-row ring, batch 16, 0.25 updates per decision, γ 0.95 (`survival.py:63`), i.i.d. Gaussian exploration std 0.5 → 0.1 (`survival.py:66`). The names differ only in the auxiliary ("binding") loss on the shared state: none (`ppo-needs`), learning-progress critic (`ppo-lp`), RSSM + decoder (`dreamer-xs`, `cores.py:304`), + 5-head disagreement (`wm-efe`, `cores.py:410`), latent prediction against an EMA encoder (`wm-latent`), stored recurrent state (`wm-dyn`, `wm-latent+ring`). None plans or learns in imagination.
+**What ours are (probed 11-17).** ONE policy learner under seven names: advantage-weighted regression (AWR) on GAE targets (`cores.py:540`), 256-row ring, batch 16, 0.25 updates per decision, γ 0.95 (`survival.py:63`), i.i.d. Gaussian noise std 0.5 → 0.1 (`inhouse_rows.py:194`). They differ only in an auxiliary loss; none plans. Measured:
+- **`wm-efe` IS `dreamer-xs` on these rows.** Same seed: 115 shared tensors identical, only actor/critic initial values differ; the 5 heads get no gradient and nothing calls `uncertainty` (`cores.py:408`).
+- `dreamer-xs`, `wm-efe`, `wm-latent` step the GRU once from zero state and zero action (`cores.py:362`; recurrent and action weights get gradient 0.0, as `ef335cf` found): an autoencoder, no model of what comes next. `wm-latent`'s target is its own detached latent (`cores.py:395`), no EMA copy. Only `wm-dyn` predicts the next step.
+- Weights: `ppo-needs` 122K, `wm-latent` 857K, `dreamer-xs` 1.53M: `wm-latent`'s ~3× faster row 1 is confounded with a 7× larger network.
+
+**Already known**
+- **Tuned on-policy learners miss row 1's rule too.** RL-Zoo's PPO on Pendulum-v1 (gSDE, γ 0.9, budget 100k): 20k-step training windows −1185, −754, **−321**, −214, −220; first rolling-100 ≥ −314.7 at ~60,700 steps (`wm-latent`'s best windows −321…−397 sit there: PPO-class speed). TRPO: 80,600. A2C (budget 1M): 370,800. SAC/TQC: inside 20k. One seed each, public logs (`DLR-RM/rl-trained-agents`; PPO re-derived here). The Zoo budgets on-policy 5–50× off-policy; ours 3×.
+- AWR is published as slow online: "not yet as sample efficient as SAC and TD3" (Peng 2019, arXiv:1910.00177; 50k buffer, batch 256, β 0.05; 5k already unstable; no Pendulum result); "an order of magnitude slower" (AWAC, arXiv:2006.09359). Ours: 256 rows, batch 16, β 1.0.
+- **White noise cannot find the flag.** Measured here (200 episodes each): i.i.d. Gaussian std 0.1 / 0.3 / 0.5 → **0 / 0 / 0** reaches; std 1.0 → 5. The same std 0.5 held 8 / 32 steps → 79 / 170; OU σ 0.5 → 176.
+- Published, same shape: PPO with white noise scores 0.0 on this task after 2,048,000 steps (20 seeds); colored noise β ≥ 0.5 ~93.9 (Hollenstein 2024, arXiv:2312.11091, Table A14.1). Under DDPG/TD3/SAC Gaussian σ 0.6 fails, OU σ 0.5 solves (arXiv:2206.03787).
+- γ 0.95 is a second blocker (inf): the best run takes ~106 steps; 100 × 0.95^100 = 0.59 vs ~2 of action cost, so doing nothing is optimal (36.6 at γ 0.99).
+- Disagreement solves sparse Mountain Car in the first episode only when it PLANS the actions (Tschantz 2020, arXiv:2002.12636; MAX, arXiv:1810.12162). No result found where a model or ensemble loss that chooses no actions reaches a sparse reward; dropping an active-inference agent's epistemic term made "little to no difference" on CartPole (Millidge 2020).
+- A next-state loss does help model-free learners on state inputs: TD7 +276.7% over TD3 at 300k (MuJoCo, arXiv:2306.02451); decoder vs EMA-latent target differ 2–5%, an un-stopped target loses 23–25%; OFENet lifts SAC (Humanoid 6093 → 9561), barely PPO. All NEXT-step; ours (bar `wm-dyn`) is same-step.
+- Memory buys nothing on a fully observed task: DRQN worse on 6 of 9 such Atari games (Hausknecht 2015); a shared recurrent encoder hinders (Ni 2022).
+
+**Candidates** (repairs; rule unchanged, ruling 24)
+1. **Held noise at action choice** (hold 32 steps, or OU θ 0.15 σ 0.5), with γ ≥ 0.99. Proven: PPO 0 → ~94 here at 2M steps.
+2. **A class-fair reading of row 1.** PPO-class needs ~60–100k steps, A2C-class ≥ 370k. A rising curve that misses at 60k is "on-policy speed", not "broken".
+3. **A next-step latent loss, stopped target** (`wm-dyn`): proven on MuJoCo state with a 1M replay, not on 256 rows.
+
+**Ours beside theirs**
+
+| Setting | Published | Ours | Cost |
+|---|---|---|---|
+| Row 1 budget | PPO 100k, A2C 1M, SAC 20k | 60k for all (`inhouse_rows.py:114`) | tuned PPO misses by 6 points |
+| Exploration | gSDE / OU / colored | i.i.d. Gaussian 0.5 → 0.1 | 0 flag reaches, any arm |
+| γ on row 3 | 0.9999 (Zoo), 0.99 (PPO, colored) | 0.95 | do-nothing is optimal |
+| Model loss | next step, 16 × 64 sequences | same step, single rows | an autoencoder |
+| Epistemic term | plans the actions | untrained, uncalled | none: `wm-efe` = `dreamer-xs` |
+
+**Predictions for the four waiting arms.** Row 3: 0 flag reaches, 0/5, every arm. Row 1: `dreamer-xs` and `wm-efe` best windows −320…−420, 0–1 of 5 seeds, indistinguishable; `wm-dyn`, `wm-latent+ring` no better than `wm-latent`.
+
+**Known-answer check.** `mc_noise.py`: an exploration option reproduces white 0/200, held-32 ~170/200 before use. Row 1's PPO-class reference: Zoo PPO, 100k steps, windows 3 and 4 ≈ −321, −214.
+
+**What the record does NOT answer**
+- Is `wm-latent`'s 3× its loss or its size? `wm-latent` at loss weight 0 (5 seeds, ~1.7 CPU-h); predicted: most of the gain stays.
+- AWR on 256 rows with held noise and γ 0.99 on row 3 (5 seeds, ~2 CPU-h); predicted: flag found at once, row still missed (256 rows forget the reach).
+- Next-step vs same-step loss on 256 rows: `wm-dyn` vs `wm-latent` reads it first.
+
+**Not verified.** R2D2's burn-in figures; Eberhard 2023's pink-noise table; VIME's and AWAC's figures; OFENet's step budgets; TD7's per-task digits; the TRPO and A2C steps (one seed, a sub-agent's arithmetic). Not found: AWR or Dreamer on state Pendulum; Dreamer on Mountain Car; a discount or replay-size ablation on Pendulum; an RSSM trained on single rows.
