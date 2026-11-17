@@ -189,3 +189,10 @@ mlx 0.32.4:
 **Next: 0.2 + 0.3 Kaggle half** in one Kaggle CPU session: PyPI `mlx[cpu]==0.32.4`, `mlx_smoke.py`,
 `mlx_spike.py --size 1m` and `--size 12m` (compiled and eager), plus the official `debug` preset 200
 steps → G0 decided.
+
+**0.2a + 0.3 Kaggle half: KERNEL READY 11-17 01:55** — `python -m experiments.brain_a.g0_kernel kernel`
+(PyPI `mlx[cpu]==0.32.4`; smoke, then spike 1m/12m × compiled/eager, 6 steps each, per-run timeouts).
+G0 rule frozen in its docstring as the report states it: size12m compiled cold first step < 600 s AND
+peak < 8192 MB, finite. 0.2b (official `debug` preset on a dummy world) is NOT in it — needs a driver
+wrapper, next. Launch at the first free Kaggle CPU session after J8/J3/J6/J10's queued kernels:
+`scripts/launch_detached.sh /data/jack-logs/mlx/launch_g0.log $PY -m experiments.brain_a.g0_kernel kernel`.

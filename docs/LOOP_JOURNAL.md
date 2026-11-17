@@ -1957,3 +1957,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 1 core: eager 2.26 s/step, 408 MB; `mx.compile` 37.1 s cold (≈0.5 s trace + g++ JIT, cached), steady 2.34 s, 341 MB; compiled loss = eager to 7 digits. Compile buys no CPU speed.
 - The report's one unanswered risk is retired for size1m; G0 is decided on size12m, which needs a Kaggle CPU session (with 0.2). Logs `/data/jack-logs/mlx/`.
 - Philosophy served: 3 and 7 (A's Mac route is measured, not assumed — the finished Jack runs on owners' machines).
+
+## 2026-11-17 01:55 · JACK · Next up 1 (MLX port 0.2a + 0.3 Kaggle half): the G0 kernel is ready to launch
+- J8 cannot move: f3, e0, e1 RUNNING on Kaggle (checked by status 01:38), W1.04 holds the 4th; J3/J6/J10 each wait on a session → "Next up" 1.
+- `experiments/brain_a/g0_kernel.py`: one Kaggle CPU kernel, PyPI mlx[cpu]==0.32.4: smoke, then spike 1m and 12m × compiled/eager, each its own process and timeout; verdict = the report's G0 exactly (12m compiled cold first step < 600 s AND peak < 8 GB, finite). Verdict function checked on PASS / TIMEOUT / slow-compile dicts. Not launched — no free session.
+- 0.2b (official debug preset on a dummy world) is not in it: needs a driver wrapper; next.
+- Philosophy served: 3 and 7 (A's Mac route gets a gate that can say no before any port code is written).
