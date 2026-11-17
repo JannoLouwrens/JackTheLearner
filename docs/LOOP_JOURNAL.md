@@ -2154,3 +2154,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Corrected the 12:58 state's "past the 9.5 h watcher timeout their summary is lost": Kaggle keeps running to its own 12 h cap, and every cell writes its file every 10 lives. `pilot_b2.cells_from_artifacts` + `kernel()` now assemble the card from those files on a reattach (`JACK_REUSE_KERNEL`), marking unfinished cells cut and missing ones not_found. `test_pilot_b2_recover` PASS (control: no files → None).
 - Kernel ids for the reattach written into J11's state. J12/J6/J3 still wait for sessions.
 - Philosophy served: 4 (a measurement cannot be silently thrown away by a timeout) and 6 (≈ 20 free Kaggle CPU-hours not re-spent).
+
+## 2026-11-17 13:22–13:42 UTC · JACK · J11 item (4) — c0..c3 still RUNNING on Kaggle (all 4 sessions held)
+- Explained INBOX 11-16 19:40: brain B's extra cores are jax 0.11's `tf_XLAEigen` intra-op pool (4 threads = the affinity mask, 29.4 of 64 CPU-s). The XLA_FLAGS in `_single_thread` do nothing, even set in the env from process start (1.54 cores) — not a setdefault problem.
+- Fix (opt-in, default off): `_single_thread(pin_cpu=)` / `JACK_PIN_CPU` sets the affinity before jax's backend starts (refuses after). Probe `harness/single_thread_probe.py`: 1.00 cores, CPU 55.4→50.5 s, wall 34.7→50.7 s; actor weights and lives bit-identical to unpinned; taskset control 1.00. `3b054813`.
+- Gap: no fingerprint control (another seed) run; Kaggle's 4-cells-a-kernel B runs oversubscribe the same pool, unmeasured.
+- Philosophy served: 6 (B can now run on this box without taking customers' cores) and 4 (the cause measured and attributed by thread, not guessed).
