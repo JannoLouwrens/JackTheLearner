@@ -111,3 +111,70 @@ def apply_multiray_vision(w) -> None:
 def apply_lazy_contact_audio(w) -> None:
     """Swap the instance's `synth.step` for the lazy one (this W0 only)."""
     w.synth.step = types.MethodType(_lazy_step, w.synth)
+
+
+# ── J12 (1): the 128-ray level row, an EYE CHANGE (not an identity) ─────────
+# LAB `experiments/eye_streak.py` (bddffac4): one level row of 128 world-frame
+# azimuths finds floor food .909 at d0 where today's 16 rays find .528.
+# Ray k points at azimuth 2*pi*k/n_az from the same origin as W0's eye, same
+# geom groups, flg_static=1, bodyexclude=-1, cutoff mjMAXVAL and the same
+# "> RAY_MAX_RANGE reads empty" clause; each ray reads [distance/8 m,
+# material] exactly as W0's 16 do, the noise panel included (one world draw
+# per panel ray, in ray order). With n_az = 128, rays 8j are today's ray j's
+# direction, so on the same body state they read the same numbers.
+ROW_EYES = {"row128": 128}
+
+
+def _row_vision(self) -> np.ndarray:
+    import mujoco
+    from experiments import w0 as W
+    n = self._row_n
+    pos = np.array(self.data.xpos[self.rover_bid], dtype=float)
+    pos[2] += W.RAY_Z_OFFSET
+    mujoco.mj_multiRay(self.model, self.data, pos, self._row_vec, W._RAY_GROUPS,
+                       1, -1, self._row_gid, self._row_dist, n, mujoco.mjMAXVAL)
+    dist, gid = self._row_dist, self._row_gid
+    miss = (dist < 0) | (dist > W.RAY_MAX_RANGE) | (gid < 0)
+    out = np.empty(2 * n, dtype=np.float32)
+    d = np.where(miss, 1.0, dist / W.RAY_MAX_RANGE)
+    t = np.where(miss, 0.0, self._tex[np.maximum(gid, 0)])
+    if self.panel_gid >= 0:
+        for k in np.flatnonzero((~miss) & (gid == self.panel_gid)):
+            amp = min(1.0, 2.5 / max(float(dist[k]), 1e-6))
+            t[k] = 0.5 + amp * (float(self._rng.uniform()) - 0.5)
+    out[0::2] = d
+    out[1::2] = t
+    return out
+
+
+def apply_row_vision(w, eye: str = "row128") -> None:
+    """Give this W0 the n_az-ray level row. `observe()` keeps its order of
+    world draws (vision's panel draws, then the placebo channel) and its width
+    check on every other sense; only `vision` is 2*n_az wide. `observe_pure`
+    goes through the patched `observe`, so J9's stream restore still holds."""
+    n = ROW_EYES[eye]
+    az = 2 * np.pi * np.arange(n) / n
+    dirs = np.stack([np.cos(az), np.sin(az), np.zeros(n)], -1)
+    w._row_n = n
+    w._row_vec = np.ascontiguousarray(dirs, dtype=np.float64).reshape(-1)
+    w._row_gid = np.zeros(n, dtype=np.int32)
+    w._row_dist = np.zeros(n, dtype=np.float64)
+    from experiments import w0 as W
+    blank = np.zeros(W.MODALITIES["vision"], dtype=np.float32)
+    shipped_observe = type(w).observe
+
+    def observe(self):
+        v = _row_vision(self)                    # panel draws first, as shipped
+        own = self.__dict__.get("_vision")       # multiray_vision may be set
+        self._vision = lambda: blank             # no draw, passes the width check
+        try:
+            o = shipped_observe(self)
+        finally:
+            if own is None:
+                del self._vision
+            else:
+                self._vision = own
+        o["vision"] = v
+        return o
+
+    w.observe = types.MethodType(observe, w)

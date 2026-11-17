@@ -299,6 +299,7 @@ SENSES = ("vision", "audio", "touch", "proprio", "needs")
 REWARDS = ("homeo-dr", "dr100-eat", "dr100-eat-pos")
 TERMINAL_OBS = ("reborn", "dying")
 INTEGRATORS = ("shipped", "implicitfast")  # J6(4); shipped = RK4
+EYES = ("rays16", "row128")                 # J12 (1); rays16 = today's eye
 FLOOR_FOODS = ("obj0", "obj1")
 # J2 item 1, food count: W0's own non-food floor objects that the dial turns
 # into floor food at low d, in this order (obj5 is never food).
@@ -364,7 +365,8 @@ class JackEnv(gym.Env):
                  multiray_vision: bool = False,
                  integrator: str = "shipped",
                  move_cost_dial: bool = False,
-                 spawn_clear: Optional[float] = None):
+                 spawn_clear: Optional[float] = None,
+                 eye: str = "rays16"):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -413,6 +415,13 @@ class JackEnv(gym.Env):
             raise ValueError(f"spawn_clear must be > 0 m, got {spawn_clear!r}")
         self.spawn_clear = None if spawn_clear is None else float(spawn_clear)
         self.spawn_clear_failed = 0
+        # J12 (1), default "rays16" = today's 16-ray eye, nothing patched.
+        # "row128": one level row of 128 azimuths (experiments/fast_sim.py);
+        # vision is 256 wide. An eye change, proven in
+        # experiments/tests/test_jack_env_eye.py.
+        if eye not in EYES:
+            raise ValueError(f"eye must be one of {EYES}, got {eye!r}")
+        self.eye = eye
         self._ep_decisions = 0
         self._truncated = False
         self._seed = int(seed)
@@ -442,6 +451,9 @@ class JackEnv(gym.Env):
         if self.multiray_vision:
             from experiments.fast_sim import apply_multiray_vision
             apply_multiray_vision(self.w)
+        if self.eye != "rays16":
+            from experiments.fast_sim import apply_row_vision
+            apply_row_vision(self.w, self.eye)
         if self.integrator == "implicitfast":
             self.w.model.opt.integrator = self.w.mujoco.mjtIntegrator.mjINT_IMPLICITFAST
         self.move_cost_scale = 1.0
