@@ -350,3 +350,30 @@ has 2/200, and 0.75 is the next grid point down. Two capped lives in 200 is a
 first sign, not a sustaining world: d8 at 0.75 still dies of hunger 198/200,
 mean life 694 s (+29% on d = 1), bouts/life 2.1× d = 1; every seed (20/20) has
 ≥ 5 of 10 lives that eat. The three outstanding rows fill the shares only.
+
+## J12 (2) — the forager gate for the NEW eye, `row128` (FROZEN 2026-11-17, before any gate run; ruling 37)
+
+**Ruler.** Row f2's forager (`HandForager2`, F2_BAN_S = inf), changed only in
+that it reads `jack_env(eye="row128")`: 128 world-frame azimuths (row ray 8j
+is old ray j), indices after vision shifted +224, and the "small object" blob
+rule kept in ANGLES (≤ 2 × 22.5°, growth cap 90° — ≤ 16 / 32 of 128 rays), not
+in ray counts. Code `experiments/eye_forager.py`; proof
+`tests/test_eye_forager.py` PASS (11-17): at 16 rays its actions equal
+HandForager2's bit for bit, 0 of 12,000 decisions differ (seeds 153/154 ×
+d 1 / 0.75 × plain / shuffled, meals inside), control (ray 0 nudged 1e-3)
+differs on 26; at 128 rays the angle-kept rule reports a food blob on 486/500
+decisions vs 317/500 for the unscaled rule.
+**World.** Row f2's (default options, shipped calibration), `lazy_contact_audio`
+(identical world, ruling 34), at **d = 0.75 (d0)** and **d = 1**.
+**Seeds.** Fresh **241–260**, 10 lives each, life cap 9,000 decisions.
+**Rows** at each d: **f3** the ruler; **g3** f3 with its 128 rays permuted
+fresh every decision (must fail); **b3** white random (the per-seed floor).
+**Bar, unmoved:** a seed counts if f3's mean floor meals/life ≥ 5.0 AND > b3's
+on that seed; f3 PASSES at d iff ≥ 18 of 20. g3 scored the same must hold on
+< 18, else f3's pass at that d is VOID. Judged at d0 and at d = 1 separately.
+**Extension clause: none.** A miss is a miss.
+**Where.** 2 Kaggle CPU kernels (`eye_forager kernel 0.75`, `… kernel 1.0`),
+rank 2 behind J11's card. Smoke (tuning seed 153, d0, 1 life, box): f3 capped
+(1,800 s) 19 meals, g3 capped 10 meals, b3 445 s 3 meals; ~44 dec/CPU-s;
+worst case ~4.7 h a kernel. Disclosed before the run: the blind twin's 10
+meals in one d0 life make "g3 passes at d0 → f3 VOID there" a live outcome.
