@@ -47,6 +47,9 @@ button{font:inherit;color:inherit}
 .icon{width:44px;height:44px;display:grid;place-items:center;border:0;background:none;border-radius:12px;cursor:pointer;color:var(--ink)}
 .icon:active{background:rgba(255,255,255,.08)}
 .icon svg{width:22px;height:22px}
+.copyhdr{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 11px;border:0;border-radius:11px;background:var(--key);color:var(--ink);font-size:14px;font-weight:600;letter-spacing:-.01em;cursor:pointer;flex:none}
+.copyhdr:active{opacity:.7}
+.copyhdr svg{width:15px;height:15px}
 
 #stage{position:relative;flex:1;min-height:0;background:var(--panel);padding:6px 4px 2px 8px;touch-action:none}
 #term{width:100%;height:100%}
@@ -172,6 +175,7 @@ html:not(.app) #menu [data-m="dash"]{display:none}
     <a class="back" href="../" aria-label="Back to the dashboard"><svg viewBox="0 0 12 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 2 10l8 8"/></svg>Jack</a>
     <h1>Terminal</h1>
     <span class="state" id="state" role="status"><i></i><span>Signed out</span></span>
+    <button class="copyhdr" id="copybtn" type="button" aria-label="Select and copy text"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="9.5" height="11" rx="2"/><path d="M12 15.5H4.5a2 2 0 0 1-2-2V5.5"/></svg>Copy</button>
     <button class="icon" id="more" aria-label="More" aria-haspopup="true"><svg viewBox="0 0 22 22" fill="currentColor"><circle cx="4" cy="11" r="2"/><circle cx="11" cy="11" r="2"/><circle cx="18" cy="11" r="2"/></svg></button>
   </header>
 
@@ -274,7 +278,7 @@ html:not(.app) #menu [data-m="dash"]{display:none}
     <div class="sheet">
       <div class="grab"></div>
       <h2>Select and copy</h2>
-      <p>Press and hold a word, then drag the handles. Everything that has scrolled away is here too: scroll up.</p>
+      <p>This is the text from the screen. Tap <b>Copy screen</b>, or <b>Copy all</b> to include what scrolled off the top. To copy only part, select it with your finger or mouse first, then <b>Copy selection</b>.</p>
       <div class="field mono" id="copytext" tabindex="0" aria-label="Text from the terminal"></div>
       <div class="copyrow">
         <button class="key" id="copysel" type="button" disabled>Copy selection</button>
@@ -318,6 +322,17 @@ var fit=new FitAddon.FitAddon();
 term.loadAddon(fit);
 term.open($("#term"));
 window.jackTerm=term;                                 /* for the interface tests */
+/* On a computer, Ctrl+C in a terminal means "interrupt", not copy. So when text
+   is selected, Ctrl+C (or ⌘+C) copies it and does NOT reach the shell; with
+   nothing selected it still interrupts as normal. */
+term.attachCustomKeyEventHandler(function(e){
+  if(e.type!=="keydown")return true;
+  if((e.ctrlKey||e.metaKey)&&e.code==="KeyC"&&term.hasSelection()){
+    copyOut(term.getSelection(),null);try{term.clearSelection()}catch(_){}
+    if(e.preventDefault)e.preventDefault();return false;
+  }
+  return true;
+});
 
 /* ───── connection: ttyd's own wire format ───── */
 var ws=null, token=null, wantOpen=false, tries=0, timer=null, pending=0, paused=false, everLive=false;
@@ -414,7 +429,7 @@ term.onData(function(d){
 term.onResize(function(){sendSize()});
 
 /* ───── window tabs, from what tmux reports in the terminal title ───── */
-var NAMES={bash:"Shell",claude:"Claude",node:"Claude",python:"Python",python3:"Python",vim:"Editor",nano:"Editor",htop:"Monitor",top:"Monitor"};
+var NAMES={bash:"Shell",claude:"Claude",node:"Claude",python:"Python",python3:"Python",vim:"Editor",nano:"Editor",htop:"Monitor",top:"Monitor",laptop:"Laptop"};
 var winCount=1,winNames={},winKey="",activeWin="";
 term.onTitleChange(function(t){
   if(!/^JWm?\|/.test(t))return;
@@ -773,6 +788,7 @@ $("#copysel").addEventListener("click",function(){copyOut(String(window.getSelec
 $("#copyscreen").addEventListener("click",function(){copyOut(readerScreen,this)});
 $("#copyall").addEventListener("click",function(){copyOut($("#copytext").textContent,this)});
 $("#copydone").addEventListener("click",function(){try{window.getSelection().removeAllRanges()}catch(e){}});
+$("#copybtn").addEventListener("click",function(){openReader(null)});
 var installEvent=null;
 window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();installEvent=e});
 function showInstall(){
