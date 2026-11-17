@@ -2280,3 +2280,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Scar: W0 seeds `RandomState(seed*104729+7)` — any world seed ≥ 41,010 raises; rebuilt worlds draw from [20k, 40k).
 - Harvested last slot's PG.6: PASS on current code (537 s), no longer stale; PG.9 and its dependents un-gated.
 - Philosophy served: 3 (the curriculum is now a raceable arm built from the published design, not assumed) and 5 (his world can teach in stages). Nothing run under a learner — it waits for J11 to say B moves.
+
+## 2026-11-17 22:20–22:35 UTC · JACK · J11 (the R = 1.55 m leak) — c4..c7 still RUNNING on Kaggle (22:22), every other order waits on a session
+- The partial floor card's only do-nothing sustained life (seed 601, life 64, 36 meals, both noop arms) was born 1.577 m from food — past R. A statue fed is a world fault (cause a), learner-free, so it is repaired before the rule, not explained in it.
+- Foods are free bodies ("where eating shoves them"); R was measured on 250-decision lives, the card's lives run 9,000. `experiments/statue_leak_probe.py` (`d6ca4615`) replays the exact cell (native_substep, identical world) to life 64, self-checking each life vs c0.json (life 0 matched: 2,836 decisions, 0 meals), and logs root + food xy through life 64. Detached ~45 min; next slot harvests.
+- Philosophy served: 4 (the floor must be clean before a learner is judged against it) and 5 (his world is part of what makes him).
