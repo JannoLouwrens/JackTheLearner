@@ -366,7 +366,8 @@ class JackEnv(gym.Env):
                  integrator: str = "shipped",
                  move_cost_dial: bool = False,
                  spawn_clear: Optional[float] = None,
-                 eye: str = "rays16"):
+                 eye: str = "rays16",
+                 native_substep: bool = False):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -422,6 +423,14 @@ class JackEnv(gym.Env):
         if eye not in EYES:
             raise ValueError(f"eye must be one of {EYES}, got {eye!r}")
         self.eye = eye
+        # J6 (2b), default OFF: the 40 sub-steps' Python pieces (drives,
+        # water, contact-audio filter, drive gate) run by C twins
+        # (experiments/native_substep.py); identical decisions, proven with
+        # deaths and rebirths in experiments/tests/test_native_substep_env.py.
+        # Piece 4 twins the lazy audio step, so it requires lazy_contact_audio.
+        if native_substep and not self.lazy_contact_audio:
+            raise ValueError("native_substep requires lazy_contact_audio=True")
+        self.native_substep = bool(native_substep)
         self._ep_decisions = 0
         self._truncated = False
         self._seed = int(seed)
@@ -498,6 +507,11 @@ class JackEnv(gym.Env):
                 if name in self.w.drives._food:
                     gid, nu = self.w.drives._food[name]
                     self.w.drives._food[name] = (gid, dial_meal(nu, self.difficulty))
+        if self.native_substep:
+            # LAST in the build: the C drive config copies the food table
+            # (extra foods, dialled meal sizes) when it is made.
+            from experiments.native_substep import apply_native_substep
+            apply_native_substep(self.w)
 
     def _apply_move_cost(self, scale: float) -> None:
         """J11 (1) `move_cost_dial`: this world's DriveLayer charges

@@ -30,6 +30,24 @@ RESULT — Kaggle CPU column (kernel jack-cpu-1794897525, 11-17 06:44, mujoco
   decisions/s wall -> 1M decisions ~1.05 h; shipped vec4 ~1.9 h; shipped
   single ~3.8 h. Item (2b) (40 sub-steps in one native call) not measured.
 
+BOX ROW with (2b) (11-17 ~12:40, `box 300`, same world/seed/actions, one
+run each, `/data/jack-logs/j6/box_speed_T300.json`; identity proven in
+tests/test_native_substep_env.py, which needs lazy audio):
+  config                      dec/CPU-s   x shipped
+  shipped                        49.0       1.00
+  lazy                           60.6       1.24
+  implicitfast (WORLD CHANGE)    80.8       1.65
+  lazy + implicitfast           120.0       2.45
+  lazy + native                  93.7       1.91   (identical world)
+  lazy + native + implicitfast  281.3       5.74   (world change = implicitfast's)
+  vec4 shipped                  113.6 wall  38.6/CPU-s
+  vec4 lazy + implicitfast      237.5 wall  86.3/CPU-s
+  The native gain under implicitfast (2.34x here, 2.0-2.2x in the test) is
+  above (2b)'s 1.97x ceiling, which was priced on a different world/seed
+  (substep_split.py, seed 153, J8 shipped cal) — read the test's per-seed
+  range as the sturdier figure. Kaggle column for native: NOT measured (the
+  C build and its identity must be proven on Kaggle's BLAS first).
+
 Usage: $PY -m experiments.sim_speed_kcpu box [T]     # local, small T
        $PY -m experiments.sim_speed_kcpu kernel      # one Kaggle CPU kernel
 """
@@ -50,6 +68,9 @@ CONFIGS = {
     "implicitfast": {"integrator": "implicitfast"},
     "lazy+implicitfast": {"lazy_contact_audio": True, "integrator": "implicitfast"},
     "multiray": {"multiray_vision": True},
+    "lazy+native": {"lazy_contact_audio": True, "native_substep": True},
+    "lazy+native+implicitfast": {"lazy_contact_audio": True, "native_substep": True,
+                                 "integrator": "implicitfast"},
 }
 VEC_CONFIGS = {"vec4 shipped": {}, "vec4 lazy+implicitfast": CONFIGS["lazy+implicitfast"]}
 SEED = 301

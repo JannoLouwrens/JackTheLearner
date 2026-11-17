@@ -742,15 +742,16 @@ def _native_decide(self, action) -> None:
             self._die(cause)
 
 
-def apply_native_substep(w) -> None:
+def apply_native_substep(w, fma_norm: bool = True) -> None:
     """Patch one W0 instance (the fast_sim way; w0.py untouched). Requires
     lazy_contact_audio semantics (piece 4 is the twin of `_lazy_step`, which
     is proven identical to the shipped step)."""
     import types
     w._native = {
         "contacts": NativeContacts(w._body_mask, w._ground_mask),
-        "drives": NativeDrives(w.drives),
-        "water": NativeWater(w.water) if w.water is not None else None,
+        "drives": NativeDrives(w.drives, fma_norm=fma_norm),
+        "water": (NativeWater(w.water, fma_norm=fma_norm)
+                  if w.water is not None else None),
         "synth": NativeSynth(w.synth),
     }
     w.decide = types.MethodType(_native_decide, w)
