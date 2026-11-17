@@ -2179,3 +2179,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Dyna maze (§6 row 1, "sleep" = learning while not acting) REPRODUCES: upstream S&B code `maze.py@96bc2036` unmodified, 30 seeded runs, rule `f6c3f074` before any run. E (first episode the 30-run mean ≤ 21 steps 5 in a row) = 28 / 6 / 3 at n = 0 / 5 / 50 vs the book's ~25 / ~5 / 3; never-trains twin E = ∞, 930 steps/episode. 146 CPU-s, box, nice 19. KNOWN_ANSWERS N1-dyna.
 - Control re-registered `b4aa7f65` before it produced a number: n=50 at α=0 is q += 0 per planning update (same zero Q, same policy as n=0, α=0) but cost ~2M samples/run — killed at 10 CPU-min. Disclosed; arms and bands untouched. Two runs gave identical arm numbers (seeded).
 - Philosophy served: 3, 4 (the "sleep" part's first published number reproduced under a rule written first, with a control that failed) — small, tabular; it says the textbook effect is real in our hands, not that Jack sleeps.
+
+## 2026-11-17 UTC · SYSTEM · INBOX 07:31 (fresh poller held a busy seat)
+- `cpu_budget admit` (`a1dab043`): a refusal caused only by a job under 60 s old now waits (≤ 80 s) until that job is measured, then re-asks. Pollers use ~0.5 CPU-s at start against the 6 CPU-s line, so they reclassify at 60 s.
+- Live test: busy job + 5 s-old poller → ADMITTED after 60 s; control (two busy jobs) → REFUSED after 61 s. Caps and classification unchanged. T0.34 reads stale (IMPL_DEPS) — regate's to re-buy.
+- Not acted on: the SESSION 07:38 disk line (research_prompt /tmp rule, CLI-versions prune) is next in INBOX.
+- Philosophy served: 5, 6 (free Kaggle sessions the JACK lane was being refused).
