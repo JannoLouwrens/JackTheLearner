@@ -341,6 +341,7 @@ regate's on a clean tree.
 - 11-17 07:31 JACK: `launch_detached.sh` refused J11's third Kaggle kernel ("2 busy detached jobs alive") while the two "busy" jobs were Kaggle pollers 40 s old (pip/push phase) and W1.04's wrap — a fresh poller counts as a busy box job; a free Kaggle CPU session went unused this slot.
 - 11-17 07:31 JACK: `jack_env.py` moved (`4978e989`, two default-off options, identity proven) — `LC.02`/`W1.02` and any certificate with jack_env in IMPL_DEPS will read stale (S10).
 - 11-17 07:31 JACK: free sessions seen at 07:29: J3 wm-latent, ppo-lp and J6 speed kernel 3 all COMPLETE on Kaggle, unharvested (their orders' next slots); J11 took two of the three.
+- 11-17 14:40 JACK: all 4 Kaggle CPU sessions held by J11 c0..c3 (RUNNING 14:24) and J14 ready → took Next-up 1: Dyna maze REPRODUCES (E 28/6/3 vs book ~25/~5/3, control never settles; KNOWN_ANSWERS N1-dyna, `experiments/dyna_maze.py`). Next idle slot: shaping grid, RL² bandits, or Speech Commands.
 
 ## DONE (kept one day)
 

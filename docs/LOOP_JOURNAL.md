@@ -2174,3 +2174,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found and fixed before any seed: the frozen "never-trains" control (`learning_starts = total+1`) took ~2 gradient steps on its last iteration (the runner floors to whole iterations). Now `2 × total`: replay_ratio 0.0, no loss logged. Stronger than the rule's text required in practice; no reading could have moved.
 - `test_brain_a_rows` PASS 5/5, each with a control that must fail. J14 is ready for 11-21; nothing launched.
 - Philosophy served: 4 (the control now does what its rule says — a twin that never learns) and 3 (brain A's chair earned only by a published number).
+
+## 2026-11-17 14:22–14:45 UTC · JACK · Next-up 1 (idle-slot reproduction) — J11/J12/J6/J3/J13/J10 wait (c0..c3 RUNNING on Kaggle at 14:24), J14 ready for 11-21
+- Dyna maze (§6 row 1, "sleep" = learning while not acting) REPRODUCES: upstream S&B code `maze.py@96bc2036` unmodified, 30 seeded runs, rule `f6c3f074` before any run. E (first episode the 30-run mean ≤ 21 steps 5 in a row) = 28 / 6 / 3 at n = 0 / 5 / 50 vs the book's ~25 / ~5 / 3; never-trains twin E = ∞, 930 steps/episode. 146 CPU-s, box, nice 19. KNOWN_ANSWERS N1-dyna.
+- Control re-registered `b4aa7f65` before it produced a number: n=50 at α=0 is q += 0 per planning update (same zero Q, same policy as n=0, α=0) but cost ~2M samples/run — killed at 10 CPU-min. Disclosed; arms and bands untouched. Two runs gave identical arm numbers (seeded).
+- Philosophy served: 3, 4 (the "sleep" part's first published number reproduced under a rule written first, with a control that failed) — small, tabular; it says the textbook effect is real in our hands, not that Jack sleeps.
