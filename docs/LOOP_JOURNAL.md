@@ -2267,3 +2267,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The information is there: same probe on the 2 thermal floats 0.998 (fire 0.994), the law on the decoded floats 1.000; the 80 non-thermal −0.83. The FAIL is the generic 82-input probe's sample efficiency over 10 training lives — the instrument, not the world.
 - A v3 edit was drafted and REVERTED uncommitted: choosing a probe by reading the pilot until it passes is a forking path. Receipt `experiments/ps02_fire_probe_diag.py`; INBOX asks the Director for the probe rule (CV-chosen on training lives only, or thermal channel alone with a reason).
 - Philosophy served: 4 (a failure fixed, not filed — by first proving which fix is real; the ordered one would have re-run to the same FAIL).
+
+## 2026-11-17 21:37–21:55 UTC · JACK · Next-up 6 (`PG.6` detached) — every order waits (c4..c7 RUNNING on Kaggle, `kernels status` 21:40)
+- J11/J12/J6/J3/J13/J10 all need a Kaggle CPU session; J14 waits for Saturday's GPU week; PS.02 v3 waits on the Director's probe rule (21:40 INBOX).
+- `PG.6` (playground eyes, recorded PASS on code 306308f0, now 849884a6) re-run launched detached at nice 19 — too long for regate's cpu<10min, killed at the 20-min ceiling when tried in-session 11-15. No result yet; next slot harvests. It gates `PG.9`.
+- Scar: `PY` set in one Bash call does not carry to the next — an unset `$PY -m …` prints only "-m: command not found" to stderr, and `2>/dev/null` hides it as an empty result.
+- Philosophy served: 4 (a certificate about older code is re-tested, not trusted). Small slot, small step.
