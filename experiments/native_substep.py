@@ -22,13 +22,20 @@ Not world code; nothing here is imported by the world. Proof:
 `tests/test_native_substep.py` (identity on live JackEnv sub-steps, 3 seeds,
 plus a control that must differ).
 
-Scar for pieces 2-4 (written before they exist): `drives.substep`'s power is
-`np.abs(tau*omega).sum()` — numpy's PAIRWISE sum. A C loop that sums left to
-right differs in the last bits and is NOT identical; the C side must
-reproduce numpy's pairwise order (blocks of 8, unroll 128) or the option is a
-world change. Same for every `np.linalg.norm` (it is sqrt(dot), BLAS order).
+Float order for piece 2 (`drives.substep`), MEASURED 11-17 09:42 (probe on
+live sub-steps, seeds 153-155, 12,000 calls; and 20,000 random vectors):
+  power = np.abs(tau*omega).sum(): tau/omega are ndof-6 = 4 long, under
+    numpy's pairwise block (8), so it is a plain left-to-right loop —
+    C sequential sum matches 12,000/12,000.
+  np.linalg.norm(qvel) (10 long) and norm(qvel[:3]): NO plain ordering
+    matches (sequential 1,776 and 1,076 misses of 12,000; 2/4/8-accumulator
+    trees worse) — this box's OpenBLAS ddot accumulates with FMA. C
+    `s = fma(x[i], x[i], s)` left to right, then sqrt, compiled with
+    `-ffp-contract=off`, matches 20,000/20,000 (n = 10 and 3).
+  This is the box's BLAS. Kaggle's x86 BLAS may order differently: the
+  identity test must run where the option runs, or the option stays box-only.
 
-Measured 11-17 09:50, box, nice 19 (seed 153, ncon 23): `_grounded` Python
+Measured 11-17 09:38, box, nice 19 (seed 153, ncon 23): `_grounded` Python
 13.69 us, C 1.02 us a call -> x40 = 0.51 ms of a decision (of 0.73 priced).
 Identity (`tests/test_native_substep.py`): 18,000/18,000 sub-step calls of
 each function match on seeds 153-155; the control (ground mask cleared)
@@ -94,7 +101,7 @@ def build(force: bool = False):
     if force or not os.path.exists(so) or open(c).read() != SRC:
         with open(c, "w") as f:
             f.write(SRC)
-        subprocess.run(["gcc", "-O2", "-shared", "-fPIC", "-o", so, c,
+        subprocess.run(["gcc", "-O2", "-ffp-contract=off", "-shared", "-fPIC", "-o", so, c,
                         "-I", os.path.join(_MJ_DIR, "include")], check=True)
     ffi = FFI()
     ffi.cdef(CDEF)

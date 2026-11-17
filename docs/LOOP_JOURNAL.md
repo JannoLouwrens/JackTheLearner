@@ -2105,3 +2105,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The gain is the four per-sub-step Python pieces (drives.substep 2.85, water 1.25, synth 0.91, _grounded 0.73 ms of a 21.45 ms RK4 decision; ~5.6 of 10.44 under implicitfast). Ceiling 1.37× RK4, 1.97× implicitfast → build them in C (cffi + mujoco headers are in the venv), identity-tested.
 - cpu_budget.json pollers' dirt committed by name per the header.
 - Philosophy served: 5 (the simulator's speed priced on free compute before effort is spent) and 6 (free compute only).
+
+## 2026-11-17 09:45 · JACK · J6 (2b) piece 1
+- J11's 4 Kaggle floor kernels still running (none exited); J12 waits for a session → J6.
+- Built the native pipeline: gcc + cffi ABI dlopen (no Python headers on the box), C reads mjData directly.
+- `_grounded` and `_contact_partners` in C: identical on 18,000/18,000 live sub-step calls (3 seeds), control differs; _grounded 13.7 → 1.0 us.
+- Measured how piece 2 must sum: power = plain loop (matches), norm = sequential FMA (matches 20,000/20,000; no plain order does).
+- Not wired into jack_env (one edit when all four pieces are proven). Commits 48f44bc2 + this.
+- Philosophy 5 (a faster, true loop) and 4 (identity proven with a control that fails).
