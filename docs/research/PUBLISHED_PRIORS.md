@@ -499,3 +499,9 @@ Long form: `/data/jack-research/research_notes/j8_lie_still/` (three parts).
 - γ 0.999 vs 0.995: predicted smaller effect than either above.
 
 **Not verified:** every paper row came through a fetch summariser (quotes second-hand); only `trp_env`, EVAAA, Crafter and Avalon code were read directly. Yoshida's five-way numbers (abstract only). `trp_env`'s death charge: one reading found −10, another none. EVAAA's steps and published decay rates. n-step SAC, average-reward learners and pay-on-intake-only were never tested against this trap.
+
+## 14. Smell: what learned to follow an odour, with which nose, in how many steps (2026-11-17; serves stage 3 "Other senses", the Smell seat `SM.02`; answers the INBOX `RESEARCH:` line of 11-16 06:44)
+
+Long form: `/data/jack-research/research_notes/smell/` (three parts). SKELETON — published side being read this slot.
+
+**Ours (read from code):** `odour.py` ships a static field `A0·exp(−d/2 m)` (O1, `:172`, `LAMBDA_M` `:103`) and a puff field with wind and line-of-sight occlusion (O2, `:210`); the nose is two points 0.16 m apart (`:99`), 12 numbers [left, right, d/dt] × 4 channels (`:418`), noise 1e-3 (`:131`). Three kills of smell on O1 (`smell_sense.py`): 13k decisions, meals 8 vs shuffled-nose 10 vs no-smell 6; then 52k; and `SM.02`'s six DQN arms 83–100% timeout. The probe says the nose points to food on 99.5% of poses.
