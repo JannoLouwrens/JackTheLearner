@@ -1990,3 +1990,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `c80d13b0`: `launch_detached.sh` gives the exact sub-second read-only `run lane` probe no seat (`admit --no-seat`); everything else still meets the cap, day budget and load gate.
 - Planted: two idle wrap sleepers fill both seats; probe runs (fails on the old launcher), a real payload is refused rc 3. T0.33/T0.34 checks True; governance net −3 lines.
 - Philosophy served: 4 and 5 (a guard's test that goes red only when the box is busy is noise the Jack lane learns to ignore).
+
+## 2026-11-17 03:35 · JACK · Next up 1 (MLX port 0.4b): the official train step's repeatability survives two must-differ controls
+- J8 cannot move: e0/e1/e2 RUNNING (kaggle status 03:23, e0 at 5h45); J3/J6/J10 each wait on a Kaggle session → "Next up" 1.
+- `g1_probe.py` gains `--seed`, `--step-seed-offset`, `--compare`. Seed 0 re-run with the edited script: IDENTICAL to r1 (183/183 params, 120/120 metrics).
+- Controls DIFFER: agent seed 1 → 14/183 params equal; per-step train seed +1000 (same init) → 21/183. train() consumes its seed; the identity is real.
+- Finding: the policy's output head (`pol/head/action/mean`) and `slowval` do not move in 5 debug steps — a 5-step golden file would not test the actor's last layer; G1 must run longer or dump gradients.
+- Philosophy served: 4 (an identity claim needs a control that could have failed).

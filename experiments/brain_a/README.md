@@ -229,3 +229,16 @@ non-repeat is the loop, not the agent: G1 is reachable by calling train directly
 control that must differ (different per-step seed → different params), file noise for the two
 samplers, compiler off, intermediates. Next (0.4b): add the seed-changed control, then the
 file-noise patch + intermediate dumps on `debug`, twice → G1.
+
+**0.4b MEASURED 11-17 03:35 — the controls that must differ, on the box** (`g1_probe.py --seed`,
+`--step-seed-offset`, `--compare`; logs `/data/jack-logs/mlx/g1_probe_{r3,c_seed1,c_step1000}.*`,
+55 CPU-s for three runs). Against r1 (seed 0): r2 and r3 (r3 = the edited script, seed 0)
+**IDENTICAL 183/183 params, 120/120 metrics**; agent seed 1 **DIFFERS** (14/183 params, 55/120
+metrics equal); same init with only the per-step train seeds shifted by 1000 **DIFFERS** (21/183,
+65/120) — so `train()` consumes its seed and the identity is not a seed-blind step. The params
+equal under both controls are counters, optimiser slots, return-norm bounds, norm scales and the
+zero-initialised policy-mean head (`pol/head/action/mean/*` unchanged after 5 steps, as is
+`slowval`), i.e. the ones 5 debug steps leave at their deterministic init — a golden file built
+on 5 steps does NOT exercise the actor's output layer; G1's file should run long enough (or dump
+gradients) that `pol/head/action/mean` moves. Next (0.4c): file noise for the two samplers,
+compiler off, intermediate dumps, twice → G1.
