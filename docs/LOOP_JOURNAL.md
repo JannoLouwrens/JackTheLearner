@@ -2077,3 +2077,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First (c) read 0/0 for both eyes: hand cal + random_needs kills the body every ~3 decisions, so it never settles to eye height. Apparatus fixed (shipped cal), not the threshold.
 - Next: J12 (2) freeze the forager gate in WORLD_CARD.md before any run. J11: launch c2..c7 when the cap frees.
 - Served: philosophy 3 (the eye is raced from a measured LAB, not assumed) and 4 (identity + a control that must fail).
+
+## 2026-11-17 08:07–08:30 UTC · JACK · J11 card kernels c2, c3 launched; J12 (2) forager gate frozen
+- J11: the detached cap freed (W1.04 gone; c0/c1 are pollers) and Kaggle had 2 free sessions → c2 jack-cpu-1794902904, c3 jack-cpu-1794902959 RUNNING; all 4 sessions now hold J11's floor card. c4..c7 wait for sessions.
+- J12 (2): gate frozen before any run in WORLD_CARD.md + `experiments/eye_forager.py`: f2's forager reading row128 (blob rule kept in angles: ≤ 45°, not ≤ 2 rays), shuffled twin, random floor; seeds 241–260; d0 and d=1; bar unmoved (≥ 5 meals/life on ≥ 18/20); no extension.
+- Proof the ruler is unchanged: at 16 rays 0/12,000 actions differ from HandForager2 (incl. shuffled twin and lives with meals); nudging one ray by 1e-3 differs on 26 (control). At 128 rays the angle rule sees food on 486/500 decisions vs 317 unscaled.
+- Smoke d0 seed 153 (tuning seed, 1 life): f3 capped with 19 meals, g3 capped with 10, b3 445 s 3 meals. The blind twin may pass at d0 → f3 VOID there; written down before the run.
+- Philosophy served: 4 (a gate that can fail, with a control that must, frozen before the data) and 3 (the new eye is tested, not assumed).
