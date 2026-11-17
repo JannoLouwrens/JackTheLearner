@@ -2091,3 +2091,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Finding: never-trained controls show the same row-3 return rise (−22 → −1.3) as the arms; it is the noise schedule. The J3-4 claim "ppo-needs learned to stop paying action cost" was wrong; corrected in KNOWN_ANSWERS.
 - `dc0e2b05`. ledger.json dirt is not this slot's (left alone).
 - Philosophy served: 4 (a wrong reading of a control-shared effect corrected; misses kept as misses) and 5 (the simulator's speed priced on the free compute).
+
+## 2026-11-17 ~09:20 UTC · SYSTEM · S9 slot 1: 8 settled FAILs fated, two floors lowered (`6ce0397c`)
+- FAIL-DISPOSED markers: NE.01 (ruling-35), ME.11/.B/.C/.D + T2.10 (ruling-20: diary retrieval → keys from learned state, stage 3), HR.1 (D54), T1.11 (D41). S9 list 34 → 26.
+- Floors: UNREACHABLE 115→107, PASS-ON-DEAD-DEPENDENCY 6→4, `ratchets record --only` the four moved counters. FAIL-UNOWNED stays 1 until the list is empty.
+- Found: the order's prescribed "FAIL-DISPOSED: Director ruling 35 …" parses MALFORMED (authority regex is one token) — written `ruling-35`.
+- coverage / decisions / champions all exit 0. cpu_budget.json dirt is the pollers', left alone.
+- Philosophy served: 4 (a failure names the ruling that answered it, not a page that happens to mention it).
