@@ -68,6 +68,24 @@ RULE — declared before worlds 700-719 are generated (tuning set 690-692):
 
     nice -n 19 $PY -m experiments.find_himself collect <seed> [<seed> ...]
     nice -n 19 $PY -m experiments.find_himself fit <first_seed> <n_worlds>
+
+FOLLOW-ON (11-17 23:20, after the registered fit on 700-719 read ALIVE) — A
+KEY THAT NEEDS NO TURNING.  Trying all 128 turns of a look against every
+memory is 128 comparisons per memory; a brain's store compares a key once.
+Bet: the amplitude spectrum of the row over azimuth (|rfft|, 65 x 2 numbers,
+unchanged by any turn of the head) is such a key and loses little.  Prior:
+rotation-invariant ring descriptors re-localise lidar robots (Scan Context,
+from memory, source not opened); nothing for a from-scratch agent.
+RULE — declared before any look of worlds 720-724 is read (no tuning set:
+nothing to tune).  Arm b128f = body frame, 128 rays, nearest remembered
+spectrum, no turning.  ALIVE iff b128f FINDS HIMSELF (mean HIT >= 0.50 and
+HIT - CHANCE >= 0.25 on >= 4 of 5 worlds) AND mean HIT(b128, turning) - mean
+HIT(b128f) <= 0.10.  VOID if its tag control > CHANCE + 0.05 or its
+scrambled eye (rays permuted before the spectrum) > CHANCE + 0.10.
+Otherwise DEAD: the phases carry the place and the turn search stays.
+Reported: b16f; b128n.
+
+    nice -n 19 $PY -m experiments.find_himself fitf <first_seed> <n_worlds>
 """
 from __future__ import annotations
 
@@ -272,11 +290,59 @@ def fit(first: int, n_worlds: int) -> dict:
     return out
 
 
+def fitf(first: int, n_worlds: int) -> dict:
+    """The follow-on: amplitude-spectrum keys, no turning (rule in docstring)."""
+    rows = []
+    for seed in range(first, first + n_worlds):
+        z = np.load(os.path.join(OUT, f"world_{seed}.npz"))
+        xy, life = z["xy"].astype(np.float64), z["life"]
+        rng = np.random.RandomState(seed + 29)
+        mem = life < MEM_LIVES
+        te = (~mem) & np.r_[True, life[1:] != life[:-1]]
+        d_true = np.linalg.norm(xy[te][:, None] - xy[mem][None], axis=2)
+        ar = np.arange(int(te.sum()))
+        hit = lambda k: float((d_true[ar, k] <= HIT_M).mean())      # noqa: E731
+        spec = lambda x: np.abs(np.fft.rfft(x.astype(np.float64), axis=1))  # noqa: E731
+        row = {"seed": seed, "chance": float((d_true <= HIT_M).mean())}
+        for n in WIDTHS:
+            X = _sub(z["xb"], n)
+            q, M = X[te], X[mem]
+            k = _nearest(spec(q), spec(M), False)
+            row[f"b{n}f"] = hit(k)
+            row[f"b{n}f_tags"] = hit(rng.permutation(int(mem.sum()))[k])
+            row[f"b{n}f_scr"] = hit(_nearest(spec(q[:, rng.permutation(n)]),
+                                             spec(M), False))
+            row[f"b{n}"] = hit(_nearest(q, M, True))
+            row[f"b{n}n"] = hit(_nearest(q, M, False))
+        rows.append(row)
+    A = lambda k: np.array([r[k] for r in rows])                 # noqa: E731
+    ch = A("chance")
+    need = math.ceil(0.8 * n_worlds)
+    void = []
+    if A("b128f_tags").mean() > ch.mean() + 0.05:
+        void.append("tags")
+    if A("b128f_scr").mean() > ch.mean() + 0.10:
+        void.append("scrambled")
+    finds = bool(A("b128f").mean() >= 0.50
+                 and ((A("b128f") - ch) >= 0.25).sum() >= need)
+    loss = float(A("b128").mean() - A("b128f").mean())
+    verdict = "VOID" if void else "ALIVE" if finds and loss <= 0.10 else "DEAD"
+    out = {"rows": rows, "verdict": verdict, "void": void, "loss": loss,
+           **{k: float(A(k).mean()) for k in rows[0] if k != "seed"}}
+    print(json.dumps({k: (round(v, 3) if isinstance(v, float) else v)
+                      for k, v in out.items() if k != "rows"}, indent=1))
+    with open(os.path.join(OUT, f"fitf_{first}_{n_worlds}.json"), "w") as f:
+        json.dump(out, f, indent=1)
+    return out
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == "collect":
         for s in sys.argv[2:]:
             collect(int(s))
+    elif cmd == "fitf":
+        fitf(int(sys.argv[2]), int(sys.argv[3]))
     elif cmd == "fit":
         fit(int(sys.argv[2]), int(sys.argv[3]))
     else:
