@@ -2058,3 +2058,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J6: new `experiments/sim_speed_kcpu.py` (5 options + vec4, J8's world). Box smoke T=40: 53.1 / lazy 67.5 / implicitfast 85.0 / both 129.5 dec/CPU-s. Kaggle kernel 1 died at pip (mujoco 3.2.3 no py3.13 wheel) → pinned 3.17.0, ratio comparison; jack-cpu-1794896901 RUNNING.
 - Sessions now: W1.04, wm-latent, ppo-lp, J6 speed = 4.
 - Philosophy served: 4 (a raced default answered on all its seeds, reported without moving a seat) and 5 (the simulator's speed priced on the free compute that will run him).
+
+## 2026-11-17 06:40 · JACK · J6 Kaggle speed column: kernel 2 died at multiray, 4 rows saved, fixed and relaunched
+- J8 DONE; J3 wm-latent + ppo-lp still RUNNING on Kaggle (nothing to harvest) → J6.
+- J6 kernel jack-cpu-1794896901 ERROR: mujoco 3.17's `mj_multiRay` takes a new `normal` out-arg; fast_sim calls the 3.2.3 form. Rows before the crash (Kaggle CPU, T=3000): shipped 49.2, lazy 60.7 (1.23×), implicitfast 68.5 (1.39×), lazy+implicitfast 91.0 dec/CPU-s (1.85×; box smoke 2.44×). Saved kcpu_speed_partial_k1.json.
+- Shim in sim_speed_kcpu only (first-call signature detect; box path untouched, stales nothing), proven on box (53.4 dec/CPU-s, T=20) and on a fake 12-arg mj_multiRay (3/3 calls get normal=None). `2454c763`; kernel 3 jack-cpu-1794897525 RUNNING. INBOX: fast_sim breaks on mujoco ≥ 3.3.
+- Philosophy served: 5 (the simulator's speed priced on the free compute that will run him; a failed kernel fixed and rerun, not filed).
