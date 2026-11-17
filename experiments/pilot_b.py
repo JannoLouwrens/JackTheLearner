@@ -536,6 +536,31 @@ def from_partial(arm: str, seed: int, pf: Path) -> dict:
     return {"arm": arm, "seed": seed, "lives": [], "not_found": True}
 
 
+def cells_from_artifacts(artifacts: dict, cells: list) -> dict | None:
+    """J11 prep (11-17 20:50): a kernel cut by Kaggle's cap or reattached after
+    its watcher timed out has no `pilot_b_cells.json`, but every cell left
+    `pilot_<arm>_s<seed>.json` (finished) or its `.partial.json` (written every
+    PARTIAL_EVERY lives) in JACK_OUT, and Kaggle returns all of JACK_OUT. This
+    assembles the cells from those, exactly as run_parallel would have: final
+    file first, else from_partial (marked `cut`), else `not_found` — never
+    invented. None when no cell file came back at all (tests/test_pilot_b_partial)."""
+    res, found = {}, 0
+    for arm, seed in cells:
+        final = f"pilot_{arm}_s{seed}.json"
+        part = partial_file(Path(final)).name
+        if final in artifacts:
+            rec = json.loads(Path(artifacts[final]).read_text())
+            found += 1
+        elif part in artifacts:
+            rec = from_partial(arm, seed, Path(artifacts[part]))
+            found += 1
+        else:
+            rec = from_partial(arm, seed, Path("/nonexistent") / part)
+        rec["from_cell_file"] = True
+        res[f"{arm}_s{seed}"] = rec
+    return {"cells": res, "assembled": True} if found else None
+
+
 _JOB = r'''
 import subprocess as _s, sys as _y
 _s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
@@ -562,9 +587,14 @@ def kernel(name: str) -> dict:
     cells = kernel_groups()[name]
     sub = submit(build_job(job_body(cells)), prefer="kaggle-cpu", est_hours=5.0,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["pilot_b_cells.json"])
-    if not sub.ok:
-        raise RuntimeError(f"pilot_b kernel {name}: {sub.message}")
-    r = result_json(sub, "pilot_b_cells.json")
+    if sub.ok and "pilot_b_cells.json" in sub.artifacts:
+        r = result_json(sub, "pilot_b_cells.json")
+    else:
+        r = cells_from_artifacts(sub.artifacts, cells)
+        if r is None:
+            raise RuntimeError(f"pilot_b kernel {name}: {sub.message}")
+        print(f"pilot_b kernel {name}: no summary ({sub.message or 'missing'}); "
+              f"assembled from per-cell files", flush=True)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / f"{name}.json").write_text(json.dumps(r, indent=1) + "\n")
     for k, rec in r["cells"].items():
