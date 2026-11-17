@@ -2213,3 +2213,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Box probe (`rl2_cost_probe.py`): one GRU fwd+bwd over a 250k batch = 11.5 CPU-s → ≥ 138 CPU-s per TRPO iteration → ≥ 23 CPU-h a seed. Not an idle-slot row (INBOX correction).
 - Rule `74371e09` first, then the learner-free task check: random 49.60 / greedy 75.59 / Thompson 74.80 vs the paper's 49.9 / 74.8 / 74.7 — all REPRODUCE (tol ±1.8–2.3); blind-Thompson control 49.4 fails as it must. KNOWN_ANSWERS N6-rl2-task.
 - Philosophy served: 3, 4 (a cost claim checked against the paper's own recipe before anyone pays; the "memory across episodes" row's task is now proven to be the paper's task, with a control that failed) — it is the instrument, not Jack.
+
+## 2026-11-17 17:38–17:55 UTC · JACK · Next-up 1 (Speech Commands) — J11/J12/J6/J3/J13/J10 wait (c4..c7 hold all 4 Kaggle sessions, RUNNING 17:38), J14 waits for 11-21
+- Read Warden 2018 §6 from the arXiv PDF (pypdf): 105,829 utterances, 35 words, 2,618 speakers. Rule `b857ff29` committed before the run.
+- Learner-free task check on `/data/jack_corpora/speech_commands_v2` REPRODUCES: counts exact; train/val/test (84,843 / 9,981 / 11,005) share 0 speakers; the shipped lists equal the TF `which_set` SHA-1 rule on 100% of files. Random-split control shares 2,115–2,307 speakers — fails as it must. KNOWN_ANSWERS N7-sc-task.
+- Not run: the DS-CNN 94.4% ear row (PRIORS: one CPU session → Kaggle rank). cpu_budget receipts (c4..c7 watchers) committed as the header asks.
+- Philosophy served: 4 (the ear's first known-answer row now stands on the paper's own data, checked with a control that failed) and 3 — instrument, not Jack.

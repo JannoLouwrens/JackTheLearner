@@ -1348,10 +1348,10 @@
         "detached:launch_c1.log": 656.38,
         "detached:launch_c2.log": 672.32,
         "detached:launch_c3.log": 674.15,
-        "detached:launch_c4.log": 125.59,
-        "detached:launch_c5.log": 125.5,
-        "detached:launch_c6.log": 42.32,
-        "detached:launch_c7.log": 42.27,
+        "detached:launch_c4.log": 136.15,
+        "detached:launch_c5.log": 135.74,
+        "detached:launch_c6.log": 62.84,
+        "detached:launch_c7.log": 62.94,
         "detached:launch_e0.log": 576.39,
         "detached:launch_e1.log": 432.15,
         "detached:launch_e2.log": 267.89,
@@ -1364,7 +1364,7 @@
         "detached:w104.log": 522.5,
         "j14-rows-smoke": 82.13
       },
-      "used_s": 15235.46
+      "used_s": 15297.45
     }
   },
   "last_child_s": {
