@@ -196,3 +196,26 @@ G0 rule frozen in its docstring as the report states it: size12m compiled cold f
 peak < 8192 MB, finite. 0.2b (official `debug` preset on a dummy world) is NOT in it — needs a driver
 wrapper, next. Launch at the first free Kaggle CPU session after J8/J3/J6/J10's queued kernels:
 `scripts/launch_detached.sh /data/jack-logs/mlx/launch_g0.log $PY -m experiments.brain_a.g0_kernel kernel`.
+
+**0.2b MEASURED 11-17 02:27 — on the box, no Kaggle session needed** (JAX 0.4.33 has an aarch64 CPU
+wheel; scratch venv `/data/venvs/jack-dv3`, Python 3.12, the pin's `requirements.txt` with
+`jax[cuda12]` → `jax==0.4.33` CPU; unpinned deps as resolved today: elements 3.22.4, ninjax 3.6.3,
+portal 3.8.3, granular 0.25.0, optax 0.2.5, chex 0.1.90, numpy 1.26.4). Checkout
+`/data/src/dreamerv3_e01491f` at `e01491f`. `experiments/brain_a/official_debug.py`: the official
+`main()` with `--configs defaults debug`, a 74-float-in / 8-continuous-out dummy world registered by
+wrapping `make_env` (nothing inside the agent touched), 200 env steps, float32 compute; settings that
+differ are in its docstring. Logs `/data/jack-logs/mlx/official_debug_r{1,2}{,.log}`.
+- Runs: 17.2 s wall, 16.9 CPU-s, peak RSS 448 MB; optimizer 2,666 params (debug widths); training
+  starts at env step 132 (replay prefill), 7 train logs to step 204; all 8 loss series finite:
+  con 0.864→0.783, dyn 1→1, rep 1→1 (free nats), policy −1.6e-4, repval 3.2189 and rew 1.6094
+  (= ln 25, ln 5: uniform over the debug preset's 5 bins), value 0.166→0.182, vector 38.3→39.9.
+  Flat losses are expected: the optimiser warms up over 1,000 updates and this run makes ~20.
+- **Same seed, two runs: NOT identical.** Steps line up, dyn/rep identical, but vector loss differs by
+  up to 1.37, con 0.032, value 0.0079, rew/repval 2.4e-7. The official TRAINING LOOP is not
+  run-to-run reproducible on CPU (env threads + async replay sampling decide which batch the learner
+  sees). Consequence for G1 (step 0.4): the golden-file generator must call the agent's train/policy
+  functions directly on a fixed batch with file noise, never go through `embodied.run.train` —
+  the report's design already says this; this is the measurement that makes it binding.
+**Next: G0** (`g0_kernel.py`) at the first free Kaggle CPU session; then 0.4, the golden-file
+generator (≤ 60-line patch: file noise for the two samplers, direct `agent.train` on a stored batch,
+compiler off), run twice → G1.
