@@ -43,6 +43,19 @@ THE FLOOR CARD (learner-free; fixed before any cell ran, 11-17):
           the movement drain, ~2,750 without); at Kaggle's measured 60.7
           decisions per CPU-s with lazy audio (J6) ~ 89 CPU-h: 8 kernels of
           8 cells, 4 at a time, ~3 h each. > 60 CPU-min -> Kaggle (ruling 32).
+
+PILOT COST, for the rule's kernel plan (11-17 19:40; read off J8's own Kaggle
+returns /data/jack-logs/pilot_b/{k,e,f}*.json, no new run). 28 learner runs of
+300k packed 4 to a kernel: each got 0.99-1.01 cores (process CPU / wall), so
+Kaggle's 4x4-thread oversubscription (J11 item 4) costs no visible CPU there;
+decisions per CPU-s 11.29 / median 12.9 / 18.45 — the HOST sets the speed
+(kernel medians k0 17.96 vs k3 11.61; 1- and 2-learner kernels 13.0-15.0, no
+faster). Wall per run 4.58-7.37 h against CHILD_TIMEOUT_S 8.5 h: the slowest
+host seen leaves 13% margin. J11's arms (B0 K P G KP + K-lr0 = 30 learners,
+noop/held8 10 cheap) -> 8 kernels at 4 learners each (+ floors riding along),
+~4.6-7.4 h each, 4 sessions at a time = 2 waves. `native_substep=True`
+(identical world, J6 2b) is the one margin lever; under a learner it is
+measured on the box in the J11 state line.
 """
 from __future__ import annotations
 

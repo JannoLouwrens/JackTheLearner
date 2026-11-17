@@ -360,8 +360,12 @@ def build(force: bool = False):
     import subprocess
     from cffi import FFI
     os.makedirs(BUILD_DIR, exist_ok=True)
-    so = os.path.join(BUILD_DIR, "libjack_native.so")
-    c = os.path.join(BUILD_DIR, "jack_native.c")
+    # Keyed by the mujoco version: the C reads mjData/mjModel by struct layout,
+    # and a .so built against 3.2.3's headers SEGFAULTS on the first step under
+    # 3.17 (jack-std, Brain B's venv) — the cache used to key on SRC only (11-17).
+    tag = mujoco.__version__.replace(".", "_")
+    so = os.path.join(BUILD_DIR, f"libjack_native_mj{tag}.so")
+    c = os.path.join(BUILD_DIR, f"jack_native_mj{tag}.c")
     if force or not os.path.exists(so) or open(c).read() != SRC:
         with open(c, "w") as f:
             f.write(SRC)
