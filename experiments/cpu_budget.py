@@ -422,8 +422,9 @@ def is_poller(cpu_s: float, age_s: float) -> bool:
 
 
 def detached_jobs() -> tuple:
-    """(busy, pollers) over live `cpu_budget wrap` processes, one per
-    detached job; each is classed by its setsid session's lifetime CPU."""
+    """(busy, pollers, young) over live `cpu_budget wrap` processes, one per
+    detached job; each is classed by its setsid session's lifetime CPU.
+    `young` = busy only because younger than POLLER_MIN_AGE_S."""
     tick = os.sysconf("SC_CLK_TCK")
     uptime = float(open("/proc/uptime").read().split()[0])
     wraps, sess = {}, {}
@@ -442,7 +443,8 @@ def detached_jobs() -> tuple:
             continue
     pollers = sum(is_poller(sess.get(sid, 0) / tick, age)
                   for sid, age in wraps.values())
-    return len(wraps) - pollers, pollers
+    young = sum(age < POLLER_MIN_AGE_S for _, age in wraps.values())
+    return len(wraps) - pollers, pollers, young
 
 
 def admit_detached(label: str, *, path: Path | None = None,
@@ -458,7 +460,7 @@ def admit_detached(label: str, *, path: Path | None = None,
     read-only `run lane` probe only, S7(4)) skips the concurrency cap."""
     load = _loadavg() if loadavg is None else loadavg
     if alive is None:
-        alive, live_pollers = detached_jobs()
+        alive, live_pollers, _ = detached_jobs()
         pollers = live_pollers if pollers is None else pollers
     pollers = pollers or 0
     if seat and (alive >= DETACHED_MAX_ALIVE
@@ -565,8 +567,18 @@ def _main(argv: list) -> int:
     if len(argv) >= 2 and argv[0] == "admit":
         seat = "--no-seat" not in argv
         argv = [a for a in argv if a != "--no-seat"]
-        d = admit_detached(argv[1], est_s=float(argv[2]) if len(argv) > 2
-                           else 0.0, seat=seat)
+        est = float(argv[2]) if len(argv) > 2 else 0.0
+        d = admit_detached(argv[1], est_s=est, seat=seat)
+        # 11-17: a Kaggle poller 40 s old (≈0.5 CPU-s so far) held a busy
+        # seat and a free Kaggle session went unused. A refusal that only a
+        # sub-minute job causes waits until that job is classed, then asks
+        # again — the measurement decides, never a declared label.
+        for _ in range(int(POLLER_MIN_AGE_S // 10) + 2):
+            if d.admitted or "busy detached" not in d.reason \
+                    or not detached_jobs()[2]:
+                break
+            time.sleep(10)
+            d = admit_detached(argv[1], est_s=est, seat=seat)
         print(("ADMITTED: " if d.admitted else "REFUSED: ") + d.reason)
         return 0 if d.admitted else 1
     if len(argv) >= 3 and argv[0] == "wrap":
