@@ -28,6 +28,10 @@ Rows and bands, exactly as PUBLISHED_PRIORS §2 states them (official v1 size-S,
 - Control, one per row, seed 0: the never-trains twin (`algo.learning_starts` past the run's last
   step: dreamer_v3_5 plays its untrained policy from step 1 — no random prefill — and never takes
   a gradient step).
+  CORRECTION 11-17 14:35, before any seed ran (box smoke, A2 control): `learning_starts = total+1`
+  still trained ~2 gradient steps at the final iteration (the runner floors it to whole iterations);
+  it is now `2 x total` — no gradient step at all, as the line above says. Stronger, never looser:
+  the old form's extra steps came after every scored episode, so no reading could have moved.
   It MUST land below the band's lower edge at every point, else the row is VOID (the task is
   too easy to tell a learner from none at that point).
 - Reported, not judged: §2's step-0 check (reward and value loss 5.541, dyn = rep = 1.0, actor std
@@ -88,7 +92,11 @@ def overrides(row: str, seed: int, control: bool = False) -> list:
     out = BASE + [f"env.wrapper.domain_name={r['domain']}", f"env.wrapper.task_name={r['task']}",
                   f"seed={seed}", f"algo.total_steps={total_policy}"]
     if control:
-        out.append(f"algo.learning_starts={total_policy + 1}")
+        # 2 x total, not total + 1: the runner floors learning_starts to whole iterations
+        # (sheeprl utils.off_policy_schedule: learning_starts // num_envs), so total + 1 = 100,001 // 4
+        # = 25,000 = total_iters trained ~2 gradient steps on the LAST iteration (box smoke 11-17 14:30:
+        # Params/replay_ratio 0.001, losses logged at the final step). Correction 11-17, before any seed.
+        out.append(f"algo.learning_starts={2 * total_policy}")
     return out
 
 
@@ -128,3 +136,250 @@ def judge(row: str, per_seed: dict, control_episodes) -> dict:
     out["verdict"] = verdict
     out["extension_due"] = verdict == "MISS" and len(per_seed) == len(SEEDS)
     return out
+
+
+# ---------------------------------------------------------------------------------------------
+# The kernel (J14 item 1). One Kaggle GPU kernel per row: the never-trains control FIRST (cheap, no
+# gradient step, and it carries the unit check), then the seeds in order. Every run's record is
+# written to `brain_a_rows_<row>.json` the moment it ends, so a session cut keeps what finished.
+#
+# Per-episode returns come from the runner's own stdout line, printed once per finished episode
+# (sheeprl dreamer_v3_5.py: `Rank-0: policy_step={policy_step}, reward_env_{i}={ep_rew}`), NOT from
+# the `Rewards/rew_avg` TensorBoard scalar — that one is a mean over a log interval (5,000 policy
+# steps), and the rule scores individual episodes ending inside (0.9 P, P].
+#
+# UNIT CHECK (the smoke's inference made positive): a DMC episode is 1,000 frames and never
+# terminates early, so with action repeat 2 and 4 envs it ends after 500 decisions; if policy_step
+# counts decisions x envs, the FIRST episode line of a run reads policy_step=2000, for all 4 envs.
+# Anything else stops the run before it spends GPU time, and the row records UNIT_FAIL.
+# ---------------------------------------------------------------------------------------------
+import json as _json
+import os as _os
+import re as _re
+import signal as _signal
+import subprocess as _sp
+import sys as _sys
+import time as _time
+
+NUM_ENVS = 4
+EPISODE_FRAMES = 1000
+FIRST_EPISODE_POLICY_STEP = EPISODE_FRAMES // ACTION_REPEAT * NUM_ENVS   # 2,000
+EP_RE = _re.compile(r"policy_step=(\d+), reward_env_(\d+)=([-+0-9.eE]+|nan|inf)")
+ROW_DEADLINE_S = 9.0 * 3600        # in-kernel stop: the current run is cut (SIGINT) and kept
+REMOTE_TIMEOUT_S = int(10.5 * 3600)  # box watcher; Kaggle's own session cap is 12 h
+EST_HOURS = {"A1": 2.6, "A2": 2.6, "A3": 2.6}   # J5: 3 x (0.54 + 0.23) T4-h + control ~0.25
+
+
+def _set(ovr: list, key: str, value) -> list:
+    """Replace `key=` in an override list (Hydra refuses a key given twice). Smoke use only."""
+    out = [o for o in ovr if not o.startswith(key + "=")]
+    return out + [f"{key}={value}"]
+
+
+def parse_episodes(text: str) -> list:
+    """Runner stdout -> [(end_env_step, return, env_index)], env step = ACTION_REPEAT x policy_step."""
+    out = []
+    for m in EP_RE.finditer(text):
+        out.append((ACTION_REPEAT * int(m.group(1)), float(m.group(3)), int(m.group(2))))
+    return out
+
+
+def unit_check(text: str):
+    """None while no episode has ended; else (ok, reason) from the first episode lines."""
+    eps = [(int(m.group(1)), int(m.group(2))) for m in EP_RE.finditer(text)]
+    if not eps:
+        return None
+    first = eps[0][0]
+    envs = sorted(i for s, i in eps if s == first)
+    ok = first == FIRST_EPISODE_POLICY_STEP and envs == list(range(NUM_ENVS))
+    return ok, f"first episode at policy_step={first} for envs {envs} (expect " \
+               f"{FIRST_EPISODE_POLICY_STEP} for {list(range(NUM_ENVS))})"
+
+
+def _first_scalars(logdir: str) -> dict:
+    """§2's step-0 check, reported only: the first logged value of each Loss/State/Values/Grads tag."""
+    try:
+        import glob
+        from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
+        out = {}
+        for f in glob.glob(_os.path.join(logdir, "**", "events.out.tfevents.*"), recursive=True):
+            ea = EventAccumulator(_os.path.dirname(f), size_guidance={"scalars": 0})
+            ea.Reload()
+            for tag in ea.Tags().get("scalars", []):
+                if tag.split("/")[0] in ("Loss", "State", "Values", "Grads", "Params"):
+                    e = min(ea.Scalars(tag), key=lambda e: e.step)
+                    out[tag] = (e.step, round(e.value, 4))
+        return out
+    except Exception as e:  # reported-only: never fails a run
+        return {"error": repr(e)[:200]}
+
+
+def run_one(row: str, seed: int, control: bool, out_dir: str, device: str = "cuda",
+            deadline: float = None, extra: tuple = (), cmd_prefix: tuple = None) -> dict:
+    """One unmodified runner process. `extra` = (key, value) replacements, SMOKE ONLY.
+    `cmd_prefix` replaces `python -m sheeprl` (tests drive a fake runner through it)."""
+    name = f"{row}_s{seed}" + ("_control" if control else "")
+    logdir = _os.path.join(out_dir, "logs_" + name)
+    ovr = overrides(row, seed, control)
+    for k, v in extra:
+        ovr = _set(ovr, k, v)
+    cmd = list(cmd_prefix or [_sys.executable, "-m", "sheeprl"]) + ovr + [
+        f"fabric.accelerator={device}", f"log_root={logdir}"]
+    logf = _os.path.join(out_dir, name + ".log")
+    print("RUN", name, " ".join(cmd), flush=True)
+    t0 = _time.time()
+    rec = {"name": name, "row": row, "seed": seed, "control": control, "cmd": cmd,
+           "cut": False, "unit": None}
+    with open(logf, "w") as log:
+        p = _sp.Popen(cmd, cwd=out_dir, stdout=log, stderr=_sp.STDOUT)
+        while p.poll() is None:
+            _time.sleep(5)
+            if rec["unit"] is None:
+                u = unit_check(open(logf, errors="replace").read())
+                if u is not None:
+                    rec["unit"] = {"ok": u[0], "reason": u[1]}
+                    print("UNIT", name, u[0], u[1], flush=True)
+                    if not u[0]:
+                        p.kill()
+                        break
+            if deadline is not None and _time.time() > deadline:
+                rec["cut"] = True
+                p.send_signal(_signal.SIGINT)
+                try:
+                    p.wait(120)
+                except _sp.TimeoutExpired:
+                    p.kill()
+                break
+        p.wait()
+    text = open(logf, errors="replace").read()
+    if rec["unit"] is None:
+        u = unit_check(text)
+        rec["unit"] = None if u is None else {"ok": u[0], "reason": u[1]}
+    rec["rc"] = p.returncode
+    rec["wall_s"] = round(_time.time() - t0, 1)
+    rec["episodes"] = parse_episodes(text)
+    steps = [int(s) for s in _re.findall(r"policy_step=(\d+)", text)]
+    rec["last_episode_policy_step"] = max(steps) if steps else None
+    rec["first_scalars"] = _first_scalars(logdir)
+    if rec["rc"] not in (0, None) and not rec["cut"]:
+        rec["log_tail"] = text[-3000:]
+    return rec
+
+
+def run_row(row: str, seeds, out_dir: str, device: str = "cuda", control: bool = True,
+            deadline_s: float = ROW_DEADLINE_S, extra: tuple = (), cmd_prefix: tuple = None) -> dict:
+    """Control first, then each seed; the file is rewritten after every run."""
+    t_end = _time.time() + deadline_s
+    res = {"row": row, "seeds": list(seeds), "control": control, "runs": [], "stopped": None}
+    path = _os.path.join(out_dir, f"brain_a_rows_{row}.json")
+    plan = ([(CONTROL_SEED, True)] if control else []) + [(s, False) for s in seeds]
+    for seed, ctl in plan:
+        if _time.time() > t_end:
+            res["runs"].append({"name": f"{row}_s{seed}" + ("_control" if ctl else ""), "row": row,
+                                "seed": seed, "control": ctl, "not_started": "row deadline"})
+            continue
+        r = run_one(row, seed, ctl, out_dir, device, t_end, extra, cmd_prefix)
+        res["runs"].append(r)
+        _json.dump(res, open(path, "w"))
+        if not (r["unit"] or {}).get("ok", False):
+            res["stopped"] = f"UNIT_FAIL or no episode in {r['name']}: {r['unit']}"
+            break
+    _json.dump(res, open(path, "w"))
+    print("ROW_DONE", row, res["stopped"], flush=True)
+    return res
+
+
+def judge_files(row: str, paths) -> dict:
+    """Box side: merge one or more kernel files for a row (base + extension) and apply the rule.
+    Cut, failed or unstarted runs are left out of per_seed, so judge() sees them as missing ->
+    reported, never scored as zeros."""
+    per_seed, ctrl, notes = {}, None, []
+    for pth in paths:
+        for r in _json.load(open(pth))["runs"]:
+            ok = "episodes" in r and not r.get("cut") and r.get("rc") == 0 and (r["unit"] or {}).get("ok")
+            if not ok:
+                notes.append(f"{r['name']}: not complete ({r.get('not_started') or r.get('rc')}, cut={r.get('cut')})")
+                continue
+            eps = [(s, ret) for s, ret, _ in r["episodes"]]
+            if r["control"]:
+                ctrl = eps
+            else:
+                per_seed[r["seed"]] = eps
+    if ctrl is None or not per_seed:
+        return {"row": row, "verdict": "NOT JUDGED", "notes": notes, "seeds": sorted(per_seed)}
+    want = set(SEEDS) | (set(EXTENSION_SEEDS) if set(EXTENSION_SEEDS) & set(per_seed) else set())
+    out = judge(row, per_seed, ctrl)
+    missing = sorted(want - set(per_seed))
+    if missing:
+        out["verdict"] = "NOT JUDGED"
+        notes.append(f"seeds missing: {missing}")
+    out["notes"] = notes
+    return out
+
+
+_KERNEL_TAIL = r'''
+from experiments.brain_a.rows import run_row
+_r = run_row(__ROW__, __SEEDS__, WORK, "cuda", control=__CONTROL__)
+print("RESULT " + json.dumps({"row": _r["row"], "stopped": _r["stopped"],
+      "runs": [(x["name"], x.get("rc"), x.get("cut"), len(x.get("episodes", []))) for x in _r["runs"]]}), flush=True)
+print("DONE", flush=True)
+'''
+
+
+def kernel_body(row: str, seeds=SEEDS, control: bool = True) -> str:
+    """speed.py's tested install + version preamble (everything before `def one(`), then run_row."""
+    from experiments.brain_a import speed
+    head = speed._JOB.split("\ndef one(")[0]
+    assert "INSTALL" in head and "WORK =" in head, "speed._JOB preamble moved"
+    head = (head.replace("__DEV__", repr("cuda")).replace("__RUNS__", "[]")
+            .replace("__BASE__", "[]").replace("__PIP__", repr(["sheeprl==0.8.5", "dm_control"])))
+    tail = (_KERNEL_TAIL.replace("__ROW__", repr(row)).replace("__SEEDS__", repr(list(seeds)))
+            .replace("__CONTROL__", repr(control)))
+    return head + "\nprint('VERSIONS', json.dumps(_versions()), flush=True)\n" + tail
+
+
+OUT = "/data/jack-logs/brain_a/rows"
+
+
+def main(argv) -> int:
+    """kernel ROW [--ext]   (Kaggle GPU; --ext = the rule's one extension, seeds 3-4, no control)
+    score ROW            (judge every harvested file of the row)
+    smoke                (box, CPU: A2 control, 2,100 policy steps, compile off — the unit check)"""
+    _os.makedirs(OUT, exist_ok=True)
+    cmd = argv[1] if len(argv) > 1 else ""
+    if cmd == "smoke":
+        d = _os.path.join(OUT, "smoke")
+        _os.makedirs(d, exist_ok=True)
+        r = run_row("A2", (), d, "cpu", control=True, deadline_s=1200,
+                    extra=(("algo.total_steps", 2100), ("algo.learning_starts", 4200),
+                           ("algo.compile.enabled", "False")))
+        print(_json.dumps({k: v for k, v in r["runs"][0].items() if k != "episodes"}, default=str)[:3000])
+        print("episodes", r["runs"][0].get("episodes"))
+        return 0 if (r["runs"][0]["unit"] or {}).get("ok") else 1
+    if cmd == "score" and len(argv) > 2:
+        import glob
+        row = argv[2]
+        paths = sorted(glob.glob(_os.path.join(OUT, f"rows_{row}*.json")))
+        print(_json.dumps(judge_files(row, paths), indent=1, default=str))
+        return 0
+    if cmd == "kernel" and len(argv) > 2:
+        from experiments.gpu import build_job, result_json, submit
+        row, ext = argv[2], "--ext" in argv
+        seeds = EXTENSION_SEEDS if ext else SEEDS
+        sub = submit(build_job(kernel_body(row, seeds, control=not ext)), prefer="kaggle",
+                     est_hours=EST_HOURS[row] * (2 / 3.5 if ext else 1), timeout_s=REMOTE_TIMEOUT_S,
+                     fetch=[f"brain_a_rows_{row}.json"])
+        print("SUBMIT", sub.backend, sub.ok, sub.job_id, sub.message, flush=True)
+        if not sub.ok:
+            return 1
+        r = result_json(sub, f"brain_a_rows_{row}.json")
+        dst = _os.path.join(OUT, f"rows_{row}{'_ext' if ext else ''}.json")
+        open(dst, "w").write(_json.dumps(r))
+        print("WROTE", dst, flush=True)
+        return 0
+    print(main.__doc__)
+    return 2
+
+
+if __name__ == "__main__":
+    _sys.exit(main(_sys.argv))
