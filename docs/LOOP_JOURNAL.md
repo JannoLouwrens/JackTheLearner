@@ -1977,3 +1977,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 200 steps in 17.2 s, 448 MB; 8 loss series finite (flat as expected: ~20 updates inside a 1,000-update warm-up).
 - Same seed twice: NOT identical (vector loss up to 1.37 apart; dyn/rep identical) — the training loop is async, so the golden-file generator (0.4) must call train/policy directly on a stored batch.
 - Philosophy served: 3 and 4 (the reference A is measured against is run, not assumed; a non-repeating reference would have silently broken every parity test downstream).
+
+## 2026-11-17 03:00 · JACK · Next up 1 (MLX port 0.4a): the official Dreamer's train step repeats exactly when called directly
+- J8 cannot move: e0/e1/e2 RUNNING (kaggle status 02:38); J3/J6/J10 each wait on a session → "Next up" 1.
+- `experiments/brain_a/g1_probe.py`: `make_agent` (debug, f32, seed 0), fixed numpy batch 8×11, `_seeds(i)` as `stream()`, 5 direct `agent.train()` calls, run in two processes.
+- 183/183 params sha256-identical, all metrics identical → 0.2b's non-repeat came from the async loop, not the agent; G1 is reachable.
+- Missing: a must-differ control (changed seed → changed params); file-noise patch, compiler off, intermediates = 0.4b.
+- Philosophy served: 4 (a reference the port is checked against must be shown repeatable before any golden file is trusted).
