@@ -2,17 +2,11 @@
 # launch_detached.sh LOGFILE CMD [ARGS...] — detach a long-running job and
 # PROVE it survived its imports before reporting success.
 #
-# Closes four failure modes that each happened (LESSONS "verify the artifact"):
-#   - died at import from a wrong cwd  -> cwd is pinned to the repo
-#   - traceback into a severed stderr  -> 2>&1 into the log
-#   - reaped with the launching session -> setsid
-#   - "launched" believed on exit code -> at 15 s the PROCESS must be alive
-#     and the LOG non-empty, or this script exits 1 loudly with the log tail
-#
-# The header line written before exec makes "log non-empty" meaningful even
-# when the payload buffers its stdout. Meant for jobs that run minutes or
-# hours: a job that legitimately finishes in under 15 s is reported DEAD —
-# read the printed log tail to tell success from a crash.
+# Closes four failure modes (LESSONS "verify the artifact"): wrong cwd
+# (pinned), severed stderr (2>&1), reaped with the session (setsid), and
+# "launched" believed on exit code (at 15 s the process must be alive and the
+# log non-empty, else exit 1 with the log tail). A job that legitimately
+# finishes under 15 s is reported DEAD — read the tail.
 set -u
 MAIN=/home/opc/jackthelearner
 # JACK_REPO (S7 step 2): launch from a clean `git worktree` of this repo, so
@@ -31,16 +25,14 @@ LOG=$1; shift
 cd "$REPO" || { echo "REFUSED: cannot cd $REPO" >&2; exit 2; }
 : > "$LOG" || { echo "REFUSED: cannot write $LOG" >&2; exit 2; }
 echo "LAUNCH $(date -u +%FT%TZ) cwd=$REPO cmd: $*" >> "$LOG"
-# ADMIT, THEN METER (T0.34). The day's CPU ledger (experiments/cpu_budget.py,
-# T0.33's file) refuses a NEW detached launch from an exhausted or overloaded
-# day — loudly, before anything detaches — and once admitted the wrapper
-# bills measured wall clock per heartbeat, split across the calendar days it
-# spans. Accounting never kills a running child; overruns are marked. An
-# unreachable venv python refuses too: a meter that fails open is not a
-# limit (T0.12's rule).
+# ADMIT, THEN METER (T0.34): the day's CPU ledger refuses a new launch from an
+# exhausted/overloaded day or full seats (fails closed); once admitted the
+# wrapper bills wall per heartbeat, marking overruns, never killing. The
+# read-only `run lane` probe (test_lane_guard.sh) takes no seat (S7(4)).
 PYBIN=/data/venvs/jackthelearner/bin/python
 LABEL="${JACK_AWAITING_SPEC:-detached:$(basename "$LOG")}"
-admit_msg=$("$PYBIN" -m experiments.cpu_budget admit "$LABEL" "${JACK_DETACHED_EST_S:-0}" 2>&1) || {
+SEAT=; [ "$*" = "$PYBIN -m experiments.run lane" ] && SEAT=--no-seat
+admit_msg=$("$PYBIN" -m experiments.cpu_budget admit "$LABEL" "${JACK_DETACHED_EST_S:-0}" $SEAT 2>&1) || {
     echo "REFUSED by the CPU day budget (T0.34): $admit_msg" >&2
     exit 3
 }

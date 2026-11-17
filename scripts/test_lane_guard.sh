@@ -144,6 +144,32 @@ chk "  ...through the wrapper (spend is NOT the session leader)" \
     "$([ -n "$psid" ] && [ -n "$ppid_" ] && [ "$psid" != "$ppid_" ] && echo distinct || echo same)" \
     "distinct"
 
+echo "== the same probe with BOTH detached seats held (S7 step 4) =="
+
+# Two idle `cpu_budget wrap` sleepers count BUSY for their first 60 s
+# (POLLER_MIN_AGE_S), so they fill the seats at zero CPU. The probe must still
+# run (it takes no seat); a real payload must still be refused — the control.
+SEATS=""
+for i in 1 2; do
+  setsid env -u JACK_LANE_WAIVER "$VENV_PY" -m experiments.cpu_budget wrap \
+      "detached:lane-guard-seat$i" sleep 40 >/dev/null 2>&1 </dev/null &
+  SEATS="$SEATS $!"
+done
+trap 'kill $SEATS 2>/dev/null; rm -rf "$TMP"' EXIT
+sleep 1
+busy=$("$VENV_PY" -c 'from experiments.cpu_budget import detached_jobs as d; print(d()[0])')
+chk "both seats are held" "$([ "$busy" -ge 2 ] && echo held || echo "busy=$busy")" held
+env -u JACK_LANE_WAIVER -u JACK_DETACHED_LANE \
+    scripts/launch_detached.sh "$TMP/full.log" "$VENV_PY" -m experiments.run lane \
+    >"$TMP/flaunch" 2>&1
+chk "  ...the read-only probe still runs and names its lane" \
+    "$(grep -c 'DETACHED LANE, DECLARED — launch_detached.sh' "$TMP/full.log")" 1
+env -u JACK_LANE_WAIVER -u JACK_DETACHED_LANE \
+    scripts/launch_detached.sh "$TMP/real.log" sleep 30 >"$TMP/rlaunch" 2>&1
+chk "  ...but a real payload is refused by the seat cap (rc)" "$?" 3
+chk "  ...naming the cap" "$(grep -c 'detached cap' "$TMP/rlaunch")" 1
+kill $SEATS 2>/dev/null
+
 echo "== the CONTROL THAT MUST FAIL: the pre-repair order, via the waiver =="
 
 echo x | setsid env -u JACK_LANE_WAIVER \

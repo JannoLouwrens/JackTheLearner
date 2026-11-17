@@ -448,18 +448,21 @@ def detached_jobs() -> tuple:
 def admit_detached(label: str, *, path: Path | None = None,
                    loadavg: float | None = None, est_s: float = 0.0,
                    alive: int | None = None,
-                   pollers: int | None = None) -> CpuDecision:
+                   pollers: int | None = None,
+                   seat: bool = True) -> CpuDecision:
     """Admit or refuse a detached launch BEFORE setsid. The gate asks whether
     TODAY has headroom, the detached share (`DETACHED_DAY_CAP_S`, plus the
     caller's optional estimate) and the concurrency cap have room, and the
     box is calm; the ceiling binds a running child through `charge`'s
-    overrun marks, never through a kill."""
+    overrun marks, never through a kill. `seat=False` (the sub-second
+    read-only `run lane` probe only, S7(4)) skips the concurrency cap."""
     load = _loadavg() if loadavg is None else loadavg
     if alive is None:
         alive, live_pollers = detached_jobs()
         pollers = live_pollers if pollers is None else pollers
     pollers = pollers or 0
-    if alive >= DETACHED_MAX_ALIVE or pollers >= DETACHED_MAX_POLLERS:
+    if seat and (alive >= DETACHED_MAX_ALIVE
+                 or pollers >= DETACHED_MAX_POLLERS):
         return CpuDecision(False, est_s, 0.0, load,
                            f"detached cap: {alive} busy detached jobs alive "
                            f"(max {DETACHED_MAX_ALIVE}, ruling 3), {pollers} "
@@ -560,8 +563,10 @@ def _wrap(label: str, argv: list) -> int:
 def _main(argv: list) -> int:
     import sys
     if len(argv) >= 2 and argv[0] == "admit":
+        seat = "--no-seat" not in argv
+        argv = [a for a in argv if a != "--no-seat"]
         d = admit_detached(argv[1], est_s=float(argv[2]) if len(argv) > 2
-                           else 0.0)
+                           else 0.0, seat=seat)
         print(("ADMITTED: " if d.admitted else "REFUSED: ") + d.reason)
         return 0 if d.admitted else 1
     if len(argv) >= 3 and argv[0] == "wrap":
