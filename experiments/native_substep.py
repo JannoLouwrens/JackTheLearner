@@ -95,7 +95,7 @@ import time
 import mujoco
 import numpy as np
 
-BUILD_DIR = "/data/caches/jack_native"
+BUILD_DIR = os.environ.get("JACK_NATIVE_DIR", "/data/caches/jack_native")  # Kaggle: a writable dir
 _MJ_DIR = os.path.dirname(mujoco.__file__)
 
 CDEF = """

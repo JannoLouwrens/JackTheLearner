@@ -48,7 +48,21 @@ tests/test_native_substep_env.py, which needs lazy audio):
   range as the sturdier figure. Kaggle column for native: NOT measured (the
   C build and its identity must be proven on Kaggle's BLAS first).
 
-Usage: $PY -m experiments.sim_speed_kcpu box [T]     # local, small T
+NATIVE ON KAGGLE — kernel READY 11-17 13:00, not yet run. `kernel` now first
+runs `native_identity(300)` (rule in its docstring, fixed before any run:
+cases A + D x seeds 153-155 exact, >= 1 death each, dt+1ulp control must
+differ on all 3 seeds; else the option is box-only), builds the C under
+JACK_NATIVE_DIR=/tmp/jack_native against the wheel's own headers, then the
+speed rows incl. the two native ones. PRE-CHECK on the box under Kaggle's
+pins (jack-std venv: mujoco 3.17.0, gymnasium 1.4.0, py3.12; still THIS
+box's aarch64 — Kaggle's x86 FMA order is what the kernel tests): the C
+compiles clean against 3.17 headers; A 0/0/0 of 300 differing (deaths
+2/2/1), D 0/0/0 (2/2/1), control seed 153 differs 85/300 (first at 108);
+lazy -> lazy+native 64.8-93.8 -> 99.3-153.4 dec/CPU-s; under implicitfast
+108-142 -> 254-363. (3.17 changes the world: case A seed 155 dies once
+where 3.2.3 died twice — a pin difference, not a native one.)
+
+Usage: $PY -m experiments.sim_speed_kcpu box [T] [identity_N]   # local, small T
        $PY -m experiments.sim_speed_kcpu kernel      # one Kaggle CPU kernel
 """
 from __future__ import annotations
@@ -155,12 +169,50 @@ def _compat_multiray() -> None:
     mujoco.mj_multiRay = shim
 
 
-def run_all(T: int) -> dict:
+def native_identity(N: int = 300) -> dict:
+    """J6 (2b) on THIS host's mujoco/BLAS: tests/test_native_substep_env cases
+    A (dying, e0=0.05) and D (A + implicitfast), seeds 153-155, N decisions,
+    exact equality every decision; the dt+1ulp control must differ on >= 1
+    decision a seed. Rule (fixed before the kernel runs): PASS = 0 differing
+    in all 6 pairs, >= 1 death in each, and the control differs on all 3
+    seeds; otherwise the option is box-only. A C build error is a FAIL with
+    its message, and the native speed rows are then skipped."""
+    out = {"N": N, "pairs": {}, "control": {}}
+    try:
+        import experiments.tests.test_native_substep_env as T
+        T.N = N
+        ok = True
+        for case in ("A", "D"):
+            for seed in T.SEEDS:
+                r = T.pair(seed, case)
+                out["pairs"][f"{case}{seed}"] = r
+                ok &= r["bad"] == 0 and r["deaths"] >= 1
+                print("identity", case, seed, r, flush=True)
+        for seed in T.SEEDS:
+            r = T.pair(seed, "A", control="ulp")
+            out["control"][str(seed)] = r
+            ok &= r["bad"] >= 1
+            print("control dt+1ulp", seed, r, flush=True)
+        out["verdict"] = "PASS" if ok else "FAIL"
+    except Exception as e:  # noqa: BLE001 — a build failure is a reading
+        out["verdict"] = "FAIL"
+        out["error"] = f"{type(e).__name__}: {e}"[:2000]
+        print("native identity error:", out["error"], flush=True)
+    return out
+
+
+def run_all(T: int, identity_n: int = 0) -> dict:
     import platform
     _compat_multiray()
     res = {"host": platform.node(), "cpus": os.cpu_count(),
            "load": os.getloadavg()[0], "configs": {}}
+    if identity_n:
+        res["native_identity"] = native_identity(identity_n)
     for name, kw in CONFIGS.items():
+        if (identity_n and "native" in name
+                and "error" in res["native_identity"]):
+            res["configs"][name] = {"skipped": "native build failed"}
+            continue
         res["configs"][name] = single(kw, T)
         print(name, res["configs"][name], flush=True)
     for name, kw in VEC_CONFIGS.items():
@@ -177,8 +229,9 @@ def run_all(T: int) -> dict:
 # it). pilot_b's Kaggle pin mujoco==3.17.0 is used instead — a listed
 # difference: compare the columns by RATIO to their own `shipped` row, not
 # absolute dec/CPU-s. Versions are written into the result.
-KERNEL_PINS = ["mujoco==3.17.0", "gymnasium==1.1.1"]
+KERNEL_PINS = ["mujoco==3.17.0", "gymnasium==1.1.1", "cffi"]
 KERNEL_T = 3000
+KERNEL_IDENTITY_N = 300
 REMOTE_TIMEOUT_S = int(3 * 3600)
 
 _JOB = r'''
@@ -187,8 +240,9 @@ _s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
 import json, os
 os.chdir("/tmp/jack")
 os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ["JACK_NATIVE_DIR"] = "/tmp/jack_native"
 from experiments.sim_speed_kcpu import run_all
-r = run_all(__T__)
+r = run_all(__T__, __N__)
 json.dump(r, open(os.path.join(os.environ["JACK_OUT"], "sim_speed.json"), "w"))
 print("DONE", flush=True)
 '''
@@ -196,7 +250,8 @@ print("DONE", flush=True)
 
 def kernel() -> dict:
     from .gpu import build_job, result_json, submit
-    body = _JOB.replace("__PINS__", repr(KERNEL_PINS)).replace("__T__", repr(KERNEL_T))
+    body = (_JOB.replace("__PINS__", repr(KERNEL_PINS)).replace("__T__", repr(KERNEL_T))
+            .replace("__N__", repr(KERNEL_IDENTITY_N)))
     sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=1.0,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["sim_speed.json"])
     if not sub.ok:
@@ -213,7 +268,8 @@ if __name__ == "__main__":
         kernel()
     elif len(sys.argv) > 1 and sys.argv[1] == "box":
         T = int(sys.argv[2]) if len(sys.argv) > 2 else 60
-        r = run_all(T)
+        n = int(sys.argv[3]) if len(sys.argv) > 3 else 0
+        r = run_all(T, n)
         OUT.mkdir(parents=True, exist_ok=True)
         (OUT / f"box_speed_T{T}.json").write_text(json.dumps(r, indent=1) + "\n")
     else:
