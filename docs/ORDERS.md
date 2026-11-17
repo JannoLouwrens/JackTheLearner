@@ -148,6 +148,11 @@ state: next (last item): Kaggle column for native — KERNEL READY 11-17 13:00 `
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
+prior: (4), from §15: all seven arms are ONE on-policy AWR learner with different auxiliary losses. The record's own tuned PPO misses row 1's rule (best 20k-window −321 at 60k; reaches at ~60,700 steps, 100k budget; A2C ~370k). Expected for the four waiting arms: row 1 best windows −320…−420, 0–1 of 5 seeds; row 3 0 flag reaches.
+prior: settings that differ: 60k for every class (the Zoo gives on-policy 5–50× SAC's steps); i.i.d. Gaussian noise 0.5 → 0.1 (measured 0 flag reaches in 600 noise-only episodes; the same noise held 32 steps 170/200; published PPO 0.0 with white noise at 2M steps, ~94 with colored); γ 0.95 (doing nothing is optimal on row 3); 256-row ring, batch 16 (AWR published at 50k, 256).
+prior: `wm-efe` is `dreamer-xs` on these rows (same seed: 115 tensors identical, the 5 heads untrained and uncalled) — its kernel is a second draw of `dreamer-xs`, not a fifth design. `wm-latent`'s 3× over `ppo-needs` is confounded with 7× the weights.
+prior: known-answer status: no in-house arm has reproduced a row; B has. Learnable by this class as built: row 1 at ~100k yes (PPO-class speed, already shown by `wm-latent`'s curve), inside 60k unlikely; row 3 no, whatever the auxiliary loss, until noise is held and γ ≥ 0.99.
+prior: §15 of `docs/research/PUBLISHED_PRIORS.md`; long form `/data/jack-research/research_notes/inhouse_rows/`.
 **Why.** No learner here has ever reproduced a published result.
 **Do.** (1) A separate environment `/data/venvs/jack-std` (Python 3.12 is at
 `~/.local/bin/python3.12`) with §5's pins exactly; the project venv is not
@@ -341,6 +346,7 @@ regate's on a clean tree.
 - 11-17 07:31 JACK: `jack_env.py` moved (`4978e989`, two default-off options, identity proven) — `LC.02`/`W1.02` and any certificate with jack_env in IMPL_DEPS will read stale (S10).
 - 11-17 07:31 JACK: free sessions seen at 07:29: J3 wm-latent, ppo-lp and J6 speed kernel 3 all COMPLETE on Kaggle, unharvested (their orders' next slots); J11 took two of the three.
 - 11-17 14:40 JACK: all 4 Kaggle CPU sessions held by J11 c0..c3 (RUNNING 14:24) and J14 ready → took Next-up 1: Dyna maze REPRODUCES (E 28/6/3 vs book ~25/~5/3, control never settles; KNOWN_ANSWERS N1-dyna, `experiments/dyna_maze.py`). Next idle slot: shaping grid, RL² bandits, or Speech Commands.
+- 11-17 16:15 RESEARCH (J3 (4), §15): the record says the four waiting arms will fail both rows as the three before did, for reasons that are the shared learner's, not each arm's — tuned PPO itself misses row 1's 60k rule by 6 points, and white noise reached the flag 0 times in 600 episodes here (held 32 steps: 170/200). Change: (1) do not give `wm-efe` its own Kaggle session — on these rows it is `dreamer-xs` with other initial actor values (measured); (2) rule whether row 3 is run at all for the rest (71% of each kernel's steps, predicted 0 reaches) or closed BY RECORD with the 20-second noise count as its receipt; (3) the fair chance the owner asked for is a REPAIRED entry under the unchanged rule: held noise at action choice + γ 0.99, the same cure J11 builds for B; (4) read `dreamer-xs` against `wm-latent` — if equal, the 3× was network size, not the loss. Also: PUBLISHED_PRIORS is 83 KB against its 70 KB cap; wording-only tightening recovered 1.3 KB with nothing lost, more needs a ruling (move tables' duplicate prose to the long forms).
 
 ## DONE (kept one day)
 
