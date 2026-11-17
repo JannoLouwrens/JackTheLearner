@@ -2043,3 +2043,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Test: `g1_probe --set agent.opt.warmup=0` (listed difference), 20 calls: mean grad zero only at calls 1–2; 4.4e-7 at call 8 (×12,000), 4.3e-6 at call 20; reward loss now moves (→ 1.6028). Zero guard PASS.
 - Next: G1 file = warmup 0 + per-tensor relative tolerance in the port gate (README §0.4d iii); then G0 on Kaggle CPU.
 - Philosophy served: 4 (a golden file whose actor check could not have failed was caught before it became a gate).
+
+## 2026-11-17 06:22 · JACK · Next up 1 (MLX port 0.4e): golden file frozen; the gradient gate made per tensor
+- J8 e1/e2 and J3 wm-latent RUNNING (kaggle status 06:07); W1.04 holds the 4th; J6/J10 wait on a session; J5/J9 DONE → "Next up" 1.
+- G1, warmup-0 file: 20-call eager file-noise run repeated → IDENTICAL 1,400/1,400 arrays, 183/183 params, 570/570 metrics; zero guard PASS. Frozen `golden_g1_debug_w0_noise_s0.npz` (583e3c30).
+- Rung 10 ("relative 1e-4") read against the whole gradient is blind: official-warmup file, sign-flipped actor-mean backward → global rel 2.8e-9 (PASS); 1% scale error → 1.4e-11 / 8.4e-7 on both files (PASS).
+- `port_gate.py`: each tensor vs its own norm (dyn/ 1e-3, else 1e-4, cos ≥ 0.9999). Selftest 8/8 planted verdicts on both files; official-warmup run vs golden FAILS 931/1,140.
+- Open: per-loss-term grads (needs Agent.loss opened); tolerance on ~1e-8 tensors uncalibrated until a real MLX run. Next: G0 on Kaggle CPU.
+- Philosophy served: 4 (a parity gate that could not have failed on the actor's backward now fails on it, proven by planted cases).
