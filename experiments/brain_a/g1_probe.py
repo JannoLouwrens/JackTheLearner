@@ -17,6 +17,7 @@ the metrics each call returns. Run twice in separate processes and compare the J
 `ZERO_GRAD_CHECK FAIL`) if any gradient is exactly zero in EVERY dumped call unless named in `--allow-zero`
 — 0.4d found the `dyn/prior*` grads all-zero at call 20 (free-nats floor), a hole a golden file
 must not carry silently.
+0.4d iii: `--set agent.opt.warmup=0` passes an official config flag through (listed difference).
 0.4c: `--jit False` = compiler off; needs `PYTHONPATH=/data/tmp/ninjax362` (ninjax 3.6.2) + the AOT skip below.
 
 0.4b controls (must DIFFER from the seed-0 run, or the identity above proves nothing):
@@ -59,6 +60,8 @@ def main(argv=None):
                     help="0.4d ii: comma list of grad names allowed to be all-zero in every dumped call")
     ap.add_argument("--dump", help="0.4d: .npz path for the intermediates")
     ap.add_argument("--compare-npz", nargs=2, metavar=("A", "B"))
+    ap.add_argument("--set", action="append", default=[], metavar="KEY=VAL",
+                    help="0.4d iii: extra official config flag, e.g. agent.opt.warmup=0 (a LISTED difference)")
     a = ap.parse_args(argv)
     if a.compare_npz:
         return compare_npz(*a.compare_npz)
@@ -80,7 +83,10 @@ def main(argv=None):
     config = elements.Flags(config).parse([
         "--task", "jack74_v0", "--seed", str(a.seed), "--jax.compute_dtype", "float32",
         "--jax.jit", a.jit,
-        "--logdir", tempfile.mkdtemp(prefix="g1probe_")])
+        "--logdir", tempfile.mkdtemp(prefix="g1probe_")]
+        + [x for kv in a.set for x in ("--" + kv.split("=", 1)[0], kv.split("=", 1)[1])])
+    if a.set:
+        print("CONFIG_OVERRIDES", a.set, "agent.opt.warmup", config.agent.opt.warmup, flush=True)
     if a.jit == "False":
         # 0.4c ii patch (2 methods, listed as a difference): official `jit: False` sets
         # jax_disable_jit globally (internal.py:36) but agent.py:457/467 still AOT-lower the

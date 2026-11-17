@@ -330,3 +330,31 @@ when a gradient is exactly zero in EVERY dumped call and not named in `--allow-z
   saturated/clipped mean on noise inputs is a guess, not a finding).
 Next: G1 golden file = calls {1, 8, 20} with the guard on, no `--allow-zero`; then G0 (`g0_kernel.py`)
 at the first free Kaggle CPU session.
+
+**0.4d iii MEASURED 11-17 05:44 — why the actor mean's gradient is (nearly) zero: the official
+zero-init heads under warmup, on a noise batch** (from 0.4d ii's `g1_dump20_r1.npz`, no new run for
+the diagnosis; `/data/tmp/j_mlx/scale.py`).
+- Not saturation. The actor loss (agent.py:411–414) is `-(logpi * sg(adv_normed) + actent * ent)`;
+  the entropy term does not depend on the mean, so the mean's gradient is the advantage term alone.
+- `adv = (ret - tarval)/rscale` (rscale ≥ 1) and both sides start at EXACTLY 0: the official
+  `rewhead` and `value` have `outscale: 0.0` (zero output layer → uniform logits over the `debug`
+  preset's 5 symmetric bins → symexp-twohot mean 0). The reward loss reads ln 5 = 1.609438 at call 1
+  and 1.609389 at call 20: the heads barely move, because `opt.warmup: 1000` at lr 4e-5 gives an
+  effective lr of 8e-7 at call 20. So adv rounds to exactly 0 in float32 at 11 of 20 calls (1–7,
+  15–17, 20) and is ~1e-8 elsewhere.
+- **Consequence: {1, 8, 20} passes the zero guard but is still a hole for the port.** At call 8 the
+  mean-kernel grad is 3.5e-11 against a largest grad of 6.6e+1 (ratio 5e-13, below float32 relative
+  precision); stddev-kernel 4.3e-7. A bit-exact G1 sees it; a tolerance-based JAX-vs-MLX comparison
+  (the port's later gate) would pass a wrong logp-by-mean backward. A golden file must make the
+  advantage non-trivial.
+- **Test of the cause (one run, 245 s, eager, file noise s0, `--set agent.opt.warmup=0` = a LISTED
+  difference; `/data/jack-logs/mlx/g1_dump20_w0.*`):** mean-kernel grad zero only at calls 1–2
+  (was 11/20); 4.4e-7 at call 8 (was 3.5e-11, ×12,000), 4.3e-6 at call 20 (was 0); reward loss
+  1.609438 → 1.602759 (was → 1.609389). Zero guard PASS (prior grads still 0 at call 20). Call 1 is
+  unchanged bit for bit in the printed scales (warmup does not touch the first gradient). So
+  warmup-throttled zero-init heads are the cause; the advantage grows as they learn.
+- Not yet decided (next): what G1's golden file uses. Options, raceable on the box at ~4 min each:
+  (a) official config, more calls (≥ ~1,000 to leave warmup — 3.4 h eager, too slow); (b)
+  `agent.opt.warmup=0`, calls {1, 8, 20} or later (one listed difference, cheap); (c) compare every
+  tensor against its OWN scale in the port gate (per-tensor relative tolerance), which a 5e-13
+  global ratio needs anyway. Recommendation: (b) + (c). Then G0 at the first free Kaggle CPU session.

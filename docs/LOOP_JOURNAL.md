@@ -2035,3 +2035,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - prior grads non-zero only at calls 1 and 8; actor-mean grad zero at 1–7 and 4 of the last 6 → the planned calls 1/2/20 FAIL; {1,8,20} PASS. Call 8 is the only all-57-non-zero call.
 - Box: 3 parallel runs × 2.4 GB peak for 4 min — above the 1.5 GB guideline; one at a time next.
 - Philosophy served: 4 (a golden file that compares zero gradients could not have failed; now the probe refuses one).
+
+## 2026-11-17 05:44 · JACK · Next up 1 (MLX port 0.4d iii): the actor mean's zero gradient is the official zero-init heads under warmup
+- J8 e1/e2 and J3 wm-latent RUNNING (kaggle status 05:37); W1.04 holds the 4th; J6/J10 wait on a session; J5/J9 DONE → "Next up" 1.
+- Diagnosis from 0.4d ii's dump: actor loss mean-gradient = advantage term only; reward/value heads have outscale 0 → predict exactly 0 (reward loss = ln 5 at 5 bins); warmup 1000 at lr 4e-5 → lr 8e-7 at call 20, heads barely move → adv ≡ 0 at 11/20 calls.
+- Even call 8 (the "all non-zero" call): mean-kernel grad 3.5e-11 = 5e-13 of the largest grad — invisible to any tolerance-based port gate.
+- Test: `g1_probe --set agent.opt.warmup=0` (listed difference), 20 calls: mean grad zero only at calls 1–2; 4.4e-7 at call 8 (×12,000), 4.3e-6 at call 20; reward loss now moves (→ 1.6028). Zero guard PASS.
+- Next: G1 file = warmup 0 + per-tensor relative tolerance in the port gate (README §0.4d iii); then G0 on Kaggle CPU.
+- Philosophy served: 4 (a golden file whose actor check could not have failed was caught before it became a gate).
