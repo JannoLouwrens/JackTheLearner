@@ -2243,3 +2243,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Measured the margin lever under B in the K world (seed 381, 9k decisions, pinned): `native_substep` 53.8 vs lazy 43.0 dec/CPU-s (1.25×).
 - Found: in jack-std native_substep SEGFAULTED on the first step — the C cache was keyed on source only and a mujoco-3.2.3 .so was loaded by 3.17. Keyed by mujoco version; both venvs step; test_native_substep_env PASS (0/300 × all cases, control 273–287/300). INBOX asks the Director to rule native on/off for J11.
 - Philosophy served: 5 (the loop's next 40 runs priced and a crash that would have killed every box run of B with the fast world removed) and 4 (the fix proven by the identity test with its failing control). Not Jack himself.
+
+## 2026-11-17 20:07–20:35 UTC · JACK · J11 prep — every order waits (c4..c7 hold all 4 Kaggle sessions, RUNNING 20:10)
+- J8's packed learner kernels returned a cell's lives only when the run ended; a run killed at the 8.5 h cut or by Kaggle's cap came back empty. J11's 30 learners are priced at 4.6–7.4 h against that cut (13% margin).
+- `f76f1edb`: `pilot_b.run_cell/run_b/run_floor(partial_path=)` write the finished-life log atomically every 10 lives (default off); `run_parallel` falls back to it, marked `cut` with the decisions reached.
+- test_pilot_b_partial PASS (seed 381, 7 CPU-min pinned): identical with/without (3 held8 lives; B 700 dec, actor diff 0.0); a cell SIGKILLed at 4,747 decisions returns its 2 lives row-for-row; the no-partial control returns 0 (J8's behaviour). No arm defined, no pilot seed run.
+- Philosophy served: 5 (the pilot's slowest-host runs cannot vanish into a timeout) and 4 (proven by a kill with a control that loses everything).
