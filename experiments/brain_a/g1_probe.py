@@ -13,6 +13,10 @@ the metrics each call returns. Run twice in separate processes and compare the J
 0.4c iii: `--noise-file` (file_noise.py) feeds the two samplers from an .npz, eager only.
 0.4d: `--dump-step N --dump X.npz` records call N's grads by name, loss and aux outs (install_capture);
 `--compare-npz A B` checks two dumps bit for bit.
+0.4d ii: `--dump-step 1,2,20` dumps several calls (keys prefixed `c<N>/`), and the probe FAILS (rc 3,
+`ZERO_GRAD_CHECK FAIL`) if any gradient is exactly zero in EVERY dumped call unless named in `--allow-zero`
+— 0.4d found the `dyn/prior*` grads all-zero at call 20 (free-nats floor), a hole a golden file
+must not carry silently.
 0.4c: `--jit False` = compiler off; needs `PYTHONPATH=/data/tmp/ninjax362` (ninjax 3.6.2) + the AOT skip below.
 
 0.4b controls (must DIFFER from the seed-0 run, or the identity above proves nothing):
@@ -49,8 +53,10 @@ def main(argv=None):
                     help="0.4c: comma list of param-name substrings hashed after EVERY step")
     ap.add_argument("--noise-file", help="0.4c iii: .npz noise for the two samplers (made if absent)")
     ap.add_argument("--noise-seed", type=int, default=0, help="seed used only when making the file")
-    ap.add_argument("--dump-step", type=int, default=None,
-                    help="0.4d: 1-based train call whose intermediates are dumped (eager only)")
+    ap.add_argument("--dump-step", default=None,
+                    help="0.4d: 1-based train call(s), comma list, whose intermediates are dumped (eager only)")
+    ap.add_argument("--allow-zero", default="",
+                    help="0.4d ii: comma list of grad names allowed to be all-zero in every dumped call")
     ap.add_argument("--dump", help="0.4d: .npz path for the intermediates")
     ap.add_argument("--compare-npz", nargs=2, metavar=("A", "B"))
     a = ap.parse_args(argv)
@@ -90,7 +96,8 @@ def main(argv=None):
         from experiments.brain_a.file_noise import FileNoise
         noise = FileNoise(a.noise_file, seed=a.noise_seed).install(ejouts)
     cap = None
-    if a.dump_step:
+    dump_steps = sorted({int(x) for x in a.dump_step.split(",")}) if a.dump_step else []
+    if dump_steps:
         assert a.jit == "False", "intermediates need --jit False (concrete arrays)"
         cap = install_capture()
     agent = dv3main.make_agent(config)
@@ -125,7 +132,8 @@ def main(argv=None):
         data = internal.device_put({k: v.copy() for k, v in batch.items()}, agent.train_sharded)
         data["seed"] = agent._seeds(i + a.step_seed_offset, agent.train_mirrored)
         if cap is not None:
-            cap["on"] = (i + 1 == a.dump_step)
+            cap["on"] = (i + 1) in dump_steps
+            cap["prefix"] = f"c{i + 1}/" if len(dump_steps) > 1 else ""
         if a.disable_jit:
             with jax.disable_jit():
                 carry, _, mets = agent.train(carry, data)
@@ -138,7 +146,9 @@ def main(argv=None):
             draws.append(noise.snapshot())
     if cap is not None:
         np.savez(a.dump, **cap["arrays"])
-        print("DUMP", a.dump, "arrays", len(cap["arrays"]))
+        print("DUMP", a.dump, "arrays", len(cap["arrays"]), "calls", dump_steps)
+        zero_rc = zero_grad_check(cap["arrays"], dump_steps,
+                                  {x for x in a.allow_zero.split(",") if x})
     # first step after which each traced param differs from its init (None = never moved)
     first_move = {k: next((i for i, h in enumerate(trace) if h[k] != trace[0][k]), None)
                   for k in trace[0]}
@@ -152,7 +162,32 @@ def main(argv=None):
     print("G1_PROBE", a.out, "n_params", len(params), "metric calls", len(mets_all))
     for k, v in first_move.items():
         print("FIRST_MOVE", k, v)
-    return 0
+    return zero_rc if cap is not None else 0
+
+
+def zero_grad_check(arrays, dump_steps, allow):
+    """0.4d ii: per dumped call, the grads that are exactly zero everywhere; FAIL (3) if a grad is
+    all-zero in every dumped call and not allowed. A golden file with such a grad cannot catch a
+    wrong backward through it."""
+    import numpy as np
+    multi = len(dump_steps) > 1
+    zero_in = {}
+    for k, v in arrays.items():
+        rest = k.split("/", 1)[1] if multi else k
+        if not rest.startswith("grad/"):
+            continue
+        name = rest[len("grad/"):]
+        zero_in.setdefault(name, [])
+        if not np.any(v):
+            zero_in[name].append(int(k.split("/", 1)[0][1:]) if multi else dump_steps[0])
+    for c in dump_steps:
+        zs = sorted(n for n, cs in zero_in.items() if c in cs)
+        print(f"ZERO_GRADS call {c}: {len(zs)}/{len(zero_in)}", " ".join(zs))
+    always = sorted(n for n, cs in zero_in.items() if len(cs) == len(dump_steps))
+    bad = [n for n in always if n not in allow]
+    print("ZERO_GRAD_CHECK", "FAIL" if bad else "PASS", f"always-zero {len(always)}",
+          f"unallowed {len(bad)}", " ".join(bad))
+    return 3 if bad else 0
 
 
 def install_capture():
@@ -180,10 +215,11 @@ def install_capture():
             out = inner(*args, **kwargs)
             if cap["on"] and not ninjax.creating():
                 loss, params, grads, aux = out
-                cap["arrays"]["loss/total_scaled"] = np.asarray(jax.device_get(loss))
-                flat("grad/", grads)
+                pre = cap.get("prefix", "")
+                cap["arrays"][pre + "loss/total_scaled"] = np.asarray(jax.device_get(loss))
+                flat(pre + "grad/", grads)
                 if isinstance(aux, tuple) and len(aux) == 4 and isinstance(aux[2], dict):
-                    flat("outs/", aux[2])
+                    flat(pre + "outs/", aux[2])
             return out
         return run
 

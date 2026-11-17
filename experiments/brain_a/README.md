@@ -309,3 +309,24 @@ policy rep repval rew value vector) — 70 arrays, 5,859 values.
 Next (0.4d ii): dump calls 1, 2 and 20 (prior active + actor head moved) — or a batch with
 structure so KL stays above 1 — and assert in the probe that no captured gradient is all-zero
 except ones named in a list; then G0 at the first free Kaggle CPU session.
+
+**0.4d ii MEASURED 11-17 05:40 — all 20 calls dumped, twice, plus a zero-gradient guard** (`g1_probe
+--dump-step 1,...,20 --allow-zero ...`; keys `c<N>/...`; eager, ninjax 3.6.2, file noise; logs
+`/data/jack-logs/mlx/g1_dump20_{r1,r2,c1}.*`). New guard: the probe exits 3 (`ZERO_GRAD_CHECK FAIL`)
+when a gradient is exactly zero in EVERY dumped call and not named in `--allow-zero`.
+- Known-positives: the guard FAILS 0.4d's call-20 dump (10 always-zero) and the call-1 smoke (8).
+- r1 vs r2: **IDENTICAL 1,400/1,400 arrays**, 183/183 params, 570/570 metrics; r1 equals 0.4c iii's
+  g1_noise_r1 183/183, 570/570 (capturing every call perturbs nothing). Control c1 (noise s1):
+  DIFFERS 209/1,400 arrays, 10/183 params.
+- Zero-gradient map over the 20 calls: the 8 `dyn/prior*` grads are non-zero ONLY at calls 1 and 8;
+  `pol/head/action/mean/{bias,kernel}` are zero at calls 1–7 and in 4 of the last 6 (bias at 15–17, 20;
+  both at 1, 2); `rew`/`val` first layers zero at calls 1–2. **Call 8 is the only call with all 57
+  grads non-zero.**
+- **0.4d's plan (calls 1, 2, 20) FAILS the guard**: the actor head's mean gradient is zero in all
+  three, so that golden file could not catch a wrong actor-mean backward. {1, 8, 20} PASSES (0
+  always-zero); call 8 alone passes. Cost: 245 s and 2.4 GB peak per 20-call eager run (three run in
+  parallel this once — above the box's 1.5 GB guideline; run them one at a time).
+- Why the actor mean's gradient is so often exactly zero is not yet known (not investigated; a
+  saturated/clipped mean on noise inputs is a guess, not a finding).
+Next: G1 golden file = calls {1, 8, 20} with the guard on, no `--allow-zero`; then G0 (`g0_kernel.py`)
+at the first free Kaggle CPU session.
