@@ -177,6 +177,16 @@ in the rule. Whether row 4 is closed as "the reference does not reproduce
 its own number" or re-registered at a size that can show ±5 is the
 Director's (INBOX, 11-16 14:15).
 
+**Row 4 CLOSED (Director ruling 33, 11-17 06:50).** The PPO reference
+does not reproduce its own stored number on this box (published code, 60
+seeds over rows 4c+4d: pooled 76.4, 7/60 collapses, against the store's
+87.5 ± 4.2 at n 10); ours matches the reference code as far as 40 seeds per
+arm can show (72.6 vs 73.4; MW p 0.66 and 0.16; equivalence within ±5 not
+shown, CI [−9.1, +0.6]). Recorded as a **miss of the stored number, not a
+pass**. Not re-registered at 100 per arm (~3 Kaggle CPU-h for a row no seat
+rests on). Nothing more is run on row 4; Brain B's seat rests on rows 1b
+and 3b.
+
 ## Row J10-2 — Yu, Turk & Liu 2018 (arXiv:1801.08093): PIN and pre-flight, not yet run (11-16 17:55)
 
 Published code, code only (no weights in it): `github.com/VincentYu68/SymmetryCurriculumLocomotion`

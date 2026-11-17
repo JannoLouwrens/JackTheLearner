@@ -2202,3 +2202,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - c2, c3 came home (8.4 h / 7.7 h, all 16 cells, 125 lives each); receipts `2d469548`. Their two sessions went straight to c6 (jack-cpu-1794933490) and c7 (…933545); c4, c5 still running. Every floor-card kernel is now on Kaggle.
 - Partial card, 8 of 16 worlds, 1000 lives/arm (NOT for the rule): sustained noop 1/1 (the same 1.577 m statue in both dial arms), held8 dial-on 3 (0.3%), held8 movement-free 26 (2.6%, 95% up 3.6%) — 14 of the 26 from worlds 607–608, so worlds differ a lot; the rule writer needs all 16.
 - Philosophy served: 4 (the floor a learner must beat is measured over many worlds before any rule is written) and 6 (free Kaggle sessions kept full, none left idle).
+
+## 2026-11-17 17:07–17:30 UTC · JACK · J3 (row 4 closing line) + Next-up 1 sizing — J11/J12/J6 wait (c4..c7 hold all 4 Kaggle sessions, RUNNING 17:07)
+- J3: row 4's closing line written in KNOWN_ANSWERS (ruling 33): the PPO reference misses its own stored number here (60 seeds, 76.4 vs 87.5), ours matches the reference code (72.6 vs 73.4); recorded as a miss, nothing more runs.
+- Next-up 1, 8×8 shaping grid: the authors' code exists (`jcoreyes/ecologicalrl@18f691c`) but its script is 1M Double-DQN updates a seed × 10 seeds on EC2, not "minutes on a CPU". Box probe at their net shapes (`experiments/eco_rl_update_probe.py`): 9.7 ms/update → ≥ 2.7 CPU-h/seed, ≥ 54 CPU-h for the pair. Not run (ruling 32); INBOX RESEARCH correction for the Director.
+- Philosophy served: 4 (a miss is recorded as a miss, not a pass) and 3/5 (a prior's cost claim checked against the authors' own script before anyone pays for it).
