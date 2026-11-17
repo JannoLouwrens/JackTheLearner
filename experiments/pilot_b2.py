@@ -65,6 +65,7 @@ CARD_ARMS = ("noop-k1", "noop-k0", "held8-k1", "held8-k0")
 KERNEL_PINS = ["gymnasium==1.4.0", "mujoco==3.17.0"]
 WORKERS = 4
 REMOTE_TIMEOUT_S = int(9.5 * 3600)
+POOL_DEADLINE_S = int(8.5 * 3600)   # in-kernel stop, leaves pip + queue + fetch margin under REMOTE_TIMEOUT_S
 
 
 def make_world(seed: int, move_cost_dial: bool = False):
@@ -124,11 +125,19 @@ def card_groups() -> dict:
 
 
 def run_pool(cells: list, outdir, lives: int = CARD_LIVES,
-             workers: int = WORKERS) -> dict:
-    """Cells as child processes, `workers` at a time; each keeps its own file."""
+             workers: int = WORKERS, deadline_s: float | None = None) -> dict:
+    """Cells as child processes, `workers` at a time; each keeps its own file.
+
+    `deadline_s` (from the call): past it, live cells are terminated and kept
+    with what they wrote (every 10 lives), unstarted cells are recorded empty,
+    and the pool returns — so a slow kernel still hands back its summary file
+    before the watcher's REMOTE_TIMEOUT_S gives up on it (added 11-17 12:50
+    for c4..c7 after c0..c3 ran 5 h vs the ~3 h estimate: held8-k0 smoke lives
+    were ~3,900-4,080 decisions, not ~1,500). Changes no cell's measurement."""
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     todo, live, res = list(cells), [], {}
+    t_end = None if deadline_s is None else time.monotonic() + deadline_s
 
     def harvest(arm, seed, f, p):
         err = p.stderr.read().decode()[-800:] if p.stderr else ""
@@ -153,6 +162,18 @@ def run_pool(cells: list, outdir, lives: int = CARD_LIVES,
             if item[3].poll() is not None:
                 live.remove(item)
                 harvest(*item)
+        if t_end is not None and time.monotonic() > t_end and (todo or live):
+            for item in live:
+                item[3].terminate()
+            for item in live:
+                item[3].wait()
+                harvest(*item)
+                res[f"{item[0]}_s{item[1]}"]["deadline_cut"] = True
+            for arm, seed in todo:
+                res[f"{arm}_s{seed}"] = {"arm": arm, "seed": seed, "lives": [],
+                                         "deadline_cut": True, "not_started": True}
+                print(f"{arm} s{seed}: not started (deadline)", flush=True)
+            todo, live = [], []
     return res
 
 
@@ -162,7 +183,7 @@ _s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
 import json, os
 os.chdir("/tmp/jack")
 from experiments.pilot_b2 import run_pool
-r = run_pool(__CELLS__, os.environ["JACK_OUT"], __LIVES__)
+r = run_pool(__CELLS__, os.environ["JACK_OUT"], __LIVES__, deadline_s=__DEADLINE__)
 json.dump({"cells": r}, open(os.path.join(os.environ["JACK_OUT"], "pilot_b2_card.json"), "w"))
 print("DONE", flush=True)
 '''
@@ -170,7 +191,8 @@ print("DONE", flush=True)
 
 def job_body(cells: list, lives: int = CARD_LIVES) -> str:
     return (_JOB.replace("__CELLS__", repr(list(cells)))
-            .replace("__PINS__", repr(KERNEL_PINS)).replace("__LIVES__", repr(int(lives))))
+            .replace("__PINS__", repr(KERNEL_PINS)).replace("__LIVES__", repr(int(lives)))
+            .replace("__DEADLINE__", repr(POOL_DEADLINE_S)))
 
 
 def kernel(name: str) -> dict:

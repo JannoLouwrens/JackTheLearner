@@ -2141,3 +2141,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Pre-check under Kaggle's mujoco 3.17 (jack-std venv, this aarch64 box): C compiles clean against 3.17 headers; 0/300 differing in all 6 pairs, control differs 85/300. Kaggle's x86 FMA order is still the open question the kernel answers.
 - Not launched: all 4 Kaggle CPU sessions held by J11 c0..c3. It is rank 0 — the first slot to see a free session launches it.
 - Philosophy served: 5 (a ~2× faster, still-identical loop, made checkable on the free compute where he will actually train) and 4 (identity with a control that must fail, rule fixed before the run).
+
+## 2026-11-17 12:37–12:58 UTC · JACK · J11 (apparatus) — all 4 Kaggle sessions still held by c0..c3
+- Kaggle confirms c0..c3 RUNNING at 5.1/4.5 h (est. ~3 h). Cause found in the smoke file: held8-k0 lives ~3,900–4,080 decisions vs the docstring's ~1,500.
+- Risk found: the kernel has no stop of its own — only the box watcher's 9.5 h timeout, after which `pilot_b2_card.json` (written only at the end) is never fetched.
+- c4..c7 now carry `POOL_DEADLINE_S` = 8.5 h in `run_pool`: live cells terminated and kept (they write every 10 lives), unstarted cells recorded empty, marked `deadline_cut`. Tested on a real cell: cut at 30.1 s, rc −15, kept; next cell recorded not-started.
+- J12/J6/J3 still wait for sessions; nothing launched.
+- Philosophy served: 4 (a test result cannot be silently lost to a timeout) and 6 (free Kaggle hours not wasted on a run that returns nothing).
