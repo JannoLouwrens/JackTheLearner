@@ -124,3 +124,19 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   an INBOX line: build `row128` as a `jack_env` option, then race it under a
   learner. Not tried: a fovea (dense ahead, sparse behind) at 64 rays.
   END-FIT 1, 5. Philosophy 1, 3, 4.
+
+- 11-17 · **Finding himself after rebirth — one look, with and without the
+  compass** (Death & persistence, VACANT; Vision encoder; PLAN "Memory and
+  sleep" right column; `find_himself.py`, rule first). Bet: today's eye casts
+  rays at WORLD azimuths, a free compass the human-like body will not have;
+  with it one look re-finds his place even at 16 rays; once the eye turns
+  with his head, 16 rays cannot and the 128 row can (best of all turns of
+  the look against remembered looks). Why it matters: a map kept across
+  lives is useless to a body that cannot say where on it he stands. Kill: the
+  128 row without compass recalls a look from within 1 m on < 50% of rebirths,
+  or leads 16 rays by < .10 / on < 16 of 20 worlds. Prior: nothing published
+  on re-localising from range-only senses in a from-scratch agent (PRIORS §6
+  "also open", long form L4: "unknown, expect poor in symmetric arenas");
+  successes had vision (MERLIN) or GPS + compass (Wijmans). No training
+  steps: a look-up in his own remembered looks, minutes of CPU.
+  END-FIT 1, 2, 4. Philosophy 1, 3, 4. **Result: pending.**
