@@ -2071,3 +2071,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Floor card fixed in `pilot_b2.py` before any cell: noop/held8 × dial off/on, worlds 601–616 × 125 lives (2,000 lives an arm). Kernels c0, c1 RUNNING (07:30); c2 refused by the box's detached cap (INBOX). Box smoke held8 with free movement: 816 s and 758 s lives, 2 + 1 meals (J8's held8 lived ~300 s) — two lives, an anecdote.
 - Receipts (`gpu_submissions.jsonl`, `cpu_budget.json`) committed as the header asked. Item (4) (`_single_thread`) not done. No rule written, no learner run (ruling 30).
 - Philosophy served: 4 (the floor that voided the last pilot is measured, learner-free, before the next rule exists) and 3 (the record's cure built as a raced option, not assumed).
+
+## 2026-11-17 07:40–08:00 UTC · JACK · J12 (J11 waiting: c0/c1 on Kaggle, c2 refused by the box's detached cap — W1.04 + c0 + c1 hold it)
+- J12 (1) DONE `9e4031bb`: `jack_env(eye="row128")`, default rays16 byte-identical (4/4). Row ray 8j reads old ray j exactly; floor food in sight .287 → .905 at d 0.75; +0.03 ms a look.
+- First (c) read 0/0 for both eyes: hand cal + random_needs kills the body every ~3 decisions, so it never settles to eye height. Apparatus fixed (shipped cal), not the threshold.
+- Next: J12 (2) freeze the forager gate in WORLD_CARD.md before any run. J11: launch c2..c7 when the cap frees.
+- Served: philosophy 3 (the eye is raced from a measured LAB, not assumed) and 4 (identity + a control that must fail).
