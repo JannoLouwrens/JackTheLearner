@@ -29,8 +29,12 @@ RULE (ruling 33's form; committed before the first run):
   accept     REPRODUCES iff E(0) ∈ [15, 40] AND E(5) ∈ [3, 8] AND E(50) ∈ [2, 5]
              AND E(50) ≤ E(5) < E(0). (Bands are wide because the published
              numbers are prose read off a figure: "about 25 / about five / three".)
-  control    never-trains twin: n = 50, α = 0 (Q never moves; the policy stays
-             uniform-random-with-ties), same 30 seeds. It must have E = ∞ and
+  control    never-trains twin: n = 0, α = 0 (Q never moves; the policy stays
+             uniform-random-with-ties), same 30 seeds. RE-REGISTERED 11-17 14:37,
+             before the control had produced any number: first registered as
+             n = 50, α = 0, but at α = 0 every planning update is q += 0, so
+             n = 50 differs from n = 0 only in RNG draws — same Q (zeros), same
+             policy — and cost ~2M model samples a run (killed at 10 CPU-min). It must have E = ∞ and
              a mean of the last 10 episodes > 100 steps, else the metric is
              VOID (a random walk would be scoring as "learned").
   extension  ONE, named now: if exactly one of the three bands misses, rerun with
@@ -122,10 +126,10 @@ def main(argv=None):
         res["E"][str(n)] = first_settled(m)
         print(f"n={n:>2}: E={res['E'][str(n)]}  ep1={m[0]:.0f} ep2={m[1]:.0f} ep5={m[4]:.1f} "
               f"ep25={m[24]:.1f} last10={m[-10:].mean():.1f}", flush=True)
-    c = curve(mod, 50, runs, alpha=0.0).mean(0)
+    c = curve(mod, 0, runs, alpha=0.0).mean(0)
     res["control"] = {"E": first_settled(c), "last10": float(c[-10:].mean()),
                       "curve": c.round(1).tolist()}
-    print(f"control n=50 alpha=0: E={res['control']['E']} last10={res['control']['last10']:.0f}")
+    print(f"control n=0 alpha=0: E={res['control']['E']} last10={res['control']['last10']:.0f}")
     E = {n: res["E"][str(n)] for n in NS}
     res["verdict"] = judge(E, res["control"]["E"], res["control"]["last10"])
     res["cpu_s"] = round(time.process_time() - t0, 1)
