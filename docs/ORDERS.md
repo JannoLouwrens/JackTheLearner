@@ -266,16 +266,19 @@ order or roadmap milestone will re-earn it (name it). (ii) A `FAIL-DISPOSED:
 ruling already answered the question — e.g. ruling 10/20 for "to earn again
 on the chosen brain", ruling 20 for one-world walking. (iii) A one-line ask
 in INBOX when it is a live defect that needs a JACK order. The ids: DP.05,
-HR.1, HR.5, LG.10, LG.12, LG.14, LT.02, ME.11, ME.11.B, ME.11.C, ME.11.D,
-PS.05, PS.06, PS.08, T0.07, T0.17, T0.23, T0.27, T0.32, T0.35, T1.08, T1.11,
-T2.05, T2.07, T2.10, T2.11, T2.15, T3.09, T4.02, W.2, W1.00, WM.01, XL.01.
+HR.5, LG.10, LG.12, LG.14, LT.02,
+PS.05, PS.06, PS.08, T0.07, T0.17, T0.23, T0.27, T0.32, T0.35, T1.08,
+T2.05, T2.07, T2.11, T2.15, T3.09, T4.02, W.2, W1.00, WM.01, XL.01.
 In the first slot also lower the floors `coverage` says fell (UNREACHABLE
 115 → 101, PASS-ON-DEAD-DEPENDENCY 6 → 4; FAIL-UNOWNED 1 → 0 only when the
 id list above is empty) with `run ratchets record` — `coverage` stays 2 until then.
 serves: philosophy 4 · the auditor's exit codes.
 **done when:** `coverage` exits 0 with this order's id list deleted.
 **Added 11-17 (ruling 35):** `NE.01` joins the list with its fate already ruled — (ii) `FAIL-DISPOSED: Director ruling 35 2026-11-17 — heat is a stage-3 need (PLAN stage 3 "eat, drink, keep warm"); re-read at the first stage-3 sitting or 2027-01-15, whichever is first`. Also lower the three floors the auditor names (UNREACHABLE 115 → 107, PASS-ON-DEAD-DEPENDENCY 6 → 4, FAIL-UNOWNED when the list is empty).
-state: open — ordered 11-16 06:47; no slot has taken it (the SYSTEM lane spent 11-16 on S7). It is FIRST now.
+state: slot 1 (11-17) — 8 fated by (ii): NE.01 (ruling-35), ME.11/.B/.C/.D + T2.10 (ruling-20, diary retrieval →
+stage 3), HR.1 (D54), T1.11 (D41). Floors lowered: UNREACHABLE 115→107, PASS-ON-DEAD 6→4 (recorded).
+The marker's authority must be ONE token (`ruling-35`, not "Director ruling 35" — that parses MALFORMED).
+26 ids left; FAIL-UNOWNED floor 1→0 waits for the empty list. Next slot: the T1/T2 old-core FAILs.
 
 ### S10 — The clerk must be able to re-buy the two certificates that gate his world
 part: (machine) · stage: — · step: —

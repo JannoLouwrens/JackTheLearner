@@ -337,7 +337,8 @@ LADDER: list[Spec] = [
                "different module (action_head), and train_flow_matching_step — the only "
                "bridge — had zero callers in the entire repo. The system could have "
                "trained to convergence with the actuator module still at its random "
-               "initialisation, and every metric would have looked correct."),
+               "initialisation, and every metric would have looked correct.\n"
+               "FAIL-DISPOSED: D41 2026-10-19 — the fired default holds both artefacts: T1.11 stays an honest FAIL with no call site added; options (i)/(ii) remain the owner's. The old action-expert path is not a stage-2 brain candidate (ruling 10); no re-run until one is named (ORDERS S9)."),
 
     Spec("T1.12", 1, "Flow matching actually denoises",
          hypothesis="After training on a fixed target, the flow-matching sampler "
@@ -674,7 +675,8 @@ LADDER: list[Spec] = [
                "venue only, and ME.11 measured this exact scorer at 0.0000 on "
                "the paraphrase fixture — the conjunct cannot be satisfied by "
                "the machinery that satisfied the original, and a FAIL here is "
-               "the correct outcome, not a defect."),
+               "the correct outcome, not a defect.  "
+               "FAIL-DISPOSED: ruling-20 2026-11-15 — Director ruling 20 (FULL sitting 16:57): the diary's word-matching retrieval is answered by the record (PUBLISHED_PRIORS §6: keys from learned state), built at stage 3 (JACK Next up 7); no re-run of this arm before then (ORDERS S9)."),
 
     Spec("T2.11", 2, "Skills are distinguishable",
          hypothesis="A classifier recovers the skill label from trajectories above chance.",

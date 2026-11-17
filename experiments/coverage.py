@@ -1187,7 +1187,8 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #   2026-11-13  95 -> 115, banked at the live value by Director ruling 4
 #               (11-13, after LC.02's quiet-box verdict). Printed only since
 #               then: it no longer moves coverage's exit code (S3(2)).
-UNREACHABLE_BASELINE = 115
+#   2026-11-17  115 -> 107, the floor follows the number down (ORDERS S9).
+UNREACHABLE_BASELINE = 107
 
 
 def unreachable_ratchet(ledger=None,
@@ -1536,7 +1537,8 @@ def _owned_by_dued_row(sid: str, queue_doc: str) -> Optional[str]:
 #               interval between routing it and building it.
 #   2026-11-13  3 -> 6, banked at the live value by Director ruling 4 (11-13,
 #               after LC.02's quiet-box verdict); still red on any 7th pair.
-PASS_ON_DEAD_DEPENDENCY_BASELINE = 6
+#   2026-11-17  6 -> 4, the floor follows the number down (ORDERS S9).
+PASS_ON_DEAD_DEPENDENCY_BASELINE = 4
 
 #: Verdicts that are RECORDED and are not PASS. `None` (no ledger row) is
 #: deliberately absent — see the note above.

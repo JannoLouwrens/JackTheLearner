@@ -1124,7 +1124,8 @@ EXPANSION: list[Spec] = [
                  "Semantic matching makes confabulation EASIER, so the "
                  "abstention floor is the thing under test, not the recall.",
          kills="Any retriever that generates its answer instead of quoting "
-               "one, however good its numbers."),
+               "one, however good its numbers.",
+         notes="FAIL-DISPOSED: ruling-20 2026-11-15 — Director ruling 20 (FULL sitting 16:57): the diary's word-matching retrieval is answered by the record (PUBLISHED_PRIORS §6: keys from learned state), built at stage 3 (JACK Next up 7); no re-run of this arm before then (ORDERS S9)."),
 
     # ── ME.11 BAKEOFF: the arms that make ME.11 decidable ────────────────
     # From docs/research/MEMORY_RETRIEVAL_BAKEOFF.md (agent, 2026-08-09), which
@@ -1226,7 +1227,8 @@ EXPANSION: list[Spec] = [
                "  Measured: build 100k = 4.24 s, query = 0.876 ms — 40x FASTER "
                "than the incumbent's 35.4 ms linear scan, so whatever wins on "
                "recall, this replaces the scan on efficiency grounds alone. "
-               "BM25S: Lu, arXiv:2407.03618."),
+               "BM25S: Lu, arXiv:2407.03618.  "
+               "FAIL-DISPOSED: ruling-20 2026-11-15 — Director ruling 20 (FULL sitting 16:57): the diary's word-matching retrieval is answered by the record (PUBLISHED_PRIORS §6: keys from learned state), built at stage 3 (JACK Next up 7); no re-run of this arm before then (ORDERS S9)."),
 
     Spec("ME.11.C", 2, "Arm C — static embeddings (potion-base-8M), near-free semantics",
          hypothesis="A distilled STATIC embedding table (model2vec potion-base-8M, "
@@ -1258,7 +1260,8 @@ EXPANSION: list[Spec] = [
                "recall@10 1.000. Cheapest arm that could plausibly win, and its "
                "6.6 s reindex (vs MiniLM's 18 min) is an operational argument "
                "in its favour on a tenant-serving box. Model2Vec: Zenodo "
-               "10.5281/zenodo.17270888."),
+               "10.5281/zenodo.17270888.  "
+               "FAIL-DISPOSED: ruling-20 2026-11-15 — Director ruling 20 (FULL sitting 16:57): the diary's word-matching retrieval is answered by the record (PUBLISHED_PRIORS §6: keys from learned state), built at stage 3 (JACK Next up 7); no re-run of this arm before then (ORDERS S9)."),
 
     Spec("ME.11.D", 2, "Arm D — a real sentence encoder (all-MiniLM-L6-v2, ONNX)",
          hypothesis="A 6-layer transformer bi-encoder (22.7M params, ONNX "
@@ -1293,7 +1296,8 @@ EXPANSION: list[Spec] = [
                "speed win. Report both. bge-small-en-v1.5 is a within-arm "
                "variant WITH its query prefix, but note its compressed cosine "
                "band (real 0.617 vs fabricated 0.595) makes it the worst arm "
-               "for abstention despite the best BEIR score."),
+               "for abstention despite the best BEIR score.  "
+               "FAIL-DISPOSED: ruling-20 2026-11-15 — Director ruling 20 (FULL sitting 16:57): the diary's word-matching retrieval is answered by the record (PUBLISHED_PRIORS §6: keys from learned state), built at stage 3 (JACK Next up 7); no re-run of this arm before then (ORDERS S9)."),
 
     Spec("ME.11.E", 2, "Arm E — weighted hybrid, calibrated not assumed",
          hypothesis="Fusing Arm B's lexical scores with the best dense arm's, "
@@ -4417,6 +4421,7 @@ EXPANSION: list[Spec] = [
                "trains. Every constant in 2.3 is a PROPOSAL until this spec "
                "replaces it with a measurement.",
          notes="COVERS: hunger/thirst (fixture)\n"
+               "FAIL-DISPOSED: ruling-35 2026-11-17 — Director ruling 35: heat is a stage-3 need (PLAN stage 3 \"eat, drink, keep warm\"); re-read at the first stage-3 sitting or 2027-01-15, whichever is first (ORDERS S9).\n"
                "RE-REGISTERED 2026-11-14 (Director ruling 4, before any run "
                "under it): every window is a multiple of the world's own "
                "lethal times, the multiple it already had on the shipped "
@@ -7879,7 +7884,8 @@ EXPANSION: list[Spec] = [
                "— both synthesisable on this box with scipy alone, no "
                "download — and gate HR.3 on the MINIMUM over strata, never the "
                "average (docs/LESSONS.md, ME.11's deleted register). "
-               "  COVERS: hearing (fixture)"),
+               "  COVERS: hearing (fixture)\n"
+               "FAIL-DISPOSED: D54 2026-11-11 — hold the bar and leave HR.1 red (CLEAN_BAR 0.10 unmoved); the way forward is a learned ear raced against a no-ASR null on a corpus whose channel does not identify the speaker — a fixture repair, never the bar (ORDERS S9)."),
 
     Spec("HR.2", 2, "ASR bakeoff: the cheapest transcriber that gets Jack's words right",
          hypothesis="At least one open-weight, locally-runnable ASR arm "
