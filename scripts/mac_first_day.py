@@ -32,11 +32,13 @@ Rules this script obeys (§10 "Take as-is"):
     `platform.system()` branch. On the Linux box it runs as a smoke (CPU
     rows only; MPS/MLX rows SKIP).
 
-Automated here: 1-8 and 11's MPS-context line. NOT automated (printed as
-NOT_AUTOMATED with the command to run by hand):
-  9  Dreamer steps/s on official JAX, sheeprl CPU and sheeprl MPS — needs
-     the J5 pins installed on the Mac (experiments/brain_a/README.md);
-  10 sheeprl CPU-vs-MPS 2,000-step correctness — same installs;
+Automated here: 1-8, 9's sheeprl arms, 10, and 11's MPS-context line. Rows 9
+and 10 run `experiments/brain_a/mac_dreamer.py` (sheeprl's own agent and
+train(), fixed data; row 10's pass/divergence rule is in its docstring) under
+the interpreter in JACK_SHEEPRL_PY (default: this one; SKIP without
+sheeprl==0.8.5). NOT automated (printed as NOT_AUTOMATED with the command to
+run by hand):
+  9  the official-JAX arm of row 9 (the jack-dv3 venv);
   11 renders from a logged-in session, SSH, LaunchAgent, LaunchDaemon — needs
      the four contexts set up; this script records which context it ran in;
   12 the 24 h soak behind a wall meter.
@@ -80,12 +82,8 @@ ESTIMATE = {  # §10's scaled figures, verbatim, so each row prints beside its g
     11: "MPS available in which launch contexts",
 }
 NOT_AUTOMATED = {
-    9: "Dreamer grad steps/s after 500 warm-up, dummy 30-number world, pre-filled replay: "
-       "official JAX (CPU), sheeprl dreamer_v3_5_1M on CPU and MPS (PYTORCH_ENABLE_MPS_FALLBACK=0), "
-       "then _12M for the two fastest; same script on the T4. Needs the J5 pins "
-       "(experiments/brain_a/README.md).",
-    10: "2,000 sheeprl steps, fixed seed and data, CPU vs MPS: compare loss curves and per-module "
-        "gradient norms; any divergence bars MPS from decisive runs (PyTorch issue 204359).",
+    9: "official JAX (CPU) Dreamer grad steps/s only — the sheeprl CPU/MPS arms are automated (m9); "
+       "JAX needs the jack-dv3 venv (experiments/brain_a/README.md); same harness on the T4.",
     11: "2,000 renders of a 64x64 eye frame logged in, over SSH, from a LaunchAgent and from a "
         "LaunchDaemon after a no-login reboot; run this script with --only 11 in each context.",
     12: "24 h soak: 6 world processes (--only 5 --procs 6 --seconds 86400) + 1 Dreamer learner on MPS, "
@@ -407,7 +405,49 @@ def m11(a):
     return rec
 
 
-MEASURE = {1: m1, 2: m2, 3: m3, 4: m4, 5: m5, 6: m6, 7: m7, 8: m8, 11: m11}
+def _sheeprl_py():
+    """The interpreter with J14's pin (sheeprl==0.8.5): JACK_SHEEPRL_PY, else this one."""
+    py = os.environ.get("JACK_SHEEPRL_PY", sys.executable)
+    r = subprocess.run([py, "-c", "import sheeprl; print(sheeprl.__version__)"], capture_output=True, text=True)
+    if r.returncode != 0:
+        raise Skip(f"no sheeprl in {py} (set JACK_SHEEPRL_PY to a venv with sheeprl==0.8.5)")
+    return py, r.stdout.strip()
+
+
+def _harness(py, args, timeout):
+    p = subprocess.run([py, "-m", "experiments.brain_a.mac_dreamer"] + args, capture_output=True, text=True,
+                       timeout=timeout, cwd=str(REPO), env=_one_thread_env())
+    line = (p.stdout.strip().splitlines() or [""])[-1]
+    if p.returncode != 0 or not line.startswith("{"):
+        return {"status": "FAILED", "rc": p.returncode, "stderr": p.stderr[-800:]}
+    return json.loads(line)
+
+
+def m9(a):
+    """sheeprl dreamer_v3_5 grad steps/s, CPU (1 thread) and MPS, 1M then 12M (experiments/brain_a/mac_dreamer.py)."""
+    py, ver = _sheeprl_py()
+    warm, timed = (5, 10) if a.quick else (500, 500)
+    rec = {"sheeprl": ver, "python": py}
+    sizes = ["1M"] if a.quick else ["1M", "12M"]
+    for size in sizes:
+        for dev in ("cpu", "mps"):
+            rec[f"{dev}_{size}"] = _harness(py, ["speed", "--device", dev, "--size", size,
+                                                 "--warm", str(warm), "--timed", str(timed)], 6 * 3600)
+    return rec
+
+
+def m10(a):
+    """2,000 sheeprl gradient steps, same init and data, CPU vs MPS, judged against a CPU noise floor with a
+    planted-bug control (the rule: experiments/brain_a/mac_dreamer.py docstring)."""
+    py, ver = _sheeprl_py()
+    steps = 30 if a.quick else 2000
+    out = Path.cwd() / f"first_day_row10_series_{socket.gethostname()}.json"
+    rec = _harness(py, ["check", "--steps", str(steps), "--out", str(out)], 24 * 3600)
+    rec.update(sheeprl=ver, series_file=str(out))
+    return rec
+
+
+MEASURE = {1: m1, 2: m2, 3: m3, 4: m4, 5: m5, 6: m6, 7: m7, 8: m8, 9: m9, 10: m10, 11: m11}
 
 
 def child(k, a):
