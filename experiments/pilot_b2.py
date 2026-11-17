@@ -1,0 +1,252 @@
+"""pilot_b2.py — Pilot 2 at the entry rung: the FLOOR CARD first (ORDERS J11).
+
+PLAN stage 1 (ready-list item 4), parts "Learning to eat" + "His world",
+step 2 (combine the record's cures as options) -> 4 (pilot). Prior:
+PUBLISHED_PRIORS.md §13 (the lie-still trap), §1, §8; ruling 30: the next
+rule is written from the record and from a LEARNER-FREE floor measurement,
+never from brain B's 35 J8 runs. Nothing of J8 is re-run.
+
+THIS FILE, TODAY: only the floor card (J11 item 2). No learner is imported
+here, no rule exists yet, and none may be written until the card is in
+`docs/research/PILOT_B2.md` (item 3). The learner arms are added to this file
+by the commit that freezes the rule.
+
+THE WORLD. J8's pilot world (`pilot_b.make_world`: d 0.75, dr100-eat,
+random_needs 1/6, random_layout, life cap 9,000 decisions) with
+  spawn_clear = jack_env.SPAWN_CLEAR_R (1.55 m)   on in EVERY cell: J8's VOID
+      came from a do-nothing body born touching a food (cause a);
+  lazy_contact_audio = True                       ruling 34 (identical world);
+  move_cost_dial     off / on                     the card's two columns.
+Proofs of the two new options: experiments/tests/test_jack_env_cures.py.
+
+THE FLOOR CARD (learner-free; fixed before any cell ran, 11-17):
+  arms    noop   the zero action (world_card.DoNothing)
+          held8  uniform(-1,1)^8 held 8 decisions (world_card.Held(seed, 8))
+          each with move_cost_dial off ("k1") and on ("k0": movement free
+          at d0) -> 4 arms.
+  size    16 worlds per arm, seeds 601..616 (the SAME worlds in all four
+          arms; never 301-345, and the pilot's own 401+ stay unseen), 125
+          consecutive finished lives per world in one persisting world ->
+          2,000 lives per arm, 8,000 in all.
+  per life  pilot_b's row (decisions, seconds, floor meals, apples, cause,
+          intake, basal drain, sustained = capped AND intake >= basal
+          drain) + the spawn's distance to the nearest floor food.
+  reads   per arm: sustained lives / lives (rate, Poisson 95% upper bound);
+          runs of W = 1, 2, 3 consecutive sustained lives inside a world;
+          life length (median, 5-95%); meals per life (mean, share of lives
+          with >= 1, max). These fix W and the floor clause of the rule
+          (J11 item 3): W = the smallest W at which the card predicts <= 0.5
+          floor crossings over the pilot's planned floor lives.
+  cost    ~19.5 M decisions (noop lives ~2,750 decisions, held8 ~1,500 with
+          the movement drain, ~2,750 without); at Kaggle's measured 60.7
+          decisions per CPU-s with lazy audio (J6) ~ 89 CPU-h: 8 kernels of
+          8 cells, 4 at a time, ~3 h each. > 60 CPU-min -> Kaggle (ruling 32).
+"""
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+
+REPO = Path(__file__).resolve().parent.parent
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+
+from experiments.pilot_b import DIFFICULTY, LIFE_CAP, REWARD, PilotLives  # noqa: E402
+
+OUT = Path("/data/jack-logs/pilot_b2")
+CARD_SEEDS = tuple(range(601, 617))
+CARD_LIVES = 125
+CARD_ARMS = ("noop-k1", "noop-k0", "held8-k1", "held8-k0")
+KERNEL_PINS = ["gymnasium==1.4.0", "mujoco==3.17.0"]
+WORKERS = 4
+REMOTE_TIMEOUT_S = int(9.5 * 3600)
+
+
+def make_world(seed: int, move_cost_dial: bool = False):
+    from experiments.jack_env import JackEnv, NEEDS_S_TRP, SPAWN_CLEAR_R
+    return JackEnv(seed=seed, difficulty=DIFFICULTY, reward=REWARD,
+                   random_needs=NEEDS_S_TRP, random_layout=True,
+                   lazy_contact_audio=True, spawn_clear=SPAWN_CLEAR_R,
+                   move_cost_dial=move_cost_dial)
+
+
+def run_card_cell(arm: str, seed: int, lives: int = CARD_LIVES,
+                  out: Path | None = None) -> dict:
+    """`lives` finished lives (death or cap) of one floor arm in one world.
+    Written to `out` every 10 lives, so a killed cell keeps what it lived."""
+    from experiments.world_card import DoNothing, Held
+    pol_name, k = arm.split("-")
+    pol = DoNothing(seed) if pol_name == "noop" else Held(seed, 8)
+    w = PilotLives(make_world(seed, move_cost_dial=(k == "k0")), cap=LIFE_CAP)
+    o, info = w.reset(seed=seed)
+    pol.new_life()
+    spawn = [float(getattr(w.env, "last_spawn_food_dist", float("nan")))]
+    t_wall, t_cpu, n = time.time(), time.process_time(), 0
+
+    def record(done: bool) -> dict:
+        rows = [dict(l, spawn_dist=round(spawn[i], 3)) for i, l in enumerate(w.lives)]
+        rec = {"arm": arm, "seed": seed, "lives_asked": lives, "done": done,
+               "decisions": n, "wall_s": round(time.time() - t_wall, 1),
+               "cpu_s": round(time.process_time() - t_cpu, 1), "lives": rows,
+               "spawn_clear_failed": int(w.env.spawn_clear_failed),
+               "layout_failed": int(w.env.layout_failed)}
+        if out is not None:
+            tmp = Path(str(out) + ".tmp")
+            tmp.write_text(json.dumps(rec) + "\n")
+            tmp.replace(out)
+        return rec
+
+    while len(w.lives) < lives:
+        o, r, term, trunc, info = w.step(pol.act(o))
+        n += 1
+        if term or trunc:
+            o, info = w.reset()
+            pol.new_life()
+            spawn.append(float(getattr(w.env, "last_spawn_food_dist", float("nan"))))
+            if len(w.lives) % 10 == 0:
+                record(False)
+    return record(True)
+
+
+def card_cells() -> list:
+    return [(a, s) for s in CARD_SEEDS for a in CARD_ARMS]
+
+
+def card_groups() -> dict:
+    """c0..c7: 8 cells each = two worlds x the four arms."""
+    c = card_cells()
+    return {f"c{i}": c[8 * i:8 * i + 8] for i in range(8)}
+
+
+def run_pool(cells: list, outdir, lives: int = CARD_LIVES,
+             workers: int = WORKERS) -> dict:
+    """Cells as child processes, `workers` at a time; each keeps its own file."""
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    todo, live, res = list(cells), [], {}
+
+    def harvest(arm, seed, f, p):
+        err = p.stderr.read().decode()[-800:] if p.stderr else ""
+        rec = (json.loads(f.read_text()) if f.exists()
+               else {"arm": arm, "seed": seed, "lives": []})
+        rec["rc"] = p.returncode
+        if p.returncode != 0:
+            rec["error"] = f"rc={p.returncode}: {err}"
+        res[f"{arm}_s{seed}"] = rec
+        print(f"{arm} s{seed}: rc {p.returncode}, {len(rec['lives'])} lives", flush=True)
+
+    while todo or live:
+        while todo and len(live) < workers:
+            arm, seed = todo.pop(0)
+            f = outdir / f"card_{arm}_s{seed}.json"
+            live.append((arm, seed, f, subprocess.Popen(
+                [sys.executable, "-m", "experiments.pilot_b2", "cell", "--arm", arm,
+                 "--seed", str(seed), "--lives", str(lives), "--out", str(f)],
+                cwd=REPO, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)))
+        time.sleep(2)
+        for item in list(live):
+            if item[3].poll() is not None:
+                live.remove(item)
+                harvest(*item)
+    return res
+
+
+_JOB = r'''
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
+import json, os
+os.chdir("/tmp/jack")
+from experiments.pilot_b2 import run_pool
+r = run_pool(__CELLS__, os.environ["JACK_OUT"], __LIVES__)
+json.dump({"cells": r}, open(os.path.join(os.environ["JACK_OUT"], "pilot_b2_card.json"), "w"))
+print("DONE", flush=True)
+'''
+
+
+def job_body(cells: list, lives: int = CARD_LIVES) -> str:
+    return (_JOB.replace("__CELLS__", repr(list(cells)))
+            .replace("__PINS__", repr(KERNEL_PINS)).replace("__LIVES__", repr(int(lives))))
+
+
+def kernel(name: str) -> dict:
+    """Submit one card group (c0..c7) as one Kaggle CPU kernel; write the
+    returned cells to OUT/<name>.json (failed cells kept with their error)."""
+    from experiments.gpu import build_job, result_json, submit
+    cells = card_groups()[name]
+    sub = submit(build_job(job_body(cells)), prefer="kaggle-cpu", est_hours=4.0,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["pilot_b2_card.json"])
+    if not sub.ok:
+        raise RuntimeError(f"pilot_b2 kernel {name}: {sub.message}")
+    r = result_json(sub, "pilot_b2_card.json")
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / f"{name}.json").write_text(json.dumps(r, indent=1) + "\n")
+    for k, rec in r["cells"].items():
+        print(f"{k}: {len(rec['lives'])} lives"
+              + (f" ERROR {rec['error']}" if "error" in rec else ""), flush=True)
+    return r
+
+
+def card_table(paths) -> str:
+    """The floor card from harvested kernel files (OUT/c*.json)."""
+    by = {a: [] for a in CARD_ARMS}
+    for p in paths:
+        for rec in json.loads(Path(p).read_text())["cells"].values():
+            by[rec["arm"]].append(rec)
+    lines = ["| arm | worlds | lives | sustained | rate (95% upper) | runs W=1/2/3 "
+             "| life s median (5-95%) | meals/life mean | lives fed | max meals |",
+             "|---|---|---|---|---|---|---|---|---|---|"]
+    for arm, recs in by.items():
+        L = [l for r in recs for l in r["lives"]]
+        if not L:
+            continue
+        s = sum(l["sustained"] for l in L)
+        up = _poisson_upper(s) / len(L)
+        runs = [0, 0, 0]
+        for r in recs:
+            streak = 0
+            for l in r["lives"]:
+                streak = streak + 1 if l["sustained"] else 0
+                for W in (1, 2, 3):
+                    runs[W - 1] += streak >= W
+        secs = np.array([l["seconds"] for l in L])
+        meals = np.array([l["floor_meals"] + l["apples"] for l in L])
+        lines.append(
+            f"| {arm} | {len(recs)} | {len(L)} | {s} | {s / len(L):.5f} ({up:.5f}) "
+            f"| {runs[0]}/{runs[1]}/{runs[2]} | {np.median(secs):.0f} "
+            f"({np.percentile(secs, 5):.0f}-{np.percentile(secs, 95):.0f}) "
+            f"| {meals.mean():.3f} | {(meals > 0).mean():.3f} | {int(meals.max())} |")
+    return "\n".join(lines)
+
+
+def _poisson_upper(k: int, conf: float = 0.95) -> float:
+    """One-sided upper bound on a Poisson mean given k events (exact)."""
+    from scipy.stats import chi2
+    return float(chi2.ppf(conf, 2 * (k + 1)) / 2.0)
+
+
+def main(argv):
+    import argparse
+    p = argparse.ArgumentParser()
+    p.add_argument("cmd", choices=["cell", "kernel", "card"])
+    p.add_argument("--arm", default="noop-k1")
+    p.add_argument("--seed", type=int, default=601)
+    p.add_argument("--lives", type=int, default=CARD_LIVES)
+    p.add_argument("--out", default=None)
+    p.add_argument("--name", default=None)
+    a = p.parse_args(argv)
+    if a.cmd == "cell":
+        rec = run_card_cell(a.arm, a.seed, a.lives, Path(a.out) if a.out else None)
+        print(json.dumps({k: v for k, v in rec.items() if k != "lives"}))
+    elif a.cmd == "kernel":
+        kernel(a.name)
+    else:
+        print(card_table(sorted(OUT.glob("c*.json"))))
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

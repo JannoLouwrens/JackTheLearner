@@ -211,6 +211,52 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          at death vs 0.05 reborn; control (OFF terminal)
                          fails on all 3. PASS. Place is carried by the dying
                          body's own senses (rays, proprio); x, y is no sense.
+  move_cost_dial=False  J11 (1). False = today (every joule of the body's
+                         mechanical work costs drives.KAPPA of energy at
+                         every d). True: this world charges dial_move_cost(d)
+                         * KAPPA — 0 at and below the entry rung d0 = 0.75
+                         (D0_ENTRY; moving drains nothing beyond basal),
+                         linear in (d - d0)/(1 - d0), the full KAPPA at
+                         d = 1; with difficulty None (= 1) nothing is
+                         patched. Per instance: drives.py and the module
+                         constant are untouched; `last_power_w` still reports
+                         the true power. Theirs: no published survival world
+                         charges for moving (§13); the cure proven on the
+                         lie-still trap is a cost ramped in (Hwangbo 2019:
+                         factor from 0.3, k <- k^0.997; Solo12: 0 -> 1;
+                         Kwiatkowski 2023). DIFFERS: theirs ramps over
+                         TRAINING TIME inside one run; ours ties the cost to
+                         the world's difficulty dial (a fixed world per run),
+                         from 0 not 0.3, and is a reward-free WORLD change
+                         (energy), not a reward term.
+  spawn_clear=None      J11 (1). None = today. R (m): no birth or rebirth
+                         with the body's root within R (x, y) of any floor
+                         food where it lies at that moment — the legal cells
+                         inside R are dropped before today's draw (uniform,
+                         the dial's, or after the layout's food placement;
+                         same W0 spawn stream). The apple is on its platform
+                         and is not counted. Why: J8's floor arms crossed the
+                         sustained mark 5 times in 15 runs, every time a
+                         do-nothing body born touching a food and fed by
+                         contact at every regrowth (PILOT_B.md). R to use =
+                         SPAWN_CLEAR_R 1.55 m, MEASURED 11-17
+                         (/data/jack-logs/j11/reach_probe.py, seeds 381-382,
+                         180 do-nothing lives of 250 decisions spawned within
+                         1.6 m of a food in the pilot world): the body tips
+                         and slides a median 0.71 m, max 1.07 m (all of it in
+                         the first 100 decisions for the median life); 5
+                         lives ate by contact, all at decisions 9-10, from
+                         spawns 0.44 m (4 of 28) and 0.88 m (1 of 17), 0 of
+                         123 from >= 0.98 m. R = 1.07 + torso bound 0.27 +
+                         largest food bound 0.175 = 1.52, rounded up. Theirs:
+                         Avalon starts food 0.5 m in FRONT, never in contact;
+                         no published world feeds a motionless body (§13).
+                         DIFFERS: with the dial below d ~ 0.06 (r(d) < R) the
+                         dial's "nearest cell" fallback applies, so d = 0
+                         then means "as near as the clearance allows".
+  CURES PROOF (measured 2026-11-17, `python -m
+  experiments.tests.test_jack_env_cures`, seeds 153-155): see RESULT in that
+  file's docstring.
   OPTIONS PROOF (measured 2026-11-15, `python -m
   experiments.tests.test_jack_env_options 300`, seeds 153/154/155): (a)
   explicit defaults == JackEnv() byte for byte; (b) dr100-eat == 100*homeo-dr
@@ -261,6 +307,10 @@ NEEDS_S_TRP = 1.0 / 6.0  # trp_env: start state uniform within +/-1/6 of setpoin
 MEAL_AT_D0 = 1.0     # Avalon: a food fills the bar (PUBLISHED_PRIORS §3 table)
 SPAWN_R_D0 = 0.5     # m; Avalon eat: food 0.5 m in front of the agent at d=0
 SPAWN_R_SPAN = 17.0  # m; ~ the arena diagonal (2*sqrt(2)*6): r(1) covers all
+D0_ENTRY = 0.75      # ruling 22: the entry rung; move_cost_dial charges 0 there
+# J11: the contact-eating reach of a body that does nothing (measured, see
+# OPTIONS spawn_clear): it tips and slides <= 1.07 m, + torso 0.27 + food 0.175.
+SPAWN_CLEAR_R = 1.55  # m
 
 
 # J2 item 2, random layout each life (see OPTIONS).
@@ -278,6 +328,12 @@ def dial_extra_foods(d: float) -> int:
     """Extra floor foods at dial d: 3 at d=0 (5 in all), 0 at d=1, linear,
     rounded half up: d<1/6 -> 3, <1/2 -> 2, <5/6 -> 1, else 0."""
     return int(np.floor(len(EXTRA_FOODS) * (1.0 - d) + 0.5))
+
+
+def dial_move_cost(d: float, d0: float = D0_ENTRY) -> float:
+    """J11 `move_cost_dial`: the share of drives.KAPPA charged at dial d —
+    0 at and below the entry rung d0, 1 at d = 1, linear between."""
+    return float(min(1.0, max(0.0, (d - d0) / (1.0 - d0))))
 
 
 def dial_meal(nu1: float, d: float) -> float:
@@ -306,7 +362,9 @@ class JackEnv(gym.Env):
                  terminal_obs: str = "reborn",
                  lazy_contact_audio: bool = False,
                  multiray_vision: bool = False,
-                 integrator: str = "shipped"):
+                 integrator: str = "shipped",
+                 move_cost_dial: bool = False,
+                 spawn_clear: Optional[float] = None):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -348,6 +406,13 @@ class JackEnv(gym.Env):
             raise ValueError(f"integrator must be one of {INTEGRATORS}, "
                              f"got {integrator!r}")
         self.integrator = integrator
+        # J11 (1), default OFF: the movement drain ramped in with the dial.
+        self.move_cost_dial = bool(move_cost_dial)
+        # J11 (1), default None: no birth or rebirth within R m of a floor food.
+        if spawn_clear is not None and not float(spawn_clear) > 0.0:
+            raise ValueError(f"spawn_clear must be > 0 m, got {spawn_clear!r}")
+        self.spawn_clear = None if spawn_clear is None else float(spawn_clear)
+        self.spawn_clear_failed = 0
         self._ep_decisions = 0
         self._truncated = False
         self._seed = int(seed)
@@ -366,6 +431,8 @@ class JackEnv(gym.Env):
             sampler = self._layout_spawn
         elif self.difficulty is not None:
             sampler = self._near_food_spawn
+        elif self.spawn_clear is not None:
+            sampler = self._clear_spawn
         self.w = W0(seed=seed, j0=self.j0, alpha=self.alpha, lethal=True,
                     diary=self.diary, spawn_sampler=sampler)
         self.w.capture_dying_obs = self.terminal_obs == "dying"
@@ -377,6 +444,11 @@ class JackEnv(gym.Env):
             apply_multiray_vision(self.w)
         if self.integrator == "implicitfast":
             self.w.model.opt.integrator = self.w.mujoco.mjtIntegrator.mjINT_IMPLICITFAST
+        self.move_cost_scale = 1.0
+        if self.move_cost_dial and self.difficulty is not None:
+            self.move_cost_scale = dial_move_cost(self.difficulty)
+            if self.move_cost_scale != 1.0:
+                self._apply_move_cost(self.move_cost_scale)
         self.floor_foods = FLOOR_FOODS
         if self.difficulty is not None:
             # J2 item 1, food count: extras are food before birth is placed.
@@ -394,7 +466,8 @@ class JackEnv(gym.Env):
                 self._food_rest[name] = (qa, da, self.w.data.qpos[qa + 2],
                                          self.w.data.qpos[qa + 3:qa + 7].copy())
             self.layout_failed = 0
-        if self.difficulty is not None or self.random_layout:
+        if (self.difficulty is not None or self.random_layout
+                or self.spawn_clear is not None):
             # J2 items 1/2: birth too is placed by the dial and/or the layout
             # (W0's own respawn, body drawn from W0's spawn stream); with
             # both options off this is never reached.
@@ -413,6 +486,57 @@ class JackEnv(gym.Env):
                 if name in self.w.drives._food:
                     gid, nu = self.w.drives._food[name]
                     self.w.drives._food[name] = (gid, dial_meal(nu, self.difficulty))
+
+    def _apply_move_cost(self, scale: float) -> None:
+        """J11 (1) `move_cost_dial`: this world's DriveLayer charges
+        scale * KAPPA per joule instead of KAPPA. drives.decide computes
+        e -= BASAL_B*dt + KAPPA*_power_dt; the accumulated mechanical work
+        `_power_dt` is scaled just before that line runs (drives.py is not
+        edited, the module constant is not touched, so no other world sees
+        it) and the published `last_power_w` is put back to the TRUE mean
+        power, so a reader of the body's work is not lied to."""
+        dl = self.w.drives
+        inner = dl.decide
+
+        def decide():
+            p, dt = dl._power_dt, dl._dt_acc
+            dl._power_dt = p * scale
+            st = inner()
+            dl.last_power_w = p / dt if dt > 0 else 0.0
+            return st
+
+        dl.decide = decide
+
+    def _food_xy(self) -> np.ndarray:
+        w = self.w
+        return np.array([w.data.xpos[w.model.body(n).id][:2]
+                         for n in getattr(self, "floor_foods", FLOOR_FOODS)
+                         if n in w.drives._food]).reshape(-1, 2)
+
+    def _clear_cells(self, legal: np.ndarray) -> np.ndarray:
+        """J11 (1) `spawn_clear`: drop the legal cells within R m (body root
+        to food body, x, y) of any floor food where it lies NOW. If none is
+        left (never seen), the farthest cell(s) are kept and
+        `spawn_clear_failed` counts it."""
+        if self.spawn_clear is None:
+            return legal
+        foods = self._food_xy()
+        if len(foods) == 0:
+            return legal
+        dist = np.min(np.linalg.norm(legal[:, None, :] - foods[None, :, :],
+                                     axis=2), axis=1)
+        keep = dist > self.spawn_clear
+        if not keep.any():
+            self.spawn_clear_failed += 1
+            keep = dist >= dist.max() - 1e-9
+        return legal[keep]
+
+    def _clear_spawn(self, legal: np.ndarray, rng: np.random.RandomState,
+                     death_xy) -> tuple:
+        """W0 spawn_sampler for spawn_clear alone (no dial, no layout):
+        today's uniform draw over the cleared cells, W0's own spawn stream."""
+        from experiments.w0 import uniform_legal_spawn
+        return uniform_legal_spawn(self._clear_cells(legal), rng, death_xy)
 
     def _draw_needs(self) -> None:
         """J2 item 2: e and i uniform in [1-s, 1], w = 0 (see OPTIONS)."""
@@ -460,6 +584,8 @@ class JackEnv(gym.Env):
         nearest legal cell(s) are used. `death_xy` unused, as in
         w0.uniform_legal_spawn. Same RNG stream (W0's _spawn_rng)."""
         w = self.w
+        if not self.random_layout:      # _layout_spawn has cleared already
+            legal = self._clear_cells(legal)
         foods = np.array([w.data.xpos[w.model.body(n).id][:2]
                           for n in getattr(self, "floor_foods", FLOOR_FOODS)
                           if n in w.drives._food])
@@ -535,7 +661,7 @@ class JackEnv(gym.Env):
                 if w._penetrating():
                     continue
             keep.append(k)
-        legal = legal[keep]
+        legal = self._clear_cells(legal[keep])
         if self.difficulty is not None:
             return self._near_food_spawn(legal, rng, death_xy)
         return uniform_legal_spawn(legal, rng, death_xy)
