@@ -1984,3 +1984,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 183/183 params sha256-identical, all metrics identical → 0.2b's non-repeat came from the async loop, not the agent; G1 is reachable.
 - Missing: a must-differ control (changed seed → changed params); file-noise patch, compiler off, intermediates = 0.4b.
 - Philosophy served: 4 (a reference the port is checked against must be shown repeatable before any golden file is trusted).
+
+## 2026-11-17 03:30 · SYSTEM · S7 step 4: the lane-guard self-test stays green when both detached seats are taken — S7 DONE
+- Before: with 2 busy detached jobs alive, `test_lane_guard.sh`'s real-launcher case was refused by the seat cap, so the self-test went red exactly when the box was busy.
+- `c80d13b0`: `launch_detached.sh` gives the exact sub-second read-only `run lane` probe no seat (`admit --no-seat`); everything else still meets the cap, day budget and load gate.
+- Planted: two idle wrap sleepers fill both seats; probe runs (fails on the old launcher), a real payload is refused rc 3. T0.33/T0.34 checks True; governance net −3 lines.
+- Philosophy served: 4 and 5 (a guard's test that goes red only when the box is busy is noise the Jack lane learns to ignore).
