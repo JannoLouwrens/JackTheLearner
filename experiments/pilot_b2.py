@@ -55,7 +55,12 @@ host seen leaves 13% margin. J11's arms (B0 K P G KP + K-lr0 = 30 learners,
 noop/held8 10 cheap) -> 8 kernels at 4 learners each (+ floors riding along),
 ~4.6-7.4 h each, 4 sessions at a time = 2 waves. `native_substep=True`
 (identical world, J6 2b) is the one margin lever; under a learner it is
-measured on the box in the J11 state line.
+measured on the box in the J11 state line. Since 11-17 20:20 `pilot_b.run_cell(
+..., partial_path=)` writes each run's finished lives every PARTIAL_EVERY (10)
+lives and `run_parallel` falls back to that file (`from_partial`, marked `cut`
+with `decisions_reached`) — a learner killed at the 8.5 h cut or by Kaggle's
+cap returns its lives, not none (tests/test_pilot_b_partial.py). How a cut
+run counts is the rule's to say.
 """
 from __future__ import annotations
 

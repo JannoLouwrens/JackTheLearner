@@ -148,6 +148,7 @@ WARMUP = 5000
 GAMMA = 0.995
 TRAIN_FREQ = 32
 OUT = Path("/data/jack-logs/pilot_b")
+PARTIAL_EVERY = 10         # finished lives between partial-file writes (PilotLives)
 
 
 def _single_thread(pin_cpu=None):
@@ -192,10 +193,19 @@ class PilotLives(_Wrapper):
     Logs every finished life into `self.lives` (see module docstring).
     """
 
-    def __init__(self, env, cap: int = LIFE_CAP):
+    def __init__(self, env, cap: int = LIFE_CAP, partial_path=None,
+                 partial_every: int | None = None):
         super().__init__(env)
         self.cap = int(cap)
         self.lives = []
+        # J11 prep (11-17 20:20): every `partial_every` finished lives the log
+        # so far is written atomically to `partial_path` (None = never, the
+        # default, J8's behaviour). A run killed at CHILD_TIMEOUT_S or by
+        # Kaggle's cap then still returns its finished lives instead of none.
+        self.partial_path = None if partial_path is None else Path(partial_path)
+        self.partial_every = max(1, int(PARTIAL_EVERY if partial_every is None
+                                        else partial_every))
+        self.total_decisions = 0
         self._capped = False
         self._started = False
         self._new_life_counters()
@@ -249,6 +259,7 @@ class PilotLives(_Wrapper):
     def step(self, action):
         o, r, term, trunc, info = self.env.step(action)
         self.n += 1
+        self.total_decisions += 1
         self.rew += float(r)
         if not term and self.n >= self.cap:
             trunc = True
@@ -257,7 +268,18 @@ class PilotLives(_Wrapper):
         elif trunc:
             self._capped = True
             self.lives.append(self._life_row(info, "capped"))
+        if ((term or trunc) and self.partial_path is not None
+                and len(self.lives) % self.partial_every == 0):
+            self.write_partial()
         return o, r, term, trunc, info
+
+    def write_partial(self) -> None:
+        """Atomic: a reader never sees a half-written file."""
+        tmp = self.partial_path.with_name(self.partial_path.name + ".tmp")
+        tmp.write_text(json.dumps({"partial": True,
+                                   "decisions": int(self.total_decisions),
+                                   "lives": self.lives}) + "\n")
+        os.replace(tmp, self.partial_path)
 
     def unfinished(self, info) -> dict:
         return self._life_row(info, "unfinished")
@@ -328,7 +350,7 @@ def _pink_selection(model, seed: int) -> None:
 
 
 def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
-          world=None, gamma: float | None = None) -> dict:
+          world=None, gamma: float | None = None, partial_path=None) -> dict:
     """One learning run of T decisions; returns the per-life log + timing.
     arm "bwhite"/"bpink" = the item-6 exploration arms (block above).
 
@@ -337,13 +359,15 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
     unchanged and each knob's effect): `world` = a callable seed -> JackEnv
     replacing `make_world` (the cures are jack_env options: move_cost_dial,
     spawn_clear, reward dr100-eat-pos); `gamma` = the learner's discount.
-    Either one, when given, is recorded in the returned dict."""
+    Either one, when given, is recorded in the returned dict.
+    `partial_path`: see PilotLives (None = no partial file, unchanged)."""
     _single_thread()
     from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
     holder = {}
 
     def _mk():
-        w = PilotLives((make_world if world is None else world)(seed))
+        w = PilotLives((make_world if world is None else world)(seed),
+                       partial_path=partial_path)
         holder["w"] = w
         return w
 
@@ -381,12 +405,13 @@ def _world_stamp(env) -> dict:
             for v in [getattr(env, k, "absent")]}
 
 
-def run_floor(arm: str, seed: int, T: int, world=None) -> dict:
+def run_floor(arm: str, seed: int, T: int, world=None, partial_path=None) -> dict:
     """noop / held8 for T decisions in the same world wrapper (no learner).
     `world` as in `run_b` (None = `make_world`)."""
     from experiments.world_card import DoNothing, Held
     pol = DoNothing(seed) if arm == "noop" else Held(seed, 8)
-    w = PilotLives((make_world if world is None else world)(seed))
+    w = PilotLives((make_world if world is None else world)(seed),
+                   partial_path=partial_path)
     o, info = w.reset(seed=seed)
     pol.new_life()
     t_wall, t_cpu = time.time(), time.process_time()
@@ -430,15 +455,16 @@ CHILD_TIMEOUT_S = int(8.5 * 3600)
 REMOTE_TIMEOUT_S = int(9.5 * 3600)
 
 
-def run_cell(arm: str, seed: int, T: int = T_RUN) -> dict:
+def run_cell(arm: str, seed: int, T: int = T_RUN, partial_path=None) -> dict:
+    pp = dict(partial_path=partial_path)
     if arm == "b":
-        return run_b(seed, T)
+        return run_b(seed, T, **pp)
     if arm == "blr0":
-        return run_b(seed, T, lr=0.0, arm="blr0")
+        return run_b(seed, T, lr=0.0, arm="blr0", **pp)
     if arm in EXPLORE_ARMS:
-        return run_b(seed, T, arm=arm)
+        return run_b(seed, T, arm=arm, **pp)
     if arm in ("noop", "held8"):
-        return run_floor(arm, seed, T)
+        return run_floor(arm, seed, T, **pp)
     raise ValueError(f"unknown arm {arm!r}")
 
 
@@ -474,7 +500,8 @@ def run_parallel(cells: list, outdir, T: int = T_RUN) -> dict:
         f = outdir / f"pilot_{arm}_s{seed}.json"
         procs.append((arm, seed, f, subprocess.Popen(
             [sys.executable, "-m", "experiments.pilot_b", "cell", "--arm", arm,
-             "--seed", str(seed), "--decisions", str(T), "--out", str(f)],
+             "--seed", str(seed), "--decisions", str(T), "--out", str(f),
+             "--partial", str(partial_file(f))],
             cwd=REPO, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)))
     res = {}
     t0 = time.time()
@@ -485,13 +512,28 @@ def run_parallel(cells: list, outdir, T: int = T_RUN) -> dict:
             p.kill()
             _, err = p.communicate()
         rec = (json.loads(f.read_text()) if f.exists()
-               else {"arm": arm, "seed": seed, "lives": []})
+               else from_partial(arm, seed, partial_file(f)))
         rec["rc"] = p.returncode
         if p.returncode != 0:
             rec["error"] = f"rc={p.returncode}: {err.decode()[-800:]}"
         res[f"{arm}_s{seed}"] = rec
         print(f"{arm} s{seed}: rc {p.returncode}, {len(rec['lives'])} lives", flush=True)
     return res
+
+
+def partial_file(final: Path) -> Path:
+    return final.with_name(final.stem + ".partial.json")
+
+
+def from_partial(arm: str, seed: int, pf: Path) -> dict:
+    """A cell with no final file: its finished lives from the partial file,
+    marked `cut` with the decisions it reached; none found -> `not_found`,
+    never invented."""
+    if pf.exists():
+        part = json.loads(pf.read_text())
+        return {"arm": arm, "seed": seed, "lives": part["lives"], "cut": True,
+                "decisions_reached": part["decisions"], "from_partial": True}
+    return {"arm": arm, "seed": seed, "lives": [], "not_found": True}
 
 
 _JOB = r'''
@@ -539,10 +581,11 @@ def main(argv):
     p.add_argument("--decisions", type=int, default=20_000)
     p.add_argument("--arm", default="b")  # b, blr0, noop, held8, bwhite, bpink
     p.add_argument("--out", default=None)
+    p.add_argument("--partial", default=None)
     p.add_argument("--name", default=None)
     a = p.parse_args(argv)
     if a.cmd == "cell":
-        res = run_cell(a.arm, a.seed, a.decisions)
+        res = run_cell(a.arm, a.seed, a.decisions, partial_path=a.partial)
         Path(a.out).write_text(json.dumps(res) + "\n")
         return
     if a.cmd == "kernel":
