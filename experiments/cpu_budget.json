@@ -1305,13 +1305,17 @@
         "VO.01": 144.55,
         "W.1": 20.68,
         "detached:box_ppo-needs.log": 3340.95,
-        "detached:launch_e0.log": 175.12,
-        "detached:launch_e1.log": 174.81,
-        "detached:launch_e2.log": 41.59,
+        "detached:detached.log": 2.47,
+        "detached:full.log": 0.83,
+        "detached:lane-guard-seat1": 0.02,
+        "detached:lane-guard-seat2": 0.04,
+        "detached:launch_e0.log": 289.36,
+        "detached:launch_e1.log": 289.75,
+        "detached:launch_e2.log": 156.55,
         "detached:launch_f3.log": 619.17,
-        "detached:w104.log": 177.36
+        "detached:w104.log": 293.44
       },
-      "used_s": 5826.98
+      "used_s": 6290.56
     }
   },
   "last_child_s": {
