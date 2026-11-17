@@ -1288,12 +1288,13 @@
     },
     "2026-11-17": {
       "by_spec": {
-        "detached:launch_e0.log": 20.27,
-        "detached:launch_e1.log": 20.34,
-        "detached:launch_f3.log": 30.64,
-        "detached:w104.log": 20.41
+        "detached:box_ppo-needs.log": 600.01,
+        "detached:launch_e0.log": 41.47,
+        "detached:launch_e1.log": 41.33,
+        "detached:launch_f3.log": 41.2,
+        "detached:w104.log": 31.16
       },
-      "used_s": 91.66
+      "used_s": 755.17
     }
   },
   "last_child_s": {

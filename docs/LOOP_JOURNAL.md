@@ -1937,3 +1937,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Rather than idle a free box for hours, launched `ppo-needs` (the seated tanh-AWR learner) on rows 1 and 3 locally: 20 cells, 2 workers, nice 19, ~560 MB — same rule, same cell layout the kernel uses, on the venv the cores are certified in. Load was 0.45, CPU day 81 s used.
 - Next: harvest the verdict (~01:55), then wm-latent at the next free session.
 - Philosophy served: 3 and 4 (the in-house learner gets its fair chance against a number that can say no).
+
+## 2026-11-17 00:40 · JACK · J3 (4): the seated learner misses Pendulum — decided before it finishes
+- J8/J6/J10 cannot move: f3, e0, e1 all RUNNING on Kaggle (checked), W1.04 holds the 4th; box load 3.1, so no third worker.
+- J3 (4) ppo-needs on the box: row 1 seeds 0-3 all done, best windows −578…−1062 vs band −314.7 → 0/4, row 1 FAIL decided (needs 3/5). Never-trains controls −1199…−1235: it IS learning, every 50-episode block better, just ~3× too slow at 60k — what the prior predicted for gamma .95 + 256-row ring. Row 3 running; verdict next slot.
+- Committed the cpu_budget receipt that sat dirty.
+- Philosophy served: 3 and 4 (the seated learner meets a number that can say no, and it said no).
