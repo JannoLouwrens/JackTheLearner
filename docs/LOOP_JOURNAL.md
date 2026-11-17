@@ -2249,3 +2249,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `f76f1edb`: `pilot_b.run_cell/run_b/run_floor(partial_path=)` write the finished-life log atomically every 10 lives (default off); `run_parallel` falls back to it, marked `cut` with the decisions reached.
 - test_pilot_b_partial PASS (seed 381, 7 CPU-min pinned): identical with/without (3 held8 lives; B 700 dec, actor diff 0.0); a cell SIGKILLed at 4,747 decisions returns its 2 lives row-for-row; the no-partial control returns 0 (J8's behaviour). No arm defined, no pilot seed run.
 - Philosophy served: 5 (the pilot's slowest-host runs cannot vanish into a timeout) and 4 (proven by a kill with a control that loses everything).
+
+## 2026-11-17 20:37–20:58 UTC · JACK · J11 prep — every order waits (c4..c7 hold all 4 Kaggle sessions, RUNNING 20:40)
+- f76f1edb saved a killed CELL's lives, but `pilot_b.kernel` read only the job's summary file, written after all cells end — a kernel cut by Kaggle's cap or reattached after its watcher timed out raised and dropped the partial files Kaggle had returned.
+- `e79104bb`: `pilot_b.cells_from_artifacts` — no summary → final file, else `.partial.json` (marked cut), else `not_found`; None when nothing came back.
+- test_pilot_b_assemble PASS (seed 381 held8, J8 world, 3,000 dec, 53 CPU-s): final 2 lives row-for-row; partial-only cell cut with its 1 life; missing → 0; the old summary-only path returns nothing. No arm defined, no pilot seed run.
+- Philosophy served: 5 (the pilot's 30 learner runs cannot vanish at the time limit) and 4 (checked with a path that must lose them).
