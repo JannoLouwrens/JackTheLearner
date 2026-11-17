@@ -10,7 +10,8 @@ Same config as 0.2b (`defaults debug`, float32, Dummy74 obs/act spaces, seed 0).
 fixed numpy draw (seed 1234) over `agent.spaces`; the batch is device_put and the per-step seed is
 `agent._seeds(i, ...)`, exactly what `agent.stream()` does. N train calls; dumps sha256 of every param (by name) plus
 the metrics each call returns. Run twice in separate processes and compare the JSONs.
-Not yet: file noise for the two samplers, compiler off, intermediates (the rest of 0.4).
+Not yet: file noise for the two samplers, intermediates (the rest of 0.4).
+0.4c: `--jit False` = compiler off; needs `PYTHONPATH=/data/tmp/ninjax362` (ninjax 3.6.2) + the AOT skip below.
 
 0.4b controls (must DIFFER from the seed-0 run, or the identity above proves nothing):
 `--seed 1` (agent seed: init weights + seed stream) and `--step-seed-offset 1000` (same init,
@@ -38,6 +39,12 @@ def main(argv=None):
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--step-seed-offset", type=int, default=0)
     ap.add_argument("--compare", nargs=2, metavar=("A", "B"))
+    ap.add_argument("--jit", choices=["True", "False"], default="True",
+                    help="0.4c: the official `jax.jit` flag; False = compiler off")
+    ap.add_argument("--disable-jit", action="store_true",
+                    help="0.4c ii: config jit kept True, train() called under jax.disable_jit()")
+    ap.add_argument("--trace", default="pol/head/action/mean,slowval",
+                    help="0.4c: comma list of param-name substrings hashed after EVERY step")
     a = ap.parse_args(argv)
     if a.compare:
         return compare(*a.compare)
@@ -56,7 +63,16 @@ def main(argv=None):
     config = elements.Config(configs["defaults"]).update(configs["debug"])
     config = elements.Flags(config).parse([
         "--task", "jack74_v0", "--seed", str(a.seed), "--jax.compute_dtype", "float32",
+        "--jax.jit", a.jit,
         "--logdir", tempfile.mkdtemp(prefix="g1probe_")])
+    if a.jit == "False":
+        # 0.4c ii patch (2 methods, listed as a difference): official `jit: False` sets
+        # jax_disable_jit globally (internal.py:36) but agent.py:457/467 still AOT-lower the
+        # train/report fns, which JAX refuses with jit disabled. Skip the AOT step so the
+        # jax.jit-wrapped fns run eagerly. Nothing else inside the agent touched.
+        from embodied.jax import agent as ejagent
+        ejagent.Agent._compile_train = lambda self: None
+        ejagent.Agent._compile_report = lambda self: None
     agent = dv3main.make_agent(config)
 
     B, T = config.batch_size, config.batch_length + config.replay_context
@@ -75,22 +91,39 @@ def main(argv=None):
             v = rng.integers(0, 2**31 - 1, shape).astype(sp.dtype)  # e.g. stepid
         batch[k] = v
 
+    import jax
+    tr = [t for t in a.trace.split(",") if t]
+
+    def traced():
+        return {k: hashlib.sha256(np.asarray(jax.device_get(v)).tobytes()).hexdigest()[:16]
+                for k, v in sorted(agent.params.items()) if any(t in k for t in tr)}
+
     carry = agent.init_train(B)
-    mets_all = []
+    mets_all, trace = [], [traced()]
     for i in range(a.steps):
         data = internal.device_put({k: v.copy() for k, v in batch.items()}, agent.train_sharded)
         data["seed"] = agent._seeds(i + a.step_seed_offset, agent.train_mirrored)
-        carry, _, mets = agent.train(carry, data)
+        if a.disable_jit:
+            with jax.disable_jit():
+                carry, _, mets = agent.train(carry, data)
+        else:
+            carry, _, mets = agent.train(carry, data)
         mets_all.append({k: float(np.asarray(v).mean()) for k, v in mets.items()
                          if np.asarray(v).dtype.kind == "f"})
-    import jax
+        trace.append(traced())
+    # first step after which each traced param differs from its init (None = never moved)
+    first_move = {k: next((i for i, h in enumerate(trace) if h[k] != trace[0][k]), None)
+                  for k in trace[0]}
     params = {k: hashlib.sha256(np.asarray(jax.device_get(v)).tobytes()).hexdigest()[:16]
               for k, v in sorted(agent.params.items())}
     rec = {"versions": versions(), "steps": a.steps, "seed": a.seed,
-           "step_seed_offset": a.step_seed_offset, "batch_keys": sorted(batch),
+           "step_seed_offset": a.step_seed_offset, "jit": a.jit, "disable_jit": a.disable_jit,
+           "first_move": first_move, "batch_keys": sorted(batch),
            "B": B, "T": T, "n_params": len(params), "params": params, "metrics": mets_all}
     pathlib.Path(a.out).write_text(json.dumps(rec, indent=1, sort_keys=True))
     print("G1_PROBE", a.out, "n_params", len(params), "metric calls", len(mets_all))
+    for k, v in first_move.items():
+        print("FIRST_MOVE", k, v)
     return 0
 
 

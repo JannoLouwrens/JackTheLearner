@@ -1997,3 +1997,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Controls DIFFER: agent seed 1 → 14/183 params equal; per-step train seed +1000 (same init) → 21/183. train() consumes its seed; the identity is real.
 - Finding: the policy's output head (`pol/head/action/mean`) and `slowval` do not move in 5 debug steps — a 5-step golden file would not test the actor's last layer; G1 must run longer or dump gradients.
 - Philosophy served: 4 (an identity claim needs a control that could have failed).
+
+## 2026-11-17 03:50 · JACK · Next up 1 (MLX port 0.4c): compiler off made runnable and repeatable; G1's file needs ≥ 20 steps
+- J8 e0/e1/e2 RUNNING (kaggle status 03:38); W1.04 wrap alive 7h; J3/J6/J10 wait on a Kaggle session → "Next up" 1.
+- 60-step trace (compiled): actor head `pol/head/action/mean` first moves at step 6; 0.4b's "slowval unmoved" was a misreading (equal across controls, not unmoved — it moves at step 1).
+- Official `jit: False` cannot run as shipped (AOT lower under disable_jit; ninjax 3.6.3 key assert). Fix = skip `_compile_train/_report` + ninjax 3.6.2, both listed differences.
+- Eager 12 steps twice: IDENTICAL 183/183 params, 330/330 metrics; ninjax swap changes nothing compiled; eager vs compiled DIFFER 36/183; eager head moves at step 10 → G1 rule ≥ 20 calls.
+- Philosophy served: 4 (the reference the port is judged against must be repeatable in the mode it is made, and must exercise every layer).

@@ -242,3 +242,27 @@ zero-initialised policy-mean head (`pol/head/action/mean/*` unchanged after 5 st
 on 5 steps does NOT exercise the actor's output layer; G1's file should run long enough (or dump
 gradients) that `pol/head/action/mean` moves. Next (0.4c): file noise for the two samplers,
 compiler off, intermediate dumps, twice → G1.
+
+**0.4c(i) MEASURED 11-17 03:40 — how long G1 must run, and compiler off, on the box** (`g1_probe.py
+--steps 60` with a per-step trace, `--jit False`; logs `/data/jack-logs/mlx/g1_probe_{s60,nojit1}.*`).
+- 60 direct train calls, seed 0, compiled: 18 CPU-s, 37 s wall. First step after which each traced
+  param differs from its init: **`pol/head/action/mean/{kernel,bias}` and their two Adam slots: step 6**;
+  `slowval` kernels step 1, head bias 2, linear0 bias 3, norm0 scale 10. 0.4b's "slowval unmoved"
+  was the wrong reading: those params are EQUAL ACROSS THE CONTROLS at step 5, not unmoved (an EMA of
+  the value net that both controls track the same way). The real gap holds for the actor head: a
+  ≤ 5-step golden file never exercises it (compiled; eager see below).
+- **Compiler off, as shipped, cannot run.** Official `jax.jit: False` sets `jax_disable_jit` globally
+  (`embodied/jax/internal.py:36`) but `agent.py:457/467` always AOT-lower train/report: with
+  ninjax 3.6.3 (the newest at the pin's date, 2026-10-04) it dies in `ninjax.unflatten`'s key assert
+  inside `opt.update`; with 3.6.2 it dies on JAX's "Disable jit is not supported in the AOT path";
+  `jax.disable_jit()` around train() alone hits the same AOT refusal.
+- **0.4c(ii) the fix, 11-17 03:48:** `g1_probe --jit False` skips `Agent._compile_train/_compile_report`
+  (2 methods, a listed DIFFERENCE) AND needs ninjax 3.6.2 (`PYTHONPATH=/data/tmp/ninjax362`, a
+  second listed difference; 3.6.3 still asserts). Then, 12 train calls, seed 0:
+  eager r1 vs r2 **IDENTICAL 183/183 params, 330/330 metrics** (145 CPU-s each, 4 min wall, 8× compiled);
+  compiled ninjax 3.6.3 vs 3.6.2 **IDENTICAL** (the ninjax swap changes nothing compiled);
+  eager vs compiled **DIFFER** (36/183, 195/330) — XLA fusion is not bit-equal to op-by-op, so the
+  golden file must say which mode made it. Eager, the actor head first moves at **step 10** (compiled 6).
+  **Rule for G1's file: ≥ 20 train calls in the mode the file is made in** (2× the later first move).
+  Not yet: a must-differ control in eager mode (seed 1) — eager identity alone is not yet G1.
+  Next (0.4c iii): eager `--seed 1` control at 20 steps, then file noise for the two samplers + intermediates.
