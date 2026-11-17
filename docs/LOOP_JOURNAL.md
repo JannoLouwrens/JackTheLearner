@@ -2231,3 +2231,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Partial reading (1000 lives/arm, NOT for the rule): smallest W = 2 for noop and held8 with movement drain, 3 for held8 with movement free (9.4 predicted single crossings). Open for the rule writer: K at learning rate 0 has no card twin.
 - cpu_budget receipts committed as the header asks.
 - Philosophy served: 4 (the bar a learner must clear is derived by a rule fixed before the data that sets it).
+
+## 2026-11-17 19:07–19:20 UTC · JACK · J11 (3) prep — every order waits (c4..c7 hold all 4 Kaggle sessions, RUNNING 19:14), J14 has nothing left before 11-21
+- The pilot's learner arms need two things J8's runner could not do: build B in a different world (the cures are world options) and with a different discount. `pilot_b.run_b/run_floor` now take `world=` and `gamma=` (`10a01710`); with neither given, nothing changes. No arm is defined and no pilot seed was run — the rule still comes first.
+- `test_pilot_b_knobs` PASS (seed 381, 700 decisions, 2.5 CPU-min pinned): default vs explicit-default — lives equal, actor weights differ by 0.0 (and moved .036 from init, so it did learn); discount .999 reaches the model and moves the actor .026; the cure world is read off the env the learner stepped and stamped in the run's record; learning rate 0 in that world leaves the actor exactly at init, its 3e-4 twin moves .047.
+- Found for the rule writer: seed 401 was already stepped by the thread probe (fingerprints only); an untrained B holds one noise draw per 32 decisions, so its nearest card arm is held8 with movement free. The pin guard refuses a second `run_b` in one process — tests pin with `taskset`.
+- Philosophy served: 4 (the zero-learning floor is proven to learn nothing and the arms proven to differ only where they say, before any number that matters is produced) and 5 (the slot that freezes the rule can launch in the same hour).
