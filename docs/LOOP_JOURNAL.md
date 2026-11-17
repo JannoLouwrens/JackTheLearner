@@ -2290,3 +2290,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The statue-leak probe finishes ~23:20, after this slot. Wrote its reading rule BEFORE the trace exists (`0fa3d7f0`): at the first meal, body travel ≥ 2× the eaten food's travel = slide (R too short), the reverse = shove (a food came to him), else both; any card mismatch = VOID. Planted test 4/4 PASS.
 - Next slot: `statue_leak_probe read` → the R fix it names, before the rule (3).
 - Philosophy served: 4 (the reading is fixed before the data, so the floor's repair cannot be fitted to it).
+
+## 2026-11-17 23:07–23:40 UTC · LAB · finding himself after rebirth: one look is enough, with or without the compass
+- Inherited the 11:10 sitting's registered bet (`find_himself.py`, rule `fe459803`; all 20 worlds on disk, never fitted, LAB entry uncommitted): ran the frozen fit. ALIVE: no compass 128 rays .933 vs 16 rays .795 (20/20, +.138); compass .957/.889; chance .021; tags .02; scrambled .06–.12 (b16 .1208 vs VOID line .1211). Half the bet wrong: 16 rays do find him.
+- Stranger's memory: compass .79/.88, no compass .40/.47 — with the compass he reads the shared room. Coverage limits him: 15/60/360 lives = .31/.65/.93.
+- Follow-on rule first (`2a6ffa69`, worlds 720–724): turn-free spectrum key hit .845 vs turn search .932 but VOID — scrambled control .157 > .121; post-hoc cause: the look's mean alone recalls .31 (dropped: control .03, key .795).
+- Scar: `until pgrep -f X` matches the waiting shell's own command line and never ends; 10 min lost. INBOX line asks for a body-frame eye option. Philosophy 1, 3, 4.

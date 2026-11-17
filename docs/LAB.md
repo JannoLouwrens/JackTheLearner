@@ -23,59 +23,28 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   Dead variants: angle init ×4 (0.106), no write gate (0.119). Open: a
   non-commutative register; ME.8 / LF.02 with the ring in place. Philosophy 3, 4.
 
-- 11-12 · **Curriculum — weaning** (`experiments/wean_pilot.py`: the mother bears
-  him within r of ready food, r ×1.5 per fed life, then leaves; control = decoy
-  points) · **DEAD at first dose (s90, 13k): weaned-window meals nursed 0, null 0,
-  decoy 0** — but killed in a world where he could not sense food and one food
-  sat in a drive trap (both below). **RE-ENTERED 11-12 23:30 with a new reason —
-  see the last entry.**
+- 11-12/13 · **Curriculum — weaning** (`wean_pilot.py`, `wean_smell_race.sh`;
+  long form `837b4c6f`) · DEAD twice: blind 0/0/0; with smell on the repaired
+  world weaned meals 1/9/1 vs null 2/0/3. Nursing feeds him (18/5/6 vs decoy 0)
+  but r never holds: he learns eating-where-born, not walking up a gradient.
 
-- 11-12 · **World/body findings the weaning kill uncovered** (J1 + LAB; modules
-  and full numbers in git, long form at `4b4c2e3`), one line each:
-  - He could not perceive floor food (rays pass over it; 0 of 584 poses). *Eye
-    height* (`food_sense.py`) DEAD: meals split 1/2/3 vs blind 2/2/3.
-  - *Smell* (`smell_sense.py`, points to food on 99.5 % of poses) DEAD three
-    times: 13k 8 vs shuffled 10; 52k repaired world **2/0/3 vs shuffled 20/0/3**.
-    A sense that works goes unused by the reactive learner.
-  - *Body* (`body_probe.py`): pole topples ~19/20 births; plinth stands. Not the cap.
-  - *The pool was a DRIVE TRAP*; fixed (`W0.PL` PASS `3f15c7f`). Perfect-map
-    oracle fed per birth 23/40 → **38/40**. Body and world are not the gap; the
-    learner is.
-  - *Credit horizon:* GAMMA .99 race DEAD 11-13 (for on 1 of 3 seeds). 88 of 120
-    meals sit in 5 "jackpot" lives; approach from afar does not carry to the
-    next birth. For `LF.04`: a meal-count margin is heavy-tailed noise.
-  Philosophy 3, 5.
+- 11-12 · **World/body findings the weaning kill uncovered** (long form `4b4c2e3`):
+  rays pass over floor food (0 of 584 poses); *eye height* DEAD (1/2/3 vs
+  2/2/3); *smell* DEAD three times (52k: 2/0/3 vs shuffled 20/0/3) — PRIORS §14
+  says that setup cannot learn; pole body topples ~19/20; the pool was a DRIVE
+  TRAP, fixed (`W0.PL`; oracle 23/40 → 38/40); *GAMMA .99* DEAD (1 of 3 seeds).
+  88 of 120 meals sit in 5 "jackpot" lives: a meal-count margin is noise.
 
-- 11-12/13 · **World: shelter law** (J6, `NE.01`) · ALIVE, not shipped; roof hides
-  the cold sky: sealed → 0.110 on s0. **Occlusion-law race 11-13
-  (`occ_law_race.py`): NO WINNER** — shipped 4/5, graded cone 2/5, damped
-  sleeper 2/5 (dies of injury), open control 0/5 (as it must). Band-geometry
-  arm is next. Rows /data/tmp/occrace/.
+- 11-12/13 · **World: shelter law** (J6, `NE.01`) · occlusion-law race NO
+  WINNER (shipped 4/5, cone 2/5, sleeper 2/5, open 0/5); parked (ruling 35).
 
-- 11-12 · **Exploration in bouts** (white vs OU vs pink action noise, noise-only,
-  `explore_bout.py`, rule first `141e84f`) · **DEAD at stage A:** fed births
-  white 4/40, ou 3/40, pink 6/40 (lead 2 < 4). Pink roams 1.7× wider (reach
-  6.3 m vs 2.9) and finds food no more often: range is not what starves him,
-  direction is. Stage B (bout noise inside the learner) never run. Philosophy 3, 4.
+- 11-12 · **Exploration in bouts** (white / OU / pink, `explore_bout.py`) ·
+  DEAD: fed births 4 / 3 / 6 of 40. Pink roams 1.7× wider and feeds no more:
+  direction, not range, starves him.
 
-- 11-12/13 · **Curriculum — weaning re-raced WITH smell on the repaired world**
-  (`wean_smell_race.sh`, rule first) · **DEAD 11-13 03:35** (null clause 1 of 3):
-  weaned meals nursed 1/9/1, decoy 0/0/·, null 2/0/3; s92's 9 are one jackpot life
-  born 0.70 m. Nursing feeds him (nurse meals 18/5/6 vs decoy 0) but r never holds:
-  up to 0.9–1.69 m, back to 0.5, vs uniform births median 3.1–3.9 m. He learns
-  eating-where-born, not walking up a gradient. Staged widening (`CR.00`, J5) is
-  the remaining world-side arm. Philosophy 4, 5.
-
-- 11-13 · **Meal memory — what he replays** (Consolidation; `meal_memory.py`,
-  rule first `dabd2bf`) · **DEAD at the claim gate (11-15, s94–98, 13k, Kaggle
-  CPU).** Pooled fed: meal .450 vs fifo .277 vs yoked .352; seed wins 5/5, 4/5;
-  far (born ≥ 0.7 m) .335 vs .230/.332. Margin vs yoked **.0985 < .10**, the only red
-  clause. Stays dead as declared. Pilot below. A second ring
-  keeps every segment with a meal; batches 8 FIFO + 8 meal. Nursery trials
-  s91–93: fed **.484** vs fifo .370 vs yoked control .376; wins 2/3 and 3/3,
-  margins .114/.108 vs a .10 bar. Mostly birth luck (meals land in 5–16
-  decisions): a lean, not approach from afar. Claim gate in the module
-  docstring (s94–98, 13k, born ≥ 0.7 m clause). END-FIT 4, 2. Philosophy 3, 4.
+- 11-13 · **Meal memory — what he replays** (Consolidation; `meal_memory.py`) ·
+  DEAD at the claim gate (s94–98): fed meal .450 vs fifo .277 vs yoked .352;
+  margin vs yoked .0985 < .10, the only red clause. Stays dead as declared.
 
 - 11-13/14 · **Predict-then-push, three arms** (Deliberation, VACANT; long form
   `1a18168`) · all DEAD on fed births (babble 5/40): sense lookahead 6/40,
@@ -127,16 +96,39 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
 
 - 11-17 · **Finding himself after rebirth — one look, with and without the
   compass** (Death & persistence, VACANT; Vision encoder; PLAN "Memory and
-  sleep" right column; `find_himself.py`, rule first). Bet: today's eye casts
-  rays at WORLD azimuths, a free compass the human-like body will not have;
-  with it one look re-finds his place even at 16 rays; once the eye turns
-  with his head, 16 rays cannot and the 128 row can (best of all turns of
-  the look against remembered looks). Why it matters: a map kept across
-  lives is useless to a body that cannot say where on it he stands. Kill: the
-  128 row without compass recalls a look from within 1 m on < 50% of rebirths,
-  or leads 16 rays by < .10 / on < 16 of 20 worlds. Prior: nothing published
-  on re-localising from range-only senses in a from-scratch agent (PRIORS §6
-  "also open", long form L4: "unknown, expect poor in symmetric arenas");
-  successes had vision (MERLIN) or GPS + compass (Wijmans). No training
-  steps: a look-up in his own remembered looks, minutes of CPU.
-  END-FIT 1, 2, 4. Philosophy 1, 3, 4. **Result: pending.**
+  sleep" right column; `find_himself.py`, rule first `fe459803`). Bet: today's
+  eye casts rays at WORLD azimuths, a free compass the human-like body will
+  not have; without it 16 rays cannot re-find his place and the 128 row can
+  (best of all turns of the look against 2,880 remembered looks; no training,
+  raw looks as keys). Kill: body-frame 128 recalls a look from within 1 m on
+  < 50% of rebirths, or leads 16 rays by < .10 / on < 16 of 20 worlds. Prior:
+  nothing published for range-only senses in a from-scratch agent (PRIORS §6,
+  L4 "expect poor in symmetric arenas"); successes had vision or GPS+compass.
+  - **ALIVE (worlds 700–719, chance .021): no compass, 128 rays .933 vs 16
+    rays .795** (ahead 20/20, lead +.138); with the compass .957 / .889.
+    Shuffled place tags .02; scrambled eye .06–.12 (16 rays no compass
+    .1208 against a .1211 VOID line — a hair). Median miss 0.3 m.
+  - **Half the bet was wrong:** 16 rays DO find him without a compass (.795,
+    20/20 worlds). PLAN's question "with 16 rays" is answered yes.
+  - The compass costs .09 at 16 rays, .02 at 128 — IF he may turn the look.
+    Compared ray-for-ray with no turning, 128 rays fall to .54.
+  - With the compass he mostly reads the ROOM, not his world: recalling from
+    ANOTHER world's memory still hits .79 / .88. Without it a stranger's
+    memory gives .40 / .47 — the square room is ambiguous, and his own
+    world's furniture is what settles it (the record's L4, measured).
+  - It is coverage, not sight, that limits him: 15 / 60 / 360 remembered
+    lives = .31 / .65 / .93.
+  - Follow-on, rule first `2a6ffa69`, fresh worlds 720–724: a key that needs
+    NO turning (the row's amplitude spectrum, 130 numbers) · **VOID as
+    declared** — hit .845 (5/5 worlds, .087 behind the turn search .932, 16
+    rays .608), but the scrambled-eye control read .157 > .121. Diagnosis
+    after the fact, deciding nothing: the mean distance and material (2
+    numbers, untouched by scrambling) alone recall .31; with them dropped
+    the control falls to .03 and the key still hits .795. Re-register with
+    that control before believing it.
+  **Reading:** one look is enough to find himself in this 12 m room on either
+  eye, and the head-turning eye loses little — provided his memory compares
+  looks turn-free. What this cannot say: whether a BRAIN's learned key does
+  it; a bigger or emptier world. ENTERED as an INBOX line (a body-frame eye
+  option; results earned on the compass eye to be earned again without it).
+  END-FIT 1, 2, 4. Philosophy 1, 3, 4.

@@ -69,7 +69,7 @@ RULE — declared before worlds 700-719 are generated (tuning set 690-692):
     nice -n 19 $PY -m experiments.find_himself collect <seed> [<seed> ...]
     nice -n 19 $PY -m experiments.find_himself fit <first_seed> <n_worlds>
 
-FOLLOW-ON (11-17 23:20, after the registered fit on 700-719 read ALIVE) — A
+FOLLOW-ON (11-17 23:10, after the registered fit on 700-719 read ALIVE) — A
 KEY THAT NEEDS NO TURNING.  Trying all 128 turns of a look against every
 memory is 128 comparisons per memory; a brain's store compares a key once.
 Bet: the amplitude spectrum of the row over azimuth (|rfft|, 65 x 2 numbers,
