@@ -2207,3 +2207,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J3: row 4's closing line written in KNOWN_ANSWERS (ruling 33): the PPO reference misses its own stored number here (60 seeds, 76.4 vs 87.5), ours matches the reference code (72.6 vs 73.4); recorded as a miss, nothing more runs.
 - Next-up 1, 8×8 shaping grid: the authors' code exists (`jcoreyes/ecologicalrl@18f691c`) but its script is 1M Double-DQN updates a seed × 10 seeds on EC2, not "minutes on a CPU". Box probe at their net shapes (`experiments/eco_rl_update_probe.py`): 9.7 ms/update → ≥ 2.7 CPU-h/seed, ≥ 54 CPU-h for the pair. Not run (ruling 32); INBOX RESEARCH correction for the Director.
 - Philosophy served: 4 (a miss is recorded as a miss, not a pass) and 3/5 (a prior's cost claim checked against the authors' own script before anyone pays for it).
+
+## 2026-11-17 17:22–17:30 UTC · JACK · Next-up 1 (RL² bandits) — J11/J12/J6/J3 wait (c4..c7 hold all 4 Kaggle sessions, watchers live)
+- Read RL²'s bandit recipe from the paper itself (arXiv e-print PDF → pypdf at `/data/tools/pypdf_lib`): TRPO, batch 250,000 steps, ≤ 1,000 iterations, GRU 256, γ 0.99, GAE λ 0.3.
+- Box probe (`rl2_cost_probe.py`): one GRU fwd+bwd over a 250k batch = 11.5 CPU-s → ≥ 138 CPU-s per TRPO iteration → ≥ 23 CPU-h a seed. Not an idle-slot row (INBOX correction).
+- Rule `74371e09` first, then the learner-free task check: random 49.60 / greedy 75.59 / Thompson 74.80 vs the paper's 49.9 / 74.8 / 74.7 — all REPRODUCE (tol ±1.8–2.3); blind-Thompson control 49.4 fails as it must. KNOWN_ANSWERS N6-rl2-task.
+- Philosophy served: 3, 4 (a cost claim checked against the paper's own recipe before anyone pays; the "memory across episodes" row's task is now proven to be the paper's task, with a control that failed) — it is the instrument, not Jack.
