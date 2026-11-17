@@ -358,3 +358,28 @@ the diagnosis; `/data/tmp/j_mlx/scale.py`).
   `agent.opt.warmup=0`, calls {1, 8, 20} or later (one listed difference, cheap); (c) compare every
   tensor against its OWN scale in the port gate (per-tensor relative tolerance), which a 5e-13
   global ratio needs anyway. Recommendation: (b) + (c). Then G0 at the first free Kaggle CPU session.
+
+**0.4e MEASURED 11-17 06:20 — G1 golden file chosen (warmup 0), and rung 10's gate made per-tensor**
+(`experiments/brain_a/port_gate.py`; logs `/data/jack-logs/mlx/{g1_dump20_w0r2.*,g1_w0_vs_w0r2.log,
+port_gate_selftest_{w0,r1}.log}`). Took 0.4d iii's recommendation (b) + (c).
+- (b) **G1 for the warmup-0 file: the 20-call eager file-noise run with `agent.opt.warmup=0` (the
+  one listed difference), repeated in a fresh process: IDENTICAL 1,400/1,400 arrays, 183/183 params,
+  570/570 metrics; zero guard PASS with nothing allowed (call 8: 0/57 zero; calls 1 and 20 carry 8
+  each, different ones).** Frozen as the golden file: `/data/jack-logs/mlx/golden_g1_debug_w0_noise_s0.npz`
+  (sha256 583e3c30…, + `.json` 0f0e8478…, noise `noise_s0.npz` 88e6654f…). Control: the same run with
+  the official warmup (`g1_dump20_r1`) FAILS the gate on 931/1,140 tensors — the flag is visible.
+- (c) **Rung 10 says "relative 1e-4 (1e-3 recurrent); cosine ≥ 0.9999" and not relative to what.
+  Measured against the whole gradient it is blind:** on the official-warmup file a SIGN-FLIPPED
+  actor-mean backward moves the global relative error to 2.8e-9, a 1% scale error to 1.4e-11 — a
+  global 1e-4 gate PASSES both. On the warmup-0 file the sign flip reaches 1.7e-4 (caught) but the 1%
+  error only 8.4e-7 (missed). `port_gate.py` compares each tensor against its own norm (`dyn/` at 1e-3,
+  the rest 1e-4, cosine ≥ 0.9999; a golden-zero tensor must stay exactly zero and is counted
+  unchecked). `--selftest` = 8 planted cases, each with the verdict it must give: identical PASS,
+  float32 round-off (×(1+2⁻²³·N)) PASS, actor-mean sign flip FAIL, actor-mean ×1.01 FAIL, dyngru ×1.005
+  FAIL, dyngru ×1.0002 PASS (the recurrent band is real), a missing key FAIL, the other-noise control
+  dump FAIL — **8/8 as required on both the warmup-0 and the official-warmup file.**
+- Still open in rung 10 as written: gradients PER LOSS TERM (the dump holds the total loss's gradient;
+  splitting needs `Agent.loss` opened — the port's job). Per-tensor tolerances on tensors of size ~1e-8
+  (`pol/mlp/*` at call 8) are uncalibrated: an honest MLX build may miss 1e-4 there through rounding
+  alone — the first real MLX comparison calibrates, and any loosening is re-registered, not edited.
+Next: G0 (`g0_kernel.py`) at the first free Kaggle CPU session closes stage 0.
