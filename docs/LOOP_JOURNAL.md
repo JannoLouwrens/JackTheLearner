@@ -2120,3 +2120,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Finding: W0's floor plane covers the pool, so no geom of his is ever wet in today's world — the wet/drown branch had to be planted (surface raised in both implementations, test only).
 - 44.4 → 1.17 us a call = 1.73 ms of a ~19 ms decision. Not wired into jack_env yet. `853adc87`.
 - Philosophy served: 5 (a faster, still-true loop on free compute) and 4 (identity with a control that must fail; every branch shown exercised).
+
+## 2026-11-17 10:28 UTC · JACK · J11/J12 waiting (c0..c3 RUNNING on Kaggle) → J6 (2b) pieces 3+4
+- `water.apply` in C: identical 54,000/54,000 sub-steps (whole force array + state), held-dry and raised-surface branches exercised, control differs; 0.55–0.70 ms a decision saved. `8c1a037b`.
+- Contact-audio onset filter in C (rare events still built by the shipped Python): identical 36,000/36,000, every event field; 0.27–0.40 ms saved. `6f8b9e87`.
+- Finding: the pool's water force fires in today's world on seeds 154/155 (68/63 of 6,000 sub-steps) — a limb over the pool off the dry floor — though the drive layer never sees him wet.
+- All four (2b) pieces proven; next = one jack_env option wiring them + whole-trajectory identity incl. a reset.
+- Philosophy served: 5 (a faster, still-true loop on free compute) and 4 (identity tests with controls that must fail).
