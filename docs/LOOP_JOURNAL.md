@@ -1925,3 +1925,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Added pink-noise-rl==2.0.1 (§5's pin, numpy-only) `85838831`; failed result kept as e1_nopink_failed.json; e1 relaunched 23:38 (jack-cpu-1794872304). e2 also carries bpink — same fix covers it.
 - In flight: f3, W1.04, e0, e1. 32/35 core runs in; pilot already VOID on the floor gate.
 - Philosophy served: 3 (the exploration default is raced, not assumed — a dead arm would have let white noise win by forfeit).
+
+## 2026-11-17 00:20 · JACK · J3 (4): the in-house arms' kernel is one command
+- J8: f3, e0, e1 (past its 2-min import death, RUNNING 40 min) and W1.04 hold all 4 Kaggle CPU sessions → no harvest, e2 cannot launch.
+- J3 (4) had a rule but no way onto Kaggle: added `inhouse_rows kernel ARM` (`40635f1b`) — 20 cells per arm, 4 workers, one kernel per arm as ordered. Pins gymnasium 1.1.1 only: measured that the path imports torch/numpy/gymnasium and never mujoco (mujoco 3.2.3 has no Python 3.13 wheel, so pinning the box's would have killed the kernel at install — e1's scar). Box smoke 3 cells + job-body mock OK.
+- Committed the e1-relaunch receipts that sat dirty.
+- Philosophy served: 3 and 4 (every in-house learner gets its fair chance against a published number; a kernel that dies at import tests nothing).
