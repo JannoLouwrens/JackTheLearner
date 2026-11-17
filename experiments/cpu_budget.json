@@ -1316,11 +1316,12 @@
         "detached:launch_e2.log": 267.89,
         "detached:launch_f3.log": 619.17,
         "detached:launch_kcpu_speed.log": 6.75,
-        "detached:launch_ppo-lp.log": 12.5,
-        "detached:launch_wm-latent.log": 97.67,
-        "detached:w104.log": 420.65
+        "detached:launch_kcpu_speed_k3.log": 7.16,
+        "detached:launch_ppo-lp.log": 508.93,
+        "detached:launch_wm-latent.log": 254.25,
+        "detached:w104.log": 473.59
       },
-      "used_s": 7486.93
+      "used_s": 8200.04
     }
   },
   "last_child_s": {
