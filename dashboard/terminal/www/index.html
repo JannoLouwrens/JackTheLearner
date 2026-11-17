@@ -503,19 +503,20 @@ $("#wins").addEventListener("click",function(e){if(winSwallow){winSwallow=false;
 function winAct(b){
   if(b.dataset.win==="x"){if(window.confirm("Close this window? Anything running in it stops."))input("\x02X")}
   else if(b.dataset.win==="+")openPlace();
-  else if(+b.dataset.win<10)input("\x02"+b.dataset.win);else tmuxCmd("select-window -t "+b.dataset.win);
+  else if(+b.dataset.win<10)input("\x02"+b.dataset.win);else tmuxAct("action=select&win="+encodeURIComponent(b.dataset.win));
   if(!coarse)term.focus()}
-/* Run a tmux command from the client. tmux's command prompt (prefix :) only
-   takes the command when the ":" lands in its own frame, a beat after the
-   prefix — one combined burst is dropped on the floor. So: prefix, then ":",
-   then the command line. */
-function tmuxCmd(cmd){input("\x02");setTimeout(function(){input(":")},90);setTimeout(function(){input(cmd+"\r")},190)}
-/* A new window — on this server, or on a connected device. Add a device by
-   adding it to attach.sh (ensure_device) and one line to PLACES. The laptop
-   opens a plain window (prefix c), then runs ssh in it — no command prompt. */
+/* Window control (rename, new window, switch) runs on the server through the
+   terminal's helper — the same authed endpoint as the photo upload and the copy
+   history. The page used to drive tmux's own command prompt by sending
+   keystrokes, but a phone's network can collapse them so the prompt never opens
+   and the command spills into whatever is focused — a rename once landed in the
+   chat. The helper runs the tmux command directly: no timing, no spill. */
+function tmuxAct(qs,fail){fetch("/term/upload?"+qs,{method:"POST",credentials:"same-origin",cache:"no-store"}).then(function(r){if(!r.ok&&fail)toast(fail,2600)}).catch(function(){if(fail)toast(fail,2600)})}
+/* A new window — on this server, or on a connected device. Add a device here
+   and in the helper's tmux_act (a matching where="…" that runs its ssh). */
 var PLACES=[
-  {label:"This server",sub:"a shell on the Oracle box",cmd:"\x02c"},
-  {label:"Work laptop",sub:"JANNO — a Windows shell",cmd:"\x02c",then:"exec ssh -tt laptop\r",thenDelay:500}
+  {label:"This server",sub:"a shell on the Oracle box",where:"server"},
+  {label:"Work laptop",sub:"JANNO — a Windows shell",where:"laptop"}
 ];
 function openPlace(){var L=$("#placelist");L.innerHTML="";PLACES.forEach(function(p,k){
   var b=document.createElement("button");b.type="button";b.className="key place";b.dataset.place=k;
@@ -523,13 +524,12 @@ function openPlace(){var L=$("#placelist");L.innerHTML="";PLACES.forEach(functio
   b.appendChild(t);b.appendChild(s);L.appendChild(b)});
   $("#menu").hidden=true;$("#place").hidden=false}
 $("#placelist").addEventListener("click",function(e){var b=e.target.closest("[data-place]");if(!b)return;var p=PLACES[+b.dataset.place];
-  $("#place").hidden=true;input(p.cmd);if(p.then)setTimeout(function(){input(p.then)},p.thenDelay||150);if(!coarse)term.focus()});
+  $("#place").hidden=true;tmuxAct("action=newwin&where="+encodeURIComponent(p.where),"Could not open the window");if(!coarse)term.focus()});
 /* Rename a tab so you know what is where; the name is frozen (auto-rename off). */
 function renameTab(idx,cur){
   var name=window.prompt("Name this tab:",(cur||"").trim());
-  if(name==null)return;name=name.replace(/['"\\;]/g,"").trim().slice(0,24);if(!name)return;
-  tmuxCmd("setw -t "+idx+" automatic-rename off");
-  setTimeout(function(){tmuxCmd("rename-window -t "+idx+" '"+name+"'")},340);
+  if(name==null)return;name=name.replace(/[\x00-\x1f]/g,"").trim().slice(0,32);if(!name)return;
+  tmuxAct("action=rename&win="+encodeURIComponent(idx)+"&name="+encodeURIComponent(name),"Could not rename the tab");
   if(!coarse)term.focus()}
 function renameActive(){var ab=$("#wins").querySelector(".win.on");renameTab(ab?ab.dataset.win:activeWin,ab?ab.textContent.replace(/^[0-9]+\s+/,""):"")}
 

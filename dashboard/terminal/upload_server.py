@@ -48,6 +48,45 @@ def history(lines: int) -> str:
     return out.stdout.decode("utf-8", "replace")
 
 
+def tmux(*args, timeout=5):
+    return subprocess.run(["/usr/bin/tmux", "-L", TMUX_SOCKET, *args], capture_output=True, timeout=timeout)
+
+
+def tmux_act(q):
+    """Run a tmux control action server-side (rename a window, open a new one,
+    switch). The page calls this instead of typing tmux's own command prompt
+    over the wire — a phone's network can collapse those keystrokes and spill
+    the command into whatever is focused. Here there is no timing and no spill.
+    The window name is passed as a lone argument (no shell), index as digits."""
+    action = (q.get("action") or [""])[0]
+    sess = TMUX_SESSION
+    if action == "rename":
+        win = (q.get("win") or [""])[0]
+        if not win.isdigit():
+            return 400, {"error": "bad window"}
+        name = "".join(c for c in (q.get("name") or [""])[0] if c.isprintable()).strip()[:32]
+        if not name:
+            return 400, {"error": "empty name"}
+        tmux("set-window-option", "-t", f"{sess}:{win}", "automatic-rename", "off")
+        r = tmux("rename-window", "-t", f"{sess}:{win}", "--", name)
+        return (200, {"ok": True}) if r.returncode == 0 else (503, {"error": "rename failed"})
+    if action == "newwin":
+        where = (q.get("where") or ["server"])[0]
+        if where == "laptop":
+            r = tmux("new-window", "-t", f"{sess}:", "-n", "Laptop", "exec ssh -tt laptop")
+            tmux("set-window-option", "-t", f"{sess}:", "automatic-rename", "off")
+        else:
+            r = tmux("new-window", "-t", f"{sess}:")
+        return (200, {"ok": True}) if r.returncode == 0 else (503, {"error": "new window failed"})
+    if action == "select":
+        win = (q.get("win") or [""])[0]
+        if not win.isdigit():
+            return 400, {"error": "bad window"}
+        r = tmux("select-window", "-t", f"{sess}:{win}")
+        return (200, {"ok": True}) if r.returncode == 0 else (503, {"error": "switch failed"})
+    return 400, {"error": "unknown action"}
+
+
 def kind(head: bytes):
     """The picture's real type, from its first bytes — never from what the sender says."""
     if head[:3] == b"\xff\xd8\xff":
@@ -105,6 +144,21 @@ class H(BaseHTTPRequestHandler):
         origin, host = self.headers.get("Origin"), self.headers.get("Host", "")
         if origin and origin.split("://", 1)[-1] != host:
             return self.reply(403, {"error": "wrong site"})
+        q = parse_qs(self.path.partition("?")[2])
+        if "action" in q:
+            if self.headers.get("Sec-Fetch-Site", "same-origin") not in ("same-origin", "none"):
+                return self.reply(403, {"error": "wrong site"})
+            try:
+                bn = int(self.headers.get("Content-Length", "0") or "0")
+                if 0 < bn <= 4096:
+                    self.rfile.read(bn)
+            except ValueError:
+                pass
+            try:
+                code, obj = tmux_act(q)
+            except (subprocess.SubprocessError, OSError):
+                code, obj = 503, {"error": "tmux refused"}
+            return self.reply(code, obj)
         try:
             n = int(self.headers.get("Content-Length", ""))
         except ValueError:
