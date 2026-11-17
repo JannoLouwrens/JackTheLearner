@@ -71,6 +71,19 @@ pool while not touching the floor), though `drives` never sees him wet.
 Speed (box, nice 19, 20,000 calls): Python 14.7-18.5 us, C 0.90 us a call
 -> 0.55-0.70 ms of a decision.
 
+Piece 4, MEASURED 11-17 10:27: `jn_synth_step` == `fast_sim._lazy_step` (the
+shipped option under ruling 34). C owns the pair grouping (dict insertion
+order) and `_prev_pairs`/`_last_fired`; for each FIRING pair Python builds
+the event with the shipped expressions (events are rare: 0.5-7% of
+sub-steps). `tests/test_native_synth.py` PASS: 36,000/36,000 sub-steps,
+every event field + state exact, C loaded once per synth: seeds 153-155 x
+{random: 322-440 events; set on food every 10 decisions: 30-47 events}.
+Control (refractory window 0) fires 4-828 extra events a seed. NOT
+exercised: a reset inside a run (no life ended in 150 decisions) — the
+wiring's whole-trajectory test must cover it.
+Speed (box, nice 19, 20,000 calls): Python 8.1-11.3 us, C 1.31-1.34 us a
+call -> 0.27-0.40 ms of a decision.
+
 Usage: $PY -m experiments.native_substep   # build + timing on one live env
 """
 from __future__ import annotations
@@ -113,6 +126,12 @@ typedef struct {
     double* newf; uint8_t* held;
 } jn_water;
 void jn_water_apply(uintptr_t d, jn_water* w);
+typedef struct {
+    int ngeom, nprev, ncur;
+    uint8_t* prev_mark; double* last; int* prev; int* cur; int* seen;
+    int stamp; double refr;
+} jn_synth;
+int jn_synth_step(uintptr_t d, jn_synth* s, int* fire, int maxfire);
 """
 
 SRC = r"""
@@ -290,6 +309,45 @@ void jn_water_apply(uintptr_t dp, jn_water* w) {
             if (w->newf[3 * b + i] != 0.0) la = 1;
         }
     w->last_any = la;
+}
+
+typedef struct {
+    int ngeom, nprev, ncur;
+    uint8_t* prev_mark; double* last; int* prev; int* cur; int* seen;
+    int stamp; double refr;
+} jn_synth;
+
+/* fast_sim._lazy_step's bookkeeping: pairs grouped in order of first
+   appearance (== dict insertion order), skipped if touching last sub-step
+   or inside the refractory window, `_last_fired`/`_prev_pairs` updated.
+   Returns the firing pairs (key a*ngeom+b, a<=b) in order; Python builds
+   each event from them with the shipped float ops (events are rare).
+   `last` holds -1e9 where `_last_fired` has no key (its .get default). */
+int jn_synth_step(uintptr_t dp, jn_synth* s, int* fire, int maxfire) {
+    const mjData* d = (const mjData*)dp;
+    double t = d->time;
+    int ng = s->ngeom, nf = 0;
+    s->stamp += 1;
+    s->ncur = 0;
+    for (int k = 0; k < d->ncon; k++) {
+        int a = d->contact[k].geom[0], b = d->contact[k].geom[1];
+        int key = a <= b ? a * ng + b : b * ng + a;
+        if (s->seen[key] == s->stamp) continue;
+        s->seen[key] = s->stamp;
+        s->cur[s->ncur++] = key;
+    }
+    for (int j = 0; j < s->ncur; j++) {
+        int key = s->cur[j];
+        if (s->prev_mark[key]) continue;
+        if (t - s->last[key] < s->refr) continue;
+        s->last[key] = t;
+        if (nf < maxfire) fire[nf] = key;
+        nf++;
+    }
+    for (int j = 0; j < s->nprev; j++) s->prev_mark[s->prev[j]] = 0;
+    for (int j = 0; j < s->ncur; j++) { s->prev_mark[s->cur[j]] = 1; s->prev[j] = s->cur[j]; }
+    s->nprev = s->ncur;
+    return nf;
 }
 """
 
@@ -486,6 +544,86 @@ class NativeWater:
             bad.append("written")
         if bool(self.cfg.last_any) != bool(W._last_any):
             bad.append("last_any")
+        return bad
+
+
+class NativeSynth:
+    """C twin of `fast_sim._lazy_step` for ONE ContactAudioSynth (piece 4).
+
+    C owns the per-sub-step pair grouping and the `_prev_pairs` /
+    `_last_fired` state; for each pair that fires, `step()` gathers its
+    contact indices and builds the event with the SAME Python expressions
+    as the shipped step (mj_contactForce, np.mean of positions, sum of
+    forces, `_make_event`) into `self.events`. `load()` copies state in,
+    `diff()` compares it exactly."""
+
+    MAXFIRE = 256
+
+    def __init__(self, synth):
+        from ContactAudio import REFRACTORY_S
+        self.ffi, self.lib = build()
+        f, m = self.ffi, synth.model
+        self.synth, self.ng = synth, m.ngeom
+        n2 = m.ngeom * m.ngeom
+        self.prev_mark = np.zeros(n2, dtype=np.uint8)
+        self.last = np.full(n2, -1e9)
+        self.prev = np.zeros(n2, dtype=np.int32)
+        self.cur = np.zeros(n2, dtype=np.int32)
+        self.seen = np.zeros(n2, dtype=np.int32)
+        self.fire = np.zeros(self.MAXFIRE, dtype=np.int32)
+        b = f.from_buffer
+        s = self.cfg = f.new("jn_synth*")
+        s.ngeom, s.refr = m.ngeom, REFRACTORY_S
+        s.prev_mark, s.last = b("uint8_t[]", self.prev_mark), b("double[]", self.last)
+        s.prev, s.cur = b("int[]", self.prev), b("int[]", self.cur)
+        s.seen = b("int[]", self.seen)
+        self._pf = b("int[]", self.fire)
+        self.events = []
+        self.load()
+
+    def load(self) -> None:
+        S, ng = self.synth, self.ng
+        self.prev_mark[:] = 0
+        self.last[:] = -1e9
+        keys = [a * ng + b for a, b in S._prev_pairs]
+        for j, k in enumerate(keys):
+            self.prev_mark[k] = 1
+            self.prev[j] = k
+        self.cfg.nprev = len(keys)
+        for (a, b), t in S._last_fired.items():
+            self.last[a * ng + b] = t
+
+    def step(self, data) -> None:
+        import mujoco
+        nf = self.lib.jn_synth_step(data._address, self.cfg, self._pf, self.MAXFIRE)
+        assert nf <= self.MAXFIRE
+        if not nf:
+            return
+        S, ng, t = self.synth, self.ng, float(data.time)
+        g = data.contact.geom[:int(data.ncon)].tolist()
+        for key in self.fire[:nf].tolist():
+            pair = (key // ng, key % ng)
+            pts = []
+            for i, (a, b) in enumerate(g):
+                if ((a, b) if a <= b else (b, a)) != pair:
+                    continue
+                con = data.contact[i]
+                f6 = np.zeros(6)
+                mujoco.mj_contactForce(S.model, data, i, f6)
+                pts.append((np.array(con.pos), abs(float(f6[0]))))
+            pos = np.mean([p for p, _ in pts], axis=0)
+            force = float(sum(f for _, f in pts))
+            self.events.append(S._make_event(t, pair, pos, force))
+
+    def diff(self) -> list:
+        S, ng, bad = self.synth, self.ng, []
+        mine = {(int(k) // ng, int(k) % ng) for k in self.prev[:self.cfg.nprev]}
+        if mine != S._prev_pairs:
+            bad.append("prev_pairs")
+        lf = {(int(k) // ng, int(k) % ng): float(self.last[k])
+              for k in np.flatnonzero(self.last != -1e9)}
+        if lf != S._last_fired:
+            bad.append("last_fired")
         return bad
 
 
