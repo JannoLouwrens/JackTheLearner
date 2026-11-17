@@ -2026,3 +2026,4 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 0 sustained lives in 544 (gSDE B: 0 in 2,350). Meals/life first→last 20 fell 3/4; unfed life 267–282 → 438–466 s 4/4 (lie-still); last-50k meals 0.103/1k vs B 0.100 vs untrained twin 0.374, held-8 0.454.
 - Reading (reported only): the exploration scheme is not what stops B eating at this rung; §13's movement-drain prediction stands. e1 (pink) and e2 still RUNNING (kaggle 05:07).
 - Philosophy served: 3 and 4 (a raced alternative to a default, scored on the same seeds and length, reported without moving a seat).
+- 05:12 · JACK · J3 (4): e0's exit freed a Kaggle CPU session → `inhouse_rows kernel wm-latent` launched (jack-cpu-1794892152; 20 cells, rows 1+3, 5 seeds + never-trains controls). Sessions now e1, e2, W1.04, wm-latent = 4. Philosophy 3 (the owner's fair chance for every in-house arm).
