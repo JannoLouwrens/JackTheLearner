@@ -2002,5 +2002,5 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J8 e0/e1/e2 RUNNING (kaggle status 03:38); W1.04 wrap alive 7h; J3/J6/J10 wait on a Kaggle session → "Next up" 1.
 - 60-step trace (compiled): actor head `pol/head/action/mean` first moves at step 6; 0.4b's "slowval unmoved" was a misreading (equal across controls, not unmoved — it moves at step 1).
 - Official `jit: False` cannot run as shipped (AOT lower under disable_jit; ninjax 3.6.3 key assert). Fix = skip `_compile_train/_report` + ninjax 3.6.2, both listed differences.
-- Eager 12 steps twice: IDENTICAL 183/183 params, 330/330 metrics; ninjax swap changes nothing compiled; eager vs compiled DIFFER 36/183; eager head moves at step 10 → G1 rule ≥ 20 calls.
+- Eager 12 steps twice: IDENTICAL 183/183 params, 330/330 metrics; ninjax swap changes nothing compiled; eager vs compiled DIFFER 36/183; eager head moves at step 10 → G1 rule ≥ 20 calls. Eager controls DIFFER (seed 1: 9/183; step seed +1000: 9/183).
 - Philosophy served: 4 (the reference the port is judged against must be repeatable in the mode it is made, and must exercise every layer).

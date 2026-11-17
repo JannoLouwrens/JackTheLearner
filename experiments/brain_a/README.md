@@ -264,5 +264,6 @@ compiler off, intermediate dumps, twice → G1.
   eager vs compiled **DIFFER** (36/183, 195/330) — XLA fusion is not bit-equal to op-by-op, so the
   golden file must say which mode made it. Eager, the actor head first moves at **step 10** (compiled 6).
   **Rule for G1's file: ≥ 20 train calls in the mode the file is made in** (2× the later first move).
-  Not yet: a must-differ control in eager mode (seed 1) — eager identity alone is not yet G1.
-  Next (0.4c iii): eager `--seed 1` control at 20 steps, then file noise for the two samplers + intermediates.
+  Eager controls (03:52) DIFFER as they must: agent seed 1 9/183 params, 139/330 metrics equal;
+  per-step seed +1000 9/183, 159/330. Eager identity is not seed-blind.
+  Next (0.4c iii): file noise for the two samplers + intermediates.
