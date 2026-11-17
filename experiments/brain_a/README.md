@@ -267,3 +267,24 @@ compiler off, intermediate dumps, twice → G1.
   Eager controls (03:52) DIFFER as they must: agent seed 1 9/183 params, 139/330 metrics equal;
   per-step seed +1000 9/183, 159/330. Eager identity is not seed-blind.
   Next (0.4c iii): file noise for the two samplers + intermediates.
+
+**0.4c(iii) MEASURED 11-17 04:29 — file noise for the two samplers; G1 holds eager, on the box**
+(`experiments/brain_a/file_noise.py`, `g1_probe --jit False --noise-file`; ninjax 3.6.2; logs and
+noise files `/data/jack-logs/mlx/g1_noise_{r1,r2,c1}.*`, `noise_s{0,1}.npz` = 4M float32 uniforms +
+4M normals each, numpy `default_rng(seed)`). `outs.Normal.sample` → `normal[cursor]*std + mean`;
+`outs.Categorical.sample` → argmax(logits − log(−log u)), u = `uniform[cursor]` (the Gumbel-max that
+`jax.random.categorical` itself is); differences listed in the module docstring.
+- 20 eager train calls, seed 0, file s0, twice: **IDENTICAL 183/183 params, 570/570 metrics → G1
+  PASSES for the eager parameter/metric file.** Control = the same run with ONLY the noise file
+  changed (s1): **DIFFERS** (10/183 params, 209/570 metrics equal) — the samplers really are fed by
+  the file, and nothing else random in the step leaks past it (init weights are unpatched threefry,
+  identical in all three runs).
+- Noise schedule, identical in all runs: `make_agent` consumes 68 normal / 108 categorical calls
+  (5,440 / 5,472 values) BEFORE the first train call (its init pass); every train call then consumes
+  exactly **34 normal + 54 categorical calls = 21,760 + 21,888 values**. The MLX side must replay
+  the init consumption (or start its cursor at 5,440 / 5,472). Binary/dropout never called.
+- Actor head `pol/head/action/mean` first moves at step 8 (s0) / 9 (s1) → a 20-call file exercises it.
+- Cost: 3 runs in parallel, 3 min 34 s wall at nice 19.
+Next (0.4d): dump one step's intermediates (RSSM posterior/prior logits, imagined features, returns,
+the 8 losses, grads by name) as .npz from the same eager file-noise run, twice → identical; then G0
+(`g0_kernel.py`) at the first free Kaggle CPU session closes stage 0.

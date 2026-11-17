@@ -10,7 +10,7 @@ Same config as 0.2b (`defaults debug`, float32, Dummy74 obs/act spaces, seed 0).
 fixed numpy draw (seed 1234) over `agent.spaces`; the batch is device_put and the per-step seed is
 `agent._seeds(i, ...)`, exactly what `agent.stream()` does. N train calls; dumps sha256 of every param (by name) plus
 the metrics each call returns. Run twice in separate processes and compare the JSONs.
-Not yet: file noise for the two samplers, intermediates (the rest of 0.4).
+0.4c iii: `--noise-file` (file_noise.py) feeds the two samplers from an .npz, eager only. Not yet: intermediates.
 0.4c: `--jit False` = compiler off; needs `PYTHONPATH=/data/tmp/ninjax362` (ninjax 3.6.2) + the AOT skip below.
 
 0.4b controls (must DIFFER from the seed-0 run, or the identity above proves nothing):
@@ -45,6 +45,8 @@ def main(argv=None):
                     help="0.4c ii: config jit kept True, train() called under jax.disable_jit()")
     ap.add_argument("--trace", default="pol/head/action/mean,slowval",
                     help="0.4c: comma list of param-name substrings hashed after EVERY step")
+    ap.add_argument("--noise-file", help="0.4c iii: .npz noise for the two samplers (made if absent)")
+    ap.add_argument("--noise-seed", type=int, default=0, help="seed used only when making the file")
     a = ap.parse_args(argv)
     if a.compare:
         return compare(*a.compare)
@@ -73,7 +75,14 @@ def main(argv=None):
         from embodied.jax import agent as ejagent
         ejagent.Agent._compile_train = lambda self: None
         ejagent.Agent._compile_report = lambda self: None
+    noise = None
+    if a.noise_file:
+        assert a.jit == "False", "file noise needs --jit False (a Python cursor under jit is baked in)"
+        from embodied.jax import outs as ejouts
+        from experiments.brain_a.file_noise import FileNoise
+        noise = FileNoise(a.noise_file, seed=a.noise_seed).install(ejouts)
     agent = dv3main.make_agent(config)
+    noise_at_init = noise.snapshot() if noise else None
 
     B, T = config.batch_size, config.batch_length + config.replay_context
     rng = np.random.default_rng(1234)
@@ -99,7 +108,7 @@ def main(argv=None):
                 for k, v in sorted(agent.params.items()) if any(t in k for t in tr)}
 
     carry = agent.init_train(B)
-    mets_all, trace = [], [traced()]
+    mets_all, trace, draws = [], [traced()], []
     for i in range(a.steps):
         data = internal.device_put({k: v.copy() for k, v in batch.items()}, agent.train_sharded)
         data["seed"] = agent._seeds(i + a.step_seed_offset, agent.train_mirrored)
@@ -111,6 +120,8 @@ def main(argv=None):
         mets_all.append({k: float(np.asarray(v).mean()) for k, v in mets.items()
                          if np.asarray(v).dtype.kind == "f"})
         trace.append(traced())
+        if noise:
+            draws.append(noise.snapshot())
     # first step after which each traced param differs from its init (None = never moved)
     first_move = {k: next((i for i, h in enumerate(trace) if h[k] != trace[0][k]), None)
                   for k in trace[0]}
@@ -119,7 +130,7 @@ def main(argv=None):
     rec = {"versions": versions(), "steps": a.steps, "seed": a.seed,
            "step_seed_offset": a.step_seed_offset, "jit": a.jit, "disable_jit": a.disable_jit,
            "first_move": first_move, "batch_keys": sorted(batch),
-           "B": B, "T": T, "n_params": len(params), "params": params, "metrics": mets_all}
+           "B": B, "T": T, "noise_file": a.noise_file, "noise_at_init": noise_at_init, "noise_draws": draws, "n_params": len(params), "params": params, "metrics": mets_all}
     pathlib.Path(a.out).write_text(json.dumps(rec, indent=1, sort_keys=True))
     print("G1_PROBE", a.out, "n_params", len(params), "metric calls", len(mets_all))
     for k, v in first_move.items():

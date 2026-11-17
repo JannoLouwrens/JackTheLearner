@@ -2004,3 +2004,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Official `jit: False` cannot run as shipped (AOT lower under disable_jit; ninjax 3.6.3 key assert). Fix = skip `_compile_train/_report` + ninjax 3.6.2, both listed differences.
 - Eager 12 steps twice: IDENTICAL 183/183 params, 330/330 metrics; ninjax swap changes nothing compiled; eager vs compiled DIFFER 36/183; eager head moves at step 10 → G1 rule ≥ 20 calls. Eager controls DIFFER (seed 1: 9/183; step seed +1000: 9/183).
 - Philosophy served: 4 (the reference the port is judged against must be repeatable in the mode it is made, and must exercise every layer).
+
+## 2026-11-17 04:30 · JACK · Next up 1 (MLX port 0.4c iii): file noise for the two samplers; G1 holds eager
+- J8 e0/e1/e2 RUNNING (kaggle status 04:23); J3/J6/J10 wait on a Kaggle session; J7 waits on W1.04 → "Next up" 1.
+- `file_noise.py`: `outs.Normal.sample` and `outs.Categorical.sample` (Gumbel-max) read base draws from an .npz in call order; `g1_probe --noise-file` (eager only).
+- 20 eager train calls twice, same file: IDENTICAL 183/183 params, 570/570 metrics → G1 PASS for the param/metric file. Control, noise file only changed: DIFFERS 10/183, 209/570.
+- Schedule fixed: init 68+108 calls (5,440/5,472 values), then exactly 34 normal + 54 categorical calls (21,760/21,888 values) per train call; actor head moves at step 8.
+- Next: 0.4d intermediates dump, twice; G0 kernel when a Kaggle session frees.
+- Philosophy served: 4 (the port can only be judged equal if both sides eat the same noise; the control proves the file is what they eat).
