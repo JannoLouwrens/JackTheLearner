@@ -1931,3 +1931,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J3 (4) had a rule but no way onto Kaggle: added `inhouse_rows kernel ARM` (`40635f1b`) — 20 cells per arm, 4 workers, one kernel per arm as ordered. Pins gymnasium 1.1.1 only: measured that the path imports torch/numpy/gymnasium and never mujoco (mujoco 3.2.3 has no Python 3.13 wheel, so pinning the box's would have killed the kernel at install — e1's scar). Box smoke 3 cells + job-body mock OK.
 - Committed the e1-relaunch receipts that sat dirty.
 - Philosophy served: 3 and 4 (every in-house learner gets its fair chance against a published number; a kernel that dies at import tests nothing).
+
+## 2026-11-17 00:25 · JACK · J3 (4): the first in-house arm meets a published number — on the box
+- J8 cannot move: f3, e0, e1 all RUNNING on Kaggle (checked by status), W1.04 holds the 4th session; e2 waits. Nothing to harvest.
+- Rather than idle a free box for hours, launched `ppo-needs` (the seated tanh-AWR learner) on rows 1 and 3 locally: 20 cells, 2 workers, nice 19, ~560 MB — same rule, same cell layout the kernel uses, on the venv the cores are certified in. Load was 0.45, CPU day 81 s used.
+- Next: harvest the verdict (~01:55), then wm-latent at the next free session.
+- Philosophy served: 3 and 4 (the in-house learner gets its fair chance against a number that can say no).
