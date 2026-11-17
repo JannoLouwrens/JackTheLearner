@@ -91,8 +91,36 @@ def vec(kw: dict, T: int, n: int = 4) -> dict:
             "note": "includes worker start-up"}
 
 
+def _compat_multiray() -> None:
+    """mujoco >= 3.3 added a `normal` out-arg to mj_multiRay (kernel 2 died on
+    it, 11-17 06:3x). fast_sim calls the 3.2.3 signature; for the Kaggle column
+    only, shim the call by inserting normal=None. The box path is untouched."""
+    import mujoco
+    f = mujoco.mj_multiRay
+    if getattr(f, "_jack_shim", False):
+        return
+    new_sig = []  # decided on the first call, so later calls pay no exception
+
+    def shim(*a):
+        if not new_sig:
+            try:
+                f(*a)
+                new_sig.append(False)
+                return None
+            except TypeError:
+                if len(a) != 11:
+                    raise
+                new_sig.append(True)
+        if new_sig[0]:
+            return f(*a[:9], None, *a[9:])
+        return f(*a)
+    shim._jack_shim = True
+    mujoco.mj_multiRay = shim
+
+
 def run_all(T: int) -> dict:
     import platform
+    _compat_multiray()
     res = {"host": platform.node(), "cpus": os.cpu_count(),
            "load": os.getloadavg()[0], "configs": {}}
     for name, kw in CONFIGS.items():
