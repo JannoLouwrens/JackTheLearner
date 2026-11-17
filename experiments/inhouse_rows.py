@@ -79,6 +79,18 @@ Prior    the record (PUBLISHED_PRIORS §1, §5) predicts small-replay on-policy
 Usage: $PY -m experiments.inhouse_rows cell ARM ROW SEED [ctrl] [--steps N]
        $PY -m experiments.inhouse_rows run OUTDIR ARM[,ARM] [--workers 2]
        $PY -m experiments.inhouse_rows verdict OUTDIR
+       $PY -m experiments.inhouse_rows kernel ARM      # one Kaggle CPU kernel
+                                                        # per arm (ORDERS J3 (4))
+
+KAGGLE KERNEL (added 11-17, before any arm ran; the rule above is untouched).
+One arm per kernel, all 20 cells (2 rows x 5 seeds x arm/control) through
+`run_all` with 4 workers on Kaggle's 4 cores. What a cell imports outside the
+stdlib is torch, numpy and gymnasium (measured on the box: mujoco is never
+imported by this path), so the kernel pins only gymnasium==1.1.1 (the
+certified venv's) and keeps Kaggle's own torch and numpy — a difference from
+the box's torch 2.8.0+cpu, recorded per kernel in `versions`. Cells land in
+/data/jack-logs/j3_inhouse/cells/ (the `verdict` layout); the whole kernel
+result in /data/jack-logs/j3_inhouse/<arm>.json.
 """
 from __future__ import annotations
 
@@ -278,6 +290,52 @@ def verdict(outdir) -> dict:
     return res
 
 
+# ---- Kaggle CPU kernel (one per arm) ---------------------------------------
+KERNEL_PINS = ["gymnasium==1.1.1"]
+KERNEL_OUT = Path("/data/jack-logs/j3_inhouse")
+REMOTE_TIMEOUT_S = int(9.5 * 3600)
+
+_JOB = r'''
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
+import json, os, platform
+from pathlib import Path
+os.chdir("/tmp/jack")
+from experiments.inhouse_rows import run_all, verdict
+out = Path(os.environ["JACK_OUT"]) / "cells"
+run_all(str(out), __ARMS__, workers=4)
+import gymnasium, numpy, torch
+cells = {f.name: json.loads(f.read_text()) for f in sorted(out.glob("*.json"))}
+json.dump({"cells": cells, "verdict": verdict(out),
+           "versions": {"python": platform.python_version(),
+                        "torch": torch.__version__, "numpy": numpy.__version__,
+                        "gymnasium": gymnasium.__version__}},
+          open(os.path.join(os.environ["JACK_OUT"], "inhouse_cells.json"), "w"))
+print("DONE", len(cells), "cells", flush=True)
+'''
+
+
+def job_body(arms: list) -> str:
+    return _JOB.replace("__PINS__", repr(KERNEL_PINS)).replace("__ARMS__", repr(list(arms)))
+
+
+def kernel(arm: str) -> dict:
+    """Submit one arm (20 cells) as one Kaggle CPU kernel; explode the cells
+    into KERNEL_OUT/cells/ and print the verdict."""
+    from .gpu import build_job, result_json, submit
+    sub = submit(build_job(job_body([arm])), prefer="kaggle-cpu", est_hours=3.0,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["inhouse_cells.json"])
+    if not sub.ok:
+        raise RuntimeError(f"inhouse_rows kernel {arm}: {sub.message}")
+    r = result_json(sub, "inhouse_cells.json")
+    (KERNEL_OUT / "cells").mkdir(parents=True, exist_ok=True)
+    (KERNEL_OUT / f"{arm}.json").write_text(json.dumps(r, indent=1) + "\n")
+    for name, rec in r["cells"].items():
+        (KERNEL_OUT / "cells" / name).write_text(json.dumps(rec))
+    print(json.dumps(verdict(KERNEL_OUT / "cells"), indent=1), flush=True)
+    return r
+
+
 def main(argv: list) -> None:
     if argv[1] == "cell":
         arm, row, seed = argv[2], int(argv[3]), int(argv[4])
@@ -289,6 +347,8 @@ def main(argv: list) -> None:
     elif argv[1] == "run":
         w = int(argv[argv.index("--workers") + 1]) if "--workers" in argv else 2
         run_all(argv[2], argv[3].split(","), workers=w)
+    elif argv[1] == "kernel":
+        kernel(argv[2])
     elif argv[1] == "verdict":
         print(json.dumps(verdict(argv[2]), indent=1))
     else:
