@@ -401,6 +401,15 @@ for (const p of PROFILES) {
     check(C, 'Close a tab: one confirm, one window closed, even with a slow OK', slowDlgs === 1 && before - after === 1, `dialogs ${slowDlgs}, closed ${before - after}, before ${before}`);
     while ((await page.$$('#wins .win:not(.add)')).length > 1) { page.once('dialog', (d) => d.accept()); if (p.touch) await page.tap('#wins .win.x'); else await page.click('#wins .win.x'); await sleep(700); }
 
+    // 13e. a URL in the terminal is clickable (even with tmux mouse mode on)
+    await page.evaluate(() => { window.__opened = null; window.open = (u) => { window.__opened = u; return null; }; });
+    await focusTerm(page, p); await page.keyboard.type('echo go https://example.com/abc done'); await page.keyboard.press('Enter');
+    await waitText(page, 'example.com');
+    const lp = await page.evaluate(() => { const t = window.jackTerm, buf = t.buffer.active; for (let i = 0; i < t.rows; i++) { const ln = buf.getLine(buf.viewportY + i); if (!ln) continue; const s = ln.translateToString(true); const idx = s.indexOf('https://'); if (idx >= 0) { const d = t._core._renderService.dimensions, cw = (d.css ? d.css.cell.width : d.actualCellWidth), ch = (d.css ? d.css.cell.height : d.actualCellHeight); const sc = t.element.querySelector('.xterm-screen') || t.element; const r = sc.getBoundingClientRect(); return { x: Math.round(r.left + (idx + 8) * cw), y: Math.round(r.top + i * ch + ch / 2) }; } } return null; });
+    let linkOpened = '';
+    if (lp) { await page.mouse.move(lp.x, lp.y); await sleep(200); await page.mouse.move(lp.x + 1, lp.y); await sleep(150); if (p.touch) await page.touchscreen.tap(lp.x, lp.y); else await page.mouse.click(lp.x, lp.y); await sleep(300); linkOpened = await page.evaluate(() => window.__opened || ''); }
+    check(C, 'A URL in the terminal is clickable', linkOpened === 'https://example.com/abc', `pos ${lp ? 'found' : 'MISSING'}, opened ${linkOpened || '(none)'}`);
+
     // 13b2. Claude account: the menu opens a sheet drawn from what the server tool reports; closing it tidies up
     await menu('account');
     const acOpen = await page.waitForSelector('#acct:not([hidden]) .acrow', { timeout: 25000 }).then(() => true, () => false);

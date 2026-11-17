@@ -440,6 +440,22 @@ term.onData(function(d){
 });
 term.onResize(function(){sendSize()});
 
+/* ───── clickable links: tap or click a URL to open it ───── */
+function openUrl(u){try{window.open(u,"_blank","noopener,noreferrer")}catch(_){try{location.href=u}catch(e){}}}
+var URLRE=/\b(https?:\/\/|www\.)[^\s"'`<>()\[\]{}]+/g;
+try{term.registerLinkProvider({provideLinks:function(y,cb){
+  var line=term.buffer.active.getLine(y-1);
+  if(!line){cb(undefined);return}
+  var text=line.translateToString(true),links=[],m;URLRE.lastIndex=0;
+  while((m=URLRE.exec(text))){
+    var raw=m[0].replace(/[.,;:!?)\]}'"]+$/,"");if(raw.length<4)continue;
+    var href=/^www\./.test(raw)?"https://"+raw:raw,sx=m.index+1,ex=m.index+raw.length;
+    links.push({range:{start:{x:sx,y:y},end:{x:ex,y:y}},text:href,decorations:{underline:true,pointerCursor:true},
+      activate:function(e,u){if(e){e.preventDefault&&e.preventDefault();e.stopPropagation&&e.stopPropagation()}openUrl(u)}});
+  }
+  cb(links.length?links:undefined);
+}});}catch(e){}
+
 /* ───── window tabs, from what tmux reports in the terminal title ───── */
 var NAMES={bash:"Shell",claude:"Claude",node:"Claude",python:"Python",python3:"Python",vim:"Editor",nano:"Editor",htop:"Monitor",top:"Monitor",laptop:"Laptop"};
 var winCount=1,winNames={},winKey="",activeWin="";
