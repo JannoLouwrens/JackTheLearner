@@ -95,7 +95,11 @@ explain INBOX 11-16 19:40 (`_single_thread` ran 2.4 cores). (5) Kaggle CPU,
 4 runs a kernel, `pilot_b_report`-style table → `docs/research/PILOT_B2.md`.
 serves: M2→M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4 (a rule that could fail, written before the data).
 **done when:** `PILOT_B2.md` has the floor card, the frozen rule, 40 runs and one reading per arm: sustained / eats but starves / slides.
-state: open — ordered 11-17 06:50.
+state: (1) DONE 11-17 07:29 `4978e989`: `move_cost_dial`, `spawn_clear` in jack_env, default off; `tests/test_jack_env_cures.py` PASS (identity 3/3 seeds; at d0 extra drain 3.7e-17 vs 5.2–5.9e-4/decision, control fails; 225 cleared spawns ≥ 1.58 m, control 75/75 inside; do-nothing at d=0: 0 meals vs 2,545). `dr100-eat-pos` exists; discount is a learner setting (no env code).
+state: R = `SPAWN_CLEAR_R` 1.55 m, measured learner-free (180 do-nothing lives, seeds 381–382): the body tips and slides ≤ 1.07 m; 5 contact meals, all from spawns ≤ 0.88 m, 0/123 from ≥ 0.98 m.
+state: (2) FLOOR CARD fixed in `experiments/pilot_b2.py` docstring before any cell (noop/held8 × dial off/on, worlds 601–616 × 125 lives = 2,000 lives an arm, 8 kernels c0..c7). c0 (jack-cpu-1794900564) and c1 (jack-cpu-1794900599) RUNNING since 07:30, ~3 h; c2 refused by the box's detached cap. Box smoke held8-k0: 2 lives 816/758 s, 2+1 meals.
+state: next: launch c2..c7 as sessions free (`scripts/launch_detached.sh /data/jack-logs/pilot_b2/launch_cN.log $PY -m experiments.pilot_b2 kernel --name cN`), harvest `/data/jack-logs/pilot_b2/c*.json`, `pilot_b2 card` → `PILOT_B2.md`; ONLY THEN the rule (3). No learner arm exists in pilot_b2 yet.
+state: (4) NOT done: `_single_thread` 2.4 cores unexplained — no box run of B until it is (all B runs here are Kaggle).
 
 ### J12 — His eye, step 2: the 128-ray row as an option, and the proof his senses can find food
 part: Eye + Learning to eat (the learnability proof) · stage: 1 (ready-list "the eye designed"; stage-1 line "a hand-written forager that uses only what he senses") · step: 2 (combine) · prior: §12; LAB `experiments/eye_streak.py` (`bddffac4`); ruling 37
@@ -323,6 +327,9 @@ regate's on a clean tree.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-17 07:31 JACK: `launch_detached.sh` refused J11's third Kaggle kernel ("2 busy detached jobs alive") while the two "busy" jobs were Kaggle pollers 40 s old (pip/push phase) and W1.04's wrap — a fresh poller counts as a busy box job; a free Kaggle CPU session went unused this slot.
+- 11-17 07:31 JACK: `jack_env.py` moved (`4978e989`, two default-off options, identity proven) — `LC.02`/`W1.02` and any certificate with jack_env in IMPL_DEPS will read stale (S10).
+- 11-17 07:31 JACK: free sessions seen at 07:29: J3 wm-latent, ppo-lp and J6 speed kernel 3 all COMPLETE on Kaggle, unharvested (their orders' next slots); J11 took two of the three.
 
 ## DONE (kept one day)
 
