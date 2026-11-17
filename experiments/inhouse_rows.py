@@ -108,6 +108,7 @@ from .cores import ACTION_DIM, LC_BATCH, MODALITIES, build_arm, lc_update, make_
 from .survival import EXPLORE_STD, SEG, _gae, _TargetRing, _updates_due
 
 TRAIN_RATIO = 0.25
+REC_ARMS = ("wm-dyn", "wm-latent+ring")   # survival_rec.REC_ARMS
 SEEDS = (0, 1, 2, 3, 4)
 ROWS = {
     1: {"env": "Pendulum-v1", "pub_steps": 20_000, "budget": 60_000,
@@ -151,6 +152,8 @@ def _eval(core, env_id: str, scale: float, seed: int) -> float:
 def run_cell(arm: str, row: int, seed: int, train: bool = True,
              steps: int | None = None) -> dict:
     """One arm-row-seed. Mirrors survival.run_survival's 'core' branch."""
+    if arm in REC_ARMS:
+        return run_cell_rec(arm, row, seed, train, steps)
     import gymnasium as gym
     torch.set_num_threads(1)
     R = ROWS[row]
@@ -226,6 +229,147 @@ def run_cell(arm: str, row: int, seed: int, train: bool = True,
         out["checkpoints"] = checkpoints
         if not checkpoints:      # a short smoke: evaluate once at the end
             checkpoints[str(n)] = _eval(core, R["env"], R["scale"], seed)
+        out["metric"] = max(checkpoints.values())
+    out["reached"] = (out["metric"] is not None and
+                      (out["metric"] >= R["reach"] if row == 1 else out["metric"] > R["reach"]))
+    return out
+
+
+# ── the recurrent arms (wm-dyn, wm-latent+ring) — added 11-17, rule unmoved ──
+# Mirrors survival_rec.run_survival_rec exactly where a stateful core differs
+# from run_cell: `core.step` carries the state across decisions, `efference(a)`
+# hands it the issued command (noise included), `reset()` at every episode end
+# (the row's "death": a new episode starts from zero/rest state), and replay
+# rows keep the state they were acted from (R2D2 stored state, burn-in 0) via
+# survival_rec._StateRing. Seeds, schedule, exploration, metrics and verdict
+# are run_cell's. Deterministic eval runs on a deep copy (so a row-3
+# checkpoint cannot disturb the training rollout's state), reset per episode,
+# mean action = tanh(actor) on the stepped state.
+def _eval_rec(core, env_id: str, scale: float, seed: int) -> float:
+    import copy
+    import gymnasium as gym
+    c = copy.deepcopy(core)
+    env = gym.make(env_id)
+    rets = []
+    for ep in range(N_EVAL):
+        x, _ = env.reset(seed=10_000 + seed + 1_000 * ep)
+        c.reset()
+        done, ret = False, 0.0
+        while not done:
+            ot = _to_t(_obs_dict(x))
+            with torch.no_grad():
+                s = c.step(ot, dropped=DROPPED)
+                a = c.act(ot, s["state"]).squeeze(0).numpy()
+            c.efference(a)
+            x, r, term, trunc, _ = env.step(np.array([float(a[0]) * scale]))
+            ret += float(r)
+            done = term or trunc
+        rets.append(ret)
+    env.close()
+    return float(np.mean(rets))
+
+
+def _stored_now(core):
+    """survival_rec's read of the state a decision is acted FROM."""
+    if hasattr(core, "stored_now"):
+        return core.stored_now()
+    from .cores import DETER, LATENT
+    return ((core._h if core._h is not None
+             else torch.zeros(1, DETER)).squeeze(0).clone(),
+            (core._z if core._z is not None
+             else torch.zeros(1, LATENT)).squeeze(0).clone(),
+            core._a.squeeze(0).clone())
+
+
+def run_cell_rec(arm: str, row: int, seed: int, train: bool = True,
+                 steps: int | None = None) -> dict:
+    import gymnasium as gym
+    from .survival_rec import REC_ARMS as _RA, _StateRing
+    assert tuple(_RA) == REC_ARMS
+    torch.set_num_threads(1)
+    R = ROWS[row]
+    n = steps or R["budget"]
+    t0 = time.process_time()
+    rng = np.random.RandomState(seed * 6553 + 11)
+    gen = torch.Generator().manual_seed(seed * 7919 + 3)
+    torch.manual_seed(9_000 + seed)
+    if arm == "wm-dyn":           # survival_rec.build_rec_arm, minus the
+        from .cores_dyn import DynWorldCore          # placebo (as run_cell)
+        core = DynWorldCore(with_placebo=False)
+    else:
+        from .cores_ring import RingWorldCore
+        core = RingWorldCore(with_placebo=False)
+    core.eval()
+    opt = make_optimizer(core) if train else None
+    env = gym.make(R["env"])
+    x, _ = env.reset(seed=seed)
+    obs = _obs_dict(x)
+    ring = _StateRing(obs)
+    seg = []                       # (obs, a, r, v, stored)
+    ep_ret, ep_rets, ep_end_step = 0.0, [], []
+    checkpoints, opt_steps = {}, 0
+    ck_at = {R["pub_steps"] * m for m in (1, 2, 3)} if row == 3 else set()
+
+    def close(boot: float, terminal: bool):
+        nonlocal seg
+        if not seg:
+            return
+        adv, tgt = _gae([q[2] for q in seg], [q[3] for q in seg], boot, terminal)
+        for i, (o, a_, _r, _v, st) in enumerate(seg):
+            ring.push_rec(o, a_, float(tgt[i]), float(adv[i]), st)
+        seg = []
+
+    for k in range(n):
+        ot = _to_t(obs)
+        stored = _stored_now(core)
+        with torch.no_grad():
+            s = core.step(ot, dropped=DROPPED)
+            mean = core.act(ot, s["state"]).squeeze(0).numpy()
+            v = float(core.critic(s["state"]))
+        frac = min(1.0, k / max(1, n - 1))
+        std = EXPLORE_STD[0] + (EXPLORE_STD[1] - EXPLORE_STD[0]) * frac
+        a = np.clip(mean + std * rng.randn(ACTION_DIM), -1.0, 1.0)
+        core.efference(a)
+        x2, r, term, trunc, _ = env.step(np.array([a[0] * R["scale"]]))
+        ep_ret += float(r)
+        seg.append(({kk: torch.from_numpy(vv.copy()) for kk, vv in obs.items()},
+                    torch.from_numpy(a.astype(np.float32)), float(r), v, stored))
+        if term or trunc or len(seg) >= SEG:
+            close(boot=v, terminal=bool(term))
+        if train and ring.n >= LC_BATCH:
+            for _ in range(_updates_due(k + 1, TRAIN_RATIO)):
+                batch, targets, st = ring.sample_rec(gen)
+                core.use_stored(st)
+                try:
+                    lc_update(core, batch, targets, opt, dropped=DROPPED)
+                finally:
+                    core.use_stored(None)
+                opt_steps += 1
+        if term or trunc:
+            ep_rets.append(ep_ret)
+            ep_end_step.append(k + 1)
+            ep_ret = 0.0
+            x2, _ = env.reset()
+            core.reset()
+        obs = _obs_dict(x2)
+        if (k + 1) in ck_at:
+            checkpoints[str(k + 1)] = _eval_rec(core, R["env"], R["scale"], seed)
+    env.close()
+    out = {"arm": arm, "row": row, "seed": seed, "ctrl": not train, "steps": n,
+           "episodes": len(ep_rets), "opt_steps": opt_steps,
+           "cpu_s": round(time.process_time() - t0, 1),
+           "returns": [round(r, 2) for r in ep_rets]}
+    if row == 1:
+        w = R["pub_steps"]
+        out["windows"] = [round(float(np.mean([r for r, e in zip(ep_rets, ep_end_step)
+                                               if i * w < e <= (i + 1) * w])), 2)
+                          for i in range(n // w)
+                          if any(i * w < e <= (i + 1) * w for e in ep_end_step)]
+        out["metric"] = max(out["windows"]) if out["windows"] else None
+    else:
+        out["checkpoints"] = checkpoints
+        if not checkpoints:
+            checkpoints[str(n)] = _eval_rec(core, R["env"], R["scale"], seed)
         out["metric"] = max(checkpoints.values())
     out["reached"] = (out["metric"] is not None and
                       (out["metric"] >= R["reach"] if row == 1 else out["metric"] > R["reach"]))
