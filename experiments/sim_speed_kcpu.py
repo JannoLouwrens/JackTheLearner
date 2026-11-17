@@ -107,8 +107,12 @@ def run_all(T: int) -> dict:
     return res
 
 
-# mujoco/gymnasium pinned to the box venv's versions so the columns compare.
-KERNEL_PINS = ["mujoco==3.2.3", "gymnasium==1.1.1"]
+# The box venv runs mujoco 3.2.3 / gymnasium 1.1.1, but Kaggle is Python 3.13
+# and mujoco 3.2.3 has no 3.13 wheel (first kernel 11-17 06:27 died building
+# it). pilot_b's Kaggle pin mujoco==3.17.0 is used instead — a listed
+# difference: compare the columns by RATIO to their own `shipped` row, not
+# absolute dec/CPU-s. Versions are written into the result.
+KERNEL_PINS = ["mujoco==3.17.0", "gymnasium==1.1.1"]
 KERNEL_T = 3000
 REMOTE_TIMEOUT_S = int(3 * 3600)
 
