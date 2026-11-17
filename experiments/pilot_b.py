@@ -263,12 +263,15 @@ class PilotLives(_Wrapper):
         return self._life_row(info, "unfinished")
 
 
-def make_b(venv, seed: int, T: int, lr: float = 3e-4, use_sde: bool = True):
+def make_b(venv, seed: int, T: int, lr: float = 3e-4, use_sde: bool = True,
+           gamma: float | None = None):
     """Brain B with §1/§5's settings (table above). lr=0 is the floor arm;
-    use_sde=False is the item-6 exploration arms' plain SAC sampling."""
+    use_sde=False is the item-6 exploration arms' plain SAC sampling.
+    gamma=None is GAMMA (J8's 0.995); J11's arm G passes another discount."""
     from sbx import SAC
     return SAC("MlpPolicy", venv, learning_rate=lr, buffer_size=max(int(T), 50_000),
-               batch_size=256, tau=0.005, gamma=GAMMA, learning_starts=WARMUP,
+               batch_size=256, tau=0.005, gamma=GAMMA if gamma is None else float(gamma),
+               learning_starts=WARMUP,
                train_freq=TRAIN_FREQ, gradient_steps=TRAIN_FREQ, ent_coef=0.1,
                use_sde=use_sde, seed=seed, verbose=0,
                policy_kwargs=dict(layer_norm=True, net_arch=[256, 256]))
@@ -324,22 +327,30 @@ def _pink_selection(model, seed: int) -> None:
     pol._predict = _predict
 
 
-def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b") -> dict:
+def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
+          world=None, gamma: float | None = None) -> dict:
     """One learning run of T decisions; returns the per-life log + timing.
-    arm "bwhite"/"bpink" = the item-6 exploration arms (block above)."""
+    arm "bwhite"/"bpink" = the item-6 exploration arms (block above).
+
+    Two knobs for J11's pilot arms, added 11-17 BEFORE its rule exists (no
+    arm is defined here; `tests/test_pilot_b_knobs.py` proves default =
+    unchanged and each knob's effect): `world` = a callable seed -> JackEnv
+    replacing `make_world` (the cures are jack_env options: move_cost_dial,
+    spawn_clear, reward dr100-eat-pos); `gamma` = the learner's discount.
+    Either one, when given, is recorded in the returned dict."""
     _single_thread()
     from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
     holder = {}
 
     def _mk():
-        w = PilotLives(make_world(seed))
+        w = PilotLives((make_world if world is None else world)(seed))
         holder["w"] = w
         return w
 
     venv = VecNormalize(DummyVecEnv([_mk]), norm_obs=True, norm_reward=False,
                         clip_obs=10.0)
     venv.seed(seed)
-    model = make_b(venv, seed, T, lr, use_sde=(arm not in EXPLORE_ARMS))
+    model = make_b(venv, seed, T, lr, use_sde=(arm not in EXPLORE_ARMS), gamma=gamma)
     if arm == "bpink":
         _pink_selection(model, seed)
     t_wall, t_cpu = time.time(), time.process_time()
@@ -356,14 +367,26 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b") -> dict:
             "decisions_per_s": round(model.num_timesteps / wall, 2),
             "decisions_per_cpu_s": round(model.num_timesteps / cpu, 2),
             "pink_draws": int(getattr(model.policy, "n_pink", 0)),
+            **({} if gamma is None else {"gamma": float(model.gamma)}),
+            **({} if world is None else {"world": _world_stamp(w.env)}),
             "lives": lives}
 
 
-def run_floor(arm: str, seed: int, T: int) -> dict:
-    """noop / held8 for T decisions in the same world wrapper (no learner)."""
+def _world_stamp(env) -> dict:
+    """The options a non-default world was actually built with (read off the
+    env, not off the caller's intent)."""
+    return {k: (v if isinstance(v, (bool, int, float, str, type(None))) else repr(v))
+            for k in ("difficulty", "reward", "random_layout", "lazy_contact_audio",
+                      "spawn_clear", "move_cost_dial", "native_substep", "eye")
+            for v in [getattr(env, k, "absent")]}
+
+
+def run_floor(arm: str, seed: int, T: int, world=None) -> dict:
+    """noop / held8 for T decisions in the same world wrapper (no learner).
+    `world` as in `run_b` (None = `make_world`)."""
     from experiments.world_card import DoNothing, Held
     pol = DoNothing(seed) if arm == "noop" else Held(seed, 8)
-    w = PilotLives(make_world(seed))
+    w = PilotLives((make_world if world is None else world)(seed))
     o, info = w.reset(seed=seed)
     pol.new_life()
     t_wall, t_cpu = time.time(), time.process_time()
@@ -377,7 +400,9 @@ def run_floor(arm: str, seed: int, T: int) -> dict:
         lives.append(w._life_row(info, "unfinished"))
     wall, cpu = time.time() - t_wall, time.process_time() - t_cpu
     return {"arm": arm, "seed": seed, "T": int(T), "decisions": int(T),
-            "wall_s": round(wall, 1), "cpu_s": round(cpu, 1), "lives": lives}
+            "wall_s": round(wall, 1), "cpu_s": round(cpu, 1),
+            **({} if world is None else {"world": _world_stamp(w.env)}),
+            "lives": lives}
 
 
 def harness_lives(run: dict, mark: str = "sustained") -> list:
