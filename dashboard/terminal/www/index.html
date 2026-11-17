@@ -50,6 +50,8 @@ button{font:inherit;color:inherit}
 .copyhdr{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 11px;border:0;border-radius:11px;background:var(--key);color:var(--ink);font-size:14px;font-weight:600;letter-spacing:-.01em;cursor:pointer;flex:none}
 .copyhdr:active{opacity:.7}
 .copyhdr svg{width:15px;height:15px}
+.key.place{width:100%;height:auto;min-height:52px;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:9px 14px;margin-bottom:8px}
+.key.place span{font-weight:400;opacity:.6;font-size:13px}
 
 #stage{position:relative;flex:1;min-height:0;background:var(--panel);padding:6px 4px 2px 8px;touch-action:none}
 #term{width:100%;height:100%}
@@ -202,7 +204,8 @@ html:not(.app) #menu [data-m="dash"]{display:none}
     <button data-m="account" role="menuitem">Claude account</button>
     <hr>
     <button data-m="wins" role="menuitem">Windows</button>
-    <button data-m="newwin" role="menuitem">New window</button>
+    <button data-m="newwin" role="menuitem">New window…</button>
+    <button data-m="rename" role="menuitem">Rename this tab</button>
     <hr>
     <div class="size">Text size <div><button data-m="smaller" aria-label="Smaller text">A−</button><span id="sizeval">13</span><button data-m="bigger" aria-label="Larger text">A+</button></div></div>
     <hr>
@@ -286,6 +289,15 @@ html:not(.app) #menu [data-m="dash"]{display:none}
         <button class="key on" id="copyall" type="button">Copy all</button>
       </div>
       <button class="plain" data-close="copy" id="copydone" type="button">Done</button>
+    </div>
+  </div>
+
+  <div class="scrim" id="place" hidden>
+    <div class="sheet">
+      <div class="grab"></div>
+      <h2>New window on…</h2>
+      <div id="placelist"></div>
+      <button class="plain" data-close="place" type="button">Cancel</button>
     </div>
   </div>
 </div>
@@ -451,16 +463,51 @@ term.onTitleChange(function(t){
 });
 /* A tab acts when the finger lifts on it. A phone can withhold the click when a tap follows another
    touch closely (it reads a double tap), so the click is only the fallback. */
-var winDown=null,winActed=0;
-$("#wins").addEventListener("pointerdown",function(e){winDown=e.target.closest("[data-win]")});
-$("#wins").addEventListener("pointercancel",function(){winDown=null});
-$("#wins").addEventListener("pointerup",function(e){var b=e.target.closest("[data-win]"),d=winDown;winDown=null;if(b&&b===d){winActed=Date.now();winAct(b)}});
-$("#wins").addEventListener("click",function(e){var b=e.target.closest("[data-win]");if(!b||Date.now()-winActed<700)return;winAct(b)});
+/* One action per tap. The browser fires a click right after pointerup for the
+   same tap; a blocking confirm() delays that click past any time window, which
+   once raised a second "Close?" and shut two windows. So consume exactly the one
+   click that follows a handled pointerup, no timing. A long press renames. */
+var winDown=null,winSwallow=false,winLP=null,winLPFired=false;
+$("#wins").addEventListener("pointerdown",function(e){var b=e.target.closest("[data-win]");winDown=b;winLPFired=false;winSwallow=false;clearTimeout(winLP);
+  if(b&&/^[0-9]+$/.test(b.dataset.win))winLP=setTimeout(function(){winLPFired=true;if(navigator.vibrate){try{navigator.vibrate(8)}catch(_){}}renameTab(b.dataset.win,b.textContent.replace(/^[0-9]+\s+/,""))},520)});
+$("#wins").addEventListener("pointermove",function(){clearTimeout(winLP)});
+$("#wins").addEventListener("pointercancel",function(){winDown=null;clearTimeout(winLP)});
+$("#wins").addEventListener("pointerup",function(e){clearTimeout(winLP);var b=e.target.closest("[data-win]"),d=winDown;winDown=null;
+  if(winLPFired){winLPFired=false;winSwallow=true;return}   /* long press handled; eat its click */
+  if(b&&b===d){winSwallow=true;winAct(b)}});
+$("#wins").addEventListener("click",function(e){if(winSwallow){winSwallow=false;return}if(winLPFired)return;var b=e.target.closest("[data-win]");if(b)winAct(b)});
 function winAct(b){
   if(b.dataset.win==="x"){if(window.confirm("Close this window? Anything running in it stops."))input("\x02X")}
-  else if(b.dataset.win==="+")input("\x02c");
-  else if(+b.dataset.win<10)input("\x02"+b.dataset.win);else input("\x02:select-window -t "+b.dataset.win+"\r");
+  else if(b.dataset.win==="+")openPlace();
+  else if(+b.dataset.win<10)input("\x02"+b.dataset.win);else tmuxCmd("select-window -t "+b.dataset.win);
   if(!coarse)term.focus()}
+/* Run a tmux command from the client. tmux's command prompt (prefix :) only
+   takes the command when the ":" lands in its own frame, a beat after the
+   prefix — one combined burst is dropped on the floor. So: prefix, then ":",
+   then the command line. */
+function tmuxCmd(cmd){input("\x02");setTimeout(function(){input(":")},90);setTimeout(function(){input(cmd+"\r")},190)}
+/* A new window — on this server, or on a connected device. Add a device by
+   adding it to attach.sh (ensure_device) and one line to PLACES. The laptop
+   opens a plain window (prefix c), then runs ssh in it — no command prompt. */
+var PLACES=[
+  {label:"This server",sub:"a shell on the Oracle box",cmd:"\x02c"},
+  {label:"Work laptop",sub:"JANNO — a Windows shell",cmd:"\x02c",then:"exec ssh -tt laptop\r",thenDelay:500}
+];
+function openPlace(){var L=$("#placelist");L.innerHTML="";PLACES.forEach(function(p,k){
+  var b=document.createElement("button");b.type="button";b.className="key place";b.dataset.place=k;
+  var t=document.createElement("b");t.textContent=p.label;var s=document.createElement("span");s.textContent=p.sub;
+  b.appendChild(t);b.appendChild(s);L.appendChild(b)});
+  $("#menu").hidden=true;$("#place").hidden=false}
+$("#placelist").addEventListener("click",function(e){var b=e.target.closest("[data-place]");if(!b)return;var p=PLACES[+b.dataset.place];
+  $("#place").hidden=true;input(p.cmd);if(p.then)setTimeout(function(){input(p.then)},p.thenDelay||150);if(!coarse)term.focus()});
+/* Rename a tab so you know what is where; the name is frozen (auto-rename off). */
+function renameTab(idx,cur){
+  var name=window.prompt("Name this tab:",(cur||"").trim());
+  if(name==null)return;name=name.replace(/['"\\;]/g,"").trim().slice(0,24);if(!name)return;
+  tmuxCmd("setw -t "+idx+" automatic-rename off");
+  setTimeout(function(){tmuxCmd("rename-window -t "+idx+" '"+name+"'")},340);
+  if(!coarse)term.focus()}
+function renameActive(){var ab=$("#wins").querySelector(".win.on");renameTab(ab?ab.dataset.win:activeWin,ab?ab.textContent.replace(/^[0-9]+\s+/,""):"")}
 
 /* ───── Claude account: the tool on the server says what to show (one private escape sequence) ───── */
 var acctState="";
@@ -729,7 +776,8 @@ document.addEventListener("click",function(e){
     $("#menu").hidden=true;
     if(a==="chat"){input("jackchat\r");term.focus()}
     else if(a==="wins"){input("\x02w");term.focus()}
-    else if(a==="newwin"){input("\x02c");term.focus()}
+    else if(a==="newwin"){openPlace()}
+    else if(a==="rename"){renameActive()}
     else if(a==="account"){input("\x02c");setTimeout(function(){input(" claude-account --app; exit\r")},500)}   /* in a window of its own, never typed into a running chat */
 
     else if(a==="copy")openReader(null);
@@ -741,10 +789,10 @@ document.addEventListener("click",function(e){
     return;
   }
   var c=e.target.closest("[data-close]");if(c){$("#"+c.dataset.close).hidden=true;if(!coarse)term.focus();return}
-  if(e.target.id==="tips"||e.target.id==="install"||e.target.id==="copy"){e.target.hidden=true;return}
+  if(e.target.id==="tips"||e.target.id==="install"||e.target.id==="copy"||e.target.id==="place"){e.target.hidden=true;return}
   if(!$("#menu").hidden&&!e.target.closest("#menu"))$("#menu").hidden=true;
 });
-document.addEventListener("keydown",function(e){if(e.key!=="Escape")return;var open=["menu","tips","install","copy"].filter(function(i){return !$("#"+i).hidden})[0];if(open){$("#"+open).hidden=true;e.stopPropagation()}},true);
+document.addEventListener("keydown",function(e){if(e.key!=="Escape")return;var open=["menu","tips","install","copy","place"].filter(function(i){return !$("#"+i).hidden})[0];if(open){$("#"+open).hidden=true;e.stopPropagation()}},true);
 
 /* ───── copy, and adding it to the home screen ───── */
 /* ───── select and copy: a view of real, selectable text ─────

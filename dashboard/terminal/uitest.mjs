@@ -339,6 +339,11 @@ for (const p of PROFILES) {
     // 13b. a second window: a strip appears, switching works, closing it removes the strip
     const menu = async (item) => { if (!(await page.isVisible('#menu'))) { if (p.touch) await page.tap('#more'); else await page.click('#more'); await page.waitForSelector('#menu:not([hidden])'); } if (p.touch) await page.tap(`[data-m="${item}"]`); else await page.click(`[data-m="${item}"]`); await sleep(250); };
     await menu('newwin');
+    await page.waitForSelector('#place:not([hidden])');
+    const places = await page.$$eval('#placelist [data-place] b', (n) => n.map((x) => x.textContent));
+    check(C, 'New window asks where: this server or the laptop', places.length === 2 && /laptop/i.test(places[1]), places.join(', '));
+    if (p.touch) await page.tap('#placelist [data-place="0"]'); else await page.click('#placelist [data-place="0"]');
+    await sleep(300);
     const tabs = async () => page.$$eval('#wins .win:not(.add)', (n) => n.map((x) => x.classList.contains('on')));
     const t7 = Date.now(); let strip = -1; while (Date.now() - t7 < 5000) { if ((await tabs()).length === 2) { strip = Date.now() - t7; break; } await sleep(60); }
     await focusTerm(page, p); await page.keyboard.type(`echo WINTWO-${mark}`); await page.keyboard.press('Enter');
@@ -374,6 +379,27 @@ for (const p of PROFILES) {
     while (Date.now() - t9 < 5000) { if ((await page.$$('#wins .win:not(.add)')).length === 1 && (await screen(page)).includes(`${mark}-STILL-HERE`)) { stripGone = true; break; } await sleep(80); }
     if (!stripGone) { await page.screenshot({ path: `${OUT}${p.id}-d-tidy.png` }); R.tidy = { tabs: await page.$$eval('#wins .win', (n) => n.map((x) => x.textContent + (x.classList.contains('on') ? '*' : ''))), dlg }; console.log('TIDY', JSON.stringify(R.tidy)); }
     check(C, 'Window tabs: a second window gets a tab, tapping switches, closing removes the tabs', strip >= 0 && w2 >= 0 && w1 >= 0 && firstOn && tabsFit && stripGone, `tabs ${strip} ms, second ${w2} ms, back ${w1} ms, first lit ${firstOn}, fits ${tabsFit}, tidy ${stripGone}`);
+
+    // 13c. renaming a tab (a name with a space, to prove the quoting) sticks on the tab
+    page.once('dialog', (d) => d.accept('QA renamed'));
+    await menu('rename');
+    let renamed = false; const trn = Date.now();
+    while (Date.now() - trn < 5000) { if ((await page.$$eval('#wins .win:not(.add)', (n) => n.map((x) => x.textContent).join('|'))).includes('QA renamed')) { renamed = true; break; } await sleep(100); }
+    check(C, 'Rename this tab: the typed name appears on the tab', renamed);
+
+    // 13d. the close confirm must fire once and close one window even when OK is slow —
+    //      the reported bug: a slow OK let the trailing click raise a second confirm and close two
+    for (let i = 0; i < 2; i++) { await menu('newwin'); await page.waitForSelector('#place:not([hidden])'); if (p.touch) await page.tap('#placelist [data-place="0"]'); else await page.click('#placelist [data-place="0"]'); await sleep(450); }
+    const before = (await page.$$('#wins .win:not(.add)')).length;
+    let slowDlgs = 0; const slowOk = async (d) => { slowDlgs++; await sleep(900); await d.accept(); };
+    page.on("dialog", slowOk);
+    await sleep(600);
+    if (p.touch) await page.tap('#wins .win.x'); else await page.click('#wins .win.x');
+    await sleep(1800);
+    const after = (await page.$$('#wins .win:not(.add)')).length;
+    page.off("dialog", slowOk);
+    check(C, 'Close a tab: one confirm, one window closed, even with a slow OK', slowDlgs === 1 && before - after === 1, `dialogs ${slowDlgs}, closed ${before - after}, before ${before}`);
+    while ((await page.$$('#wins .win:not(.add)')).length > 1) { page.once('dialog', (d) => d.accept()); if (p.touch) await page.tap('#wins .win.x'); else await page.click('#wins .win.x'); await sleep(700); }
 
     // 13b2. Claude account: the menu opens a sheet drawn from what the server tool reports; closing it tidies up
     await menu('account');
