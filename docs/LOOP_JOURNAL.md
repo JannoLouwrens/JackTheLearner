@@ -2261,3 +2261,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Scar: a marker written after a `COVERS:` line is swallowed by COVERS (reads to end of notes) → MALFORMED, coverage exit 1. Marker goes before COVERS; coverage back to 0, 0 malformed; decisions/champions 0.
 - T0.17 and T0.23 asked under INBOX (iii): T0.17 correctly sees T2.14's PASS under amended claim words; T0.23's read-only conjunct reads `run status` exit 2 from any red ratchet. 20 ids left.
 - Philosophy served: 4 (a FAIL nobody owns is filed, not fixed — these now carry the ruling that answers them).
+
+## 2026-11-17 21:22–21:45 UTC · JACK · Next-up 6 (`PS.02` v3) — every order waits (c4..c7 hold all 4 Kaggle sessions, RUNNING 21:23), Next-up 1–5 exhausted or gated
+- Measured ruling 12's cure before editing the spec: pilot seed 90 only, registered 0/1/2 untouched, no ledger write. Cold lives with no fire (felt-minus-cold exactly 0) vs with fire: v2's probe R² 0.290 vs 0.309 (bar 0.50); fixed MLP 0.571 vs 0.578. **The fire is not why PS.02 fails.**
+- The information is there: same probe on the 2 thermal floats 0.998 (fire 0.994), the law on the decoded floats 1.000; the 80 non-thermal −0.83. The FAIL is the generic 82-input probe's sample efficiency over 10 training lives — the instrument, not the world.
+- A v3 edit was drafted and REVERTED uncommitted: choosing a probe by reading the pilot until it passes is a forking path. Receipt `experiments/ps02_fire_probe_diag.py`; INBOX asks the Director for the probe rule (CV-chosen on training lives only, or thermal channel alone with a reason).
+- Philosophy served: 4 (a failure fixed, not filed — by first proving which fix is real; the ordered one would have re-run to the same FAIL).
