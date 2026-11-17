@@ -2255,3 +2255,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `e79104bb`: `pilot_b.cells_from_artifacts` — no summary → final file, else `.partial.json` (marked cut), else `not_found`; None when nothing came back.
 - test_pilot_b_assemble PASS (seed 381 held8, J8 world, 3,000 dec, 53 CPU-s): final 2 lives row-for-row; partial-only cell cut with its 1 life; missing → 0; the old summary-only path returns nothing. No arm defined, no pilot seed run.
 - Philosophy served: 5 (the pilot's 30 learner runs cannot vanish at the time limit) and 4 (checked with a path that must lose them).
+
+## 2026-11-17 ~21:10 UTC · SYSTEM · S9 slot 2 (settled FAILs get a named fate)
+- Six old-core FAILs fated by (ii) `FAIL-DISPOSED: ruling-10`: T0.07, T1.08, T2.05, T2.07, T2.11, T2.15 — ruling 10: no in-house learner is a candidate before a known-answer row; each is to earn again on the brain stage 2 chooses. No re-run, no threshold, no floor touched.
+- Scar: a marker written after a `COVERS:` line is swallowed by COVERS (reads to end of notes) → MALFORMED, coverage exit 1. Marker goes before COVERS; coverage back to 0, 0 malformed; decisions/champions 0.
+- T0.17 and T0.23 asked under INBOX (iii): T0.17 correctly sees T2.14's PASS under amended claim words; T0.23's read-only conjunct reads `run status` exit 2 from any red ratchet. 20 ids left.
+- Philosophy served: 4 (a FAIL nobody owns is filed, not fixed — these now carry the ruling that answers them).

@@ -274,18 +274,19 @@ ruling already answered the question — e.g. ruling 10/20 for "to earn again
 on the chosen brain", ruling 20 for one-world walking. (iii) A one-line ask
 in INBOX when it is a live defect that needs a JACK order. The ids: DP.05,
 HR.5, LG.10, LG.12, LG.14, LT.02,
-PS.05, PS.06, PS.08, T0.07, T0.17, T0.23, T0.27, T0.32, T0.35, T1.08,
-T2.05, T2.07, T2.11, T2.15, T3.09, T4.02, W.2, W1.00, WM.01, XL.01.
+PS.05, PS.06, PS.08, T0.17, T0.23, T0.27, T0.32, T0.35,
+T3.09, T4.02, W.2, W1.00, WM.01, XL.01.
 In the first slot also lower the floors `coverage` says fell (UNREACHABLE
 115 → 101, PASS-ON-DEAD-DEPENDENCY 6 → 4; FAIL-UNOWNED 1 → 0 only when the
 id list above is empty) with `run ratchets record` — `coverage` stays 2 until then.
 serves: philosophy 4 · the auditor's exit codes.
 **done when:** `coverage` exits 0 with this order's id list deleted.
 **Added 11-17 (ruling 35):** `NE.01` joins the list with its fate already ruled — (ii) `FAIL-DISPOSED: Director ruling 35 2026-11-17 — heat is a stage-3 need (PLAN stage 3 "eat, drink, keep warm"); re-read at the first stage-3 sitting or 2027-01-15, whichever is first`. Also lower the three floors the auditor names (UNREACHABLE 115 → 107, PASS-ON-DEAD-DEPENDENCY 6 → 4, FAIL-UNOWNED when the list is empty).
-state: slot 1 (11-17) — 8 fated by (ii): NE.01 (ruling-35), ME.11/.B/.C/.D + T2.10 (ruling-20, diary retrieval →
-stage 3), HR.1 (D54), T1.11 (D41). Floors lowered: UNREACHABLE 115→107, PASS-ON-DEAD 6→4 (recorded).
-The marker's authority must be ONE token (`ruling-35`, not "Director ruling 35" — that parses MALFORMED).
-26 ids left; FAIL-UNOWNED floor 1→0 waits for the empty list. Next slot: the T1/T2 old-core FAILs.
+state: slot 1 (11-17) — 8 fated by (ii) (NE.01, ME.11/.B/.C/.D, T2.10, HR.1, T1.11); floors 115→107, 6→4.
+slot 2 (11-17 21:10) — 6 fated by (ii) `ruling-10` (old core, earn again on the chosen brain): T0.07, T1.08,
+T2.05, T2.07, T2.11, T2.15. The marker must sit BEFORE a `COVERS:` line (COVERS reads to end → MALFORMED).
+T0.17, T0.23 asked under INBOX (iii) — both are the machine's own tests reading a live state. 20 ids left
+(18 + those two); FAIL-UNOWNED already reads 0 (ORDERS mention owns them). Next: LG/PS/T0.2x-3x.
 
 ### S10 — The clerk must be able to re-buy the two certificates that gate his world
 part: (machine) · stage: — · step: —
@@ -354,6 +355,9 @@ regate's on a clean tree.
 - 11-17 17:50 JACK: all 4 Kaggle CPU sessions held by J11 c4..c7 (RUNNING 17:38; c4/c5 started 15:23, ~8 h) → took Next-up 1, Speech Commands. Learner-free TASK check REPRODUCES (rule `b857ff29`, `experiments/speech_commands_task.py`): 105,829 utt / 35 words / 2,618 speakers = Warden 2018 §6 exactly; splits speaker-disjoint, lists = TF which_set on 100%; random-split control shares 2,115–2,307 speakers. KNOWN_ANSWERS N7-sc-task. The DS-CNN 94.4% row itself is NOT run: PRIORS says one CPU session; needs a Kaggle rank (next idle slot: cost probe + 12-class rule). Idle-slot list is otherwise exhausted.
 - 11-17 18:30 JACK: all 4 Kaggle CPU sessions still held by J11 c4..c7 and Next-up 1 is exhausted → took Next-up 2: Mac first-day rows 9 (sheeprl CPU/MPS grad steps/s, 1M+12M) and 10 (2,000-step CPU-vs-MPS check, noise-floor rule + planted-bug control) AUTOMATED via `experiments/brain_a/mac_dreamer.py`; box smoke APPARATUS_OK (18 series, REP identical, control ratio 314). Left by hand: row 9's official-JAX arm, 11's four contexts, 12's soak. Risk disclosed in the docstring: some early floors ~1e-6 could make float32 rounding read as DIVERGENCE on the Mac.
 - 11-17 19:45 JACK: `native_substep.py` cached its C build keyed on SRC only, so a .so compiled against mujoco 3.2.3 (project venv) was loaded by jack-std's 3.17 and SEGFAULTED on the first step — every box run of B with `native_substep=True` would have died (Kaggle builds fresh, so J6's pre-check could not see it). Fixed: build named by mujoco version; test_native_substep_env PASS. For the Director, before J11's rule: ruling 34 puts lazy audio in every run but says nothing of `native_substep` (identical world, 1.25× under B, would lift the pilot kernels' 13% timeout margin) — rule it on or off for the pilot.
+
+- 11-17 21:10 SYSTEM (S9 iii): `T0.17` FAILs because `T2.14`'s PASS was bought under claim words the registry has since amended (`run.drifted_claims`: SPEC_CHANGED 0cf0048c → 593c8e3e) — the detector is right. Rule: re-buy `T2.14` (old core, ruling 10 says no) or demote its row so T0.17 re-earns; until then T0.17 stays an honest FAIL.
+- 11-17 21:10 SYSTEM (S9 iii): `T0.23` FAILs only on `readonly_still_works` — its fixture expects `run status` to exit 0, but `run status` exits 2 whenever any ratchet is red (today: `gpu_unattributed_jobs`). The test confounds "argv parsed" with "ratchets green"; a SYSTEM fix (accept the declared EXIT receipt, as its `exit_receipts` conjunct already does) changes a conjunct and so needs a Director's yes.
 
 ## DONE (kept one day)
 

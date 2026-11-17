@@ -846,6 +846,7 @@ EXPANSION: list[Spec] = [
                  "trained — else the ruler leaks and the run is VOID.",
          notes="The verb x object grid must be designed BEFORE grounding training "
                "(CAPABILITIES.md L2) or the held-out cells cannot exist."
+               "  FAIL-DISPOSED: ruling-10 2026-11-15 — Director ruling 10 (FULL sitting 15:55): no in-house learner is a candidate until it has a known-answer row; free-form routing on the old core is to earn again on the brain stage 2 chooses, no re-run of the old core before then (ORDERS S9)."
                "  COVERS: language (parent) (claim)"),
 
     Spec("T2.16", 2, "Hindsight goal-reaching (the flow-matching weld)",

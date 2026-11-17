@@ -101,7 +101,8 @@ LADDER: list[Spec] = [
                "physics it drives, so 2M steps = 47 CPU-hours. Sync vectorisation over 8 "
                "envs buys 1.03x, i.e. nothing, until the POLICY is batched with it. "
                "llm_enabled=False changes rollout speed by 0.0%: the 1.71B-param SmolLM2 "
-               "is 6.9 GB resident and never runs in forward()."),
+               "is 6.9 GB resident and never runs in forward()."
+               "  FAIL-DISPOSED: ruling-10 2026-11-15 — Director ruling 10 (FULL sitting 15:55): no in-house learner is a candidate until it has a known-answer row; this throughput is the old SmolLM2 policy's (brains A/B are timed by J5/J8 instead); it is to earn again on the brain stage 2 chooses, no re-run of the old core before then (ORDERS S9)."),
 
     Spec("T0.08", 0, "Metrics land in the ledger, and only the recorded spec moves",
          hypothesis="A run writes metrics retrievable by spec id; an untouched "
@@ -407,7 +408,8 @@ LADDER: list[Spec] = [
                "failure the overflow slot exists to close, and the slot cannot "
                "fire because it requires every holder to be `remote_only` — read "
                "off THIS field. Measured: it blocked the builder's T0.22 run at "
-               "08:36 with the box idle. T1.07 carried the same lie."),
+               "08:36 with the box idle. T1.07 carried the same lie."
+               "  FAIL-DISPOSED: ruling-10 2026-11-15 — Director ruling 10 (FULL sitting 15:55): no in-house learner is a candidate until it has a known-answer row; seed variance of the old core's held-out metric is to earn again on the brain stage 2 chooses, no re-run of the old core before then (ORDERS S9)."),
 
     Spec("T1.09", 1, "Fits in P100 memory",
          hypothesis="Peak VRAM < 14 GB at the intended batch size.",
@@ -594,6 +596,7 @@ LADDER: list[Spec] = [
                "model that loses K-step prediction to one linear map has "
                "not demonstrated modelling. Strengthen-only; the VOID row "
                "stays in history."
+               "  FAIL-DISPOSED: ruling-10 2026-11-15 — Director ruling 10 (FULL sitting 15:55): no in-house learner is a candidate until it has a known-answer row; the old core's world-model prediction is to earn again on the brain stage 2 chooses, no re-run of the old core before then (ORDERS S9)."
                "  COVERS: fast/slow (fixture)"),
 
     Spec("T2.06", 2, "Language-action alignment beats chance",
@@ -617,6 +620,7 @@ LADDER: list[Spec] = [
                  "else the ruler leaks.",
          kills="SemanticActionAnchors as a grounding mechanism.",
          notes="THE test that separates understanding from a lookup table."
+               "  FAIL-DISPOSED: ruling-10 2026-11-15 — Director ruling 10 (FULL sitting 15:55): no in-house learner is a candidate until it has a known-answer row; held-out phrasing grounding on the old core is to earn again on the brain stage 2 chooses, no re-run of the old core before then (ORDERS S9)."
                "  COVERS: language (parent) (claim), generality (claim)"),
 
     Spec("T2.08", 2, "Curiosity drives coverage",
@@ -707,7 +711,8 @@ LADDER: list[Spec] = [
                     "is the Review-designed successor spec in which the MI "
                     "channel decides (row t211-accuracy-channel-is-seed-"
                     "fragile-not-globally-broken), and the delete-or-keep "
-                    "decision belongs to that successor's verdict."),
+                    "decision belongs to that successor's verdict.",
+         notes="FAIL-DISPOSED: ruling-10 2026-11-15 — Director ruling 10 (FULL sitting 15:55): no in-house learner is a candidate until it has a known-answer row; the old core's DIAYN skill separability is to earn again on the brain stage 2 chooses, no re-run of the old core before then (ORDERS S9)."),
 
     Spec("T2.13", 2, "Train to convergence, not to a step count",
          hypothesis="Training can be extended in increments until improvement "
