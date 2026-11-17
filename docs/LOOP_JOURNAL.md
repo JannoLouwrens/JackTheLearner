@@ -2020,3 +2020,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The 10 equal: dyn/rep losses at the free-nats floor (1.0 everywhere) → all 8 `dyn/prior*` grads exactly 0. Off the floor only at calls 1, 2, 9. A call-20 golden file cannot catch a wrong prior backward.
 - Next: 0.4d ii — dump calls 1, 2, 20 (or a structured batch) + assert no captured grad is all-zero unless listed; then G0.
 - Philosophy served: 4 (a test that could not have failed — a zero gradient compared equal — found before it became a gate).
+
+## 2026-11-17 05:10 · JACK · J8 (6): e0 harvested — plain white-noise exploration slides exactly as gSDE did
+- e0.json landed 05:02 (bwhite_s301–304, 300k decisions each). `pilot_b_report --write` → PILOT_B §Results now lists bwhite 4 of 5; §Seen at e0 added.
+- 0 sustained lives in 544 (gSDE B: 0 in 2,350). Meals/life first→last 20 fell 3/4; unfed life 267–282 → 438–466 s 4/4 (lie-still); last-50k meals 0.103/1k vs B 0.100 vs untrained twin 0.374, held-8 0.454.
+- Reading (reported only): the exploration scheme is not what stops B eating at this rung; §13's movement-drain prediction stands. e1 (pink) and e2 still RUNNING (kaggle 05:07).
+- Philosophy served: 3 and 4 (a raced alternative to a default, scored on the same seeds and length, reported without moving a seat).

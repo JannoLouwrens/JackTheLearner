@@ -85,8 +85,8 @@ serves: M2→M3 · PLAN ready-list "B reproduced, then piloted in his world" · 
 **done when:** the rule, the 20 + 15 runs and the table are in `docs/research/PILOT_B.md` with one of three readings: sustained / eats but starves / does not learn at this budget.
 state: (1)-(3) DONE `6f197f94`; prereg FROZEN `f0dc9fd7` (sustained, W 1, T 300k, 35 runs); harness #4 #5 #7 PASS, #8 half PASS, fixed-point half RULE `79e465bf`; #2 paid at 35/35 (B vs lr-0 twin p 0.201, NOT told apart); #6 #9 not payable.
 state: **35/35 IN, READING VOID** (f3 harvested 11-17 02:10; `pilot_b_report --write` → PILOT_B.md §Results + §Seen at f3): B 0 sustained in 2,350 lives; floor 5 of 15 runs cross W 1 vs ≤ 1 — noop_s305 the third do-nothing crossing, same 36 contact meals born on food. No W/T fixed; next pilot needs W ≥ 2 or a no-food-at-spawn rule, plus the cost curriculum.
-state: (6) e2 LAUNCHED 02:07 (jack-cpu-1794881266, `launch_e2.log`); e0 (21:37), e1 (23:38, pink pinned); all three RUNNING by `kernels status` 11-17 02:38. Sessions: e0 e1 e2 W1.04 = all 4.
-state: next: harvest e0/e1/e2 as each `/data/jack-logs/pilot_b/eN.json` lands (check e1 cells have lives, not `pink` errors), re-run `$PY -m experiments.pilot_b_report --write` (it re-inserts §Results; keep §Seen sections above it), commit → order DONE. Harvest only; ≤ 5 min a slot.
+state: (6) e0 HARVESTED 11-17 05:07 (PILOT_B §Seen at e0): white noise 0 sustained in 544 lives, meals first→last 20 fell 3/4, unfed life 267–282 → 438–466 s 4/4; last-50k 0.103/1k vs B 0.100 — same slide, noise is not the lever. e1 (pink, jack-cpu-1794872304) and e2 (bwhite_s305 + bpink_s305, jack-cpu-1794881266) RUNNING by `kernels status` 05:07.
+state: next: harvest e1/e2 as `/data/jack-logs/pilot_b/e1.json` / `e2.json` land (check e1 cells have lives, not `pink` errors), re-run `/data/venvs/jack-std/bin/python -m experiments.pilot_b_report --write` (keep §Seen sections above §Results), commit → order DONE. Harvest only; ≤ 5 min a slot.
 
 ### J3 — Brain B from published code reproduces published numbers (§5's rows)
 part: His brain · stage: 1 · step: 2→3 (combine, reproduce) · prior: §5
