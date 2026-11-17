@@ -2185,3 +2185,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Live test: busy job + 5 s-old poller → ADMITTED after 60 s; control (two busy jobs) → REFUSED after 61 s. Caps and classification unchanged. T0.34 reads stale (IMPL_DEPS) — regate's to re-buy.
 - Not acted on: the SESSION 07:38 disk line (research_prompt /tmp rule, CLI-versions prune) is next in INBOX.
 - Philosophy served: 5, 6 (free Kaggle sessions the JACK lane was being refused).
+
+## 2026-11-17 15:22–15:40 UTC · JACK · J11 (2) floor card — c0, c1 harvested; c4, c5 launched
+- c0, c1 came home from Kaggle (7.6 h / 7.9 h, all 16 cells, 125 lives each); receipts committed `06edb0c7`. c4, c5 pushed into the two freed sessions (jack-cpu-1794928991 / …929054); c2, c3 still running; c6, c7 wait.
+- Partial card (4 of 16 worlds, 500 lives/arm, NOT used for the rule): sustained noop 1/1 (same life in both dial arms — noop cannot feel the dial, a built-in check that held), held8 dial-off 0, held8 movement-free 10 (2.0%, 95% up 3.4%).
+- Finding: `spawn_clear` R = 1.55 m leaks — a statue spawned at 1.577 m ate 36 contact meals and capped (1 of 21 spawns in 1.55–1.60 m, 0 of 479 beyond). Not changed mid-card; the card counts it as floor; the rule must name it.
+- Philosophy served: 4 (the floor that a learner must beat is measured, not assumed — and it exposed a leak in the world's own repair) and 6 (free Kaggle sessions kept full).
