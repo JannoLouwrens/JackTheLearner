@@ -10,8 +10,7 @@ free bodies: "where eating shoves them", jack_env OPTIONS random_layout), or
 the statue never dies inside the life, so no re-placement happens in it).
 
 Method: replay the card cell exactly (pilot_b2.make_world(601), DoNothing,
-PilotLives cap 9,000) with native_substep=True (identical world, J6 2b,
-tests/test_native_substep_env.py) to life 64; SELF-CHECK every finished
+PilotLives cap 9,000) (run 2: WITHOUT native_substep — it drifted 1-2 decisions in run 1) to life 64; SELF-CHECK every finished
 life's (decisions, floor meals) against the card's c0.json row — any
 mismatch is printed and the replay is void. In life 64 log, every 10
 decisions and at every meal: body root (x, y, z), each floor food's (x, y),
@@ -47,7 +46,10 @@ import numpy as np  # noqa: E402
 
 SEED, LIFE, ARM = 601, 64, "noop-k1"
 CARD = Path("/data/jack-logs/pilot_b2/c0.json")
-OUT = Path("/data/jack-logs/j11/statue_leak_601_64.json")
+OUT = Path("/data/jack-logs/j11/statue_leak_601_64_r2.json")
+# run 1 (/data/jack-logs/j11/statue_leak_601_64.json): VOID by the rule (lives 51/54 off by 1-2
+# decisions under native_substep) AND its "root" was the apple (qpos[:3]); life 64 itself matched
+# (9000 dec, 36 meals); obj1 eaten every ~250 decisions (k=49,300,551,801) = the respawn period.
 
 
 def main():
@@ -60,7 +62,7 @@ def main():
     env = JackEnv(seed=SEED, difficulty=DIFFICULTY, reward=REWARD,
                   random_needs=NEEDS_S_TRP, random_layout=True,
                   lazy_contact_audio=True, spawn_clear=SPAWN_CLEAR_R,
-                  move_cost_dial=False, native_substep=True)
+                  move_cost_dial=False)   # as the card ran it: native_substep drifted 1-2 decisions in lives 51/54 (run 1 VOID)
     w = PilotLives(env, cap=LIFE_CAP)
     pol = DoNothing(SEED)
     o, info = w.reset(seed=SEED)
@@ -69,7 +71,7 @@ def main():
 
     def snap(k, tag):
         e = w.env.w
-        root = [float(x) for x in e.data.qpos[:3]]
+        root = [float(x) for x in e.data.xpos[e.rover_bid][:3]]   # his body (qpos[:3] is the APPLE's freejoint — run 1 read that, 11-17 23:50)
         foods = {n: [float(x) for x in e.data.xpos[e.model.body(n).id][:2]]
                  for n in getattr(w.env, "floor_foods", FLOOR_FOODS)
                  if n in e.drives._food}
