@@ -36,7 +36,9 @@ THE FLOOR CARD (learner-free; fixed before any cell ran, 11-17):
           life length (median, 5-95%); meals per life (mean, share of lives
           with >= 1, max). These fix W and the floor clause of the rule
           (J11 item 3): W = the smallest W at which the card predicts <= 0.5
-          floor crossings over the pilot's planned floor lives.
+          floor crossings over the pilot's planned floor lives
+          (`pilot_b2 rule-inputs` computes it; written before the card
+          was complete).
   cost    ~19.5 M decisions (noop lives ~2,750 decisions, held8 ~1,500 with
           the movement drain, ~2,750 without); at Kaggle's measured 60.7
           decisions per CPU-s with lazy audio (J6) ~ 89 CPU-h: 8 kernels of
@@ -275,6 +277,56 @@ def card_table(paths) -> str:
     return "\n".join(lines)
 
 
+PILOT_T = 300_000      # J11 item 3: decisions per pilot run
+PILOT_SEEDS = 5        # seeds per floor arm in the pilot
+
+
+def rule_inputs(paths, T: int = PILOT_T, seeds: int = PILOT_SEEDS) -> str:
+    """The numbers J11 item 3's rule is written from, computed the same way
+    whatever the card turns out to be (written 11-17 18:45, with 4 of 8
+    kernels harvested and BEFORE the card is complete, so the derivation
+    cannot be tuned to the full card).
+
+    Per card arm: planned floor lives = seeds * T / mean decisions per life;
+    per W in 1..3, the card's rate of W-runs (lives ending a run of >= W
+    consecutive sustained lives inside one world, divided by lives) times the
+    planned lives = predicted floor crossings in the pilot; and the Poisson
+    95% upper bound of that count (the floor clause: crossings <= it). The
+    smallest W with predicted <= 0.5 is printed per arm. Which pilot floor
+    reads which card arm (do-nothing -> noop-k1; held-8 -> held8-k1; arms
+    with move_cost_dial -> the k0 twin) is the rule writer's call, stated
+    in the rule; this prints all four.
+    """
+    by = {a: [] for a in CARD_ARMS}
+    for p in paths:
+        for rec in json.loads(Path(p).read_text())["cells"].values():
+            by[rec["arm"]].append(rec)
+    lines = ["| arm | card lives | decisions/life | planned lives | "
+             "pred. crossings W=1/2/3 | 95% upper W=1/2/3 | smallest W <= 0.5 |",
+             "|---|---|---|---|---|---|---|"]
+    for arm, recs in by.items():
+        L = [l for r in recs for l in r["lives"]]
+        if not L:
+            continue
+        runs = [0, 0, 0]
+        for r in recs:
+            streak = 0
+            for l in r["lives"]:
+                streak = streak + 1 if l["sustained"] else 0
+                for W in (1, 2, 3):
+                    runs[W - 1] += streak >= W
+        dpl = float(np.mean([l["decisions"] for l in L]))
+        planned = seeds * T / dpl
+        pred = [k / len(L) * planned for k in runs]
+        upper = [_poisson_upper(k) / len(L) * planned for k in runs]
+        w = next((W for W in (1, 2, 3) if pred[W - 1] <= 0.5), None)
+        lines.append(
+            f"| {arm} | {len(L)} | {dpl:.0f} | {planned:.0f} | "
+            + "/".join(f"{x:.2f}" for x in pred) + " | "
+            + "/".join(f"{x:.2f}" for x in upper) + f" | {w if w else '> 3'} |")
+    return "\n".join(lines)
+
+
 def _poisson_upper(k: int, conf: float = 0.95) -> float:
     """One-sided upper bound on a Poisson mean given k events (exact)."""
     from scipy.stats import chi2
@@ -284,7 +336,7 @@ def _poisson_upper(k: int, conf: float = 0.95) -> float:
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "kernel", "card"])
+    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs"])
     p.add_argument("--arm", default="noop-k1")
     p.add_argument("--seed", type=int, default=601)
     p.add_argument("--lives", type=int, default=CARD_LIVES)
@@ -296,6 +348,8 @@ def main(argv):
         print(json.dumps({k: v for k, v in rec.items() if k != "lives"}))
     elif a.cmd == "kernel":
         kernel(a.name)
+    elif a.cmd == "rule-inputs":
+        print(rule_inputs(sorted(OUT.glob("c*.json"))))
     else:
         print(card_table(sorted(OUT.glob("c*.json"))))
 
