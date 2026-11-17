@@ -2098,3 +2098,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found: the order's prescribed "FAIL-DISPOSED: Director ruling 35 …" parses MALFORMED (authority regex is one token) — written `ruling-35`.
 - coverage / decisions / champions all exit 0. cpu_budget.json dirt is the pollers', left alone.
 - Philosophy served: 4 (a failure names the ruling that answered it, not a page that happens to mention it).
+
+## 2026-11-17 09:22–09:40 UTC · JACK · J11/J12 waiting (c0..c3 hold all 4 Kaggle sessions, pollers healthy) → J6 (2b) measured
+- J6 (2b) priced before building, rule first (build only if ceiling ≥ 1.3×): `experiments/substep_split.py`, shipped cal, lazy audio on, seed 153, N 300.
+- One `mj_step(nstep=40)` vs 40 Python calls: 13.66 vs 13.70 ms — the native CALL saves 0.2%; "one native call" alone is not a lever.
+- The gain is the four per-sub-step Python pieces (drives.substep 2.85, water 1.25, synth 0.91, _grounded 0.73 ms of a 21.45 ms RK4 decision; ~5.6 of 10.44 under implicitfast). Ceiling 1.37× RK4, 1.97× implicitfast → build them in C (cffi + mujoco headers are in the venv), identity-tested.
+- cpu_budget.json pollers' dirt committed by name per the header.
+- Philosophy served: 5 (the simulator's speed priced on free compute before effort is spent) and 6 (free compute only).
