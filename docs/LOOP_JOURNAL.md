@@ -1970,3 +1970,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `pilot_b_report --write` at 35/35: VOID by the frozen rule (floor 5/15 runs cross vs ≤ 1); B 0 sustained in 2,350 lives; harness #2 paid: B not told apart from its never-updated twin (p 0.201).
 - Next pilot needs W ≥ 2 or a spawn rule that never starts him on food, plus the cost curriculum. J8 now only harvests e0–e2.
 - Philosophy served: 4 (the rule was frozen before the runs and read as written; a floor that can pass by luck voids the test instead of flattering it).
+
+## 2026-11-17 02:30 · JACK · Next up 1 (MLX port 0.2b): the official Dreamer runs on the box, and does not repeat itself
+- J8 cannot move: e0, e1, e2 RUNNING on Kaggle (checked by status 02:22), W1.04 holds the 4th; J3/J6/J10/G0 each wait on a session → "Next up" 1.
+- `experiments/brain_a/official_debug.py`: official `dreamerv3@e01491f` `main()`, `debug` preset, a 74-in/8-out dummy world via a `make_env` wrapper; JAX 0.4.33 CPU wheel installs on aarch64, so this step needed no Kaggle session.
+- 200 steps in 17.2 s, 448 MB; 8 loss series finite (flat as expected: ~20 updates inside a 1,000-update warm-up).
+- Same seed twice: NOT identical (vector loss up to 1.37 apart; dyn/rep identical) — the training loop is async, so the golden-file generator (0.4) must call train/policy directly on a stored batch.
+- Philosophy served: 3 and 4 (the reference A is measured against is run, not assumed; a non-repeating reference would have silently broken every parity test downstream).
