@@ -500,8 +500,44 @@ Long form: `/data/jack-research/research_notes/j8_lie_still/` (three parts).
 
 **Not verified:** every paper row came through a fetch summariser (quotes second-hand); only `trp_env`, EVAAA, Crafter and Avalon code were read directly. Yoshida's five-way numbers (abstract only). `trp_env`'s death charge: one reading found −10, another none. EVAAA's steps and published decay rates. n-step SAC, average-reward learners and pay-on-intake-only were never tested against this trap.
 
-## 14. Smell: what learned to follow an odour, with which nose, in how many steps (2026-11-17; serves stage 3 "Other senses", the Smell seat `SM.02`; answers the INBOX `RESEARCH:` line of 11-16 06:44)
+## 14. Smell: what learned to follow an odour, with which nose, in how many steps (2026-11-17; serves stage 3 "Other senses", seat `SM.02`; INBOX `RESEARCH:` 11-16 06:44)
 
-Long form: `/data/jack-research/research_notes/smell/` (three parts). SKELETON — published side being read this slot.
+Long form: `/data/jack-research/research_notes/smell/`. [V] = read in paper or code.
 
-**Ours (read from code):** `odour.py` ships a static field `A0·exp(−d/2 m)` (O1, `:172`, `LAMBDA_M` `:103`) and a puff field with wind and line-of-sight occlusion (O2, `:210`); the nose is two points 0.16 m apart (`:99`), 12 numbers [left, right, d/dt] × 4 channels (`:418`), noise 1e-3 (`:131`). Three kills of smell on O1 (`smell_sense.py`): 13k decisions, meals 8 vs shuffled-nose 10 vs no-smell 6; then 52k; and `SM.02`'s six DQN arms 83–100% timeout. The probe says the nose points to food on 99.5% of poses.
+**Already known**
+- **OdorSpaces** (arXiv:2611.05738, CoRL 2026; read in full [V]): PPO, depth eye + nose + pose history into a recurrent core, start distance ramped 1.5 → 9 m over 30M steps, one seed. SPL %: learned 65.3 propane / 24.7 fire; best hand-written searcher 36.1 / 0. **Nose: 5 points on 0.5 m arms × 4 heights, raw samples over 1–2.5 s.** Centre point only: 65 → 12.9. One height: fire 0. No curriculum: 53.6. Reward pays each step for true distance closed; without it 51.6 / 0. Smell alone 49.5; no recurrence 54.0 / 28.7 (fire better). Given GPS + compass; starts inside the plume; fails by pushing into obstacles the odour crosses; **no no-smell control, no curve, no result under 30M, no code.** Nothing pretrained named.
+- **Our field form, the closest test** (Alonso & Kirkegaard 2024, arXiv:2310.10531 [V]; C0·exp(−λ|x|), 5 sensors, log(M+1), PPO, "millions of simulations", distance-shaped): a memoryless policy "performs poorly" when the sensor baseline is small against noise; a recurrent one reading change over time carries that regime.
+- **Intermittent plumes: every published learner had memory AND a wind reference.** Singh 2023 (arXiv:2109.12434 [V]): 1 odour point + egocentric wind, PPO, RNN-64, 5M steps, "RNNs outperform MLPs for every plume tracking task", top 5 of 14 seeds shown. Rando 2024 (arXiv:2404.17495 [V]): tabular Q, actions in the wind frame, 100k episodes: memory of 1 sniff 79% success at 0.14 path efficiency, 20 sniffs 95% at 0.5. Verano 2023: a reactive controller fails "in a large fraction of cases". Piro 2026 (arXiv:2605.21329): wind direction is "key to many proposed algorithms". Windless successes (Loisy 2022–23) carry a full Bayesian map.
+- **Learned smooth-gradient taxis on a body:** FlyGym's RL demo [V, code]: SAC [32,32], 500k decisions, a 1-number turn action over a ready-made walker, reward = distance closed + heading; odour as 2 square-rooted numbers. Its hand-written taxis needs (L−R)/mean × 500 through tanh: "the asymmetry is subtle".
+- **Biology:** two-nostril smell is a near-field cue. Moles: nostril block matters "within 4–5 cm", not farther (Catania 2013). Mice at a distance: "naris occlusion did not significantly impact performance"; they compare sniff to sniff (Findley 2021 [V]). Best human concentration resolution ~5% (Cain 1977).
+- **No published body learned to climb a static two-point gradient from eat-only reward**, at any budget. Every success: ≥ 500k decisions, pay for distance closed, a 1–4-way action (ours: a whole body).
+
+**Ours (inf, from `odour.py:99-131`):** left–right contrast ≤ 8% (0.16 m / 2 m), ~5% over headings; best-heading signal/noise 7.6 / 4.6 / 2.8 at 4 / 5 / 6 m; the cue is 0.004–0.011 between two raw inputs of 0.05–0.14. Raw, memoryless, 13k–52k decisions, eat-only: the weak end of every published axis. The sense itself suffices: a scripted nose-follower fed .375 = the perfect-map ceiling (`505f7ae8`); `steer` on rising log smell 14/40 vs babble 3/40.
+
+**Candidates** (for `SM.02`; none seats anything)
+- **A. Wide multi-point nose, raw history** (OdorSpaces). Proven at 30M, shaped, one seed. Strength: direction in one sniff. Weak: a 1 m nose is not a human head (END-FIT); never shown under 30M.
+- **B. Today's nose re-encoded + memory:** log per nostril, (L−R)/(L+R) with gain, d(log mean)/dt, into a recurrent brain (Alonso; FlyGym; biology). Smallest published: 500k decisions, 1-number action. Expect: nothing at 52k; first sign ≥ 500k.
+- **C. Head sweep (casting):** the animal's far-field answer. Evolved, not RL (Izquierdo 2010, 1 sensor); our klinotaxis script fed .21. Needs memory.
+- Not candidates: a memoryless learner on the raw 12 numbers (three kills here; the record's weak end); O2 puffs with no wind sense.
+
+**Ours beside theirs**
+
+| setting | published | ours (file:line) | cost |
+|---|---|---|---|
+| nose | 5 pts × 4 heights, 1.0 m span; or 4–5 on-body | 2 pts, 0.16 m (`odour.py:99`) | centre-only lost 52 SPL |
+| encoding | log, sqrt, normalised contrast × gain | raw (`odour.py:455`) | cue is 5% of the input |
+| memory | RNN / 10-sample history | one d/dt (`odour.py:453`); reactive learner | the weak arm in 3 papers |
+| start distance | 1.5 m, ramped to 9 | 4–6 m from birth | no ramp: −12 SPL |
+| reward | distance closed each step | meals only | stop-only: 0 on fire |
+| wind | given (plumes); none (CFD room) | no wind sense; O2 gusts 0.6 m/s (`odour.py:123`) | O2: no precedent |
+| steps | 500k – 30M | 13k, 52k (`smell_sense.py:40-51`) | 10–2,300× short |
+
+**Known-answer check:** none fits us cleanly. Closest: Alonso's exponential-field cell (memoryless poor at small baseline, recurrent good): code and step count not found. OTTO (`C0PEP0D/otto`, 1-D: mean arrival ≈ 7.15, "several hours" on a laptop) checks a pipeline, not a nose. Singh: 16 h/seed. The cheap check is ours: the scripted follower on the new encoding must still reach the perfect-map ceiling (minutes, box).
+
+**What the record does NOT answer** (stage 3; a brain with memory, start-distance dial, ≥ 500k decisions, 5 seeds, shuffled-nose control; ~1 Kaggle CPU kernel an arm)
+- Encoding B vs raw, same nose: predicted B out-eats shuffled, raw does not.
+- Does smell add anything once the `row128` eye sees floor food (HIT .909)? Predicted no in the open, yes for hidden food (`SM.02`'s claim; OdorSpaces ran no no-smell control).
+- Nose span 0.16 vs 0.5 m: predicted to matter less with memory (Alonso).
+- O2 puffs with vs without a wind sense: predicted no learning without.
+
+**Not verified:** OdorSpaces' total steps (30M is the ramp), net sizes, PPO settings, figures. Singh's success counts (plot). Verano's table; Alonso's step count (SI); FlyGym RL's score; EVAAA's smell ablation (secondary: "least useful sense"). Biology except Findley: abstracts. Not found: any RL test of one nose point vs two. Not searched: auxiliary losses for an ignored input.
