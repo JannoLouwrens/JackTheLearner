@@ -2084,3 +2084,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Proof the ruler is unchanged: at 16 rays 0/12,000 actions differ from HandForager2 (incl. shuffled twin and lives with meals); nudging one ray by 1e-3 differs on 26 (control). At 128 rays the angle rule sees food on 486/500 decisions vs 317 unscaled.
 - Smoke d0 seed 153 (tuning seed, 1 life): f3 capped with 19 meals, g3 capped with 10, b3 445 s 3 meals. The blind twin may pass at d0 → f3 VOID there; written down before the run.
 - Philosophy served: 4 (a gate that can fail, with a control that must, frozen before the data) and 3 (the new eye is tested, not assumed).
+
+## 2026-11-17 08:37–09:00 UTC · JACK · J11/J12 waiting (c0..c3 hold all 4 Kaggle sessions) → J6 + J3 harvests
+- J6: Kaggle CPU speed column in (jack-cpu-1794897525, T=3000): shipped 72.7, lazy 88.0, implicitfast 98.6, both 124.1 dec/CPU-s (1.71×); vec4 both 263 dec/wall-s ≈ 1.05 h per 1M decisions a kernel. Table in sim_speed_kcpu.py (jack_env untouched, stales nothing). Left: (2b).
+- J3(4): wm-latent and ppo-lp FAIL rows 1 and 3, controls 0/5. wm-latent row 1 is a near-miss (best window −321 vs −314.7; last 10 eps in band) — budget binds, no extension, a miss. 0 flag reaches on row 3 for every in-house arm so far.
+- Finding: never-trained controls show the same row-3 return rise (−22 → −1.3) as the arms; it is the noise schedule. The J3-4 claim "ppo-needs learned to stop paying action cost" was wrong; corrected in KNOWN_ANSWERS.
+- `dc0e2b05`. ledger.json dirt is not this slot's (left alone).
+- Philosophy served: 4 (a wrong reading of a control-shared effect corrected; misses kept as misses) and 5 (the simulator's speed priced on the free compute).
