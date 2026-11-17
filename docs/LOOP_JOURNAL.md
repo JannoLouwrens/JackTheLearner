@@ -2128,3 +2128,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - All four (2b) pieces proven; next = one jack_env option wiring them + whole-trajectory identity incl. a reset.
 - Philosophy served: 5 (a faster, still-true loop on free compute) and 4 (identity tests with controls that must fail).
 - 2026-11-17 10:55 · JACK · J6 (2b). J11 c0-c3 still RUNNING on Kaggle (all 4 sessions held, so J12 waits too). Wired the four C sub-step twins into one W0.decide patch (`apply_native_substep`, not yet a jack_env option). 900/900 decisions identical on seeds 153-155; 1.31-1.47x dec/CPU-s. Gap: no death occurred, so rebirth was not exercised; no control run yet. Serves philosophy 5 (a faster, still-true loop).
+
+## 2026-11-17 12:07–12:50 UTC · JACK · J11/J12 waiting (c0..c3 still RUNNING on Kaggle at ~5 h vs ~3 h estimate; all 4 sessions held) → J6 (2b) wired as a jack_env option
+- `jack_env(native_substep=True)`, default OFF, needs lazy audio, applied LAST in `_build` (C copies the dialled food table). `e7c5011c`.
+- `tests/test_native_substep_env.py` PASS: 0/300 differing decisions on 3 seeds × {dying world with 2 deaths a seed, J11 pilot + both cures with truncations, reset(seed) rebuild, implicitfast}; dt+1ulp control differs 273–287/300.
+- Finding: the piece tests' plain-order-norm control changes no decision at all in the whole env — too weak to be a control there; replaced, reported.
+- Box speed row: shipped 49.0 → lazy+native 93.7 dec/CPU-s (identical world); with implicitfast 281.3 (5.7×). Kaggle column for native is the last J6 item (needs identity proven on Kaggle's BLAS).
+- Philosophy served: 5 (the loop that makes him runs ~2× faster on free compute, still the same world) and 4 (identity with a control that must fail, deaths and rebirths exercised).
