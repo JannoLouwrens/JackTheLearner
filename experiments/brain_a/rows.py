@@ -46,6 +46,13 @@ Rows and bands, exactly as PUBLISHED_PRIORS §2 states them (official v1 size-S,
 sheeprl's `policy_step` counts decisions x envs (NOT simulator frames); with action repeat 2,
 env steps = 2 x policy_step. `POINTS` below are env steps; `total_steps` is policy steps.
 The smoke must confirm this from the logged `Rewards/rew_avg` steps before any GPU run.
+
+Box smoke 11-17 13:39 (A2 overrides, seed 0, compile off, CPU, total 1,200 policy steps, killed at
+7 min — 0.19 gradient steps/s on this box): imports and steps; first logged losses at step 1,100:
+reward_loss 5.541, Values/value 0.0, Values/return 0.0 = §2's step-0 check. NO `Rewards/rew_avg`
+by policy step 1,100 — consistent with policy_step = decisions x 4 envs (a 500-decision cartpole
+episode ends at 2,000), inconsistent with per-decision counting (would end at 500). Inference from
+an absence: the positive check (an episode logged at 2,000) is the Kaggle smoke's first line.
 """
 from __future__ import annotations
 

@@ -2160,3 +2160,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Fix (opt-in, default off): `_single_thread(pin_cpu=)` / `JACK_PIN_CPU` sets the affinity before jax's backend starts (refuses after). Probe `harness/single_thread_probe.py`: 1.00 cores, CPU 55.4→50.5 s, wall 34.7→50.7 s; actor weights and lives bit-identical to unpinned; taskset control 1.00. `3b054813`.
 - Gap: no fingerprint control (another seed) run; Kaggle's 4-cells-a-kernel B runs oversubscribe the same pool, unmeasured.
 - Philosophy served: 6 (B can now run on this box without taking customers' cores) and 4 (the cause measured and attributed by thread, not guessed).
+
+## 2026-11-17 13:37–13:55 UTC · JACK · J14 (2)(4) — J11/J12/J6/J3 all wait on Kaggle (c0..c3 hold all 4 sessions)
+- Froze brain A's known-answer rule before any seed: `experiments/brain_a/rows.py` `286d6451` — three DMC rows at §2's published mean ± 2 SD, seeds 0–2, one extension (3–4), never-trains twin must land below band or the row is VOID.
+- Caught: dreamer_v3_5's algo default replay_ratio is 0.03125 (train ratio 32 — §2's control that must FAIL); pinned 0.5 (= 512) in the command so it cannot leak into a row.
+- Box smoke (A2, compile off, 7 min, 0.19 grad-steps/s): runner imports and steps; step-0 reward loss 5.541, value/return 0 = §2's code check. No episode by policy step 1,100 → policy_step counts decisions × envs (inferred from an absence; the kernel asserts it positively).
+- (3) was already done 11-16 (README line diff). Left: the kernel body. Nothing launched.
+- Philosophy served: 3, 4 (brain A's chair is earned by a published number under a rule written before the data, with a control that must fail).

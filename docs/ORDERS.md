@@ -192,7 +192,10 @@ theirs". (4) A 5-minute CPU smoke that the kernel body imports and steps.
 (GPU jobs clone from GitHub); rows → `KNOWN_ANSWERS.md`.
 serves: M3 · PLAN ready-list "brain A reproduced at the early points of its published curves on the free GPU" · objective 3 (spend the free GPU) · philosophy 2, 3.
 **done when:** (1)–(4) committed by Fri 11-20; then the three rows, in band or a named miss.
-state: open — ordered 11-17 06:50.
+state: (2) RULE FROZEN 11-17 13:45 `286d6451` `experiments/brain_a/rows.py`: A1 cartpole_balance 100K/200K (690–898, 932–1000), A2 cartpole_swingup (438–518, 740–816), A3 ball_in_cup_catch 200K (931–967) = §2 mean ± 2 SD; seeds 0–2, one extension seeds 3–4; never-trains twin (learning_starts past end) must land below band else VOID. `replay_ratio=0.5` pinned (dreamer_v3_5's default 0.03125 is train ratio 32 = §2's failing control).
+state: (3) already DONE 11-16 (README §"Line diff"). (1) overrides()+judge() exist (judge checked on 4 synthetic cases); kernel body NOT yet written.
+state: (4) box smoke 13:39 (A2, compile off, killed 7 min, 0.19 grad-steps/s): imports, steps, step-0 reward_loss 5.541, value/return 0 = §2. No rew_avg by policy step 1,100 → policy_step = decisions × 4 envs (inferred from absence).
+state: next: (1) the GPU kernel body in rows.py (reuse speed.py's _JOB/_scalars; harvest `Rewards/rew_avg` → (end_env_step = 2 × policy_step, return) → judge()); the kernel's first check asserts an episode logs at policy step 2,000. Launch 11-21 via gpu.py.
 
 ### J13 — MLX port, stage 0 ends at gate G0 (owner 11-15 19:18)
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` steps 1–3; `experiments/brain_a/README.md` §MLX port
