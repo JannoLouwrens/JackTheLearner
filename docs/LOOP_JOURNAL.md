@@ -2191,3 +2191,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Partial card (4 of 16 worlds, 500 lives/arm, NOT used for the rule): sustained noop 1/1 (same life in both dial arms — noop cannot feel the dial, a built-in check that held), held8 dial-off 0, held8 movement-free 10 (2.0%, 95% up 3.4%).
 - Finding: `spawn_clear` R = 1.55 m leaks — a statue spawned at 1.577 m ate 36 contact meals and capped (1 of 21 spawns in 1.55–1.60 m, 0 of 479 beyond). Not changed mid-card; the card counts it as floor; the rule must name it.
 - Philosophy served: 4 (the floor that a learner must beat is measured, not assumed — and it exposed a leak in the world's own repair) and 6 (free Kaggle sessions kept full).
+
+## 2026-11-17 15:37–15:45 UTC · JACK · J3 (4) — J11/J12/J6 wait (c2..c5 hold all 4 Kaggle sessions, RUNNING at 15:38)
+- The two recurrent in-house arms, wm-dyn and wm-latent+ring, are now wired through the J3 row adapter (`8a87941a`): `run_cell_rec` mirrors survival_rec (stored state per replay row, efference copy, reset per episode, eval on a deep copy). Rule `3054fbe6` unmoved; existing arms' path byte-unchanged.
+- `test_inhouse_rows_rec` PASS (`7ea3a5ef`): 85 updates move wm-dyn's GRU action columns (max .015) and weight_hh (.019) — the seated arms get exactly 0.0 there — and all 9 ring tensors incl. the resting state; never-trains control: every tensor byte-identical.
+- Smoke 8/8 cells run; CPU per 600 steps 5.2 s (wm-dyn) / 14.4 s (ring) → kernels ~0.8 h / ~2 h. All four remaining J3 arms are now kernel-ready; none launched (no free session).
+- Philosophy served: 3 (every in-house design gets its fair race on a published number — two arms that could not enter now can) and 4 (a test that checks learning reaches the recurrence, with a control that must not move).
