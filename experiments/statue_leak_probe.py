@@ -18,6 +18,18 @@ decisions and at every meal: body root (x, y, z), each floor food's (x, y),
 nearest food distance, energy.
     nice -n 19 $PY -m experiments.statue_leak_probe   (~30 CPU-min)
 Output: /data/jack-logs/j11/statue_leak_601_64.json
+
+READING RULE (written 11-17 22:45, BEFORE the trace exists; `read`):
+    $PY -m experiments.statue_leak_probe read [path]
+VOID if any life mismatched the card or the life has no floor meal. Else,
+at the FIRST meal, for the food eaten (the one whose ate count rose):
+gap0 = its spawn-time distance, root_mv = body xy travel since spawn,
+food_mv = that food's xy travel since spawn. Verdict:
+  "slide" (cause a: R too short)  if root_mv >= 2 * food_mv
+  "shove" (cause b: a food came)  if food_mv >= 2 * root_mv
+  "both"                          otherwise.
+Also printed: max root travel over the whole life (what a re-measured R
+must exceed if "slide"), and the decision of the first meal.
 """
 from __future__ import annotations
 
@@ -104,5 +116,44 @@ def main():
           "spawn root", trace[0]["root"], "spawn dist", trace[0]["dist"], flush=True)
 
 
+def _xy(a):
+    return np.asarray(a[:2], dtype=float)
+
+
+def verdict(res):
+    """Apply the READING RULE (docstring) to a probe result dict."""
+    if res.get("mismatches"):
+        return {"verdict": "VOID", "why": "replay mismatched the card"}
+    tr = res["trace"]
+    t0 = tr[0]
+    first = next((t for t in tr if t["tag"] == "meal"), None)
+    if first is None:
+        return {"verdict": "VOID", "why": "no floor meal in the life"}
+    prev = max((t for t in tr if t["k"] < first["k"]), key=lambda t: t["k"])
+    eaten = [n for n in first["ate"]
+             if first["ate"].get(n, 0) > prev["ate"].get(n, 0)
+             and n in t0["foods"]]
+    if not eaten:
+        return {"verdict": "VOID", "why": "meal food not identified"}
+    n = eaten[0]
+    root_mv = float(np.linalg.norm(_xy(first["root"]) - _xy(t0["root"])))
+    food_mv = float(np.linalg.norm(_xy(first["foods"][n]) - _xy(t0["foods"][n])))
+    max_root = max(float(np.linalg.norm(_xy(t["root"]) - _xy(t0["root"])))
+                   for t in tr)
+    if root_mv >= 2 * food_mv:
+        v = "slide"
+    elif food_mv >= 2 * root_mv:
+        v = "shove"
+    else:
+        v = "both"
+    return {"verdict": v, "food": n, "first_meal_k": first["k"],
+            "gap0": t0["dist"][n], "root_mv": root_mv, "food_mv": food_mv,
+            "max_root_travel": max_root}
+
+
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == "read":
+        path = Path(sys.argv[2]) if len(sys.argv) > 2 else OUT
+        print(json.dumps(verdict(json.loads(path.read_text())), indent=1))
+    else:
+        main()
