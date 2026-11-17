@@ -2127,3 +2127,4 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Finding: the pool's water force fires in today's world on seeds 154/155 (68/63 of 6,000 sub-steps) — a limb over the pool off the dry floor — though the drive layer never sees him wet.
 - All four (2b) pieces proven; next = one jack_env option wiring them + whole-trajectory identity incl. a reset.
 - Philosophy served: 5 (a faster, still-true loop on free compute) and 4 (identity tests with controls that must fail).
+- 2026-11-17 10:55 · JACK · J6 (2b). J11 c0-c3 still RUNNING on Kaggle (all 4 sessions held, so J12 waits too). Wired the four C sub-step twins into one W0.decide patch (`apply_native_substep`, not yet a jack_env option). 900/900 decisions identical on seeds 153-155; 1.31-1.47x dec/CPU-s. Gap: no death occurred, so rebirth was not exercised; no control run yet. Serves philosophy 5 (a faster, still-true loop).

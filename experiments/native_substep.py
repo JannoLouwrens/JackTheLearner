@@ -651,3 +651,106 @@ def _main() -> None:
 
 if __name__ == "__main__":
     _main()
+
+
+# ── J6 (2b) wiring: one option, all four pieces ─────────────────────────
+def _drives_store(nd) -> None:
+    """Write the C drive state back into the Python layer (inverse of load)."""
+    L, s = nd.layer, nd.s
+    for k in nd._F:
+        setattr(L, "_" + k, getattr(s, k))
+    L.state.w, L.t, L.n_onsets = s.w, s.t, s.n_onsets
+    L._touching_world = bool(s.touching_world)
+    L._prev_speed = s.prev_speed if s.has_prev_speed else None
+    L._submerged_since = s.submerged_since if s.has_submerged else None
+    L._wet_in = bool(s.wet_in)
+    for k, n in enumerate(nd.names):
+        L._respawn_at[n] = float(nd.respawn_at[k])
+        L.ate_total[n] = int(nd.ate_total[k])
+
+
+def _water_store(nw) -> None:
+    W = nw.water
+    W._last = nw.last.reshape(np.shape(W._last)).copy()
+    W._written = nw.written.reshape(np.shape(W._written)).copy()
+    W._last_any = bool(nw.cfg.last_any)
+
+
+def _synth_store(ns) -> None:
+    S, ng = ns.synth, ns.ng
+    S._prev_pairs = {(int(k) // ng, int(k) % ng)
+                     for k in ns.prev[:ns.cfg.nprev]}
+    S._last_fired = {(int(k) // ng, int(k) % ng): float(ns.last[k])
+                     for k in np.flatnonzero(ns.last != -1e9)}
+
+
+def _native_decide(self, action) -> None:
+    """W0.decide with its 40-sub-step body run by the four C twins. Python
+    state is loaded into C at the top of each decision and written back at
+    the bottom, so everything outside the loop (decide(), death, respawn,
+    observe) reads exactly the objects it reads today."""
+    from experiments import drives as _drv
+    from experiments.w0 import SUBSTEPS
+    nat = self._native
+    a = np.clip(np.asarray(action, dtype=float).reshape(-1), -1.0, 1.0)
+    if a.shape[0] != self.action_dim:
+        raise RuntimeError(f"action is {a.shape[0]}, not {self.action_dim}")
+    gear = self.drives.gear_scale()
+    lo = np.asarray(self.model.actuator_ctrlrange[:, 0], dtype=float)
+    hi = np.asarray(self.model.actuator_ctrlrange[:, 1], dtype=float)
+    ctrl = lo + (a[:6] * 0.5 + 0.5) * (hi - lo)
+    ctrl[:4] *= gear
+    force = a[6:8] * self.pg.ROVER_DRIVE_FORCE * gear
+    self.drives.begin_decision()
+    dt = float(self.model.opt.timestep)
+    nd, nw, ns, nc = nat["drives"], nat["water"], nat["synth"], nat["contacts"]
+    nd.load()
+    if nw is not None:
+        nw.load()
+    ns.load()
+    ns.events = []
+    d, m, step, bid = self.data, self.model, self.mujoco.mj_step, self.rover_bid
+    n_gated = 0
+    for _ in range(SUBSTEPS):
+        d.ctrl[:] = ctrl
+        gate = nc.grounded(d)
+        n_gated += int(gate)
+        d.xfrc_applied[bid, :2] = force if gate else 0.0
+        if nw is not None:
+            nw.apply(d)
+        step(m, d)
+        ns.step(d)
+        nd.substep(d, dt)
+    _drives_store(nd)
+    if nw is not None:
+        _water_store(nw)
+    _synth_store(ns)
+    self.synth.events.extend(ns.events)
+    d.xfrc_applied[bid, :2] = 0.0
+    self.mujoco.mj_rnePostConstraint(m, d)
+    self._prev_drive = _drv.DriveState(**vars(self.drives.state))
+    self.drives.decide()
+    self._audio = self._drain_audio()
+    self.decisions += 1
+    self.drive_gate_open += n_gated
+    self.sim_seconds += SUBSTEPS * dt
+    self.died_this_decision = False
+    self.dying_obs = None
+    if self.lethal:
+        cause = self.death_cause()
+        if cause:
+            self._die(cause)
+
+
+def apply_native_substep(w) -> None:
+    """Patch one W0 instance (the fast_sim way; w0.py untouched). Requires
+    lazy_contact_audio semantics (piece 4 is the twin of `_lazy_step`, which
+    is proven identical to the shipped step)."""
+    import types
+    w._native = {
+        "contacts": NativeContacts(w._body_mask, w._ground_mask),
+        "drives": NativeDrives(w.drives),
+        "water": NativeWater(w.water) if w.water is not None else None,
+        "synth": NativeSynth(w.synth),
+    }
+    w.decide = types.MethodType(_native_decide, w)
