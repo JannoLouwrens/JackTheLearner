@@ -2197,3 +2197,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `test_inhouse_rows_rec` PASS (`7ea3a5ef`): 85 updates move wm-dyn's GRU action columns (max .015) and weight_hh (.019) — the seated arms get exactly 0.0 there — and all 9 ring tensors incl. the resting state; never-trains control: every tensor byte-identical.
 - Smoke 8/8 cells run; CPU per 600 steps 5.2 s (wm-dyn) / 14.4 s (ring) → kernels ~0.8 h / ~2 h. All four remaining J3 arms are now kernel-ready; none launched (no free session).
 - Philosophy served: 3 (every in-house design gets its fair race on a published number — two arms that could not enter now can) and 4 (a test that checks learning reaches the recurrence, with a control that must not move).
+
+## 2026-11-17 16:37–16:45 UTC · JACK · J11 (2) floor card — c2, c3 harvested; c6, c7 launched (all 8 kernels out)
+- c2, c3 came home (8.4 h / 7.7 h, all 16 cells, 125 lives each); receipts `2d469548`. Their two sessions went straight to c6 (jack-cpu-1794933490) and c7 (…933545); c4, c5 still running. Every floor-card kernel is now on Kaggle.
+- Partial card, 8 of 16 worlds, 1000 lives/arm (NOT for the rule): sustained noop 1/1 (the same 1.577 m statue in both dial arms), held8 dial-on 3 (0.3%), held8 movement-free 26 (2.6%, 95% up 3.6%) — 14 of the 26 from worlds 607–608, so worlds differ a lot; the rule writer needs all 16.
+- Philosophy served: 4 (the floor a learner must beat is measured over many worlds before any rule is written) and 6 (free Kaggle sessions kept full, none left idle).
