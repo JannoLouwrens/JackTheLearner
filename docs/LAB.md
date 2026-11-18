@@ -67,68 +67,41 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   gains start at 100 h. Unrun: listening hours as the dial; the narrator's
   label as the loss. Data `/data/jack_corpora/speech_commands_v2`. Philosophy 2, 3, 4.
 
-- 11-16 · **Eye — a streak, not a grid** (Vision encoder, BY DEFAULT; PLAN
-  "Learning to eat" right column and §12's open question; `eye_streak.py`,
-  rule first `bddffac4`, dial rule `e583c41e`). Bet: his food is a 0.2 m thing
-  on the floor, so 16 azimuths miss it whatever rows are stacked above; the
-  same 256 rays as 128 azimuths × 2 rows find it (ground foragers have a
-  horizontal streak). Kill: no lead of +.05 over the 16×16 grid and +.10 over
-  today's 16 rays on ≥ 16 of 20 worlds. Prior: Habitat depth SPL .79 vs RGB
-  .46; "What if Eye" — detection needs resolution; nothing published on ray
-  geometry for a floor object at a 0.12 m eye. Ruler: at the entry rung, a
-  per-world table material → food (≤ 81 numbers, adult's label) points along
-  the nearest food-coloured ray; HIT = within 20° of a food ≤ 4 m away.
-  - **ALIVE (worlds 400–419): streak .900 vs grid16 .517 vs seated16 .528**
-    (ahead 20/20, 20/20); grid32 (1,024 rays) .758; blind twin .19, shuffled
-    table .21 — both fail as they must. **§12's question answered: the 16×16
-    grid does NOT beat today's 16 rays** (−.012, ahead 7/20).
-  - The second row buys nothing: one level row of 256 scores .907 (streak
-    ahead 6/20). Dial (worlds 420–429): row 16 / 32 / 64 / 128 / 256 = .540 /
-    .696 / .856 / .909 / .925 — **knee at 128**. Food 4–8 m away: today's eye
-    sees it on 14% of frames, row128 on 74%.
-  **Reading:** today he is blind to food beyond ~1 m about half the time, and
-  the retina planned in "Next up" 3 would not cure it; azimuth in the floor
-  band does, for 256 numbers and ~0.1 ms. What this cannot say: whether a
-  BRAIN learns to use it (the table is an adult-taught ceiling). ENTERED as
-  an INBOX line: build `row128` as a `jack_env` option, then race it under a
-  learner. Not tried: a fovea (dense ahead, sparse behind) at 64 rays.
+- 11-16 · **Eye — a streak, not a grid** (Vision encoder; `eye_streak.py`, rule
+  first `bddffac4`; long form `78902da4`) · **ALIVE, ENTERED (now order J12):**
+  on a taught table's ruler (worlds 400–419) 128 azimuths × 2 rows .900 vs
+  16×16 grid .517 vs today's 16 rays .528 (ahead 20/20); blind .19, shuffled
+  .21 fail as they must. The 16×16 grid does NOT beat 16 rays (§12 answered).
+  One level row: 16/32/64/128/256 = .540/.696/.856/.909/.925 — knee at 128.
+  Cannot say whether a BRAIN learns to use it. Not tried: a fovea at 64 rays.
   END-FIT 1, 5. Philosophy 1, 3, 4.
 
 - 11-17 · **Finding himself after rebirth — one look, with and without the
-  compass** (Death & persistence, VACANT; Vision encoder; PLAN "Memory and
-  sleep" right column; `find_himself.py`, rule first `fe459803`). Bet: today's
-  eye casts rays at WORLD azimuths, a free compass the human-like body will
-  not have; without it 16 rays cannot re-find his place and the 128 row can
-  (best of all turns of the look against 2,880 remembered looks; no training,
-  raw looks as keys). Kill: body-frame 128 recalls a look from within 1 m on
-  < 50% of rebirths, or leads 16 rays by < .10 / on < 16 of 20 worlds. Prior:
-  nothing published for range-only senses in a from-scratch agent (PRIORS §6,
-  L4 "expect poor in symmetric arenas"); successes had vision or GPS+compass.
-  - **ALIVE (worlds 700–719, chance .021): no compass, 128 rays .933 vs 16
-    rays .795** (ahead 20/20, lead +.138); with the compass .957 / .889.
-    Shuffled place tags .02; scrambled eye .06–.12 (16 rays no compass
-    .1208 against a .1211 VOID line — a hair). Median miss 0.3 m.
-  - **Half the bet was wrong:** 16 rays DO find him without a compass (.795,
-    20/20 worlds). PLAN's question "with 16 rays" is answered yes.
-  - The compass costs .09 at 16 rays, .02 at 128 — IF he may turn the look.
-    Compared ray-for-ray with no turning, 128 rays fall to .54.
-  - With the compass he mostly reads the ROOM, not his world: recalling from
-    ANOTHER world's memory still hits .79 / .88. Without it a stranger's
-    memory gives .40 / .47 — the square room is ambiguous, and his own
-    world's furniture is what settles it (the record's L4, measured).
-  - It is coverage, not sight, that limits him: 15 / 60 / 360 remembered
-    lives = .31 / .65 / .93.
-  - Follow-on, rule first `2a6ffa69`, fresh worlds 720–724: a key that needs
-    NO turning (the row's amplitude spectrum, 130 numbers) · **VOID as
-    declared** — hit .845 (5/5 worlds, .087 behind the turn search .932, 16
-    rays .608), but the scrambled-eye control read .157 > .121. Diagnosis
-    after the fact, deciding nothing: the mean distance and material (2
-    numbers, untouched by scrambling) alone recall .31; with them dropped
-    the control falls to .03 and the key still hits .795. Re-register with
-    that control before believing it.
-  **Reading:** one look is enough to find himself in this 12 m room on either
-  eye, and the head-turning eye loses little — provided his memory compares
-  looks turn-free. What this cannot say: whether a BRAIN's learned key does
-  it; a bigger or emptier world. ENTERED as an INBOX line (a body-frame eye
-  option; results earned on the compass eye to be earned again without it).
+  compass** (Death & persistence, VACANT; `find_himself.py`, rule first
+  `fe459803`; long form `78902da4`) · **ALIVE, ENTERED (became ruling 38 /
+  J12):** recall of a look from within 1 m (worlds 700–719, chance .021): no
+  compass 128 rays .933 vs 16 rays .795 (ahead 20/20); with compass .957 /
+  .889; shuffled tags .02. Half the bet was wrong — 16 rays DO find him. The
+  compass costs .09 / .02 only if he may turn the look; ray-for-ray 128 falls
+  to .54. Coverage limits him: 15/60/360 remembered lives = .31/.65/.93.
+  Turn-free key (amplitude spectrum, `2a6ffa69`): hit .845 but **VOID** — the
+  scrambled-eye control read .157 > .121; re-register with mean distance and
+  material dropped from the control before believing it.
   END-FIT 1, 2, 4. Philosophy 1, 3, 4.
+
+- 11-18 · **A place key he learns from the passing of time** (Death &
+  persistence, VACANT; the diary's key; PLAN "Memory and sleep" right column;
+  `place_key.py`). Bet: yesterday's body-frame eye re-finds his place only by
+  trying all 128 turns of a look against every memory (.933; compared once
+  .54). A small ring-shaped network trained from scratch only to give looks a
+  moment apart in one life close keys — no place tags, no compass — learns a
+  key compared ONCE that loses ≤ .10 to the turn search. Why it might: he
+  turns faster than he travels, so time itself teaches "same place, other
+  heading" (the slowness account of place cells). Kill: the key fails to find
+  him (< .50), or leads its untrained and time-shuffled twins by < .10 / on
+  < 16 of 20 worlds, or trails the turn search by > .10. Prior: Franzius &
+  Wiskott 2007 (slow features of a simulated rat's view are place cells);
+  learned recall keys on record needed 10^6–10^9 frames of pixels (PRIORS
+  §6); ours has 2,880 looks of 256 numbers per world — the record is silent
+  at that size. Rule frozen in the docstring before worlds 730–749 exist;
+  tuned on 690–692 only.
