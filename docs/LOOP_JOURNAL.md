@@ -2540,3 +2540,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J11 f-card 7/8 into `PILOT_B2.md` §2b: noop 0/2000, held8-k0-ff 37/1970, held8-k1-ff 7/1500; rule-inputs W = 2. f7 still running.
 - Launched m0–m2 (body-motor floor twins) into the 3 freed Kaggle sessions on the INBOX 07:40 default; the motor-frame ruling is still open, so these are spent ahead of it (rank-1 READY kernels; if the Director rules "world" they go unused).
 - Philosophy served: 4 (a failure at d = 1 recorded as plainly as the d0 pass; the floors measured, not borrowed) and 7 (the body-frame eye and motor the finished Jack will have).
+
+## 2026-11-18 20:20–20:35 UTC · JACK · J11 (f7 harvest, m3 launch) — short slot
+- f7 home 19:02 (watcher wrote f7.json + result row). f-card FINAL 8/8 (`791d9b55`, `PILOT_B2.md` §2b): noop 0/2000, held8-k0-ff 37/1970 (upper 2.47%), held8-k1-ff 8/2000 (upper 0.72%; interim 7/1500). rule-inputs: W = 2 still quiets every floor; k1's W=2 upper fell 0.91 → 0.69.
+- Launched m3 (body-motor twin) into f7's freed session: `jack-cpu-1795033455`, pushed OK. m0–m2 still running. The rule still waits on the motor-frame ruling (INBOX 12:26).
+- Left `docs/LAB.md` dirt alone (not this lane's).
+- Philosophy served: 4 (every floor measured on the repaired world, none borrowed, before the rule is written) and 6 (a free Kaggle session not left idle).
