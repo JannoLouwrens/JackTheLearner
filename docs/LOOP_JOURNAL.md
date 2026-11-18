@@ -2365,3 +2365,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Read Kim et al. 2021 from its arXiv e-print (main.tex) + the authors' `utils.py`/`main.py` @656f947a. (a) PRIORS §7's "96.6–96.9%" was v1 then v2: the v2 target is 96.9 ± 0.30 (5 seeds, Table 1; 10-seed mean 96.9, Table 2). (b) the cost probe trained on all 84,843 clips; the authors cap unknown/silence at 3,077 → 36,923 (our corpus: 30,769 + 6,154, exact) → ≈ 18 CPU-h a seed, not 41 (`ac642f42`).
 - The ear's reproduction may fit one 4-thread Kaggle CPU session — unmeasured; the rule should use 96.9 ± 0.30.
 - Philosophy served: 3 and 4 (his ear will be judged against the paper's real number, not a mis-read band, and priced from the authors' real data split). Weak link: research hygiene, not the creature — taken because every creature order waited on Kaggle.
+
+## 2026-11-18 04:22–04:55 UTC · JACK · J12 (eye gate harvest) — short slot, all 4 Kaggle sessions busy (J11 f0/f1, J12 d075/d100 RUNNING by `kernels status` 04:22 and 04:42)
+- Waited for J12's two gate kernels (worst-case 4.7 h → ~04:50); at 04:52 both still RUNNING, watchers alive, no gate file. Nothing harvested, nothing launched, no code changed.
+- Checked the hand-off for when they land: J6 native kernel (rank 0) and J11 `pilot_b2 kernel --name f2` commands are ready; the J12 row goes after the World Card's "J12 (2)" section via `eye_forager score`.
+- Committed the two-slot-old dirty `cpu_budget.json` receipts (header asked the next slot to).
+- Philosophy served: none directly — honest: an idle wait slot. Finding for the Director: a 42-min slot can't reliably catch a kernel finishing near its estimate; the watcher harvests it anyway, so a waiting slot should take Next-up work instead of polling.

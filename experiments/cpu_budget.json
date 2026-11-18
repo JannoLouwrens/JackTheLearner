@@ -1385,15 +1385,18 @@
     },
     "2026-11-18": {
       "by_spec": {
+        "SO.04": 156.61,
+        "VO.01": 144.54,
+        "W.1": 20.94,
         "detached:launch_c6.log": 228.89,
         "detached:launch_c7.log": 215.96,
-        "detached:launch_d075.log": 217.11,
-        "detached:launch_d100.log": 207.94,
-        "detached:launch_f0.log": 134.0,
-        "detached:launch_f1.log": 134.69,
+        "detached:launch_d075.log": 289.39,
+        "detached:launch_d100.log": 291.13,
+        "detached:launch_f0.log": 206.59,
+        "detached:launch_f1.log": 207.28,
         "detached:statue_leak_r2_launch.log": 2567.89
       },
-      "used_s": 3706.48
+      "used_s": 4329.22
     }
   },
   "last_child_s": {
@@ -1430,6 +1433,7 @@
     "SM.01": 7.58,
     "SO.01": 85.9,
     "SO.02": 41.05,
+    "SO.04": 156.61,
     "T0.01": 4.71,
     "T0.02": 7.21,
     "T0.03": 16.67,
@@ -1461,8 +1465,8 @@
     "T2.12": 42.09,
     "T6.03": 1185.78,
     "TA.01": 635.46,
-    "VO.01": 144.55,
-    "W.1": 20.68,
+    "VO.01": 144.54,
+    "W.1": 20.94,
     "W.2": 94.77,
     "W0.DIAG": 661.97,
     "W0.PL": 91.28,
