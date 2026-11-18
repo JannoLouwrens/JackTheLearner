@@ -86,7 +86,7 @@ decisive test; no seat moves.
 serves: M2→M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 7 (the eye the finished Jack will have).
 **done when:** `PILOT_B2.md` has the f-card, the frozen rule, 40 runs and one reading per arm.
 state: DONE — options `move_cost_dial`, `spawn_clear`, `food_floor_only` (`4978e989`, `adf457ca`); c-card 16/16 (leaky world, kept as history, NOT the rule's input); arms, packer, table tool coded and tested (`1eb7af3f`, `2d6808f0`, `1970d4a8`); f4..f7 groups (`31f5e5ac`).
-state: 11-18 09:23 — f0 HOME 08:46 (noop-k1-ff 0/500 sustained; held8-k0-ff 8/500 = 1.6%, 95% upper 2.9%). f3 launched `jack-cpu-1794993809` into its session; f1, f2 RUNNING; f4..f7 not launched.
+state: 11-18 10:10 — f0, f1 HOME (f1 09:59, one held8 cell deadline-cut at 110 lives). f0+f1 card: noop-k1-ff 0/1000 (upper 0.30%); held8-k0-ff 16/985 = 1.62% (upper 2.47%). f4 launched `jack-cpu-1794996504` (`13f0e98a`); f2, f3 RUNNING; f5..f7 not launched.
 state: for the rule writer: seed 401 was stepped once (start at 402); K-lr0 has no card twin (SBX `use_sde` holds a draw 32 decisions); `PILOT_RULE = {seeds, food_floor_only, rule}` unlocks the packer — add the eye frame to that stamp.
 
 ### J12 — His eye: body-frame, 128-ray row, and the proof his senses can find food
@@ -203,7 +203,7 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 **done when:** row (2′) is in `KNOWN_ANSWERS.md`, pass or fail.
 state: (1) DONE: Humanoid-v5 floor reproduces (random 109.9, zero 198.5). Yu pinned `b50478f8`, rule `experiments/yu2018_walk.py`; smoke never run.
 state: (2′) RULE FROZEN `experiments/humanoid_sac_row.py` (11-18 slot): Zoo entry (2M, learning_starts 10k, SB3 defaults set explicitly in SBX), seeds 0–2, PASS R ≥ 5,950 AND ≥ 12 m/1,000 steps on ≥ 2/3, 1M median in [3,784, 5,866] else named miss, late-start control < 500 else VOID; resume = 500k/10.5 h segments with model + replay buffer (~3.1 GB) as kernel source.
-state: next: read the Zoo's sac.yml at a pinned commit (the entry is from memory — correct the rule block BEFORE seed 0 if it differs), then the kernel body + 50k box smoke of the control; launch at rank 5.
+state: `61e2950f`: Zoo entry VERIFIED at zoo `d802099a` (matches); SBX hidden defaults = SB3 non-SDE; rule CORRECTED before seed 0: metres = centre-of-mass x (v4 `x_position`), not torso. `evaluate` + `control_run` coded; box control 50k: R 67.96, 0 updates, holds. next: the training-segment body (500k/10.5 h, model + replay buffer carried, resume test on box at ~20k), then launch at rank 5.
 
 **Parked or closed:** `D1.0`, `T2.01` (→ J10), `LF.06`, `LC.09`, `CR.01`,
 `LF.04` — "to earn again" on the chosen brain (ruling 20). `NE.01` → stage 3

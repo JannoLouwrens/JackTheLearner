@@ -2435,3 +2435,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `experiments/humanoid_sac_row.py`: the walk row's rule frozen before any kernel body — SBX SAC, Zoo Humanoid entry on Humanoid-v4, seeds 0–2; PASS = return ≥ 5,950 AND ≥ 12 m per 1,000 steps on ≥ 2 of 3 (return alone reads STANDS); 1M check vs SimBaV2's [3,784, 5,866]; late-start never-trains control < 500 or VOID; 2M (~26 CPU-h) resumes over 500k/10.5 h segments with the replay buffer carried. `verdict()` checked by hand on planted PASS/STANDS/VOID inputs.
 - Disclosed in the rule: the Zoo entry is written from memory; the next slot reads sac.yml at a pinned commit and corrects the block before seed 0.
 - Philosophy served: 4 (a walk is claimed only by forward metres with a control that must fail, rule before data) and 1 (the body he will walk with).
+
+## 2026-11-18 10:07–10:30 UTC · JACK · J11 (session refilled) + J10 (2′) Zoo check, eval, control
+- J11: f1 came home 09:59 (one held8 cell deadline-cut at 110 lives) and its session was free: launched f4 (`jack-cpu-1794996504`). f0+f1 card on the repaired world: noop-k1-ff 0/1000 sustained (upper 0.30%); held8-k0-ff 16/985 = 1.62% (upper 2.47%). Receipts `13f0e98a`.
+- All four sessions busy again (J11 f2/f3/f4, J12 d075), so the order of work fell through to J10: the Zoo's sac.yml read at pinned commit `d802099a` — Humanoid-v4 = mujoco-defaults (MlpPolicy, learning_starts 10k) + 2e6, so the rule's from-memory block was right; SBX's hidden actor defaults read from source equal SB3's.
+- Found and corrected before seed 0: the rule said "torso x (info x_position)", but on v4 that field is the centre of mass — the rule now names centre of mass (`61e2950f`).
+- `evaluate` + `control_run` coded; the late-start control's 50k steps on the box: R 67.96, M 0.03 m/1000, 0 updates — holds (< 500). 50k env steps in 32 s.
+- Philosophy served: 4 (the walk row's metric and control fixed and checked before any number exists) and 1 (the body he will walk with).
