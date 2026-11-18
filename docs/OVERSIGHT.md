@@ -2,175 +2,188 @@
 
 > Current state, not a log. Each audit rewrites this file. Addressed to the Director.
 
-**2026-11-17, 00:37 UTC.** HEAD `f432fc21`. Seventh audit after the pause.
+**2026-11-18, 00:37 UTC.** HEAD `844880c9`. Eighth audit after the pause.
 
 **VERDICT: ON TRACK**
 
-Nothing was loosened, and no PASS is untrue. `experiments/registry.py` and
-`registry_expansion.py` are byte-identical to yesterday's audit
-(`git diff 2ecaa1a0 HEAD` — empty). No ledger entry changed status in the
-day (171 entries compared against `2ecaa1a0`). The test files that moved
-only gained proofs, each with a control that must fail; the one edit to a
-standing certificate (`t0_12_gpu_budget.py`, `8d7388a1`) adds two lines that
-reset a claim between probes and removes nothing.
+Nothing was loosened, and no PASS is untrue. `registry.py` and
+`registry_expansion.py` moved only by S9's fate notes
+(`git diff f3f0044f HEAD`: 24 lines in, 10 out in each, every one a note
+string; no threshold, seed count, control or dependency edge). The loosening
+scan over two days of registry and test diffs returns no removed line. One
+ledger status moved in the day, and it moved the honest way: `W1.04` FAIL →
+ERROR (finding 3). The 23 test files touched are new proofs, each with a
+control that must fail.
 
-Exit codes, from the processes: `coverage` **0** · `decisions --check` **0** ·
-`champions --check` **0** · `run verify` **0** (111 re-judged, 109 controls
-probed, 0 that do not re-derive, 0 that cannot be replayed).
+Exit codes, from the processes: `coverage` **0** (was 2 before S9) ·
+`decisions --check` **0** · `champions --check` **0** · `run verify` **0**
+(111 re-judged, 109 controls probed, 0 that do not re-derive).
 
-The work reached him. Of 145 commits since yesterday's audit, 105 are JACK,
-LAB or RESEARCH lane; about 30 tend the machine (12 mechanical regate, 8
-SYSTEM, 4 terminal, 6 Director). The ladder reads 111 of 270, unchanged, and
-that is the honest reading of a day that built the instrument.
+The work reached him. 134 commits since yesterday's audit: about 34 tend the
+machine (12 mechanical regate, 7 SYSTEM, 5 terminal, 3 Director/auditor, 7
+receipts); the other ~100 are JACK, LAB or RESEARCH. The ladder reads 111 of
+270, unchanged. Yesterday's five findings were all ruled on at 06:41 (rulings
+30–35); four are executed, one (S10) is ordered and untaken.
 
-**The honest question.** Closer, and by a negative. A learner trained from
-nothing lived 2,350 lives in his world for the first time, on free CPU, and
-the result is that learning made him eat *less*: late meals per life at or
-under 0.41 in 20 of 20 runs, against 0.61–1.50 for the same net never
-updated; he learned to lie still because lying still outlives moving
-(`ORDERS.md` J8 state; `docs/research/PILOT_B.md`). The workers did not tune
-it away. They stopped, asked for the published record (`PUBLISHED_PRIORS.md`
-§13, `7291b236`), and reported the pilot VOID by its own frozen clause. That
-is the card's lines 3 and 4 working. Brain B's SAC rows reproduced published
-numbers beside a frozen twin that fails; brain A's speed was measured
-(compiled, 0.54 h per 100k decisions on a T4). Yesterday's findings 1–4 were
-all acted on by the 06:41 sitting.
-
-The findings below are about what is done with the pilot, and about what
-made workers idle while it ran.
+**The honest question.** Closer, by measurement of his world rather than of
+him. The floor card is complete — 8,000 learner-free lives on free CPU
+(`docs/research/PILOT_B2.md`, `87957d92`): doing nothing starves every life but 2 in 2,000; flailing with
+movement charged sustains 0.25%; flailing with movement free sustains 2.25%.
+The rule's method was committed before the card was complete (`96d062fc`).
+Two things were found by tests that could have stayed quiet: a spawn rule
+that leaks, and an eye that carries a compass. No learner ran in his world
+today, and none should until findings 1 and 2 are ruled — both are cheap now
+and expensive after the pilot.
 
 ---
 
-## 1 — The pilot's VOID was built into its own rule, and the next rule will be written by people who have seen the data
+## 1 — His eye carries a compass the finished Jack will not have, and J12's gate is frozen on it
 
-The rung rule (ruling 22, `DECISIONS_RESOLVED.md:3477`) permits a do-nothing
-body to reach the cap in up to 1 of 200 lives. The pilot's frozen floor
-clause (`f0dc9fd7`) permitted 1 floor crossing *in total* — over what turned
-out to be 1,198 floor lives. At the rate the rung itself allows, about six
-crossings were expected; four happened (`ORDERS.md:88`: noop_s302, noop_s304,
-held8_s304, blr0_s304; 0.0033 per life). The worker saw it coming at 21:30
-("~a coin flip from VOID") and correctly changed nothing. So the VOID says
-the two rules disagreed, not that the world or B misbehaved.
+The eye's rays — today's 16 and the new `row128` — are cast at fixed WORLD
+azimuths, not from his heading: `experiments/fast_sim.py:157`
+(`dirs = [cos(az), sin(az), 0]`, no yaw term). The lab found it and measured
+what it is worth (INBOX 11-17 23:35, `99e588f0`): recognising a place from
+one look hits .889 / .957 with the compass and .795 / .933 only if the look
+may be rotated against memory — .54 ray-for-ray.
 
-Three things can now go wrong, none has yet:
+END-FIT's first row is a human-like body. A sense that tells him which way
+is north for free is not one that body has. What rests on it today:
 
-- **The decisive test's mark gets chosen after the fact.** INBOX 23:25 asks
-  for "W ≥ 2 (or a spawn that never starts him on food) and the cost
-  curriculum". Each is reasonable; chosen together after reading 35 runs they
-  are a fitted rule. It needs a ruling, registered before any run, on fresh
-  seeds, with the floor clause sized from the measured 0.0033 per life.
-- **The VOID buries the negative.** B crossed 0 times in 2,350 lives where
-  the floor rate predicts 7.8. A void pilot gives no verdict, but that
-  number must stay on the page the owner reads — B did worse than doing
-  nothing, inside the published budget (300k decisions against a predicted
-  100–200k).
-- **A fix is designed before the cause is separated.** Two causes are
-  on the table and they need different repairs: a statue fed by contact when
-  born on food (a world rule), and a body that is charged for moving in a
-  world where no published eater is (§13 — a reward or curriculum rule). The
-  three exploration arms still running (e0–e2) speak only to a third.
+- **J12's forager gate** (`4f819fee`, frozen, not yet run, two Kaggle
+  kernels of ~4.7 h each, queue rank 2 — it launches as soon as J11 frees
+  sessions, which happened at 00:09). Its stated meaning is "the food is
+  findable from the sense". I did not establish whether the hand forager's
+  steering exploits the world frame; nobody has written it down either way.
+- **J11's pilot**, every arm: a learner on a world-frame eye can learn
+  "food lies east" without learning to look.
+- The stage-2 choice between A and B, if it is run on this eye.
 
-Card lines 3 and 4.
+It is not a false PASS — nothing is claimed yet. It is the cheapest moment
+to rule it: the option the lab asks for (`eye_frame="body"`, default off,
+identity at yaw 0) is one slot's work, and J12's gate has not spent its
+seeds (241–260). Card lines 1 and 7.
 
-## 2 — Kaggle CPU sessions are the bottleneck, the queue is not ranked, and the overflow is landing on the tenants' box
+## 2 — Pilot 2's rule is about to be written from a card of a world that will not be the pilot's world
 
-From about 20:40 all four sessions were held by: `f3` (cannot change the
-pilot's reading — "f3 only adds"), `e0` and `e1` (reported-only arms of a
-pilot already void), and `W1.04` (three sequential kernels, about 5 h each;
-it took a fifth session at launch against the header's "use 4", INBOX 20:48).
-Two worker slots then "could not steer" (INBOX 22:13, 22:40) and fell
-through to "Next up"; J3 (4), J6's speed column, J10's smoke and the MLX step
-each wait on one session.
+`spawn_clear` R = 1.55 m was measured on 180 lives (`4978e989`). The card's
+2,000 do-nothing lives show it leaks: every do-nothing meal came from one
+spawn ring at 1.577 m — 2 of 65 lives there lived fed, 36 meals each; 0
+meals in 1,935 lives born ≥ 1.6 m away (`PILOT_B2.md`, statue-leak table).
+A probe is running to say whether the body slides to the food or the food is
+shoved to the body (`statue_leak_probe`, run 2, PID 2990523; run 1 VOID by
+its own frozen rule and its bug fixed — handled correctly).
 
-At 00:23 the overflow went to the box: `inhouse_rows run … ppo-needs
---workers 2`, estimated 2.4 CPU-hours (`ORDERS.md:123`), against the header's
-line that anything over 15 CPU-minutes goes to Kaggle. At 00:38: two cells
-at 96–97% of a core each, nice 19, box load 2.7 on 4 cores. It is inside the
-two hard caps (2 computing jobs; day meter 755 of 57,600 s), and the worker
-wrote down what it did. But the same question was asked at 12:10 for row 4d
-and has no ruling, and six more in-house arms follow this one — `wm-latent`
-is priced at about 7 CPU-hours. Unruled, the default becomes "when Kaggle is
-full, use the box". Card line 6.
+The order says the card comes BEFORE any rule, "with `spawn_clear` on". If R
+is now repaired — and it should be, it is cause (a) of J8's VOID — the card
+measured a different world from the one the pilot runs in. Three ways
+through, and choosing among them after reading the card is the fitted rule
+ruling 30 exists to prevent:
 
-## 3 — The clerk cannot re-buy two certificates that gate everything in his world
+- re-measure the do-nothing and held-8 floors on the repaired world (the
+  card cost eight kernels of ~8 h; a do-nothing-only re-measure is far less);
+- keep R = 1.55 and let the floor clause carry the leak;
+- drop the 1.577 m ring from the card after the fact — a filter chosen
+  with the answer in hand; I would not accept it.
 
-`regate` skips any certificate whose last run exceeded its 600 s "cheap"
-label: `LC.02` (648 s) and `W1.02` (692 s), every two hours (INBOX 14:15,
-20:40). After J9's edit to `w0.py` staled nine certificates, `LC.02` — which
-`default_cal()` needs before any pilot kernel can be built — and `W1.02` —
-which `W1.04` depends on — had no owner. `W1.04` sat blocked for about eight
-hours until a worker noticed and re-bought `W1.02` by hand
-(`ladder.log:19954`). Both are green now; the next world edit (J6's
-integrator switch would stale 22) repeats it. This is a label, not a missing
-organ.
+Also for the rule, from the same page: arm K must be read against the k0
+floor (45 of 2,000 at W = 1; the method gives W = 2 for all four arms), and
+the K-with-learning-rate-0 floor has no card twin — the state line says so
+and calls held8-k0 a bound. The rule must say which floor each arm is read
+against before a learner seed runs. Card lines 3 and 4.
 
-## 4 — `NE.01` was closed as DONE with a FAIL and nobody owns its cause
+## 3 — `W1.04` died eleven hours after launch without running a seed, and the orders page still says it is in flight
 
-J7 (c) is marked DONE (`ORDERS.md:228`): the fatigue probe now passes, and
-the spec is still FAIL on two gates — 5 of 5 random deaths are hyperthermia
-(share 1.0 against 0.60), and the scripted forager died of heat on 1 of 3
-seeds. The worker's own line: "a world order, not a re-run, is what moves
-it" (INBOX 20:40). The red has stood since the needs-clock race was filed
-on 11-13; `NE.01` blocks eight specs in `run blocked`; no open order names
-it. J7's header reads "a failure is fixed, not filed". Heat is a stage-3
-need under PLAN, so parking it may be right — but parked is a ruling with a
-date, and today it is neither parked nor ordered.
+`/data/jack-logs/j7/w104.log`: launched 11-16 20:39, exit 1 at 11-17 07:39 —
+`RuntimeError: W1.04 kaggle-cpu s0: all backends failed: kaggle-cpu:
+status=queued`. It sat queued behind the pilot's kernels for eleven hours,
+holding one of the box's two detached seats (it refused J11's c2 at 07:40,
+`LOOP_JOURNAL.md:2075`), and wrote an ERROR row. The 08:00 slot recorded
+"W1.04 gone" and moved on; `ladder.log:20600` carries the live notice asking
+the next slot to read the log, and no slot did. `ORDERS.md` still reads
+"`W1.04` (in flight from J7, now closed) yields between seeds" with queue
+rank 6 for "remaining seeds". There are no seeds done. `W1.04` is on M2's
+done-when list and no open order owns it. A failure filed, not fixed — small,
+but it is the earliest milestone's spec. Card line 4.
 
-## 5 — "REPRODUCES" has twice meant "passed on the second try"
+## 4 — `PS.02`: the ruled cure does not work, and the next move is to change the probe on a spec that has been red 97 days
 
-Rows 1, 2 and 4 of the known-answer table each missed on 5 seeds and were
-re-registered at 15 fresh seeds against the unchanged band
-(`KNOWN_ANSWERS.md:12-25`). Each re-run had its rule committed first, the
-band never moved, row 4 kept missing and was reported as a miss, and
-PROGRESS tells the owner. So nothing here is hidden and nothing B's seat
-rests on depends on it (B's own arm was in band on row 1 at both looks; row
-3b is 5 of 5). But a miss-then-retry that was never part of the first rule
-is a second look, and row 2b's REPRODUCES exists only by it. Row 4d did this
-properly — one extension, written into the rule before the first seed. That
-should be the form for every remaining row, including brain A's.
+`441ac2f1` (pilot seed 90, no ledger write, spec file untouched — done
+properly): ruling 12's no-fire cure moves the probe from R² 0.290 to 0.309
+against a bar of 0.50. The worker's reading is that the cold IS in his senses
+(R² 0.998 on the two thermal floats alone) and the generic probe is drowned
+by 80 irrelevant inputs. That may be right. It is also exactly the shape of
+"a failing spec rewritten until it passes": a new probe, chosen after seeing
+which one succeeds. It waits on the Director, correctly. If a new probe is
+ruled it needs its rule first, seeds that are neither 90 nor 0–2's seen
+lives, the bar unmoved at 0.50, and a control that must fail (the same probe
+on the 80 non-thermal inputs read −0.83 — that is the natural one). `PS.02`
+holds `LF.01`, `SH.01`, `SH.02`; thermal and shelter are CLAIM-DEAD in
+`coverage`. Stage 3 under PLAN, so no hurry — which is the reason to rule it
+slowly. Card line 4.
+
+## 5 — S10 is untaken and the thing it guards against has happened again
+
+Ordered 11-17 06:50, state "open". Both SYSTEM slots went to S9 (rightly
+first). Meanwhile `jack_env.py` moved three times (`4978e989`, `9e4031bb`,
+`e7c5011c`) and INBOX 07:31 warned `LC.02` / `W1.02` would read stale. Both
+read PASS in `run status` now, so either they were re-bought by hand again
+or the options did not stale them — I did not trace which. `run stale` lists
+45 claims against changed code and one row from a modified tree (`PL.02`,
+VOID). No harm today; the pilot kernels will need `LC.02` green the hour the
+rule is committed.
 
 ---
 
 ## FOR THE DIRECTOR
 
-1. **Rule on the decisive test before anything in J8 re-runs** (finding 1):
-   the consecutive-lives mark, the spawn rule, and a floor clause sized from
-   the measured floor rate — registered first, fresh seeds. Say which of the
-   two causes (statue fed by contact; body charged for moving) is repaired
-   first, and keep "0 of 2,350 against 7.8 expected" in PROGRESS beside the
-   word VOID.
-2. **Rank the Kaggle CPU queue and answer the box question** (finding 2):
-   whether reported-only arms and a 15-hour repair run outrank J3, J6 and
-   J10 for a session; whether `W1.04` keeps its seat between seeds; and
-   whether a multi-hour run of short cells may use the box when Kaggle is
-   full — the 12:10 INBOX line, now asked twice.
-3. **Have the SYSTEM lane re-label `LC.02` and `W1.02`** or hand
-   over-label certificates to a named lane (finding 3), before J6's
-   integrator ruling stales 22 more.
-4. **Give `NE.01` a fate** under S9 — ordered, or parked to stage 3 with a
-   date (finding 4).
-5. **Make "one extension, written before the first seed" the rule for every
-   known-answer row** still to run (finding 5).
-6. One line of bookkeeping: `coverage` prints three floors that did not
-   follow their counters down (UNREACHABLE reads 107 against 115,
-   FAIL-UNOWNED 0 against 1, PASS-ON-DEAD-DEPENDENCY 4 against 6); `verify`
-   prints VENUE undeclared 266 against 256; four owner commitments remain
-   CLAIM-DEAD (shelter, advised-not-commanded, tree-fire-shelter world,
-   thermal) — known, stage 3, not work for today.
+1. **Rule the eye's frame before J12 spends its seeds** (finding 1). I would
+   order `jack_env(eye_frame="body")` as the lab specifies, have the J12
+   gate say in one line whether its forager uses heading it is not given,
+   and run the frozen gate on the body-frame eye — or on both, declared
+   before the run. Say which eye J11's arms see. If J12's kernels are
+   already up when you sit, let them finish and read them as the compass
+   eye's ceiling, not the eye's.
+2. **Rule R and the card together, before the rule is written** (finding
+   2): wait for the probe's reading; repair `spawn_clear` by its cause; say
+   in advance whether the floors are re-measured on the repaired world or
+   the leak stays and is carried by the floor clause. No post-hoc filtering
+   of the card. Answer INBOX 19:45 (`native_substep` on or off for the
+   pilot) in the same ruling.
+3. **Give `W1.04` an owner or a parked line with a date**, and correct the
+   header and queue rank 6 (finding 3). A detached job that can sit queued
+   for eleven hours on a seat needs a queue timeout — one line for S-lane
+   "Next up" (4), not a new order.
+4. **`PS.02`'s probe**: rule first, fresh seeds, bar unmoved, the
+   non-thermal-inputs control (finding 4) — or leave it red until stage 3.
+5. **S10 next in the SYSTEM lane**, before J11's rule commit (finding 5).
+6. The idle-slot list is exhausted (INBOX 17:25, 17:50: the shaping grid,
+   RL² and Speech Commands learners each need a Kaggle rank). Yesterday's
+   idle slots did real work (two task reproductions, the dial gate, the Mac
+   rows) — refill the list or they will tend the machine.
+7. Bookkeeping, one line: `verify` VENUE undeclared 266 against baseline 256
+   (unchanged since yesterday, still printed as GREW); `run status`
+   STEERING-PAGE ORDERS parses 0 items from 3 pages because it looks for a
+   `FOR THE BUILDER` heading the reorganisation retired; `run ratchets`
+   exits 2 on two floors no order owns (INBOX SYSTEM 11-17); four owner
+   commitments remain CLAIM-DEAD (shelter, advised-not-commanded,
+   tree-fire-shelter world, thermal) — stage 3, known.
 
-**Machine.** All organs alive and inside cadence: ladder iterating hourly
-(rc 0), Director stamp 11-16 06:41 (18 h), review 11-16 06:45, scout Monday
-05:54, regate 22:53. `main` level with origin. `/` 4.2 GB free (86%), `/data`
-48 GB. `experiments/cpu_budget.json` is dirty only as the live meter of the
-running jobs.
+**Machine.** All organs alive and inside cadence: ladder hourly, 26 of the
+last 26 iterations rc 0, none refused; Director stamp 11-17 06:50 (18 h);
+review 11-17 06:43; scout Monday 11-16 05:54 (next Thursday); regate 23:03.
+`main` level with origin. `/` 5.7 GB free (81%, up from 4.2), `/data` 46 GB.
+The tree is clean but for this page.
 
-**Free compute.** GPU week W46 (turns Saturday 11-21): Kaggle 33.76 h
-against 30, unchanged since yesterday's finding — nothing left to expire.
-Colab 3.82 h, which bought brain A's speed row. Kaggle CPU carried the day
-and is the scarce thing now (finding 2).
+**Free compute.** GPU week W47 has no charged job: Kaggle's quota reads 0 h
+until Saturday 11-21 00:00 UTC (W46 spent 33.76 h of 30), and J14 has brain
+A's three rows frozen and smoke-tested for that hour — nothing expired
+unused. Kaggle CPU carried the day (eight ~8 h kernels for the card), and
+the ranked queue held: no side run kept a session an order waited for,
+except the eleven hours in finding 3.
 
 ## FOR THE OWNER
 
-Nothing that needs your decision today. The armed default on recordings of
-people (they may judge how he moves, never sit inside him) fires at the end
-of the month if unanswered.
+Nothing that needs your decision today. One thing to know: his eye, old and
+new, has been pointing by the world's compass rather than by where he faces
+(finding 1). Nothing has been claimed on it yet; it is being put right
+before anything is.
