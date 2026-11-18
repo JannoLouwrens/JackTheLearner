@@ -2527,3 +2527,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `0bf84989`: rows 5–6 rule from SimBa@7d0358b1's code (2×256 SAC, UTD 2, 5k warm-up, 10 deterministic evals); bands 837.9–868.1 (swingup 50k), 726.9–826.1 / 929.9–1000 / 905.7–1000 (sparse, reacher easy/hard, 150k); lib/ours/never-trains ctrl; six differences listed. `test_brain_b_dmc` PASS 4/4.
 - Box probe (price only): ~15–20 ms/update → row 5 ~2 h one kernel; row 6 split per task. Row 7 not started.
 - Philosophy served: 3 and 4 (brain B must reproduce a published number on standard tasks before it holds his seat; the control must fail).
+
+## 2026-11-18 17:22–17:50 UTC · JACK · Next-up 2 (brain B row 7, recurrent SAC) — short slot
+- Kaggle 4/4 still RUNNING (f3 both watchers alive, ends ~17:53; f6, f7, J12 d=1); J11's rule waits on the motor-frame ruling; nothing to launch → Next-up 2's last row.
+- Read row 7 at source before writing a rule: `pomdp-baselines@e7c19c32` rnn.yml = LSTM-128, separate, whole 200-step episodes, γ 0.9, batch 32, 51,000 steps; PRIORS said GRU-64. The paper (e-print tex + figure) gives Pendulum-V only as a curve (separate ≈ −170, shared ≈ −350…−750 at 50k); −168.6 ± 3.5 and the 5-step −1,380 are untraceable (authors' data.zip 404). Corrected PRIORS §5 (`69935227`).
+- Ran their code unmodified on the box (sb3-17 venv, 3 declared import shims, `experiments/brain_b_row7_shim.py`): init episodes −1,074…−1,348; first 200 updates did not log in 14.5 min → > ~4 s/update vs PRIORS' 0.3 s. Not a reading; threads=1 untested.
+- Philosophy served: 4 (a rule built on a number nobody published would have been a fake bar) and 3 (brain B's memory row is read from the record, not assumed).
