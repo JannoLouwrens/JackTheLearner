@@ -2442,3 +2442,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found and corrected before seed 0: the rule said "torso x (info x_position)", but on v4 that field is the centre of mass — the rule now names centre of mass (`61e2950f`).
 - `evaluate` + `control_run` coded; the late-start control's 50k steps on the box: R 67.96, M 0.03 m/1000, 0 updates — holds (< 500). 50k env steps in 32 s.
 - Philosophy served: 4 (the walk row's metric and control fixed and checked before any number exists) and 1 (the body he will walk with).
+
+## 2026-11-18 10:22–10:35 UTC · JACK · J10 (2′) training segment + resume test — short slot (all 4 Kaggle sessions RUNNING: J11 f2/f3/f4, J12 d075; f2 local wrap alive)
+- Nothing home, no session free; J12/J3/J14/J15/J13 wait on a session or Saturday, so the order of work fell to J10's next step.
+- `train_segment` (`23e375be`): fresh or loaded model + replay buffer, trains to the next 500k mark or 10.5 h wall, saves both, evaluates only at exactly 1M/2M, env reseeded seed*1000+segment, as the frozen rule says.
+- Box `resume_check` (10k + 10k, learning_starts 1k): steps 10000→20000, buffer 20000 carried, updates 9000→19000 (learning_starts not re-applied), params + actor optimiser state equal in memory vs after load, a fresh model differs (control), ent_coef 0.090 carried. RESUME OK. Not exercised: the wall-time stop.
+- Found: Humanoid obs are float64 — a full replay checkpoint is ~6.1 GB, not the rule's 3.1 GB; still fits Kaggle's 20 GB output.
+- Philosophy served: 4 (a 2M-step row can only be honest if the run is provably one run across sessions) and 1 (the body he will walk with).
