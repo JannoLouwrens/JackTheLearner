@@ -2335,3 +2335,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - test_pilot_b2_kernels PASS: exact cover of 40 runs; must-fail refusal fires; K and held8 children at T=300 (seed 901, outside every range) rc 0, world stamped ff/dial; reassembly from cell files. Scar: the project venv has no sbx — learner children need `/data/venvs/jack-std/bin/python`.
 - Committed the dirty cpu_budget receipts with it.
 - Philosophy served: 4 (no learner can be launched before its rule exists — the guard is in code) and 5 (the rule-to-pilot wait is now one command).
+
+## 2026-11-18 02:22–02:45 UTC · JACK · Next-up 1 (the ear sized) — all 4 Kaggle sessions busy (J11 f0/f1, J12 d075/d100 RUNNING)
+- Every ranked order waits on a session; J11's rule is the 07:07 strong slot's (needs f0/f1's card). Next-up 1's last open row was the learned ear (Speech Commands keyword spotting).
+- Vendored the authors' BC-ResNet verbatim (`Qualcomm-AI-research/bcresnet@656f947a`, recipe read from main.py/utils.py): 9,232 weights = published 9.2K. Probe `kws_cost_probe.py` (`9b086c32`): 785 ms a training step at batch 100 + 59 ms log-mel → 200 epochs ≈ 41 CPU-h a seed. NOT RUN; KNOWN_ANSWERS N7-kws.
+- RESEARCH correction (INBOX): PRIORS §7's "one CPU session each" does not hold at the published recipe; it is a free-GPU row, and the official 12-class test set is not on the box.
+- Philosophy served: 3 and 2 (his ear's design goes through a published reproduction first, priced from the authors' own code before any money of time is spent).
