@@ -2347,3 +2347,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `experiments/brain_a/official_speed.py` (`9ba4e682`): dreamerv3@e01491f's own make_agent/train, unmodified, fixed batches, 30-in/6-out = mac_dreamer's shapes (m9 asserts it), float32 CPU. Trained weights 641,641 = sheeprl's 1M count exactly (agent.params also holds opt state/slowval — 1.99M raw; first smoke misread that, fixed before commit).
 - Box 1 thread, size1m: JAX 0.925 grad steps/s vs sheeprl 0.458 (~2×, 10 timed steps — a smoke, not a reading). Rows 1–10 automated; 11, 12 Mac-only by nature.
 - Philosophy served: 5 (the Mac's first day measures the brain-A runner choice on official code in one command) and 6 (free compute: the move to the owner's machine is priced, not guessed). Weak link to the creature itself — honest: this is machine-readiness work taken because every creature order waited on Kaggle.
+
+## 2026-11-18 ~03:11 UTC · SYSTEM · S9 slot 3 (settled FAILs fated, `a2890c28`)
+- 4 fated by (ii): LG.10/.12/.14 `ruling-1` (Director 11-11: frozen-mouth verdicts stand, credit none to Jack), T0.27 `D16` (fired default: red on purpose). Notes only — unhashed, 0 certificates staled.
+- 4 asked (iii) under INBOX: PS.05/.06/.08 pass every world gate and fail only the legibility probe (same defect JACK found in PS.02 21:40); T0.32 fails only because 16 long-run impls skip `require_feasible`.
+- 12 ids left (6 asked). coverage/decisions/champions exit 0; FAIL-UNOWNED floor 1 left until the list is empty, per the order.
+- Philosophy served: 4 (a failure gets a named fate or an owner, not a closed queue).
