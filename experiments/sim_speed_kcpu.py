@@ -46,21 +46,44 @@ tests/test_native_substep_env.py, which needs lazy audio):
   above (2b)'s 1.97x ceiling, which was priced on a different world/seed
   (substep_split.py, seed 153, J8 shipped cal) — read the test's per-seed
   range as the sturdier figure. Kaggle column for native: NOT measured (the
-  C build and its identity must be proven on Kaggle's BLAS first).
+  C build and its identity must be proven on Kaggle's BLAS first) — now
+  measured, see NATIVE ON KAGGLE below.
 
-NATIVE ON KAGGLE — kernel READY 11-17 13:00, not yet run. `kernel` now first
-runs `native_identity(300)` (rule in its docstring, fixed before any run:
-cases A + D x seeds 153-155 exact, >= 1 death each, dt+1ulp control must
+NATIVE ON KAGGLE — RESULT (kernel jack-cpu-1794978482, 11-18 05:08-05:15,
+HEAD 591569c9, mujoco 3.17.0, python 3.13.18, numpy 2.1.3, 4 cpus, x86;
+`/data/jack-logs/j6/kcpu_speed.json`). Rule fixed 11-17 13:00 (below, kept).
+IDENTITY PASS: cases A and D x seeds 153-155, 0 of 300 decisions differ on
+all six pairs (deaths 2/2/1 each, so rebirth is crossed); dt+1ulp control
+differs on all 3 seeds (60, 138, 238 of 300; first at 172, 20, 36). So the
+native C is exact on Kaggle's BLAS/FMA order too, not just the box's.
+  config                      dec/CPU-s   x shipped   (box T=300, x)
+  shipped                        71.0       1.00
+  lazy                           85.9       1.21      (1.24)
+  implicitfast (WORLD CHANGE)    93.3       1.31      (1.65)
+  lazy + implicitfast           121.9       1.72      (2.45)
+  multiray                       70.0       0.99      (not a lever)
+  lazy + native                 169.8       2.39      (1.91)  identical world
+  lazy + native + implicitfast  400.2       5.64      (5.74)  world change
+  vec4 shipped                  137.5 wall  39.5/CPU-s (incl. start-up)
+  vec4 lazy + implicitfast      247.7 wall  73.5/CPU-s (incl. start-up)
+  Identical-world best on one Kaggle core: lazy + native 169.8 dec/CPU-s
+  (2.39x shipped) -> 1M decisions ~1.6 CPU-h; with implicitfast (a world
+  change, needs the Director's ruling + the 22-cert re-cert list in
+  tests/test_integrator.py) 400 -> ~0.7 CPU-h. One run each, T=3000, load
+  0.67 at start: ratios, not error bars. The Kaggle column was the last
+  open J6 item.
+
+Rule as frozen 11-17 13:00: `kernel` first runs `native_identity(300)`
+(cases A + D x seeds 153-155 exact, >= 1 death each, dt+1ulp control must
 differ on all 3 seeds; else the option is box-only), builds the C under
 JACK_NATIVE_DIR=/tmp/jack_native against the wheel's own headers, then the
 speed rows incl. the two native ones. PRE-CHECK on the box under Kaggle's
 pins (jack-std venv: mujoco 3.17.0, gymnasium 1.4.0, py3.12; still THIS
-box's aarch64 — Kaggle's x86 FMA order is what the kernel tests): the C
-compiles clean against 3.17 headers; A 0/0/0 of 300 differing (deaths
-2/2/1), D 0/0/0 (2/2/1), control seed 153 differs 85/300 (first at 108);
-lazy -> lazy+native 64.8-93.8 -> 99.3-153.4 dec/CPU-s; under implicitfast
-108-142 -> 254-363. (3.17 changes the world: case A seed 155 dies once
-where 3.2.3 died twice — a pin difference, not a native one.)
+box's aarch64): the C compiles clean against 3.17 headers; A 0/0/0 of 300
+differing (deaths 2/2/1), D 0/0/0 (2/2/1), control seed 153 differs 85/300
+(first at 108); lazy -> lazy+native 64.8-93.8 -> 99.3-153.4 dec/CPU-s; under
+implicitfast 108-142 -> 254-363. (3.17 changes the world: case A seed 155
+dies once where 3.2.3 died twice — a pin difference, not a native one.)
 
 Usage: $PY -m experiments.sim_speed_kcpu box [T] [identity_N]   # local, small T
        $PY -m experiments.sim_speed_kcpu kernel      # one Kaggle CPU kernel

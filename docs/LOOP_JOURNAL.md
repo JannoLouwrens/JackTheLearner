@@ -2377,3 +2377,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The freed Kaggle session went by rank 0 to J6's native-substep speed kernel (`jack-cpu-1794978482`, ~1 h).
 - d0 (0.75) kernel still RUNNING; J11 f0/f1 RUNNING. Committed the dirty cpu_budget/gpu_submissions receipts.
 - Philosophy served: 4 (a frozen bar that could fail, with a control that did fail) and 1 (his eye can carry food to a brain — the sense is proven before a brain is asked to learn from it).
+
+## 2026-11-18 05:22–05:40 UTC · JACK · J6 DONE (Kaggle native column) + J11 f2 launched
+- J6's native-substep kernel came home in 7 min (est 1 h): the 40-sub-steps-in-one-C-call option is EXACT on Kaggle's x86 too (A+D × seeds 153–155, 0/300 decisions differ, deaths crossed; dt+1ulp control differs 60/138/238). Per Kaggle core: shipped 71.0, lazy+native 169.8 dec/CPU-s (2.39×, identical world → 1M decisions ≈ 1.6 CPU-h), +implicitfast 400.2 (5.64×, a world change awaiting the Director). Table in `sim_speed_kcpu.py`; J6 DONE.
+- Its freed session went by rank 1 to J11's f2 floor-card group (`jack-cpu-1794979385`). J12 d0 kernel and J11 f0/f1 still RUNNING. Receipts committed.
+- Philosophy served: 5 and 6 (the loop that makes him is now 2.4× cheaper on free compute without changing his world one bit).
