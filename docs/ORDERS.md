@@ -202,7 +202,8 @@ Inside him the layer KEEPS LEARNING (owner 11-15 19:21).
 serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked in parallel from now" · philosophy 1, 2.
 **done when:** row (2′) is in `KNOWN_ANSWERS.md`, pass or fail.
 state: (1) DONE: Humanoid-v5 floor reproduces (random 109.9, zero 198.5). Yu pinned `b50478f8`, rule `experiments/yu2018_walk.py`; smoke never run.
-state: next: (2′)'s rule + kernel body; launch at rank 5.
+state: (2′) RULE FROZEN `experiments/humanoid_sac_row.py` (11-18 slot): Zoo entry (2M, learning_starts 10k, SB3 defaults set explicitly in SBX), seeds 0–2, PASS R ≥ 5,950 AND ≥ 12 m/1,000 steps on ≥ 2/3, 1M median in [3,784, 5,866] else named miss, late-start control < 500 else VOID; resume = 500k/10.5 h segments with model + replay buffer (~3.1 GB) as kernel source.
+state: next: read the Zoo's sac.yml at a pinned commit (the entry is from memory — correct the rule block BEFORE seed 0 if it differs), then the kernel body + 50k box smoke of the control; launch at rank 5.
 
 **Parked or closed:** `D1.0`, `T2.01` (→ J10), `LF.06`, `LC.09`, `CR.01`,
 `LF.04` — "to earn again" on the chosen brain (ruling 20). `NE.01` → stage 3
