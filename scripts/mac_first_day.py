@@ -32,13 +32,15 @@ Rules this script obeys (§10 "Take as-is"):
     `platform.system()` branch. On the Linux box it runs as a smoke (CPU
     rows only; MPS/MLX rows SKIP).
 
-Automated here: 1-8, 9's sheeprl arms, 10, and 11's MPS-context line. Rows 9
-and 10 run `experiments/brain_a/mac_dreamer.py` (sheeprl's own agent and
-train(), fixed data; row 10's pass/divergence rule is in its docstring) under
-the interpreter in JACK_SHEEPRL_PY (default: this one; SKIP without
-sheeprl==0.8.5). NOT automated (printed as NOT_AUTOMATED with the command to
-run by hand):
-  9  the official-JAX arm of row 9 (the jack-dv3 venv);
+Automated here: 1-10 and 11's MPS-context line. Rows 9 and 10 run
+`experiments/brain_a/mac_dreamer.py` (sheeprl's own agent and train(), fixed
+data; row 10's pass/divergence rule is in its docstring) under the interpreter
+in JACK_SHEEPRL_PY (default: this one; SKIP without sheeprl==0.8.5). Row 9's
+official-JAX arm runs `experiments/brain_a/official_speed.py` (dreamerv3@e01491f's
+own make_agent/train, same 30-in/6-out shapes, float32, CPU) under JACK_DV3_PY
+with the checkout at JACK_DV3_SRC (defaults: the box's jack-dv3 paths; an arm
+whose interpreter is missing SKIPS alone). NOT automated (printed as
+NOT_AUTOMATED with the command to run by hand):
   11 renders from a logged-in session, SSH, LaunchAgent, LaunchDaemon — needs
      the four contexts set up; this script records which context it ran in;
   12 the 24 h soak behind a wall meter.
@@ -55,6 +57,11 @@ outside, `--quick --procs 1,2`; a smoke of the script, not a Mac estimate):
     SBX 2 runs 39.5 each (1.28x) before XLA single-threading was added
   7 numpy f32 1024^2 0.04 TFLOPS; 8 torch GRU cpu b16 1,459 us, b1024 37,492 us
   9 10 12 NOT_AUTOMATED; 11 context terminal, MPS false; MPS/MLX rows SKIP.
+Row 9 JAX arm, box 11-18 02:40 (official_speed --size 1m --warm 3 --timed 10, 1 thread):
+  0.912 grad steps/s (1,096 ms/step), metrics finite; 641,641 trained weights = sheeprl's 1M count.
+  Through `--only 9 --quick` (92 s): JAX cpu 1M 0.925/s beside sheeprl cpu 1M 0.458/s at the same
+  641,641 weights (~2x; 10 timed steps, a smoke not a reading); MPS SKIP. Both interpreters absent ->
+  the row SKIPS with both reasons.
 """
 from __future__ import annotations
 
@@ -82,8 +89,6 @@ ESTIMATE = {  # §10's scaled figures, verbatim, so each row prints beside its g
     11: "MPS available in which launch contexts",
 }
 NOT_AUTOMATED = {
-    9: "official JAX (CPU) Dreamer grad steps/s only — the sheeprl CPU/MPS arms are automated (m9); "
-       "JAX needs the jack-dv3 venv (experiments/brain_a/README.md); same harness on the T4.",
     11: "2,000 renders of a 64x64 eye frame logged in, over SSH, from a LaunchAgent and from a "
         "LaunchDaemon after a no-login reboot; run this script with --only 11 in each context.",
     12: "24 h soak: 6 world processes (--only 5 --procs 6 --seconds 86400) + 1 Dreamer learner on MPS, "
@@ -423,16 +428,52 @@ def _harness(py, args, timeout):
     return json.loads(line)
 
 
+def _dv3_py():
+    """The official-JAX arm: JACK_DV3_PY (a venv with dreamerv3@e01491f's requirements) + JACK_DV3_SRC
+    (the checkout at e01491f). Defaults are the box's paths; a missing one SKIPS only this arm."""
+    py = os.environ.get("JACK_DV3_PY", "/data/venvs/jack-dv3/bin/python")
+    src = os.environ.get("JACK_DV3_SRC", "/data/src/dreamerv3_e01491f")
+    if not Path(py).exists() or not (Path(src) / "dreamerv3" / "configs.yaml").exists():
+        return None, None
+    return py, src
+
+
+def _official_arm(py, src, size, warm, timed):
+    from experiments.brain_a import official_speed as osp  # stdlib-only at import
+    from experiments.brain_a import mac_dreamer as md
+    assert (osp.OBS_DIM, osp.ACT_DIM) == (md.OBS_DIM, md.ACT_DIM), "the two arms must time the same shapes"
+    p = subprocess.run([py, "-m", "experiments.brain_a.official_speed", "--src", src, "--size", size,
+                        "--warm", str(warm), "--timed", str(timed)], capture_output=True, text=True,
+                       timeout=6 * 3600, cwd=str(REPO), env=_one_thread_env())
+    line = (p.stdout.strip().splitlines() or [""])[-1]
+    if p.returncode != 0 or not line.startswith("{"):
+        return {"status": "FAILED", "rc": p.returncode, "stderr": p.stderr[-800:]}
+    return json.loads(line)
+
+
 def m9(a):
-    """sheeprl dreamer_v3_5 grad steps/s, CPU (1 thread) and MPS, 1M then 12M (experiments/brain_a/mac_dreamer.py)."""
-    py, ver = _sheeprl_py()
+    """Dreamer grad steps/s, 1M then 12M: sheeprl dreamer_v3_5 CPU (1 thread) and MPS
+    (experiments/brain_a/mac_dreamer.py), and the official JAX code on CPU (experiments/brain_a/official_speed.py)."""
     warm, timed = (5, 10) if a.quick else (500, 500)
-    rec = {"sheeprl": ver, "python": py}
     sizes = ["1M"] if a.quick else ["1M", "12M"]
-    for size in sizes:
-        for dev in ("cpu", "mps"):
-            rec[f"{dev}_{size}"] = _harness(py, ["speed", "--device", dev, "--size", size,
-                                                 "--warm", str(warm), "--timed", str(timed)], 6 * 3600)
+    rec = {}
+    try:
+        py, ver = _sheeprl_py()
+        rec.update(sheeprl=ver, python=py)
+        for size in sizes:
+            for dev in ("cpu", "mps"):
+                rec[f"{dev}_{size}"] = _harness(py, ["speed", "--device", dev, "--size", size,
+                                                     "--warm", str(warm), "--timed", str(timed)], 6 * 3600)
+    except Skip as e:
+        rec["sheeprl_arms"] = f"SKIPPED: {e}"
+    dpy, src = _dv3_py()
+    if dpy is None:
+        rec["jax_arm"] = "SKIPPED: set JACK_DV3_PY / JACK_DV3_SRC (experiments/brain_a/README.md §0.2b)"
+    else:
+        for size in sizes:
+            rec[f"jax_cpu_{size}"] = _official_arm(dpy, src, size.lower(), warm, timed)
+    if not any(isinstance(v, dict) for v in rec.values()):
+        raise Skip("; ".join(str(v) for v in rec.values()))
     return rec
 
 
