@@ -2563,3 +2563,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - m2 (body-motor floor twin) home 20:46: held8-k0-ff-bm 1/250 sustained (upper 1.90%), k1-ff-bm 0/250 — two worlds only, interim, written to PILOT_B2 §2b. k0 reads below the world-motor floor (expect 4.7, P(≤1)=0.05) — not a reading yet.
 - m4 launched into the freed Kaggle session (`jack-cpu-1795037006`); m0, m1, m3 still RUNNING (watchers alive, untouched). m5–m7 next as sessions free.
 - Served philosophy 4 (the floor a learner must beat is measured, not borrowed) and 7 (floors in the body frame the finished Jack will have).
+
+## 2026-11-18 21:37–21:55 UTC · JACK · J11 (m0 harvest) — short slot
+- m0 (body-motor floor twin) home 21:32. m-card interim 2/8 (`PILOT_B2.md` §2b): held8-k0-ff-bm 3/500 sustained (upper 1.55%), k1-ff-bm 0/500 (upper 0.60%). At the world-motor floor's rate k0 would show 9.4; P(≤3) = 0.016 — the body-motor held8 floor is likely LOWER, which is why floors must match the arms' frame. 4 of 16 worlds: not a reading.
+- m5 launch into m0's session refused by the load gate (6.7 > 6.0, other tenants' test runs); a bounded wait-then-launch loop ran in the slot — outcome in the state line.
+- Philosophy served: 4 (the floor a learner must beat measured in his own frame, not borrowed from the world-frame card).
