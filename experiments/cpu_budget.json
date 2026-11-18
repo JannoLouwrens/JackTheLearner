@@ -1400,17 +1400,18 @@
         "VO.01": 144.54,
         "W.1": 20.94,
         "W0.PL": 91.07,
+        "detached:launch2_d075.log": 31.37,
         "detached:launch_c6.log": 228.89,
         "detached:launch_c7.log": 215.96,
         "detached:launch_d075.log": 506.7,
         "detached:launch_d100.log": 400.83,
-        "detached:launch_f0.log": 383.11,
-        "detached:launch_f1.log": 383.51,
-        "detached:launch_f2.log": 134.97,
+        "detached:launch_f0.log": 414.4,
+        "detached:launch_f1.log": 414.41,
+        "detached:launch_f2.log": 176.69,
         "detached:launch_native.log": 8.54,
         "detached:statue_leak_r2_launch.log": 2567.89
       },
-      "used_s": 6416.46
+      "used_s": 6551.74
     }
   },
   "last_child_s": {
