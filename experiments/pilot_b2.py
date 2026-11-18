@@ -545,6 +545,74 @@ def pilot_kernel(name: str, rule: dict | None = None) -> dict:
               + (f" ERROR {rec['error']}" if "error" in rec else ""), flush=True)
     return r
 
+# ---- J11 item 5: the pilot's TABLE, descriptive only (11-18 06:40, NO rule yet)
+# Written before the rule and before any pilot run, so it decides nothing: no
+# W is chosen, no floor clause is applied, no reading (sustained / eats but
+# starves / slides) is printed -- those are the rule's. It transcribes, per
+# arm, the quantities the order names: sustained-mark crossings at W = 1/2/3
+# by the frozen harness (pilot_b_report.score; PILOT_T == pilot_b.T_RUN, so
+# its scorer applies unchanged), and the J8 early/late table (first 5 lives
+# vs last quarter; unfed life length). A cut or crashed run is flagged, its
+# lives kept ("crash" appended after its last life, ruling 19); how it COUNTS
+# is the rule's. Missing registered runs -> PARTIAL.
+def load_pilot(paths) -> tuple:
+    """{run_id: rec}, {run_id: file} from harvested pilot kernel files; a run id
+    in two files is an error, not a choice."""
+    runs, src = {}, {}
+    for p in paths:
+        for k, rec in json.loads(Path(p).read_text())["cells"].items():
+            if k in runs:
+                raise ValueError(f"{k} appears in {src[k]} and {Path(p).name}")
+            runs[k], src[k] = rec, Path(p).name
+    return runs, src
+
+
+def pilot_table(paths, seeds) -> tuple:
+    """(markdown, missing run ids). Arms in PILOT_LEARNERS + PILOT_FLOORS order."""
+    from experiments import pilot_b_report as R
+    if PILOT_T != R.T:
+        raise RuntimeError("pilot_table: pilot_b_report scores at T_RUN != PILOT_T")
+    runs, _ = load_pilot(paths)
+    reg = [R.rid(a, s) for a, s in pilot_cells(seeds)]
+    missing = [r for r in reg if r not in runs]
+    extra = sorted(set(runs) - set(reg))
+    out = [("**PARTIAL** -- " if missing else "") + f"{len(reg) - len(missing)} of "
+           f"{len(reg)} registered runs in" + (f"; missing {', '.join(missing)}" if missing else "")
+           + (f"; NOT registered (ignored): {', '.join(extra)}" if extra else ""), "",
+           "| arm | runs in | cut/crash | runs crossing W=1/2/3 | lives | sustained lives "
+           "| meals/life early -> late | % fed early -> late | unfed life s early -> late |",
+           "|---|---|---|---|---|---|---|---|---|"]
+    arms = PILOT_LEARNERS + PILOT_FLOORS
+    for arm in arms:
+        recs = [runs[R.rid(arm, s)] for s in seeds if R.rid(arm, s) in runs]
+        if not recs:
+            out.append(f"| {arm} | 0 of {len(seeds)} | | | | | | | |")
+            continue
+        xs = [R.run_stats(r) for r in recs]
+        sc = [R.score(r) for r in recs]
+        cr = [sum(sc_["sustained", W].event for sc_ in sc) for W in R.WS]
+
+        def m(key, f, scale=1.0, nd=2):
+            """Mean over runs of a run's early/late block field (NaN blocks skipped)."""
+            v = [x[key][f] for x in xs if x[key] and x[key][f] == x[key][f]]
+            return R._f(scale * st_mean(v) if v else None, nd)
+        out.append(
+            f"| {arm} | {len(recs)} of {len(seeds)} | {sum(x['crashed'] for x in xs)} "
+            f"| {'/'.join(map(str, cr))} | {sum(x['lives'] for x in xs)} "
+            f"| {sum(x['sustained_lives'] for x in xs)} "
+            f"| {m('early', 'meals')} -> {m('late', 'meals')} "
+            f"| {m('early', 'fed', 100.0, 0)} -> {m('late', 'fed', 100.0, 0)} "
+            f"| {m('early', 'unfed_s', nd=0)} -> {m('late', 'unfed_s', nd=0)} |")
+    out += ["", "Per run (pilot_b_report's columns):", "", R.RUN_HEAD]
+    for arm in arms:
+        out += R._arm_rows(runs, arm, seeds)
+    return "\n".join(out), missing
+
+
+def st_mean(v) -> float:
+    return float(sum(v) / len(v))
+
+
 def _poisson_upper(k: int, conf: float = 0.95) -> float:
     """One-sided upper bound on a Poisson mean given k events (exact)."""
     from scipy.stats import chi2
@@ -554,7 +622,7 @@ def _poisson_upper(k: int, conf: float = 0.95) -> float:
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel"])
+    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table"])
     p.add_argument("--arm", default="noop-k1")
     p.add_argument("--seed", type=int, default=601)
     p.add_argument("--lives", type=int, default=CARD_LIVES)
@@ -577,6 +645,13 @@ def main(argv):
         Path(a.out).write_text(json.dumps(rec) + "\n")
     elif a.cmd == "pilot-kernel":
         pilot_kernel(a.name)
+    elif a.cmd == "table":
+        seeds = (PILOT_RULE or {}).get("seeds")
+        if not seeds:
+            raise SystemExit("table: no frozen rule (PILOT_RULE) -> no registered seeds")
+        md, missing = pilot_table(sorted(OUT.glob("pilot_p*.json")), seeds)
+        print(md)
+        raise SystemExit(3 if missing else 0)
     elif a.cmd == "rule-inputs":
         print(rule_inputs(sorted(OUT.glob(a.glob))))
     else:
