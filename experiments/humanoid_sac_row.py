@@ -60,8 +60,9 @@ RULE (frozen in this commit, BEFORE the kernel body exists and before seed 0):
 
 STATUS: rule + eval + late-start control (`evaluate`, `control_run`; box smoke
 11-18) + `train_segment` (resume as the rule says; box resume test
-`resume_check`, 11-18) + Kaggle wrapper `kernel` (segment 0 only; later
-segments wait on kernel_sources in experiments/gpu.py, INBOX 11-18).
+`resume_check`, 11-18) + Kaggle wrapper `kernel` (segment n > 0 mounts
+segment n-1's kernel via gpu.py `kernel_sources`; the /kaggle/input/<slug>
+mount path is unverified until the first segment 1 runs — it fails fast).
 """
 from __future__ import annotations
 
@@ -275,20 +276,27 @@ def kernel(seed: int, segment: int = 0) -> dict:
     """Submit one resume segment as a Kaggle CPU kernel; write segment.json to
     /data/jack-logs/j10/sac_row/s<seed>_seg<segment>.json.
 
-    REFUSES segment > 0 today: experiments/gpu.py's run_on_kaggle writes no
-    `kernel_sources` into kernel-metadata.json, so a later segment cannot mount
-    the previous checkpoint (INBOX 11-18 10:50). It also downloads EVERY output
-    file (`kernels output` with no --file-pattern), so even segment 0 would
-    pull the ~6.1 GB checkpoint onto /data — also in that INBOX line."""
+    Segment n > 0 mounts segment n-1's kernel (named in its record's
+    "kernel" key) as a kernel source and resumes from /kaggle/input/<slug>;
+    REFUSES if that record is missing. Only segment.json is downloaded
+    (`fetch_only`), never the ~6.1 GB checkpoint."""
     from pathlib import Path
     import json
     from experiments.gpu import build_job, result_json, submit
-    if segment > 0:
-        raise RuntimeError("segment > 0 needs kernel_sources in experiments/gpu.py (INBOX 11-18)")
-    sub = submit(build_job(segment_job_body(seed, segment)), prefer="kaggle-cpu", est_hours=10.5,
-                 timeout_s=KERNEL_REMOTE_TIMEOUT_S, fetch=SEGMENT_FETCH)
-    r = result_json(sub, "segment.json")
     out = Path("/data/jack-logs/j10/sac_row")
+    sources, prev_dir = None, None
+    if segment > 0:
+        prev = out / f"s{seed}_seg{segment - 1}.json"
+        src = json.loads(prev.read_text()).get("kernel") if prev.exists() else None
+        if not src:
+            raise RuntimeError(f"segment {segment} needs {prev} with a 'kernel' key "
+                               f"(the previous segment's Kaggle kernel)")
+        sources, prev_dir = [src], f"/kaggle/input/{src.split('/', 1)[1]}"
+    sub = submit(build_job(segment_job_body(seed, segment, prev_dir)), prefer="kaggle-cpu",
+                 est_hours=10.5, timeout_s=KERNEL_REMOTE_TIMEOUT_S, fetch=SEGMENT_FETCH,
+                 kernel_sources=sources, fetch_only=True)
+    r = result_json(sub, "segment.json")
+    r["kernel"] = sub.job_id
     out.mkdir(parents=True, exist_ok=True)
     (out / f"s{seed}_seg{segment}.json").write_text(json.dumps(r, indent=1) + "\n")
     return r

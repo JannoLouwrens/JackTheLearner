@@ -28,8 +28,23 @@ def test_seed_outside_rule_refused_and_checkpoint_never_fetched():
     assert H.SEGMENT_FETCH == ["segment.json"]
 
 
-def test_kernel_refuses_later_segment_until_kernel_sources_exist():
-    _raises(RuntimeError, H.kernel, 0, 1)
+def test_kernel_refuses_later_segment_without_previous_record():
+    import os
+    if not os.path.exists("/data/jack-logs/j10/sac_row/s2_seg4.json"):
+        _raises(RuntimeError, H.kernel, 2, 5)
+
+
+def test_output_pattern_selects_only_fetched_basenames():
+    import re
+    from experiments.gpu import output_pattern
+    assert output_pattern(None) == [] and output_pattern([]) == []
+    flag, pat = output_pattern(["segment.json", "a.b+c.json"])
+    assert flag == "--file-pattern"
+    for name, want in [("segment.json", True), ("sub/segment.json", True),
+                       ("a.b+c.json", True), ("model.zip", False),
+                       ("replay.pkl", False), ("xsegment.json", False),
+                       ("segment.json.bak", False), ("aXb+c.json", False)]:
+        assert bool(re.search(pat, name)) is want, name
 
 
 if __name__ == "__main__":

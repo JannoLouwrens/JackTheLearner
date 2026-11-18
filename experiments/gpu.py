@@ -21,6 +21,7 @@ import fcntl
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -1085,10 +1086,30 @@ def _claim_reuse(reuse: str) -> Optional[str]:
     return None
 
 
+def output_pattern(fetch: Optional[list[str]]) -> list[str]:
+    """`--file-pattern` args selecting exactly the basenames in `fetch` (the
+    CLI `re.search`es each output file name); [] = download everything."""
+    if not fetch:
+        return []
+    names = "|".join(re.escape(Path(f).name) for f in fetch)
+    return ["--file-pattern", f"(^|/)({names})$"]
+
+
 def run_on_kaggle(script: Path, timeout_s: int = 1800,
                   fetch: Optional[list[str]] = None,
-                  journal: Optional[Path] = None, cpu: bool = False) -> JobResult:
+                  journal: Optional[Path] = None, cpu: bool = False,
+                  kernel_sources: Optional[list[str]] = None,
+                  fetch_only: bool = False) -> JobResult:
     """Push a kernel, poll to completion, retrieve output.
+
+    `kernel_sources=["user/slug", ...]` goes into kernel-metadata.json, so the
+    kernel mounts those kernels' outputs read-only under /kaggle/input/ (a
+    resume segment reads the previous segment's checkpoint there, J10).
+    `fetch_only=True` downloads only the files named in `fetch` (by basename;
+    the console log always comes too). Opt-in, because recovery paths such as
+    pilot_b2's `cells_from_artifacts` read artifacts never listed in `fetch`.
+    Without it a kernel with a ~6 GB checkpoint lands whole on /data — and the
+    CLI holds each file in memory while writing it.
 
     `cpu=True` (S1, backend "kaggle-cpu"): `enable_gpu:false`, no accelerator,
     so the session draws on no GPU quota — billable_s is 0 and `submit` charges
@@ -1149,6 +1170,7 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         "is_private": True,
         "enable_gpu": not cpu,
         "enable_internet": True,
+        "kernel_sources": list(kernel_sources or []),
     }, indent=2))
 
     job_id = f"{username}/{slug}"
@@ -1225,7 +1247,8 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     if status == "complete" or reuse:
         outdir = work / "out"
         outdir.mkdir(exist_ok=True)
-        _run([KAGGLE, "kernels", "output", f"{username}/{slug}", "-p", str(outdir)], 300)
+        _run([KAGGLE, "kernels", "output", f"{username}/{slug}", "-p", str(outdir)]
+             + output_pattern(fetch if fetch_only else None), 300)
         artifacts, log_path, k_out, k_err = _kaggle_collect(outdir, slug)
 
     if reuse:
@@ -1372,7 +1395,9 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
            gpu: str = "T4", timeout_s: int = 900,
            fetch: Optional[list[str]] = None,
            budget: Optional["Budget"] = None,
-           journal: Optional[Path] = None) -> JobResult:
+           journal: Optional[Path] = None,
+           kernel_sources: Optional[list[str]] = None,
+           fetch_only: bool = False) -> JobResult:
     """Run a job on whichever backend can take it. The job does not know which.
 
     Order: try `prefer`, fall back to the other. Kaggle is checked against its
@@ -1462,7 +1487,9 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
                             "pid": os.getpid()}, journal)
         res = (run_on_colab(script, gpu, timeout_s, fetch) if backend == "colab"
                else run_on_kaggle(script, timeout_s, fetch, journal,
-                                  cpu=backend == "kaggle-cpu"))
+                                  cpu=backend == "kaggle-cpu",
+                                  kernel_sources=kernel_sources,
+                                  fetch_only=fetch_only))
         stdout_path = ""
         try:  # the WHOLE stdout, before anything can fail; best-effort
             STDOUT_DIR.mkdir(parents=True, exist_ok=True)
