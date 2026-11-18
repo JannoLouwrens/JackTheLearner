@@ -48,4 +48,16 @@ The leak is 0.1% of lives and makes **no** W = 2 run (a statue life is followed 
 
 **The food-travel lead, chased (11-18 01:10–02:00).** The statue's food in 601/64 (obj1, a 0.13 m ball) was laid at (−3.06, 2.62) — on the 13° ramp. Cause in code: `_place_foods` drops each food at its FLOOR rest height and its clash test exempts every ground geom (floor, ramp, stair0–4), so on 32 of 610 legal cells (5.2%) a food starts buried in the ramp or a stair and is thrown out. `experiments/food_travel_probe.py` (rule frozen `25a58628` before any trace): 320 layouts × 3 foods over worlds 601–608, do-nothing body, 50 decisions. **Verdict by the frozen rule: "still"** — 7/706 foods born ≥ 4 m from him moved ≥ 0.5 m (0.99%, just inside the 1% line; "self-moving" needed ≥ 10%), 0/61 born < 2.2 m moved. Read beside the rule, not in it: all 12 movers at any distance had been laid on the ramp/stair footprints (61 of 960 foods laid there, 20% of them moved, up to 3.65 m); 0 of the 899 foods laid on flat floor moved. The body pushed nothing in 50 decisions. **Repair built, default off:** `jack_env(food_floor_only=True)` lays foods only outside the non-floor ground footprints (`adf457ca`; `test_food_floor_only` PASS — identity 2/2 seeds; on: 0 inside, 0/264 far movers; off control: 25 inside, 5/268 far movers). The floor card above was run WITHOUT it; switching it on is a world change and means re-running the card's noop arm at least.
 
+## 2b. The f-card — the floors re-measured on the repaired world (ruling 39; `food_floor_only=True`, world motor, compass-free floors need no eye)
+
+Interim, 7 of 8 groups home (f0–f6; **f7 = held8-k1-ff's last 4 worlds, RUNNING** `jack-cpu-1795015395`). `pilot_b2 card --glob 'f*.json'`, 18:10 UTC 11-18:
+
+| arm | worlds (cut) | lives | sustained | rate (95% upper) | runs W=1/2/3 | life s median (5–95%) | meals/life | lives fed | max meals |
+|---|---|---|---|---|---|---|---|---|---|
+| noop-k1-ff | 16 (0) | 2000 | 0 | 0.00000 (0.00150) | 0/0/0 | 550 (506–595) | 0.000 | 0.000 | 0 |
+| held8-k0-ff | 16 (2) | 1970 | 37 | 0.01878 (0.02471) | 37/0/0 | 735 (514–1483) | 2.466 | 0.688 | 20 |
+| held8-k1-ff | 12 (0) | 1500 | 7 | 0.00467 (0.00877) | 7/0/0 | 582 (434–1193) | 1.990 | 0.623 | 21 |
+
+`rule-inputs` (T = 300,000, 5 seeds): predicted floor crossings W=1/2/3 — noop 0/0/0 (upper 0.82 each; smallest W ≤ 0.5 → 1); held8-k0-ff 6.82/0/0 (upper 8.97/0.55/0.55 → W = 2); held8-k1-ff 2.13/0/0 (upper 4.00/0.91/0.91 → W = 2). Read: no floor ever strings two sustained lives together, so **W = 2 is where the floors go quiet** on point estimates; on 95% uppers no W reaches ≤ 0.5 for held8 (the upper is set by the zero count, not by W). Cut cells: held8-k0-ff seeds 608 (f1) and 616 (f3), 110 of 125 lives each (in-kernel deadline; 1970/2000). **Motor frame:** these held8 floors pushed along WORLD axes. If the pilot's arms run `motor_frame="body"` (INBOX 07:40 default; gate 2: body eye + world motor 0/20), the matching floors are `held8-k0-ff-bm`/`held8-k1-ff-bm`: m0, m1, m2 LAUNCHED 18:09–18:11 (`jack-cpu-1795025355`, `…5407`, `…5443`; 6 of 16 worlds), m3–m7 to follow. noop is frame-free.
+
 ## 3. The rule — not written. 4. Runs — none.

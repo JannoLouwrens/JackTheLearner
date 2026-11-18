@@ -471,4 +471,26 @@ run). **The motor frame matters:** the same body eye with the world-axis
 push (h4) eats 0.81, barely above random — a body eye needs a body motor.
 The shuffled twin fell from 4.84 (gate 1) to 2.17, so the margin between
 sight and no sight is wider here than on the compass row.
-Adult-taught ceiling only. d = 1: kernel not yet run (J12 next step).
+Adult-taught ceiling only. d = 1: next section.
+
+### J12 (2′) — gate 2's reading at d = 1 (harvested 2026-11-18 18:10; raw `world_card_data/eye_gate2_d100.json` sha256 f69b032f…; kernel `jack-cpu-1795012722`; scored by `eye_forager score2`)
+
+| row (d = 1, seeds 261–280 × 10 lives) | seeds meeting the bar | mean of seed means, floor meals/life (sd; min–max) | mean life, decisions | capped lives |
+|---|---|---|---|---|
+| **f4** body eye + body motor (the row) | **3 / 20 → FAILS** (needs 18) | 3.92 (1.01; 2.60–6.00) | 3,877 | 0 / 200 |
+| g4 shuffled rays (must fail) | 0 / 20 → fails, as it must | 1.24 (0.40; 0.20–1.90) | 3,232 | 0 / 200 |
+| b4 white random (floor) | — | 0.47 (0.16; 0.20–0.70) | 1,519 | 0 / 200 |
+| h4 body eye + WORLD motor (reported only) | 0 / 20 → misses, as predicted | 0.74 (0.33; 0.20–1.70) | 3,133 | 0 / 200 |
+
+**At d = 1 the frozen gate FAILS on the body-frame eye.** Seeds 262, 264,
+280 cleared 5.0; 70 of 200 f4 lives ate ≥ 5. No extension (frozen). Sight
+still carries food — f4 beat its own b4 AND its own g4 seed on 20/20 — but
+not enough of it for this ruler at the harder rung. All 800 lives ended by
+hunger. Beside the compass row at d = 1 (f3 8.83, 20/20): taking the
+compass away costs ~4.9 meals a life (d0.75: ~6.2). What the reading does
+NOT say: that the body-frame eye cannot carry d = 1 — the ruler's
+dead-reckoning and wander were written for world axes and not re-tuned
+(said before the run), so this is the frozen ruler's miss, a lower bound on
+the eye. What it does say: the stage-1 proof stands at the entry rung only
+(d0 = 0.75, 20/20); any claim at d = 1 on the body-frame eye is unproven.
+Adult-taught ceiling only.
