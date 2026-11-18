@@ -414,6 +414,124 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
     return rec
 
 
+
+# ---- J11 item 5: the pilot's kernels (11-18 02:20, STILL NO RULE) ----------
+# Packing only. Seeds and the world ((a) food_floor_only / (b) today's) are the
+# rule's; until the rule's commit sets PILOT_RULE, `pilot_kernel` REFUSES, so no
+# learner can be launched before the rule exists (philosophy 4). The order's
+# plan: 40 runs (B0 K P G KP K-lr0 x5 learners = 30; noop held8 x5 = 10), 4
+# runs a kernel -> 10 kernels p0..p9. Learners are dealt seed-major across arms
+# (p0 = B0/K/P/G of the first seed, ...) so no arm sits wholly on one slow host
+# (J8 kernels: host sets the speed, medians 11.6 vs 18.0 dec/CPU-s); floors go
+# last and share no kernel with more than two learners. Each run is pilot_b's
+# child-process cell: own file, partial file every 10 lives, CHILD_TIMEOUT_S
+# cut -> `cut` with its lives (pilot_b.from_partial), Kaggle's cap -> per-cell
+# files reassembled by pilot_b.cells_from_artifacts. How a cut run counts is
+# the rule's to say.
+PILOT_LEARNERS = ("B0", "K", "P", "G", "KP", "K-lr0")
+PILOT_FLOORS = ("noop", "held8")
+PILOT_PER_KERNEL = 4
+PILOT_RULE = None   # the rule commit sets e.g. {"seeds": (402, ..., 406), "food_floor_only": True, "rule": "<doc ref>"}
+
+
+def pilot_cells(seeds) -> list:
+    """All runs, learners seed-major across arms, then floors."""
+    seeds = tuple(int(s) for s in seeds)
+    return ([(a, s) for s in seeds for a in PILOT_LEARNERS]
+            + [(a, s) for s in seeds for a in PILOT_FLOORS])
+
+
+def pilot_groups(seeds) -> dict:
+    c = pilot_cells(seeds)
+    n = PILOT_PER_KERNEL
+    return {f"p{j}": c[n * j:n * (j + 1)] for j in range((len(c) + n - 1) // n)}
+
+
+def run_pilot_parallel(cells: list, outdir, food_floor_only: bool,
+                       T: int = PILOT_T) -> dict:
+    """pilot_b.run_parallel for PILOT_ARMS: all cells at once as children."""
+    from experiments.pilot_b import CHILD_TIMEOUT_S, from_partial, partial_file
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    procs = []
+    for arm, seed in cells:
+        f = outdir / f"pilot_{arm}_s{seed}.json"
+        procs.append((arm, seed, f, subprocess.Popen(
+            [sys.executable, "-m", "experiments.pilot_b2", "pilot-cell", "--arm", arm,
+             "--seed", str(seed), "--decisions", str(T), "--out", str(f),
+             "--partial", str(partial_file(f))]
+            + (["--food-floor-only"] if food_floor_only else []),
+            cwd=REPO, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)))
+    res, t0 = {}, time.time()
+    for arm, seed, f, p in procs:
+        try:
+            _, err = p.communicate(timeout=max(1, CHILD_TIMEOUT_S - (time.time() - t0)))
+        except subprocess.TimeoutExpired:
+            p.kill()
+            _, err = p.communicate()
+        rec = (json.loads(f.read_text()) if f.exists()
+               else from_partial(arm, seed, partial_file(f)))
+        rec["rc"] = p.returncode
+        if p.returncode != 0:
+            rec["error"] = f"rc={p.returncode}: {err.decode()[-800:]}"
+        res[f"{arm}_s{seed}"] = rec
+        print(f"{arm} s{seed}: rc {p.returncode}, {len(rec['lives'])} lives", flush=True)
+    return res
+
+
+_PILOT_JOB = r"""
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
+import json, os
+os.chdir("/tmp/jack")
+from experiments.pilot_b2 import run_pilot_parallel
+from experiments.brain_b import versions
+r = run_pilot_parallel(__CELLS__, os.environ["JACK_OUT"], __FF__, __T__)
+json.dump({"cells": r, "versions": versions(), "rule": __RULE__},
+          open(os.path.join(os.environ["JACK_OUT"], "pilot_b2_cells.json"), "w"))
+print("DONE", flush=True)
+"""
+
+
+def pilot_job_body(cells: list, food_floor_only: bool, T: int = PILOT_T,
+                   rule: str = "") -> str:
+    from experiments.pilot_b import KERNEL_PINS as B_PINS
+    return (_PILOT_JOB.replace("__CELLS__", repr(list(cells)))
+            .replace("__PINS__", repr(list(B_PINS)))
+            .replace("__FF__", repr(bool(food_floor_only)))
+            .replace("__T__", repr(int(T))).replace("__RULE__", repr(str(rule))))
+
+
+def pilot_kernel(name: str, rule: dict | None = None) -> dict:
+    """Submit pilot group p0..p9 as one Kaggle CPU kernel -> OUT/<name>.json.
+    REFUSES without a rule (PILOT_RULE, set only by the rule's commit)."""
+    rule = PILOT_RULE if rule is None else rule
+    if not rule or not rule.get("seeds") or "food_floor_only" not in rule:
+        raise RuntimeError("pilot_kernel: no frozen rule (PILOT_RULE is None) — "
+                           "J11 item 3 must be committed before any learner runs")
+    from experiments.gpu import build_job, result_json, submit
+    from experiments.pilot_b import cells_from_artifacts
+    cells = pilot_groups(rule["seeds"])[name]
+    body = pilot_job_body(cells, rule["food_floor_only"], rule.get("T", PILOT_T),
+                          rule.get("rule", ""))
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=7.5,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["pilot_b2_cells.json"])
+    if sub.ok and "pilot_b2_cells.json" in sub.artifacts:
+        r = result_json(sub, "pilot_b2_cells.json")
+    else:
+        r = cells_from_artifacts(sub.artifacts, cells)
+        if r is None:
+            raise RuntimeError(f"pilot_b2 pilot kernel {name}: {sub.message}")
+        print(f"pilot_b2 pilot kernel {name}: no summary ({sub.message or 'missing'}); "
+              f"assembled from per-cell files", flush=True)
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / f"pilot_{name}.json").write_text(json.dumps(r, indent=1) + "\n")
+    for k, rec in r["cells"].items():
+        print(f"{k}: {len(rec['lives'])} lives"
+              + (" (cut)" if rec.get("cut") else "")
+              + (f" ERROR {rec['error']}" if "error" in rec else ""), flush=True)
+    return r
+
 def _poisson_upper(k: int, conf: float = 0.95) -> float:
     """One-sided upper bound on a Poisson mean given k events (exact)."""
     from scipy.stats import chi2
@@ -423,12 +541,15 @@ def _poisson_upper(k: int, conf: float = 0.95) -> float:
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs"])
+    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel"])
     p.add_argument("--arm", default="noop-k1")
     p.add_argument("--seed", type=int, default=601)
     p.add_argument("--lives", type=int, default=CARD_LIVES)
     p.add_argument("--out", default=None)
     p.add_argument("--name", default=None)
+    p.add_argument("--decisions", type=int, default=PILOT_T)
+    p.add_argument("--partial", default=None)
+    p.add_argument("--food-floor-only", action="store_true")
     p.add_argument("--glob", default="c*.json",
                    help="card / rule-inputs: which kernel files (f*.json = the -ff re-run)")
     a = p.parse_args(argv)
@@ -437,6 +558,12 @@ def main(argv):
         print(json.dumps({k: v for k, v in rec.items() if k != "lives"}))
     elif a.cmd == "kernel":
         kernel(a.name)
+    elif a.cmd == "pilot-cell":
+        rec = run_pilot_cell(a.arm, a.seed, a.food_floor_only, a.decisions,
+                             partial_path=a.partial)
+        Path(a.out).write_text(json.dumps(rec) + "\n")
+    elif a.cmd == "pilot-kernel":
+        pilot_kernel(a.name)
     elif a.cmd == "rule-inputs":
         print(rule_inputs(sorted(OUT.glob(a.glob))))
     else:
