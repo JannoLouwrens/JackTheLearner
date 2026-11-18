@@ -2311,3 +2311,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J12: three Kaggle sessions were free → committed the pending receipts (`844880c9`, the submit guard refuses dirt) and launched the eye gate at d 0.75 and d 1.0 (rank 2; J11 had no kernel ready).
 - Scar: Bash `sleep N; cmd` is blocked; wait with `until …; do sleep; done` in run_in_background, and a 10-min foreground until-loop gets relocated, not killed.
 - Philosophy served: 4 (the floor a learner is judged against is now measured, leak included, before any rule) and 3 (his new eye goes to a gate that could fail).
+
+## 2026-11-18 01:07–02:05 UTC · JACK · J11 (the statue leak's lead) — J12 eye gate still RUNNING on Kaggle (due ~04:50)
+- Chased the lead "a food came to him": the statue's food in 601/64 was obj1, a ball, laid at (−3.06, 2.62) ON THE 13° RAMP. `_place_foods` drops foods at floor rest height and exempts every ground geom (ramp, stair0–4) from its clash test → on 32/610 cells (5.2%) a food starts buried and is thrown out.
+- `food_travel_probe` (rule frozen `25a58628` before any trace; 320 layouts, worlds 601–608, do-nothing, 50 dec): "still" by its rule — 7/706 far foods moved (0.99%, inside the 1% line), 0/61 near. Beside the rule: all 12 movers were laid on ramp/stairs (20% of the 61 laid there, up to 3.65 m); 0/899 floor-laid foods moved; the body pushed nothing.
+- Repair: `jack_env(food_floor_only=True)` `adf457ca`, default off; test PASS (identity 2/2; on 0 inside, 0/264 far movers; off control 25 inside, 5/268). Card ran without it — the rule writer decides (a) re-run the card with it or (b) disclose.
+- Philosophy served: 4 (the floor a learner is judged against is repaired at its cause, not explained) and 5 (his world is part of what makes him).
