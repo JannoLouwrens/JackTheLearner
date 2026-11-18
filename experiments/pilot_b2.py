@@ -106,12 +106,17 @@ POOL_DEADLINE_S = int(8.5 * 3600)   # in-kernel stop, leaves pip + queue + fetch
 
 
 def make_world(seed: int, move_cost_dial: bool = False,
-               food_floor_only: bool = False, reward: str = REWARD):
+               food_floor_only: bool = False, reward: str = REWARD,
+               eye_frame: str = "world", motor_frame: str = "world"):
+    """The pilot's world. eye_frame / motor_frame default "world" = the f-card's
+    world byte for byte (the floor cards never pass them); the pilot's runs get
+    them from the frozen rule (ruling 39; J12 (0), (2'))."""
     from experiments.jack_env import JackEnv, NEEDS_S_TRP, SPAWN_CLEAR_R
     return JackEnv(seed=seed, difficulty=DIFFICULTY, reward=reward,
                    random_needs=NEEDS_S_TRP, random_layout=True,
                    lazy_contact_audio=True, spawn_clear=SPAWN_CLEAR_R,
-                   move_cost_dial=move_cost_dial, food_floor_only=food_floor_only)
+                   move_cost_dial=move_cost_dial, food_floor_only=food_floor_only,
+                   eye_frame=eye_frame, motor_frame=motor_frame)
 
 
 def run_card_cell(arm: str, seed: int, lives: int = CARD_LIVES,
@@ -402,20 +407,26 @@ PILOT_ARMS = {
 }
 
 
-def pilot_world(arm: str, food_floor_only: bool):
-    """seed -> JackEnv for one pilot arm (the world half of its settings)."""
+def pilot_world(arm: str, food_floor_only: bool, eye_frame: str = "world",
+                motor_frame: str = "world"):
+    """seed -> JackEnv for one pilot arm (the world half of its settings).
+    The frames apply to EVERY arm, floors included: held8 holds a push, and in
+    the body motor frame that push turns with him, so a floor run in another
+    motor frame than the learners' is not their floor."""
     c = PILOT_ARMS[arm]
     return lambda seed: make_world(seed, move_cost_dial=c["move_cost_dial"],
                                    food_floor_only=food_floor_only,
-                                   reward=c["reward"])
+                                   reward=c["reward"], eye_frame=eye_frame,
+                                   motor_frame=motor_frame)
 
 
 def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
-                   T: int = PILOT_T, partial_path=None) -> dict:
+                   T: int = PILOT_T, partial_path=None, eye_frame: str = "world",
+                   motor_frame: str = "world") -> dict:
     """One pilot run of `arm` (PILOT_ARMS) for T decisions."""
     from experiments.pilot_b import run_b, run_floor
     c = PILOT_ARMS[arm]
-    world = pilot_world(arm, food_floor_only)
+    world = pilot_world(arm, food_floor_only, eye_frame, motor_frame)
     if c["kind"] == "floor":
         rec = run_floor(c["policy"], seed, T, world=world, partial_path=partial_path)
     else:
@@ -424,6 +435,7 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
                     partial_path=partial_path, **kw)
     rec["pilot_arm"] = arm
     rec["food_floor_only"] = bool(food_floor_only)
+    rec["eye_frame"], rec["motor_frame"] = eye_frame, motor_frame
     return rec
 
 
@@ -444,7 +456,7 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
 PILOT_LEARNERS = ("B0", "K", "P", "G", "KP", "K-lr0")
 PILOT_FLOORS = ("noop", "held8")
 PILOT_PER_KERNEL = 4
-PILOT_RULE = None   # the rule commit sets e.g. {"seeds": (402, ..., 406), "food_floor_only": True, "rule": "<doc ref>"}
+PILOT_RULE = None   # the rule commit sets e.g. {"seeds": (402, ..., 406), "food_floor_only": True, "eye_frame": "body", "motor_frame": "body"|"world", "rule": "<doc ref>"}
 
 
 def pilot_cells(seeds) -> list:
@@ -461,7 +473,8 @@ def pilot_groups(seeds) -> dict:
 
 
 def run_pilot_parallel(cells: list, outdir, food_floor_only: bool,
-                       T: int = PILOT_T) -> dict:
+                       T: int = PILOT_T, eye_frame: str = "world",
+                       motor_frame: str = "world") -> dict:
     """pilot_b.run_parallel for PILOT_ARMS: all cells at once as children."""
     from experiments.pilot_b import CHILD_TIMEOUT_S, from_partial, partial_file
     outdir = Path(outdir)
@@ -473,7 +486,8 @@ def run_pilot_parallel(cells: list, outdir, food_floor_only: bool,
             [sys.executable, "-m", "experiments.pilot_b2", "pilot-cell", "--arm", arm,
              "--seed", str(seed), "--decisions", str(T), "--out", str(f),
              "--partial", str(partial_file(f))]
-            + (["--food-floor-only"] if food_floor_only else []),
+            + (["--food-floor-only"] if food_floor_only else [])
+            + ["--eye-frame", eye_frame, "--motor-frame", motor_frame],
             cwd=REPO, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)))
     res, t0 = {}, time.time()
     for arm, seed, f, p in procs:
@@ -499,7 +513,7 @@ import json, os
 os.chdir("/tmp/jack")
 from experiments.pilot_b2 import run_pilot_parallel
 from experiments.brain_b import versions
-r = run_pilot_parallel(__CELLS__, os.environ["JACK_OUT"], __FF__, __T__)
+r = run_pilot_parallel(__CELLS__, os.environ["JACK_OUT"], __FF__, __T__, __EYE__, __MOTOR__)
 json.dump({"cells": r, "versions": versions(), "rule": __RULE__},
           open(os.path.join(os.environ["JACK_OUT"], "pilot_b2_cells.json"), "w"))
 print("DONE", flush=True)
@@ -507,12 +521,15 @@ print("DONE", flush=True)
 
 
 def pilot_job_body(cells: list, food_floor_only: bool, T: int = PILOT_T,
-                   rule: str = "") -> str:
+                   rule: str = "", eye_frame: str = "world",
+                   motor_frame: str = "world") -> str:
     from experiments.pilot_b import KERNEL_PINS as B_PINS
     return (_PILOT_JOB.replace("__CELLS__", repr(list(cells)))
             .replace("__PINS__", repr(list(B_PINS)))
             .replace("__FF__", repr(bool(food_floor_only)))
-            .replace("__T__", repr(int(T))).replace("__RULE__", repr(str(rule))))
+            .replace("__T__", repr(int(T))).replace("__RULE__", repr(str(rule)))
+            .replace("__EYE__", repr(str(eye_frame)))
+            .replace("__MOTOR__", repr(str(motor_frame))))
 
 
 def pilot_kernel(name: str, rule: dict | None = None) -> dict:
@@ -522,11 +539,21 @@ def pilot_kernel(name: str, rule: dict | None = None) -> dict:
     if not rule or not rule.get("seeds") or "food_floor_only" not in rule:
         raise RuntimeError("pilot_kernel: no frozen rule (PILOT_RULE is None) — "
                            "J11 item 3 must be committed before any learner runs")
+    # Ruling 39: every learner arm sees the body-frame eye. The motor frame is
+    # the rule's to name (INBOX 11-18 07:40; gate 2's h4: body eye + world
+    # motor 0/20 vs body + body 20/20) -- no silent "world" default for either.
+    if rule.get("eye_frame") != "body":
+        raise RuntimeError("pilot_kernel: the rule must set eye_frame='body' "
+                           "(ruling 39)")
+    if rule.get("motor_frame") not in ("world", "body"):
+        raise RuntimeError("pilot_kernel: the rule must name motor_frame "
+                           "('world' or 'body'); if 'body', held8's floor is "
+                           "not the f-card's (the f-card ran the world frame)")
     from experiments.gpu import build_job, result_json, submit
     from experiments.pilot_b import cells_from_artifacts
     cells = pilot_groups(rule["seeds"])[name]
     body = pilot_job_body(cells, rule["food_floor_only"], rule.get("T", PILOT_T),
-                          rule.get("rule", ""))
+                          rule.get("rule", ""), rule["eye_frame"], rule["motor_frame"])
     sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=7.5,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["pilot_b2_cells.json"])
     if sub.ok and "pilot_b2_cells.json" in sub.artifacts:
@@ -631,6 +658,8 @@ def main(argv):
     p.add_argument("--decisions", type=int, default=PILOT_T)
     p.add_argument("--partial", default=None)
     p.add_argument("--food-floor-only", action="store_true")
+    p.add_argument("--eye-frame", choices=["world", "body"], default="world")
+    p.add_argument("--motor-frame", choices=["world", "body"], default="world")
     p.add_argument("--glob", default="c*.json",
                    help="card / rule-inputs: which kernel files (f*.json = the -ff re-run)")
     a = p.parse_args(argv)
@@ -641,7 +670,8 @@ def main(argv):
         kernel(a.name)
     elif a.cmd == "pilot-cell":
         rec = run_pilot_cell(a.arm, a.seed, a.food_floor_only, a.decisions,
-                             partial_path=a.partial)
+                             partial_path=a.partial, eye_frame=a.eye_frame,
+                             motor_frame=a.motor_frame)
         Path(a.out).write_text(json.dumps(rec) + "\n")
     elif a.cmd == "pilot-kernel":
         pilot_kernel(a.name)
