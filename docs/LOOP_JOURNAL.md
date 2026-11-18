@@ -2317,3 +2317,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `food_travel_probe` (rule frozen `25a58628` before any trace; 320 layouts, worlds 601–608, do-nothing, 50 dec): "still" by its rule — 7/706 far foods moved (0.99%, inside the 1% line), 0/61 near. Beside the rule: all 12 movers were laid on ramp/stairs (20% of the 61 laid there, up to 3.65 m); 0/899 floor-laid foods moved; the body pushed nothing.
 - Repair: `jack_env(food_floor_only=True)` `adf457ca`, default off; test PASS (identity 2/2; on 0 inside, 0/264 far movers; off control 25 inside, 5/268). Card ran without it — the rule writer decides (a) re-run the card with it or (b) disclose.
 - Philosophy served: 4 (the floor a learner is judged against is repaired at its cause, not explained) and 5 (his world is part of what makes him).
+
+## 2026-11-18 01:22–01:35 UTC · JACK · J11 (option (a) half-bought) — J12 eye gate still RUNNING (due ~04:50)
+- The rule writer must choose the card's world: (a) with `food_floor_only` (no ramp foods) or (b) today's + disclose. Made (a) cheap in time instead of choosing: `pilot_b2.make_world(food_floor_only=)`, arms `noop-k1-ff`/`held8-k0-ff`, groups f0..f3, `--glob` for card/rule-inputs (`c9908359`).
+- Identity: card and rule-inputs output byte-identical on the 8 harvested kernels; box `noop-k1` s601 reproduces the card's first 3 lives exactly; the -ff twin changes only the layout (spawn 6.83→6.19, 3.42→3.16, 3.06→1.75 m).
+- Launched f0, f1 on Kaggle (2 free of 4 sessions; J11 is rank 1); f2, f3 when J12's sessions free (~04:50). Card (a) home ~09:00–11:00.
+- Philosophy served: 4 (the floor the rule reads can be measured in the repaired world, not explained) and 5 (his world fixed before he is judged in it).
