@@ -2449,3 +2449,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Box `resume_check` (10k + 10k, learning_starts 1k): steps 10000→20000, buffer 20000 carried, updates 9000→19000 (learning_starts not re-applied), params + actor optimiser state equal in memory vs after load, a fresh model differs (control), ent_coef 0.090 carried. RESUME OK. Not exercised: the wall-time stop.
 - Found: Humanoid obs are float64 — a full replay checkpoint is ~6.1 GB, not the rule's 3.1 GB; still fits Kaggle's 20 GB output.
 - Philosophy served: 4 (a 2M-step row can only be honest if the run is provably one run across sessions) and 1 (the body he will walk with).
+
+## 2026-11-18 10:37–10:52 UTC · JACK · J10 (2′) Kaggle wrapper — short slot (all 4 Kaggle sessions RUNNING: J11 f2/f3/f4, J12 d075, checked with `kernels status`)
+- Nothing home; order of work fell to J10's next step. `humanoid_sac_row.kernel(seed, segment)` + `segment_job_body`: pins = the jack-std venv (sb3 2.9.2, sbx 0.28.0, gymnasium 1.4.0, mujoco 3.17.0, jax 0.11.2), job calls the frozen `train_segment`, fetch = segment.json only. `tests/test_humanoid_sac_row_kernel` PASS 4/4 (seed outside rule refused; segment 0 fresh / later needs prev).
+- Found, machine gap (INBOX): gpu.py writes no `kernel_sources` (a resumed segment cannot mount the checkpoint) and `kernels output` downloads every file (a 6.1 GB checkpoint per segment onto /data). Wrapper refuses segment ≥ 1; seed 0 seg 0 not launched (no free session either).
+- Philosophy served: 4 (a 2M-step row is one honest run only if each segment provably resumes the last) and 1 (the body he will walk with).

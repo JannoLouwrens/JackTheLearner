@@ -60,7 +60,8 @@ RULE (frozen in this commit, BEFORE the kernel body exists and before seed 0):
 
 STATUS: rule + eval + late-start control (`evaluate`, `control_run`; box smoke
 11-18) + `train_segment` (resume as the rule says; box resume test
-`resume_check`, 11-18). The Kaggle kernel wrapper is the next J10 slot.
+`resume_check`, 11-18) + Kaggle wrapper `kernel` (segment 0 only; later
+segments wait on kernel_sources in experiments/gpu.py, INBOX 11-18).
 """
 from __future__ import annotations
 
@@ -239,6 +240,59 @@ def resume_check(work: str, steps: int = 10_000) -> dict:
             "ent_coef_after_seg0": ent0, "ok": ok}
 
 
+
+# ---- Kaggle kernel wrapper (J10 slot 11-18 10:45) ----------------------------
+KERNEL_PINS = ["stable-baselines3==2.9.2", "sbx-rl==0.28.0", "gymnasium==1.4.0",
+               "mujoco==3.17.0", "jax==0.11.2", "jaxlib==0.11.2"]
+KERNEL_REMOTE_TIMEOUT_S = int(11.75 * 3600)
+SEGMENT_FETCH = ["segment.json"]  # never the ~6.1 GB model+replay checkpoint
+
+_JOB = r'''
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
+import json, os
+os.chdir("/tmp/jack")
+from experiments.humanoid_sac_row import train_segment
+out = os.environ["JACK_OUT"]
+r = train_segment(__SEED__, out, __PREV__, __SEGMENT__)
+print("RESULT " + json.dumps(r), flush=True)
+'''
+
+
+def segment_job_body(seed: int, segment: int, prev_dir: str | None = None) -> str:
+    """The job text for one resume segment. Segment 0 trains fresh; a later
+    segment loads model + replay from `prev_dir` (the previous segment's kernel
+    output, mounted as a kernel source under /kaggle/input)."""
+    if seed not in SEEDS:
+        raise ValueError(f"seed {seed} is not in the frozen rule's seeds {SEEDS}")
+    if (segment == 0) != (prev_dir is None):
+        raise ValueError("segment 0 starts fresh (no prev_dir); every later segment needs one")
+    return (_JOB.replace("__PINS__", repr(KERNEL_PINS)).replace("__SEED__", repr(int(seed)))
+            .replace("__PREV__", repr(prev_dir)).replace("__SEGMENT__", repr(int(segment))))
+
+
+def kernel(seed: int, segment: int = 0) -> dict:
+    """Submit one resume segment as a Kaggle CPU kernel; write segment.json to
+    /data/jack-logs/j10/sac_row/s<seed>_seg<segment>.json.
+
+    REFUSES segment > 0 today: experiments/gpu.py's run_on_kaggle writes no
+    `kernel_sources` into kernel-metadata.json, so a later segment cannot mount
+    the previous checkpoint (INBOX 11-18 10:50). It also downloads EVERY output
+    file (`kernels output` with no --file-pattern), so even segment 0 would
+    pull the ~6.1 GB checkpoint onto /data — also in that INBOX line."""
+    from pathlib import Path
+    import json
+    from experiments.gpu import build_job, result_json, submit
+    if segment > 0:
+        raise RuntimeError("segment > 0 needs kernel_sources in experiments/gpu.py (INBOX 11-18)")
+    sub = submit(build_job(segment_job_body(seed, segment)), prefer="kaggle-cpu", est_hours=10.5,
+                 timeout_s=KERNEL_REMOTE_TIMEOUT_S, fetch=SEGMENT_FETCH)
+    r = result_json(sub, "segment.json")
+    out = Path("/data/jack-logs/j10/sac_row")
+    out.mkdir(parents=True, exist_ok=True)
+    (out / f"s{seed}_seg{segment}.json").write_text(json.dumps(r, indent=1) + "\n")
+    return r
+
 if __name__ == "__main__":
     import json, sys
     if sys.argv[1:2] == ["control"]:
@@ -250,3 +304,5 @@ if __name__ == "__main__":
         r = resume_check(sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 10_000)
         print(json.dumps(r, indent=1))
         print("RESUME OK" if r["ok"] else "RESUME BROKEN")
+    elif sys.argv[1:2] == ["kernel"]:
+        print(json.dumps(kernel(int(sys.argv[2]), int(sys.argv[3]) if len(sys.argv) > 3 else 0)))
