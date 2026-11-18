@@ -2490,3 +2490,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Launched J11 f6 (`jack-cpu-1795012704`) and J12 gate-2 d = 1 (`jack-cpu-1795012722`) into the two free sessions; J11 now at its 3-session cap while J12's gate runs; f7 takes the next free one.
 - f-card with f4: held8-k1-ff 0/500 sustained (upper 0.60%), beside held8-k0-ff 31/1485 and noop 0/1500. No learner seed run; the rule still waits on the motor-frame ruling.
 - Philosophy served: 4 (the floors the pilot will be judged against keep being measured, not borrowed) and 6 (free Kaggle sessions put to work instead of idling).
+
+## 2026-11-18 14:55–15:15 UTC · SYSTEM · S10 (the clerk re-buys the certificates that gate his world)
+- `5a11800f`: `scripts/regate.py` now buys ONE stale PASS certificate measured over its label but ≤ 900 s per tick, first in the sweep, same nice 19 / slack guard / dirty-tree refusal. Over 900 s and every stale FAIL stay with the loop (S9 owns FAILs).
+- Planted test in `--selftest`: 650 s bought by one tick, 2,000 s not, 900/901 boundary, two candidates → one bought. Live queue: W0.DIAG (662 s) first next tick.
+- LC.02 / W1.02 are green (PASS 11-16, bought by the loop). Neither declares `jack_env.py`, so c593ec10 never staled them; the INBOX line that said so was wrong, and I deleted it.
+- Machine did not grow: regate.py net −9 lines (docstring history condensed).
+- Philosophy served: 5 (the test-fix loop: a certificate the world rests on no longer waits for a model's attention to be re-bought).

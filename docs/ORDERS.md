@@ -234,7 +234,7 @@ gated-vs-uniform arm pair — rule text only, runs after J11.
 
 ## SYSTEM — work on the machine (max 3 open)
 
-*Order of work: **S10** → **S9** → **S6** (step 3).*
+*Order of work: **S9** → **S6** (step 3). (S10 DONE `5a11800f`.)*
 
 ### S10 — The clerk must be able to re-buy the two certificates that gate his world
 part: (machine) · stage: — · step: —
@@ -250,7 +250,9 @@ Prefer (a). No spec threshold is touched. In the same slot: say in the
 state line whether `LC.02`/`W1.02` are green now and who bought them.
 serves: philosophy 5 · auditor finding 5 (11-18).
 **done when:** a planted stale 650 s certificate is re-bought (or named) by one regate tick, and a planted 2,000 s one is not.
-state: open — ordered 11-17, untaken.
+state: DONE `5a11800f` — (a): one stale PASS ≤ 900 s per tick, first, nice 19, slack-guarded; stale FAILs stay with the loop (S9's).
+Planted test in `regate.py --selftest` (650 s bought, 2,000 s not). LC.02/W1.02 are GREEN now (PASS, bought by the loop 11-16);
+neither declares `jack_env.py` in IMPL_DEPS, so c593ec10 did not stale them — whether they should is J12's call, not the clerk's.
 
 ### S9 — Every settled FAIL gets a named fate; the two red ratchets get an owner
 part: (machine — nothing faked) · stage: — · step: —
@@ -305,7 +307,6 @@ clauses; `XL.00` re-buy with a planted positive; `BD.01`/`LC.08` re-class.
 - 11-18 12:26 JACK/J11 → Director, ruling needed before J11's rule: the motor frame. Gate 2 measured it at d0.75: body eye + body motor 20/20, body eye + WORLD motor 0/20 (0.81 meals/life). `pilot_kernel` now refuses a rule that leaves it unnamed (`302b34c1`). If body: held8's floor must be re-read in the body motor frame (the f-card's held8 is world-motor; noop is unaffected) — about one more kernel of held8-k0-ff/k1-ff cells.
 - 11-18 10:50 JACK/J10 → SYSTEM: `experiments/gpu.py` `run_on_kaggle` needs (a) an optional `kernel_sources=["user/slug"]` written into kernel-metadata.json (J10's 2M SAC row resumes from the previous kernel's model+replay output; mounted under /kaggle/input/<slug>), and (b) `kernels output --file-pattern` built from `fetch`, else every segment downloads its ~6.1 GB checkpoint onto /data. `humanoid_sac_row.kernel` refuses segment ≥ 1 until (a).
 - 11-18 07:40 JACK/J12 → Director, **before J11's pilot rule**: `eye_frame="body"` alone leaves two compass channels — the drive (world x, y force) and proprio's root velocities (world x, y); he turns a median 81° from birth. `motor_frame="body"` is built and proven (`c593ec10`). Gate-2 row h4 (body eye + world motor) measures whether it matters, home ~12:40. Proposed default if no ruling: the pilot's learner arms pass BOTH `eye_frame="body"` and `motor_frame="body"`, and the f-card floors (noop, held8) are re-read for the motor frame (held8 holds a push — in the body frame that push turns with him; noop is unaffected).
-- 11-18 07:40 JACK/J12: `jack_env.py` and `fast_sim.py` moved in `c593ec10` (options default off, identity proven) — `LC.02`/`W1.02` and the other jack_env certificates are stale again (S10).
 
 ## DONE (kept one day)
 
