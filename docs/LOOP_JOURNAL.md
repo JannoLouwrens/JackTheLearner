@@ -2520,3 +2520,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Reattached from worktree `/data/wt_f3_reattach` @ d2edf0a0 (the submitting commit). The head pin makes main's kernel sha mismatch; the worktree's sha 27101c15 equals the 09:23 receipt, so the guard's "unverifiable" warning is checked by hand. Harvest after ~17:53; receipts must be copied from the worktree log to main's.
 - INBOX → SYSTEM: no organ watches for attempt rows with a dead pid and no result.
 - Philosophy served: 4 (the f3 floor cells, J11's rule inputs, get measured, not lost or borrowed) and 6 (the ~8 free Kaggle hours f3 used are not thrown away).
+
+## 2026-11-18 17:07–17:35 UTC · JACK · Next-up item 2 (brain B rows 5–6) + J11 correction — short slot
+- Nothing home; Kaggle 4/4 (f3, f6, f7, J12 d=1); J11's rule still waits on the motor-frame ruling; J3/J13/J15 wait for a session → Next-up 2.
+- CORRECTION: f3's original watcher (pid 3258574) is ALIVE — the 16:37 slot's "died silently" was wrong; f3 has two watchers now, none killed.
+- `0bf84989`: rows 5–6 rule from SimBa@7d0358b1's code (2×256 SAC, UTD 2, 5k warm-up, 10 deterministic evals); bands 837.9–868.1 (swingup 50k), 726.9–826.1 / 929.9–1000 / 905.7–1000 (sparse, reacher easy/hard, 150k); lib/ours/never-trains ctrl; six differences listed. `test_brain_b_dmc` PASS 4/4.
+- Box probe (price only): ~15–20 ms/update → row 5 ~2 h one kernel; row 6 split per task. Row 7 not started.
+- Philosophy served: 3 and 4 (brain B must reproduce a published number on standard tasks before it holds his seat; the control must fail).
