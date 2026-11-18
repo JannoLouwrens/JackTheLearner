@@ -591,12 +591,44 @@ Long form: `/data/jack-research/research_notes/inhouse_rows/` (three parts, `mc_
 
 ## 16. The walking layer on free CPUs: what the 2018 recipe really showed, and the cheapest walk to reproduce first (2026-11-18; serves order J10, M4; plan part "Body and movement")
 
-Long form: `/data/jack-research/research_notes/walking_layer/` (`part_a_yu2018.md` = paper source + code at `b50478f8`, read line by line; parts b, c). **Parts b, c in flight 04:15 UTC.**
+Long form: `/data/jack-research/research_notes/walking_layer/` (`part_a_yu2018.md` = paper source and code at `b50478f8`; `part_b_cpu_walks.md`; `part_c_transfer.md`).
 
-**Question.** J10 (2) reproduces Yu, Turk & Liu 2018 ([arXiv:1801.08093](https://arxiv.org/abs/1801.08093)) on a 2018 stack over chained kernels, then (3) moves "the same recipe" to our Humanoid-v5 body. What did that paper show, is there a cheaper published walk for ONE free CPU kernel, and what happens when the recipe changes body?
+**Question.** J10 (2) reproduces Yu, Turk & Liu 2018 ([1801.08093](https://arxiv.org/abs/1801.08093)) over chained kernels, then (3) moves the recipe to our Humanoid-v5 body. What did the paper show, is there a cheaper published walk for ONE free CPU kernel, and what happens on a new body?
 
-**Already known — part a, the paper and its released code**
-- Confirmed verbatim: 29 DoF, 76.6 kg, walk 1.5 m/s; PPO1, 3×64, mirror weight 4; 20k samples an iteration, 500–1,500 iterations, 8 threads, 25–45 s an iteration, 4–15 h. Humanoid walk, read off the one learning-curve figure: curriculum + mirror ends at ~780 iterations (~15.6M samples, return ~1,250); curriculum alone ~910 (return ~1,040); mirror alone and plain PPO plateau at ~500 = "fall slowly or stand still".
-- **The paper gives no seed count, no success rate and no definition of "walks".** One curve per method, no band; Table 2 covers "successfully trained policies" only; a sentence commented out of the source says other low-energy-weight runs gave no successful policy. "Half the data" for the environment-centred schedule was measured on the simple biped only.
-- **The released curriculum is looser than the paper.** (i) `(2000, 2000)` are GAINS of a spring on sideways position and forward speed, not newtons (`human_walker.py:175-190`). (ii) **A stage that hits its 5M cap advances anyway, unflagged** (`pposgd_mirror.py:211-212`): the 22 stages can "complete" having learned nothing. (iii) Stage 0 exits the first iteration with mean length > 200 steps and speed > 0.75 m/s; the last, unaided stage exits at 0.84 × that early return. (iv) An unpublished rule restores the weights when the 100-episode return drops by > 500. (v) Learning rate and clip fall to 0 inside each stage and reset at the next. (vi) **The helper is OFF by default** (`assist_timeout` 0.0; the script sets 100): a port that misses the line trains unaided. (vii) The code's reward has no orientation term; energy is 0.3·Σ|a| on the raw action; lateral damping is 0.002·kp, the paper says 0.1·kp.
-- Nobody has published a reproduction: 7 forks with no new commits, 5 issues all install or crash (one a DART solver crash on the humanoid that needs the repo's patched `lcp.cpp`). The one re-test of the mirror loss (Abdolhosseini 2019) found it "detrimental" on a humanoid WITHOUT the curriculum and calls the torque symmetry index "misleading".
+**Already known**
+- Yu 2018 confirmed verbatim: 29 DoF, 76.6 kg, 1.5 m/s; PPO1, 3×64, mirror weight 4; 20k samples an iteration, 500–1,500 iterations, 8 threads, 4–15 h. Humanoid walk, read off its one curve: helper + mirror ends at ~780 iterations (~15.6M samples, return ~1,250); helper alone ~910; mirror alone and plain PPO plateau at ~500 ("fall slowly or stand still").
+- **It gives no seed count, no success rate and no definition of "walks".** One curve per method; Table 2 covers "successfully trained policies" only. "Half the data" is the simple biped.
+- **The released curriculum is looser than the paper**: a stage that hits its 5M cap **advances anyway, unflagged** (`pposgd_mirror.py:211`, `training_utils.py:81-85`) — all 22 stages can "complete" having learned nothing. `(2000, 2000)` are spring GAINS on sideways position and forward speed, not newtons. The helper is OFF by default (`assist_timeout` 0.0; the script sets 100). An unpublished rule restores the weights when return drops > 500. Energy is 0.3·Σ|a|; lateral damping 0.002·kp (paper: 0.1·kp).
+- **Nobody has published a reproduction, or the recipe on any MuJoCo body**: 7 forks with no commits, 5 issues, all install or crash (one a DART solver crash on the humanoid).
+- Mirror loss buys symmetry, not speed: "no consistent and predictable impact" on learning (Abdolhosseini 2019, 4 bodies); "detrimental" on a humanoid without the curriculum; "slower convergence" than mirrored data (Mittal 2024).
+- **On Gymnasium Humanoid a return near 5,000 is STANDING**: 5 a step × 1,000 steps (`humanoid_v5.py:196-216`); speed ≈ (R − 5,000 + control cost ≤ 272)/1,250 m/s. ARS says so verbatim and sets its bar at 6,000. §4's "SAC ~5,200–5,500 at 1M" is 0.16–0.62 m/s: it does not prove a walk.
+- Humanoid-v4 at 1M, 10 seeds (SimBaV2's table): PPO 477; SAC 4,825 [3,784–5,866]; TD3 5,165 [5,020–5,310]; TQC 6,029; CrossQ 10,480 (~4.4 m/s). At 2M on v3 (SB3 Zoo, ONE model, 150 episodes): SAC 6,232 ± 280, TD3 5,567, TQC 7,239 ± 1,647, A2C 388. Humanoid-v5: no comparable published number.
+- Withdrawn aids elsewhere: 200 N pull −20 N per success (HoST 2025, standing up; without it fails); torque limits ×0.95 per stage (Tao 2022; weak from the start "fails"). A strong effort cost from the start "causes a performance collapse" (Schumacher 2023).
+- A learning low level under a learning high level: DeepLoco froze it (joint training "impairs" the high level; a swapped low level dropped return to 0.06–0.19); HIRO found a frozen one "detrimental" on hard tasks, and its fix is for replay learners only.
+
+**Candidates** (for J10's known-answer walk)
+1. **SAC, the Zoo's Humanoid entry, Humanoid-v4, 2M steps** (256×256, one update a step; SBX SAC is brain B's own library). Strength: runs today in `jack-std`; a 10-seed band at 1M. Weakness: the 2M figure is one model; the gait is unshaped. Expect ≥ 6,000 and ≥ 12 m forward per 1,000 steps on most seeds. **Measured here: 0.046 CPU-s a step, so 2M ≈ 26 CPU-h — one seed per 12 h kernel only if it uses ≥ 2.2 cores.**
+2. **Yu 2018 as released** (J10 (2) today): the only no-mocap, CPU-sized, natural-gait recipe. Weakness: unreproduced, 2018 stack, ≥ 3 chained kernels a seed, silent cap. Expect ~780 iterations if it trains.
+3. **ARS, linear policy** (Mania 2018): CPU-native, 100-seed timing, bar 6,000; median 12–17 CPU-h, heavy tail; on Humanoid-v1.
+- Ruled out on CPU: CrossQ (measured here 0.31 CPU-s a step → 85 CPU-h per 1M), REDQ/DroQ (20 updates a step), PPO at ≤ 1M (floor).
+
+**Ours beside theirs**
+
+| Setting | Published | Ours | Cost |
+|---|---|---|---|
+| Body | Yu: 29 DoF, 23 actions, 76.6 kg, DART | Humanoid-v5, 17 actions, MuJoCo (`drives.py:170`) | untested transfer; helper gains unscaled |
+| Control rate | Yu 33 Hz; Gym 67 Hz | 67 Hz under a 5 Hz brain | §4: needs the layer |
+| Reward | Yu: speed 3, alive 6, energy 0.3, posture | Gym default pays 5 a step to stand | must be replaced for (3) |
+| Success test | none published | `yu2018_walk.py`: 9/10 full rollouts ≥ 0.75 m/s | ours is stricter; keep |
+| "Curriculum done" | cap advances silently | `yu2018_walk.py` verdict DID-NOT-FINISH reads stage reached | **must also log which stages exited by cap** |
+| Zoo SAC env | v3/v4 | floor measured on v5 (`humanoid_floor.py`) | run the row on v4, then v5 |
+
+**Known-answer check.** SAC row: Humanoid-v4, Zoo settings, return at 1M inside [3,784, 5,866] and at 2M ≥ 5,950 (6,232 − 280) WITH ≥ 12 m forward; control = learning starts after the last step, must stay < 500. ~26 CPU-h a seed. Yu row: as registered, plus a per-stage log of exit reason.
+
+**What the record does NOT answer**
+- Does Yu's recipe train at all outside its authors' hands? (J10 (2); ≥ 3 kernels a seed; prediction: build risk > learning risk.)
+- Helper + mirror on the Gym Humanoid body, with Yu's reward: no published run. One kernel a seed with SAC or PPO; prediction: helper needed for a low-energy gait, mirror changes symmetry only.
+- Does Humanoid-v5 score like v4 (contact cost restored)? The SAC row on both, 2 kernels.
+- A torque-level walker that keeps learning under a learned 5 Hz brain: not published.
+
+**Not verified.** The curve figures (iterations read by eye); the Zoo table (read through a summariser); Heess 2017's and the PPO paper's humanoid step counts; the original SAC paper's Humanoid curves; Kaggle-kernel speed (box figure only, loaded 2-core ARM); ports searched once.
