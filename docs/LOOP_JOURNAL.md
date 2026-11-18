@@ -2546,3 +2546,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Launched m3 (body-motor twin) into f7's freed session: `jack-cpu-1795033455`, pushed OK. m0–m2 still running. The rule still waits on the motor-frame ruling (INBOX 12:26).
 - Left `docs/LAB.md` dirt alone (not this lane's).
 - Philosophy served: 4 (every floor measured on the repaired world, none borrowed, before the rule is written) and 6 (a free Kaggle session not left idle).
+
+## 2026-11-18 20:37–20:50 UTC · JACK · Next-up 3 (the dial's success gate: rule text) — short slot, every order waits
+- J11 waits on m0–m3 (harvest ~22:10) and the motor-frame ruling; J3/J13/J15 on a Kaggle session (all 4 held); J14 on 11-21. Next-up 1 (`STAGE2_PREDICTION.md`) already done `1a166d39`; item 2 (rows 5–7) done/blocked on a GPU.
+- Wrote `docs/research/prereg/dial_gated_vs_uniform.md` before any seed: gated / uniform / sham-gate (coin at the gated seed's own success rate — must NOT beat uniform), seeds 521–525, 300k, learner = J11's best-reading arm; eval lives at fixed d 0.75 and 1.0 on worlds common to every arm; GATE HELPS needs ≥ 4/5 paired seeds, above the floor's upper bound, sham ≤ 2/5, and clause G.
+- Found while writing: with lo = ceiling₀ = 0.75 the gated arm is a fixed-d0 arm until his first sustained life — clause G (ceiling > 0.80 on ≥ 3/5 seeds) or the reading is "GATE NEVER OPENED". Declared a PILOT (1/167 of Avalon's 50M). Committed the dirty `cpu_budget.json` (m0–m3 ledger) as the Director asked.
+- Philosophy served: 3 (the dial raced against its absence and a sham, not assumed) and 4 (the gate's failure mode named before data so a fixed-easy-world win cannot pass as a curriculum win).

@@ -1455,14 +1455,15 @@
         "detached:launch_f5.log": 711.55,
         "detached:launch_f6.log": 466.27,
         "detached:launch_f7.log": 795.59,
-        "detached:launch_m0.log": 139.76,
-        "detached:launch_m1.log": 140.13,
-        "detached:launch_m2.log": 140.51,
+        "detached:launch_m0.log": 160.84,
+        "detached:launch_m1.log": 150.71,
+        "detached:launch_m2.log": 150.97,
+        "detached:launch_m3.log": 11.03,
         "detached:launch_native.log": 8.54,
         "detached:launch_pilot.log": 347.95,
         "detached:statue_leak_r2_launch.log": 2567.89
       },
-      "used_s": 33156.8
+      "used_s": 33209.95
     }
   },
   "last_child_s": {
