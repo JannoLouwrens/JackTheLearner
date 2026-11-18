@@ -109,8 +109,11 @@ no extension. Two Kaggle kernels. (3) Harvest the compass-eye d0 kernel
 `WORLD_CARD.md` "compass eye — ceiling only".
 serves: M3, M5 · PLAN part "Eye" · END-FIT row 1 (human-like body) · philosophy 4, 7.
 **done when:** the option + tests, the heading line, and the body-frame gate row (both rungs, pass or fail) are committed.
-state: `eye="row128"` DONE `9e4031bb` (0.089 CPU-ms a look). Gate frozen `4f819fee`. Compass eye d = 1: f3 PASSES 20/20 (8.83 meals/life), shuffled 0/20, random 0.52. Compass d0 kernel RUNNING 06:23 (watcher pid 3002302).
-state: scar: with hand cal j0=alpha=1 + random_needs the body dies every ~3 decisions — use the shipped cal for any eye measurement.
+state: (0) DONE `c593ec10`: `eye_frame="body"` for both eyes, default byte-identical 8/8; quarter turn rolls the look 20/20, world control 0/20 (`test_jack_env_eye_frame` PASS). He sits a median 81° off his birth heading under random actions. (1) DONE: YES — WORLD_CARD "J12 (0)".
+state: FOUND: the compass is also in the MOTOR — W0's drive is a force along world x, y and proprio's two velocities are world x, y. Added `motor_frame="body"` (default identical; forward push follows his heading). `eye_frame` alone asks a learner to aim a compass push with no heading sense — see INBOX, it touches J11's pilot.
+state: (2) gate 2 FROZEN `c593ec10` (`eye_forager.py` docstring): ruler unchanged line for line, mapping in the env (`motor_frame="body"`), seeds 261–280, rows f4 / g4 (must fail) / b4 / h4 (body eye + WORLD motor, reported only, predicted miss). d0 kernel `jack-cpu-1794987421` RUNNING 07:37 (est 5 h, log `/data/jack-logs/eye_forager/launch2_d075.log`).
+state: next: when a session frees — `scripts/launch_detached.sh /data/jack-logs/eye_forager/launch2_d100.log $PY -m experiments.eye_forager kernel2 1.0`; harvest with `eye_forager score2 /data/jack-logs/eye_forager/gate2_d*.json` → WORLD_CARD "J12 (2′)".
+state: (3) DONE: compass d0 f3 20/20 (13.72 meals/life), shuffled 8/20, random 0.46; both compass rows labelled "ceiling only". Scar: with hand cal j0=alpha=1 + random_needs the body dies every ~3 decisions — use the shipped cal for any eye measurement.
 
 ### J3 — The home-made brains' fair chance on the published rows (owner 11-15)
 part: His brain · stage: 1 · step: 3 (reproduce) · prior: §15, §5; rulings 24, 33, 44
@@ -285,6 +288,8 @@ clauses; `XL.00` re-buy with a planted positive; `BD.01`/`LC.08` re-class.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-18 07:40 JACK/J12 → Director, **before J11's pilot rule**: `eye_frame="body"` alone leaves two compass channels — the drive (world x, y force) and proprio's root velocities (world x, y); he turns a median 81° from birth. `motor_frame="body"` is built and proven (`c593ec10`). Gate-2 row h4 (body eye + world motor) measures whether it matters, home ~12:40. Proposed default if no ruling: the pilot's learner arms pass BOTH `eye_frame="body"` and `motor_frame="body"`, and the f-card floors (noop, held8) are re-read for the motor frame (held8 holds a push — in the body frame that push turns with him; noop is unaffected).
+- 11-18 07:40 JACK/J12: `jack_env.py` and `fast_sim.py` moved in `c593ec10` (options default off, identity proven) — `LC.02`/`W1.02` and the other jack_env certificates are stale again (S10).
 
 ## DONE (kept one day)
 
