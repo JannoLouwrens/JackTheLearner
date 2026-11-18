@@ -95,12 +95,72 @@ def test_kernel_pieces():
     assert rec["rc"] != 0 and rec["lives"] == [] and "clone_s9" in rec["error"]
 
 
+def test_full_kernel_pieces():
+    """The FULL kernel (collect + manifest check + train + test): the hash
+    sees the bytes (identical arrays match, one changed action differs —
+    the control); a missing seed is reported, not skipped; the manifest
+    writer refuses an incomplete collection; with no committed manifest
+    the kernel refuses; the job compiles; the subprocess path collect-to ->
+    train-one -> cell (with a weights root) runs end to end on a tiny cap."""
+    import subprocess
+    import sys
+    rng = np.random.default_rng(3)
+    z = {"x": rng.random((50, 256)).astype(np.float32),
+         "a": rng.random((50, 8)).astype(np.float32)}
+    with tempfile.TemporaryDirectory() as d:
+        np.savez_compressed(Path(d) / "teacher_s701.npz", **z)
+        z2 = {"x": z["x"], "a": z["a"].copy()}
+        z2["a"][7, 3] += 1e-6
+        np.savez_compressed(Path(d) / "teacher_s702.npz", **z2)
+        man = {"701": {"sha256": C.teacher_hash(z), "n": 50},
+               "702": {"sha256": C.teacher_hash(z), "n": 50},
+               "703": {"sha256": C.teacher_hash(z), "n": 50}}
+        chk = C.check_manifest(d, man, seeds=(701, 702, 703))
+        assert chk["701"] == "match" and chk["702"].startswith("differs") and chk["703"] == "missing"
+        try:
+            C.write_manifest(Path(d))
+            raise AssertionError("manifest written from 2 of 40 seeds")
+        except RuntimeError as e:
+            assert "38 teacher seeds missing" in str(e)
+    if not C.TEACHER_MANIFEST.exists():
+        assert C.full_ready() and "no teacher manifest" in C.full_ready()[0]
+        try:
+            C.kernel_full()
+            raise AssertionError("full kernel launched without a manifest")
+        except RuntimeError as e:
+            assert "refused" in str(e)
+    compile(C._JOB_FULL.replace("__PINS__", "[]"), "job", "exec")
+    py, m = sys.executable, "experiments.forager_clone"
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        (d / "w").mkdir()
+        r = C.collect_seed(701, lives=1, cap=30)          # real teacher, tiny cap
+        np.savez_compressed(d / "teacher_s701.npz", **r)
+        rc = subprocess.run([py, "-c", (
+            "import sys; from experiments import forager_clone as C;"
+            "C.load_teacher.__defaults__ = (C.OUT, (701,));"
+            "C.train_clone.__defaults__ = (1,);"
+            "sys.exit(C.main(['train-one', 'clone', '0', sys.argv[1], sys.argv[2]]))"),
+            str(d), str(d / "w")], cwd=C.REPO).returncode
+        assert rc == 0
+        assert C.weights_path("clone", 0, d / "w").exists() and (d / "w" / "clone_s0.json").exists()
+        res = C.test_cell("clone", 0, 741, lives=1, cap=40, root=d / "w")
+        assert len(res) == 1 and res[0]["row"] == "clone0"
+        # run_pool hands its root to the cell subprocess: weights absent there,
+        # present in the default root's absence too -> the error names THIS root
+        (d / "empty_root").mkdir()
+        cells = C.run_pool([("clone", 0, 741)], d / "cells", workers=1, root=d / "empty_root")
+    rec = cells["clone0_s741"]
+    assert rec["rc"] != 0 and "empty_root" in rec["error"], rec
+
+
 def main():
     test_permute_pairs()
     test_trainer_learns_planted_map()
     test_cell_runs_student_in_f4_world()
     test_score_planted()
     test_kernel_pieces()
+    test_full_kernel_pieces()
     print("test_forager_clone_student PASS")
 
 

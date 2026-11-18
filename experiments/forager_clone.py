@@ -307,7 +307,7 @@ print("DONE", flush=True)
 '''
 
 
-def run_pool(cells: list, outdir, workers: int = EF.WORKERS) -> dict:
+def run_pool(cells: list, outdir, workers: int = EF.WORKERS, root: Path = WEIGHTS) -> dict:
     """Each (arm, clone_seed, seed) cell in its own `cell` subprocess; failed
     cells are kept with their error, never dropped."""
     import subprocess
@@ -322,7 +322,7 @@ def run_pool(cells: list, outdir, workers: int = EF.WORKERS) -> dict:
             err = open(str(f) + ".err", "w")
             live.append((arm, k, seed, f, err, subprocess.Popen(
                 [sys.executable, "-m", "experiments.forager_clone", "cell", arm,
-                 str(k), str(seed), str(f)],
+                 str(k), str(seed), str(f), str(root)],
                 cwd=REPO, stdout=subprocess.DEVNULL, stderr=err)))
         time.sleep(2)
         for item in list(live):
@@ -375,6 +375,154 @@ def kernel() -> dict:
     return r
 
 
+# ---------------------------------------------------------------------------
+# E2b FULL kernel (11-18 13:3x, before any student was trained; INBOX 12:48
+# default — training is ~112 CPU-min, over the box line, and 300 MB of
+# teacher data cannot ride git). One Kaggle CPU session:
+#   1. re-collects the teacher's lives on 701..740 (same code, same seeds);
+#   2. checks each seed's (x, a) bytes against TEACHER_MANIFEST — the sha256
+#      of the BOX collection, committed before launch. Declared now: a
+#      mismatch does not stop the run (the kernel's data is still the frozen
+#      teacher's own lives on the rule's seeds, and its students are tested
+#      in the same machine's world), but every mismatching seed is reported
+#      in clone_full.json and in the verdict line — a cross-machine world
+#      difference is a finding about the simulator, not hidden;
+#   3. trains the 6 students exactly as `train` does (train_clone unchanged);
+#   4. runs test_cells() through run_pool on those weights.
+# Fetched: clone_full.json (manifest check, train reports, cells) and the 6
+# weight files, so the box can re-score and later commit the students.
+# ---------------------------------------------------------------------------
+TEACHER_MANIFEST = REPO / "experiments" / "forager_clone_teacher.json"
+FULL_EST_HOURS = 9.0         # collect ~1.2 h + train ~0.8 h + test <= 6 h (GUESS)
+
+
+def teacher_hash(z) -> str:
+    import hashlib
+    h = hashlib.sha256()
+    h.update(np.ascontiguousarray(z["x"], dtype=np.float32).tobytes())
+    h.update(np.ascontiguousarray(z["a"], dtype=np.float32).tobytes())
+    return h.hexdigest()
+
+
+def write_manifest(data_dir: Path = OUT, seeds=TRAIN_SEEDS) -> dict:
+    """sha256 of every box teacher seed; refuses while any seed is missing."""
+    missing = [s_ for s_ in seeds if not (Path(data_dir) / f"teacher_s{s_}.npz").exists()]
+    if missing:
+        raise RuntimeError(f"manifest refused: {len(missing)} teacher seeds missing {missing[:5]}")
+    m = {}
+    for s_ in seeds:
+        z = np.load(Path(data_dir) / f"teacher_s{s_}.npz")
+        m[str(s_)] = {"sha256": teacher_hash(z), "n": int(len(z["x"]))}
+    TEACHER_MANIFEST.write_text(json.dumps(m, indent=1) + "\n")
+    return m
+
+
+def check_manifest(data_dir, manifest: dict, seeds=TRAIN_SEEDS) -> dict:
+    out = {}
+    for s_ in seeds:
+        f = Path(data_dir) / f"teacher_s{s_}.npz"
+        if not f.exists():
+            out[str(s_)] = "missing"
+            continue
+        z = np.load(f)
+        want = manifest.get(str(s_), {})
+        out[str(s_)] = ("match" if teacher_hash(z) == want.get("sha256") else
+                        f"differs (n {len(z['x'])} vs box {want.get('n')})")
+    return out
+
+
+def _pool(jobs: list, workers: int, cwd=None) -> dict:
+    """jobs: (key, argv). Returns key -> returncode; never drops a failure."""
+    import subprocess
+    import time
+    todo, live, rc = list(jobs), [], {}
+    while todo or live:
+        while todo and len(live) < workers:
+            k, argv = todo.pop(0)
+            live.append((k, subprocess.Popen(argv, cwd=cwd or REPO,
+                                             stdout=subprocess.DEVNULL)))
+        time.sleep(2)
+        for item in list(live):
+            if item[1].poll() is not None:
+                live.remove(item)
+                rc[item[0]] = item[1].returncode
+                print(f"{item[0]}: rc {item[1].returncode}", flush=True)
+    return rc
+
+
+def run_full(outdir, workers: int = EF.WORKERS) -> dict:
+    outdir = Path(outdir)
+    data, wroot = outdir / "teacher", outdir / "weights"
+    data.mkdir(parents=True, exist_ok=True)
+    wroot.mkdir(parents=True, exist_ok=True)
+    py = sys.executable
+    crc = _pool([(f"collect{s_}", [py, "-m", "experiments.forager_clone",
+                                   "collect-to", str(data), str(s_)])
+                 for s_ in TRAIN_SEEDS], workers)
+    manifest = json.loads(TEACHER_MANIFEST.read_text())
+    check = check_manifest(data, manifest)
+    trc = _pool([(f"{a}{k}", [py, "-m", "experiments.forager_clone", "train-one",
+                              a, str(k), str(data), str(wroot)])
+                 for a in ARMS for k in CLONE_SEEDS], max(1, workers // 2))
+    reports = [json.loads((wroot / f"{a}_s{k}.json").read_text())
+               if (wroot / f"{a}_s{k}.json").exists() else {"arm": a, "clone_seed": k, "error": "no report"}
+               for a in ARMS for k in CLONE_SEEDS]
+    cells = run_pool(test_cells(), outdir / "cells", workers, root=wroot)
+    return {"collect_rc": crc, "manifest_check": check,
+            "n_differ": sum(v != "match" for v in check.values()),
+            "train_rc": trc, "train": reports, "cells": cells}
+
+
+_JOB_FULL = r'''
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
+import json, os, shutil
+os.chdir("/tmp/jack")
+from experiments.forager_clone import run_full
+out = os.environ["JACK_OUT"]
+r = run_full(os.path.join(out, "work"))
+for f in os.listdir(os.path.join(out, "work", "weights")):
+    shutil.copy(os.path.join(out, "work", "weights", f), out)
+shutil.rmtree(os.path.join(out, "work", "teacher"), ignore_errors=True)
+json.dump(r, open(os.path.join(out, "clone_full.json"), "w"))
+print("DONE", flush=True)
+'''
+
+
+def full_ready() -> list:
+    """Reasons the FULL kernel must not launch: no committed manifest of all
+    40 box seeds."""
+    import subprocess
+    if not TEACHER_MANIFEST.exists():
+        return ["no teacher manifest (run `write-manifest` when all 40 seeds are home)"]
+    m = json.loads(TEACHER_MANIFEST.read_text())
+    bad = [f"manifest lacks seed {s_}" for s_ in TRAIN_SEEDS if str(s_) not in m]
+    r = subprocess.run(["git", "diff", "--quiet", "HEAD", "--", str(TEACHER_MANIFEST)], cwd=REPO)
+    t = subprocess.run(["git", "ls-files", "--error-unmatch", str(TEACHER_MANIFEST)],
+                       cwd=REPO, capture_output=True)
+    if t.returncode != 0 or r.returncode != 0:
+        bad.append("teacher manifest not committed")
+    return bad
+
+
+def kernel_full() -> dict:
+    from experiments.gpu import build_job, result_json, submit
+    bad = full_ready()
+    if bad:
+        raise RuntimeError("E2b full kernel refused: " + "; ".join(bad))
+    body = _JOB_FULL.replace("__PINS__", repr(EF.KERNEL_PINS))
+    fetch = ["clone_full.json"] + [weights_path(a, k, Path(".")).name
+                                   for a in ARMS for k in CLONE_SEEDS]
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=FULL_EST_HOURS,
+                 timeout_s=EF.REMOTE_TIMEOUT_S, fetch=fetch)
+    if not sub.ok:
+        raise RuntimeError(f"forager_clone full kernel: {sub.message}")
+    r = result_json(sub, "clone_full.json")
+    TEST_OUT.parent.mkdir(parents=True, exist_ok=True)
+    TEST_OUT.write_text(json.dumps(r, indent=1) + "\n")
+    return r
+
+
 def main(argv):
     if argv and argv[0] == "train":            # train [epochs] — all 6 students
         ep = int(argv[1]) if len(argv) > 1 else EPOCHS
@@ -387,10 +535,28 @@ def main(argv):
                 np.savez_compressed(weights_path(arm, k), **sd)
                 print(json.dumps(rep), flush=True)
         return 0
+    if argv and argv[0] == "collect-to":       # collect-to <dir> <seed ...>
+        collect(tuple(int(x) for x in argv[2:]), out=Path(argv[1]))
+        return 0
+    if argv and argv[0] == "train-one":        # train-one <arm> <k> <data_dir> <weights_dir>
+        X, A = load_teacher(Path(argv[3]))
+        sd, rep = train_clone(X, A, int(argv[2]), argv[1])
+        np.savez_compressed(weights_path(argv[1], int(argv[2]), Path(argv[4])), **sd)
+        (Path(argv[4]) / f"{argv[1]}_s{argv[2]}.json").write_text(json.dumps(rep))
+        return 0
+    if argv and argv[0] == "write-manifest":
+        m = write_manifest()
+        print(f"manifest: {len(m)} seeds -> {TEACHER_MANIFEST}")
+        return 0
+    if argv and argv[0] == "kernel-full":      # kernel-full — collect+check+train+test, one session
+        r = kernel_full()
+        print(json.dumps({"n_differ": r["n_differ"], "cells": len(r["cells"])}))
+        return 0
     if argv and argv[0] == "cell":             # cell <arm> <clone_seed> <seed> <out>
         from experiments.sim_speed_kcpu import _compat_multiray
         _compat_multiray()
-        res = test_cell(argv[1], int(argv[2]), int(argv[3]))
+        root = Path(argv[5]) if len(argv) > 5 else WEIGHTS
+        res = test_cell(argv[1], int(argv[2]), int(argv[3]), root=root)
         with open(argv[4], "a") as fh:
             fh.write("\n".join(json.dumps(r) for r in res) + "\n")
         return 0

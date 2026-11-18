@@ -2473,3 +2473,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Measured before anyone launched it: training the 6 students is ~112 CPU-min (clone 4.4, perm 8.5 CPU-s per 1e5 samples; ~0.9M teacher decisions × 20 epochs) — over ruling 32's box line, so the order's "train on the box" would have broken the box rule. INBOX + default: train inside the Kaggle kernel on re-collected, hash-checked teacher lives.
 - Collect at 8/40 seeds.
 - Philosophy served: 4 (the clone's test is fixed and runnable before any student exists) and 6 (the box's customers: a 2-hour job caught before it ran on their cores).
+
+## 2026-11-18 13:22–13:30 UTC · JACK · J11 (f6 launch refused) + J15 (FULL kernel coded) — short slot
+- LAB sleep_naps kernel came home → one Kaggle session free; J11 f6 launch REFUSED by the CPU-day guard: the 2 J15 teacher collectors fill the box's detached cap (2 busy, ruling 3). f6/f7 and J12's d = 1 wait until collect ends (24/40 seeds).
+- J15: coded the INBOX-12:48 default as `forager_clone kernel-full` — one Kaggle session re-collects 701–740, checks every seed's sha256 against a committed box manifest (mismatch reported, not fatal; declared before data), trains the 6 students with train_clone unchanged, runs the 140 test cells, fetches the weights. Refuses without a committed 40-seed manifest. `test_forager_clone_student` PASS 6/6 (hash control: a 1e-6 change in one action differs; missing seed reported; manifest writer refuses 2/40).
+- Philosophy served: 4 (the clone's data is provably the box teacher's, or the difference is printed) and 6 (112 CPU-min of training moved off the customers' cores onto free compute).
