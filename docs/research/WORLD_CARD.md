@@ -377,3 +377,19 @@ rank 2 behind J11's card. Smoke (tuning seed 153, d0, 1 life, box): f3 capped
 (1,800 s) 19 meals, g3 capped 10 meals, b3 445 s 3 meals; ~44 dec/CPU-s;
 worst case ~4.7 h a kernel. Disclosed before the run: the blind twin's 10
 meals in one d0 life make "g3 passes at d0 → f3 VOID there" a live outcome.
+
+### J12 (3) — the gate's reading at d = 1 (harvested 2026-11-18 05:02; raw `world_card_data/eye_gate_d100.json` sha256 ee2003a4…; kernel `jack-cpu-1794960628`; scored by `eye_forager score`)
+
+| row (d = 1, seeds 241–260 × 10 lives) | seeds meeting the bar | mean of seed means, floor meals/life (sd; min–max) | mean life, decisions | capped lives |
+|---|---|---|---|---|
+| **f3** the forager on `row128` | **20 / 20 → PASSES** | 8.83 (1.76; 5.60–12.20) | 4,995 | 10 / 200 |
+| g3 shuffled rays (must fail) | 0 / 20 → fails, as it must | 1.68 (0.58; 0.90–2.80) | 3,343 | 0 |
+| b3 white random (floor) | — | 0.52 (0.31; 0.00–1.30) | 1,527 | 0 |
+
+Every f3 seed beat its own b3 seed and cleared 5.0 (lowest: seed 246, 5.6).
+All 190 uncensored f3 lives still ended by hunger — a forager that eats ~9
+floor meals a life is not yet a forager that lives on them. **At d = 1 the
+food is findable from the 128-ray row** (the old 16-ray eye: 6 and 13 of 20
+on the same bar, ruling 23). Adult-taught ceiling only: it says the sense
+carries the food, not that a brain learns to use it. **d = 0.75 (d0): kernel
+`jack-cpu-1794960563` still RUNNING at 05:08; its row goes here when it lands.**

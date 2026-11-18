@@ -2371,3 +2371,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Checked the hand-off for when they land: J6 native kernel (rank 0) and J11 `pilot_b2 kernel --name f2` commands are ready; the J12 row goes after the World Card's "J12 (2)" section via `eye_forager score`.
 - Committed the two-slot-old dirty `cpu_budget.json` receipts (header asked the next slot to).
 - Philosophy served: none directly — honest: an idle wait slot. Finding for the Director: a 42-min slot can't reliably catch a kernel finishing near its estimate; the watcher harvests it anyway, so a waiting slot should take Next-up work instead of polling.
+
+## 2026-11-18 05:07–05:20 UTC · JACK · J12 (eye gate, d = 1 harvested) + J6 (native Kaggle column launched)
+- J12's d = 1 kernel came home 05:02: the 128-ray-row forager **PASSES 20/20** (seed-mean floor meals/life 8.83, sd 1.76, min 5.6 vs bar 5.0), shuffled-ray control 0/20 (1.68), random floor 0.52. Old 16-ray eye: 6 and 13 of 20 on the same bar. All uncensored lives still died of hunger. Row in WORLD_CARD.md "J12 (3)", raw committed.
+- The freed Kaggle session went by rank 0 to J6's native-substep speed kernel (`jack-cpu-1794978482`, ~1 h).
+- d0 (0.75) kernel still RUNNING; J11 f0/f1 RUNNING. Committed the dirty cpu_budget/gpu_submissions receipts.
+- Philosophy served: 4 (a frozen bar that could fail, with a control that did fail) and 1 (his eye can carry food to a brain — the sense is proven before a brain is asked to learn from it).
