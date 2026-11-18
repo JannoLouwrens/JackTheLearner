@@ -254,6 +254,20 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          DIFFERS: with the dial below d ~ 0.06 (r(d) < R) the
                          dial's "nearest cell" fallback applies, so d = 0
                          then means "as near as the clearance allows".
+  food_floor_only=False J11, found 11-18 (experiments/food_travel_probe.py).
+                         False = today. True (needs random_layout): a floor
+                         food is laid out only on legal cells whose xy lies
+                         outside the footprint (xy box of the geom's corners
+                         + FOOD_FLOOR_MARGIN) of every ground geom that is
+                         not the flat `floor` (the 13-degree ramp, the five
+                         stair blocks). Why: _place_foods drops each food at
+                         its FLOOR rest height and its clash test exempts all
+                         ground geoms, so on 32 of 610 legal cells (5.2%) a
+                         food starts buried in the ramp or a stair, is thrown
+                         out and (a ball) rolls: the statue's food in seed
+                         601 life 64 (obj1, a sphere, laid at -3.06, 2.62 on
+                         the ramp) rolled 1.9 m to and past him. The body's
+                         own spawn cells are not changed.
   CURES PROOF (measured 2026-11-17, `python -m
   experiments.tests.test_jack_env_cures`, seeds 153-155): see RESULT in that
   file's docstring.
@@ -316,6 +330,7 @@ SPAWN_CLEAR_R = 1.55  # m
 
 # J2 item 2, random layout each life (see OPTIONS).
 LAYOUT_TRIES = 50          # random cells tried per food before it stays put
+FOOD_FLOOR_MARGIN = 0.175     # m: the largest floor food's bound (as SPAWN_CLEAR_R uses)
 LAYOUT_SEP = 0.5           # m between floor foods (no stacked foods)
 LAYOUT_BODY_CHECK = 0.8    # m: legal cells this near a food are re-tested
 
@@ -366,6 +381,7 @@ class JackEnv(gym.Env):
                  integrator: str = "shipped",
                  move_cost_dial: bool = False,
                  spawn_clear: Optional[float] = None,
+                 food_floor_only: bool = False,
                  eye: str = "rays16",
                  native_substep: bool = False):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
@@ -416,6 +432,10 @@ class JackEnv(gym.Env):
             raise ValueError(f"spawn_clear must be > 0 m, got {spawn_clear!r}")
         self.spawn_clear = None if spawn_clear is None else float(spawn_clear)
         self.spawn_clear_failed = 0
+        # J11, default False: foods laid out on flat floor cells only (OPTIONS).
+        if food_floor_only and not random_layout:
+            raise ValueError("food_floor_only needs random_layout=True")
+        self.food_floor_only = bool(food_floor_only)
         # J12 (1), default "rays16" = today's 16-ray eye, nothing patched.
         # "row128": one level row of 128 azimuths (experiments/fast_sim.py);
         # vision is 256 wide. An eye change, proven in
@@ -635,6 +655,8 @@ class JackEnv(gym.Env):
         (counted in layout_failed)."""
         w = self.w
         m, d = w.model, w.data
+        if self.food_floor_only:
+            legal = legal[self._flat_floor_mask(legal)]
         placed = []
         for name, (qa, da, z0, quat0) in self._food_rest.items():
             gid = int(m.geom(name).id)
@@ -665,6 +687,26 @@ class JackEnv(gym.Env):
                 placed.append((float(xy[0]), float(xy[1])))
         self.last_layout = {n: tuple(map(float, w.data.qpos[v[0]:v[0] + 2]))
                             for n, v in self._food_rest.items()}
+
+    def _flat_floor_mask(self, legal: np.ndarray) -> np.ndarray:
+        """`food_floor_only`: True where the cell's xy is outside every
+        non-floor ground geom's footprint (xy bounding box of its 8 box
+        corners in the world frame, grown by FOOD_FLOOR_MARGIN)."""
+        w = self.w
+        m, d = w.model, w.data
+        ok = np.ones(len(legal), dtype=bool)
+        for g in w.ground_gids:
+            g = int(g)
+            if m.geom(g).name == "floor":
+                continue
+            h = m.geom_size[g][:3]
+            corners = np.array([[sx * h[0], sy * h[1], sz * h[2]]
+                                for sx in (-1, 1) for sy in (-1, 1) for sz in (-1, 1)])
+            xy = (corners @ d.geom_xmat[g].reshape(3, 3).T + d.geom_xpos[g])[:, :2]
+            lo, hi = xy.min(0) - FOOD_FLOOR_MARGIN, xy.max(0) + FOOD_FLOOR_MARGIN
+            inside = np.all((legal >= lo) & (legal <= hi), axis=1)
+            ok &= ~inside
+        return ok
 
     def _layout_spawn(self, legal: np.ndarray, rng: np.random.RandomState,
                       death_xy) -> tuple:
