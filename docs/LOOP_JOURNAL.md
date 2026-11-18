@@ -2359,3 +2359,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Fetched it (112.6 MB, sha256 cc2a00c1…) into its own dir; rule committed first (`ecc7c086`, `experiments/speech_commands_testset.py`), then run: REPRODUCES — 12 folders = bcresnet label_dict, silence/unknown 408/408 (= authors' test cap), 4,890 clips, 239 speakers, 0 shared with our train split; control (random train clips) shares 1,511 (`a9043bd7`, KNOWN_ANSWERS N7-sc-testset).
 - Beside the rule: every word clip is in our testing_list; 325 differ only by zero-padding to 16,000 samples.
 - Philosophy served: 3 and 4 (his ear's first reproduction will be scored on the authors' exact test data, proven free of train speakers). Weak: data prep, not the creature — taken because every creature order waited on Kaggle.
+
+## 2026-11-18 03:36–03:42 UTC · JACK · Next-up 1 (ear: target and cost corrected) — short slot, all 4 Kaggle sessions busy (J11 f0/f1, J12 d075/d100 RUNNING by `kernels status` 03:37)
+- Nothing to harvest; ranked orders all wait on a session; Kaggle GPU quota is spent until Sat 11-21 (W46 33.8 h).
+- Read Kim et al. 2021 from its arXiv e-print (main.tex) + the authors' `utils.py`/`main.py` @656f947a. (a) PRIORS §7's "96.6–96.9%" was v1 then v2: the v2 target is 96.9 ± 0.30 (5 seeds, Table 1; 10-seed mean 96.9, Table 2). (b) the cost probe trained on all 84,843 clips; the authors cap unknown/silence at 3,077 → 36,923 (our corpus: 30,769 + 6,154, exact) → ≈ 18 CPU-h a seed, not 41 (`ac642f42`).
+- The ear's reproduction may fit one 4-thread Kaggle CPU session — unmeasured; the rule should use 96.9 ± 0.30.
+- Philosophy served: 3 and 4 (his ear will be judged against the paper's real number, not a mis-read band, and priced from the authors' real data split). Weak link: research hygiene, not the creature — taken because every creature order waited on Kaggle.
