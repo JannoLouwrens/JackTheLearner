@@ -3671,3 +3671,93 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
+
+## D56 — RESOLVED BY ARMED DEFAULT (fired 2026-11-18 by the Director; class conduct, desk-executable, decide_by 2026-11-21): NO SPLIT IS ASSUMED. Jack dispatches smallest-first, treats a Kaggle GPU quota refusal as final for that week and overflows to Colab; nothing of the other project is touched, paused or metered. `D1.0` no longer waits on it (closed by the record, ruling 20). Executed as ruling 47 below: J14 launches A1, A2, A3, then A's smoke in his world, then the ear seeds, in that order, from Sat 11-21 00:00 UTC.
+
+## 2026-11-18 06:42 UTC — Director, DAILY sitting: rulings
+
+**38. His eye is body-frame.** Today's 16 rays and the new `row128` are cast
+at fixed WORLD azimuths (`fast_sim.py:157`, no yaw term): a free compass the
+human-like body will not have (END-FIT row 1; lab `99e588f0`; auditor 11-18
+finding 1). J12 builds `jack_env(eye_frame="body")`, default off, identity at
+yaw 0. From today nothing a brain learns is believed on the compass eye:
+every learner arm of J11's pilot, and the stage-2 choice, see the body-frame
+eye. J12's compass-eye gate rows (d = 1: 20/20; d0 in flight) stand as
+"compass eye — ceiling only". The frozen gate is run again on the body-frame
+eye, declared before any body-frame run: same forager, same bar, shuffled
+twin must miss, fresh seeds 261–280, d0 and d = 1, no extension; if the
+forager's steering assumed the world frame, only the mapping needed to steer
+from body-frame rays changes, written down first. Any memory, map or homing
+result earned on the compass eye is earned again without it.
+
+**39. Pilot 2's world and its card, ruled before the rule is written.** The
+statue leak's cause is known (a food laid on the ramp rolls; `adf457ca`), so
+it is repaired by its cause: the pilot's world has `food_floor_only=True`;
+`spawn_clear` R stays 1.55 m. The card the rule reads is measured on THAT
+world: f0..f7 all run (do-nothing, held-8 with movement free, held-8 with
+movement charged); nothing is borrowed from the leaky card and no ring is
+filtered out of any card. The leaky c-card stays on the page as history.
+Each arm's floor is named in the rule (B0, P, G against held8-k1-ff; K, KP
+against held8-k0-ff; K with learning rate 0 against held8-k0-ff as a bound,
+said so). `native_substep=True` in the pilot and every new run: identical
+world, 0/300 decisions differ on the box and on Kaggle. Cost: the rule
+freezes about a day later than option (b). Floors are learner-free, so
+ruling 38 does not touch the card.
+
+**40. The integrator is not switched.** J6's table is complete: identical
+world 2.39× (lazy audio + native sub-steps), `implicitfast` 5.64× but a
+different world (22 certificates to re-earn). Under brain B the packed
+learner runs 11–18 decisions per CPU-second against the simulator's 170, so
+the simulator is no longer the clock and the switch would buy under 10%.
+RK4 stays through stages 1–2. Re-opened only by a measured profile in which
+the simulator is over half of a learner run's CPU.
+
+**41. `W1.04` is parked, honestly.** It queued eleven hours and died without
+running a seed; its ERROR row stands and the orders page no longer says "in
+flight". No session before J11's pilot is harvested; re-read 2026-11-25. A
+detached job still queued on Kaggle after two hours gives up its box seat
+(SYSTEM next-up 2).
+
+**42. `PS.02` and its family stay red until stage 3.** Ruling 12's no-fire
+cure does not move the probe (R² 0.290 → 0.309, bar 0.50; `441ac2f1`); the
+same generic probe fails `PS.05`, `PS.06`, `PS.08` whose world gates pass.
+A new probe chosen now, after seeing which one succeeds, is a failing spec
+rewritten until it passes. At the first stage-3 sitting (or 2027-01-15) the
+probe procedure is pre-registered once for the family: rule first, seeds
+that are neither 90 nor the registered 0–2, bars unmoved, and the same probe
+on the non-thermal inputs as the control that must fail.
+
+**43. Three settled FAILs asked of the Director (S9).** `T0.17`: the detector
+is right — `T2.14`'s PASS was bought under claim words since amended; its row
+is demoted by the registry's own drift mechanism, not re-run on the old core
+(ruling 10), and `T0.17` re-earns. `T0.23`: no conjunct changes; it is red
+because `run ratchets` is red, so S9 makes the ratchets green honestly (the
+6 unattributed GPU jobs attributed or named, the fallen floor recorded).
+`T0.32`: stays FAIL; none of the 16 long-run impls is grandfathered; each
+gets `rtf.require_feasible` in the commit that next re-runs it.
+
+**44. The home-made brains' fair chance (J3).** The frozen rule is unchanged
+and both rows run for `dreamer-xs`, `wm-dyn`, `wm-latent+ring`. `wm-efe` gets
+no session: on these rows it is `dreamer-xs` tensor for tensor (115
+identical, its 5 heads uncalled), and its row says so. The fair chance the
+owner asked for is then a REPAIRED entry under the same rule on fresh seeds
+— noise held at action choice and γ 0.99, §15's named cure — first for
+`wm-latent`, the only arm that learned.
+
+**45. The walking layer reproduces a walk that has a published number
+first.** §16: the 2018 helper-force paper states no seeds, success rate or
+test of walking. J10's first row is SAC with the Zoo's Humanoid-v4 entry
+(pass: return ≥ 5,950 AND ≥ 12 m forward per 1,000 steps at 2M; check at 1M
+in [3,784, 5,866]); the 2018 row stays, third, with a per-stage exit-reason
+log.
+
+**46. The reference's size.** Already ruled (36): 6 KB a section, no
+whole-file cap. The researcher's 11-18 ask is answered by it.
+
+**47. D56 executed** (above): smallest-first on the shared free GPU.
+
+**48. The ear starts its reproduce step on the free GPU.** BC-ResNet-1 is
+sized (9,232 weights = the published 9.2K; corpus and official test set
+reproduce; target 96.9 ± 0.30). It runs inside J14 after brain A's rows, from
+scratch, rule first, shuffled-label twin. Nothing pretrained goes inside
+him; this is a known-answer row for a published design, PLAN step 3.

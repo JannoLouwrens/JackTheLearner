@@ -2575,6 +2575,8 @@ DECIDE: D56
              week whenever the other project runs first.
   decide_by: 2026-11-21
 
+ANSWERED D56 — resolved by armed default, fired 2026-11-18 by the Director (class conduct, desk-executable); record in docs/DECISIONS_RESOLVED.md.
+
 ---
 
 ## D57 — Recordings of how people move: a judge outside him, or a part inside him? (Director, 2026-11-15)
