@@ -451,3 +451,24 @@ reported only, predicted to miss, there so "does the motor frame matter" is
 measured. World: gate 1's, through `lazy_contact_audio` + `native_substep`.
 Box smoke (seed 153, one life capped at 2,000 decisions, d 0.75 — not a
 reading): f4 3 meals, g4 2, h4 0, b4 0 (died at 1,454).
+
+### J12 (2′) — gate 2's reading at d = 0.75, the entry rung (harvested 2026-11-18 12:10; raw `world_card_data/eye_gate2_d075.json` sha256 af51fece…; kernel `jack-cpu-1794987421`; scored by `eye_forager score2`)
+
+| row (d = 0.75, seeds 261–280 × 10 lives) | seeds meeting the bar | mean of seed means, floor meals/life (sd; min–max) | mean life, decisions | capped lives |
+|---|---|---|---|---|
+| **f4** body eye + body motor (the row) | **20 / 20 → PASSES** | 7.53 (1.31; 5.60–11.50) | 7,494 | 88 / 200 |
+| g4 shuffled rays (must fail) | 0 / 20 → fails, as it must | 2.17 (1.06; 0.40–4.90) | 4,574 | 29 / 200 |
+| b4 white random (floor) | — | 0.45 (0.25; 0.10–1.10) | 1,646 | 0 |
+| h4 body eye + WORLD motor (reported only) | 0 / 20 → misses, as predicted | 0.81 (0.49; 0.00–2.10) | 3,480 | 0 |
+
+**At the entry rung, food is findable from the body-frame 128-ray row by a
+ruler that is never told its heading.** Every f4 seed beat its own b4 seed
+and cleared 5.0 (lowest: seed 275, 5.6). All 112 uncensored f4 lives ended by
+hunger. Beside the compass row (f3 13.72 on seeds 241–260): taking the
+compass away costs ~6 meals a life — the frozen ruler's dead-reckoning and
+wander were written for world axes and were not re-tuned (said before the
+run). **The motor frame matters:** the same body eye with the world-axis
+push (h4) eats 0.81, barely above random — a body eye needs a body motor.
+The shuffled twin fell from 4.84 (gate 1) to 2.17, so the margin between
+sight and no sight is wider here than on the compass row.
+Adult-taught ceiling only. d = 1: kernel not yet run (J12 next step).
