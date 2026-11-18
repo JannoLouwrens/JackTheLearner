@@ -2484,3 +2484,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `test_pilot_b2_bm` PASS 4/4 (old 16 groups identical to 858ba11c; 32 cells once; stamp body vs control world; noop/non-ff twins refused). One life, seed 901: body motor 2,578 decisions vs world 9,000 — an anecdote, not a reading, but it says the world-motor floor may not stand in for the body-motor one.
 - Waits on the Director's motor-frame ruling (INBOX 12:26); if body, m-kernels launch as sessions and the cap free.
 - Philosophy served: 4 (the pilot's floors must be measured on the creature being tested, not borrowed) and 7 (his own-frame motor).
+
+## 2026-11-18 14:37–14:45 UTC · JACK · J11 (f6) + J12 (d = 1 gate) — short slot
+- J15's two teacher collectors finished (40/40 seeds, 14:24), freeing the box's detached cap; f4 was home (13:45). Kaggle: only f3, f5 RUNNING.
+- Launched J11 f6 (`jack-cpu-1795012704`) and J12 gate-2 d = 1 (`jack-cpu-1795012722`) into the two free sessions; J11 now at its 3-session cap while J12's gate runs; f7 takes the next free one.
+- f-card with f4: held8-k1-ff 0/500 sustained (upper 0.60%), beside held8-k0-ff 31/1485 and noop 0/1500. No learner seed run; the rule still waits on the motor-frame ruling.
+- Philosophy served: 4 (the floors the pilot will be judged against keep being measured, not borrowed) and 6 (free Kaggle sessions put to work instead of idling).

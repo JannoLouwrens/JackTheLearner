@@ -1422,8 +1422,8 @@
         "VO.01": 144.54,
         "W.1": 20.94,
         "W0.PL": 91.07,
-        "detached:collect_a.log": 1800.03,
-        "detached:collect_b.log": 1800.04,
+        "detached:collect_a.log": 7905.19,
+        "detached:collect_b.log": 8040.19,
         "detached:launch2_d075.log": 496.94,
         "detached:launch_c6.log": 228.89,
         "detached:launch_c7.log": 215.96,
@@ -1432,14 +1432,14 @@
         "detached:launch_f0.log": 960.35,
         "detached:launch_f1.log": 581.51,
         "detached:launch_f2.log": 703.37,
-        "detached:launch_f3.log": 213.9,
-        "detached:launch_f4.log": 160.31,
-        "detached:launch_f5.log": 33.39,
+        "detached:launch_f3.log": 333.55,
+        "detached:launch_f4.log": 666.18,
+        "detached:launch_f5.log": 164.04,
         "detached:launch_native.log": 8.54,
-        "detached:launch_pilot.log": 97.44,
+        "detached:launch_pilot.log": 347.95,
         "detached:statue_leak_r2_launch.log": 2567.89
       },
-      "used_s": 15268.57
+      "used_s": 28620.56
     }
   },
   "last_child_s": {
