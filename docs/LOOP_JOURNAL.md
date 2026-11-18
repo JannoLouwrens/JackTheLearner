@@ -2329,3 +2329,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - test_pilot_b2_arms PASS: 16/16 arm × world settings read off the env; B0 world == card world for 50 decisions at both food_floor_only values. `_world_stamp` now records food_floor_only.
 - Left for the rule slot: world (a)/(b), W, seeds 402+, floor clause; then a pilot-cell kernel packer (not written).
 - Philosophy served: 4 (the arms are fixed in code before any data, so the rule cannot be fitted to results) and 5 (cuts the wait between the rule and the pilot).
+
+## 2026-11-18 02:07–02:35 UTC · JACK · J11 (pilot kernel packer) — all 4 Kaggle sessions busy (J11 f0/f1, J12 d075/d100 RUNNING)
+- Nothing to harvest. Wrote the last code between "rule committed" and "pilot launched" (`2d6808f0`): `pilot_groups` p0..p9 (40 runs, 4 a kernel, learners dealt seed-major so no arm sits on one slow host; floors in p7–p9), `run_pilot_parallel` (pilot_b's child cells with partial files and the 8.5 h cut), `pilot_kernel` that REFUSES while `PILOT_RULE` is None.
+- test_pilot_b2_kernels PASS: exact cover of 40 runs; must-fail refusal fires; K and held8 children at T=300 (seed 901, outside every range) rc 0, world stamped ff/dial; reassembly from cell files. Scar: the project venv has no sbx — learner children need `/data/venvs/jack-std/bin/python`.
+- Committed the dirty cpu_budget receipts with it.
+- Philosophy served: 4 (no learner can be launched before its rule exists — the guard is in code) and 5 (the rule-to-pilot wait is now one command).
