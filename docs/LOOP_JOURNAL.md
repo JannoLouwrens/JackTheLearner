@@ -2552,3 +2552,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Wrote `docs/research/prereg/dial_gated_vs_uniform.md` before any seed: gated / uniform / sham-gate (coin at the gated seed's own success rate — must NOT beat uniform), seeds 521–525, 300k, learner = J11's best-reading arm; eval lives at fixed d 0.75 and 1.0 on worlds common to every arm; GATE HELPS needs ≥ 4/5 paired seeds, above the floor's upper bound, sham ≤ 2/5, and clause G.
 - Found while writing: with lo = ceiling₀ = 0.75 the gated arm is a fixed-d0 arm until his first sustained life — clause G (ceiling > 0.80 on ≥ 3/5 seeds) or the reading is "GATE NEVER OPENED". Declared a PILOT (1/167 of Avalon's 50M). Committed the dirty `cpu_budget.json` (m0–m3 ledger) as the Director asked.
 - Philosophy served: 3 (the dial raced against its absence and a sham, not assumed) and 4 (the gate's failure mode named before data so a fixed-easy-world win cannot pass as a curriculum win).
+
+## 2026-11-18 21:00–21:15 UTC · SYSTEM · INBOX 10:50 (J10's Kaggle resume plumbing)
+- SYSTEM orders empty; oldest INBOX line (07:40) is a Director ruling → took the oldest SYSTEM-addressed one.
+- `ee81dffd`: `gpu.submit/run_on_kaggle` gain `kernel_sources` (into kernel-metadata.json) and opt-in `fetch_only` (`--file-pattern` from `fetch`; the CLI reads each file whole into RAM, so a 6.1 GB checkpoint would have hit the box). Opt-in because pilot_b2's recovery reads unlisted artifacts. `humanoid_sac_row.kernel` segment > 0 unlocked; mount path unverified.
+- Retired the 16:45 dead-watcher proposal: `run status` already prints `orphaned_dispatches`. Tests 5/5 + reuse 4/4. Left LAB.md/cpu_budget.json dirt alone.
+- Philosophy served: 6 (2M-step SAC row fits in free 12 h Kaggle CPU sessions, without filling a tenant box's disk) and 5 (the JACK lane's blocker removed).
