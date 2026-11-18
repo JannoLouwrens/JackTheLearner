@@ -99,6 +99,16 @@ CARD_FF_ARMS = ("noop-k1-ff", "held8-k0-ff")
 # 3.4 h mean, 4.1 h max wall), so no kernel nears POOL_DEADLINE_S.
 # `card --glob 'f*.json'` reads them with no change.
 CARD_FF_K1_ARMS = ("held8-k1-ff",)
+# J11 11-18 13:45, the motor-frame INBOX (12:26, 07:40): gate 2 measured body
+# eye + WORLD motor 0/20 vs body motor 20/20, so the pilot's rule will likely
+# name motor_frame="body" — and then held8's floors above (world motor: the
+# held push points along a world axis) are not the floors of that creature.
+# These are the same two held8 floors with ONLY motor_frame="body" changed
+# ("-bm"; the held push turns with his heading). noop needs no twin: a zero
+# push is zero in either frame. Floors never read the eye, so eye_frame is not
+# varied. Built ahead of the ruling so it can launch the slot a session frees;
+# if the ruling is "world", these groups are simply never run.
+CARD_FF_BM_ARMS = ("held8-k0-ff-bm", "held8-k1-ff-bm")
 KERNEL_PINS = ["gymnasium==1.4.0", "mujoco==3.17.0"]
 WORKERS = 4
 REMOTE_TIMEOUT_S = int(9.5 * 3600)
@@ -125,11 +135,13 @@ def run_card_cell(arm: str, seed: int, lives: int = CARD_LIVES,
     Written to `out` every 10 lives, so a killed cell keeps what it lived."""
     from experiments.world_card import DoNothing, Held
     pol_name, k, *rest = arm.split("-")
-    if rest not in ([], ["ff"]):
+    if rest not in ([], ["ff"], ["ff", "bm"]) or (pol_name, rest) == ("noop", ["ff", "bm"]):
         raise ValueError(f"unknown arm {arm}")
     pol = DoNothing(seed) if pol_name == "noop" else Held(seed, 8)
     w = PilotLives(make_world(seed, move_cost_dial=(k == "k0"),
-                              food_floor_only=(rest == ["ff"])), cap=LIFE_CAP)
+                              food_floor_only=("ff" in rest),
+                              motor_frame="body" if "bm" in rest else "world"),
+                   cap=LIFE_CAP)
     o, info = w.reset(seed=seed)
     pol.new_life()
     spawn = [float(getattr(w.env, "last_spawn_food_dist", float("nan")))]
@@ -140,6 +152,7 @@ def run_card_cell(arm: str, seed: int, lives: int = CARD_LIVES,
         rec = {"arm": arm, "seed": seed, "lives_asked": lives, "done": done,
                "decisions": n, "wall_s": round(time.time() - t_wall, 1),
                "cpu_s": round(time.process_time() - t_cpu, 1), "lives": rows,
+               "motor_frame": w.env.motor_frame,
                "spawn_clear_failed": int(w.env.spawn_clear_failed),
                "layout_failed": int(w.env.layout_failed)}
         if out is not None:
@@ -167,13 +180,17 @@ def card_cells() -> list:
 def card_groups() -> dict:
     """c0..c7: 8 cells each = two worlds x the four arms. f0..f3: 8 cells
     each = four worlds x CARD_FF_ARMS. f4..f7: 4 cells each = four worlds x
-    held8-k1-ff."""
+    held8-k1-ff. m0..m7: 4 cells each = two worlds x CARD_FF_BM_ARMS (both
+    body-motor floors in every kernel, so any number of m-kernels home gives
+    the two arms the same worlds)."""
     c = card_cells()
     g = {f"c{i}": c[8 * i:8 * i + 8] for i in range(8)}
     f = [(a, s) for s in CARD_SEEDS for a in CARD_FF_ARMS]
     g.update({f"f{i}": f[8 * i:8 * i + 8] for i in range(4)})
     h = [(a, s) for s in CARD_SEEDS for a in CARD_FF_K1_ARMS]
     g.update({f"f{4 + i}": h[4 * i:4 * i + 4] for i in range(4)})
+    m = [(a, s) for s in CARD_SEEDS for a in CARD_FF_BM_ARMS]
+    g.update({f"m{i}": m[4 * i:4 * i + 4] for i in range(8)})
     return g
 
 
@@ -297,7 +314,7 @@ def cells_from_artifacts(artifacts: dict, cells: list) -> dict | None:
 
 def _arm_order(by: dict) -> dict:
     """Rows in CARD_ARMS, CARD_FF_ARMS, CARD_FF_K1_ARMS order (others last)."""
-    known = CARD_ARMS + CARD_FF_ARMS + CARD_FF_K1_ARMS
+    known = CARD_ARMS + CARD_FF_ARMS + CARD_FF_K1_ARMS + CARD_FF_BM_ARMS
     return dict(sorted(by.items(), key=lambda kv: (known.index(kv[0])
                                                    if kv[0] in known else len(known))))
 
