@@ -63,6 +63,59 @@ Cost    smoke (box, 11-17 08:3x, seed 153, d 0.75, 1 life each): f3 9,000
 Disclosed before the run: at d0 the blind twin ate 10 meals in its one
         smoke life (tuning seed). A g3 pass at d0 — f3 VOID there — is a
         live outcome the bar was not moved to avoid; d = 1 is judged anyway.
+
+=============================================================================
+GATE 2 — THE SAME GATE ON THE BODY-FRAME EYE (ruling 38, ORDERS J12 (2)).
+Declared 2026-11-18 07:4x UTC, in this commit, before any gate-2 cell runs.
+=============================================================================
+Why     Both gate-1 rows were earned on an eye cast at WORLD azimuths — a free
+        compass. Ruling 38: nothing is believed on the compass eye.
+Does the ruler assume the world frame?  YES (ORDERS J12 (1)), three places in
+        `EyeForager._act`: (i) a blob at ray angle `ang` is placed at
+        rel = (cos ang, sin ang) * dist (the two `rel =` lines) and the push
+        is a[6:8] = rel/|rel| — but W0's drive is a force along WORLD x, y
+        (`w0.py` decide: xfrc_applied[rover, :2]); (ii) the wander push
+        a[6:8] = (cos, sin) of ray_ang[heading], same assumption; (iii) the
+        target is dead-reckoned with rel -= v * DT, v = proprio's root
+        velocity, WORLD x, y. With a body-frame eye and none of these changed
+        the ruler pushes along a compass it cannot see: the body is born at
+        yaw 0 and under random actions sits a median 81 deg from it
+        (`tests/test_jack_env_eye_frame.py` (d)).
+The ONE change, said before the run (ORDERS: "change ONLY the action mapping
+        needed to steer from body-frame rays"): the mapping is put in the
+        WORLD'S INTERFACE, not in the ruler — `JackEnv(motor_frame="body")`:
+        action[6:8] is a push (forward, left) along the body's own heading and
+        proprio's two root velocities are (forward, left). The ruler's code is
+        gate 1's line for line (`EyeForager`, same class, same constants, same
+        rng); read in the body frame its three assumptions hold again. It is
+        NOT given yaw: a ruler that read the heading from the simulator would
+        put the compass back by another door. Known and left as is: `rel` is
+        not turned when the body yaws between decisions (he has no turn-rate
+        sense); the ruler's own re-sighting rule (same texture within 1.5 m)
+        is what it has.
+World   `JackEnv(seed, difficulty=d, eye="row128", eye_frame="body",
+        motor_frame=<row>, lazy_contact_audio=True, native_substep=True)` —
+        gate 1's world (default options, shipped calibration) through the
+        two identical-world speed options (ORDERS 11-18), d = 0.75 and d = 1.
+Seeds   FRESH 261..280 (ORDERS J12 (2)); 10 lives a seed, cap 9,000 — gate 1's.
+Rows    at each d:
+          f4  the ruler, body-frame eye, body-frame motor      <- THE ROW
+          g4  CONTROL that must fail: f4 with its rays permuted each decision
+          b4  white random (same policy and rng as b3) in f4's world — the
+              per-seed floor
+          h4  REPORTED ONLY, no bar clause, decides nothing: the ruler with
+              the body-frame eye and the WORLD-frame motor (what an env with
+              only `eye_frame="body"` gives). Predicted before the run: it
+              misses. It is here so that "does the motor frame matter?" is a
+              measurement, not an argument (scored by the same function
+              against b4, labelled as such).
+Bar     UNMOVED: mean floor meals/life >= 5.0 AND > b4's mean on the same
+        seed, on >= 18 of 20 seeds; g4 must hold on < 18, else f4 is VOID at
+        that d. d0 and d = 1 judged separately, both reported.
+Extension  NONE. A miss is a miss — and then J15 becomes "say why" (ORDERS).
+Where   2 Kaggle CPU kernels (one per d, 80 cells, 4 workers), rank 2.
+Cost    gate 1 at d = 1 took one session under its 4.7 h worst case with 60
+        cells and no native_substep (2.4x); 80 cells with it: est 5 h.
 """
 from __future__ import annotations
 
@@ -84,6 +137,10 @@ from experiments import world_card as WC  # noqa: E402
 GATE_SEEDS = tuple(range(241, 261))
 GATE_DS = (0.75, 1.0)
 GATE_ROWS = ("f3", "g3", "b3")
+# gate 2 (body-frame eye), declared in the docstring above
+GATE2_SEEDS = tuple(range(261, 281))
+GATE2_ROWS = ("f4", "g4", "h4", "b4")        # longest first
+GATE2_MOTOR = {"f4": "body", "g4": "body", "b4": "body", "h4": "world"}
 EYE = "row128"
 N_ROW = 128
 SMOKE_SEED = 153
@@ -237,17 +294,21 @@ class EyeForager(WC.HandForager2):
 
 
 def make_policy(row: str, seed: int):
-    if row == "f3":
+    if row in ("f3", "f4", "h4"):
         return EyeForager(seed)
-    if row == "g3":
+    if row in ("g3", "g4"):
         return EyeForager(seed, shuffle_rays=True)
-    if row == "b3":
+    if row in ("b3", "b4"):
         return WC.WhiteRandom(seed)
     raise ValueError(f"row {row!r} unknown")
 
 
-def make_env(seed: int, d: float, eye: str = EYE):
+def make_env(seed: int, d: float, eye: str = EYE, row: str = "f3"):
     from experiments.jack_env import JackEnv
+    if row in GATE2_MOTOR:                         # gate 2: body-frame eye
+        return JackEnv(seed=seed, difficulty=(None if d == 1.0 else d), eye=eye,
+                       eye_frame="body", motor_frame=GATE2_MOTOR[row],
+                       lazy_contact_audio=True, native_substep=True)
     return JackEnv(seed=seed, difficulty=(None if d == 1.0 else d), eye=eye,
                    lazy_contact_audio=True)
 
@@ -255,7 +316,7 @@ def make_env(seed: int, d: float, eye: str = EYE):
 def run_seed(row: str, seed: int, d: float, lives: int = WC.LIVES,
              cap: int = WC.LIFE_CAP_DECISIONS) -> list:
     """world_card.run_seed's life loop, unchanged, on the row128 world."""
-    env = make_env(seed, d)
+    env = make_env(seed, d, row=row)
     o, info = env.reset(seed=seed)
     pol = make_policy(row, seed)
     out = []
@@ -297,8 +358,10 @@ def run_seed(row: str, seed: int, d: float, lives: int = WC.LIVES,
     return out
 
 
-def gate_cells(d: float) -> list:
+def gate_cells(d: float, gate: int = 1) -> list:
     # longest first (f3, then g3, then b3) so the pool's tail is short
+    if gate == 2:
+        return [(row, s, d) for row in GATE2_ROWS for s in GATE2_SEEDS]
     return [(row, s, d) for row in GATE_ROWS for s in GATE_SEEDS]
 
 
@@ -344,13 +407,14 @@ print("DONE", flush=True)
 '''
 
 
-def kernel(d: float) -> dict:
-    """Submit the gate at one d (60 cells) as one Kaggle CPU kernel; write the
-    returned cells to OUT/gate_dXXX.json (failed cells kept with their error)."""
+def kernel(d: float, gate: int = 1) -> dict:
+    """Submit the gate at one d (60 cells; gate 2: 80) as one Kaggle CPU
+    kernel; write the returned cells to OUT/gate[2]_dXXX.json (failed cells
+    kept with their error)."""
     from experiments.gpu import build_job, result_json, submit
     if d not in GATE_DS:
         raise ValueError(f"d {d!r} not in {GATE_DS}")
-    body = (_JOB.replace("__CELLS__", repr(gate_cells(d)))
+    body = (_JOB.replace("__CELLS__", repr(gate_cells(d, gate)))
             .replace("__PINS__", repr(KERNEL_PINS)))
     sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=5.0,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["eye_gate.json"])
@@ -358,7 +422,8 @@ def kernel(d: float) -> dict:
         raise RuntimeError(f"eye_forager gate d={d}: {sub.message}")
     r = result_json(sub, "eye_gate.json")
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"gate_d{int(round(100 * d)):03d}.json").write_text(json.dumps(r, indent=1) + "\n")
+    name = "gate2" if gate == 2 else "gate"
+    (OUT / f"{name}_d{int(round(100 * d)):03d}.json").write_text(json.dumps(r, indent=1) + "\n")
     return r
 
 
@@ -375,6 +440,22 @@ def score_gate(paths) -> dict:
     return out
 
 
+def score_gate2(paths) -> dict:
+    """Gate 2's frozen bar at each d. h4 is scored by the same function but
+    is REPORTED ONLY (no bar clause)."""
+    rows = {}
+    for p in paths:
+        for rec in json.loads(Path(p).read_text())["cells"].values():
+            rows.setdefault((rec["row"], rec["d"]), []).extend(rec["lives"])
+    out = {}
+    for d in GATE_DS:
+        b = rows.get(("b4", d), [])
+        out[d] = {r: WC.score(rows.get((r, d), []), b, GATE2_SEEDS)
+                  for r in ("f4", "g4", "h4")}
+        out[d]["h4"]["reported_only"] = True
+    return out
+
+
 def main(argv):
     if len(argv) >= 6 and argv[1] == "cell":       # cell <row> <seed> <d> <out>
         from experiments.sim_speed_kcpu import _compat_multiray
@@ -382,6 +463,21 @@ def main(argv):
         res = run_seed(argv[2], int(argv[3]), float(argv[4]))
         with open(argv[5], "a") as fh:
             fh.write("\n".join(json.dumps(r) for r in res) + "\n")
+        return 0
+    if len(argv) >= 3 and argv[1] == "kernel2":    # kernel2 <d> — gate 2
+        r = kernel(float(argv[2]), gate=2)
+        print(json.dumps({k: len(v["lives"]) for k, v in r["cells"].items()}))
+        return 0
+    if len(argv) >= 2 and argv[1] == "smoke2":     # smoke2 [d] [cap] — 1 life, seed 153
+        d = float(argv[2]) if len(argv) > 2 else 0.75
+        cap = int(argv[3]) if len(argv) > 3 else WC.LIFE_CAP_DECISIONS
+        for row in GATE2_ROWS:
+            t = time.process_time()
+            res = run_seed(row, SMOKE_SEED, d, lives=1, cap=cap)
+            print(row, d, res, f"{time.process_time() - t:.0f} CPU-s", flush=True)
+        return 0
+    if len(argv) >= 2 and argv[1] == "score2":     # score2 <gate2 files...>
+        print(json.dumps(score_gate2(argv[2:]), indent=1))
         return 0
     if len(argv) >= 3 and argv[1] == "kernel":     # kernel <d>
         r = kernel(float(argv[2]))

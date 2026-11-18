@@ -31,6 +31,7 @@ Speed table: in `experiments/tests/test_fast_sim.py`'s docstring.
 """
 from __future__ import annotations
 
+import math
 import types
 
 import numpy as np
@@ -131,6 +132,8 @@ def _row_vision(self) -> np.ndarray:
     n = self._row_n
     pos = np.array(self.data.xpos[self.rover_bid], dtype=float)
     pos[2] += W.RAY_Z_OFFSET
+    if self.__dict__.get("_eye_body"):           # J12 (0): body-frame azimuths
+        self._row_vec[:] = _rot_z(self._row_dirs0, body_yaw(self)).reshape(-1)
     mujoco.mj_multiRay(self.model, self.data, pos, self._row_vec, W._RAY_GROUPS,
                        1, -1, self._row_gid, self._row_dist, n, mujoco.mjMAXVAL)
     dist, gid = self._row_dist, self._row_gid
@@ -178,3 +181,76 @@ def apply_row_vision(w, eye: str = "row128") -> None:
         return o
 
     w.observe = types.MethodType(observe, w)
+
+
+# ── J12 (0), ruling 38: the BODY-FRAME eye (an EYE CHANGE, default off) ─────
+# Both eyes above cast ray k at WORLD azimuth 2*pi*k/n — a free compass (LAB
+# `find_himself.py`, 99e588f0) that the human-like body will not have. In the
+# body frame ray k points at azimuth 2*pi*k/n + yaw, yaw = the heading of the
+# rover body's own +x axis on the ground, atan2(xmat[1,0], xmat[0,0]) — the
+# SAME yaw his ears already use (`W0._drain_audio`). The rays stay level (a
+# tipped body's row does not tip): only the azimuth turns with him. Same
+# origin, groups, range, materials, panel draws in ray order. The base
+# directions are rotated (c*x - s*y, s*x + c*y), so at yaw exactly 0 the look
+# is the world-frame look bit for bit.
+def body_yaw(w) -> float:
+    m = w.data.xmat[w.rover_bid]
+    return math.atan2(float(m[3]), float(m[0]))
+
+
+def _rot_z(dirs: np.ndarray, yaw: float) -> np.ndarray:
+    c, s = math.cos(yaw), math.sin(yaw)
+    out = dirs.copy()
+    out[:, 0] = c * dirs[:, 0] - s * dirs[:, 1]
+    out[:, 1] = s * dirs[:, 0] + c * dirs[:, 1]
+    return out
+
+
+def apply_body_frame_eye(w) -> None:
+    """Turn this W0's eye (16 rays, or the row if `apply_row_vision` ran
+    first) with the body's yaw. Call AFTER multiray/row are applied."""
+    w._eye_body = True
+    if "_row_vec" in w.__dict__:
+        w._row_dirs0 = w._row_vec.reshape(-1, 3).copy()
+        return                                   # _row_vision reads the flag
+    w._ray_dirs0 = np.array(w._ray_dirs, dtype=float)
+    own = w.__dict__.get("_vision")              # multiray_vision may be set
+    inner = own if own is not None else types.MethodType(type(w)._vision, w)
+
+    def vision(self):
+        rot = _rot_z(self._ray_dirs0, body_yaw(self))
+        self._ray_dirs = rot
+        mr = self.__dict__.get("_mr_vec")
+        if mr is not None:
+            mr[:] = rot.reshape(-1)
+        return inner()
+
+    w._vision = types.MethodType(vision, w)
+
+
+# ── J12 (2): the BODY-FRAME motor (a WORLD-INTERFACE CHANGE, default off) ───
+# With the eye in the body frame, two compass channels are left: the drive
+# (action[6:8] is a force along WORLD x, y) and the two root velocities in
+# proprio (WORLD x, y). A body that turns (test_jack_env_eye_frame (d):
+# median |yaw| 81 deg under random actions) and is not told its heading cannot
+# aim a world-frame push at food seen in a body-frame ray. "body": the drive
+# is (forward, left) along the body's own heading and proprio's two root
+# velocities are (forward, left) too. Same yaw as the eye and the ears. The
+# push is turned ONCE, at the start of the decision (0.2 s): W0's 40 sub-steps
+# and their C twin are not touched.
+def to_world(vec2, yaw: float):
+    c, s = math.cos(yaw), math.sin(yaw)
+    return c * vec2[0] - s * vec2[1], s * vec2[0] + c * vec2[1]
+
+
+def apply_body_frame_proprio(w) -> None:
+    """Proprio's last two entries (root vx, vy) read in the body's frame."""
+    inner = types.MethodType(type(w)._proprio, w)
+
+    def proprio(self):
+        out = inner()
+        fx, fy = to_world((float(out[-2]), float(out[-1])), -body_yaw(self))
+        out[-2], out[-1] = fx, fy
+        return out
+
+    w._proprio = types.MethodType(proprio, w)

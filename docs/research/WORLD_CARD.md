@@ -391,5 +391,63 @@ All 190 uncensored f3 lives still ended by hunger — a forager that eats ~9
 floor meals a life is not yet a forager that lives on them. **At d = 1 the
 food is findable from the 128-ray row** (the old 16-ray eye: 6 and 13 of 20
 on the same bar, ruling 23). Adult-taught ceiling only: it says the sense
-carries the food, not that a brain learns to use it. **d = 0.75 (d0): kernel
-`jack-cpu-1794960563` still RUNNING at 05:08; its row goes here when it lands.**
+carries the food, not that a brain learns to use it. d = 0.75 (d0): next section.
+
+### J12 (3) — the gate's reading at d = 0.75, the entry rung (harvested 2026-11-18 07:10; raw `world_card_data/eye_gate_d075.json` sha256 417e2c69…; kernel `jack-cpu-1794960563`; scored by `eye_forager score`)
+
+| row (d = 0.75, seeds 241–260 × 10 lives) | seeds meeting the bar | mean of seed means, floor meals/life (sd; min–max) | mean life, decisions | capped lives |
+|---|---|---|---|---|
+| **f3** the forager on `row128` | **20 / 20 → PASSES** | 13.72 (1.57; 10.10–17.20) | 8,422 | 156 / 200 |
+| g3 shuffled rays (must fail) | 8 / 20 → fails, as it must | 4.84 (1.05; 3.50–6.50) | 6,418 | 93 / 200 |
+| b3 white random (floor) | — | 0.46 (0.27; 0.00–1.00) | 1,648 | 0 |
+
+At the entry rung food is so near that even the blind twin eats 4.8 meals a
+life and reaches the bar on 8 seeds (disclosed before the run) — sight adds
+~9 meals a life on top. 156 of 200 forager lives reached the 9,000-decision
+cap alive; the 44 that ended: 38 hunger, 6 integrity.
+
+**BOTH J12 (3) rows above (d = 1 and d = 0.75) are "compass eye — ceiling
+only" (ruling 38).** They were earned on an eye cast at WORLD azimuths by a
+forager that pushes along WORLD axes. Nothing a brain is asked to learn is
+sized from them; the body-frame gate below is the row that counts.
+
+## J12 (0) — the body-frame eye and motor (2026-11-18; `jack_env(eye_frame=, motor_frame=)`, proof `experiments/tests/test_jack_env_eye_frame.py` PASS)
+
+- `eye_frame="body"`: ray k of either eye is cast at 2πk/n + the body's yaw
+  (the yaw his ears already use); default `"world"` is byte-identical to
+  before (8/8 runs). At birth (yaw exactly 0) the two frames' looks are
+  bit-equal; a quarter turn in place rolls the body-frame look by n/4 on
+  20/20 stops for both eyes, and leaves the world-frame look unchanged 20/20.
+- **How much compass the old eye gave:** under random actions at the entry
+  rung he sits a median 81° from his birth heading (p90 145°; beyond one
+  16-ray step on 90% of decisions).
+- **J12 (1): does the hand forager f3 use heading it is not given? YES.**
+  `experiments/eye_forager.py`, `EyeForager._act`: the two `rel =
+  np.array([math.cos(ang), math.sin(ang)]) * dist` lines place a seen blob
+  along WORLD axes, `a[6:8] = r / nr` and the wander line `a[6:8] =
+  [math.cos(self.ray_ang[self.heading]), …]` push along them, and
+  `self.target["rel"] - v * WC.DT` dead-reckons with a WORLD-frame velocity.
+  The cause is in the world, not only the ruler: W0's drive is a force along
+  WORLD x, y (`w0.py` `decide`, `xfrc_applied[self.rover_bid, :2] = force`)
+  and proprio's root velocities are WORLD x, y — two more compass channels
+  that `eye_frame` alone leaves open. **Any learner given the body-frame eye
+  and today's motor is asked to aim a compass push at food it sees relative
+  to itself, with no sense of heading.**
+- `motor_frame="body"` (default `"world"` byte-identical, 2/2): the drive is
+  (forward, left) along his heading, turned once per decision; proprio's two
+  velocities likewise. Facing +y, "forward" moves him +0.37 m along +y
+  (world-motor control: +0.38 m along +x).
+
+## J12 (2′) — GATE 2: the same gate on the body-frame eye (FROZEN 2026-11-18, before any gate-2 cell ran; full text in `experiments/eye_forager.py`)
+
+Same ruler line for line, same bar (≥ 5 floor meals/life and above the
+random floor on ≥ 18 of 20 seeds), shuffled twin must miss, **fresh seeds
+261–280**, d = 0.75 and d = 1 judged separately, **no extension**. The one
+change, said before the run: the mapping lives in the world's interface
+(`motor_frame="body"`), not in the ruler, and the ruler is not told its yaw.
+Rows: **f4** body eye + body motor (the row), **g4** its shuffled twin
+(must fail), **b4** white random (floor), **h4** body eye + WORLD motor —
+reported only, predicted to miss, there so "does the motor frame matter" is
+measured. World: gate 1's, through `lazy_contact_audio` + `native_substep`.
+Box smoke (seed 153, one life capped at 2,000 decisions, d 0.75 — not a
+reading): f4 3 meals, g4 2, h4 0, b4 0 (died at 1,454).

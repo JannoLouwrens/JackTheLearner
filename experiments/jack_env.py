@@ -268,6 +268,30 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          601 life 64 (obj1, a sphere, laid at -3.06, 2.62 on
                          the ramp) rolled 1.9 m to and past him. The body's
                          own spawn cells are not changed.
+  eye_frame="world"     J12 (0), ruling 38. "world" = today: ray k of either
+                         eye is cast at WORLD azimuth 2*pi*k/n whatever way
+                         the body faces — a free compass (lab 11-17: place
+                         recall .957 with it, .54 ray-for-ray without).
+                         "body": ray k is cast at 2*pi*k/n + yaw, yaw = the
+                         heading of the rover body's +x axis on the ground
+                         (the yaw his ears already use). Rays stay level.
+                         NOT changed by this option, still world-frame: the
+                         drive (action[6:8] is a force along WORLD x, y) and
+                         the two root velocities in proprio (WORLD x, y) —
+                         see motor_frame.
+                         Proof: experiments/tests/test_jack_env_eye_frame.py.
+  motor_frame="world"   J12 (2). "world" = today. "body": action[6:8] is a
+                         push (forward, left) along the body's own heading,
+                         turned into the world ONCE at the start of each
+                         decision (so a body spinning inside the 0.2 s keeps
+                         a world-fixed push for that decision; clipping to
+                         [-1, 1] is per WORLD axis, as shipped, so a diagonal
+                         body push can lose up to 29%); proprio's two root
+                         velocities are (forward, left). Why: a body-frame eye
+                         with a world-frame drive asks him to aim a compass
+                         push at food seen relative to himself with no sense
+                         of heading; he turns a median 81 deg from birth
+                         under random actions. Same proof file, (e)-(f).
   CURES PROOF (measured 2026-11-17, `python -m
   experiments.tests.test_jack_env_cures`, seeds 153-155): see RESULT in that
   file's docstring.
@@ -314,6 +338,8 @@ REWARDS = ("homeo-dr", "dr100-eat", "dr100-eat-pos")
 TERMINAL_OBS = ("reborn", "dying")
 INTEGRATORS = ("shipped", "implicitfast")  # J6(4); shipped = RK4
 EYES = ("rays16", "row128")                 # J12 (1); rays16 = today's eye
+EYE_FRAMES = ("world", "body")              # J12 (0), ruling 38; world = today
+MOTOR_FRAMES = ("world", "body")            # J12 (2); world = today
 FLOOR_FOODS = ("obj0", "obj1")
 # J2 item 1, food count: W0's own non-food floor objects that the dial turns
 # into floor food at low d, in this order (obj5 is never food).
@@ -383,7 +409,9 @@ class JackEnv(gym.Env):
                  spawn_clear: Optional[float] = None,
                  food_floor_only: bool = False,
                  eye: str = "rays16",
-                 native_substep: bool = False):
+                 native_substep: bool = False,
+                 eye_frame: str = "world",
+                 motor_frame: str = "world"):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -443,6 +471,21 @@ class JackEnv(gym.Env):
         if eye not in EYES:
             raise ValueError(f"eye must be one of {EYES}, got {eye!r}")
         self.eye = eye
+        # J12 (0), ruling 38, default "world" = today (ray k at WORLD azimuth
+        # 2*pi*k/n: a free compass). "body": ray azimuths + the body's yaw,
+        # for either eye (experiments/fast_sim.py apply_body_frame_eye).
+        # Proven in experiments/tests/test_jack_env_eye_frame.py.
+        if eye_frame not in EYE_FRAMES:
+            raise ValueError(f"eye_frame must be one of {EYE_FRAMES}, "
+                             f"got {eye_frame!r}")
+        self.eye_frame = eye_frame
+        # J12 (2), default "world" = today. "body": the drive action[6:8] is
+        # (forward, left) along the body's heading and proprio's two root
+        # velocities are read the same way (experiments/fast_sim.py).
+        if motor_frame not in MOTOR_FRAMES:
+            raise ValueError(f"motor_frame must be one of {MOTOR_FRAMES}, "
+                             f"got {motor_frame!r}")
+        self.motor_frame = motor_frame
         # J6 (2b), default OFF: the 40 sub-steps' Python pieces (drives,
         # water, contact-audio filter, drive gate) run by C twins
         # (experiments/native_substep.py); identical decisions, proven with
@@ -483,6 +526,12 @@ class JackEnv(gym.Env):
         if self.eye != "rays16":
             from experiments.fast_sim import apply_row_vision
             apply_row_vision(self.w, self.eye)
+        if self.eye_frame == "body":
+            from experiments.fast_sim import apply_body_frame_eye
+            apply_body_frame_eye(self.w)
+        if self.motor_frame == "body":
+            from experiments.fast_sim import apply_body_frame_proprio
+            apply_body_frame_proprio(self.w)
         if self.integrator == "implicitfast":
             self.w.model.opt.integrator = self.w.mujoco.mjtIntegrator.mjINT_IMPLICITFAST
         self.move_cost_scale = 1.0
@@ -786,7 +835,12 @@ class JackEnv(gym.Env):
         d_before = w.drives.state.d()
         meals_before = self._meals()
         ate_before = dict(w.drives.ate_total)
-        w.decide(np.asarray(action, dtype=float))
+        action = np.asarray(action, dtype=float)
+        if self.motor_frame == "body":
+            from experiments.fast_sim import body_yaw, to_world
+            action = action.copy()
+            action[6:8] = to_world(action[6:8], body_yaw(w))
+        w.decide(action)
         if self.difficulty is not None:
             self._dial_respawn(ate_before)
         eats = self._meals() - meals_before
