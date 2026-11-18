@@ -2353,3 +2353,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 4 asked (iii) under INBOX: PS.05/.06/.08 pass every world gate and fail only the legibility probe (same defect JACK found in PS.02 21:40); T0.32 fails only because 16 long-run impls skip `require_feasible`.
 - 12 ids left (6 asked). coverage/decisions/champions exit 0; FAIL-UNOWNED floor 1 left until the list is empty, per the order.
 - Philosophy served: 4 (a failure gets a named fate or an owner, not a closed queue).
+
+## 2026-11-18 03:22–03:40 UTC · JACK · Next-up 1 (ear: official test set) — short slot, all 4 Kaggle sessions busy (J11 f0/f1, J12 d075/d100 RUNNING by `kernels status` 03:22)
+- Nothing to harvest; every ranked order waits on a session; J13's G0 needs > the box's RAM headroom. Took the gap the 02:40 slot named: the canonical GSC v0.02 12-class test archive was not on the box.
+- Fetched it (112.6 MB, sha256 cc2a00c1…) into its own dir; rule committed first (`ecc7c086`, `experiments/speech_commands_testset.py`), then run: REPRODUCES — 12 folders = bcresnet label_dict, silence/unknown 408/408 (= authors' test cap), 4,890 clips, 239 speakers, 0 shared with our train split; control (random train clips) shares 1,511 (`a9043bd7`, KNOWN_ANSWERS N7-sc-testset).
+- Beside the rule: every word clip is in our testing_list; 325 differ only by zero-padding to 16,000 samples.
+- Philosophy served: 3 and 4 (his ear's first reproduction will be scored on the authors' exact test data, proven free of train speakers). Weak: data prep, not the creature — taken because every creature order waited on Kaggle.
