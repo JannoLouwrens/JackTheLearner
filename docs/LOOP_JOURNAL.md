@@ -2513,3 +2513,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Coded E2c's two-number wrapper (`6aae85f8`, `experiments/handed_sense.py`): nearest uneaten floor food in the body frame, the frozen random-point control, plus the INBOX-proposed cos/sin encoding and zeroed control as options only (frozen form stays default). `test_handed_sense` PASS: planted geometry, radpi's ±π jump vs none for cos/sin, his own senses byte-identical on the arm-K world, point held/kept/re-drawn as stated.
 - Scar: first wrote it as `experiments/food_sense.py` — that name was a LAB file; the Write overwrote it, restored from git at once (uncommitted, never pushed). Check a name with `git log -- <path>` before creating.
 - Philosophy served: 4 (E2c's handed sense and its must-fail control are tested before any run, so a miss cannot be blamed on the wrapper).
+
+## 2026-11-18 16:37–16:50 UTC · JACK · J11 (f3 rescue) — short slot
+- Nothing new home (f6, f7, J12 d=1 watchers alive). f3's watcher (pid 3258574) was GONE: no result row, log stops at the push line, kernel still RUNNING on Kaggle after 7 h 16 m. Its output would have been stranded.
+- First relaunch REFUSED by the CPU budget (load 7.1 from other tenants); 1 min later it was admitted at load 5.65.
+- Reattached from worktree `/data/wt_f3_reattach` @ d2edf0a0 (the submitting commit). The head pin makes main's kernel sha mismatch; the worktree's sha 27101c15 equals the 09:23 receipt, so the guard's "unverifiable" warning is checked by hand. Harvest after ~17:53; receipts must be copied from the worktree log to main's.
+- INBOX → SYSTEM: no organ watches for attempt rows with a dead pid and no result.
+- Philosophy served: 4 (the f3 floor cells, J11's rule inputs, get measured, not lost or borrowed) and 6 (the ~8 free Kaggle hours f3 used are not thrown away).
