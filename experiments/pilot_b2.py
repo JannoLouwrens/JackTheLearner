@@ -97,9 +97,9 @@ POOL_DEADLINE_S = int(8.5 * 3600)   # in-kernel stop, leaves pip + queue + fetch
 
 
 def make_world(seed: int, move_cost_dial: bool = False,
-               food_floor_only: bool = False):
+               food_floor_only: bool = False, reward: str = REWARD):
     from experiments.jack_env import JackEnv, NEEDS_S_TRP, SPAWN_CLEAR_R
-    return JackEnv(seed=seed, difficulty=DIFFICULTY, reward=REWARD,
+    return JackEnv(seed=seed, difficulty=DIFFICULTY, reward=reward,
                    random_needs=NEEDS_S_TRP, random_layout=True,
                    lazy_contact_audio=True, spawn_clear=SPAWN_CLEAR_R,
                    move_cost_dial=move_cost_dial, food_floor_only=food_floor_only)
@@ -367,6 +367,51 @@ def rule_inputs(paths, T: int = PILOT_T, seeds: int = PILOT_SEEDS) -> str:
             + "/".join(f"{x:.2f}" for x in pred) + " | "
             + "/".join(f"{x:.2f}" for x in upper) + f" | {w if w else '> 3'} |")
     return "\n".join(lines)
+
+
+# ---- J11 item 3: the pilot's arms as settings (11-18 01:50, NO rule yet) ---
+# Only the mapping the order already names (arms B0 K P G KP; floors
+# do-nothing, held-8, K with learning rate 0), so the rule writer picks the
+# world and seeds and the kernels need no new code. Nothing here runs a
+# learner; W, seeds, the floor clause and the world choice ((a) food_floor_only
+# or (b) today's + disclosure) belong to the rule. Every arm has spawn_clear
+# and lazy_contact_audio (make_world). kind: "b" = brain B (run_b), "floor" =
+# run_floor. lr None = run_b's default (3e-4); gamma None = make_b's default.
+PILOT_ARMS = {
+    "B0":   dict(kind="b", move_cost_dial=False, reward=REWARD, gamma=None, lr=None),
+    "K":    dict(kind="b", move_cost_dial=True, reward=REWARD, gamma=None, lr=None),
+    "P":    dict(kind="b", move_cost_dial=False, reward="dr100-eat-pos", gamma=None, lr=None),
+    "G":    dict(kind="b", move_cost_dial=False, reward=REWARD, gamma=0.999, lr=None),
+    "KP":   dict(kind="b", move_cost_dial=True, reward="dr100-eat-pos", gamma=None, lr=None),
+    "noop": dict(kind="floor", policy="noop", move_cost_dial=False, reward=REWARD),
+    "held8": dict(kind="floor", policy="held8", move_cost_dial=False, reward=REWARD),
+    "K-lr0": dict(kind="b", move_cost_dial=True, reward=REWARD, gamma=None, lr=0.0),
+}
+
+
+def pilot_world(arm: str, food_floor_only: bool):
+    """seed -> JackEnv for one pilot arm (the world half of its settings)."""
+    c = PILOT_ARMS[arm]
+    return lambda seed: make_world(seed, move_cost_dial=c["move_cost_dial"],
+                                   food_floor_only=food_floor_only,
+                                   reward=c["reward"])
+
+
+def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
+                   T: int = PILOT_T, partial_path=None) -> dict:
+    """One pilot run of `arm` (PILOT_ARMS) for T decisions."""
+    from experiments.pilot_b import run_b, run_floor
+    c = PILOT_ARMS[arm]
+    world = pilot_world(arm, food_floor_only)
+    if c["kind"] == "floor":
+        rec = run_floor(c["policy"], seed, T, world=world, partial_path=partial_path)
+    else:
+        kw = {} if c["lr"] is None else {"lr": c["lr"]}
+        rec = run_b(seed, T, world=world, gamma=c["gamma"],
+                    partial_path=partial_path, **kw)
+    rec["pilot_arm"] = arm
+    rec["food_floor_only"] = bool(food_floor_only)
+    return rec
 
 
 def _poisson_upper(k: int, conf: float = 0.95) -> float:

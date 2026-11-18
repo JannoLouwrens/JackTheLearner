@@ -401,7 +401,8 @@ def _world_stamp(env) -> dict:
     env, not off the caller's intent)."""
     return {k: (v if isinstance(v, (bool, int, float, str, type(None))) else repr(v))
             for k in ("difficulty", "reward", "random_layout", "lazy_contact_audio",
-                      "spawn_clear", "move_cost_dial", "native_substep", "eye")
+                      "spawn_clear", "move_cost_dial", "native_substep", "eye",
+                      "food_floor_only")
             for v in [getattr(env, k, "absent")]}
 
 
