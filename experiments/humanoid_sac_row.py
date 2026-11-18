@@ -59,7 +59,8 @@ RULE (frozen in this commit, BEFORE the kernel body exists and before seed 0):
   budget     Kaggle CPU only (box: nice 19, the 50k control smoke at most).
 
 STATUS: rule + eval + late-start control (`evaluate`, `control_run`; box smoke
-11-18). Training segments with resume are the next J10 slot.
+11-18) + `train_segment` (resume as the rule says; box resume test
+`resume_check`, 11-18). The Kaggle kernel wrapper is the next J10 slot.
 """
 from __future__ import annotations
 
@@ -143,6 +144,101 @@ def control_run(seed: int = 0, steps: int = CONTROL_STEPS) -> dict:
             "trained": int(model._n_updates) if hasattr(model, "_n_updates") else None}
 
 
+def _ckpt_paths(d):
+    import os
+    return os.path.join(d, "model.zip"), os.path.join(d, "replay.pkl")
+
+
+class _WallStop:
+    """SB3 callback factory: stop learn() once `deadline` (time.time()) passes."""
+    def __new__(cls, deadline):
+        import time
+        from stable_baselines3.common.callbacks import BaseCallback
+
+        class Stop(BaseCallback):
+            def _on_step(self) -> bool:
+                return time.time() < deadline
+        return Stop()
+
+
+def train_segment(seed: int, out_dir: str, prev_dir: str | None = None, segment: int = 0,
+                  wall_h: float = SEGMENT_WALL_H, seg_steps: int = SEGMENT_STEPS,
+                  total: int = TOTAL_STEPS, eval_at=(CHECK_STEPS, TOTAL_STEPS),
+                  sac_kw: dict | None = None, keep: list | None = None) -> dict:
+    """One resume segment of the rule. Fresh model if prev_dir is None, else
+    loads model + replay buffer from prev_dir. Trains until the next seg_steps
+    mark (capped at `total`) or wall_h, saves model + buffer to out_dir, and
+    runs the rule's eval only when num_timesteps lands EXACTLY on an eval_at
+    mark. The env is re-seeded seed*1000 + segment (disclosed in the rule)."""
+    import json, os, time
+    from sbx import SAC
+    t0 = time.time()
+    os.makedirs(out_dir, exist_ok=True)
+    env = make_env()
+    env.reset(seed=seed * 1000 + segment)
+    if prev_dir is None:
+        model = SAC("MlpPolicy", env, seed=seed, verbose=0, **(sac_kw or SAC_KW))
+    else:
+        mp, rp = _ckpt_paths(prev_dir)
+        model = SAC.load(mp, env=env)
+        model.load_replay_buffer(rp)
+    start = int(model.num_timesteps)
+    target = min(total, (start // seg_steps + 1) * seg_steps)
+    # SB3 reads total_timesteps as an increment when reset_num_timesteps=False
+    model.learn(total_timesteps=target - start, reset_num_timesteps=prev_dir is None,
+                callback=_WallStop(t0 + wall_h * 3600.0))
+    end = int(model.num_timesteps)
+    mp, rp = _ckpt_paths(out_dir)
+    model.save(mp)
+    model.save_replay_buffer(rp)
+    row = {"seed": seed, "segment": segment, "start": start, "end": end, "target": target,
+           "hit_target": end == target, "buffer_size": int(model.replay_buffer.size()),
+           "n_updates": int(getattr(model, "_n_updates", -1)), "train_s": time.time() - t0}
+    if end in tuple(eval_at):
+        ev = evaluate(lambda o: model.predict(o, deterministic=True)[0])
+        row["eval"] = {"at": end, "R": ev["R"], "M": ev["M"], "episodes": ev["episodes"]}
+    with open(os.path.join(out_dir, "segment.json"), "w") as f:
+        json.dump(row, f, indent=1)
+    if keep is not None:
+        keep.append(model)
+    return row
+
+
+def resume_check(work: str, steps: int = 10_000) -> dict:
+    """Box test of the resume path at toy size (learning_starts 1,000 so both
+    halves train): segment 0 to `steps`, segment 1 resumed to 2*`steps`.
+    Checks: step counter continues, buffer carried, actor/critic/ent_coef
+    params + actor optimiser state equal in
+    memory at the end of segment 0 and after load, updates continue in segment 1.
+    Control: a fresh (not loaded) model's params differ from the checkpoint."""
+    import os
+    import numpy as np, jax
+    from sbx import SAC
+    kw = dict(SAC_KW, learning_starts=1_000, buffer_size=4 * steps)
+    a, b = os.path.join(work, "seg0"), os.path.join(work, "seg1")
+    held = []
+    r0 = train_segment(0, a, None, 0, seg_steps=steps, total=2 * steps, eval_at=(), sac_kw=kw,
+                       keep=held)
+
+    def flat(m):
+        leaves = jax.tree_util.tree_leaves((m.policy.actor_state.params, m.policy.qf_state.params,
+                                            m.policy.qf_state.target_params, m.ent_coef_state.params,
+                                            m.policy.actor_state.opt_state))
+        return np.concatenate([np.asarray(x, dtype=np.float64).ravel() for x in leaves])
+    # what was saved vs what loads back
+    m_saved = SAC.load(_ckpt_paths(a)[0], env=make_env())
+    m_fresh = SAC("MlpPolicy", make_env(), seed=0, verbose=0, **kw)
+    load_equal = bool(np.array_equal(flat(m_saved), flat(held[0])))
+    control_differs = not np.array_equal(flat(m_saved), flat(m_fresh))
+    ent0 = float(np.exp(np.asarray(m_saved.ent_coef_state.params["log_ent_coef"])))
+    r1 = train_segment(0, b, a, 1, seg_steps=steps, total=2 * steps, eval_at=(), sac_kw=kw)
+    ok = (r0["end"] == steps and r1["start"] == steps and r1["end"] == 2 * steps
+          and r1["buffer_size"] == 2 * steps and r1["n_updates"] > r0["n_updates"] > 0
+          and load_equal and control_differs and abs(ent0 - 1.0) > 1e-3)
+    return {"seg0": r0, "seg1": r1, "load_equal": load_equal, "control_differs": control_differs,
+            "ent_coef_after_seg0": ent0, "ok": ok}
+
+
 if __name__ == "__main__":
     import json, sys
     if sys.argv[1:2] == ["control"]:
@@ -150,3 +246,7 @@ if __name__ == "__main__":
         r = control_run(0, n)
         print(json.dumps({k: v for k, v in r.items() if k != "episodes"}))
         print("VOID" if r["R"] >= CONTROL_MAX_RETURN else "control holds (R < 500)")
+    elif sys.argv[1:2] == ["resume_check"]:
+        r = resume_check(sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 10_000)
+        print(json.dumps(r, indent=1))
+        print("RESUME OK" if r["ok"] else "RESUME BROKEN")
