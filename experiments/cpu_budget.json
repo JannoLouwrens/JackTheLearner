@@ -1454,12 +1454,12 @@
         "detached:launch_f4.log": 666.18,
         "detached:launch_f5.log": 711.55,
         "detached:launch_f6.log": 466.27,
-        "detached:launch_f7.log": 172.26,
+        "detached:launch_f7.log": 182.76,
         "detached:launch_native.log": 8.54,
         "detached:launch_pilot.log": 347.95,
         "detached:statue_leak_r2_launch.log": 2567.89
       },
-      "used_s": 32113.07
+      "used_s": 32123.57
     }
   },
   "last_child_s": {

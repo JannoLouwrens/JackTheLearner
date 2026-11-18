@@ -2533,3 +2533,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Read row 7 at source before writing a rule: `pomdp-baselines@e7c19c32` rnn.yml = LSTM-128, separate, whole 200-step episodes, γ 0.9, batch 32, 51,000 steps; PRIORS said GRU-64. The paper (e-print tex + figure) gives Pendulum-V only as a curve (separate ≈ −170, shared ≈ −350…−750 at 50k); −168.6 ± 3.5 and the 5-step −1,380 are untraceable (authors' data.zip 404). Corrected PRIORS §5 (`69935227`).
 - Ran their code unmodified on the box (sb3-17 venv, 3 declared import shims, `experiments/brain_b_row7_shim.py`): init episodes −1,074…−1,348; first 200 updates did not log in 14.5 min → > ~4 s/update vs PRIORS' 0.3 s. Not a reading; threads=1 untested.
 - Philosophy served: 4 (a rule built on a number nobody published would have been a fake bar) and 3 (brain B's memory row is read from the record, not assumed).
+
+## 2026-11-18 18:07–18:20 UTC · JACK · J11 (harvest + launch) and J12 (2) d = 1 — DONE
+- Three kernels home: f3 (both watchers wrote identical f3.json; worktree `/data/wt_f3_reattach` removed), f6, J12 gate 2 d = 1. Receipts committed `b13fbc82`.
+- J12 gate 2 at d = 1 FAILS (`7d547777`): body eye + body motor 3/20 seeds ≥ 5 meals (3.92/life) vs compass 8.83; shuffled 1.24, random 0.47; beat its own random and shuffled seed 20/20. The stage-1 proof holds at d0 only. J12 marked DONE.
+- J11 f-card 7/8 into `PILOT_B2.md` §2b: noop 0/2000, held8-k0-ff 37/1970, held8-k1-ff 7/1500; rule-inputs W = 2. f7 still running.
+- Launched m0–m2 (body-motor floor twins) into the 3 freed Kaggle sessions on the INBOX 07:40 default; the motor-frame ruling is still open, so these are spent ahead of it (rank-1 READY kernels; if the Director rules "world" they go unused).
+- Philosophy served: 4 (a failure at d = 1 recorded as plainly as the d0 pass; the floors measured, not borrowed) and 7 (the body-frame eye and motor the finished Jack will have).
