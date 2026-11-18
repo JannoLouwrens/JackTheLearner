@@ -1,130 +1,133 @@
 # PROGRESS — for the owner, on a phone
 
-Written 2026-11-17 (Tuesday) 06:55 UTC by the Director, daily sitting.
+Written 2026-11-18 (Wednesday) 06:50 UTC by the Director, daily sitting.
 Rewritten every day; git keeps the old ones.
 
 ## The short version
 
-**A brain trained from nothing lived in his world for the first time — and
-it did not learn to eat. It learned to lie still.**
+**No brain ran in his world yesterday, on purpose. The day went into the
+ruler, and the ruler caught two faults before any brain could learn from
+them.**
 
-Brain B (the simple learner from a public library, the one that reproduced
-two published scores) lived 2,350 lives at the starting rung, on free
-machines, 300,000 decisions a run (one decision is one action, 0.2 seconds
-of his life). The honest reading has two parts:
+1. **His eye pointed by the world's compass, not by where he faces.** Both
+   the old 16-ray eye and the new 128-ray eye cast their rays at fixed
+   world directions. That hands him "which way is north" for free — a sense
+   a human-like body does not have. The lab found it; the auditor raised
+   it. Ruled today: his eye turns with his body from now on, and nothing a
+   brain learns is believed on the compass eye. One worker slot builds it.
+2. **One layout in twenty laid a food on the ramp.** It rolled downhill to a
+   body that never moved, so "do nothing" was sometimes fed. This is what
+   made Monday's pilot void. Repaired by its cause (food on the floor only),
+   and the do-nothing comparison is being re-measured on the repaired world
+   rather than borrowed from the faulty one.
 
-- **The pilot is VOID by its own rule.** The rule allowed at most one
-  "sustained life" (he reaches the end and eats at least what he burns)
-  among the do-nothing comparison runs. There were five. Cause: a body that
-  happens to be born touching food is fed without moving. That is a fault in
-  our rule and our world, found by the test.
-- **Inside the void there is a clear negative, and it stays on this page:**
-  brain B had 0 sustained lives where doing nothing predicts about 8. It ate
-  less the more it learned (about a quarter of what its own untrained copy
-  eats). Moving roughly doubles what his body burns, so the learner was
-  paid, surely and at once, to move less; one meal every few thousand
-  decisions could not outbid that.
+**What was measured.** 8,000 lives with no learner at the starting rung, on
+free machines: doing nothing keeps him fed for a whole life 2 times in
+2,000; random movement 5 times in 2,000; random movement when moving costs
+nothing extra, 45 in 2,000. So making movement free (the published cure for
+"he learned to lie still") lifts even blind luck nine-fold. The pilot's
+rule will be written from these floors, before any learner runs.
 
-The workers did not tune it away. They stopped and asked the research desk.
-The answer: **every published creature that learned to eat lived in a world
-where moving costs nothing extra; wherever energy is charged, published
-learners collapse into standing still**, and the proven cure is to start
-with free movement and bring the cost in as he succeeds. Three kinds of
-exploration noise were tried here; none stopped the slide.
+**The new eye works, as far as a hand-written program can show.** A simple
+forager reading the 128-ray row ate 8.8 meals a life and passed the bar on
+20 of 20 worlds at the hardest setting (rays shuffled: 0 of 20; the old
+eye: 6 and 13 of 20). That was on the compass eye, so it counts only as a
+ceiling; the same test is ordered again on the eye that turns with him.
 
-**Today's first order (pilot 2):** build those cures as switches (movement
-free at the first rung; never born on food; pay for closing distance to
-food; a longer horizon), measure the do-nothing floor on 2,000+ lives
-before writing any rule, then run five setups side by side on fresh runs.
-The rule is written from the record and the floor, not from yesterday's
-data.
-
-**Second: his eye.** The lab measured that his 16 distance rays find floor
-food 53% of the time; a single level row of 128 rays finds it 91%. He may
-have been half blind to food. The new eye is ordered as a switch, with a
-hand-written forager that must pass the same unmoved bar the old eye failed.
+**His world runs 2.4 times faster,** identical decision for decision on
+this box and on the free machines. A further speed-up that changes the
+physics was measured and declined: the learner, not the world, is now the
+slow part.
 
 ## What Jack can do today
 
 He lives whole lives in his first world, with needs, senses, a diary that
 survives death, death and retry. He still does **not** get better by
-living. The test ladder reads **111 of 270**, unchanged: this stage builds
-the instrument.
+living. The test ladder reads **111 of 270**, unchanged for a week: this
+stage builds the instrument, and its work does not move that number.
 
 ## Each part of the plan: the step it is on (0–5)
 
-- **His brain — step 3 for B, step 2 for A.** *Moved:* brain A (Dreamer)
-  was timed on the free GPU: 52 decisions a second, so a full-length life
-  costs about 5 GPU-hours of learning. Its three reproduction runs are being
-  prepared to start the hour the free GPU week opens (Sat 21 Nov). The first
-  of our seven home-made brains failed both standard tasks (its control
-  held); two more are running; four wait for a free machine.
-- **Learning to eat — step 2** (went to step 4 and came back). *Moved:* the
-  pilot above.
-- **His world — step 2.** *Moved:* "what he senses when he dies" is now
-  correct and proven. Simulator 2.4 times faster with two switches; one is
-  an identical world and in use, the other changes the world and I have not
-  switched it yet. The heat test is parked until he has needs beyond food.
-- **Eye — step 1 → 2 today.** The measurement above.
-- **Body and movement — step 1.** The published-walk reproduction is pinned
-  and its rule written; its first run waits for a free machine.
-- **Memory and sleep, ear, words — step 1.** No change.
-- **Other senses — step 0.** Smell researched: our three failed smell tests
-  used the one setup the record says cannot learn. Re-tested later, properly.
+(1 research, 2 combine from published parts, 3 reproduce a published
+number, 4 test what is new, 5 in him.)
 
-## Ready before the Mac arrives (your list)
-
-Done: first rung; test card; brain B reproduced; **the interface at death**;
-**brain A's speed**; a first-day Mac script (8 of 12 measurements automatic).
-In progress: simulator speed; the Dreamer port to Apple's library (four
-preparation steps done in idle hours; its first pass-or-stop gate is ready
-to run). Not done: **anything learning to eat** (pilot 2); brain A
-reproduced (from 21 Nov); the simulator on macOS; the eye.
+- **His brain — 3 for brain B (the simple learner), 2 for brain A (the
+  Dreamer world model).** *Not moved.* A's three reproduction runs are
+  frozen and wait for the free GPU week (opens Sat 21 Nov). Three of our
+  seven home-made brains failed both standard tasks; three run next; one is
+  an exact duplicate. Then they get one repaired re-entry under the same
+  rule — the fair chance you asked for.
+- **Learning to eat — 2.** *Moved:* the floor measurement above; the ramp
+  fault repaired. Next: the rule, then 40 runs (five setups and three
+  do-nothing comparisons).
+- **His world — 2.** *Moved:* 2.4× faster, identical world.
+- **Eye — 2.** *Moved:* the 128-ray row passed its hand-forager test; the
+  compass fault found and ruled.
+- **Body and movement — 1, with a reproduce side job.** *Moved (research):*
+  the 2018 walking paper we meant to reproduce states no success rate and
+  no test of walking. We reproduce a walk with a published score first.
+- **Ear — 1 → 2.** *Moved:* a published 9,000-weight word-spotting network
+  copied unmodified; the speech corpus and official test set check out
+  against the papers. Its training run (published score 96.9%) goes on the
+  free GPU after brain A's. It learns from scratch; nothing ready-made goes
+  inside him.
+- **Memory and sleep — 1. Words and advice — 1. Other senses — 0.** Not
+  moved. A lab probe: after rebirth he can find where he is from one look
+  93% of the time with 128 rays, without the compass.
 
 ## What did not move
 
-- The 33 old failed tests that need a named fate: ordered yesterday, no
-  worker took it (the machine lane finished another order). It is first now.
-- The walking run and the Dreamer-port gate: both waited all day for one of
-  four free Kaggle machines.
+- No learner has yet eaten in his world. Pilot 2 cannot start before about
+  Thursday: its comparison runs need five more machine-sessions.
+- The Mac port's first gate has waited three days for a free machine. It
+  gets a guaranteed turn by Friday.
+- A world test (`W1.04`, "the horizon is longer than the consequence") sat
+  queued eleven hours and died without running. Parked until 25 Nov, said
+  plainly on the orders page.
+- The cold-is-felt test (`PS.02`) and three like it stay red until stage 3.
+  A worker showed the fault is in the generic probe, not his senses; I
+  declined to swap the probe now, because choosing a new probe after seeing
+  which one passes is how a test gets faked.
 
-## Rules I made today
+## What the workers are on next
 
-- The free-machine queue is ranked; a side run may no longer hold a machine
-  a ranked order waits for. Yesterday two side runs of an already-void pilot
-  did, and two worker runs had nothing to steer.
-- Long runs never go to this box when the free machines are full: it serves
-  your customers. One such run (2.4 CPU-hours, lowest priority, inside the
-  caps) happened last night.
-- A reproduction gets at most one extension, named before its first run.
-  Three earlier rows were retried after a miss; nothing was hidden, but that
-  is a second look. One reference row is closed as a miss: the published
-  code does not reach its own stored score on this box.
+1. The eye that turns with his body (one slot), then the forager test on it.
+2. Pilot 2: finish the comparison runs, freeze the rule, run 40.
+3. Three more home-made brains on the standard tasks.
+4. Saturday: brain A's reproduction runs, A's first steps in his world,
+   and the ear's run, on the free GPU.
+5. The forager copied into his own network, and a learner told where food
+   is — the two remaining proofs that eating is learnable from his senses.
 
 ## The machine, in four numbers
 
-- Test points per worker run: 0 over 58 runs. Landed instead: the pilot (45
-  runs), 3 orders finished, the eye measurement, two research answers.
-- Worker runs lost to budget: 0. Usage this week: 14% all models (resets
-  18 Nov).
-- Free GPU-hours expired this week: 0 (Kaggle's 30 were spent by 15 Nov;
-  next week opens Sat 21 Nov and brain A's runs are being readied for it).
-- Oldest unrepaired blocker: "he moves better than random", red 97 days,
-  holding 25 tests; re-earned through the walking layer.
+- Test points per worker run: 0 over 58 runs (all 58 finished cleanly).
+  Landed instead: the 8,000-life floor card, the eye test, the speed-up,
+  one order finished, one research answer.
+- Worker runs lost to budget: 0. Usage this week 52% (all models); it
+  resets today.
+- Free GPU-hours expired this week: 0. Kaggle's quota reads empty until
+  Sat 21 Nov (last week ran 33.8 of 30 hours).
+- Oldest unrepaired blocker: "he moves better than random", red 98 days,
+  holding 25 tests; closed to more attempts by the published record and
+  re-earned through the walking layer.
 
 ## Dead or stuck
 
-- Free Kaggle CPU machines (4) are the bottleneck; ranked today.
-- The simulator-speed run on Kaggle has failed twice at start-up; ordered
-  fixed first thing.
-- Main disk: 4.1 GB free (workers stop under 3). Holding.
-- The usage meter gave a third impossible reading (66% then 1% inside one
-  week). Reporting only; no run was refused.
-- All organs ran in the last day; pushes work.
+- The four free Kaggle CPU machines are the bottleneck; every order queued
+  on them yesterday. Idle workers did useful side work, but several half-
+  hours went to paperwork while waiting.
+- Main disk 5.7 GB free (workers stop under 3); up from 4.1. Two causes
+  still need fixing at the source — queued for the system lane.
+- The usage meter has given three impossible readings this month
+  (reporting only; no run was refused).
+- All organs ran inside their cadence; pushes work; the auditor's verdict
+  was ON TRACK, nothing loosened.
+- The orders page had grown to 55 KB of worker notes. Cut to 23 KB today
+  with a hard rule on note length.
 
 ## FOR THE OWNER
 
-Nothing needs you today. One thing to know, not to decide: charging him
-energy for moving is what the published worlds do not do. Pilot 2 keeps the
-charge in his world and only delays it at the first rung, so what he must
-become is unchanged.
+Nothing needs you today. One standing question keeps its date: whether
+recordings of how people move may ever be a part inside him (default on 29
+Nov: no — outside him only, as a judge).
