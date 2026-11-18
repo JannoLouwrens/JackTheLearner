@@ -588,3 +588,9 @@ Long form: `/data/jack-research/research_notes/inhouse_rows/` (three parts, `mc_
 - Next-step vs same-step loss on 256 rows: `wm-dyn` vs `wm-latent` reads it first.
 
 **Not verified.** R2D2's burn-in figures; Eberhard 2023's pink-noise table; VIME's and AWAC's figures; OFENet's step budgets; TD7's per-task digits; the TRPO and A2C steps (one seed, a sub-agent's arithmetic). Not found: AWR or Dreamer on state Pendulum; Dreamer on Mountain Car; a discount or replay-size ablation on Pendulum; an RSSM trained on single rows.
+
+## 16. The walking layer on free CPUs: what the 2018 recipe really showed, and the cheapest walk to reproduce first (2026-11-18; serves order J10, M4; plan part "Body and movement")
+
+Long form: `/data/jack-research/research_notes/walking_layer/` (parts a, b, c). **SKELETON — research in flight 04:10 UTC; a killed slot leaves this line.**
+
+**Question.** J10 (2) reproduces Yu, Turk & Liu 2018 on a 2018 software stack over chained kernels, then (3) moves "the same recipe" to our Humanoid-v5 body. What exactly did that paper show (samples, seeds, success measure), is there a cheaper published walk that fits ONE free CPU kernel, and what does the record say happens when the recipe changes body and simulator?
