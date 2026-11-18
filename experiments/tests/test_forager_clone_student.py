@@ -73,11 +73,34 @@ def test_score_planted():
     assert C.score(_cells({**base, **good, **leaky}))["verdict"] == "VOID"
 
 
+def test_kernel_pieces():
+    """The E2b test kernel: 140 distinct cells; refuses missing weights, and
+    refuses present-but-uncommitted ones with a different reason (the pass
+    case — tracked files — is not exercised until the students exist); the
+    job body compiles; a failing cell is kept with its error, not dropped."""
+    cells = C.test_cells()
+    assert len(cells) == len(set(cells)) == 6 * 20 + 20
+    with tempfile.TemporaryDirectory() as d:
+        bad = C.weights_ready(Path(d))
+        assert len(bad) == 6 and all(b.startswith("missing") for b in bad)
+        for a in C.ARMS:
+            for k in C.CLONE_SEEDS:
+                np.savez_compressed(C.weights_path(a, k, Path(d)), w=np.zeros(1))
+        bad = C.weights_ready(Path(d))
+        assert len(bad) == 6 and all(b.startswith("untracked") for b in bad)
+    compile(C._JOB.replace("__PINS__", "[]"), "job", "exec")
+    with tempfile.TemporaryDirectory() as d:
+        r = C.run_pool([("clone", 9, 741)], d, workers=1)       # no clone_s9 weights
+    rec = r["clone9_s741"]
+    assert rec["rc"] != 0 and rec["lives"] == [] and "clone_s9" in rec["error"]
+
+
 def main():
     test_permute_pairs()
     test_trainer_learns_planted_map()
     test_cell_runs_student_in_f4_world()
     test_score_planted()
+    test_kernel_pieces()
     print("test_forager_clone_student PASS")
 
 

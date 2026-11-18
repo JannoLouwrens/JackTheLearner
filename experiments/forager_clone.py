@@ -287,6 +287,94 @@ def score(cells: dict) -> dict:
     return {"students": out, "passing": npass, "verdict": verdict}
 
 
+# ---------------------------------------------------------------------------
+# E2b test kernel (11-18 12:4x, before any student was trained): one Kaggle
+# CPU session runs test_cells() — 6 students x 20 seeds + b4 x 20 = 140
+# cells of 10 lives — through the same per-cell subprocess pool gate 2 used.
+# ---------------------------------------------------------------------------
+KERNEL_EST_HOURS = 6.0       # gate 2: 80 cells in 3.25 h; 140 cells, worst case all f4-long
+TEST_OUT = OUT / "test.json"
+
+_JOB = r'''
+import subprocess as _s, sys as _y
+_s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
+import json, os
+os.chdir("/tmp/jack")
+from experiments.forager_clone import run_pool, test_cells
+r = run_pool(test_cells(), os.environ["JACK_OUT"])
+json.dump({"cells": r}, open(os.path.join(os.environ["JACK_OUT"], "clone_test.json"), "w"))
+print("DONE", flush=True)
+'''
+
+
+def run_pool(cells: list, outdir, workers: int = EF.WORKERS) -> dict:
+    """Each (arm, clone_seed, seed) cell in its own `cell` subprocess; failed
+    cells are kept with their error, never dropped."""
+    import subprocess
+    import time
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    todo, live, res = list(cells), [], {}
+    while todo or live:
+        while todo and len(live) < workers:
+            arm, k, seed = todo.pop(0)
+            f = outdir / f"{arm}{k}_s{seed}.jsonl"
+            err = open(str(f) + ".err", "w")
+            live.append((arm, k, seed, f, err, subprocess.Popen(
+                [sys.executable, "-m", "experiments.forager_clone", "cell", arm,
+                 str(k), str(seed), str(f)],
+                cwd=REPO, stdout=subprocess.DEVNULL, stderr=err)))
+        time.sleep(2)
+        for item in list(live):
+            arm, k, seed, f, err, p = item
+            if p.poll() is None:
+                continue
+            live.remove(item)
+            err.close()
+            lives = ([json.loads(x) for x in f.read_text().splitlines() if x.strip()]
+                     if f.exists() else [])
+            rec = {"row": f"{arm}{k}", "seed": seed, "lives": lives, "rc": p.returncode}
+            if p.returncode != 0:
+                rec["error"] = Path(str(f) + ".err").read_text()[-800:]
+            res[f"{arm}{k}_s{seed}"] = rec
+            print(f"{arm}{k} s{seed}: rc {p.returncode}, {len(lives)} lives", flush=True)
+    return res
+
+
+def weights_ready(root: Path = WEIGHTS) -> list:
+    """Reasons the kernel must not launch: a student file missing, or present
+    but not committed (the kernel clones the pushed HEAD, not this disk)."""
+    import subprocess
+    bad = []
+    for a in ARMS:
+        for k in CLONE_SEEDS:
+            w = weights_path(a, k, root)
+            if not w.exists():
+                bad.append(f"missing {w.name}")
+                continue
+            r = subprocess.run(["git", "ls-files", "--error-unmatch", str(w)],
+                               cwd=REPO, capture_output=True)
+            if r.returncode != 0:
+                bad.append(f"untracked {w.name}")
+    return bad
+
+
+def kernel() -> dict:
+    from experiments.gpu import build_job, result_json, submit
+    bad = weights_ready()
+    if bad:
+        raise RuntimeError("E2b test kernel refused: " + "; ".join(bad))
+    body = _JOB.replace("__PINS__", repr(EF.KERNEL_PINS))
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=KERNEL_EST_HOURS,
+                 timeout_s=EF.REMOTE_TIMEOUT_S, fetch=["clone_test.json"])
+    if not sub.ok:
+        raise RuntimeError(f"forager_clone test kernel: {sub.message}")
+    r = result_json(sub, "clone_test.json")
+    TEST_OUT.parent.mkdir(parents=True, exist_ok=True)
+    TEST_OUT.write_text(json.dumps(r, indent=1) + "\n")
+    return r
+
+
 def main(argv):
     if argv and argv[0] == "train":            # train [epochs] — all 6 students
         ep = int(argv[1]) if len(argv) > 1 else EPOCHS
@@ -306,8 +394,16 @@ def main(argv):
         with open(argv[4], "a") as fh:
             fh.write("\n".join(json.dumps(r) for r in res) + "\n")
         return 0
+    if argv and argv[0] == "kernel":           # kernel — the E2b test, one Kaggle CPU session
+        r = kernel()
+        print(json.dumps({k: len(v["lives"]) for k, v in r["cells"].items()}))
+        return 0
+    if argv and argv[0] == "score":            # score [test.json]
+        p = Path(argv[1]) if len(argv) > 1 else TEST_OUT
+        print(json.dumps(score(json.loads(p.read_text())["cells"]), indent=1))
+        return 0
     if not argv or argv[0] not in ("collect", "smoke"):
-        print("usage: forager_clone.py collect [seed ...] | smoke | train [epochs] | cell ...")
+        print("usage: forager_clone.py collect [seed ...] | smoke | train [epochs] | cell ... | kernel | score [file]")
         return 2
     if argv[0] == "smoke":
         r = collect_seed(153, lives=1, cap=300)
