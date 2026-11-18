@@ -2341,3 +2341,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Vendored the authors' BC-ResNet verbatim (`Qualcomm-AI-research/bcresnet@656f947a`, recipe read from main.py/utils.py): 9,232 weights = published 9.2K. Probe `kws_cost_probe.py` (`9b086c32`): 785 ms a training step at batch 100 + 59 ms log-mel → 200 epochs ≈ 41 CPU-h a seed. NOT RUN; KNOWN_ANSWERS N7-kws.
 - RESEARCH correction (INBOX): PRIORS §7's "one CPU session each" does not hold at the published recipe; it is a free-GPU row, and the official 12-class test set is not on the box.
 - Philosophy served: 3 and 2 (his ear's design goes through a published reproduction first, priced from the authors' own code before any money of time is spent).
+
+## 2026-11-18 02:37–02:52 UTC · JACK · Next-up 2 (Mac first-day row 9, JAX arm) — short slot, all 4 Kaggle sessions busy (J11 f0/f1, J12 d075/d100 RUNNING)
+- Ranked orders all wait on a session; Next-up 1 exhausted (shaping grid sized `ee463f1c`, Dyna reproduced, RL² + ear sized). Next-up 2's last automatable piece was row 9's official-JAX arm.
+- `experiments/brain_a/official_speed.py` (`9ba4e682`): dreamerv3@e01491f's own make_agent/train, unmodified, fixed batches, 30-in/6-out = mac_dreamer's shapes (m9 asserts it), float32 CPU. Trained weights 641,641 = sheeprl's 1M count exactly (agent.params also holds opt state/slowval — 1.99M raw; first smoke misread that, fixed before commit).
+- Box 1 thread, size1m: JAX 0.925 grad steps/s vs sheeprl 0.458 (~2×, 10 timed steps — a smoke, not a reading). Rows 1–10 automated; 11, 12 Mac-only by nature.
+- Philosophy served: 5 (the Mac's first day measures the brain-A runner choice on official code in one command) and 6 (free compute: the move to the owner's machine is priced, not guessed). Weak link to the creature itself — honest: this is machine-readiness work taken because every creature order waited on Kaggle.
