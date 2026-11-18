@@ -29,3 +29,4 @@ runpy.run_path("policies/main.py", run_name="__main__")
 # training iteration (200 updates on whole 200-step LSTM sequences, batch 32) did NOT log
 # within 14.5 min at load ~5.5, 4 torch threads -> > ~4 s/update here (PRIORS said ~0.3 s).
 # Untested: torch.set_num_threads(1); Kaggle speed.
+# 17:45 re-time: OMP/MKL threads 1, PYTHONUNBUFFERED=1, num_iters 1: no iteration in 8 min (7m52s CPU) -> >= 2.3 CPU-s/update.
