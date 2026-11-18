@@ -2382,3 +2382,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J6's native-substep kernel came home in 7 min (est 1 h): the 40-sub-steps-in-one-C-call option is EXACT on Kaggle's x86 too (A+D × seeds 153–155, 0/300 decisions differ, deaths crossed; dt+1ulp control differs 60/138/238). Per Kaggle core: shipped 71.0, lazy+native 169.8 dec/CPU-s (2.39×, identical world → 1M decisions ≈ 1.6 CPU-h), +implicitfast 400.2 (5.64×, a world change awaiting the Director). Table in `sim_speed_kcpu.py`; J6 DONE.
 - Its freed session went by rank 1 to J11's f2 floor-card group (`jack-cpu-1794979385`). J12 d0 kernel and J11 f0/f1 still RUNNING. Receipts committed.
 - Philosophy served: 5 and 6 (the loop that makes him is now 2.4× cheaper on free compute without changing his world one bit).
+
+## 2026-11-18 05:37–05:52 UTC · JACK · J11 (decision support for the 07:07 rule) — short slot, all 4 Kaggle sessions RUNNING (J12 d075, J11 f0/f1/f2 by `kernels status` 05:40)
+- Nothing to harvest. Read the rule's inputs against the pilot's arms: the pilot's `held8` floor runs with movement charged (k1, judge of B0/P/G), but option (a)'s -ff card re-runs only noop and held8-k0 → under (a) held8's floor clause has no same-world card. Wrote the gap, its two fixes (add held8-k1-ff groups under new names, or disclose the borrowed 5/2000 rate) and the (a)/(b) timing into J11's state for the strong slot.
+- No code changed, nothing launched; cpu_budget receipts committed.
+- Philosophy served: 4 (a floor clause read from the wrong world would let the pilot's control be weaker than it looks). Weak: a paper check, taken because every order waited on Kaggle.
