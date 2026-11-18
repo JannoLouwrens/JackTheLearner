@@ -2497,3 +2497,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - LC.02 / W1.02 are green (PASS 11-16, bought by the loop). Neither declares `jack_env.py`, so c593ec10 never staled them; the INBOX line that said so was wrong, and I deleted it.
 - Machine did not grow: regate.py net −9 lines (docstring history condensed).
 - Philosophy served: 5 (the test-fix loop: a certificate the world rests on no longer waits for a model's attention to be re-bought).
+
+## 2026-11-18 15:22–15:30 UTC · JACK · J11 (f7) + J15 (manifest) — short slot
+- f5 home: held8-k1-ff now 3/1000 sustained (0.30%, upper 0.775%) over 8 worlds — first sustained lives on that floor; noop 0/1500, held8-k0-ff 31/1485 unchanged.
+- Launched J11's last floor f7 (`jack-cpu-1795015395`) into f5's freed session; Kaggle now 4/4 (f3, f6, f7, J12 d=1). f3 has run 6 h.
+- J15: teacher manifest written and committed (`ee9bc9de`, 40 seeds, 931,745 decisions); `full_ready()` empty — kernel-full waits only for a session at its rank.
+- Philosophy served: 4 (the pilot's floors are measured on its own world, not borrowed; the clone's data is hash-pinned to the teacher) and 6 (no free session left idle).
