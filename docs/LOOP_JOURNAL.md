@@ -2461,3 +2461,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - That unblocked J15: teacher collection running on the box (2 workers, ~3 h); the E2b student, trainer, test cell (through gate 2's own loop) and scorer coded; `test_forager_clone_student` PASS 4/4 on planted answers, each with a control.
 - d = 1 gate-2 kernel still waits for a session (all 4 busy: f3, f4, f5, LAB sleep_naps).
 - Philosophy served: 4 (his own-frame senses proven to carry food, with a twin that had to fail and did) and 7 (the eye and motor the finished Jack will have).
+
+## 2026-11-18 12:22–12:40 UTC · JACK · J11 (the pilot's eye wiring) — short slot; all 4 Kaggle sessions busy (f3, f4, f5, LAB sleep_naps; f3/f4 RUNNING by `kernels status`), nothing home
+- Found: ruling 39 says every pilot learner sees the body-frame eye and "the pilot kernels refuse without it", but `pilot_b2.make_world` passed neither `eye_frame` nor `motor_frame` and `pilot_kernel` checked neither. A rule written to the order's letter would have launched 40 runs on the compass eye.
+- Fixed `302b34c1`: frames go from PILOT_RULE through the job, the child CLI and pilot_world into JackEnv, for floors too; the kernel refuses without eye_frame='body' or a named motor_frame; `_world_stamp` records both, read off the env. `test_pilot_b2_frames` PASS (identity, 4/4 refusals, child stamped body/body, control child world/world); arms + kernels tests still PASS.
+- INBOX: the motor frame needs a ruling before the rule, and a body-motor choice means held8's floor gets re-read.
+- Philosophy served: 4 (the pilot cannot silently test a different creature than the one ruled) and 7 (his own-frame eye, as the finished Jack will have).
