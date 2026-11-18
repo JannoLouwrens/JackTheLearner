@@ -82,18 +82,27 @@ OUT = Path("/data/jack-logs/pilot_b2")
 CARD_SEEDS = tuple(range(601, 617))
 CARD_LIVES = 125
 CARD_ARMS = ("noop-k1", "noop-k0", "held8-k1", "held8-k0")
+# J11 option (a), 11-18 01:40: the card re-run in the world WITH
+# jack_env(food_floor_only=True) (adf457ca: no food laid on the ramp/stairs,
+# the statue leak's cause). An arm name ending "-ff" runs that world; nothing
+# else about a cell changes (same seeds 601..616, 125 lives, cap, policies).
+# Only the two arms the order names: noop (the statue leak lives there) and
+# held8-k0 (the highest floor, arm K's judge). Groups f0..f3 = 4 worlds x 2
+# arms; kernels write OUT/f*.json, which the c*.json card never globs.
+CARD_FF_ARMS = ("noop-k1-ff", "held8-k0-ff")
 KERNEL_PINS = ["gymnasium==1.4.0", "mujoco==3.17.0"]
 WORKERS = 4
 REMOTE_TIMEOUT_S = int(9.5 * 3600)
 POOL_DEADLINE_S = int(8.5 * 3600)   # in-kernel stop, leaves pip + queue + fetch margin under REMOTE_TIMEOUT_S
 
 
-def make_world(seed: int, move_cost_dial: bool = False):
+def make_world(seed: int, move_cost_dial: bool = False,
+               food_floor_only: bool = False):
     from experiments.jack_env import JackEnv, NEEDS_S_TRP, SPAWN_CLEAR_R
     return JackEnv(seed=seed, difficulty=DIFFICULTY, reward=REWARD,
                    random_needs=NEEDS_S_TRP, random_layout=True,
                    lazy_contact_audio=True, spawn_clear=SPAWN_CLEAR_R,
-                   move_cost_dial=move_cost_dial)
+                   move_cost_dial=move_cost_dial, food_floor_only=food_floor_only)
 
 
 def run_card_cell(arm: str, seed: int, lives: int = CARD_LIVES,
@@ -101,9 +110,12 @@ def run_card_cell(arm: str, seed: int, lives: int = CARD_LIVES,
     """`lives` finished lives (death or cap) of one floor arm in one world.
     Written to `out` every 10 lives, so a killed cell keeps what it lived."""
     from experiments.world_card import DoNothing, Held
-    pol_name, k = arm.split("-")
+    pol_name, k, *rest = arm.split("-")
+    if rest not in ([], ["ff"]):
+        raise ValueError(f"unknown arm {arm}")
     pol = DoNothing(seed) if pol_name == "noop" else Held(seed, 8)
-    w = PilotLives(make_world(seed, move_cost_dial=(k == "k0")), cap=LIFE_CAP)
+    w = PilotLives(make_world(seed, move_cost_dial=(k == "k0"),
+                              food_floor_only=(rest == ["ff"])), cap=LIFE_CAP)
     o, info = w.reset(seed=seed)
     pol.new_life()
     spawn = [float(getattr(w.env, "last_spawn_food_dist", float("nan")))]
@@ -141,7 +153,10 @@ def card_cells() -> list:
 def card_groups() -> dict:
     """c0..c7: 8 cells each = two worlds x the four arms."""
     c = card_cells()
-    return {f"c{i}": c[8 * i:8 * i + 8] for i in range(8)}
+    g = {f"c{i}": c[8 * i:8 * i + 8] for i in range(8)}
+    f = [(a, s) for s in CARD_SEEDS for a in CARD_FF_ARMS]
+    g.update({f"f{i}": f[8 * i:8 * i + 8] for i in range(4)})
+    return g
 
 
 def run_pool(cells: list, outdir, lives: int = CARD_LIVES,
@@ -262,12 +277,20 @@ def cells_from_artifacts(artifacts: dict, cells: list) -> dict | None:
     return {"cells": res, "assembled": True} if found else None
 
 
+def _arm_order(by: dict) -> dict:
+    """Rows in CARD_ARMS then CARD_FF_ARMS order (any other arm last)."""
+    known = CARD_ARMS + CARD_FF_ARMS
+    return dict(sorted(by.items(), key=lambda kv: (known.index(kv[0])
+                                                   if kv[0] in known else len(known))))
+
+
 def card_table(paths) -> str:
     """The floor card from harvested kernel files (OUT/c*.json)."""
-    by = {a: [] for a in CARD_ARMS}
+    by = {}
     for p in paths:
         for rec in json.loads(Path(p).read_text())["cells"].values():
-            by[rec["arm"]].append(rec)
+            by.setdefault(rec["arm"], []).append(rec)
+    by = _arm_order(by)
     lines = ["| arm | worlds (cut) | lives | sustained | rate (95% upper) | runs W=1/2/3 "
              "| life s median (5-95%) | meals/life mean | lives fed | max meals |",
              "|---|---|---|---|---|---|---|---|---|---|"]
@@ -315,10 +338,11 @@ def rule_inputs(paths, T: int = PILOT_T, seeds: int = PILOT_SEEDS) -> str:
     with move_cost_dial -> the k0 twin) is the rule writer's call, stated
     in the rule; this prints all four.
     """
-    by = {a: [] for a in CARD_ARMS}
+    by = {}
     for p in paths:
         for rec in json.loads(Path(p).read_text())["cells"].values():
-            by[rec["arm"]].append(rec)
+            by.setdefault(rec["arm"], []).append(rec)
+    by = _arm_order(by)
     lines = ["| arm | card lives | decisions/life | planned lives | "
              "pred. crossings W=1/2/3 | 95% upper W=1/2/3 | smallest W <= 0.5 |",
              "|---|---|---|---|---|---|---|"]
@@ -360,6 +384,8 @@ def main(argv):
     p.add_argument("--lives", type=int, default=CARD_LIVES)
     p.add_argument("--out", default=None)
     p.add_argument("--name", default=None)
+    p.add_argument("--glob", default="c*.json",
+                   help="card / rule-inputs: which kernel files (f*.json = the -ff re-run)")
     a = p.parse_args(argv)
     if a.cmd == "cell":
         rec = run_card_cell(a.arm, a.seed, a.lives, Path(a.out) if a.out else None)
@@ -367,9 +393,9 @@ def main(argv):
     elif a.cmd == "kernel":
         kernel(a.name)
     elif a.cmd == "rule-inputs":
-        print(rule_inputs(sorted(OUT.glob("c*.json"))))
+        print(rule_inputs(sorted(OUT.glob(a.glob))))
     else:
-        print(card_table(sorted(OUT.glob("c*.json"))))
+        print(card_table(sorted(OUT.glob(a.glob))))
 
 
 if __name__ == "__main__":
