@@ -1362,10 +1362,10 @@
         "detached:launch_c1.log": 656.38,
         "detached:launch_c2.log": 672.32,
         "detached:launch_c3.log": 674.15,
-        "detached:launch_c4.log": 469.57,
-        "detached:launch_c5.log": 469.76,
-        "detached:launch_c6.log": 397.16,
-        "detached:launch_c7.log": 397.13,
+        "detached:launch_c4.log": 552.43,
+        "detached:launch_c5.log": 737.03,
+        "detached:launch_c6.log": 459.0,
+        "detached:launch_c7.log": 515.28,
         "detached:launch_e0.log": 576.39,
         "detached:launch_e1.log": 432.15,
         "detached:launch_e2.log": 267.89,
@@ -1376,11 +1376,20 @@
         "detached:launch_ppo-lp.log": 508.93,
         "detached:launch_wm-latent.log": 254.25,
         "detached:run.log": 147.26,
-        "detached:statue_leak_launch.log": 1800.04,
+        "detached:statue_leak_launch.log": 2479.75,
+        "detached:statue_leak_r2_launch.log": 1267.73,
         "detached:w104.log": 522.5,
         "j14-rows-smoke": 82.13
       },
-      "used_s": 21767.86
+      "used_s": 24245.42
+    },
+    "2026-11-18": {
+      "by_spec": {
+        "detached:launch_c6.log": 10.51,
+        "detached:launch_c7.log": 215.96,
+        "detached:statue_leak_r2_launch.log": 532.31
+      },
+      "used_s": 758.78
     }
   },
   "last_child_s": {
