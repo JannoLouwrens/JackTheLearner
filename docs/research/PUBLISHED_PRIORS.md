@@ -635,19 +635,40 @@ Long form: `/data/jack-research/research_notes/walking_layer/` (`part_a_yu2018.m
 
 ## 17. Copying the hand forager into his network, and a learner handed the direction to food (2026-11-18; serves order J15, rows E2b and E2c; plan part "Learning to eat")
 
-**Question.** J15's two `prior:` lines point at "E2b, E2c in PUBLISHED_PRIORS" — no such text existed. (a) What does the record say happens when a scripted teacher WITH memory (ours holds a remembered target on 0.993 of decisions) is copied by plain regression into a network WITHOUT memory, from 932k teacher decisions and no corrections? (b) What does a replay learner handed the bearing and distance to its goal need, in steps, and what does the handed direction prove?
+**Question.** J15's `prior:` pointed here; no such text existed. (a) A scripted teacher WITH memory copied by plain regression into a net WITHOUT memory, no corrections: what happens? (b) What does a learner handed bearing and distance to its goal need, and prove? Long form: `/data/jack-research/research_notes/j15_clone/`. Read in LaTeX source unless under Not verified.
 
-Long form: `/data/jack-research/research_notes/j15_clone/` (`partA…`, `partB…`, `partC…`, `ours_measured.md`). Numbers below were read in each paper's LaTeX source unless listed under Not verified.
+**Already known.**
+- Regression on teacher-only states drifts (error ~T²) and more data does not cure it: Super Tux Kart supervised "does not improve as more data is collected", corrections reach 0 falls/lap in ~15k points; Mario sticks where the expert never stood ([1011.0686](https://arxiv.org/abs/1011.0686)).
+- A teacher that is Markov on the student's own input clones easily: 25 trajectories → 77–95% of expert ([1606.03476](https://arxiv.org/abs/1606.03476) T3). At 1M samples (ours): HalfCheetah-expert 105.2 ± 1.7, Hopper 111.5 ± 1.3, Walker2d 56.0 ± 24.9 ([2106.06860](https://arxiv.org/abs/2106.06860) T1).
+- **Imitation gap** ([2007.12173](https://arxiv.org/abs/2007.12173) T1): a student blind to what the teacher knows learns the AVERAGE of its choices. Best of BC/DAgger 0.88 with a matched view; 0.00–0.11 where the teacher remembers a switch.
+- Squared error on a teacher that picks at random: MLP+MSE 0.67 on the first reach, **0 on the three later stages** of scripted block-push; 0.98 on unimodal CARLA ([2206.11251](https://arxiv.org/abs/2206.11251)).
+- Privileged teacher → sensor student (CARLA): offline 16–20% success; teacher labelling the student's OWN states 64%; plus every-branch labels 100 ([1912.12294](https://arxiv.org/abs/1912.12294)). Walking: teacher 76.2, student with history 73.5, without 52.1 ([2107.04034](https://arxiv.org/abs/2107.04034)).
+- History in an OFFLINE clone often hurts (it copies its last action): Ant single frame 1,300, history RNN −311; Humanoid 587 / 367 ([2010.14876](https://arxiv.org/abs/2010.14876)).
+- Handed direction, navigation: a blind agent with GPS+compass reaches SPL 0.42 / success 0.62 at 75M steps ([1904.01201](https://arxiv.org/abs/1904.01201)), 0.973 success at 2.5B ([1911.00357](https://arxiv.org/abs/1911.00357)); direction removed, success 0.948 → 0.099 ([2009.03231](https://arxiv.org/abs/2009.03231)). The oracle swap is the field's perception-vs-control test ([2206.00997](https://arxiv.org/abs/2206.00997)).
+- Handed goal, small budgets, DENSE reward: state SAC reacher-easy 746 ± 25 ([2004.04136](https://arxiv.org/abs/2004.04136)) or 919 ± 123 ([2004.13649](https://arxiv.org/abs/2004.13649)) at 100k. Repeated reaching: SAC PointGoal1 27.0 ± 1.5 at 1M (OmniSafe table, shaped).
+- Gathering WITHOUT a direction: Swimmer-Gather 0.0 for all algorithms at 25M ([1604.06778](https://arxiv.org/abs/1604.06778)); Ant-Gather ~3 apples at 10M ([1805.08296](https://arxiv.org/abs/1805.08296)).
 
-**Already known (E2b — the clone).**
-- Plain regression on teacher-only states has error growing with T²; more data does not cure it: Super Tux Kart supervised "does not improve as more data is collected", corrections reach 0 falls/lap in ~15k points; Mario sticks at obstacles the expert never stood beside (Ross 2011, [1011.0686](https://arxiv.org/abs/1011.0686)).
-- Where the teacher is Markov on the student's own input, plain cloning works at small data: 25 trajectories give 77–95% of expert on Hopper/HalfCheetah/Ant ([1606.03476](https://arxiv.org/abs/1606.03476) T3; [2102.02872](https://arxiv.org/abs/2102.02872) T1). At OUR data scale (1M samples): HalfCheetah-expert 105.2 ± 1.7, Hopper 111.5 ± 1.3, but Walker2d 56.0 ± 24.9 ([2106.06860](https://arxiv.org/abs/2106.06860) T1). Longest published success: ≤ 1,000 steps.
-- **The imitation gap** (Weihs 2021, [2007.12173](https://arxiv.org/abs/2007.12173)): a student that cannot see what the teacher knows learns the AVERAGE of the teacher's choices. Best of BC/DAgger: 0.88 with a matched view, 0.00–0.11 on tasks where the teacher remembers a switch; −0.59 on PoisonedDoors.
-- Squared error on a teacher that chooses at random: MLP+MSE 0.67 on the first reach, **0 on the three later stages** of scripted block-push; 0.98 on unimodal CARLA ([2206.11251](https://arxiv.org/abs/2206.11251)). Driving clones stay stopped more as data grows ("inertia", [1904.08980](https://arxiv.org/abs/1904.08980), figure).
-- Privileged teacher → sensor student, CARLA: offline cloning 16–20% success, with the teacher labelling the student's own states 64%, with every-branch labels 100% ([1912.12294](https://arxiv.org/abs/1912.12294)). Walking: teacher 76.2, student with 50-step history 73.5, without history 52.1 ([2107.04034](https://arxiv.org/abs/2107.04034)).
-- History given to an OFFLINE clone often hurts — it copies its own last action: Ant single frame 1,300, history MLP 1,750, history RNN −311; Humanoid 587 / 565 / 367 ([2010.14876](https://arxiv.org/abs/2010.14876)); GTA-V better validation loss, half the distance ([1905.11979](https://arxiv.org/abs/1905.11979)).
-- Navigation: cloning shortest-path demos 4.4% ObjectNav success vs 31.6% from 35k human demos ([2204.03514](https://arxiv.org/abs/2204.03514)); a blind agent with memory of 1 step "nearly 0%" ([2301.13261](https://arxiv.org/abs/2301.13261)).
+**Ours, measured** (seeds 701–712, 269,524 decisions). A target is held on **0.551** of decisions (per seed 0.445–0.698), not the state line's 0.993 (smoke seed 153). Only actions 6–7 vary. With no target the teacher steers along ONE of ~38 open rays, drawn at random, held ≤ 25 decisions (`eye_forager.py:293-299`): 45% of the lesson is a coin the row cannot see. A 90-s copy of the student on unseen worlds: R² 0.29 / −0.11 with a target, ≤ 0 without; its push 0.38 / 0.24 against the teacher's 0.63.
 
-**Ours, measured this slot (first 12 teacher seeds, 269,524 decisions; box, < 2 min).** The target is held on **0.551** of decisions (per seed 0.445–0.698), not the state line's 0.993 (that was smoke seed 153). Only actions 6–7 vary (0–3 are 0, 4–5 are −1). With no target the teacher steers along ONE of the ~38 most open rays, drawn at random and held ≤ 25 decisions (`eye_forager.py:293-299`) — 45% of the lesson is a coin the row cannot see. A 90-second copy of the student (224k samples, tested on unseen worlds): R² 0.29 / −0.11 with a target, ≤ 0 without; its push is 0.38 / 0.24 against the teacher's 0.63. The last action predicts the next at R² 0.86, so the rule's random 10% hold-out is leaked and will read rosier than an unseen-world one.
+**Candidates.**
+1. *Plain regression, as frozen.* Proven for realizable teachers, ≤ 1,000 steps. At ours (inf): approaches food it sees; with none in view, a weak push toward the mean open direction. Bar of 5 meals: unknown, leaning miss.
+2. *The teacher labels the student's own lives* (DAgger). 16 → 64% in CARLA; our teacher labels for free. Cures drift and stuck states, NOT averaging over a random heading. A short history only with this; offline it is the copycat (−311).
+3. *A teacher the row determines* — wander along THE most open ray, no draw. Makes the lesson realizable (0.88-class). It is a new ruler: it must re-pass gate 2 first.
 
-*E2c part, table and checks land next (16:2x UTC).*
+**Ours beside theirs.**
+
+| Setting | Published success | Ours (file:line) | Cost |
+|---|---|---|---|
+| Teacher vs student view | same input, Markov | timers, bans, target, random heading (`eye_forager.py:221-299`) | 0.88 → ≤ 0.11 |
+| Loss on random choices | unimodal 0.98 | MSE on a 38-way draw (`forager_clone.py:182`) | averaging; inertia |
+| Horizon | ≤ 1,000 | 9,000 (`forager_clone.py:99`) | drift, no recovery data |
+| Hold-out | — | random 10% of the same lives; last action predicts next at R² 0.86 | rosier than unseen worlds |
+| E2c reward | dense or shaped | +100 on eating, drain (J11) | sparse: Fetch-class DDPG "often not able to learn" ([1802.09464](https://arxiv.org/abs/1802.09464)) |
+| E2c bearing | lidar, or cos/sin | radians / π — jumps at ±π (rule E2c) | Safety Gym warns of the wrap-around |
+| E2c control | input removed and retrained | random fixed point | a fixed point leaks odometry; add zeroed |
+
+**Known-answer check.** Clone: `train_clone` on D4RL hopper-expert should score 111.5 ± 1.3 (not Walker2d); minutes at our 4.4 CPU-s per 1e5 samples (inf). E2c: B's SAC rows already reproduce; DMC reacher-easy at 100k has no single published number (746 vs 919).
+
+**What the record does NOT answer.** (i) Whether a memoryless clone of THIS teacher clears 5 meals — the frozen kernel, ~9 h; prediction: miss, or a pass carried by the 55% of decisions with a target; read the clone's push on no-target frames first. (ii) Survival by repeated eating with the direction handed, at 300k: nobody published it. Prediction (inf): first reliable reach 50k–200k; a miss at 300k is weak evidence.
+
+**Not verified.** Ross & Bagnell 2010; Kart/Mario and DART baselines (figures); Walsman 2023; Ortega 2021 (abstract only); PointGoal1 curve at 300k; D4RL BC's network and normalisation; whether food textures change per world.
