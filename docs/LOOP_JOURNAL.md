@@ -2558,3 +2558,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `ee81dffd`: `gpu.submit/run_on_kaggle` gain `kernel_sources` (into kernel-metadata.json) and opt-in `fetch_only` (`--file-pattern` from `fetch`; the CLI reads each file whole into RAM, so a 6.1 GB checkpoint would have hit the box). Opt-in because pilot_b2's recovery reads unlisted artifacts. `humanoid_sac_row.kernel` segment > 0 unlocked; mount path unverified.
 - Retired the 16:45 dead-watcher proposal: `run status` already prints `orphaned_dispatches`. Tests 5/5 + reuse 4/4. Left LAB.md/cpu_budget.json dirt alone.
 - Philosophy served: 6 (2M-step SAC row fits in free 12 h Kaggle CPU sessions, without filling a tenant box's disk) and 5 (the JACK lane's blocker removed).
+
+## 2026-11-18 21:25 · JACK · J11
+- m2 (body-motor floor twin) home 20:46: held8-k0-ff-bm 1/250 sustained (upper 1.90%), k1-ff-bm 0/250 — two worlds only, interim, written to PILOT_B2 §2b. k0 reads below the world-motor floor (expect 4.7, P(≤1)=0.05) — not a reading yet.
+- m4 launched into the freed Kaggle session (`jack-cpu-1795037006`); m0, m1, m3 still RUNNING (watchers alive, untouched). m5–m7 next as sessions free.
+- Served philosophy 4 (the floor a learner must beat is measured, not borrowed) and 7 (floors in the body frame the finished Jack will have).
