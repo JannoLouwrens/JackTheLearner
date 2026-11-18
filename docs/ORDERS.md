@@ -154,7 +154,9 @@ final for the week → Colab through `gpu.py`.
 serves: M3, M5 · PLAN ready-list "brain A reproduced … and smoke-tested in his world"; part "Ear" 1 → 3 · objective 3 · philosophy 2, 3.
 **done when:** (a), (b) committed by Fri 11-20; then A1–A3 and the ear row in `KNOWN_ANSWERS.md`, in band or a named miss, and A's smoke line.
 state: A rows: rule frozen `286d6451` (A1 cartpole_balance, A2 swingup, A3 ball_in_cup; seeds 0–2, ext 3–4; never-trains twin below band else VOID); kernels + tests `31286dac`; control corrected to replay_ratio 0.0. Nothing left for A1–A3 before Saturday.
-state: ear: sized `9b086c32`, test set `a9043bd7`, target corrected `ac642f42`. (a), (b) not started.
+state: ear: sized `9b086c32`, test set `a9043bd7`, target corrected `ac642f42`.
+state: (a) DONE `57574dc7`: rule frozen in `experiments/kws_row.py` (authors' clone sha256-pinned, band 96.3–97.5, seeds 0–2 + ext 3–4, counts 36923/4445/4890 or stop, shuffled twin ≤ 15.0%); box smoke ran the real main.py 200 epochs both arms, guard fired; `test_kws_row` PASS. T4 cost a GUESS (1.5 h/run) — first kernel measures it. Ear on 11-21: `scripts/launch_detached.sh /data/jack-logs/kws_row/launch_k1.log $PY -m experiments.kws_row kernel s0 s1 s2 twin`.
+state: next: (b) A-in-his-world smoke kernel (not started).
 
 ### J15 — The learnability proof, part 2: the forager copied into his network, and a learner given the direction
 part: Learning to eat · stage: 1 (stage-1 line "a copy of it inside his own network, and a learner given the direction to food") · step: 2 → 3 · prior: grep `E2b`, `E2c` in `PUBLISHED_PRIORS.md` and `WORLD_CARD.md`; J12

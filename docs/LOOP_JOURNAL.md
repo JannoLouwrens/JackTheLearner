@@ -2410,3 +2410,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - (2) gate 2 declared before any cell (same ruler line for line, same bar, seeds 261–280, no extension; h4 = body eye + world motor, reported only, predicted miss). The session the compass kernel freed went to its d0 kernel `jack-cpu-1794987421` (J11 holds 3: f0, f1, f2). d = 1 kernel waits for a session.
 - Two of my own test expectations were wrong before the option was (pose one sub-step behind qpos after mj_step; a 5-decision push curves because he yaws) — both written into the test's RESULT.
 - Philosophy served: 7 and 1 (the eye and the push the human-like body will have, not a compass), 4 (the gate is re-earned on fresh seeds with a control and a predicted-miss row, declared first).
+
+## 2026-11-18 08:07–08:35 UTC · JACK · J14 (a) — the ear's reproduction rule, kernel and smoke (all 4 Kaggle sessions RUNNING: J12 d075, J11 f0/f1/f2)
+- Nothing home to harvest (J11, J12, J3 all wait on a session), so the order of work fell to J14's no-GPU half.
+- `experiments/kws_row.py` (`57574dc7`): BC-ResNet-1 on Speech Commands v2, the authors' repo cloned at 656f947a and sha256-pinned, run unmodified through a seeding launcher. Rule frozen before seed 0: 3-seed mean in 96.3–97.5 (paper 96.9 ± 2×0.30), one extension (seeds 3–4), data counts 36,923/4,445/4,890 or the run stops, shuffled-label twin ≤ 15.0% (the authors' noise augmentation is label-dependent: a leak worth ≤ 8.3 points above the 8.34% constant guess, stated in the rule).
+- Box smoke: the real main.py, 200 epochs, 60 symlinked clips, both arms rc 0 in 80 s each; twin permuted 57/60 labels; the counts guard (known-positive) killed a wrong-data run in 4 s. torchaudio 2.8.0 put in a side dir `/data/tools/torchaudio_lib` (box only, venv untouched). `test_kws_row` PASS on planted answers.
+- T4 cost is still a guess (1.5 h/run); the first kernel on 11-21 measures it.
+- Philosophy served: 3 and 4 (the ear's learner must hit a published number, with a twin that must fail, before it may become part of him); 1 (hearing is one of his senses).
