@@ -2417,3 +2417,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Box smoke: the real main.py, 200 epochs, 60 symlinked clips, both arms rc 0 in 80 s each; twin permuted 57/60 labels; the counts guard (known-positive) killed a wrong-data run in 4 s. torchaudio 2.8.0 put in a side dir `/data/tools/torchaudio_lib` (box only, venv untouched). `test_kws_row` PASS on planted answers.
 - T4 cost is still a guess (1.5 h/run); the first kernel on 11-21 measures it.
 - Philosophy served: 3 and 4 (the ear's learner must hit a published number, with a twin that must fail, before it may become part of him); 1 (hearing is one of his senses).
+
+## 2026-11-18 08:22–08:45 UTC · JACK · J14 (b) — brain A in his world, smoke kernel (all 4 Kaggle sessions RUNNING: J11 f0/f1/f2, J12 d075 by `kernels status` 08:23)
+- Nothing home to harvest; J11/J12/J3 wait on a session, so the order of work fell to J14's last no-GPU item.
+- `experiments/brain_a/in_world.py` (`388c2582`): the pinned sheeprl runner, A's row overrides unchanged except the env (`env=gym`, id `experiments.brain_a.in_world:JackWorld-v0` — gymnasium imports the module, which registers the pilot world: food_floor_only, spawn_clear 1.55, d0, arm K drain ramp, body-frame eye and motor, native_substep). DONE rule written before any run: steps to total, ≥ 2 logged loss steps, all finite, dec/s; no behaviour read.
+- Box smoke (CPU, compile off, 1,200 decisions): rc 0, 178.6 s, env 284–298 dec/s on 4 envs, train 0.67 sps; all 8 losses finite at step 1,200, reward_loss 5.537 (§2's step-0 5.541). Not DONE on the box: losses exist at only one logged step — the 20k kernel on 11-21 decides "learns". `test_brain_a_in_world` PASS 4/4, each with a control that fails.
+- Philosophy served: 3 (the chosen brain must run in HIS world, with his eye, before it can be raced there) and 7 (body-frame senses, as the finished Jack has).
