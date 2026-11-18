@@ -2568,3 +2568,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - m0 (body-motor floor twin) home 21:32. m-card interim 2/8 (`PILOT_B2.md` §2b): held8-k0-ff-bm 3/500 sustained (upper 1.55%), k1-ff-bm 0/500 (upper 0.60%). At the world-motor floor's rate k0 would show 9.4; P(≤3) = 0.016 — the body-motor held8 floor is likely LOWER, which is why floors must match the arms' frame. 4 of 16 worlds: not a reading.
 - m5 refused once by the load gate (6.7 > 6.0, other tenants' tests); a bounded wait-then-launch loop got it in at 21:39 (`jack-cpu-1795037983`, push rc=0). m1, m3, m4 still running.
 - Philosophy served: 4 (the floor a learner must beat measured in his own frame, not borrowed from the world-frame card).
+
+## 2026-11-18 22:22–22:45 UTC · JACK · J11 (m1 harvest) — short slot
+- m1 (body-motor floor twin) home 21:54. m-card interim 3/8 (`82c64ba4`, `PILOT_B2.md` §2b): held8-k0-ff-bm 4/750 sustained (upper 1.22%), k1-ff-bm 0/750 (upper 0.40%). At the world-motor floor's rate k0 would show 14.1; P(≤4) = 0.0017 — the lower body-motor floor has now held across three kernel groups. 6/16 worlds: still interim, no W set.
+- m6 into the freed session: refused by the load gate for the whole slot (load 7.1–7.5 > 6.0, other tenants); a bounded wait loop ran to 22:44. m3, m4, m5 still running, untouched.
+- Philosophy served: 4 (the floor a learner must beat measured in his own frame, not borrowed) and 6 (yielded the box to paying tenants rather than force a launch).
