@@ -2323,3 +2323,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Identity: card and rule-inputs output byte-identical on the 8 harvested kernels; box `noop-k1` s601 reproduces the card's first 3 lives exactly; the -ff twin changes only the layout (spawn 6.83→6.19, 3.42→3.16, 3.06→1.75 m).
 - Launched f0, f1 on Kaggle (2 free of 4 sessions; J11 is rank 1); f2, f3 when J12's sessions free (~04:50). Card (a) home ~09:00–11:00.
 - Philosophy served: 4 (the floor the rule reads can be measured in the repaired world, not explained) and 5 (his world fixed before he is judged in it).
+
+## 2026-11-18 01:37–01:58 UTC · JACK · J11 (pilot arms coded) — short slot, all 4 Kaggle sessions busy (J11 f0/f1, J12 d075/d100 RUNNING)
+- Nothing to harvest; J11/J12/J6/J3 all wait on a session. Advanced J11 item 3 without pre-empting the rule: `pilot_b2.PILOT_ARMS` maps the arms the order names (B0 K P G KP; floors noop, held8, K-lr0) to world options + gamma/lr, `run_pilot_cell(arm, seed, food_floor_only)` via run_b/run_floor (`1eb7af3f`). No learner ran.
+- test_pilot_b2_arms PASS: 16/16 arm × world settings read off the env; B0 world == card world for 50 decisions at both food_floor_only values. `_world_stamp` now records food_floor_only.
+- Left for the rule slot: world (a)/(b), W, seeds 402+, floor clause; then a pilot-cell kernel packer (not written).
+- Philosophy served: 4 (the arms are fixed in code before any data, so the rule cannot be fitted to results) and 5 (cuts the wait between the rule and the pilot).
