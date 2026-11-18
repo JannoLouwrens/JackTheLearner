@@ -258,7 +258,7 @@ Long form: `$N/ear_words_advice.md` (99 KB). Nothing below was measured by us.
 
 | stage | task | published |
 |---|---|---|
-| ear | Speech Commands, 12 classes, speaker-disjoint; DS-CNN 24K / BC-ResNet-1 9.2K | 94.4% / 96.6–96.9% |
+| ear | Speech Commands, 12 classes, speaker-disjoint; DS-CNN 24K / BC-ResNet-1 9.2K | 94.4% / BC-ResNet-1 **v2 96.9 ± 0.30** (v1 96.6 ± 0.21) — corrected 11-18: "96.6–96.9" was v1 then v2, not a band (arXiv:2106.04140 e-print `main.tex` l.52, Table l.170) |
 | data budget | 35 words at all / 1,000 / 125 recordings per word | 97.4 / 94.8 / 90.3% |
 | words in an agent | Chang's 4 words → 4 objects, 5×10^6 steps | 0.945 with label loss, 0.870 without (arm); 0.920 vs 0.135 (navigation) |
 | narrator | ACTRCE hindsight descriptions | ≈80% vs no learning; 1% of frames enough |

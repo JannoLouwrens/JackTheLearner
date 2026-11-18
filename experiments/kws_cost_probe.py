@@ -20,9 +20,12 @@ What is measured (process CPU time, 1 thread, nice 19):
   mel_ms    log-mel of 100 clips via torch.stft + a 40-bin mel matrix
             (torchaudio is not in either venv; its MelSpectrogram is the same
             STFT + matmul, so this is a stand-in for the cost, not the values)
-Projection: train clips = 12-class train split as main.py builds it (all 35
-words: 10 named + `_unknown_`, so the whole speaker-disjoint train list,
-84,843 clips per N7-sc-task) -> steps/epoch = ceil(N/100); CPU-h = 200 x
+Projection: train clips = 12-class train split as the authors' code builds it.
+CORRECTED 11-18: `utils.py` SpeechCommand caps `_unknown_` and `_silence_` at
+`sample_per_cls_v2` = [3077, 371, 408] (train/valid/test), so the balanced v2
+splits are 36,923 / 4,445 / 4,890 (paper e-print, main.tex commented line under
+Datasets; 4,890 = our N7-sc-testset count). The first version used the whole
+84,843-clip train list and overstated the cost 2.3x -> steps/epoch = ceil(N/100); CPU-h = 200 x
 steps/epoch x (step_ms + mel_ms) + eval. Reported, not judged.
 
     python -m experiments.kws_cost_probe
@@ -117,7 +120,7 @@ def main(n_steps=30, warm=5):
             model(x)
         eval_ms = (time.process_time() - t) / n_steps * 1e3
 
-    n_train, n_valid = 84843, 9981
+    n_train, n_valid = 36923, 4445  # authors' balanced v2 splits
     spe = math.ceil(n_train / 100)
     train_h = 200 * spe * (step_ms + mel_ms) / 3.6e6
     # main.py validates every epoch on the valid split, tests once at the end
