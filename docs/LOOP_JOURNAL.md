@@ -2503,3 +2503,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Launched J11's last floor f7 (`jack-cpu-1795015395`) into f5's freed session; Kaggle now 4/4 (f3, f6, f7, J12 d=1). f3 has run 6 h.
 - J15: teacher manifest written and committed (`ee9bc9de`, 40 seeds, 931,745 decisions); `full_ready()` empty — kernel-full waits only for a session at its rank.
 - Philosophy served: 4 (the pilot's floors are measured on its own world, not borrowed; the clone's data is hash-pinned to the teacher) and 6 (no free session left idle).
+
+## 2026-11-18 15:37–15:55 UTC · JACK · Next-up item 1 (stage-2 prediction) — short slot
+- All 4 Kaggle sessions RUNNING (f3 since 09:23, f6, f7, J12 d=1); nothing home, J3/J13/J15 wait for a session. Every JACK order waits → "Next up" item 1.
+- Wrote `docs/research/STAGE2_PREDICTION.md` from PRIORS §1, §2, §9, §12, §13, §15 only: B reliable eating 100k–200k, A 10^5–10^6 (both inference; void for his world unless J11 finds a cure for the movement-drain slide); battery ordering per row (A ahead memory 0.65/0.04, delayed reward 0.78/0.39; B ahead DMC swingup 100k 835 vs 478; deep_sea 0.00 both); added sense has no number anywhere.
+- Philosophy served: 3 (the choice of brain is predicted from the record before it is raced, so the race can surprise it) and 4 (the rule will be checked against numbers written down before the runs).
