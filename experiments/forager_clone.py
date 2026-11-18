@@ -76,6 +76,7 @@ Extension  NONE. E2c's code (the two-number wrapper) is written when J11's
 """
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -140,9 +141,173 @@ def collect(seeds=TRAIN_SEEDS, out: Path = OUT, lives: int = TRAIN_LIVES) -> lis
     return paths
 
 
+# ---------------------------------------------------------------------------
+# E2b: the student, its training, and its test (written 2026-11-18 12:xx,
+# after gate 2 PASSED at d0, before any teacher data existed on disk).
+# ---------------------------------------------------------------------------
+CLONE_SEEDS = (0, 1, 2)
+ARMS = ("clone", "perm")                  # perm = the control that must fail
+HIDDEN = (256, 256)                       # SBX SAC MlpPolicy default actor
+EPOCHS, BATCH, LR, HOLDOUT = 20, 256, 1e-3, 0.10
+TEST_LIVES = 10
+WEIGHTS = REPO / "experiments" / "forager_clone_weights"
+
+
+def _mlp():
+    import torch.nn as nn
+    h1, h2 = HIDDEN
+    return nn.Sequential(nn.Linear(N_IN, h1), nn.ReLU(), nn.Linear(h1, h2),
+                         nn.ReLU(), nn.Linear(h2, 8), nn.Tanh())
+
+
+def permute_pairs(x: np.ndarray, rng) -> np.ndarray:
+    """The g4 twin's corruption: the 128 (distance, texture) pairs of each
+    row reordered by a fresh permutation per row. x: (B, 256) or (256,)."""
+    one = x.ndim == 1
+    xb = x.reshape(-1, EF.N_ROW, 2)
+    idx = np.argsort(rng.random(xb.shape[:2]), axis=1)
+    out = np.take_along_axis(xb, idx[:, :, None], axis=1).reshape(-1, N_IN)
+    return out[0] if one else out
+
+
+def load_teacher(data_dir: Path = OUT, seeds=TRAIN_SEEDS):
+    X, A = [], []
+    for s_ in seeds:
+        z = np.load(Path(data_dir) / f"teacher_s{s_}.npz")
+        X.append(z["x"])
+        A.append(z["a"])
+    return np.concatenate(X).astype(np.float32), np.concatenate(A).astype(np.float32)
+
+
+def train_clone(X: np.ndarray, A: np.ndarray, clone_seed: int, arm: str,
+                epochs: int = EPOCHS) -> tuple:
+    """MSE behaviour cloning, from scratch. arm 'perm' permutes every input
+    afresh every time it is seen. Returns (state_dict as numpy, report)."""
+    import torch
+    torch.manual_seed(clone_seed)
+    torch.set_num_threads(2)
+    rng = np.random.default_rng(10_000 + clone_seed)
+    n = len(X)
+    order = rng.permutation(n)
+    n_hold = int(round(HOLDOUT * n))
+    hold, tr = order[:n_hold], order[n_hold:]
+    net = _mlp()
+    opt = torch.optim.Adam(net.parameters(), lr=LR)
+    lossf = torch.nn.MSELoss()
+    Xh = X[hold] if arm == "clone" else permute_pairs(X[hold], rng)
+    Xh_t, Ah_t = torch.from_numpy(Xh), torch.from_numpy(A[hold])
+    rep = {"arm": arm, "clone_seed": clone_seed, "n_train": int(len(tr)),
+           "n_hold": int(n_hold), "hold_mse": []}
+    for _ep in range(epochs):
+        net.train()
+        ep_order = rng.permutation(tr)
+        for i in range(0, len(ep_order), BATCH):
+            b = ep_order[i:i + BATCH]
+            xb = X[b] if arm == "clone" else permute_pairs(X[b], rng)
+            loss = lossf(net(torch.from_numpy(xb)), torch.from_numpy(A[b]))
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
+        net.eval()
+        with torch.no_grad():
+            rep["hold_mse"].append(round(float(lossf(net(Xh_t), Ah_t)), 6))
+    sd = {k: v.detach().numpy().copy() for k, v in net.state_dict().items()}
+    return sd, rep
+
+
+class ClonePolicy:
+    """The trained student as a policy: body-frame row in, action out. No
+    memory (new_life does nothing); 'perm' sees a freshly permuted row."""
+
+    def __init__(self, weights: dict, arm: str, seed: int):
+        import torch
+        torch.set_num_threads(1)
+        self.net = _mlp()
+        self.net.load_state_dict({k: torch.from_numpy(np.asarray(v)) for k, v in weights.items()})
+        self.net.eval()
+        self.arm = arm
+        self.rng = np.random.default_rng(seed)
+        self.target = None                 # collector/diagnostic interface
+
+    def new_life(self):
+        pass
+
+    def act(self, o):
+        import torch
+        x = np.asarray(o[:N_IN], dtype=np.float32)
+        if self.arm == "perm":
+            x = permute_pairs(x, self.rng).astype(np.float32)
+        with torch.no_grad():
+            return self.net(torch.from_numpy(x)[None])[0].numpy().astype(np.float32)
+
+
+def weights_path(arm: str, clone_seed: int, root: Path = WEIGHTS) -> Path:
+    return Path(root) / f"{arm}_s{clone_seed}.npz"
+
+
+def test_cell(arm: str, clone_seed: int, seed: int, lives: int = TEST_LIVES,
+              cap: int = 9000, root: Path = WEIGHTS) -> list:
+    """One test seed for one student (or the b4 floor when arm == 'b4'),
+    through gate 2's own life loop in f4's world."""
+    if arm == "b4":
+        res = EF.run_seed("b4", seed, D0, lives=lives, cap=cap)
+    else:
+        w = dict(np.load(weights_path(arm, clone_seed, root)))
+        pol = ClonePolicy(w, arm, seed)
+        res = EF.run_seed("f4", seed, D0, lives=lives, cap=cap, policy=pol)
+    for r in res:
+        r["row"], r["arm"], r["clone_seed"] = f"{arm}{clone_seed}", arm, clone_seed
+    return res
+
+
+def test_cells() -> list:
+    """Every (arm, clone_seed, seed) of the E2b test; b4 once per seed."""
+    cells = [(a, k, s_) for a in ARMS for k in CLONE_SEEDS for s_ in TEST_SEEDS]
+    return cells + [("b4", 0, s_) for s_ in TEST_SEEDS]
+
+
+def score(cells: dict) -> dict:
+    """The frozen bar per student, then E2b's verdict (>= 2 of 3 clone seeds
+    pass; VOID if the permuted control passes on >= 2 of 3)."""
+    from experiments import world_card as WC
+    by = {}
+    for rec in cells.values():
+        by.setdefault(rec["row"], []).extend(rec["lives"])
+    b = by.get("b40", [])
+    for lv in b:
+        lv["row"] = "b4"
+    out = {}
+    for a in ARMS:
+        for k in CLONE_SEEDS:
+            lv = [dict(x, row=f"{a}{k}") for x in by.get(f"{a}{k}", [])]
+            out[f"{a}{k}"] = WC.score(lv, b, TEST_SEEDS)
+    npass = {a: sum(bool(out[f"{a}{k}"]["passes"]) for k in CLONE_SEEDS) for a in ARMS}
+    verdict = ("VOID" if npass["perm"] >= 2 else
+               "PASS" if npass["clone"] >= 2 else "FAIL")
+    return {"students": out, "passing": npass, "verdict": verdict}
+
+
 def main(argv):
+    if argv and argv[0] == "train":            # train [epochs] — all 6 students
+        ep = int(argv[1]) if len(argv) > 1 else EPOCHS
+        X, A = load_teacher()
+        print(f"teacher: {len(X)} decisions", flush=True)
+        WEIGHTS.mkdir(parents=True, exist_ok=True)
+        for arm in ARMS:
+            for k in CLONE_SEEDS:
+                sd, rep = train_clone(X, A, k, arm, epochs=ep)
+                np.savez_compressed(weights_path(arm, k), **sd)
+                print(json.dumps(rep), flush=True)
+        return 0
+    if argv and argv[0] == "cell":             # cell <arm> <clone_seed> <seed> <out>
+        from experiments.sim_speed_kcpu import _compat_multiray
+        _compat_multiray()
+        res = test_cell(argv[1], int(argv[2]), int(argv[3]))
+        with open(argv[4], "a") as fh:
+            fh.write("\n".join(json.dumps(r) for r in res) + "\n")
+        return 0
     if not argv or argv[0] not in ("collect", "smoke"):
-        print("usage: forager_clone.py collect [seed ...] | smoke")
+        print("usage: forager_clone.py collect [seed ...] | smoke | train [epochs] | cell ...")
         return 2
     if argv[0] == "smoke":
         r = collect_seed(153, lives=1, cap=300)

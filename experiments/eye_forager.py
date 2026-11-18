@@ -314,11 +314,13 @@ def make_env(seed: int, d: float, eye: str = EYE, row: str = "f3"):
 
 
 def run_seed(row: str, seed: int, d: float, lives: int = WC.LIVES,
-             cap: int = WC.LIFE_CAP_DECISIONS) -> list:
-    """world_card.run_seed's life loop, unchanged, on the row128 world."""
+             cap: int = WC.LIFE_CAP_DECISIONS, policy=None) -> list:
+    """world_card.run_seed's life loop, unchanged, on the row128 world.
+    `policy` (J15 E2b): drive `row`'s world with another policy object
+    (new_life() + act(o)); None = the row's own policy, as before."""
     env = make_env(seed, d, row=row)
     o, info = env.reset(seed=seed)
-    pol = make_policy(row, seed)
+    pol = make_policy(row, seed) if policy is None else policy
     out = []
     for life in range(lives):
         pol.new_life()

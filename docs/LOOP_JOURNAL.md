@@ -2454,3 +2454,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Nothing home; order of work fell to J10's next step. `humanoid_sac_row.kernel(seed, segment)` + `segment_job_body`: pins = the jack-std venv (sb3 2.9.2, sbx 0.28.0, gymnasium 1.4.0, mujoco 3.17.0, jax 0.11.2), job calls the frozen `train_segment`, fetch = segment.json only. `tests/test_humanoid_sac_row_kernel` PASS 4/4 (seed outside rule refused; segment 0 fresh / later needs prev).
 - Found, machine gap (INBOX): gpu.py writes no `kernel_sources` (a resumed segment cannot mount the checkpoint) and `kernels output` downloads every file (a 6.1 GB checkpoint per segment onto /data). Wrapper refuses segment ≥ 1; seed 0 seg 0 not launched (no free session either).
 - Philosophy served: 4 (a 2M-step row is one honest run only if each segment provably resumes the last) and 1 (the body he will walk with).
+
+## 2026-11-18 12:07–12:30 UTC · JACK · J11 (session refilled) + J12 (2′) harvest + J15 (collect, student)
+- Two kernels home unharvested: f2 (10:39) and gate 2 d0.75 (10:51); one session free. Launched J11 f5 (`jack-cpu-1795003679`). f0–f2 card: noop 0/1500 sustained, held8-k0 31/1485 = 2.09% (upper 2.82%).
+- J12 gate 2 at d0.75 (`67c51727`): the body-frame eye + body motor forager PASSES 20/20 (7.53 meals/life); shuffled twin 0/20 (2.17); random 0.45; body eye + world motor 0/20 (0.81) — a body eye needs a body motor. Taking the compass away cost ~6 meals/life against the compass row.
+- That unblocked J15: teacher collection running on the box (2 workers, ~3 h); the E2b student, trainer, test cell (through gate 2's own loop) and scorer coded; `test_forager_clone_student` PASS 4/4 on planted answers, each with a control.
+- d = 1 gate-2 kernel still waits for a session (all 4 busy: f3, f4, f5, LAB sleep_naps).
+- Philosophy served: 4 (his own-frame senses proven to carry food, with a twin that had to fail and did) and 7 (the eye and motor the finished Jack will have).

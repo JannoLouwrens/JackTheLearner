@@ -86,7 +86,7 @@ decisive test; no seat moves.
 serves: M2→M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 7 (the eye the finished Jack will have).
 **done when:** `PILOT_B2.md` has the f-card, the frozen rule, 40 runs and one reading per arm.
 state: DONE — options `move_cost_dial`, `spawn_clear`, `food_floor_only` (`4978e989`, `adf457ca`); c-card 16/16 (leaky world, kept as history, NOT the rule's input); arms, packer, table tool coded and tested (`1eb7af3f`, `2d6808f0`, `1970d4a8`); f4..f7 groups (`31f5e5ac`).
-state: 11-18 10:10 — f0, f1 HOME (f1 09:59, one held8 cell deadline-cut at 110 lives). f0+f1 card: noop-k1-ff 0/1000 (upper 0.30%); held8-k0-ff 16/985 = 1.62% (upper 2.47%). f4 launched `jack-cpu-1794996504` (`13f0e98a`); f2, f3 RUNNING; f5..f7 not launched.
+state: 11-18 12:08 — f0, f1, f2 HOME. f0–f2 card: noop-k1-ff 0/1500 (upper 0.20%); held8-k0-ff 31/1485 = 2.09% (upper 2.82%; one cell cut). f5 launched `jack-cpu-1795003679` into f2's freed session; f3, f4, f5 RUNNING; f6, f7 not launched.
 state: for the rule writer: seed 401 was stepped once (start at 402); K-lr0 has no card twin (SBX `use_sde` holds a draw 32 decisions); `PILOT_RULE = {seeds, food_floor_only, rule}` unlocks the packer — add the eye frame to that stamp.
 
 ### J12 — His eye: body-frame, 128-ray row, and the proof his senses can find food
@@ -112,7 +112,7 @@ serves: M3, M5 · PLAN part "Eye" · END-FIT row 1 (human-like body) · philosop
 state: (0) DONE `c593ec10`: `eye_frame="body"` for both eyes, default byte-identical 8/8; quarter turn rolls the look 20/20, world control 0/20 (`test_jack_env_eye_frame` PASS). He sits a median 81° off his birth heading under random actions. (1) DONE: YES — WORLD_CARD "J12 (0)".
 state: FOUND: the compass is also in the MOTOR — W0's drive is a force along world x, y and proprio's two velocities are world x, y. Added `motor_frame="body"` (default identical; forward push follows his heading). `eye_frame` alone asks a learner to aim a compass push with no heading sense — see INBOX, it touches J11's pilot.
 state: (2) gate 2 FROZEN `c593ec10` (`eye_forager.py` docstring): ruler unchanged line for line, mapping in the env (`motor_frame="body"`), seeds 261–280, rows f4 / g4 (must fail) / b4 / h4 (body eye + WORLD motor, reported only, predicted miss). d0 kernel `jack-cpu-1794987421` RUNNING 07:37 (est 5 h, log `/data/jack-logs/eye_forager/launch2_d075.log`).
-state: next: when a session frees — `scripts/launch_detached.sh /data/jack-logs/eye_forager/launch2_d100.log $PY -m experiments.eye_forager kernel2 1.0`; harvest with `eye_forager score2 /data/jack-logs/eye_forager/gate2_d*.json` → WORLD_CARD "J12 (2′)".
+state: (2) d0.75 HOME `67c51727`: f4 PASSES 20/20 (7.53 meals/life, min 5.6), g4 0/20 (2.17), b4 0.45, h4 0/20 (0.81) → WORLD_CARD "J12 (2′) — gate 2's reading at d = 0.75". next: when a session frees — `scripts/launch_detached.sh /data/jack-logs/eye_forager/launch2_d100.log $PY -m experiments.eye_forager kernel2 1.0`; score2 then the d = 1 row (ignore score2's 1.0 block until that file exists).
 state: (3) DONE: compass d0 f3 20/20 (13.72 meals/life), shuffled 8/20, random 0.46; both compass rows labelled "ceiling only". Scar: with hand cal j0=alpha=1 + random_needs the body dies every ~3 decisions — use the shipped cal for any eye measurement.
 
 ### J3 — The home-made brains' fair chance on the published rows (owner 11-15)
@@ -174,7 +174,8 @@ serves: M3 · PLAN stage 1 "proof that the task can be learned with his senses" 
 **done when:** both rows are in `WORLD_CARD.md`, pass or fail, each with its control.
 state: rules + collector DONE `760ae70a` (`experiments/forager_clone.py` docstring: E2b train seeds 701–740, test 741–760, clone ≥2 of 3 seeds, permuted twin must fail; E2c 300k × 5 seeds 801–805, random-point control). `test_forager_clone` PASS.
 state: disclosed before data: the teacher holds a remembered target 0.993 of decisions (smoke seed 153) — a memoryless clone may miss for the forager's memory, not the eye.
-state: next, only after J12 gate 2 is in WORLD_CARD: `forager_clone collect` (box, est ~40×3 lives) → write the trainer + clone kernel; E2c wrapper waits for J11's frozen rule.
+state: 11-18 12:10 gate 2 passed at d0 → collect RUNNING on the box, 2 detached workers (`/data/jack-logs/forager_clone/collect_{a,b}.log`, seeds 701–720 / 721–740; ~3 h at ~39 dec/s). Student coded: `train_clone` (MSE, 256-256-256-8 ReLU/tanh, perm arm re-permuted every sight), `ClonePolicy`, `test_cell` via gate 2's own loop (`run_seed(policy=)`), `score`; `test_forager_clone_student` PASS 4/4.
+state: next: when 40 `teacher_s*.npz` exist — `forager_clone train` (box, detached; 6 students), commit `experiments/forager_clone_weights/*.npz`, then write the Kaggle test kernel (`test_cells()`: 6 students + b4 × seeds 741–760 × 10 lives) and launch it at J15's rank; E2c waits for J11's rule.
 
 ### J13 — MLX port, stage 0 ends at gate G0 (owner 11-15)
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` steps 1–3
