@@ -2467,3 +2467,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Fixed `302b34c1`: frames go from PILOT_RULE through the job, the child CLI and pilot_world into JackEnv, for floors too; the kernel refuses without eye_frame='body' or a named motor_frame; `_world_stamp` records both, read off the env. `test_pilot_b2_frames` PASS (identity, 4/4 refusals, child stamped body/body, control child world/world); arms + kernels tests still PASS.
 - INBOX: the motor frame needs a ruling before the rule, and a body-motor choice means held8's floor gets re-read.
 - Philosophy served: 4 (the pilot cannot silently test a different creature than the one ruled) and 7 (his own-frame eye, as the finished Jack will have).
+
+## 2026-11-18 12:38–12:52 UTC · JACK · J15 (test kernel; training cost) — short slot; all 4 Kaggle sessions RUNNING (f3, f4, f5, LAB sleep_naps by `kernels status`), nothing home, J11/J12 wait
+- Coded the E2b test kernel (`65c648e7`): 140 cells (6 students × seeds 741–760 + b4 × 20, 10 lives), per-cell subprocess pool like gate 2's, failed cells kept with their error; refuses to launch with missing or uncommitted student weights; `score` from the harvest. `test_forager_clone_student` PASS 5/5.
+- Measured before anyone launched it: training the 6 students is ~112 CPU-min (clone 4.4, perm 8.5 CPU-s per 1e5 samples; ~0.9M teacher decisions × 20 epochs) — over ruling 32's box line, so the order's "train on the box" would have broken the box rule. INBOX + default: train inside the Kaggle kernel on re-collected, hash-checked teacher lives.
+- Collect at 8/40 seeds.
+- Philosophy served: 4 (the clone's test is fixed and runnable before any student exists) and 6 (the box's customers: a 2-hour job caught before it ran on their cores).
