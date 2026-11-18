@@ -1,42 +1,11 @@
 """Re-buy stale CHEAP certificates mechanically, spending no Claude budget at all.
 
-WHY THIS EXISTS, with the numbers that justify it (the BUILDER's own
-measurement, 2026-09-28 — no owner act is cited or claimed; the 128th audit
-found the original "(owner review)" phrasing here had no referent anywhere in
-the repo and ordered it struck or substantiated, and struck is the honest one:
-the only owner ruling this project has ever recorded is D19, 2026-09-17).
-
-A ledger PASS is a claim about a specific piece of code. Edit that code and the
-claim keeps asserting the old result under the new code's name, so `impl_sha`
-stales it and it must be run again before it counts. That rule is load-bearing
-and is not in question here.
-
-What IS in question is who pays for it. On 2026-09-28 twenty-four certificates
-stood stale, and eight Tier-0 harness specs had been re-bought TWENTY-TWO TIMES
-each, while `T2.01` — "he can move" — had gone 47 days without an attempt and
-`T6.01` — one life, start to finish — had never run at all.
-
-The seductive diagnosis was "the re-buy bill is eating the project". It is not,
-and the measurement says so bluntly: **those eight specs cost 80 SECONDS for a
-full round.** All 22 rounds together are about 29 minutes of CPU across seven
-weeks. Nothing. The expensive rows are the real science (`D1.0` 17.6 h, `T2.02`
-6.3 h, `T2.01` 5.6 h).
-
-So the cost was never compute. It was ATTENTION. Each of those 80-second runs
-was noticed, chosen, executed, verified, committed and journalled by an hourly
-Claude iteration — and that iteration is paid out of a weekly pool of which this
-project measured its own share at NINE PERCENT (`usage_attribution.py`, 2026-09:
-builder 9%, desks 4%, not-this-project 86%). A 40-second job was consuming a
-scarce hour of judgment, and displacing the three specs that decide whether Jack
-is a creature.
-
-THE FIX IS NOT FINER DEPENDENCY TRACKING. That was the author's first proposal
-and it was wrong on the arithmetic: scoping `IMPL_DEPS` per-symbol would have
-saved 29 minutes of CPU and zero attention. The fix is to take the whole class
-off the judgment lane, because a re-buy needs no judgment — the spec, the gate
-and the thresholds are all already written. Re-running a test whose verdict is
-computed by code nobody is changing is CLERICAL WORK, and clerical work should
-not cost a model call.
+WHY (measured 2026-09-28; the full argument is in git history of this file):
+a stale certificate must be re-run before it counts (`impl_sha`), and eight
+Tier-0 harness specs had been re-bought 22 times each for 80 CPU-seconds a
+round — but each round cost an hourly Claude iteration's attention, out of a
+weekly pool this project's share of was 9%. Re-running a test whose spec, gate
+and thresholds are already written is CLERICAL WORK and costs no model call.
 
 WHAT THIS DOES AND REFUSES TO DO.
 
@@ -81,6 +50,14 @@ CHEAP = ("cpu<1min", "cpu<10min")
 # whose RECORDED runtime exceeds its label's nominal seconds is not cheap,
 # whatever it declares, until someone re-labels it.
 CHEAP_NOMINAL_S = {"cpu<1min": 60.0, "cpu<10min": 600.0}
+# S10 (ORDERS, 11-17): a STALE certificate measured over its label but at most
+# STRETCH_S is still bought — ONE per tick, first in the queue, under the same
+# nice 19, slack guard and dirty-tree refusal. LC.02 (648 s) and W1.02 (692 s)
+# gate Jack's world and were otherwise owned by nobody. Over STRETCH_S stays
+# with the loop, as does every stale FAIL (S9 rules those). The rotation never
+# stretches: a standing PASS is not owed.
+STRETCH_S = 900.0
+STRETCH_PER_TICK = 1
 # A cap, because an unbounded clerical lane on a tenant box is a new background
 # service and this project is forbidden from adding one. Whatever is left is
 # still stale next tick; nothing is lost by stopping early.
@@ -113,7 +90,7 @@ def cheap_stale() -> list[tuple]:
     from experiments.registry import BY_ID
     from experiments.run import stale_claims
     ledger = Ledger()
-    out, seen, blocked, overran = [], set(), [], []
+    out, seen, blocked, overran, stretch = [], set(), [], [], []
     for row in stale_claims(ledger):
         sid, status = row[0], row[1]
         # A spec can be reported by more than one staleness path (T6.03 is both
@@ -144,14 +121,21 @@ def cheap_stale() -> list[tuple]:
         # lane would actually spend. Reported, never silently dropped.
         measured = measured_child_seconds(sid)
         nominal = CHEAP_NOMINAL_S[spec.budget.value]
-        if measured is not None and measured > nominal:
+        cls = cost_class(measured, nominal)
+        if cls == "over":
             overran.append((sid, measured, nominal, spec.budget.value))
             continue
         unsat = ledger.unsatisfied(spec)
         if unsat:
             blocked.append((sid, ", ".join(f"{d} ({w})" for d, w in unsat)))
             continue
-        out.append((sid, status, spec.budget.value, *child_estimate_s(spec)))
+        row = (sid, status, spec.budget.value, *child_estimate_s(spec))
+        if cls == "cheap":
+            out.append(row)
+        elif str(status).upper().endswith("PASS"):   # a FAIL is S9's, not a clerk's
+            stretch.append(row)
+        else:
+            overran.append((sid, measured, nominal, spec.budget.value))
     if blocked:
         for sid, why in blocked:
             print(f"  skip {sid:9s} stale but unpayable — blocked by {why}")
@@ -159,36 +143,32 @@ def cheap_stale() -> list[tuple]:
         print(f"  skip {sid:9s} declares {label} but measured {measured:.0f}s "
               f"against the label's {nominal:.0f}s — not cheap until re-labelled; "
               f"stays with the loop")
-    return out
+    return out, stretch
+
+
+def cost_class(measured, nominal: float) -> str:
+    """"cheap" (no record, or within the label), "stretch" (over the label but
+    <= STRETCH_S: the stale lane may buy one per tick), else "over"."""
+    if measured is None or measured <= nominal:
+        return "cheap"
+    return "stretch" if measured <= STRETCH_S else "over"
+
+
+def build_queue(stale_rows, stretch_rows, rotation) -> list:
+    """Stretch first (at most STRETCH_PER_TICK, the shortest measured — it is
+    the row the 3000 s sweep timeout must not starve), then owed cheap bills,
+    then the rotation."""
+    pick = sorted(stretch_rows, key=lambda r: r[3])[:STRETCH_PER_TICK]
+    return ([("stretch", *r) for r in pick] + [("stale", *r) for r in stale_rows]
+            + [("rotate", *r) for r in rotation])
 
 
 def cheap_pass_rotation(exclude: set) -> list[tuple]:
-    """THE ADDED SELECTION PATH — ordered by the Review's 2026-10-06 CADENCE
-    RULING on `standing-pass-certificates-are-falsifiable-only-by-running-them`
-    and deliberately NOT routed through `stale_claims`.
-
-    Why it exists, in the ruling's own arithmetic: `stale_claims` keys on a
-    spec's own test-file `impl_sha` plus its DECLARED `IMPL_DEPS`, so a
-    certificate that went latently red through an UNDECLARED edge is never
-    selected by the lane above — the project re-ran certificates twelve times
-    a day and still could not falsify the three it had already found red
-    (`T0.13`, `T0.18`, `T0.22`); none of them moved its own `impl_sha`. The
-    only thing that falsifies a standing PASS is RUNNING it, so this path runs
-    the cheap standing-PASS population unconditionally, OLDEST `ran_at` first,
-    behind the staleness lane and under the same slack guard and `MAX_PER_RUN`
-    cap. At twelve ticks a day the full cheap population re-derives in a few
-    days even when the staleness lane is busy.
-
-    What it inherits from the lane above, deliberately: the cheap-by-
-    MEASUREMENT rule (a spec whose recorded runtime exceeds its label's
-    nominal seconds stays with the loop), and the skip-what-cannot-pass rule —
-    a PASS whose dependency is currently red would come back BLOCKED, and
-    demoting certificates in the `pass_on_dead_dependency` class is owned by
-    the rows that explain them, not by a clerical cron. Both skips print.
-
-    What it must never grow into: a judgment lane. It selects by age, runs
-    through the same runner, and records whatever comes back. A re-run that
-    turns a PASS into a FAIL is the point, not an incident.
+    """Cheap standing PASSes, OLDEST `ran_at` first (Review cadence ruling
+    2026-10-06): an undeclared edge can turn a PASS red without moving its
+    `impl_sha`, and only running it falsifies it. Same cheap-by-measurement and
+    skip-what-cannot-pass rules as the stale lane, both printed. It selects by
+    age and records whatever comes back — a PASS -> FAIL is the point.
     """
     from experiments.cpu_budget import child_estimate_s, measured_child_seconds
     from experiments.protocol import Ledger, Status
@@ -205,7 +185,7 @@ def cheap_pass_rotation(exclude: set) -> list[tuple]:
             continue
         measured = measured_child_seconds(sid)
         nominal = CHEAP_NOMINAL_S[spec.budget.value]
-        if measured is not None and measured > nominal:
+        if cost_class(measured, nominal) != "cheap":
             overran.append((sid, measured, nominal, spec.budget.value))
             continue
         unsat = ledger.unsatisfied(spec)
@@ -355,6 +335,19 @@ def _selftest() -> int:
         fails.append(f"a same-status re-record is an ordinary re-buy, neither "
                      f"moved nor recorded-nothing — got moved={moved} "
                      f"norec={norec}")
+    # S10, planted: a stale 650 s cpu<10min certificate is bought by one tick,
+    # first; a 2,000 s one is not; two stretch rows still buy only one.
+    assert_cls = {(650.0, 600.0): "stretch", (2000.0, 600.0): "over",
+                  (900.0, 600.0): "stretch", (901.0, 600.0): "over",
+                  (None, 600.0): "cheap", (59.0, 60.0): "cheap"}
+    for (m, n), want in assert_cls.items():
+        if cost_class(m, n) != want:
+            fails.append(f"cost_class({m}, {n}) = {cost_class(m, n)}, want {want}")
+    planted = [("P650", "PASS", "cpu<10min", 650.0, "planted"),
+               ("P700", "PASS", "cpu<10min", 700.0, "planted")]
+    q = build_queue([("C40", "PASS", "cpu<1min", 40.0, "planted")], planted, [])
+    if [r[1] for r in q] != ["P650", "C40"] or q[0][0] != "stretch":
+        fails.append(f"one tick must buy exactly ONE stretch row, first — got {q}")
     for f in fails:
         print(f"  FAIL {f}")
     print(f"regate selftest: {len(fails)} failure(s)")
@@ -364,18 +357,16 @@ def _selftest() -> int:
 def main(argv: list[str]) -> int:
     if "--selftest" in argv:
         return _selftest()
-    stale_rows = cheap_stale()
-    rotation = cheap_pass_rotation(exclude={r[0] for r in stale_rows})
-    # Staleness is an OWED bill and goes first; the rotation fills whatever is
-    # left of the same cap. On a quiet tick (stale empty, the common case at
-    # twelve ticks a day) the rotation gets the whole cap.
-    queue = ([("stale", *r) for r in stale_rows]
-             + [("rotate", *r) for r in rotation])
+    stale_rows, stretch_rows = cheap_stale()
+    rotation = cheap_pass_rotation(
+        exclude={r[0] for r in stale_rows + stretch_rows})
+    queue = build_queue(stale_rows, stretch_rows, rotation)
     if "--list" in argv:
         print(f"  {stamp_preview()}")
         for lane, sid, status, cost, est_s, prov in queue:
-            print(f"  {lane:6s} {sid:9s} {status:8s} {cost}  est {est_s:.0f}s [{prov}]")
+            print(f"  {lane:7s} {sid:9s} {status:8s} {cost}  est {est_s:.0f}s [{prov}]")
         print(f"  {len(stale_rows)} cheap stale certificate(s); "
+              f"{len(stretch_rows)} stale <= {STRETCH_S:.0f}s (one bought per tick); "
               f"{len(rotation)} in the standing-PASS rotation (oldest first)")
         return 0
 
