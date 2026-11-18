@@ -632,3 +632,9 @@ Long form: `/data/jack-research/research_notes/walking_layer/` (`part_a_yu2018.m
 - A torque-level walker that keeps learning under a learned 5 Hz brain: not published.
 
 **Not verified.** The curve figures (iterations read by eye); the Zoo table (read through a summariser); Heess 2017's and the PPO paper's humanoid step counts; the original SAC paper's Humanoid curves; Kaggle-kernel speed (box figure only, loaded 2-core ARM); ports searched once.
+
+## 17. Copying the hand forager into his network, and a learner handed the direction to food (2026-11-18; serves order J15, rows E2b and E2c; plan part "Learning to eat")
+
+**Question.** J15's two `prior:` lines point at "E2b, E2c in PUBLISHED_PRIORS" — no such text existed. (a) What does the record say happens when a scripted teacher WITH memory (ours holds a remembered target on 0.993 of decisions) is copied by plain regression into a network WITHOUT memory, from 932k teacher decisions and no corrections? (b) What does a replay learner handed the bearing and distance to its goal need, in steps, and what does the handed direction prove?
+
+*Skeleton, 16:12 UTC — sub-agents are reading; the parts land below. Notes: `/data/jack-research/research_notes/j15_clone/`.*
