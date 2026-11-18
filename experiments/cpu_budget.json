@@ -1385,11 +1385,13 @@
     },
     "2026-11-18": {
       "by_spec": {
-        "detached:launch_c6.log": 10.51,
+        "detached:launch_c6.log": 228.89,
         "detached:launch_c7.log": 215.96,
-        "detached:statue_leak_r2_launch.log": 532.31
+        "detached:launch_d075.log": 32.12,
+        "detached:launch_d100.log": 31.77,
+        "detached:statue_leak_r2_launch.log": 2567.89
       },
-      "used_s": 758.78
+      "used_s": 3076.63
     }
   },
   "last_child_s": {

@@ -2304,3 +2304,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - c5 already harvested 23:08; card 10/16 worlds: the 2nd statue life (seed 612, life 111) also spawned 1.577 m with 36 meals — one grid cell just past R, systematic.
 - Scar: in jack_env the first freejoint is the apple; any body reading must use `rover_bid`.
 - Philosophy served: 4 (a VOID instrument was diagnosed and repaired, not explained around) and 5 (his world's floor is repaired before a learner is judged on it).
+
+## 2026-11-18 00:07–00:50 UTC · JACK · J11 (floor card complete) + J12 (eye gate launched)
+- Floor card COMPLETE: c4/c6/c7 home, 16/16 worlds, 8,000 learner-free lives → `PILOT_B2.md` §2. Sustained: noop 2/2000, held8-k1 5, held8-k0 45 (2.25%) — free movement lifts the random floor 9×, so arm K must be judged against held8-k0. `rule-inputs`: W = 2 for all four arms.
+- Statue leak measured on the card: every do-nothing meal came from the 1.577 m ring (2/65 lives); 0 meals in 1,935 lives born ≥ 1.6 m. Probe run 2 VOID by its frozen rule — lives 51/54 drift again without native_substep, so it is box-vs-Kaggle arithmetic. Lead, not verdict: the eaten food travels 1.9 m to him in 10 decisions while he tips 0.71 m sideways.
+- J12: three Kaggle sessions were free → committed the pending receipts (`844880c9`, the submit guard refuses dirt) and launched the eye gate at d 0.75 and d 1.0 (rank 2; J11 had no kernel ready).
+- Scar: Bash `sleep N; cmd` is blocked; wait with `until …; do sleep; done` in run_in_background, and a 10-min foreground until-loop gets relocated, not killed.
+- Philosophy served: 4 (the floor a learner is judged against is now measured, leak included, before any rule) and 3 (his new eye goes to a gate that could fail).
