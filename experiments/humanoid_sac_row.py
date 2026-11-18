@@ -15,10 +15,14 @@ RULE (frozen in this commit, BEFORE the kernel body exists and before seed 0):
              defaults, SET EXPLICITLY because SBX's defaults are not SB3's:
              lr 3e-4, buffer 1e6, batch 256, tau 0.005, gamma 0.99,
              train_freq 1, gradient_steps 1, ent_coef "auto", net [256, 256].
-             UNVERIFIED (said before any run): the Zoo entry above is from
-             memory of hyperparams/sac.yml; the kernel-body slot must read the
-             file at a pinned Zoo commit and, if it differs, correct THIS
-             block in its own commit before seed 0 — never after.
+             VERIFIED 11-18 10:15 (before seed 0): DLR-RM/rl-baselines3-zoo
+             @ d802099a (sac.yml last touched b8a11d6e, 2026-10-16), file
+             sha256 b05466c5..., `Humanoid-v4: <<: *mujoco-defaults,
+             n_timesteps 2e6`; mujoco-defaults = MlpPolicy, learning_starts
+             10000; no normalize, no wrapper. Matches the block above. SBX
+             0.28 hidden defaults read from source and equal SB3's for the
+             non-SDE path: log_std clamp [-20, 2], ent_coef init 1.0,
+             target_entropy auto, n_critics 2, net [256, 256], policy_delay 1.
   differs from the published recipe (all listed): SBX (JAX) not SB3 (torch),
              same algorithm; the 2M figure is on v3, ours on v4 (v4 is the
              1M band's env); gymnasium 1.4 / mujoco 3.17 vs the papers'
@@ -26,8 +30,12 @@ RULE (frozen in this commit, BEFORE the kernel body exists and before seed 0):
   seeds      0, 1, 2 (one chained run each); extension none.
   eval       at 1M and at 2M: 10 deterministic episodes, env seeds
              10_000..10_009, separate eval env. Per seed: mean return R and
-             forward metres per 1,000 steps M = (final torso x - initial
-             torso x) summed / steps taken x 1,000 (info["x_position"]).
+             forward metres per 1,000 steps M = (final x - initial x)
+             summed over the 10 episodes / steps taken x 1,000, x = the
+             CENTRE OF MASS x (`info["x_position"]` on v4 is mass_center,
+             not the torso; corrected 11-18 before seed 0 — the earlier
+             "torso" contradicted the named source). Initial x = mass_center
+             right after reset, same function.
   PASS       at 2M: R >= 5,950 (6,232 - 280) AND M >= 12.0, on >= 2 of 3
              seeds. Return alone is "STANDS", never "walks".
   1M check   median R over 3 seeds inside [3,784, 5,866]. Outside it the row
@@ -50,7 +58,8 @@ RULE (frozen in this commit, BEFORE the kernel body exists and before seed 0):
              checkpoint, never skipped. Evals happen only at exactly 1M and 2M.
   budget     Kaggle CPU only (box: nice 19, the 50k control smoke at most).
 
-STATUS: rule only. Kernel body + box smoke are the next J10 slot.
+STATUS: rule + eval + late-start control (`evaluate`, `control_run`; box smoke
+11-18). Training segments with resume are the next J10 slot.
 """
 from __future__ import annotations
 
@@ -87,3 +96,57 @@ def verdict(r2m: dict, m2m: dict, r1m: dict, control_r: float) -> dict:
         "STANDS" if len(stands) >= PASS_MIN_SEEDS else "FAIL")
     return {"reading": reading, "walk_seeds": walks, "stand_seeds": stands,
             "median_1m": med, "check_1m": "IN BAND" if in_band else "NAMED MISS"}
+
+
+def make_env():
+    import gymnasium as gym
+    return gym.make(ENV_ID)
+
+
+def _com_x(env) -> float:
+    from gymnasium.envs.mujoco.humanoid_v4 import mass_center
+    u = env.unwrapped
+    return float(mass_center(u.model, u.data)[0])
+
+
+def evaluate(policy_fn, seeds=EVAL_SEEDS) -> dict:
+    """The rule's eval: one episode per env seed on a SEPARATE env.
+    policy_fn(obs) -> action (deterministic). Returns mean R, M and per-episode rows."""
+    env = make_env()
+    eps, metres, steps = [], 0.0, 0
+    for sd in seeds:
+        obs, _ = env.reset(seed=int(sd))
+        x0, ret, n, done, info = _com_x(env), 0.0, 0, False, {}
+        while not done:
+            obs, r, term, trunc, info = env.step(policy_fn(obs))
+            ret += float(r); n += 1; done = term or trunc
+        dx = float(info["x_position"]) - x0
+        eps.append({"seed": int(sd), "R": ret, "steps": n, "dx": dx, "fell": bool(term)})
+        metres += dx; steps += n
+    env.close()
+    return {"R": sum(e["R"] for e in eps) / len(eps),
+            "M": metres / max(steps, 1) * 1000.0, "episodes": eps}
+
+
+def control_run(seed: int = 0, steps: int = CONTROL_STEPS) -> dict:
+    """Late-start control: the Zoo entry with learning_starts past the end,
+    `steps` env steps (never trains), then the rule's eval of its policy."""
+    import time
+    from sbx import SAC
+    kw = dict(SAC_KW, learning_starts=CONTROL_LEARNING_STARTS)
+    t0 = time.time()
+    model = SAC("MlpPolicy", make_env(), seed=seed, verbose=0, **kw)
+    model.learn(total_timesteps=steps)
+    t_learn = time.time() - t0
+    ev = evaluate(lambda o: model.predict(o, deterministic=True)[0])
+    return {"seed": seed, "steps": steps, "learn_s": t_learn, **ev,
+            "trained": int(model._n_updates) if hasattr(model, "_n_updates") else None}
+
+
+if __name__ == "__main__":
+    import json, sys
+    if sys.argv[1:2] == ["control"]:
+        n = int(sys.argv[2]) if len(sys.argv) > 2 else CONTROL_STEPS
+        r = control_run(0, n)
+        print(json.dumps({k: v for k, v in r.items() if k != "episodes"}))
+        print("VOID" if r["R"] >= CONTROL_MAX_RETURN else "control holds (R < 500)")
