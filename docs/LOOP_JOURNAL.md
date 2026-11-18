@@ -2387,3 +2387,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Nothing to harvest. Read the rule's inputs against the pilot's arms: the pilot's `held8` floor runs with movement charged (k1, judge of B0/P/G), but option (a)'s -ff card re-runs only noop and held8-k0 → under (a) held8's floor clause has no same-world card. Wrote the gap, its two fixes (add held8-k1-ff groups under new names, or disclose the borrowed 5/2000 rate) and the (a)/(b) timing into J11's state for the strong slot.
 - No code changed, nothing launched; cpu_budget receipts committed.
 - Philosophy served: 4 (a floor clause read from the wrong world would let the pilot's control be weaker than it looks). Weak: a paper check, taken because every order waited on Kaggle.
+
+## 2026-11-18 06:07–06:35 UTC · JACK · J11 (option (a)'s floor gap closed in code) — all 4 Kaggle sessions RUNNING (J12 d075, J11 f0/f1/f2 by `kernels status` 06:08)
+- Nothing to harvest. The 05:45 slot found that option (a) (world with no food on the ramp) re-ran no card for the pilot's `held8` floor with movement charged — the judge of B0/P/G. Added it: groups f4..f7 = held8-k1-ff × seeds 601–616, 4 cells a kernel (one wave, ~3.4–4.1 h each by the c-card), f0..f3 unchanged (test pins f0 to its submitted cells).
+- `test_pilot_b2_ffk1` PASS (groups; the cell builds dial-off + food_floor_only, one life runs; control held8-k0-ff builds dial-on); `test_pilot_b2_recover` PASS. Not launched — no free session; the 07:07 slot decides (a) vs (b).
+- Philosophy served: 4 (each pilot floor clause is now judged against a card from its own world, not one borrowed from the leaky world).

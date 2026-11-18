@@ -90,6 +90,15 @@ CARD_ARMS = ("noop-k1", "noop-k0", "held8-k1", "held8-k0")
 # held8-k0 (the highest floor, arm K's judge). Groups f0..f3 = 4 worlds x 2
 # arms; kernels write OUT/f*.json, which the c*.json card never globs.
 CARD_FF_ARMS = ("noop-k1-ff", "held8-k0-ff")
+# J11 option (a)'s gap, 11-18 06:15: the pilot's `held8` floor arm runs WITH
+# movement charged (PILOT_ARMS['held8'] move_cost_dial=False = k1) and judges
+# B0/P/G, but CARD_FF_ARMS has no held8-k1-ff, so under (a) that floor clause
+# had no same-world card. Added under NEW group names f4..f7 (f0..f2 were
+# running; their cells are unchanged): 16 cells, same seeds 601..616 and 125
+# lives, 4 cells a kernel = one wave of 4 workers (held8-k1 card cells ran
+# 3.4 h mean, 4.1 h max wall), so no kernel nears POOL_DEADLINE_S.
+# `card --glob 'f*.json'` reads them with no change.
+CARD_FF_K1_ARMS = ("held8-k1-ff",)
 KERNEL_PINS = ["gymnasium==1.4.0", "mujoco==3.17.0"]
 WORKERS = 4
 REMOTE_TIMEOUT_S = int(9.5 * 3600)
@@ -151,11 +160,15 @@ def card_cells() -> list:
 
 
 def card_groups() -> dict:
-    """c0..c7: 8 cells each = two worlds x the four arms."""
+    """c0..c7: 8 cells each = two worlds x the four arms. f0..f3: 8 cells
+    each = four worlds x CARD_FF_ARMS. f4..f7: 4 cells each = four worlds x
+    held8-k1-ff."""
     c = card_cells()
     g = {f"c{i}": c[8 * i:8 * i + 8] for i in range(8)}
     f = [(a, s) for s in CARD_SEEDS for a in CARD_FF_ARMS]
     g.update({f"f{i}": f[8 * i:8 * i + 8] for i in range(4)})
+    h = [(a, s) for s in CARD_SEEDS for a in CARD_FF_K1_ARMS]
+    g.update({f"f{4 + i}": h[4 * i:4 * i + 4] for i in range(4)})
     return g
 
 
@@ -278,8 +291,8 @@ def cells_from_artifacts(artifacts: dict, cells: list) -> dict | None:
 
 
 def _arm_order(by: dict) -> dict:
-    """Rows in CARD_ARMS then CARD_FF_ARMS order (any other arm last)."""
-    known = CARD_ARMS + CARD_FF_ARMS
+    """Rows in CARD_ARMS, CARD_FF_ARMS, CARD_FF_K1_ARMS order (others last)."""
+    known = CARD_ARMS + CARD_FF_ARMS + CARD_FF_K1_ARMS
     return dict(sorted(by.items(), key=lambda kv: (known.index(kv[0])
                                                    if kv[0] in known else len(known))))
 
