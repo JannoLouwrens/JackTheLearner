@@ -272,8 +272,8 @@ order or roadmap milestone will re-earn it (name it). (ii) A `FAIL-DISPOSED:
 ruling already answered the question — e.g. ruling 10/20 for "to earn again
 on the chosen brain", ruling 20 for one-world walking. (iii) A one-line ask
 in INBOX when it is a live defect that needs a JACK order. The ids: DP.05,
-HR.5, LG.10, LG.12, LG.14, LT.02,
-PS.05, PS.06, PS.08, T0.17, T0.23, T0.27, T0.32, T0.35,
+HR.5, LT.02,
+PS.05, PS.06, PS.08, T0.17, T0.23, T0.32, T0.35,
 T3.09, T4.02, W.2, W1.00, WM.01, XL.01.
 In the first slot also lower the floors `coverage` says fell (UNREACHABLE
 115 → 101, PASS-ON-DEAD-DEPENDENCY 6 → 4; FAIL-UNOWNED 1 → 0 only when the
@@ -281,11 +281,11 @@ id list above is empty) with `run ratchets record` — `coverage` stays 2 until 
 serves: philosophy 4 · the auditor's exit codes.
 **done when:** `coverage` exits 0 with this order's id list deleted.
 **Added 11-17 (ruling 35):** `NE.01` joins the list with its fate already ruled — (ii) `FAIL-DISPOSED: Director ruling 35 2026-11-17 — heat is a stage-3 need (PLAN stage 3 "eat, drink, keep warm"); re-read at the first stage-3 sitting or 2027-01-15, whichever is first`. Also lower the three floors the auditor names (UNREACHABLE 115 → 107, PASS-ON-DEAD-DEPENDENCY 6 → 4, FAIL-UNOWNED when the list is empty).
-state: slot 1 (11-17) — 8 fated by (ii) (NE.01, ME.11/.B/.C/.D, T2.10, HR.1, T1.11); floors 115→107, 6→4.
-slot 2 (11-17 21:10) — 6 fated by (ii) `ruling-10` (old core, earn again on the chosen brain): T0.07, T1.08,
-T2.05, T2.07, T2.11, T2.15. The marker must sit BEFORE a `COVERS:` line (COVERS reads to end → MALFORMED).
-T0.17, T0.23 asked under INBOX (iii) — both are the machine's own tests reading a live state. 20 ids left
-(18 + those two); FAIL-UNOWNED already reads 0 (ORDERS mention owns them). Next: LG/PS/T0.2x-3x.
+state: slots 1–2 (11-17) — 14 fated by (ii) (ruling-35/20/10, D54, D41); floors 115→107, 6→4. Marker goes
+BEFORE any `COVERS:` text (COVERS reads to end → MALFORMED); notes are unhashed, no re-buys.
+slot 3 (11-18) — 4 fated by (ii): LG.10/.12/.14 `ruling-1` (frozen mouth = parent rig), T0.27 `D16` (red on
+purpose). Asked (iii): PS.05/.06/.08 (same probe defect as PS.02's), T0.32 (16 long runs unbound). 12 ids
+left, 6 of them asked; FAIL-UNOWNED reads 0, floor 1 waits for the empty list. Next: DP.05 HR.5 LT.02 T0.35 T3.09 T4.02 W.2 W1.00.
 
 ### S10 — The clerk must be able to re-buy the two certificates that gate his world
 part: (machine) · stage: — · step: —
@@ -357,6 +357,8 @@ regate's on a clean tree.
 
 - 11-17 21:10 SYSTEM (S9 iii): `T0.17` FAILs because `T2.14`'s PASS was bought under claim words the registry has since amended (`run.drifted_claims`: SPEC_CHANGED 0cf0048c → 593c8e3e) — the detector is right. Rule: re-buy `T2.14` (old core, ruling 10 says no) or demote its row so T0.17 re-earns; until then T0.17 stays an honest FAIL.
 - 11-17 21:10 SYSTEM (S9 iii): `T0.23` FAILs only on `readonly_still_works` — its fixture expects `run status` to exit 0, but `run status` exits 2 whenever any ratchet is red (today: `gpu_unattributed_jobs`). The test confounds "argv parsed" with "ratchets green"; a SYSTEM fix (accept the declared EXIT receipt, as its `exit_receipts` conjunct already does) changes a conjunct and so needs a Director's yes.
+- 11-18 SYSTEM (S9 iii): `PS.05` far, `PS.06` tiring, `PS.08` heavy all pass their world gates (cost monotone in distance/mass, fatigue gap, twins flat) and FAIL only on the 66/54-feature legibility probe (r² −0.88, 0.48; bal-acc 0.58) — the same generic-probe defect JACK measured for `PS.02` at 21:40. Their fate follows that probe ruling; rule the family once, not four times.
+- 11-18 SYSTEM (S9 iii): `T0.32` FAILs only on `longrun_unbound` — 16 long-budget impls (BD.01, CR.01, LC.08, LC.09, LF.03, LF.04, LF.06, NE.02, SM.03, T1.14, T4.04, T4.05, T6.01, W1.00, W1.01, W1.04) never call `rtf.require_feasible`. Live and honest; each fix changes an impl (stale certificate), so it is a JACK order or a ruling to grandfather — not a SYSTEM slot.
 
 - 11-17 21:40 JACK: all JACK orders wait on Kaggle (c4..c7 RUNNING 21:23), Next-up 1–5 exhausted or gated → took Next-up 6, `PS.02` v3. **Ruling 12's cause does not hold on the pilot:** seed 90 (PS.02's own pilot seed; registered 0/1/2 untouched, spec file NOT edited, no ledger write), the cold lives with no fire (`fire_dist` 1e9 m, felt-minus-cold exactly 0) vs with fire: v2's probe R² 0.290 vs 0.309 (bar 0.50), a fixed MLP 0.571 vs 0.578. The information IS in his senses: the same RFF on the 2 thermal floats 0.998 (fire world 0.994), the law on the decoded floats 1.000 (0.994); the 80 non-thermal −0.83. The FAIL is the generic probe's sample efficiency (80 irrelevant inputs dominate 1/√d random projections over 10 training lives), not fire and not the world. Receipt `experiments/ps02_fire_probe_diag.py`. Rule needed before v3 runs: (a) keep no-fire (harmless, ruling 12) AND replace the probe by a procedure fixed first — e.g. probe family chosen by leave-one-run-out CV on the 10 training lives only, the control through the identical procedure, bars unchanged — or (b) declare the hypothesis' "probe on his sensory vector" satisfied by the thermal channel alone and say why that is not hand-picking. I did not choose one by reading the pilot until it passed.
 - 11-17 21:50 JACK: all JACK orders wait on Kaggle (c4..c7 RUNNING on Kaggle 21:40, checked by `kernels status`), Next-up 6's PS.02 waits on the Director's probe rule → took Next-up 6's other half: stale `PG.6` re-run LAUNCHED DETACHED 21:48 (`/data/jack-logs/pg6/launch_pg6.log`, pid 2938715, nice 19; last in-session try died at the 20-min ceiling 11-15). Next slot: read the log tail + `run status | grep PG.6`; a PASS frees `PG.9`.

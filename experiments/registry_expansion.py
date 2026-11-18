@@ -704,6 +704,7 @@ EXPANSION: list[Spec] = [
                "that only ever sees fixtures guards nothing), so this spec "
                "FAILS at gate re-run the next time anyone repeats T2.08's "
                "shape — that is the point, not a flake.\n"
+               "FAIL-DISPOSED: D16 2026-09-06 — fired armed default (b): T0.27 stays RED, untouched and not re-run, reported in every status until the T2.08 pair ages out of history; a visible failure kept on purpose rather than a manufactured green (ORDERS S9).\n"
                "Deliberately declares NO `COVERS:` commitment. It guards "
                "the measurement machinery, not a capability."),
 
@@ -5146,6 +5147,7 @@ EXPANSION: list[Spec] = [
                "something not present in his state or diary — the extractive "
                "rule extended from memory to speech. The LLM-swap arm doubles "
                "as a live test of the swappable-LLM decree. "
+                "  FAIL-DISPOSED: ruling-1 2026-11-11 — Director ruling 1 (first FULL sitting): every Language-routing verdict STANDS as measured but none is a capability of Jack — a frozen LLM phrasing his speech is the parent rig; the seat reads VACANT for his own part until a learned challenger holds it by verdict, so this FAIL is not re-run on the frozen mouth (ORDERS S9)."
                "  COVERS: language (parent) (claim)"),
 
     # ── THE ABSTAINING MOUTH — LG.10's SIBLING, not its repair ────────────
@@ -5260,6 +5262,7 @@ EXPANSION: list[Spec] = [
                "report trials where exactly one model speaks, since a mouth "
                "swap that changes WHETHER he speaks is a different failure "
                "from one that changes what he means. "
+                "  FAIL-DISPOSED: ruling-1 2026-11-11 — Director ruling 1 (first FULL sitting): every Language-routing verdict STANDS as measured but none is a capability of Jack — a frozen LLM phrasing his speech is the parent rig; the seat reads VACANT for his own part until a learned challenger holds it by verdict, so this FAIL is not re-run on the frozen mouth (ORDERS S9)."
                "  COVERS: language (parent) (claim)"),
 
     # ── STRUCTURED DECODE — THE RULED SUCCESSOR TO LG.12's FAIL ──────────
@@ -5379,6 +5382,7 @@ EXPANSION: list[Spec] = [
                "discloses the count in the run's commit. depends_on is "
                "LG.00, not LG.12 — a FAIL is not a dependency (the LG.12 "
                "registration's own rule). "
+                "  FAIL-DISPOSED: ruling-1 2026-11-11 — Director ruling 1 (first FULL sitting): every Language-routing verdict STANDS as measured but none is a capability of Jack — a frozen LLM phrasing his speech is the parent rig; the seat reads VACANT for his own part until a learned challenger holds it by verdict, so this FAIL is not re-run on the frozen mouth (ORDERS S9)."
                "  COVERS: language (parent) (claim)"),
 
     # ── THE TOLD WORLD (66th audit B1, registered 2026-09-03) ─────────────
