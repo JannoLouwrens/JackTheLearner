@@ -86,7 +86,7 @@ decisive test; no seat moves.
 serves: M2→M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 7 (the eye the finished Jack will have).
 **done when:** `PILOT_B2.md` has the f-card, the frozen rule, 40 runs and one reading per arm.
 state: DONE — options `move_cost_dial`, `spawn_clear`, `food_floor_only` (`4978e989`, `adf457ca`); c-card 16/16 (leaky world, kept as history, NOT the rule's input); arms, packer, table tool coded and tested (`1eb7af3f`, `2d6808f0`, `1970d4a8`); f4..f7 groups (`31f5e5ac`).
-state: 11-18 06:23 — f0, f1 (`jack-cpu-1794965277`/`…292`) and f2 (`…385`) RUNNING, due ~07–13 h; f3..f7 not launched.
+state: 11-18 09:23 — f0 HOME 08:46 (noop-k1-ff 0/500 sustained; held8-k0-ff 8/500 = 1.6%, 95% upper 2.9%). f3 launched `jack-cpu-1794993809` into its session; f1, f2 RUNNING; f4..f7 not launched.
 state: for the rule writer: seed 401 was stepped once (start at 402); K-lr0 has no card twin (SBX `use_sde` holds a draw 32 decisions); `PILOT_RULE = {seeds, food_floor_only, rule}` unlocks the packer — add the eye frame to that stamp.
 
 ### J12 — His eye: body-frame, 128-ray row, and the proof his senses can find food
@@ -172,7 +172,9 @@ decisions, 5 seeds, J11's frozen readings. If J12's body-frame gate FAILS,
 this order becomes "say why" and stops.
 serves: M3 · PLAN stage 1 "proof that the task can be learned with his senses" · philosophy 3, 4.
 **done when:** both rows are in `WORLD_CARD.md`, pass or fail, each with its control.
-state: open — ordered 11-18. Until J12 (2): write the two rules and the data collector only.
+state: rules + collector DONE `760ae70a` (`experiments/forager_clone.py` docstring: E2b train seeds 701–740, test 741–760, clone ≥2 of 3 seeds, permuted twin must fail; E2c 300k × 5 seeds 801–805, random-point control). `test_forager_clone` PASS.
+state: disclosed before data: the teacher holds a remembered target 0.993 of decisions (smoke seed 153) — a memoryless clone may miss for the forager's memory, not the eye.
+state: next, only after J12 gate 2 is in WORLD_CARD: `forager_clone collect` (box, est ~40×3 lives) → write the trainer + clone kernel; E2c wrapper waits for J11's frozen rule.
 
 ### J13 — MLX port, stage 0 ends at gate G0 (owner 11-15)
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` steps 1–3
