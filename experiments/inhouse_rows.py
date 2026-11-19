@@ -117,6 +117,44 @@ ROWS = {
         "budget": 150_000, "scale": 1.0, "reach": 90.0},
 }
 N_EVAL = 10
+# J3 (5) — THE REPAIRED ENTRY (added 11-19, before any repaired run; the rule
+# above is UNCHANGED). An arm named "<arm>@repair" is the same core and loop
+# with exactly two settings changed, both §15 candidate 1 ("held noise at
+# action choice, with gamma >= 0.99"; PPO 0 -> ~94 on this task, Hollenstein
+# 2024; held-32 std 0.5 found the flag 170/200 here vs white 0/200):
+#   noise  the Gaussian DIRECTION eps ~ N(0, I) is redrawn every HOLD = 32
+#          decisions (and at every episode start) instead of every decision;
+#          the std schedule 0.5 -> 0.1 is kept, so a = mean + std_k * eps.
+#   gamma  0.99 in this file's GAE (survival.GAMMA 0.95 untouched; lambda kept).
+# Fresh seeds 5-9 (arm and never-trains control), same verdict clause.
+# Non-recurrent arms only (wm-latent first, the only arm that learned).
+REPAIR_SUFFIX = "@repair"
+REPAIR_HOLD = 32
+REPAIR_GAMMA = 0.99
+REPAIR_SEEDS = (5, 6, 7, 8, 9)
+
+
+def seeds_for(arm: str) -> tuple:
+    return REPAIR_SEEDS if arm.endswith(REPAIR_SUFFIX) else SEEDS
+
+
+def _gae_g(rewards, values, boot, terminal, gamma):
+    """survival._gae line for line with gamma as an argument (identity at
+    gamma = survival.GAMMA is tested)."""
+    from .survival import GAE_LAMBDA
+    n = len(rewards)
+    adv = np.zeros(n)
+    last = 0.0
+    v_next = 0.0 if terminal else boot
+    for t in reversed(range(n)):
+        delta = rewards[t] + gamma * v_next - values[t]
+        last = delta + gamma * GAE_LAMBDA * last
+        adv[t] = last
+        v_next = values[t]
+    targets = adv + np.asarray(values)
+    if n > 1:
+        adv = (adv - adv.mean()) / (adv.std() + 1e-8)
+    return adv, targets
 KEYS = list(MODALITIES)
 DROPPED = tuple(k for k in KEYS if k != "proprio")
 
@@ -152,7 +190,11 @@ def _eval(core, env_id: str, scale: float, seed: int) -> float:
 def run_cell(arm: str, row: int, seed: int, train: bool = True,
              steps: int | None = None) -> dict:
     """One arm-row-seed. Mirrors survival.run_survival's 'core' branch."""
-    if arm in REC_ARMS:
+    repair = arm.endswith(REPAIR_SUFFIX)
+    core_name = arm[:-len(REPAIR_SUFFIX)] if repair else arm
+    if core_name in REC_ARMS:
+        if repair:
+            raise ValueError("@repair is wired for non-recurrent arms only")
         return run_cell_rec(arm, row, seed, train, steps)
     import gymnasium as gym
     torch.set_num_threads(1)
@@ -162,9 +204,10 @@ def run_cell(arm: str, row: int, seed: int, train: bool = True,
     rng = np.random.RandomState(seed * 6553 + 11)
     gen = torch.Generator().manual_seed(seed * 7919 + 3)
     torch.manual_seed(9_000 + seed)
-    core = build_arm(arm, with_placebo=False)
+    core = build_arm(core_name, with_placebo=False)
     core.eval()
     opt = make_optimizer(core) if train else None
+    held_eps, since_draw = None, 0
     env = gym.make(R["env"])
     x, _ = env.reset(seed=seed)
     obs = _obs_dict(x)
@@ -178,7 +221,8 @@ def run_cell(arm: str, row: int, seed: int, train: bool = True,
         nonlocal seg_obs, seg_act, seg_rew, seg_val
         if not seg_rew:
             return
-        adv, tgt = _gae(seg_rew, seg_val, boot, terminal)
+        adv, tgt = (_gae_g(seg_rew, seg_val, boot, terminal, REPAIR_GAMMA) if repair
+                    else _gae(seg_rew, seg_val, boot, terminal))
         for i in range(len(seg_rew)):
             ring.push(seg_obs[i], seg_act[i], float(tgt[i]), float(adv[i]))
         seg_obs, seg_act, seg_rew, seg_val = [], [], [], []
@@ -191,7 +235,13 @@ def run_cell(arm: str, row: int, seed: int, train: bool = True,
             v = float(core.critic(s))
         frac = min(1.0, k / max(1, n - 1))
         std = EXPLORE_STD[0] + (EXPLORE_STD[1] - EXPLORE_STD[0]) * frac
-        a = np.clip(mean + std * rng.randn(ACTION_DIM), -1.0, 1.0)
+        if repair:
+            if held_eps is None or since_draw >= REPAIR_HOLD:
+                held_eps, since_draw = rng.randn(ACTION_DIM), 0
+            since_draw += 1
+            a = np.clip(mean + std * held_eps, -1.0, 1.0)
+        else:
+            a = np.clip(mean + std * rng.randn(ACTION_DIM), -1.0, 1.0)
         x2, r, term, trunc, _ = env.step(np.array([a[0] * R["scale"]]))
         ep_ret += float(r)
         seg_obs.append({kk: torch.from_numpy(vv.copy()) for kk, vv in obs.items()})
@@ -209,6 +259,7 @@ def run_cell(arm: str, row: int, seed: int, train: bool = True,
             ep_rets.append(ep_ret)
             ep_end_step.append(k + 1)
             ep_ret = 0.0
+            held_eps = None
             x2, _ = env.reset()
         obs = _obs_dict(x2)
         if (k + 1) in ck_at:
@@ -382,7 +433,7 @@ def cells(arms: list) -> list:
     out = []
     for arm in arms:
         for row in ROWS:
-            for s in SEEDS:
+            for s in seeds_for(arm):
                 out += [(arm, row, s, False), (arm, row, s, True)]
     return out
 
@@ -422,8 +473,8 @@ def verdict(outdir) -> dict:
             "ctrl" if r["ctrl"] else "arm"][r["seed"]] = r
     res = {}
     for (arm, row), d in sorted(by.items()):
-        a = [d["arm"].get(s) for s in SEEDS]
-        c = [d["ctrl"].get(s) for s in SEEDS]
+        a = [d["arm"].get(s) for s in seeds_for(arm)]
+        c = [d["ctrl"].get(s) for s in seeds_for(arm)]
         key = f"{arm} row {row}"
         if None in a or None in c:
             res[key] = {"reading": "INCOMPLETE"}
