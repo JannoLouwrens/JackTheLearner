@@ -410,3 +410,44 @@ AND peak < 8192 MB, loss finite. mlx 0.32.4, Python 3.13.18, x86_64, 4 cores, fr
   first-day rows (`mac_first_day.py` rows 11–12). Lesson for later rungs: never time MLX on
   Kaggle x86 and quote it; golden-file comparisons there are fine (correctness), speeds are not.
 Next: rung 1 (the report's step list), correctness-only on box/Kaggle; speed only on the Mac.
+
+## J16 (a) — row 0.4 / gate G1: already met (0.4e, 11-17)
+
+Row 0.4's done-test ("parameters by name plus one step's intermediates saved; two runs give
+identical files") is 0.4e above: the 20-call eager file-noise `debug` run (warmup 0, the one listed
+difference), two fresh processes, **IDENTICAL 1,400/1,400 arrays, 183/183 params, 570/570 metrics**;
+golden file `/data/jack-logs/mlx/golden_g1_debug_w0_noise_s0.npz` sha256 583e3c30… (re-checked
+11-19, unchanged). Not re-run: G1 holds.
+
+## J16 (b) — row 1.2: rung 1's tests, committed while they FAIL (11-19)
+
+`experiments/brain_a/rung1.py` (tests + NumPy float64 references) against `mlx_maths.py` (a stub
+that raises until row 1.3). Nine tests, each run eager AND `mx.compile`d: squashing, bins, two-hot
+(weights + loss), decode (value + uniform and mirrored exactly 0), 1% unimix, KL with free bits
+(values, both stop-gradients exactly 0, both live gradients, clamp → zero gradient), straight-through
+(forward exactly one-hot, gradient), bounded normal (mean, std, logp, entropy, both raw gradients),
+coin-flip logp (|logit| to 100). Logs `/data/jack-logs/mlx/rung1_{vs_official,stub,planted}.log`.
+
+- **The references are the official code, not our reading:** `--vs-official` (JAX 0.4.33 CPU,
+  float32, e01491f's own `outs.py`/`nets.py`/heads formula) **25/25 agree**.
+- **Stub: 0/9 pass (FAIL, as row 1.2 requires).** Known-positives: nine planted wrong MLX
+  implementations (log(1+x) for log1p, even-branch bins, two-hot in symlog space, naive decode sum,
+  mix on logits, KL without stop-gradients, `(onehot+p)-p`, std without +2, log(sigmoid))
+  **9/9 CAUGHT**.
+- What "1e-6" means is now written down (the report does not say relative to what): per element,
+  |port − ref| ≤ 1e-6 · (|ref| + s), s per test; for the decode and the two actor gradients the scale
+  is the sum's condition (summed magnitudes), because measured:
+  - **the official float32 bins are not the float64 bins**: built with `linspace(dtype=f32)` they sit
+    up to 1.24e-6 off (232/255 differ from the float64 value cast). Rung 1's bins reference is the
+    official array, pinned bit for bit in `rung1_bins_e01491f.json`;
+  - **the official actor-mean gradient misses an absolute 1e-6**: at raw mean 8 XLA's float32 tanh
+    returns 1.0 (the nearest float32 is 0.99999976), so the gradient is 0 where float64 says 2.2e-6
+    (at 6: off by 1.1e-6) — 1 − y² in float32 carries ~1 ulp of 1 times the upstream gradient. Judged
+    against that condition the official code is within 2.6e-7.
+- **Exact zero under compilation fails in BOTH libraries for the official recipe:** the official
+  symmetric sum gives 0 eager but **−0.163 / −0.172 under `jax.jit`** (uniform; it varies run to run)
+  and **+0.164 under `mx.compile`** (mirrored: up to 0.054). Issue #245 reproduced on the box and on
+  MLX. So row 1.3 must cancel mirrored probabilities before multiplying (r2dreamer `7a93691`); the
+  port then deviates from the official code here on purpose — one row in `mlx_maths.py`'s table.
+Next (row 1.3): fill `mlx_maths.py` until `rung1.py` exits 0 (9/9 eager and compiled), each
+deviation in its "ours beside theirs" table; then the same on the PyPI wheel on Kaggle.

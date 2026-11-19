@@ -2677,3 +2677,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Smoke on tuning seeds 153/154 only (one life cut at 3,000 decisions): v1 any blob 0 meals (parked on the ladder rails); v2 + width 1 / 2; v3, the ruler, 9 / 2. FOUND: food's texture is not a constant (geom ids shift per world), so no memoryless rule can know what is food; f5 parks on whatever it reaches — 5 of seed 153's 9 meals came from one food regrowing under him.
 - Gate 3 frozen before any cell (f5 / g5 shuffled / b5, d0, seeds 281–300, bar unmoved, no extension) and LAUNCHED 07:30 `jack-cpu-1795073402`, RUNNING on Kaggle. Sessions: p0, p1, p2, gate 3. INBOX: the closure sentence over-reads one hand ruler.
 - Philosophy served: 4 (the ruler's rule, its three shaping variants and its weakness written down before the fresh seeds run) and 3 (whether finding food on his eye needs memory becomes a measurement).
+
+## 2026-11-19 08:07–08:45 UTC · JACK · J16 (a)–(b): G1 confirmed met; rung 1's tests written, failing, and proven able to fail
+- All 4 Kaggle sessions RUNNING (J11 p0/p1/p2, J15 gate 3; `kernels status` each) → J11/J15/J3/J10 wait; J14 not before 11-21 → J16, box-only.
+- (a) Row 0.4 / G1 was already met by 0.4e on 11-17 (IDENTICAL 1,400/1,400 arrays twice; golden sha unchanged) — recorded, not re-run.
+- (b) `rung1.py` + stub `mlx_maths.py`: 9 tests eager AND compiled. References vs the official JAX code 25/25; stub 0/9 (FAIL, as the step requires); 9 planted wrong MLX impls 9/9 CAUGHT.
+- Measured on the way: official f32 bins sit 1.24e-6 off float64 (pinned bit for bit); the official actor-mean gradient misses an absolute 1e-6 at tanh saturation, so those checks are judged on the sum's condition (written down why).
+- FOUND: the official symmetric decode is 0 eager but +0.164 under `mx.compile` and −0.17 under `jax.jit` — issue #245 on both libraries; 1.3 must cancel mirrored probabilities first.
+- Philosophy served: 4 (a test that can fail, with planted bugs it must catch, before the code exists) and 7 (the port is what lets the finished Jack keep learning on owners' Macs).

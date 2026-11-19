@@ -180,7 +180,10 @@ passes eager and compiled. Each module's docstring carries the "ours beside
 theirs" table. No training, no speed claims.
 serves: M3 · PLAN "the decisive test … on the Mac mini" — every Mac hour an hour of the real test · philosophy 5, 6, 7.
 **done when:** G1's result and rung 1's pass are in `experiments/brain_a/README.md` with the test names.
-state: (new 11-19; J13's G0 PASS `bc08a6ef` is its entry condition.)
+state: 11-19 08:40 (a) G1 already MET by 0.4e (11-17: two fresh runs IDENTICAL 1,400/1,400 arrays; golden sha256 583e3c30… re-checked) — written into README, not re-run.
+state: (b) DONE: `experiments/brain_a/rung1.py` + stub `mlx_maths.py`: 9 tests eager+compiled; stub 0/9 (FAIL as required); refs vs official JAX code 25/25; 9 planted wrong impls 9/9 caught. Official f32 bins pinned (`rung1_bins_e01491f.json`, 1.24e-6 off float64); actor gradients judged on the sum's condition (official misses abs 1e-6 at tanh saturation).
+state: FOUND: the official symmetric decode is exactly 0 eager but +0.164 under `mx.compile` (−0.17 under `jax.jit`, issue #245) — 1.3 must cancel mirrored probs before multiplying.
+next: (c) row 1.3: fill `mlx_maths.py` until `rung1.py` exits 0 (9/9 eager AND compiled), deviations in its table.
 
 ### J10 — The walking layer: reproduce a published walk (owner 11-15)
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §4; ruling 45
