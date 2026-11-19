@@ -2685,3 +2685,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Measured on the way: official f32 bins sit 1.24e-6 off float64 (pinned bit for bit); the official actor-mean gradient misses an absolute 1e-6 at tanh saturation, so those checks are judged on the sum's condition (written down why).
 - FOUND: the official symmetric decode is 0 eager but +0.164 under `mx.compile` and −0.17 under `jax.jit` — issue #245 on both libraries; 1.3 must cancel mirrored probabilities first.
 - Philosophy served: 4 (a test that can fail, with planted bugs it must catch, before the code exists) and 7 (the port is what lets the finished Jack keep learning on owners' Macs).
+
+## 2026-11-19 08:22–08:55 UTC · JACK · J16 (c): rung 1 PASS — the Mac port's maths matches the official code, eager and compiled
+- All 4 Kaggle watchers alive (J11 p0/p1/p2, J15 gate 3) → J11/J15/J3/J10 wait on a session; J14 not before 11-21 → J16, box-only.
+- `mlx_maths.py` filled line for line from e01491f (`07a65c3d`): `rung1.py` 9/9 eager AND `mx.compile`d; worst bins 1.6e-7, decode 5.7e-7 of its condition, every gradient ≤ 1.6e-7; uniform/mirrored decode exactly 0 both modes; planted wrong impls still 9/9 caught.
+- The first fill FAILED `bins` (1.92e-6): `mx.linspace` misses JAX's grid at 41/128 points. Read the optimized HLO: XLA:CPU turns iota/127 into iota·f32(1/127) and LLVM fuses 1 − iota·r into an fma → official grid = −20·fma(−i, r, 1), 0/128 misses when ported (fma as one float64 rounding on the CPU stream).
+- Lesson for later rungs: parity with the official code means parity with what its compiler emits.
+- J16 DONE; next (for the Director): the same test on the PyPI MLX wheel, then rung 2.
+- Philosophy served: 7 (the port is what lets the finished Jack keep learning on owners' Macs) and 4 (a red test made green by finding the cause, threshold untouched).

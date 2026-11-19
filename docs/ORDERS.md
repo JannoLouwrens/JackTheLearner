@@ -180,10 +180,10 @@ passes eager and compiled. Each module's docstring carries the "ours beside
 theirs" table. No training, no speed claims.
 serves: M3 · PLAN "the decisive test … on the Mac mini" — every Mac hour an hour of the real test · philosophy 5, 6, 7.
 **done when:** G1's result and rung 1's pass are in `experiments/brain_a/README.md` with the test names.
-state: 11-19 08:40 (a) G1 already MET by 0.4e (11-17: two fresh runs IDENTICAL 1,400/1,400 arrays; golden sha256 583e3c30… re-checked) — written into README, not re-run.
-state: (b) DONE: `experiments/brain_a/rung1.py` + stub `mlx_maths.py`: 9 tests eager+compiled; stub 0/9 (FAIL as required); refs vs official JAX code 25/25; 9 planted wrong impls 9/9 caught. Official f32 bins pinned (`rung1_bins_e01491f.json`, 1.24e-6 off float64); actor gradients judged on the sum's condition (official misses abs 1e-6 at tanh saturation).
-state: FOUND: the official symmetric decode is exactly 0 eager but +0.164 under `mx.compile` (−0.17 under `jax.jit`, issue #245) — 1.3 must cancel mirrored probs before multiplying.
-next: (c) row 1.3: fill `mlx_maths.py` until `rung1.py` exits 0 (9/9 eager AND compiled), deviations in its table.
+state: **DONE `07a65c3d`** (11-19 08:50). (a) G1 met by 0.4e (IDENTICAL 1,400/1,400), in README. (b) `rung1.py` tests: refs vs official 25/25, stub 0/9, planted 9/9 caught.
+state: (c) `mlx_maths.py` filled: **rung 1 PASS 9/9 eager AND compiled** (mlx 0.32.4, box); worst bins 1.6e-7, decode 5.7e-7 (cond), grads ≤ 1.6e-7; uniform/mirrored decode exactly 0 both modes; planted still 9/9. Test names in README §J16 (c).
+state: FOUND: first fill FAILED bins (1.92e-6) — the official grid is what XLA:CPU emits, −20·fma(−i, f32(1/127), 1): 0/128 misses vs 41 for `mx.linspace`. Parity = the compiler's output, read from optimized HLO. Decode deviates on purpose: (p3 − p1[::-1])·b3.
+next: (report's row after 1.3) the same `rung1.py` on the PyPI MLX wheel, then rung 2 — for the Director to order.
 
 ### J10 — The walking layer: reproduce a published walk (owner 11-15)
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §4; ruling 45
