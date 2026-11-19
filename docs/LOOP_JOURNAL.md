@@ -2658,3 +2658,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - s0 seg 0's Kaggle output really holds model.zip + replay.pkl (kernel log RESULT 500k/490k updates, JACK_OUT /kaggle/working). `kaggle kernels files` sizes are NOT file sizes (segment.json listed 847 B, real 175 B) — don't read a checkpoint's health from them.
 - The /kaggle/input/<slug> mount for segment 1 was never verified; `resolve_prev_dir` (`27d5c364`) now takes the rule's path or the single deeper mount carrying the slug, else fails fast naming what is mounted — so a wrong guess costs a pip install, never a 10-h session. Test 6/6 with planted mounts.
 - Philosophy served: 5 (the walking layer's 2M-step reproduction made cheaper to finish) and 6 (no free Kaggle session wasted on a mis-mounted resume).
+
+## 2026-11-19 06:22–06:30 UTC · JACK · J10 (2) the Yu 2018 rule made able to tell a learned stage from a capped one — short slot
+- All 4 Kaggle sessions RUNNING (J11 p0/p1/p2, J10 s1 seg 0; checked on Kaggle); J11/J3/J15 wait on a session, J14 not before 11-21 → J10's open box item (2).
+- Read the released code at b50478f8: the helper's (2000, 2000) are SPD gains (sideways N/m, forward N per m/s), not newtons — rule corrected. `stage_exits` (`411ec079`) labels each curriculum stage THRESHOLD / CAP / CUT from rank 0's progress.json; crossing-and-meeting counts CAP (stricter; velocity is not logged).
+- FOUND: a reverted iteration resets TimestepsSoFar, so its samples never count toward the 5M cap — a stage can draw more than 5M. Logged as headers × 20k beside the logged count. Planted test 4/4.
+- Philosophy served: 4 (a curriculum that "completes" on caps can no longer pass as learned) and 5 (the walking layer's reproduction made truer before it costs a kernel).
