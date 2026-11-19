@@ -1478,15 +1478,15 @@
     },
     "2026-11-19": {
       "by_spec": {
-        "detached:launch_g0.log": 42.32,
+        "detached:launch_g0.log": 526.22,
         "detached:launch_m3.log": 0.16,
         "detached:launch_m4.log": 162.6,
         "detached:launch_m5.log": 113.66,
-        "detached:launch_m6.log": 148.27,
-        "detached:launch_m7.log": 127.67,
-        "detached:launch_wm-dyn.log": 66.1
+        "detached:launch_m6.log": 158.87,
+        "detached:launch_m7.log": 137.93,
+        "detached:launch_wm-dyn.log": 502.75
       },
-      "used_s": 660.78
+      "used_s": 1602.19
     }
   },
   "last_child_s": {

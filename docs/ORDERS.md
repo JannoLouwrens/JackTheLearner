@@ -137,8 +137,8 @@ was network size.
 serves: M3 · PLAN "a fair chance for our own brains" · philosophy 3, 4.
 **done when:** `KNOWN_ANSWERS.md` has one row pair per arm (4) and the repaired entry's row (5), pass or fail.
 state: FAIL both rows, controls hold: `ppo-needs` (−578…−1120), `ppo-lp` (−824…−1059), `wm-latent` (best −321.0; learns, budget binds); row 3: 0 flag reaches each. `wm-dyn`, `wm-latent+ring` wired `8a87941a` (est. 0.8 h / 2 h).
-state: 11-19 01:09 `wm-dyn` LAUNCHED into m5's freed session (rank 0: est 0.8 h) — `jack-cpu-1795050581`, log `/data/jack-logs/j3_inhouse/launch_wm-dyn.log`; harvest → KNOWN_ANSWERS.
-state: next: `dreamer-xs` kernel when J3's session frees (one at a time), then `wm-latent+ring`.
+state: 11-19 02:30 `wm-dyn` HARVESTED → KNOWN_ANSWERS Row J3-4c: FAIL both rows, controls 0/5. Row 1 best windows −547…−874 (learns −1300→−650…−1130, 300 eps); row 3 0 flag reaches. Below wm-latent on row 1.
+state: `dreamer-xs` LAUNCHED 02:23 into the freed session — `jack-cpu-1795054996`, log `/data/jack-logs/j3_inhouse/launch_dreamer-xs.log` (est ≤ 3 h); harvest → KNOWN_ANSWERS Row J3-4d, then `wm-latent+ring` kernel.
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48
@@ -187,7 +187,7 @@ state: 12:48 `65c648e7`: test kernel CODED (`forager_clone kernel`: 140 cells, r
 state: 13:25 FULL kernel CODED (`forager_clone kernel-full`): re-collects 701–740 in-kernel, checks each seed's (x,a) sha256 against `experiments/forager_clone_teacher.json` (mismatch reported, not fatal — declared in the docstring), trains the 6 students (train_clone unchanged), runs the 140 cells; fetches clone_full.json + 6 weights. Refuses without a committed 40-seed manifest. Test PASS 6/6. Est 9 h (GUESS) vs 9.5 h timeout.
 state: 11-18 15:25 `ee9bc9de`: teacher manifest COMMITTED (40 seeds 701–740, 931,745 decisions, 17,280–27,000/seed); `full_ready()` = [] — kernel-full is launchable. next: at J15's rank when a Kaggle session frees (all 4 full at 15:23): `scripts/launch_detached.sh /data/jack-logs/forager_clone/launch_full.log $PY -m experiments.forager_clone kernel-full`.
 
-### J13 — MLX port, stage 0 ends at gate G0 (owner 11-15)
+### J13 — DONE (G0 PASS) — MLX port, stage 0 ends at gate G0 (owner 11-15)
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` steps 1–3
 **Do.** Run `experiments/brain_a/g0_kernel.py` on one Kaggle CPU session
 when rank 4 gets one; the rule is the report's G0 unchanged. A failed G0
@@ -196,8 +196,8 @@ other port work until G0 has run. Lead to weigh in the write-up: official
 JAX ran 0.925 vs sheeprl 0.458 grad steps/s on this box (`9ba4e682`).
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6.
 **done when:** G0's pass or fail is in `experiments/brain_a/README.md` with its numbers.
-state: 11-19 01:27 G0 LAUNCHED into m4's freed session (J15's kernel-full held: its E2b disclosure ruling, INBOX 16:14, is open) — `jack-cpu-1795051615`, log `/data/jack-logs/mlx/launch_g0.log` → `/data/jack-logs/mlx/g0.json`.
-state: next: `$PY -m experiments.brain_a.g0_kernel verdict /data/jack-logs/mlx/g0.json` → numbers + PASS/FAIL into `experiments/brain_a/README.md` (weigh JAX 0.925 vs sheeprl 0.458).
+state: DONE (11-19 02:35, this commit) — G0 PASS in `experiments/brain_a/README.md`: 12m compiled first step 216 s < 600, peak 1.8 GB < 8, finite; compiled == eager bit-for-bit.
+state: FOUND: Kaggle x86 MLX steps 1m at 17.4 s vs 2.34 s on 1 box ARM core (7.4× slower); 12m 212 s/step. x86 CPU timings are not the Mac's — speed only from the Mac's first-day rows. Next per the report: rung 1.
 
 ### J10 — The walking layer: reproduce a published walk (owner 11-15)
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §4; ruling 45

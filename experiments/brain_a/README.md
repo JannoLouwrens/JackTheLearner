@@ -383,3 +383,30 @@ port_gate_selftest_{w0,r1}.log}`). Took 0.4d iii's recommendation (b) + (c).
   (`pol/mlp/*` at call 8) are uncalibrated: an honest MLX build may miss 1e-4 there through rounding
   alone — the first real MLX comparison calibrates, and any loosening is re-registered, not edited.
 Next: G0 (`g0_kernel.py`) at the first free Kaggle CPU session closes stage 0.
+
+## G0 — PASS (11-19, Kaggle CPU, `jack-cpu-1795051615`, 48 min, result `/data/jack-logs/mlx/g0.json`)
+
+Rule unchanged from `g0_kernel.py`'s docstring: size12m, `mx.compile`, cold cache, first step < 600 s
+AND peak < 8192 MB, loss finite. mlx 0.32.4, Python 3.13.18, x86_64, 4 cores, fresh process per run.
+
+| run | params | first step | steady median | peak (mlx) | max RSS |
+|---|---|---|---|---|---|
+| 1m compiled | 647,705 | 74.7 s | 17.42 s | 341 MB | 529 MB |
+| 1m eager | 647,705 | 17.8 s | 17.68 s | 409 MB | 559 MB |
+| **12m compiled (G0)** | 9,765,209 | **216.3 s** | 212.2 s | **1,811 MB** | 2,152 MB |
+| 12m eager | 9,765,209 | 212.6 s | 212.4 s | 1,427 MB | 1,701 MB |
+
+- **G0 PASS: 216 s < 600 s, 1.8 GB < 8 GB, finite.** Compile is not a risk: at 12m the compiled
+  first step costs ~4 s over a steady step. Losses are bit-identical compiled vs eager at every
+  printed step (−54438.61, −5235.11, −57498.49): the compiled graph computes the same thing.
+- **But the speed it shows is not a speed to train on.** Kaggle x86 runs the 1m step at 17.4 s;
+  this box's single ARM core ran the same step at 2.34 s (table above) — **7.4× slower on 4 x86
+  cores than on 1 ARM core.** MLX's x86 CPU path is evidently unoptimised (it is built for Apple
+  silicon; Linux x86 is a portability target). At 212 s per 12m step, x86 CPU MLX is ~460× below
+  official JAX on this box (0.925 grad steps/s, `9ba4e682`) and ~200× below sheeprl (0.458).
+- What G0 therefore decides, and what it does not: the full unrolled step compiles and fits, so
+  the port proceeds to rung 1 (the report's rule). It says **nothing** about the Mac's speed —
+  the Mac runs Metal, not this CPU path. The port's speed case still rests entirely on the Mac's
+  first-day rows (`mac_first_day.py` rows 11–12). Lesson for later rungs: never time MLX on
+  Kaggle x86 and quote it; golden-file comparisons there are fine (correctness), speeds are not.
+Next: rung 1 (the report's step list), correctness-only on box/Kaggle; speed only on the Mac.

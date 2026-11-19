@@ -313,3 +313,22 @@ Both controls reach 0/5 on both rows, so all four readings are valid FAILs.
 - Set aside with numbers (ruling 24). A repaired arm returns under this rule:
   row 3 needs temporally correlated exploration (gSDE / pink); wm-latent row 1
   needs only to be ~2× faster in sample terms.
+
+## Row J3-4c — `wm-dyn` misses both rows, further from the band than `wm-latent` (11-19, Kaggle CPU)
+
+Rule `3054fbe6`, unchanged. Kernel jack-cpu-1795050581 (67 min); result
+`/data/jack-logs/j3_inhouse/wm-dyn.json` (torch 2.11.0+cpu, gymnasium 1.1.1).
+Controls reach 0/5 on both rows → both readings are valid FAILs.
+
+| arm | row 1 best 100-ep window per seed (band edge −314.7) | reached | row 3 flag reaches (5 × 150 eps) | reached |
+|---|---|---|---|---|
+| wm-dyn | −674.9, −771.9, −547.0, −710.2, −874.2 | 0/5 | 0 | 0/5 |
+| control | −1192.1…−1255.3 | 0/5 | 0 | 0/5 |
+
+- **Row 1 learns, slowly:** first 10 → last 10 training episodes −1307→−1111, −1177→−737,
+  −1230→−646, −1342→−928, −1482→−1132 (300 eps, ~640 CPU-s a seed). Best seed −547.0 is
+  232 short of the band; wm-latent's worst seed (−397.2) beats wm-dyn's best. Ranking so far on
+  row 1: wm-latent > wm-dyn > ppo-lp > ppo-needs; none reaches.
+- **Row 3: the reward is never sampled** (0 flag reaches), as for every in-house arm — the shared
+  learner's white action noise; the named cure (correlated noise, §15) is J3 (5)'s repaired entry.
+- Remaining under (4): `dreamer-xs` (jack-cpu-1795054996, launched 11-19 02:23), then `wm-latent+ring`.
