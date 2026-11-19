@@ -2743,3 +2743,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Nothing to launch: 5 Kaggle sessions RUNNING (p3, p4, p5, J3 + its duplicate); no Kaggle cancel in CLI 2.2.4. J14 not before Sat.
 - Priced one cause for "every learner ends below K-lr0" from settings + logged lives (no run): ent_coef 0.1 fixed, 8 action dims (measured) → entropy bonus ≤ 0.555/decision vs −0.036 (meal-less K) and +0.031 (K-lr0 meal income); ≈ 111 discounted at γ 0.995 vs +100 a meal. PILOT_B2 §3b `7d3b18fc`, with a refutable prediction for E2c's trace (std/saturation rising vs flat/falling).
 - Philosophy served: 4 (a failure gets a cause put up to be refuted, before the next run) and 3 (the fix, if any, is a raced arm, not a quiet edit).
+
+## 2026-11-19 13:05–13:15 UTC · JACK · J10 (2′) launch attempt: Kaggle's CPU cap measured at 5
+- Nothing in J11/J15/J3 could launch: 5 Kaggle sessions RUNNING (`kernels status`: p3, p4, p5, J3 + duplicate). J14 not before Sat. Next-up 1 re-checked: already DONE (`95e2e4cb`); items 2–5 wait on a GPU slot or J11.
+- Five sessions running at once contradicts ORDERS' "4 sessions", so I tried J10 `kernel 0 1` (rank 4, the 6th): Kaggle refused, "Maximum batch CPU session count of 5 reached" (`jack-cpu-1795093735`, 0 s, ERROR row committed). Cap = 5 by measurement; the 4-session plan leaves one free session idle. INBOX line for the Director.
+- Machine scar (INBOX, SYSTEM): gpu.py read the refused push as rc=0, then failed with "no artifact named segment.json", which hides the cause.
+- `pilot_b2 readings` refuses on the partial (28 runs missing): the J11 step (5) tool won't read early. Good.
+- Philosophy served: 6 (free compute: a whole Kaggle session the plan wasn't counting, found by measuring it). No line of 1–4 moved: no creature work was runnable this slot. Said plainly.
