@@ -17,7 +17,9 @@ from experiments import pilot_b2 as P
 def test_arms_and_packing():
     for m in ("food", "zero", "random_point"):
         c = dict(P.E2C_ARMS[f"E-{m}"])
-        assert c.pop("handed") == m and c == P.PILOT_ARMS["K"]
+        assert c.pop("handed") == m and c.pop("trace") is True
+        assert c == P.PILOT_ARMS["K"]
+    assert not any("trace" in c for c in P.PILOT_ARMS.values())
     assert set(P.PILOT_ARMS) == set(P.PILOT_LEARNERS + P.PILOT_FLOORS)
     assert sorted(P.pilot_groups(P.PILOT_RULE["seeds"])) == [f"p{j}" for j in range(10)]
     g = P.e2c_groups()
@@ -60,7 +62,8 @@ def test_smoke():
     assert e.observation_space.shape[0] == k.observation_space.shape[0] + 3
     rec = P.run_pilot_cell("E-food", 801, True, T=300, **kw)
     assert rec["handed"] == "food" and rec["handed_encoding"] == "cossin"
-    assert rec["pilot_arm"] == "E-food"
+    assert rec["pilot_arm"] == "E-food" and rec["trace_every"] == 5000
+    assert rec["trace"] == []                    # 300 < one window
 
 
 def main():

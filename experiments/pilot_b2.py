@@ -437,7 +437,10 @@ PILOT_ARMS = {
 # PilotLives' cap respawn is not a JackEnv truncation, so random_point
 # re-draws there too (a new body = a new life for the control).
 E2C_ENCODING = "cossin"
-E2C_ARMS = {f"E-{m}": dict(PILOT_ARMS["K"], handed=m)
+# trace=True (11-19, before seed 801): run_b logs the action spread and SAC's
+# losses every 5,000 decisions -- reads only, lives identical (test_pilot_b_trace);
+# J11's pilot arms do not carry it (their kernels stay as frozen).
+E2C_ARMS = {f"E-{m}": dict(PILOT_ARMS["K"], handed=m, trace=True)
             for m in ("food", "zero", "random_point")}
 E2C_SEEDS = (801, 802, 803, 804, 805)
 
@@ -474,6 +477,8 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
         rec = run_floor(c["policy"], seed, T, world=world, partial_path=partial_path)
     else:
         kw = {} if c["lr"] is None else {"lr": c["lr"]}
+        if c.get("trace"):
+            kw["trace"] = True
         rec = run_b(seed, T, world=world, gamma=c["gamma"],
                     partial_path=partial_path, **kw)
     rec["pilot_arm"] = arm

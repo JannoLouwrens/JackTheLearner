@@ -349,8 +349,52 @@ def _pink_selection(model, seed: int) -> None:
     pol._predict = _predict
 
 
+TRACE_EVERY = 5000                      # decisions per training-trace window
+
+
+def trace_window(actions) -> dict:
+    """One window of the training trace from the actions B actually took
+    (env scale, rows = decisions): per-dim mean, per-dim std, and the share of
+    action components at |a| >= 0.95 (pinned at the box edge). Pure numpy."""
+    a = np.asarray(actions, dtype=np.float64).reshape(len(actions), -1)
+    return {"mean": [round(float(x), 4) for x in a.mean(0)],
+            "std": [round(float(x), 4) for x in a.std(0)],
+            "sat": round(float((np.abs(a) >= 0.95).mean()), 4)}
+
+
+def _trace_callback(out: list, every: int = TRACE_EVERY):
+    """SB3 callback that only READS: the actions taken (``locals['actions']``)
+    and the last values SBX's SAC.train logged (actor/critic loss, ent_coef).
+    Never touches an RNG, the buffer or the params (test_pilot_b_trace proves
+    the lives are identical with it on and off)."""
+    from stable_baselines3.common.callbacks import BaseCallback
+
+    class _Trace(BaseCallback):
+        def _on_training_start(self):
+            self._acts, self._last = [], {}
+            rec = self.model.logger.record
+
+            def record(key, value, *a, **k):
+                if key.startswith("train/"):
+                    self._last[key[6:]] = value
+                return rec(key, value, *a, **k)
+            self.model.logger.record = record
+
+        def _on_step(self):
+            self._acts.append(np.array(self.locals["actions"], dtype=np.float64).ravel())
+            if self.num_timesteps % every == 0:
+                row = {"t": int(self.num_timesteps), **trace_window(self._acts)}
+                row.update({k: (round(float(v), 5) if isinstance(v, (int, float, np.floating, np.integer))
+                                else None) for k, v in self._last.items()})
+                out.append(row)
+                self._acts = []
+            return True
+    return _Trace()
+
+
 def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
-          world=None, gamma: float | None = None, partial_path=None) -> dict:
+          world=None, gamma: float | None = None, partial_path=None,
+          trace: bool = False) -> dict:
     """One learning run of T decisions; returns the per-life log + timing.
     arm "bwhite"/"bpink" = the item-6 exploration arms (block above).
 
@@ -360,7 +404,12 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
     replacing `make_world` (the cures are jack_env options: move_cost_dial,
     spawn_clear, reward dr100-eat-pos); `gamma` = the learner's discount.
     Either one, when given, is recorded in the returned dict.
-    `partial_path`: see PilotLives (None = no partial file, unchanged)."""
+    `partial_path`: see PilotLives (None = no partial file, unchanged).
+    `trace` (11-19, J15 E2c; default False = unchanged, no key added): every
+    TRACE_EVERY decisions the returned dict's "trace" list gets one row --
+    the window's action mean/std/saturation and SAC's last actor_loss,
+    critic_loss, ent_coef -- so a learner that ends below its lr-0 twin
+    (J11 partial 12/40: every arm) can be read for WHY, not only that."""
     _single_thread()
     from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
     holder = {}
@@ -378,7 +427,9 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
     if arm == "bpink":
         _pink_selection(model, seed)
     t_wall, t_cpu = time.time(), time.process_time()
-    model.learn(total_timesteps=int(T), progress_bar=False)
+    tr = []
+    model.learn(total_timesteps=int(T), progress_bar=False,
+                **({"callback": _trace_callback(tr, TRACE_EVERY)} if trace else {}))
     wall, cpu = time.time() - t_wall, time.process_time() - t_cpu
     w = holder["w"]
     lives = list(w.lives)
@@ -393,6 +444,7 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
             "pink_draws": int(getattr(model.policy, "n_pink", 0)),
             **({} if gamma is None else {"gamma": float(model.gamma)}),
             **({} if world is None else {"world": _world_stamp(w.env)}),
+            **({"trace": tr, "trace_every": TRACE_EVERY} if trace else {}),
             "lives": lives}
 
 
