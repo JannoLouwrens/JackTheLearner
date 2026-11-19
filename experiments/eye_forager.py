@@ -116,6 +116,57 @@ Extension  NONE. A miss is a miss — and then J15 becomes "say why" (ORDERS).
 Where   2 Kaggle CPU kernels (one per d, 80 cells, 4 workers), rank 2.
 Cost    gate 1 at d = 1 took one session under its 4.7 h worst case with 60
         cells and no native_substep (2.4x); 80 cells with it: est 5 h.
+
+=============================================================================
+GATE 3 — f5, A RULER THE CURRENT ROW DETERMINES (ruling 50, ORDERS J15 (1)-(2)).
+Declared 2026-11-19 07:2x UTC, in this commit, before any gate-3 cell runs.
+=============================================================================
+Why     E2b asks a memoryless net to copy a teacher. f4 is not copyable from
+        the row: it holds a target on 0.551 of decisions and otherwise steers
+        along a random ray held 25 decisions (PRIORS §17, imitation gap 0.88
+        -> <= 0.11). Ruling 50: first a ruler whose every action IS a function
+        of the current body-frame row128, then gate 2's bar on it.
+Ruler   `f5_act(row)` below — no remembered target, no draw, no counter, no
+        energy, no velocity. Blobs by gate 1's rule (`blobs_n`, unchanged),
+        kept only if (i) their apparent width, rays x ray pitch x distance,
+        is >= F5_THIN_M = 0.11 m and (ii) their nearest ray is >= F5_FRONT_M
+        = 0.10 m nearer than BOTH flanking rays; push at the nearest kept
+        blob; none -> push at the middle of the widest open gap (rays >= 0.70
+        of the row's farthest). Proof it is a function of the row:
+        `experiments/tests/test_f5.py` (same row twice; a shuffled-order
+        replay of a life's rows; f4 under the same replay must differ).
+What it cannot do, said before the run: tell food from any other small
+        thing (food's texture differs from world to world — geom ids shift
+        with the layout, `w0.py:225` — and f4 learned it by memory), or give
+        a thing up. It parks on what it reaches; a parked food regrows
+        under him, so a seed can pass by SITTING. The bar counts meals and is
+        not moved for that; WORLD_CARD says per row how many meals came from
+        one food (floor_bouts and floor_eats_all are logged per life).
+How it was shaped (tuning seeds 153/154 ONLY, d0, one life cut at 3,000
+        decisions, box): v1 nearest blob of any size: seed 153 0 meals, dead
+        of hunger at 2,985 (2,323 decisions on the two ladder rails). v2
+        + (i): 153 1 meal, 154 2 (parked on a strip of far wall seen between
+        two things 2,283 decisions; on a non-food ball 1,597). v3 + (ii),
+        THE RULER: 153 9 meals (5 in a row from one parked food), 154 2
+        (parked on the welded block 1,743). Three variants, no fourth.
+        Also disclosed: seed 281's world was BUILT once on the box to print
+        its geom table (no policy stepped in it; what was read: ngeom 36 vs
+        39/40, so food's texture is not a constant).
+World   gate 2's f4 world exactly: `JackEnv(seed, difficulty=0.75,
+        eye="row128", eye_frame="body", motor_frame="body",
+        lazy_contact_audio=True, native_substep=True)`. d0 ONLY (ruling 51).
+Seeds   FRESH 281..300 (ORDERS J15 (2)); 10 lives a seed, cap 9,000.
+Rows    f5  the ruler                                           <- THE ROW
+        g5  CONTROL that must fail: f5 fed its row with the 128 (distance,
+            texture) pairs permuted by a fresh permutation every decision
+        b5  white random (b3's policy and rng) in the same world — the floor
+Bar     UNMOVED: mean floor meals/life >= 5.0 AND > b5's mean on the same
+        seed, on >= 18 of 20 seeds; g5 must hold on < 18, else f5 is VOID.
+Extension  NONE. A miss is a miss, and it is a miss OF THIS HAND RULER: it
+        says a simple memoryless rule does not meet the bar, not that none
+        can (a lower bound, ruling 51).
+Where   one Kaggle CPU kernel (60 cells, 4 workers), rank 2. Est 5 h (gate
+        2's 80 cells took one session; f5 lives run to the cap more often).
 """
 from __future__ import annotations
 
@@ -140,7 +191,12 @@ GATE_ROWS = ("f3", "g3", "b3")
 # gate 2 (body-frame eye), declared in the docstring above
 GATE2_SEEDS = tuple(range(261, 281))
 GATE2_ROWS = ("f4", "g4", "h4", "b4")        # longest first
-GATE2_MOTOR = {"f4": "body", "g4": "body", "b4": "body", "h4": "world"}
+GATE2_MOTOR = {"f4": "body", "g4": "body", "b4": "body", "h4": "world",
+               "f5": "body", "g5": "body", "b5": "body"}   # gate 3: f4's world
+# gate 3 (f5, a ruler the current row determines), declared in the docstring
+GATE3_SEEDS = tuple(range(281, 301))
+GATE3_ROWS = ("f5", "g5", "b5")
+GATE3_D = 0.75
 EYE = "row128"
 N_ROW = 128
 SMOKE_SEED = 153
@@ -150,9 +206,12 @@ WORKERS = 4
 REMOTE_TIMEOUT_S = int(9.5 * 3600)
 
 
-def blobs_n(vis: np.ndarray, n: int, s: int, ray_ang: np.ndarray):
+def blobs_n(vis: np.ndarray, n: int, s: int, ray_ang: np.ndarray,
+            with_len: bool = False):
     """world_card.blobs for n rays with run limits scaled by s (angles kept).
-    At n = 16, s = 1 this is world_card.blobs line for line."""
+    At n = 16, s = 1 this is world_card.blobs line for line. `with_len`
+    (f5 only): each blob also carries its run length in rays; the default
+    output is unchanged."""
     d, t = vis[0::2], vis[1::2]
     hit = d < 1.0
     same = lambda a, b: abs(a - b) < 1e-4  # noqa: E731
@@ -177,7 +236,9 @@ def blobs_n(vis: np.ndarray, n: int, s: int, ray_ang: np.ndarray):
             continue
         ang = math.atan2(np.mean([math.sin(ray_ang[r]) for r in run]),
                          np.mean([math.cos(ray_ang[r]) for r in run]))
-        out.append((ang, float(min(d[r] for r in run)) * WC.RAY_RANGE, float(t[k])))
+        out.append((ang, float(min(d[r] for r in run)) * WC.RAY_RANGE, float(t[k]))
+                   + ((len(run), float(min(d[left], d[right])) * WC.RAY_RANGE)
+                      if with_len else ()))
     return out
 
 
@@ -293,12 +354,89 @@ class EyeForager(WC.HandForager2):
         return a
 
 
+# ── J15 (1): f5 — a ruler the CURRENT row determines (ruling 50) ─────────────
+F5_GAP_FRAC = 0.70      # "open" = a ray reading >= 70 % of the row's farthest
+F5_THIN_M = 0.11        # a blob narrower than this (rays x ray pitch x distance)
+#                         is a post, not a meal: every floor food is >= 0.14 m
+#                         across, a ladder rail 0.08 m (w0's geom table)
+F5_FRONT_M = 0.10       # an object stands IN FRONT of what flanks it: its nearest
+#                         ray is this much nearer than both neighbours' (a strip
+#                         of far wall seen between two things is not an object)
+
+
+def f5_act(row, s: int = N_ROW // WC.N_RAYS, thin_m: float = F5_THIN_M,
+           front_m: float = F5_FRONT_M) -> np.ndarray:
+    """Action as a pure function of ONE body-frame row (2n floats: distance,
+    texture per ray). No state, no draw, no clock, no energy, no velocity.
+      * small objects in the row (gate 1's blob rule, `blobs_n`, unchanged),
+        less those whose apparent width is under `thin_m`: push straight at
+        the NEAREST (ties: the lowest bearing);
+      * none left: push at the middle of the WIDEST open gap — the longest
+        circular run of rays reading >= F5_GAP_FRAC of the row's farthest ray
+        (ties: the run starting at the lowest ray).
+    It cannot know which texture is food (f4 learned that by memory, and the
+    food's texture differs from world to world) and never gives a blob up."""
+    vis = np.asarray(row, dtype=float)
+    n = vis.shape[0] // 2
+    pitch = 2 * math.pi / n
+    ray_ang = pitch * np.arange(n)
+    a = WC.NEUTRAL.copy()
+    seen = [b for b in blobs_n(vis, n, s, ray_ang, with_len=True)
+            if b[3] * pitch * b[1] >= thin_m and b[4] - b[1] >= front_m]
+    if seen:
+        ang = min(seen, key=lambda b: (b[1], b[0] % (2 * math.pi)))[0]
+        return a_set(a, ang)
+    d = vis[0::2]
+    open_ = d >= F5_GAP_FRAC * d.max()
+    if open_.all():
+        return a_set(a, 0.0)
+    best_len, best_start = 0, 0
+    for k in range(n):
+        if open_[k] and not open_[k - 1]:          # a run starts here
+            L = 1
+            while open_[(k + L) % n]:
+                L += 1
+            if L > best_len:
+                best_len, best_start = L, k
+    return a_set(a, ray_ang[best_start] + 0.5 * (best_len - 1) * pitch)
+
+
+def a_set(a: np.ndarray, ang: float) -> np.ndarray:
+    a[6:8] = [math.cos(ang), math.sin(ang)]
+    return a
+
+
+class RowForager:
+    """f5 as a policy object. Holds NOTHING between decisions: `act` hands the
+    row to `f5_act`. The shuffled twin (g5) permutes the row's (distance,
+    texture) pairs with its own rng first — the draw belongs to the control's
+    blindfold, not to the ruler."""
+
+    def __init__(self, seed, shuffle_rays: bool = False, n_rays: int = N_ROW):
+        self.n = int(n_rays)
+        self.s = self.n // WC.N_RAYS
+        self.rng = np.random.RandomState(seed * 6553 + 23) if shuffle_rays else None
+
+    def new_life(self):
+        pass
+
+    def act(self, o):
+        vis = np.asarray(o, dtype=float)[:2 * self.n]
+        if self.rng is not None:
+            vis = vis.reshape(self.n, 2)[self.rng.permutation(self.n)].reshape(-1)
+        return f5_act(vis, self.s)
+
+
 def make_policy(row: str, seed: int):
     if row in ("f3", "f4", "h4"):
         return EyeForager(seed)
     if row in ("g3", "g4"):
         return EyeForager(seed, shuffle_rays=True)
-    if row in ("b3", "b4"):
+    if row == "f5":
+        return RowForager(seed)
+    if row == "g5":
+        return RowForager(seed, shuffle_rays=True)
+    if row in ("b3", "b4", "b5"):
         return WC.WhiteRandom(seed)
     raise ValueError(f"row {row!r} unknown")
 
@@ -362,6 +500,10 @@ def run_seed(row: str, seed: int, d: float, lives: int = WC.LIVES,
 
 def gate_cells(d: float, gate: int = 1) -> list:
     # longest first (f3, then g3, then b3) so the pool's tail is short
+    if gate == 3:
+        if d != GATE3_D:
+            raise ValueError("gate 3 is judged at d0 = 0.75 only (ruling 51)")
+        return [(row, s, d) for row in GATE3_ROWS for s in GATE3_SEEDS]
     if gate == 2:
         return [(row, s, d) for row in GATE2_ROWS for s in GATE2_SEEDS]
     return [(row, s, d) for row in GATE_ROWS for s in GATE_SEEDS]
@@ -424,7 +566,7 @@ def kernel(d: float, gate: int = 1) -> dict:
         raise RuntimeError(f"eye_forager gate d={d}: {sub.message}")
     r = result_json(sub, "eye_gate.json")
     OUT.mkdir(parents=True, exist_ok=True)
-    name = "gate2" if gate == 2 else "gate"
+    name = {2: "gate2", 3: "gate3"}.get(gate, "gate")
     (OUT / f"{name}_d{int(round(100 * d)):03d}.json").write_text(json.dumps(r, indent=1) + "\n")
     return r
 
@@ -458,6 +600,17 @@ def score_gate2(paths) -> dict:
     return out
 
 
+def score_gate3(paths) -> dict:
+    """Gate 3's frozen bar (d0 only)."""
+    rows = {}
+    for p in paths:
+        for rec in json.loads(Path(p).read_text())["cells"].values():
+            rows.setdefault((rec["row"], rec["d"]), []).extend(rec["lives"])
+    b = rows.get(("b5", GATE3_D), [])
+    return {GATE3_D: {r: WC.score(rows.get((r, GATE3_D), []), b, GATE3_SEEDS)
+                      for r in ("f5", "g5")}}
+
+
 def main(argv):
     if len(argv) >= 6 and argv[1] == "cell":       # cell <row> <seed> <d> <out>
         from experiments.sim_speed_kcpu import _compat_multiray
@@ -465,6 +618,13 @@ def main(argv):
         res = run_seed(argv[2], int(argv[3]), float(argv[4]))
         with open(argv[5], "a") as fh:
             fh.write("\n".join(json.dumps(r) for r in res) + "\n")
+        return 0
+    if len(argv) >= 2 and argv[1] == "kernel3":    # kernel3 — gate 3 (f5), d0
+        r = kernel(GATE3_D, gate=3)
+        print(json.dumps({k: len(v["lives"]) for k, v in r["cells"].items()}))
+        return 0
+    if len(argv) >= 2 and argv[1] == "score3":     # score3 <gate3 files...>
+        print(json.dumps(score_gate3(argv[2:]), indent=1))
         return 0
     if len(argv) >= 3 and argv[1] == "kernel2":    # kernel2 <d> — gate 2
         r = kernel(float(argv[2]), gate=2)
