@@ -2762,3 +2762,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - GPU: W46 charged 33.8 h of the 30 h ceiling (overrun row 11-15), so no GPU hour exists before J14's Sat 00:00 week. Next-up 1 re-verified DONE (`95e2e4cb`, test file present); 2–3 DONE; 4–6 are gated "after J11".
 - Did not invent work. One INBOX line: slots until ~15:20 (duplicate ends → J10 `kernel 0 1`) idle unless the Director arms a box-only item.
 - Philosophy served: none of 1–4 moved. Only 6 (no session or quota was wasted by forcing a launch). That is the finding: the order book has no box-only creature work while Kaggle is full.
+
+## 2026-11-19 14:23–14:40 UTC · JACK · J14 pre-flight for Saturday's free GPU week (no run)
+- Nothing could launch: `kernels status` shows all 5 Kaggle CPU sessions RUNNING (p3, p4, p5, J3 + duplicate); local watchers alive (p3/p4 timeout ~19:38). No pilot run home since 13:22.
+- Checked J14's Saturday path without pushing: `gpu.week_key` flips W46→W47 at 11-21 00:00:01 UTC (W46: 33.76 h spent; W47: empty), so A1 will not be refused on last week's quota. A1/A2/A3/A1-ext, `in_world` and ear kernel bodies build through `build_job` and parse; in_world passes all five world flags. Est. 15.1 of 30 GPU-h. Temp job dirs removed.
+- Philosophy served: 6 (30 free GPU-hours that expire are not lost to a broken first launch). No line of 1–4 moved; the order book still has no box-only creature work while Kaggle is full (13:45 INBOX line stands).
