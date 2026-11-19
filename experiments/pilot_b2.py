@@ -478,7 +478,14 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
 PILOT_LEARNERS = ("B0", "K", "P", "G", "KP", "K-lr0")
 PILOT_FLOORS = ("noop", "held8")
 PILOT_PER_KERNEL = 4
-PILOT_RULE = None   # the rule commit sets e.g. {"seeds": (402, ..., 406), "food_floor_only": True, "eye_frame": "body", "motor_frame": "body"|"world", "native_substep": True, "rule": "<doc ref>"}
+# FROZEN 11-19 04:35 (J11 item 3): docs/research/PILOT_B2.md §3. W = 2; floors
+# held8-k0-ff-bm (U 0.64) / held8-k1-ff-bm (U 0.80) / noop-k1-ff; motor frame
+# body by the INBOX 11-18 07:40 default (no ruling landed; a `world` ruling
+# re-drafts and runs on seeds 407+).
+PILOT_RULE = {"seeds": (402, 403, 404, 405, 406), "food_floor_only": True,
+              "eye_frame": "body", "motor_frame": "body", "native_substep": True,
+              "rule": "PILOT_B2.md §3 frozen 2026-11-19 04:35; W=2; "
+                      "floors held8-k0-ff-bm U0.64, held8-k1-ff-bm U0.80, noop-k1-ff"}
 
 
 def pilot_cells(seeds) -> list:

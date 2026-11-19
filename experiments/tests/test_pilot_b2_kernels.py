@@ -3,7 +3,8 @@ and the child-process path end to end at a plumbing size (T=300, seed 901 —
 outside every registered seed range; no learning happens in 300 decisions).
 Run with /data/venvs/jack-std/bin/python (sbx lives there), JACK_PIN_CPU=3.
 
-Known-positive / must-fail: pilot_kernel with PILOT_RULE None must raise.
+Known-positive / must-fail: pilot_kernel with an empty rule must raise; the
+frozen PILOT_RULE (11-19) must carry seeds 402-406 and every required key.
 """
 import json
 import sys
@@ -33,14 +34,20 @@ def main():
           f"learners/kernel {list(learners_per.values())}, arm spread {spread}, floors {floors_ok}")
     ok &= good and spread and floors_ok and set(P.PILOT_ARMS) == set(P.PILOT_LEARNERS + P.PILOT_FLOORS)
 
-    # must-fail: no rule -> refuse (before any import of the submit path)
+    # must-fail: an empty rule -> refuse (before any import of the submit path).
+    # Since 11-19 04:35 PILOT_RULE is frozen; the refusal is tested with {}.
     try:
-        P.pilot_kernel("p0")
+        P.pilot_kernel("p0", rule={})
         print("refusal: pilot_kernel ran WITHOUT a rule -> BAD")
         ok = False
     except RuntimeError as e:
         print(f"refusal without rule: ok ({str(e)[:60]}...)")
-    ok &= P.PILOT_RULE is None
+    R = P.PILOT_RULE
+    frozen = (R is not None and tuple(R["seeds"]) == tuple(seeds) and R["food_floor_only"] is True
+              and R["eye_frame"] == "body" and R["motor_frame"] in ("body", "world")
+              and R["native_substep"] is True and "§3" in R["rule"])
+    print(f"frozen rule: {'ok' if frozen else 'BAD'} {R}")
+    ok &= frozen
 
     body = P.pilot_job_body(g["p7"], True, 300, "test")
     compile(body, "job", "exec")
