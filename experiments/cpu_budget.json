@@ -1463,15 +1463,26 @@
         "detached:launch_f5.log": 711.55,
         "detached:launch_f6.log": 466.27,
         "detached:launch_f7.log": 795.59,
-        "detached:launch_m0.log": 171.25,
-        "detached:launch_m1.log": 172.19,
+        "detached:launch_m0.log": 409.73,
+        "detached:launch_m1.log": 478.17,
         "detached:launch_m2.log": 487.46,
-        "detached:launch_m3.log": 21.8,
+        "detached:launch_m3.log": 572.96,
+        "detached:launch_m4.log": 161.8,
+        "detached:launch_m5.log": 151.03,
+        "detached:launch_m6.log": 77.7,
         "detached:launch_native.log": 8.54,
         "detached:launch_pilot.log": 347.95,
         "detached:statue_leak_r2_launch.log": 2567.89
       },
-      "used_s": 34216.44
+      "used_s": 35702.59
+    },
+    "2026-11-19": {
+      "by_spec": {
+        "detached:launch_m3.log": 0.16,
+        "detached:launch_m4.log": 10.82,
+        "detached:launch_m6.log": 10.74
+      },
+      "used_s": 21.72
     }
   },
   "last_child_s": {
