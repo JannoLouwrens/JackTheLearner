@@ -2780,3 +2780,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - T0.23: the 6 orphan GPU jobs above the floor were all J5's hand-dispatched brain-A speed probe (W46 Colab, 1.81 h); receipts appended, unattributed 27→21.
 - Not done: `live_unauditable_pairs` 22→16 lives in `protocol.py`, hashed by T1.14's IMPL_DEPS — a byte edit there stales a GPU cert that blocks 46 specs (measured: UNREACHABLE 104→107). `run ratchets` exits 1, not 0. T0.17 left for the next slot.
 - Philosophy served: 4 (every settled failure has a named owner, and no certificate was spent to quiet a counter).
+
+## 2026-11-19 15:22–15:35 UTC · JACK · J11 / J3 / J10: three freed Kaggle sessions filled, J3 (4) harvested
+- `kernels status` 15:23: p4, J3 `…90393` and the duplicate `…90752` COMPLETE. Filled all three by rank: J11 p6 `jack-cpu-1795101811`, J3 (5) `wm-latent@repair` `…101867`, J10 `kernel 0 1` `…101892` (the first real mount test). All push rc 0, all RUNNING on Kaggle 15:30.
+- J3 (4) HARVESTED → KNOWN_ANSWERS Row J3-4e: `wm-latent+ring` FAIL both rows, controls 0/5. Row 1 best windows −425.7 −453.0 −347.3 −263.2 −353.7 (1/5; mean −368.6 vs wm-latent −364.4, dreamer-xs −359.2 — the ring adds nothing); row 3 0 flag reaches. Every plain in-house arm now has its rows; only the repaired entry remains.
+- p4 home (`pilot_p4.json`), not yet read: J11 table waits for all 10.
+- Philosophy served: 3 (a home-made arm raced on a published row and recorded beside its siblings; the repaired fair chance is running) and 6 (no freed free session left idle).

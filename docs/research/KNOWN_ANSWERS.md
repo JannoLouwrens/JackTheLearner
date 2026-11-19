@@ -356,3 +356,23 @@ Rule `3054fbe6`, unchanged. Kernel jack-cpu-1795054996 (home 03:45); result
   seeds 1–4 are −334.9, −231.5, −274.0, −247.1. The near-miss reading for row 1 stands on 4 of 5.
 - **Row 3: 0 flag reaches**, as every in-house arm (white action noise; J3 (5) is the cure).
 - Remaining under (4): `wm-latent+ring`.
+
+## Row J3-4e — `wm-latent+ring` misses both rows; the ring adds nothing measurable (11-19, Kaggle CPU)
+
+Rule `3054fbe6`, unchanged. Kernel jack-cpu-1795090393 at `71324fae` (home 14:45, 9,115 s; receipt
+in `gpu_submissions.jsonl` — the launch log names the killed duplicate `…090752`, whose watcher
+never wrote); result `/data/jack-logs/j3_inhouse/wm-latent+ring.json`. Controls reach 0/5 on both
+rows → valid FAILs (PASS needs ≥ 3 of 5 arm seeds).
+
+| arm | row 1 best 100-ep window per seed (band edge −314.7) | reached | row 3 flag reaches (5 × 150 eps) | reached |
+|---|---|---|---|---|
+| wm-latent+ring | −425.7, −453.0, −347.3, **−263.2**, −353.7 | 1/5 | 0 | 0/5 |
+| control | −1199.2…−1252.3 | 0/5 | 0 | 0/5 |
+
+- **Row 1: seed 3 reaches (−263.2)**; 2 more were needed. Learns on all 5 (first 10 eps
+  −1138…−1479 → last 10 −246.3, −481.7, −354.7, −207.7, −188.5). Mean best window −368.6 vs
+  wm-latent −364.4 and dreamer-xs −359.2: **the ring adds nothing measurable** — the third arm on
+  the same shared learner landing at the same place. Cost ~1,560 CPU-s a seed (wm-latent 1,188).
+- **Row 3: 0 flag reaches** (best training return −0.99), as every in-house arm.
+- **J3 (4) is complete:** all plain arms have rows, all FAIL with controls holding. J3 (5)
+  `wm-latent@repair` launched 11-19 15:24 (jack-cpu-1795101867).

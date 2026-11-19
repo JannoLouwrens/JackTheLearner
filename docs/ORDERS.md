@@ -84,10 +84,10 @@ serves: M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 7.
 **done when:** `PILOT_B2.md` has the frozen rule, 40 runs and one reading per arm.
 state: (3) RULE FROZEN 11-19 04:35 `e2c3c378` (`PILOT_B2.md` §3 + `PILOT_RULE`): seeds 402–406, W = 2, U 0.64 k0-bm / 0.80 k1-bm → floor(U) = 0, native_substep, body eye. **Motor frame body by the 07:40 written default** (no ruling landed); a `world` ruling re-drafts on seeds 407+ with the f-card arms.
 state: 11-19 13:35 `d3815ce6` §3c (reported, no run; p0–p2 home, 0 cut/crash): movement energy = E0+intake−basal per energy death. Control K (moving free) reads ~0. B0/P/G: movement falls Q2→Q4 in 6/6 cells (25–55 %, ~0.21→0.12 × basal) while meals fall — the slide; entropy does not override the cost; P did not stop it. 13:22 all 5 sessions still RUNNING.
-state: 11-19 12:12 p5 LAUNCHED `jack-cpu-1795090316` (`launch_p5.log`) into p2's session; p3 `…82879`, p4 `…82927` RUNNING since 10:08. J11 holds 3; the 4th went to J3 (rank 3). Launches were held ~4 min by the 2-detached cap (LAB's place_key fits).
+state: 11-19 15:23 p4 HOME 15:20 (`pilot_p4.json`, 18,721 s); p6 LAUNCHED `jack-cpu-1795101811` (`launch_p6.log`) into p4's session. Running: p3 `…82879`, p5 `…90316`, p6. J11 holds 3; the other two went to J3 (5) and J10 (rank 3, 4).
 state: `pilot_b2 table` PARTIAL 8/40 (reported, NOT the reading): 0 sustained lives in any arm; every learner's meals/life falls early→late (K 0.90→0.14, B0 0.30→0.12); K-lr0 (no learning) 1.40→0.62 is the best late row so far.
 state: 11-19 12:45 `7d3b18fc` §3b (reported, no run): fixed ent_coef 0.1 × 8 action dims → entropy bonus ≤ 0.555/decision vs task reward −0.036 (meal-less K) / +0.031 (K-lr0 meals) — 15–18×; ≈ 111 discounted vs +100 a meal (Haarnoja 2018: too-small reward scale → near-uniform policy). E2c's trace tests it: std/saturation rising = confirmed.
-next: p6..p9 as sessions free (p3/p4 ~17:30, p5 ~19:30); then `table` + `readings` → §4.
+next: p7..p9 as J11's sessions free (p3 ~17:30, p5 ~19:30, p6 ~20:30); then `table` + `readings` → §4.
 
 ### J15 — The learnability proof, part 2: a forager his network can copy, then a learner given the direction
 part: Learning to eat · stage: 1 (stage-1 line "a copy of it inside his own network, and a learner given the direction to food") · step: 2 → 3 · prior: §17 (read it whole); J12; ruling 50
@@ -167,8 +167,8 @@ serves: M3 · PLAN "a fair chance for our own brains" · philosophy 3, 4.
 state: 11-19 02:23 `wm-dyn` HARVESTED (`bc08a6ef`) → KNOWN_ANSWERS Row J3-4c: FAIL both rows, controls 0/5. Row 1 best windows −547…−874 (learns −1300→−650…−1130, 300 eps); row 3 0 flag reaches. Below wm-latent on row 1.
 state: 11-19 04:40 `dreamer-xs` HARVESTED → KNOWN_ANSWERS Row J3-4d: FAIL both rows, controls 0/5. Row 1 best −392.7, −398.9, −340.0, −286.2, −378.5 → 1/5 reach (first in-house seed in band); row 3 0. (6) read: equal to wm-latent (mean −359.2 vs −364.4). Corrected J3-4b: wm-latent s0 last-10 −839.6.
 state: 11-19 05:45 (5) WIRED `94406999` (no session free; p0/p1/p2/J10 s1 all RUNNING): arm `wm-latent@repair` = same core/loop, two settings changed — noise direction held 32 decisions (std schedule kept), GAE γ 0.99; fresh seeds 5–9; plain cells byte-identical; test 3/3.
-state: 11-19 12:12 (4) `wm-latent+ring` LAUNCHED `jack-cpu-1795090393` at `71324fae` (log `/data/jack-logs/j3_inhouse/launch_wm-latent+ring.log`, est 3 h) into gate 3's freed session (rank 3). First try died on the dirty-tree guard (my uncommitted edit); re-launched after the commit. MY retry loop then launched a DUPLICATE at 12:19 (`jack-cpu-1795090752`, still running on Kaggle, ~3 h wasted); its local watcher was killed (PIDs 510947/510938) so only `…090393` writes `wm-latent+ring.json`. The launch log was truncated by the duplicate: the push receipt for `…090393` is in `gpu_submissions.jsonl`.
-next: harvest `wm-latent+ring` → KNOWN_ANSWERS row; then `wm-latent@repair` in the next free rank-3 session.
+state: 11-19 15:25 (4) `wm-latent+ring` HARVESTED → KNOWN_ANSWERS Row J3-4e: FAIL both rows, controls 0/5. Row 1 best −425.7, −453.0, −347.3, −263.2, −353.7 → 1/5 (mean −368.6 ≈ wm-latent −364.4, dreamer-xs −359.2: ring adds nothing); row 3 0 reaches. (4) COMPLETE. (5) `wm-latent@repair` LAUNCHED `jack-cpu-1795101867` (`launch_wm-latent@repair.log`).
+next: harvest `wm-latent@repair` (`/data/jack-logs/j3_inhouse/wm-latent@repair.json`) → KNOWN_ANSWERS row; pass → the other arms get the repair, one session each; fail → J3 closes.
 
 ### J16 — Brain A on the Mac: the port's rung 1 (G0 passed 11-19)
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` (its step table, rows 0.4–1.3; gate G1); `experiments/brain_a/README.md`
@@ -203,8 +203,8 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 state: (2′) RULE FROZEN `experiments/humanoid_sac_row.py`: Zoo entry, seeds 0–2, PASS R ≥ 5,950 AND ≥ 12 m/1,000 steps on ≥ 2/3, 1M median in [3,784, 5,866], late-start control < 500 else VOID; resume = 500k segments, model + replay (float64, ~6.1 GB) carried; box resume_check OK (`23e375be`).
 state: s0 seg 0 HOME (500k, 490k updates; output holds model.zip + replay.pkl); s1 seg 0 `jack-cpu-1795059827` HOME 07:08 (500k hit, 490k updates, 11,774 s train; `j10/sac_row/s1_seg0.json`). `resolve_prev_dir` (`27d5c364`) finds the segment-1 mount or fails fast (test 6/6).
 state: 11-19 06:25 (2) `411ec079`: Yu rule's "2000 N" corrected to SPD gains (N/m sideways, N per m/s forward; human_walker.py:175-212); `stage_exits` per-stage log THRESHOLD / CAP / CUT wired into the smoke body; FOUND reverted iterations draw 20k samples the cap never counts — reported as headers × 20k. Verdicts must name "k of n stages advanced on the cap". Test 4/4.
-state: 11-19 13:08 `kernel 0 1` TRIED into a 6th session → refused by Kaggle (cap 5, `jack-cpu-1795093735`, 0 s billed, ERROR row); nothing ran, s0 seg0's kernel output still the mount source.
-next: `scripts/launch_detached.sh /data/jack-logs/j10/launch_s0_seg1.log $PY -m experiments.humanoid_sac_row kernel 0 1` when a session frees (J3's duplicate `…090752` ends ~15:20 → that session is rank 4's under the J11-holds-3 rule), then `kernel 1 1`.
+state: 11-19 15:25 `kernel 0 1` LAUNCHED `jack-cpu-1795101892` (`/data/jack-logs/j10/launch_s0_seg1.log`, push rc 0) into the freed duplicate's session — the first real mount test of s0 seg0's output.
+next: read `launch_s0_seg1.log` — if `resolve_prev_dir` failed fast, fix and say; else harvest seg 1, then `kernel 1 1` in the next rank-4 session.
 
 **Parked or closed:** `D1.0`, `T2.01` (→ J10), `LF.06`, `LC.09`, `CR.01`,
 `LF.04` — "to earn again" on the chosen brain (ruling 20). `NE.01` → stage 3
