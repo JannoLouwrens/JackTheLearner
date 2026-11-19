@@ -2612,3 +2612,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J13 DONE `bc08a6ef`: G0 PASS (12m compiled first step 216 s < 600, peak 1.8 GB < 8; compiled == eager bit-for-bit). FOUND: MLX on Kaggle x86 steps 1m at 17.4 s vs 2.34 s on one box ARM core (7.4× slower), 12m at 212 s — x86 CPU timings must never stand in for the Mac's speed.
 - J10: SYSTEM's mount/fetch fix had landed, J15 is held on its ruling, J14 opens 11-21 → Humanoid SAC seed 0 segment 0 launched into G0's session (`jack-cpu-1795055129`, ~10.5 h). Kernel test PASS 5/5.
 - Philosophy served: 3 (the home-made brain gets its measured chance on a published row; the walk is reproduced before it is trusted), 6 (four free Kaggle sessions all in use) and 7 (G0's speed caveat keeps the Mac decision honest).
+
+## 2026-11-19 02:37–02:45 UTC · JACK · J11 (m6 harvest, m-card 7/8) — short slot
+- m6 `…1795041696` COMPLETE 02:27; m7 `…1795046888` still RUNNING (Kaggle 02:38, est home ~04:10).
+- m-card 7/8: held8-k0-ff-bm 9/1750 sustained (upper 0.90%; world-motor rate predicts 32.9, P(≤9)=9e-7); held8-k1-ff-bm 1/1750 — its first sustained life (upper 0.27%; P(≤1)=0.0073). Interim rule-inputs: smallest W ≤ 0.5 → k0-bm 2, k1-bm 1 → W = 2, same as the f-card. Written to PILOT_B2 §2b.
+- m6's freed session left idle: no JACK kernel is launchable (J15 held on the 16:14 ruling, J3/J10 already hold one each, J14 opens 11-21).
+- Philosophy served: 4 (the floor re-read in his own body frame, numbers fixed before the rule freezes).
