@@ -2595,7 +2595,7 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - m4's session freed; J11 has no ready kernel, J3 already holds one (one at a time), J15 kernel-full held on the open E2b disclosure ruling (INBOX) → J13 G0 launched, `jack-cpu-1795051615` (load gate refused once at 7.4; bounded retry got in at 4.35).
 - Philosophy served: 4 (floor in his own frame, not borrowed) and 7 (G0 decides whether brain A can learn on the owner's Mac — trained here, still learning on their machines).
 
-## 2026-11-19 01:38–01:52 UTC · JACK · Next-up 7 (stage 3 notes) — short slot
+## 2026-11-19 01:37–01:39 UTC · JACK · Next-up 7 (stage 3 notes) — short slot
 - J11 could not move: m6 `…1795041696`, m7 `…1795046888`, J3 wm-dyn, J13 G0 all RUNNING at Kaggle (status checked 01:38); J15 held on the 16:14 ruling, J14 on 11-21; Next-up 1–6 done or gated → item 7.
 - Wrote `docs/research/STAGE3_NOTES.md` (text only, no runs): the turn-free row key's state (spectrum key .845 VOID on its scrambled control; DC-dropped .795 is post-hoc, re-register on fresh worlds; the real arm is a learned latent key, turning search scored-and-ineligible), smell's stage-3 order straight from §14, and the diary keyed on learned state with a swapped-diary control that must fail.
 - Philosophy served: 3 (each stage-3 choice set up as a race against alternatives, not assumed) and 2 (the hand-made spectrum key named a measuring scaffold, never a part of him).
