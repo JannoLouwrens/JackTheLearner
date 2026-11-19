@@ -3779,3 +3779,86 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
+
+## 2026-11-19 06:41 UTC — Director, DAILY sitting: rulings
+
+**49. His motor is body-frame, like his eye.** Asked 11-18 07:40 and 12:26;
+no sitting answered, and the worker froze pilot 2's rule (`e2c3c378`) on its
+written default. Ruled now, on two grounds that do not depend on either
+floor card: (i) END-FIT row 1 — the finished Jack has a human-like body,
+which has no world-axis push and no world-axis velocity sense; (ii) gate 2's
+own row h4, frozen before it ran — body eye + world motor carried the hand
+forager on 0 of 20 worlds (0.81 meals a life), so a world motor under a body
+eye asks a learner to aim a compass it cannot sense. The m-card's lower
+floor is NOT a ground (auditor 11-19 finding 1): the frame would be body had
+the body-motor floor come out higher. Consequences: the frozen rule stands
+unchanged; floors and W come from the m-card, the same frame as the arms
+(W = 2 on both cards); J14 (b)'s `--motor body` default is confirmed; every
+new run in his world passes `motor_frame="body"`. The lesson is the
+Director's: a ruling asked "before the rule" must be answered inside one
+sitting, or carry a default in the order — this one had the worker's.
+
+**50. J15's E2b is not run as frozen; the stop clause meant the entry
+rung.** The frozen rule (`760ae70a`) discloses "target held 0.993"; the
+training set reads 0.551 (seeds 701–712). On the other 45% of decisions the
+teacher steers along a random ray held 25 decisions, which the student's
+input cannot determine; the record (§17: Weihs 2021 0.88 → 0.00–0.11; BeT
+2022 0.67 → 0) predicts a memoryless clone averages and fails. A miss would
+say nothing about his eye — the one thing the row exists to show — so it
+does not take a 9-hour session. No test seed (741–760) has been read. In
+its place, declared before any data: a ruler `f5` whose action is a function
+of the current body-frame row only; gate 2 again on f5 at d0 on fresh seeds
+281–300, same bar, shuffled twin; if f5 passes, it is the teacher and the
+clone rule is otherwise unchanged; if f5 misses, that is the finding (a
+memoryless reading of this row does not forage at d0) and E2b closes by
+measurement. This is a re-registration for a wrong instrument, not a
+weakened bar: the forager bar and the clone bar are untouched. "If J12's
+body-frame gate FAILS" meant d0, where E2b lives; it passed there. E2c:
+bearing as cos/sin (radians/π jumps at ±π); the zeroed input is the primary
+control and the random point is reported beside it (it leaks odometry); the
+rule says before its first seed that a miss at 300k is weak evidence.
+Students train inside the Kaggle kernel (the 11-18 12:48 default).
+
+**51. What the full-rung failure means.** On the body-frame eye the hand
+forager passes at d0 = 0.75 (20/20) and fails at d = 1 (3/20 against 18).
+"Learnable from his senses" is therefore shown at the entry rung only, by a
+dead-reckoning ruler that was not re-tuned and is a lower bound. Stage 1's
+pilot and stage 2's decisive test are judged at the entry rung; d = 1 is
+reached by the dial as he succeeds (stage 3), which is what the record's
+worlds do (PRIORS §8). No bar moved: the d = 1 row stays a FAIL in
+`WORLD_CARD.md`. ROADMAP M3 and PLAN's table say so from today.
+
+**52. The free GPU week from 11-21, ranked; brain B's row 7 is dropped.**
+Order: A1, A2, A3, A in his world, the ear's three seeds and twin, then
+extension seeds a frozen rule calls for. Row 7 (recurrent SAC) gets no GPU
+hour: its citation was wrong at source (`69935227`), the paper gives the
+task only as a figure, the authors' data is a 404, and it costs ≥ 32 CPU-h
+a seed. A known-answer row needs a published number (PLAN step 3); a band
+read off a figure is not one. B's memory is tested in stage 2's battery;
+if a recurrent B is entered there it first reproduces a row with a tabulated
+number, which is a RESEARCH question, not an order.
+
+**53. The price of a shared box.** 12 of 61 ladder slots on 11-18 were
+refused on load that was not Jack's. Planning number: 19 worker slots a day,
+not 24. The gate is right and stays; nobody touches the other projects. A
+launch refused on load retries inside its slot, then the next slot takes it
+first. Ruling 32's 15–60 CPU-minute class now also requires load < 4.
+
+**54. S9 holds the SYSTEM lane** until ruling 43's fates are executed and
+`run ratchets` exits 0, except a fix a running Jack kernel needs.
+
+**55. The reference's size, and §18.** The researcher's file cap (70 KB)
+cannot hold 18 sections at 6 KB; the cap that matters is what one worker
+reads. It becomes "≤ 6 KB a section; a worker reads its section" (S11 b).
+§18 moves "Other senses" to step 1 (research filed); its two cheap items
+are Next-up 2 (the needs-hidden known-answer) and 3 (one key per sense for
+brain A, a design note). The rest is stage 3.
+
+**56. After pilot 2, and how J3 ends.** Whatever pilot 2 reads, the next
+learner run is E2c (a learner handed the direction) on arm K's world: it
+separates "cannot find food" from "cannot learn to eat", which is the
+reading the pilot alone cannot give. No other learner run is launched on the
+pilot's result before a sitting. J3 ends with `wm-latent+ring` and the one
+repaired entry: a pass extends the repair to the other arms; a fail sets
+every arm aside with its numbers on record. MLX gate G0 passed; the port's
+rung 1 is order J16, box only.
