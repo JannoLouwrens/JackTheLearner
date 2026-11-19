@@ -43,11 +43,12 @@ against B, 1,000,000 decisions, rule written first. Then every other seat in
 needs: M1; research review 2. · stage: 1 now, then 2.
 done when: stage 2's rule names a brain; `D1.1`, `LC.07`, `UB.10`/`BO.01`,
 `DP.01`–`DP.03` and a size test are held by evidence; END-FIT's gates pass.
-status (11-16): stage 1. Done: `jack_env`, harness checks (J4), B's two
-SAC rows (J3). **Learnable from his senses at d = 1: NEGATIVE so far**
-(hand foragers 6/20, 13/20 vs 18; ruling 23). Next: B's pilot at d0 (J8),
-A's speed (J5). Stage-2 mark = a sustained life (ruling 22); verdict
-mid-Jan to Feb 2027. Fusion UNDECIDED; control VACANT (ruling 20).
+status (11-19): stage 1. Done: `jack_env`, harness checks, B's two SAC
+rows, eye and motor in the BODY frame (rulings 38, 49). **Learnable from
+his senses: hand forager PASS at d0 (20/20), FAIL at d = 1 (3/20 vs 18) —
+shown at the entry rung only (ruling 51).** Running: B's pilot 2 at d0
+(J11, rule frozen); A's rows from 11-21 (J14). Stage-2 mark = a sustained
+life; verdict mid-Jan to Feb 2027. Fusion UNDECIDED; control VACANT.
 
 **M4 — One body that moves.** He moves well in the same body he survives in;
 hands that hold, carry and strike.
