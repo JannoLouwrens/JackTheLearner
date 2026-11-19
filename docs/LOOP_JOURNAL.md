@@ -2724,3 +2724,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Load guard refused launches for ~19 min (load 6.1–6.6 from other projects, ceiling 6.0); 730–748 home by 11:40, 749 collecting; fit chained detached (`pk_chain.sh`), verdict → `/data/tmp/find_himself/place_key_730_20.json`.
 - Scar: my first retry loop reported "both up" on a `pgrep -f` that matched its own shell and a LAUNCH header a refused launch had written; caught by `ps`, fixed with a `[f]` pattern.
 - Philosophy served: 4 (the frozen rule runs on all 20 worlds before anything is read) and 3 (the diary's key is raced, not assumed).
+
+## 2026-11-19 12:08–12:35 UTC · JACK · J15 (2)→(4) + J11 (4) + J3 (4): gate 3 read, E2c made runnable, 2 sessions filled
+- Gate 3 home: f5 (memoryless row128 ruler) MISSES 5/20 seeds (3.57 meals/life), shuffled 0/20 (2.00), random 0.50; 71 % of f5's eats in 21 capped lives parked on regrowing food. WORLD_CARD J15 (2) `a8f41c0b`; closure scoped to THIS hand rule; E2b closed.
+- Instrument scar: `floor_bouts` = `floor_eats_all` on all rows (5-decision gap < regrow), so "meals from one food" was unreadable as promised; said so, INBOX line. Bar counts obj0+obj1 (as gate 2); all-food column reported only.
+- E2c: rule amended before seed 801 (`35a6c2d2`); kernel `pilot_b2 e2c-kernel e0..e3` (`37e8cf32`), refuses until J11's 40 are home. FOUND: HandedSense under run_b's PilotLives raised on env.w and would have left JackEnv's `_truncated` stale — fixed + test with a non-forwarding control (`71324fae`).
+- Sessions: p5 `jack-cpu-1795090316`, J3 `wm-latent+ring` `jack-cpu-1795090393` (held ~4 min by the 2-detached cap: LAB's fits; J3's first try died on my own dirty tree).
+- Philosophy served: 4 (a miss written as a miss of the ruler it measured, no wider; the counter's blindness said, not papered over) and 3 (the handed-direction test made runnable with its must-fail control).

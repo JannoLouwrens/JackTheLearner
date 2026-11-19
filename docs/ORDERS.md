@@ -83,10 +83,10 @@ before the Director's ruling.
 serves: M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 7.
 **done when:** `PILOT_B2.md` has the frozen rule, 40 runs and one reading per arm.
 state: (3) RULE FROZEN 11-19 04:35 `e2c3c378` (`PILOT_B2.md` §3 + `PILOT_RULE`): seeds 402–406, W = 2, U 0.64 k0-bm / 0.80 k1-bm → floor(U) = 0, native_substep, body eye. **Motor frame body by the 07:40 written default** (no ruling landed); a `world` ruling re-drafts on seeds 407+ with the f-card arms.
-state: (4) p0 HOME 09:57, p1 HOME 09:43 (`pilot_p0.json`/`pilot_p1.json`): 8 cells, 0 cut/crash, so nothing to re-launch. p2 `jack-cpu-1795065783` RUNNING (05:23).
-state: 11-19 10:08 p3 LAUNCHED `jack-cpu-1795082879`, p4 LAUNCHED `jack-cpu-1795082927` (logs `launch_p3.log`/`launch_p4.log`) into p0/p1's sessions. Sessions: p2, p3, p4, J15 gate 3 (4 — the cap this lane has run at).
+state: (4) p0, p1, p2 HOME (`pilot_p0/1/2.json`; p2 10:54, 4 cells, 0 cut/crash), so nothing to re-launch.
+state: 11-19 12:12 p5 LAUNCHED `jack-cpu-1795090316` (`launch_p5.log`) into p2's session; p3 `…82879`, p4 `…82927` RUNNING since 10:08. J11 holds 3; the 4th went to J3 (rank 3). Launches were held ~4 min by the 2-detached cap (LAB's place_key fits).
 state: `pilot_b2 table` PARTIAL 8/40 (reported, NOT the reading): 0 sustained lives in any arm; every learner's meals/life falls early→late (K 0.90→0.14, B0 0.30→0.12); K-lr0 (no learning) 1.40→0.62 is the best late row so far.
-next: p5..p9 as sessions free (p2 ~12:50, gate 3 ~12:30); then `table` + `readings` → §4.
+next: p6..p9 as sessions free (p3/p4 ~17:30, p5 ~19:30); then `table` + `readings` → §4.
 
 ### J15 — The learnability proof, part 2: a forager his network can copy, then a learner given the direction
 part: Learning to eat · stage: 1 (stage-1 line "a copy of it inside his own network, and a learner given the direction to food") · step: 2 → 3 · prior: §17 (read it whole); J12; ruling 50
@@ -121,12 +121,10 @@ seed 801 that a miss at 300k is weak evidence. Amend the frozen E2c text
 with these three lines before any run; 15 runs = 15 sessions at J11's rank.
 serves: M3 · PLAN stage 1 "proof that the task can be learned with his senses" · philosophy 3, 4.
 **done when:** f5's gate row, E2b's row or its closure, and E2c's row are in `WORLD_CARD.md`, each with its control.
-state: E2c wrapper CODED `6aae85f8` (`experiments/handed_sense.py`: food / random_point / zero; radpi / cossin; `test_handed_sense` PASS). E2c still needs J11's forty runs + the three amended lines + a `run_b` call with the wrapper.
-state: E2b rules + collector `760ae70a`, FULL kernel `forager_clone kernel-full` coded (6/6) — NOT RUN (ruling 50); (3) amends its docstring to teacher = f5 only if gate 3 passes.
-state: 11-19 07:25 (1) DONE: `f5_act(row)` + `RowForager` in `eye_forager.py` — nearest blob that is ≥ 0.11 m wide AND ≥ 0.10 m in front of both flanks, else the middle of the widest open gap; no state, no draw. `experiments/tests/test_f5.py` PASS 5/5 (same row twice 0 diffs; shuffled replay of 400 rows 0 diffs; f4 under the same replay differs 400/400; non-row noise 0; planted rows). Smoke (153/154, one life cut at 3,000): v1 any blob 0 meals (parked on ladder rails), v2 +width 1 / 2, v3 the ruler 9 / 2 — it parks on what it reaches, food or not.
-state: (2) GATE 3 FROZEN in the docstring before any cell: f5 / g5 shuffled / b5, d0 only, seeds 281–300, bar unmoved, no extension, a miss is a miss of THIS hand ruler. Launch: `scripts/launch_detached.sh /data/jack-logs/eye_forager/launch_gate3.log $PY -m experiments.eye_forager kernel3`; score: `eye_forager score3 /data/jack-logs/eye_forager/gate3_d075.json`.
-state: (2) LAUNCHED 07:30 `jack-cpu-1795073402` at `9882df51` (log `/data/jack-logs/eye_forager/launch_gate3.log`, est 5 h) into the session J10 s1 seg 0 freed at 07:08 (rank 2; J11 holds p0/p1/p2). Two earlier launch tries this slot were refused on box load (6.8, 8.1 > 6.0, other projects' test runs).
-next: harvest gate 3 → WORLD_CARD row (with meals-from-one-food per row); pass → (3), miss → closure text + (4).
+state: 11-19 12:10 (2) GATE 3 MISSES `a8f41c0b`: f5 5/20 seeds (3.57 meals/life), shuffled g5 0/20 (2.00), b5 0.50. 71 % of f5's eats in the 21 capped (parked) lives; the bout counter cannot split one-food meals (eats = bouts, gap 5 < regrow). WORLD_CARD J15 (2) + E2b CLOSED for this teacher; (3) does not run.
+state: (4) E2c rule AMENDED `35a6c2d2` (cossin; zero primary, random_point reported; 300k miss = weak). Kernel CODED `37e8cf32`: `pilot_b2 e2c-kernel e0..e3` (15 runs, 4 a kernel), refuses until J11's 40 are home. FOUND + fixed `HandedSense` under PilotLives (raised on env.w; would have stranded `_truncated`); tests PASS.
+state: (1) f5 = `f5_act(row)` / `RowForager` (`eye_forager.py`, `test_f5` 5/5): memoryless row128 ruler; gate 3 ran `jack-cpu-1795073402` at `9882df51` on seeds 281–300, frozen before any cell.
+next: E2c waits for J11's 40 (p6..p9 still to launch). Then `scripts/launch_detached.sh /data/jack-logs/pilot_b2/launch_eN.log $PY -m experiments.pilot_b2 e2c-kernel eN` for e0..e3 at J11's rank; score with J11's frozen readings. Done when E2c's row is in WORLD_CARD.
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48, 52
@@ -166,7 +164,8 @@ serves: M3 · PLAN "a fair chance for our own brains" · philosophy 3, 4.
 state: 11-19 02:23 `wm-dyn` HARVESTED (`bc08a6ef`) → KNOWN_ANSWERS Row J3-4c: FAIL both rows, controls 0/5. Row 1 best windows −547…−874 (learns −1300→−650…−1130, 300 eps); row 3 0 flag reaches. Below wm-latent on row 1.
 state: 11-19 04:40 `dreamer-xs` HARVESTED → KNOWN_ANSWERS Row J3-4d: FAIL both rows, controls 0/5. Row 1 best −392.7, −398.9, −340.0, −286.2, −378.5 → 1/5 reach (first in-house seed in band); row 3 0. (6) read: equal to wm-latent (mean −359.2 vs −364.4). Corrected J3-4b: wm-latent s0 last-10 −839.6.
 state: 11-19 05:45 (5) WIRED `94406999` (no session free; p0/p1/p2/J10 s1 all RUNNING): arm `wm-latent@repair` = same core/loop, two settings changed — noise direction held 32 decisions (std schedule kept), GAE γ 0.99; fresh seeds 5–9; plain cells byte-identical; test 3/3.
-next: `wm-latent+ring`, then `wm-latent@repair`, one session at a time at rank 3 (07:10 a `wm-latent+ring` launch was refused on load; the session then went to J15's gate 3, rank 2).
+state: 11-19 12:12 (4) `wm-latent+ring` LAUNCHED `jack-cpu-1795090393` at `71324fae` (log `/data/jack-logs/j3_inhouse/launch_wm-latent+ring.log`, est 3 h) into gate 3's freed session (rank 3). First try died on the dirty-tree guard (my uncommitted edit); re-launched after the commit.
+next: harvest `wm-latent+ring` → KNOWN_ANSWERS row; then `wm-latent@repair` in the next free rank-3 session.
 
 ### J16 — Brain A on the Mac: the port's rung 1 (G0 passed 11-19)
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` (its step table, rows 0.4–1.3; gate G1); `experiments/brain_a/README.md`
@@ -303,6 +302,7 @@ seed average that admits a failing seed. (8) `T0.13`'s dead clauses;
 - 11-19 07:30 JACK J15: f5 cannot know which texture is food (geom ids, so textures, shift per world) and never gives a thing up — it parks; a seed can pass gate 3 by sitting on one regrowing food. If gate 3 misses, the order's closure sentence over-reads one hand ruler: propose "THIS memoryless hand rule does not meet the bar (k of 20)". Also disclosed in the rule: seed 281's world was built once to print its geom table (no policy stepped).
 - 11-19 08:46 JACK Next-up 1 DONE `95e2e4cb` (all 4 Kaggle sessions RUNNING, J16 done): `sham_success_fn` + eval-lives hook (`eval_plan`/`plan_sha`/`eval_lives`/`make_eval_callback`/`final_rate`) in `dial_curriculum.py`; `test_dial_race_parts` PASS 4/4 (eval on vs off: B's params, replay, VecNormalize identical; planted leaky eval caught). Strike item 1; the hook needs jack-std (sbx).
 - 11-19 10:30 JACK Next-up 2 DONE `5464c5b8` (all 4 Kaggle sessions busy): Dulberg needs-grid rule + kernel body frozen; it is a GPU kernel (~2 T4-h; 55 min per CPU life measured) — needs a GPU slot from the Director (J14's week or a free session). §18's Dulberg line was summariser error (8×8, "4→8 needs"); corrected from the e-print.
+- 11-19 12:20 JACK J15: gate 3 MISSES — f5 5/20 (3.57 meals/life; shuffled 0/20, random 0.50); 71 % of its eats from 21 parked lives. Wrote the closure for THIS hand rule only (the 07:30 line's wording), E2b closed, E2c amended + kernel coded (waits for J11's 40). Machine: `world_card.BOUT_GAP` = 5 decisions is shorter than food regrowth, so `floor_bouts` = `floor_eats_all` on every row — the 'meals from one food' measure the rule promised cannot be read; a per-food eat count per life would.
 
 ## DONE (kept one day)
 
