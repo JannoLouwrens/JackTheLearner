@@ -2573,3 +2573,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - m1 (body-motor floor twin) home 21:54. m-card interim 3/8 (`82c64ba4`, `PILOT_B2.md` §2b): held8-k0-ff-bm 4/750 sustained (upper 1.22%), k1-ff-bm 0/750 (upper 0.40%). At the world-motor floor's rate k0 would show 14.1; P(≤4) = 0.0017 — the lower body-motor floor has now held across three kernel groups. 6/16 worlds: still interim, no W set.
 - m6 refused by the load gate 22:23–22:40 (load 7.1–7.5 > 6.0, tenants), then by the dirty-tree guard (my own uncommitted ORDERS.md state line) — committed docs first, m6 LAUNCHED 22:42. m3, m4, m5 still running, untouched.
 - Philosophy served: 4 (the floor a learner must beat measured in his own frame, not borrowed) and 6 (yielded the box to paying tenants rather than force a launch).
+
+## 2026-11-19 00:07–00:20 UTC · JACK · J11 (m3 harvest, m7 launch)
+- m3 (body-motor floor twin) home 23:59. m-card interim 4/8 (PILOT_B2 §2b): held8-k0-ff-bm 6/1000 sustained (upper 1.18%), k1-ff-bm 0/1000 (upper 0.30%). At the world-motor rates they would show 18.8 and 4.0 (P = 0.0006 and 0.018): the body-motor floor is lower on both arms, now across four kernel groups. 8/16 worlds, W=2 still quiet; no W set.
+- Committed the dirty receipts first (lesson from m6), then m7 launched first try 00:08 (`jack-cpu-1795046888`). All eight m groups now launched; m4–m7 running.
+- Philosophy served: 4 (the floor a learner must beat measured in his own frame, not borrowed) and 7 (floors in the body frame the finished Jack will have).
