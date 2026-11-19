@@ -2635,3 +2635,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J3 Row J3-4d: dreamer-xs FAILS both rows, controls 0/5. Row 1 best windows −392.7, −398.9, −340.0, −286.2, −378.5 → 1/5 (seed 3 is the first in-house seed inside the band; 3 needed); row 3 0 flag reaches.
 - J3 (6): dreamer-xs ≈ wm-latent (mean best −359.2 vs −364.4) → the gap to PPO is the shared learner at this size, not the home-made losses. Corrected J3-4b: wm-latent s0's last-10 is −839.6 (late collapse), not in the band.
 - Philosophy served: 3 (the home-made brains' race read honestly, a past over-claim corrected) and 6 (no free Kaggle session left idle).
+
+## 2026-11-19 05:07–05:25 UTC · JACK · J11 (the rule's readings coded before data) — short slot
+- All 4 Kaggle sessions held (p0, p1, J10 s0/s1 seg 0 RUNNING at 05:08); nothing launchable. Committed the dirty `cpu_budget.json` receipt.
+- FOUND: `pilot_b2 table` prints numbers but no reading — the §3 verdicts would have been applied by hand after the data. Coded `pilot_readings` / `pilot_b2 readings` (`ebb59a38`): every clause of the frozen rule (broken, floor moved, INCOMPLETE, SUSTAINED, EATS BUT STARVES / θ too easy, SLIDES, NEAR RANDOM); refuses a partial book.
+- Planted test 9/9: a base book reads each arm as built; each VOID/broken clause fires on its own plant and spares the other arms. Four seams in the text resolved toward the stricter reading and written into PILOT_B2 §3 before any run is home.
+- Philosophy served: 4 (the reading fixed in code before the data, so nobody gets to interpret it afterwards).
