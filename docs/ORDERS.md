@@ -83,7 +83,7 @@ before the Director's ruling.
 serves: M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 7.
 **done when:** `PILOT_B2.md` has the frozen rule, 40 runs and one reading per arm.
 state: (3) RULE FROZEN 11-19 04:35 `e2c3c378` (`PILOT_B2.md` §3 + `PILOT_RULE`): seeds 402–406, W = 2, U 0.64 k0-bm / 0.80 k1-bm → floor(U) = 0, native_substep, body eye. **Motor frame body by the 07:40 written default** (no ruling landed); a `world` ruling re-drafts on seeds 407+ with the f-card arms.
-state: (4) p0, p1, p2 HOME (`pilot_p0/1/2.json`; p2 10:54, 4 cells, 0 cut/crash), so nothing to re-launch.
+state: 11-19 13:35 `d3815ce6` §3c (reported, no run; p0–p2 home, 0 cut/crash): movement energy = E0+intake−basal per energy death. Control K (moving free) reads ~0. B0/P/G: movement falls Q2→Q4 in 6/6 cells (25–55 %, ~0.21→0.12 × basal) while meals fall — the slide; entropy does not override the cost; P did not stop it. 13:22 all 5 sessions still RUNNING.
 state: 11-19 12:12 p5 LAUNCHED `jack-cpu-1795090316` (`launch_p5.log`) into p2's session; p3 `…82879`, p4 `…82927` RUNNING since 10:08. J11 holds 3; the 4th went to J3 (rank 3). Launches were held ~4 min by the 2-detached cap (LAB's place_key fits).
 state: `pilot_b2 table` PARTIAL 8/40 (reported, NOT the reading): 0 sustained lives in any arm; every learner's meals/life falls early→late (K 0.90→0.14, B0 0.30→0.12); K-lr0 (no learning) 1.40→0.62 is the best late row so far.
 state: 11-19 12:45 `7d3b18fc` §3b (reported, no run): fixed ent_coef 0.1 × 8 action dims → entropy bonus ≤ 0.555/decision vs task reward −0.036 (meal-less K) / +0.031 (K-lr0 meals) — 15–18×; ≈ 111 discounted vs +100 a meal (Haarnoja 2018: too-small reward scale → near-uniform policy). E2c's trace tests it: std/saturation rising = confirmed.
@@ -311,6 +311,8 @@ seed average that admits a failing seed. (8) `T0.13`'s dead clauses;
 - 11-19 12:45 JACK J11: one priced cause for 'learners end below K-lr0' (`PILOT_B2.md` §3b): SAC's fixed ent_coef 0.1 makes the entropy bonus up to ~15–18× the task reward per decision (≈ a meal's worth of discounted value everywhere). If E2c's trace shows action std rising, the ruling J11 (6) waits on should consider a raced arm with ent_coef "auto" or a reward scale — not a change to the frozen rule.
 - 11-19 13:10 JACK: MEASURED the Kaggle CPU cap is **5** batch sessions, not 4 — 5 ran at once all afternoon (p3, p4, p5, J3 ×2), and a 6th push (J10 `kernel 0 1`, `jack-cpu-1795093735`) was refused: "Maximum batch CPU session count of 5 reached". The 4-session ranking leaves one session idle whenever no duplicate is running; Director to re-rank for 5.
 - 11-19 13:10 JACK (machine, for SYSTEM): `gpu.py` logs that refused push as `rc=0` and then raises the unclear "job produced no result: no artifact named 'segment.json'" — the push error text (`Kernel push error: …`) should be read as a refusal and named in the error.
+
+- 11-19 13:35 JACK J11 §3c (12/40, reported, no run): where moving costs energy (B0, P, G) learning CUTS movement work in 6/6 cells (25–55 %) while meals fall — the predicted slide, and P's positive-only reward did not stop it in this partial; control K (moving free) reads ~0, so §3b's entropy cause stays open only for K's world and only E2c's trace can read it.
 
 ## DONE (kept one day)
 

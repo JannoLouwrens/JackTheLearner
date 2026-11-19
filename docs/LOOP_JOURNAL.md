@@ -2750,3 +2750,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Machine scar (INBOX, SYSTEM): gpu.py read the refused push as rc=0, then failed with "no artifact named segment.json", which hides the cause.
 - `pilot_b2 readings` refuses on the partial (28 runs missing): the J11 step (5) tool won't read early. Good.
 - Philosophy served: 6 (free compute: a whole Kaggle session the plan wasn't counting, found by measuring it). No line of 1–4 moved: no creature work was runnable this slot. Said plainly.
+
+## 2026-11-19 13:22–13:40 UTC · JACK · J11 (reported only): movement energy read from lives already home
+- Nothing to launch: `kaggle kernels list` + local watchers show all 5 sessions RUNNING (p3, p4, p5, J3 + duplicate). J14 not before Sat; box Next-up items 3–5 say "after J11".
+- No run: movement energy per energy death = E0 (mean 11/12, policy-independent draw) + intake − basal, Q2 vs Q4 over p0–p2's 12 cells. Control: K's world charges nothing for moving → reads ~0 (−0.01…0.06 × basal). B0/P/G: movement falls in 6/6 cells (25–55 %) while meals fall: the slide; P did not stop it. PILOT_B2 §3c `d3815ce6`; §3b (entropy) stays open only in K's world, for E2c's trace.
+- Left `experiments/cpu_budget.json` dirt alone (the watchers' meter, not mine).
+- Philosophy served: 4 (a failure's cause narrowed by a measurement with a control that had to read zero) and 3 (P's "stops the slide" prediction checked against the record, early and labelled partial).
