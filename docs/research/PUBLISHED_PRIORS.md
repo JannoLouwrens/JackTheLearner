@@ -674,3 +674,9 @@ Long form: `/data/jack-research/research_notes/walking_layer/` (`part_a_yu2018.m
 **What the record does NOT answer.** (i) Whether a memoryless clone of THIS teacher clears 5 meals — the frozen kernel, ~9 h; prediction: miss, or a pass carried by the 55% of decisions with a target; read the clone's push on no-target frames first. (ii) Survival by repeated eating with the direction handed, at 300k: nobody published it. Prediction (inf): first reliable reach 50k–200k; a miss at 300k is weak evidence.
 
 **Not verified.** Ross & Bagnell 2010; Kart/Mario and DART baselines (figures); Walsman 2023; Ortega 2021 (abstract only); PointGoal1 curve at 300k; D4RL BC's network and normalisation; whether food textures change per world.
+
+## 18. The other senses, all together: touch, balance, taste, pain, temperature, body-state, and many senses in one small brain (2026-11-19; serves PLAN part "Other senses, all together" (step 0), M5; stage 3)
+
+Long form and raw notes: `/data/jack-research/research_notes/senses_together/`.
+
+*Skeleton committed 04:13 UTC; the slot is researching three parts: (A) many senses fused in one learner, (B) touch, balance and pain, (C) body-state, taste and temperature. Findings replace this line.*
