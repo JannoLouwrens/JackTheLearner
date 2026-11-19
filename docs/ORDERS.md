@@ -180,7 +180,7 @@ passes eager and compiled. Each module's docstring carries the "ours beside
 theirs" table. No training, no speed claims.
 serves: M3 · PLAN "the decisive test … on the Mac mini" — every Mac hour an hour of the real test · philosophy 5, 6, 7.
 **done when:** G1's result and rung 1's pass are in `experiments/brain_a/README.md` with the test names.
-state: **DONE `07a65c3d`** (11-19 08:50). (a) G1 met by 0.4e (IDENTICAL 1,400/1,400), in README. (b) `rung1.py` tests: refs vs official 25/25, stub 0/9, planted 9/9 caught.
+state: **DONE `07a65c3d`** (11-19 08:25). (a) G1 met by 0.4e (IDENTICAL 1,400/1,400), in README. (b) `rung1.py` tests: refs vs official 25/25, stub 0/9, planted 9/9 caught.
 state: (c) `mlx_maths.py` filled: **rung 1 PASS 9/9 eager AND compiled** (mlx 0.32.4, box); worst bins 1.6e-7, decode 5.7e-7 (cond), grads ≤ 1.6e-7; uniform/mirrored decode exactly 0 both modes; planted still 9/9. Test names in README §J16 (c).
 state: FOUND: first fill FAILED bins (1.92e-6) — the official grid is what XLA:CPU emits, −20·fma(−i, f32(1/127), 1): 0/128 misses vs 41 for `mx.linspace`. Parity = the compiler's output, read from optimized HLO. Decode deviates on purpose: (p3 − p1[::-1])·b3.
 next: (report's row after 1.3) the same `rung1.py` on the PyPI MLX wheel, then rung 2 — for the Director to order.
