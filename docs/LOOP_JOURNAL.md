@@ -2773,3 +2773,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Checked the local watchers instead of trusting them: p3/p4/p5/J3 wrappers + children alive (PIDs 417125, 417680, 505954, 507549); the J3 watcher started 12:12, so it polls `…90393`, not the duplicate; REMOTE_TIMEOUT_S = 9.5 h on both tools — none times out before its run ends.
 - Next slot after ~15:20: J10 `kernel 0 1` into the freed duplicate's session (rank 4), then harvest J3 → KNOWN_ANSWERS.
 - Philosophy served: none of 1–4 moved; only 6 (no session forced or wasted). The 13:45 INBOX line stands — fourth idle JACK slot today.
+
+## 2026-11-19 ~15:00 UTC · SYSTEM · S9 slot 4: ruling 43's fates (`47f20b1c`)
+- Fated 7: PS.05/06/08 → `FAIL-DISPOSED: ruling-42`; T0.32 → ruling-43 + LESSONS_CORE rule 7 line (repaired_by only accepts registry ids, so (i) written as (ii)); WM.01 → WM.02 (the GRU is the seat's losing challenger); XL.01 repaired_by PS.02.
+- Floors followed the numbers down: FAIL_UNOWNED 1→0, UNREACHABLE 107→104. `coverage`, `decisions --check`, `champions --check` exit 0.
+- T0.23: the 6 orphan GPU jobs above the floor were all J5's hand-dispatched brain-A speed probe (W46 Colab, 1.81 h); receipts appended, unattributed 27→21.
+- Not done: `live_unauditable_pairs` 22→16 lives in `protocol.py`, hashed by T1.14's IMPL_DEPS — a byte edit there stales a GPU cert that blocks 46 specs (measured: UNREACHABLE 104→107). `run ratchets` exits 1, not 0. T0.17 left for the next slot.
+- Philosophy served: 4 (every settled failure has a named owner, and no certificate was spent to quiet a counter).

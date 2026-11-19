@@ -258,8 +258,10 @@ stays FAIL; none of the 16 impls is grandfathered; each gets
 XL.01 (the last two are the ones `coverage` names unowned today).
 serves: philosophy 4 · the auditor's exit codes.
 **done when:** `coverage` and `run ratchets` exit 0 with this id list empty.
-state: slots 1–3: 18 fated by (ii); floors UNREACHABLE 115→107, PASS-ON-DEAD-DEPENDENCY 6→4; `coverage` exits 0; FAIL-UNOWNED floor 1 → 0 waits for the empty list.
-state: 11-19 Director: untaken 27 h; `run ratchets` still exits 2 on exactly ruling 43's three items (`fail_unowned` 2 > 1; `gpu_unattributed_jobs` 27 > 21; `live_unauditable_pairs` 17 < 22). Start with ruling 43's six ids. 06:58: `WM.01` and `XL.01` read FAIL-UNOWNED until this order named them (`coverage` exits 0 again); give each a real fate (`XL.01` waits on `PS.02`, stage 3), then lower both floors in one commit: FAIL_UNOWNED 1 → 0, UNREACHABLE 107 → 104.
+state: slots 1–3: 18 fated by (ii); floors UNREACHABLE 115→107, PASS-ON-DEAD-DEPENDENCY 6→4.
+state: slot 4 (`47f20b1c`): PS.05/06/08 → ruling-42; T0.32 → ruling-43 (repaired_by only takes registry ids, so written as (ii)) + LESSONS_CORE rule 7; WM.01 → WM.02 (losing challenger); XL.01 repaired_by PS.02. Floors FAIL_UNOWNED 1→0, UNREACHABLE 107→104. T0.23: 6 W46 Colab jobs = J5 brain-A probe, receipts written, unattributed 27→21 (at floor).
+state: `run ratchets` exits 1, only `live_unauditable_pairs` 16 < 22: the floor is in `protocol.py`, which T1.14's IMPL_DEPS hashes — lowering it stales a GPU cert (blocks 46). Lower it in the commit that next re-runs T1.14 (J14's week), or Director rules.
+state: Left: T0.17 (demote T2.14 by drift), then T0.23 re-earns; DP.05 HR.5 LT.02 T0.35 T3.09 T4.02 W.2 W1.00.
 
 ### S11 — Two steering files are over their caps; the root disk leaks at the source
 part: (machine — bounded steering) · stage: — · step: —
