@@ -94,6 +94,25 @@ class HandedSense(_Wrapper):
         n = env.observation_space.shape[0] + self.n_extra
         self.observation_space = spaces.Box(-np.inf, np.inf, (n,), np.float32)
 
+    # Found 11-19 wiring E2c: gymnasium 1.x wrappers forward nothing, and
+    # pilot_b.PilotLives (run_b wraps every world in it) READS env.w /
+    # env.ate_total ... and WRITES env._pending_obs / env._truncated. Through
+    # this wrapper the reads raised and the writes would have landed here,
+    # silently leaving JackEnv's flags stale. Reads fall through to the world;
+    # the writes PilotLives makes are named and forwarded, nothing else.
+    FORWARD_SET = ("_pending_obs", "_truncated", "_died")
+
+    def __getattr__(self, name):
+        if name == "env" or name.startswith("__"):
+            raise AttributeError(name)
+        return getattr(self.env, name)
+
+    def __setattr__(self, name, value):
+        if name in HandedSense.FORWARD_SET and "env" in self.__dict__:
+            setattr(self.env, name, value)
+        else:
+            object.__setattr__(self, name, value)
+
     def _draw_point(self):
         xy = np.array([self.env.w.data.xpos[self.env.w.model.body(n).id][:2]
                        for n in _floor_names(self.env)]).reshape(-1, 2)

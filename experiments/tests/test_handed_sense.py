@@ -84,9 +84,45 @@ def test_on_pilot_world():
     assert np.array_equal(oz[-2:], [0.0, 0.0]) and np.array_equal(oz[:-2], o0)
 
 
+def test_under_pilot_lives():
+    """11-19: run_b wraps every world in PilotLives, which reads env.w and
+    writes env._pending_obs/_truncated. Through HandedSense the stream must be
+    the bare world's (senses, reward, ends, lives) and the writes must land on
+    JackEnv. Control: a wrapper that does not forward (gymnasium's own) must
+    fail at the first reset."""
+    from experiments.pilot_b import PilotLives, _Wrapper
+    raw = PilotLives(_world(), cap=50)
+    hs = H.HandedSense(_world(), "food", "cossin", seed=801)
+    env = PilotLives(hs, cap=50)
+    o, _ = env.reset(seed=811)
+    p, _ = raw.reset(seed=811)
+    assert np.array_equal(o[:-3], p)
+    for i in range(160):
+        a = np.random.default_rng(i).uniform(-1, 1, env.action_space.shape)
+        o, r, t, tr, _ = env.step(a)
+        q, r2, t2, tr2, _ = raw.step(a)
+        assert np.array_equal(o[:-3], q) and (r, t, tr) == (r2, t2, tr2)
+        if t or tr:
+            o, _ = env.reset()
+            raw.reset()
+    assert len(env.lives) == len(raw.lives) >= 2      # cap 50 -> lives end
+    assert "_truncated" not in hs.__dict__ and "_pending_obs" not in hs.__dict__
+    assert hs.env._truncated is False
+
+    class Bare(_Wrapper):                               # control: no forwarding
+        pass
+    try:
+        PilotLives(Bare(_world()), cap=50).reset(seed=811)
+    except AttributeError:
+        pass
+    else:
+        raise AssertionError("control: a non-forwarding wrapper did not fail")
+
+
 def main():
     test_encode_planted()
     test_on_pilot_world()
+    test_under_pilot_lives()
     print("test_handed_sense PASS")
 
 
