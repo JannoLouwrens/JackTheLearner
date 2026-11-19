@@ -2589,3 +2589,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - m5 (body-motor floor twin) home 00:50. m-card interim 5/8 (`99a92146`, PILOT_B2 §2b): held8-k0-ff-bm 8/1250 sustained (upper 1.16%), k1-ff-bm 0/1250 (upper 0.24%). At the world-motor rates they would show 23.5 and 5.0 (P = 0.0002 and 0.0067): the lower body-motor floor holds across five kernel groups. 10/16 worlds, W=2 quiet; no W set.
 - m5's session freed and J11 has no ready kernel (pilot kernels wait on the rule) → J3 `wm-dyn` launched under rank 0 (est 0.8 h), `jack-cpu-1795050581`, push rc=0. m4, m6, m7 watchers alive, untouched.
 - Philosophy served: 4 (the floor a learner must beat measured in his own frame, not borrowed) and 3/6 (a free Kaggle session given to the home-made brain's fair chance instead of idling).
+
+## 2026-11-19 01:22–01:30 UTC · JACK · J11 (m4 harvest) + J13 (G0 launch) — short slot
+- m4 (body-motor floor twin) home 01:14. m-card interim 6/8 (`da2fd8b4`, PILOT_B2 §2b): held8-k0-ff-bm 8/1500 sustained (upper 0.96%), k1-ff-bm 0/1500 (upper 0.20%); m4 added no sustained life. At world-motor rates: 28.2 and 6.0 expected (P = 8e-6, 0.0025). 12/16 worlds, W=2 quiet; no W set.
+- m4's session freed; J11 has no ready kernel, J3 already holds one (one at a time), J15 kernel-full held on the open E2b disclosure ruling (INBOX) → J13 G0 launched, `jack-cpu-1795051615` (load gate refused once at 7.4; bounded retry got in at 4.35).
+- Philosophy served: 4 (floor in his own frame, not borrowed) and 7 (G0 decides whether brain A can learn on the owner's Mac — trained here, still learning on their machines).

@@ -196,7 +196,8 @@ other port work until G0 has run. Lead to weigh in the write-up: official
 JAX ran 0.925 vs sheeprl 0.458 grad steps/s on this box (`9ba4e682`).
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6.
 **done when:** G0's pass or fail is in `experiments/brain_a/README.md` with its numbers.
-state: G0 kernel READY; never run — three days waiting at rank 4. If it has not run by Fri 11-20 it takes rank 1 for one session.
+state: 11-19 01:27 G0 LAUNCHED into m4's freed session (J15's kernel-full held: its E2b disclosure ruling, INBOX 16:14, is open) — `jack-cpu-1795051615`, log `/data/jack-logs/mlx/launch_g0.log` → `/data/jack-logs/mlx/g0.json`.
+state: next: `$PY -m experiments.brain_a.g0_kernel verdict /data/jack-logs/mlx/g0.json` → numbers + PASS/FAIL into `experiments/brain_a/README.md` (weigh JAX 0.925 vs sheeprl 0.458).
 
 ### J10 — The walking layer: reproduce a published walk (owner 11-15)
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §4; ruling 45
@@ -309,6 +310,7 @@ clauses; `XL.00` re-buy with a planted positive; `BD.01`/`LC.08` re-class.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-19 01:27 JACK/J11→J13 → Director: m4 home (m-card 6/8, `da2fd8b4`); its free session went to J13 G0 (`jack-cpu-1795051615`), not J15 `kernel-full`, because the 16:14 E2b disclosure question (0.993 in the rule's docstring vs 0.551 measured) is unruled — the order's prior now carries 0.551 but the frozen rule text does not. Rule it and J15 launches at the next free session.
 - 11-19 00:35 JACK/Next-up 5 → Director: J11 waits on m4–m7 (all 4 watchers alive, m4 due ~01:20), every other order on a Kaggle session or 11-21, items 1–3 done → took item 5: `25a13d60` makes Mac rows 11–12 runnable (row 11: MPS + 2,000 timed 64×64 renders per context, `--emit-launchd` plists, Interactive QoS; row 12: `--soak 86400` JSONL of world dec/s, learner grad steps/s, RSS, memory pressure, powermetrics). Box can't render (no GL) — loop proven on a planted renderer only; first real render reading is the Mac's. Mark item 5 done.
 - 11-18 21:10 SYSTEM → JACK/J10: `gpu.py` now takes `kernel_sources=` and `fetch_only=True` (`ee81dffd`); `humanoid_sac_row.kernel(seed, n>0)` mounts segment n−1's kernel at /kaggle/input/<slug> — that mount path is unverified until the first segment 1 (fails fast if wrong). The 16:45 dead-watcher proposal was already built: `run status` lists attempt rows with a dead pid and no result (`orphaned_dispatches`); line retired.
 - 11-18 20:45 JACK/Next-up 3 → Director: every JACK order waits (J11 on m0–m3 + the motor-frame ruling; J3/J13/J15 on a session; J14 on 11-21), items 1–2 already done/blocked → wrote the dial rule `docs/research/prereg/dial_gated_vs_uniform.md` (text only, runs after J11): gated vs uniform vs sham-gate, seeds 521–525, 300k (a PILOT vs Avalon's 50M, said so), eval lives at fixed d 0.75/1.0 on common worlds; clause G: ceiling₀ = lo = 0.75 means gated IS fixed-d0 until a first sustained life, so a win with the ceiling never past 0.80 reads "GATE NEVER OPENED". Needs an eval-lives hook + sham success_fn before it runs.
