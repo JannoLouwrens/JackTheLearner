@@ -19,8 +19,11 @@ released script's `num_timesteps=5,000,000` is passed as `max_timesteps` to EACH
 curriculum stage's `pposgd_mirror.learn` call — a per-stage cap, not a total.
 A stage ends early when mean rollout length > assist_schedule[2][0]/dt AND mean
 velocity > 0.5 * final_tv (pposgd_mirror.py:337-350). The helping forces start
-at 2000 N and shrink x0.75 per stage until < 5 N, then one unaided "last
-iteration" stage with return threshold 1.2 x 0.7 x stage-0 return: about 22
+as spring GAINS of (2000, 2000) — CORRECTED 11-19, they are not newtons: a
+stiffness on the pelvis's sideways position (SPD, N/m, Kd = Kp*dt) and a gain
+on its forward-speed error toward the target speed (N per m/s;
+human_walker.py:175-212, 262-272) — and shrink x0.75 per stage until < 5
+(then 0), then one unaided "last iteration" stage with return threshold 1.2 x 0.7 x stage-0 return: about 22
 stages. So the released script's TOTAL is whatever the curriculum takes — the
 paper's 10-30 M (500-1,500 iterations of 20k) is the expectation, and
 "5 M fits one kernel" was wrong.
@@ -71,6 +74,23 @@ RULE (committed before any kernel):
   control    the same seed's iteration-0 policy (initial parameters, forces at
              0), same 10 rollouts: must FAIL the primary clause, or the row is
              VOID (the test would not measure learning).
+  stage log  (added 11-19, before any full run; reported, not a pass clause.)
+             The released loop leaves a stage on EITHER its threshold
+             (pposgd_mirror.py:348-350) OR the 5M cap (:211) and prints nothing
+             to tell them apart, so all ~22 stages can "complete" having learned
+             nothing. `stage_exits` splits rank 0's progress.json where Iter
+             restarts and labels each stage THRESHOLD (left below the cap — the
+             only other exit), CAP (its last TimestepsSoFar >= 5M; an iteration
+             that crossed the cap AND met the threshold is counted CAP, the
+             stricter reading, because velocity is not logged), or CUT (the last
+             stage of a run that was stopped). It also counts, from stdout, each
+             stage's "Revert Iteration" lines and iteration headers: a reverted
+             iteration (:237-251) resets TimestepsSoFar, so its 20k samples are
+             drawn but never counted toward the cap — the stage's true samples
+             are headers x 20k, reported beside the logged count. Every verdict
+             line names how many stages left on the cap ("REPRODUCES, k of n
+             stages advanced on the cap"); the primary clause is unchanged
+             because it tests the final policy's walk itself.
   verdicts   REPRODUCES / MISSES (the curriculum completed but the policy fails
              the primary) / DID-NOT-FINISH (curriculum not done within the
              registered kernels: reported with the stage reached, never PASS) /
@@ -186,9 +206,89 @@ for txt in prog:
 res["iterations_logged"] = len(times)
 if len(times) >= 3:
     res["s_per_iter"] = round((times[-1] - times[0]) / (len(times) - 1), 2)
+rows = []
+for txt in prog:
+    for row in txt.strip().splitlines():
+        try:
+            rows.append(json.loads(row))
+        except ValueError:
+            pass
+try:
+    tl = open("/tmp/yu/log_train.txt").read().splitlines()
+except OSError:
+    tl = []
+train_rc = [s["rc"] for s in stages if s["stage"] == "train"]
+res["stages_curriculum"] = stage_exits(rows, tl, finished=bool(train_rc) and train_rc[0] == 0)
+res["stage_summary"] = stage_summary(res["stages_curriculum"])
 json.dump(res, open(os.path.join(os.environ["JACK_OUT"], "yu2018_smoke.json"), "w"), indent=1)
 print("DONE", json.dumps({k: v for k, v in res.items() if k != "progress_json"}), flush=True)
 '''
+
+
+CAP = 5_000_000          # the released script's num_timesteps, per stage
+ITER_SAMPLES = 20_000    # 8 ranks x 2,500
+
+
+def stage_exits(progress_rows, stdout_lines=(), finished=False, cap=CAP, ranks=MPI_RANKS):
+    """Per-stage exit reasons for the released curriculum (rule: "stage log").
+
+    progress_rows: rank 0's progress.json rows (dicts with Iter, TimestepsSoFar,
+    EpRewMean, EpLenMean). stdout_lines: the training log (all ranks). finished:
+    the training process exited by itself (not cut by a timeout or a segment
+    end) — only then is the last stage's exit read, else it is CUT.
+    """
+    stages, prev = [], None
+    for r in progress_rows:
+        if "Iter" not in r:
+            continue
+        it = int(r["Iter"])
+        if prev is None or it <= prev:
+            stages.append([])
+        stages[-1].append(r)
+        prev = it
+    # stdout: a stage ends at its "Current Schedule:" (printed by every rank,
+    # same text) or at "Entering Last Iteration!"; count headers and reverts.
+    heads, reverts, scheds = [0], [0], []
+    seen = set()
+    for ln in stdout_lines:
+        if "********** Iteration" in ln:
+            heads[-1] += 1
+        elif "Revert Iteration" in ln:
+            reverts[-1] += 1
+        elif ln.startswith("Current Schedule:"):
+            sch = ln.split(":", 1)[1].strip()
+            if sch not in seen:
+                seen.add(sch)
+                scheds.append(sch)
+                heads.append(0)
+                reverts.append(0)
+    out = []
+    for i, rows in enumerate(stages):
+        last = rows[-1]
+        ts = int(last["TimestepsSoFar"])
+        is_last = i == len(stages) - 1
+        if is_last and not finished:
+            why = "CUT"
+        elif ts >= cap:
+            why = "CAP"
+        else:
+            why = "THRESHOLD"
+        h = heads[i] if i < len(heads) else 0
+        rv = reverts[i] if i < len(reverts) else 0
+        out.append({"stage": i, "exit": why, "iters_logged": int(last["Iter"]),
+                    "timesteps_logged": ts,
+                    "iter_headers": h // ranks, "reverts": rv // ranks,
+                    "samples_drawn": (h // ranks) * ITER_SAMPLES,
+                    "ep_rew_mean": float(last.get("EpRewMean", float("nan"))),
+                    "ep_len_mean": float(last.get("EpLenMean", float("nan"))),
+                    "schedule_after": scheds[i] if i < len(scheds) else None})
+    return out
+
+
+def stage_summary(stages) -> str:
+    done = [s for s in stages if s["exit"] != "CUT"]
+    k = sum(s["exit"] == "CAP" for s in done)
+    return f"{k} of {len(done)} stages advanced on the cap"
 
 
 def build_sh(train_s: int = SMOKE_TRAIN_S) -> str:
@@ -204,7 +304,10 @@ def build_sh(train_s: int = SMOKE_TRAIN_S) -> str:
 
 
 def job_body(train_s: int = SMOKE_TRAIN_S) -> str:
-    return _JOB.replace("__SH__", repr(build_sh(train_s)))
+    import inspect
+    helpers = (f"MPI_RANKS = {MPI_RANKS}\nCAP = {CAP}\nITER_SAMPLES = {ITER_SAMPLES}\n"
+               + inspect.getsource(stage_exits) + "\n" + inspect.getsource(stage_summary))
+    return helpers + _JOB.replace("__SH__", repr(build_sh(train_s)))
 
 
 def smoke() -> dict:
