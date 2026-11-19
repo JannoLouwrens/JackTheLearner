@@ -17,6 +17,10 @@ Checks (each through the real code path):
      T=300, no learner) run through run_pilot_parallel with body/body, and the
      child's world stamp -- read off the env, not the caller -- says body/body.
      Control: the same child with defaults stamps world/world.
+11-19: the same path for native_substep (ORDERS: every new run in his world
+passes it; the pilot's make_world never did). 3 adds a rule with both frames
+right but no native_substep (must refuse); 4 checks the job body carries it;
+5's child stamps native_substep True, its default control False.
 Run with /data/venvs/jack-std/bin/python or the project venv.
 """
 import sys
@@ -47,7 +51,10 @@ def main():
     bad = {"no eye_frame": dict(base, motor_frame="body"),
            "eye world": dict(base, eye_frame="world", motor_frame="body"),
            "no motor_frame": dict(base, eye_frame="body"),
-           "motor junk": dict(base, eye_frame="body", motor_frame="compass")}
+           "motor junk": dict(base, eye_frame="body", motor_frame="compass"),
+           "no native_substep": dict(base, eye_frame="body", motor_frame="body"),
+           "native False": dict(base, eye_frame="body", motor_frame="body",
+                                native_substep=False)}
     for k, rule in bad.items():
         try:
             P.pilot_kernel("p0", rule=rule)
@@ -56,26 +63,31 @@ def main():
         except RuntimeError as err:
             print(f"3 refusal [{k}]: ok ({str(err)[:50]}...)")
 
-    body = P.pilot_job_body(P.pilot_groups((402,))["p0"], True, 300, "t", "body", "world")
+    body = P.pilot_job_body(P.pilot_groups((402,))["p0"], True, 300, "t", "body", "world", True)
     compile(body, "job", "exec")
-    g4 = ", 'body', 'world')" in body
+    body0 = P.pilot_job_body(P.pilot_groups((402,))["p0"], True, 300, "t", "body", "world")
+    g4 = (", 'body', 'world'," in body and "native_substep=True)" in body
+          and "native_substep=False)" in body0)
     print(f"4 job body carries frames: {g4}")
     ok &= g4
 
     with tempfile.TemporaryDirectory(dir="/data/tmp" if Path("/data/tmp").is_dir() else None) as d:
         r = P.run_pilot_parallel([("held8", 901)], d, True, T=300,
-                                 eye_frame="body", motor_frame="body")
+                                 eye_frame="body", motor_frame="body",
+                                 native_substep=True)
         rec = r["held8_s901"]
         st = rec.get("world", {})
         g5 = (rec["rc"] == 0 and st.get("eye_frame") == "body"
-              and st.get("motor_frame") == "body" and rec.get("eye_frame") == "body")
+              and st.get("motor_frame") == "body" and rec.get("eye_frame") == "body"
+              and st.get("native_substep") is True)
         print(f"5 child body/body: rc {rec['rc']} stamp eye={st.get('eye_frame')} "
-              f"motor={st.get('motor_frame')} -> {g5}")
+              f"motor={st.get('motor_frame')} native={st.get('native_substep')} -> {g5}")
         r0 = P.run_pilot_parallel([("held8", 901)], d + "/ctl", True, T=300)
         st0 = r0["held8_s901"].get("world", {})
-        g6 = st0.get("eye_frame") == "world" and st0.get("motor_frame") == "world"
+        g6 = (st0.get("eye_frame") == "world" and st0.get("motor_frame") == "world"
+              and st0.get("native_substep") is False)
         print(f"5 control child defaults: stamp eye={st0.get('eye_frame')} "
-              f"motor={st0.get('motor_frame')} -> {g6}")
+              f"motor={st0.get('motor_frame')} native={st0.get('native_substep')} -> {g6}")
         ok &= g5 and g6
 
     print("PASS" if ok else "FAIL")
