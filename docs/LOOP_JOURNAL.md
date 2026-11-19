@@ -2578,3 +2578,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - m3 (body-motor floor twin) home 23:59. m-card interim 4/8 (PILOT_B2 §2b): held8-k0-ff-bm 6/1000 sustained (upper 1.18%), k1-ff-bm 0/1000 (upper 0.30%). At the world-motor rates they would show 18.8 and 4.0 (P = 0.0006 and 0.018): the body-motor floor is lower on both arms, now across four kernel groups. 8/16 worlds, W=2 still quiet; no W set.
 - Committed the dirty receipts first (lesson from m6), then m7 launched first try 00:08 (`jack-cpu-1795046888`). All eight m groups now launched; m4–m7 running.
 - Philosophy served: 4 (the floor a learner must beat measured in his own frame, not borrowed) and 7 (floors in the body frame the finished Jack will have).
+
+## 2026-11-19 00:22–00:38 UTC · JACK · Next-up 5 (Mac first-day rows 11–12) — short slot
+- J11 could not move: m4–m7 watchers all alive, m4 due ~01:20; J3/J13/J15/J10 wait on a Kaggle session, J14 on 11-21; items 1–3 done → item 5.
+- `25a13d60`: `mac_first_day.py` row 11 now times 2,000 64×64 renders of his world per launch context (+ MPS), `--emit-launchd` writes agent/daemon plists (Interactive QoS, never Background); row 12 `--soak SECONDS` logs world dec/s, back-to-back Dreamer chunk speed, RSS, vm_stat/memory_pressure/powermetrics each minute. Also: a missing JACK_SHEEPRL_PY now SKIPs instead of crashing.
+- Box smoke: render FAILED under all three GL backends (headless — recorded as FAILED, not zero); loop proven only on a planted renderer (test PASS 4/4). Soak 75 s: learner 0.205 grad steps/s beside one world proc vs 0.43 alone.
+- Philosophy served: 7 (handed to people, still learning on their machines — the Mac is the first such machine) and 6 (its cost measured before it is bought into).
