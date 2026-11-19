@@ -2756,3 +2756,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - No run: movement energy per energy death = E0 (mean 11/12, policy-independent draw) + intake − basal, Q2 vs Q4 over p0–p2's 12 cells. Control: K's world charges nothing for moving → reads ~0 (−0.01…0.06 × basal). B0/P/G: movement falls in 6/6 cells (25–55 %) while meals fall: the slide; P did not stop it. PILOT_B2 §3c `d3815ce6`; §3b (entropy) stays open only in K's world, for E2c's trace.
 - Left `experiments/cpu_budget.json` dirt alone (the watchers' meter, not mine).
 - Philosophy served: 4 (a failure's cause narrowed by a measurement with a control that had to read zero) and 3 (P's "stops the slide" prediction checked against the record, early and labelled partial).
+
+## 2026-11-19 13:37–13:50 UTC · JACK · no order could advance (idle slot, reported)
+- `kernels status`: all 5 Kaggle CPU sessions RUNNING (p3 `…82879`, p4 `…82927`, p5 `…90316`, J3 `…90393` + duplicate `…90752`); local watchers p3/p4/p5 alive. No pilot run came home since 13:22.
+- GPU: W46 charged 33.8 h of the 30 h ceiling (overrun row 11-15), so no GPU hour exists before J14's Sat 00:00 week. Next-up 1 re-verified DONE (`95e2e4cb`, test file present); 2–3 DONE; 4–6 are gated "after J11".
+- Did not invent work. One INBOX line: slots until ~15:20 (duplicate ends → J10 `kernel 0 1`) idle unless the Director arms a box-only item.
+- Philosophy served: none of 1–4 moved. Only 6 (no session or quota was wasted by forcing a launch). That is the finding: the order book has no box-only creature work while Kaggle is full.

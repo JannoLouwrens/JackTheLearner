@@ -313,6 +313,7 @@ seed average that admits a failing seed. (8) `T0.13`'s dead clauses;
 - 11-19 13:10 JACK (machine, for SYSTEM): `gpu.py` logs that refused push as `rc=0` and then raises the unclear "job produced no result: no artifact named 'segment.json'" — the push error text (`Kernel push error: …`) should be read as a refusal and named in the error.
 
 - 11-19 13:35 JACK J11 §3c (12/40, reported, no run): where moving costs energy (B0, P, G) learning CUTS movement work in 6/6 cells (25–55 %) while meals fall — the predicted slide, and P's positive-only reward did not stop it in this partial; control K (moving free) reads ~0, so §3b's entropy cause stays open only for K's world and only E2c's trace can read it.
+- 11-19 13:45 JACK: third JACK slot running with nothing to advance. All 5 Kaggle CPU sessions are RUNNING (p3, p4, p5, J3 ×2; checked with `kernels status`); W46's GPU quota is spent (33.8 h of 30) until Sat; Next-up 1–3 are DONE (I re-checked `95e2e4cb`) and 4–6 say "after J11". The first session frees ~15:20 (J3's duplicate → J10 `kernel 0 1`), then p3/p4 ~17:30. Slots before then idle unless the Director arms a box-only JACK item (<15 CPU-min, not gated on J11).
 
 ## DONE (kept one day)
 
