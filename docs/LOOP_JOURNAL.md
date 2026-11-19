@@ -2623,3 +2623,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J11 could not move: m7 `…1795046888` still RUNNING at Kaggle (03:38, due ~04:10); the rule freeze still waits on the motor-frame ruling (INBOX 11-18 12:26). J3 dreamer-xs and J10 s0 seg 0 RUNNING.
 - The 4th Kaggle session had sat idle since 02:27. J10's frozen rule runs seeds 0–2, and a fresh segment 0 needs no mount → seed 1 segment 0 launched, `jack-cpu-1795059827` (push rc=0). The box load gate refused once at 8.05; a bounded retry got in at 5.53.
 - Philosophy served: 6 (free Kaggle hours used, not left to expire) and 1 (the walk reproduced before it goes into his body).
+
+## 2026-11-19 04:22–04:32 UTC · JACK · J11 (m-card FINAL, rule FROZEN, p0 launched) — short slot
+- m7 `…1795046888` home 04:09 → m-card FINAL 8/8: held8-k0-ff-bm 9/2000 (upper 0.785%), held8-k1-ff-bm 1/2000 (upper 0.237%); world-motor rates predict 37.6 / 8.0 (P 2.6e-8 / 0.0030) — the body-motor floor is lower on both arms. rule-inputs: W = 2 (k0-bm 2, k1-bm 1), U at W=2 0.64 / 0.80.
+- Rule FROZEN `e2c3c378`: PILOT_B2 §3 filled exactly as the draft allowed (W, U, motor frame) + `PILOT_RULE` set (seeds 402–406). Motor frame body by the 07:40 written default — the ruling never landed, gate 2's h4 (body eye + world motor 0/20) answers it; a `world` ruling re-drafts on 407+ (INBOX). SUSTAINED bar's chance at k1-bm's upper recomputed P = 0.047 (bar unchanged).
+- p0 launched into m7's freed session `jack-cpu-1795062415`. Tests PASS: pilot_b2 kernels (refusal now tested with an empty rule), frames, bm, arms.
+- Philosophy served: 4 (every bar fixed before the first learner seed, floors measured in the same frame as the arms) and 7 (no compass in eye or motor — the body the finished Jack will have).
