@@ -494,3 +494,35 @@ dead-reckoning and wander were written for world axes and not re-tuned
 the eye. What it does say: the stage-1 proof stands at the entry rung only
 (d0 = 0.75, 20/20); any claim at d = 1 on the body-frame eye is unproven.
 Adult-taught ceiling only.
+
+### J15 (2) — gate 3's reading at d = 0.75: f5, the ruler a memoryless net could copy (harvested 2026-11-19 12:10; raw `world_card_data/eye_gate3_d075.json` sha256 54c77266…; kernel `jack-cpu-1795073402` at `9882df51`; scored by `eye_forager score3`)
+
+| row (d = 0.75, seeds 281–300 × 10 lives) | seeds meeting the bar | mean of seed means, floor meals/life (sd; min–max) | mean life, decisions | capped lives | reported only: all floor foods, meals/life (seeds ≥ 5 and > b5) |
+|---|---|---|---|---|---|
+| **f5** body-frame row128 → action, no memory, no draw | **5 / 20 → MISSES** (needs 18) | 3.57 (2.89; 0.30–10.00) | 3,893 | 21 / 200 | 5.22 (8 / 20) |
+| g5 shuffled rays (must fail) | 0 / 20 → fails, as it must | 2.00 (0.76; 0.80–3.60) | 4,523 | 7 / 200 | 3.03 (1 / 20) |
+| b5 white random (floor) | — | 0.50 (0.29; 0.10–1.00) | 1,656 | 0 / 200 | 0.77 |
+
+**THIS memoryless hand rule (f5) does not meet the bar at d0: 5 of 20**
+(seeds 283, 284, 287, 289, 297). No extension (frozen). It still carries
+food: it beat its own b5 seed on 18/20, but its own shuffled twin on only
+12/20. **How it eats: by sitting.** 739 of f5's 1,044 eats (71 %) fall in the
+21 lives that reached the 9,000-decision cap, nearly all of them at 23–39
+eats, parked on food that regrows under it. Every other life ended in
+hunger. The "meals from one food" figure promised before the run cannot be
+read from these fields: eats = bouts on all three rows (1,044 = 1,044 for
+f5), because the 5-decision bout gap (`world_card.BOUT_GAP`) is shorter than
+regrowth, so each regrown meal counts as a new bout. The capped lives are
+the stand-in. The bar counts `obj0`+`obj1` only, the same as gate 2 where f4
+passed 20/20. The dial's extra foods are shown in the last column, reported
+only, and do not change the reading. Beside f4 on gate 2 (7.53, 20/20, with
+a remembered target and a held random wander): taking memory and the coin
+away costs ~4 meals a life and 15 seeds.
+What it says: **E2b (cloning a forager into his network) closes as "not
+clonable by a memoryless net, by measurement" for the only memoryless
+teacher we have.** What it does NOT say: that no function of the row can
+find food. f5 is one hand rule that cannot tell food from other small things
+(texture shifts per world) and never gives a thing up. A better memoryless
+rule might pass. Finding food on his eye at this bar has so far needed
+memory, which a recurrent student could learn, but that is not tested here.
+Adult-taught ceiling only.
