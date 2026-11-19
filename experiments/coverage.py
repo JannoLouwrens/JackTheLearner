@@ -1188,7 +1188,7 @@ QUEUE_EMPTY_BASELINE = frozenset()
 #               (11-13, after LC.02's quiet-box verdict). Printed only since
 #               then: it no longer moves coverage's exit code (S3(2)).
 #   2026-11-17  115 -> 107, the floor follows the number down (ORDERS S9).
-UNREACHABLE_BASELINE = 107
+UNREACHABLE_BASELINE = 104
 
 
 def unreachable_ratchet(ledger=None,
@@ -1340,7 +1340,7 @@ def _unreachable_fixture() -> List[str]:
 #               stored-slack defect the same audit's item 1 exists to repair.
 #   2026-11-13  4 -> 1: an id named in docs/ORDERS.md's orders is owned
 #               (S3(2)); W.1, W.2, W1.00 sit in J6/J7. T2.07 is the one.
-FAIL_UNOWNED_BASELINE = 1
+FAIL_UNOWNED_BASELINE = 0
 
 # The readable disposition marker (72nd audit B1: the T3.07 exclusion "must be
 # by a readable marker, not by a hardcoded id"). Lives in `Spec.notes` —

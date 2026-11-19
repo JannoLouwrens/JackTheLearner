@@ -3668,7 +3668,8 @@ EXPANSION: list[Spec] = [
                "inadmissible in this venue, and the repair is a world edit "
                "routed through the W1 window — never a quiet decay-rate "
                "retune until the price appears.",
-         notes="COVERS: far (claim).\n"
+         notes="FAIL-DISPOSED: ruling-42 2026-11-18 — Director ruling 42 (executed by ruling 43, ORDERS S9): the generic probe is the defect (measured 441ac2f1), not the world; a new probe is pre-registered at the first stage-3 sitting or 2027-01-15. No re-run on the old probe.\n"
+               "COVERS: far (claim).\n"
                "Registered under the 102nd audit RANK 1 / FOR THE BUILDER "
                "item 1 (2026-09-19): GOAL.md:187 names seven survival-earned "
                "primitives and 'far' had NO spec at all — not blocked, not "
@@ -3745,7 +3746,8 @@ EXPANSION: list[Spec] = [
                "edit routed through the W1 window or NE.01's constants "
                "lane under ITS binding constraints — never a quiet "
                "TAU_F/GEAR_FLOOR retune until tiredness appears.",
-         notes="COVERS: tiring (claim).\n"
+         notes="FAIL-DISPOSED: ruling-42 2026-11-18 — Director ruling 42 (executed by ruling 43, ORDERS S9): the generic probe is the defect (measured 441ac2f1), not the world; a new probe is pre-registered at the first stage-3 sitting or 2027-01-15. No re-run on the old probe.\n"
+               "COVERS: tiring (claim).\n"
                "Registered under the 102nd audit RANK 1 / FOR THE BUILDER "
                "item 1 (2026-09-19), sibling 2 of 3 after PS.05: "
                "GOAL.md:187 names seven survival-earned primitives and "
@@ -3843,7 +3845,8 @@ EXPANSION: list[Spec] = [
                "inadmissible here, and the repair is a world/body edit "
                "routed through the W1 window — never a quiet friction or "
                "mass-range retune until the price appears.",
-         notes="COVERS: heavy (claim).\n"
+         notes="FAIL-DISPOSED: ruling-42 2026-11-18 — Director ruling 42 (executed by ruling 43, ORDERS S9): the generic probe is the defect (measured 441ac2f1), not the world; a new probe is pre-registered at the first stage-3 sitting or 2027-01-15. No re-run on the old probe.\n"
+               "COVERS: heavy (claim).\n"
                "Registered under the 103rd audit FOR THE BUILDER item 1 "
                "(2026-09-19), sibling 3 of 4 after PS.05/PS.06: "
                "GOAL.md:187 names seven survival-earned primitives and "
@@ -4157,6 +4160,7 @@ EXPANSION: list[Spec] = [
          null_baseline="First-life learning curve; and the memory-wiped arm.",
          metric="lives_to_criterion_vs_wiped",
          budget=Budget.CPU_LONG, seeds=3, depends_on=["PS.02", "XL.00"],
+         repaired_by=["PS.02"],
          control="ANOTHER JACK'S MEMORIES. Carry a different agent's store into "
                  "the new life: it must NOT help, and should hurt. ME.3's "
                  "precedent - reflections generated from another agent's log "
@@ -9039,7 +9043,8 @@ EXPANSION: list[Spec] = [
                  "refuses is decorative (T0.13's own rule).",
          kills="Nothing directly; it prevents burning a Sunday quota on a run "
                "that could never have finished.",
-         notes="The numbers this spec would have surfaced, measured 2026-08-09: "
+         notes="FAIL-DISPOSED: ruling-43 2026-11-18 — stays an honest FAIL: none of the 16 long-run impls it names unbound is grandfathered; each binds rtf.require_feasible in the commit that next re-runs it (LESSONS_CORE rule 7). No re-run of T0.32 for a better number.\n"
+               "The numbers this spec would have surfaced, measured 2026-08-09: "
                "57M trunk 0.17 sim-s/real-s; 160K MLP 23.0. A 3-seed 1-sim-hour "
                "spec costs 52 h with the former against a 15 h ceiling. "
                "LC.07's pilot (2026-09-01) fired exactly this branch by hand: "
@@ -9842,7 +9847,8 @@ EXPANSION: list[Spec] = [
                  "must COLLAPSE. If a shuffled buffer scores like an ordered "
                  "one, the slots are not holding state across the step and "
                  "ME.8's PASS was bought by something other than memory.",
-         notes="REGISTERED BY THE ANATOMY AUDIT 2026-10-25 to give the new "
+         notes="FAIL-DISPOSED: WM.02 2026-11-12 — the GRU buffer is the working-memory seat's LOSING challenger: WM.02 seated RingMemory by verdict (ring 0.902 vs GRU 0.579, null 0.347); WM.01 stays an honest FAIL of the GRU (margin on 1 of 3 seeds), not re-run; the trainability row was declined 11-15. Re-run only if a changed buffer challenges the ring.\n"
+               "REGISTERED BY THE ANATOMY AUDIT 2026-10-25 to give the new "
                "Working-memory seat a ring. THE REASON THIS ONE IS URGENT "
                "RATHER THAN MERELY MISSING: the capability already holds "
                "PASSING certificates with no seat governing them — ME.8 "

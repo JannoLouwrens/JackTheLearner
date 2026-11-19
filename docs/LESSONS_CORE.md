@@ -27,7 +27,9 @@ something that smells familiar (it is split: live tail ≤ 150 KB, the rest in
    failing test.** If the *experiment* is wrong, strengthen or re-register it
    and say why in the commit; the old version stays in history.
 7. **Pilot before you pay.** Size a multi-hour run from a measured probe, and
-   declare the thresholds before the registered run, not after.
+   declare the thresholds before the registered run, not after. A long-run
+   impl binds `rtf.require_feasible` in the commit that next re-runs it — none
+   of the 16 `T0.32` names is grandfathered (ruling 43).
 
 ## The disease this project keeps catching: a control that reads a proxy
 
