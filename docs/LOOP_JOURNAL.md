@@ -2767,3 +2767,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Nothing could launch: `kernels status` shows all 5 Kaggle CPU sessions RUNNING (p3, p4, p5, J3 + duplicate); local watchers alive (p3/p4 timeout ~19:38). No pilot run home since 13:22.
 - Checked J14's Saturday path without pushing: `gpu.week_key` flips W46→W47 at 11-21 00:00:01 UTC (W46: 33.76 h spent; W47: empty), so A1 will not be refused on last week's quota. A1/A2/A3/A1-ext, `in_world` and ear kernel bodies build through `build_job` and parse; in_world passes all five world flags. Est. 15.1 of 30 GPU-h. Temp job dirs removed.
 - Philosophy served: 6 (30 free GPU-hours that expire are not lost to a broken first launch). No line of 1–4 moved; the order book still has no box-only creature work while Kaggle is full (13:45 INBOX line stands).
+
+## 2026-11-19 14:37–14:45 UTC · JACK · no order could advance (idle slot, reported)
+- `kernels status` 14:38: all 5 Kaggle CPU sessions RUNNING (p3 `…82879`, p4 `…82927`, p5 `…90316`, J3 `…90393` + duplicate `…90752`). No pilot run home since 13:22; W46 GPU spent; J14 opens Sat.
+- Checked the local watchers instead of trusting them: p3/p4/p5/J3 wrappers + children alive (PIDs 417125, 417680, 505954, 507549); the J3 watcher started 12:12, so it polls `…90393`, not the duplicate; REMOTE_TIMEOUT_S = 9.5 h on both tools — none times out before its run ends.
+- Next slot after ~15:20: J10 `kernel 0 1` into the freed duplicate's session (rank 4), then harvest J3 → KNOWN_ANSWERS.
+- Philosophy served: none of 1–4 moved; only 6 (no session forced or wasted). The 13:45 INBOX line stands — fourth idle JACK slot today.
