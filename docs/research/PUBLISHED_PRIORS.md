@@ -724,4 +724,44 @@ Long form: `/data/jack-research/research_notes/senses_together/` (parts A, B, C)
 
 ## 19. A learner that ends below its untrained twin: entropy against reward size, the survival traps, and what published foragers were set to (2026-11-19; serves J11 (6), J15 (4) E2c, M3)
 
-**Question.** In J11's partial (20/40) every learning arm of brain B eats LESS than its learning-rate-0 twin (late meals/life 0.08–0.16 vs 0.82). B runs SAC with a FIXED entropy coefficient 0.1 on 8 action dims and un-normalised rewards (`pilot_b.py:294-299`). What does the record say causes this, what does each cause look like in a trace, and what were published foragers set to? *Skeleton 16:10 UTC; sub-agents reading. Notes: `/data/jack-research/research_notes/sec19/`.*
+**Question.** In J11's partial (20/40) every learning arm of brain B eats LESS than its learning-rate-0 twin (late meals/life 0.08–0.16 vs 0.82). B is SAC with a FIXED entropy coefficient 0.1 on 8 action dims, rewards un-normalised (`pilot_b.py:294-299`). What causes this on record, what does each cause look like in a trace, and what were published foragers set to? Picked outside rules 1–3 (no `RESEARCH:` line, every order has prior lines): J11's prior predicted "arm K eats inside 300k", the partial contradicts it, and E2c's 15 sessions run the same setting. Long form: `/data/jack-research/research_notes/sec19/` (parts A, B, C).
+
+**Already known** (read in the papers' TeX source unless marked)
+- SAC v1, Haarnoja 2018 ([1801.01290](https://arxiv.org/abs/1801.01290) §5.2, Fig 3b, Ant, 2×256): "For small reward magnitudes, the policy becomes nearly uniform, and consequently fails to exploit the reward signal". Reward scale 5 on 8-dim Ant = α 0.2 against rewards of order 1 a step (Table 2; per-step size from memory).
+- SAC v2 ([1812.05905](https://arxiv.org/abs/1812.05905)): "a sub-optimal temperature can drastically degrade performance"; the cure is a LEARNED α, entropy target −dim(A). 8-motor real Minitaur walked in 160k steps.
+- Yu, Zhang, Xu 2022 ([2201.12434](https://arxiv.org/abs/2201.12434)), 5-node chain, step reward −0.05, fixed α 0.2 → entropy reward 0.14 a step (2.8× the task): the agent "never wants to reach the terminal state", "SAC hardly makes any progress", V keeps rising (9 seeds). **The entropy reward inside the critic's target is a pay-for-being-alive.** Negative entropy flips it: "tends to terminate the task earlier". Taking entropy out of the target (SACLite) cures it on MuJoCo, Box2D, Fetch; a smaller start α "will not eradicate" it (FetchPush).
+- RL-Zoo `sac.yml` (fetched 11-19): 2 fixed entries only — MountainCarContinuous 0.1 (ONE action dim: ≤ 0.069 a step; the row B reproduced) and BipedalWalkerHardcore 0.005 (1e7 steps). All others `auto`.
+- Unity ML-Agents ([1809.02627](https://arxiv.org/abs/1809.02627), table): FoodCollector SAC 46.4 ± 7.9, PPO 36.6 ± 8.4 (5 runs) — the ONE plain-SAC forager on record. Ray-era config (`release_10`): rays 49 values, discrete moves, ±1 a food, α LEARNED from 0.05 (target −dim(A); no fixed mode exists), γ 0.99, 1 update per 10 steps, 128×2, **2,000,000 steps**, several agents an area. Same table, SAC at the floor where search is sparse: Pyramids −1.0 vs PPO 1.79.
+- rllab Gather, Duan 2016 ([1604.06778](https://arxiv.org/abs/1604.06778), Table 1; 25M steps, mean over training): Swimmer-Gather 0.0 for every algorithm; Ant-Gather random −5.8, TRPO −0.4, DDPG −0.3; one column −6.7, BELOW random. "Poor performance… even with extensive hyperparameter search". Positive food return needed hierarchy: HIRO 3.02 ± 1.49, VIME 1.42 at 10M ([1805.08296](https://arxiv.org/abs/1805.08296)).
+- Crafter 1M ([2109.06780](https://arxiv.org/abs/2109.06780)): every rewarded learner beats random on eating (Eat Cow 0.4% → 12–26%). Only reward-free learners fall below random (RND return 0.7 vs 2.1; Wake Up 7.8% vs 93.6%): **learning with no usable reward destroys what a random walk gets free.**
+- Primacy bias, Nikishin 2022 ([2205.07802](https://arxiv.org/abs/2205.07802)): SAC over-fitted to its first data "is unable to recover" in ~1M steps; resets every 2e5 steps, buffer kept: DMC IQM 501 → 656; recovery in "a few thousands of steps".
+- Pardo 2018 ([1712.00378](https://arxiv.org/abs/1712.00378)): a −1 move penalty teaches "stay in place". Li 2023 ([2306.03286](https://arxiv.org/abs/2306.03286), offline): terminations alone create a survival pull.
+
+**Computed here (inf, 2 lines of numpy).** A tanh-squashed Gaussian at mean 0, std 1 has entropy 0.670 nats a dim — 97% of the ceiling ln 2 = 0.693; at std 2 it is 0.00; at std 0.37, 0.30. So (i) the untrained twin ALREADY collects 0.536 a decision; (ii) entropy pressure holds std near 1 and PUNISHES saturation — `PILOT_B2.md` §3b's "std/saturation rising = confirmed" reads the wrong way; (iii) pure entropy dominance predicts learner ≈ twin, not below it; (iv) ≤ 0.536/(1−γ) ≈ 107 is paid in every living state and lost at death, about one meal: lives 276 → 500 s is +1,120 decisions ≈ +600 of entropy reward undiscounted, more than 5 meals.
+
+**Candidates** (causes; a trace separates them)
+1. *Entropy as a survival bonus* (Yu 2022). Signature: critic V rises toward ~100 with no meals; lives lengthen, meals and movement fall; std stays 0.4–1. Fits B0/P/G. Cure a: `ent_coef="auto"`, target −8 — B's Pendulum row 1b reproduced with `auto` (−302.0 ± 22.2 vs lib −309.3), so it is the setting with a known answer; fixed 0.1 has one on a 1-dim task only. Cure b: SACLite (a subclass; unproven here). Cure c: fixed α 0.003–0.01 (inf; Zoo's 0.005).
+2. *Lost coverage*: a learned mean saturates tanh or shrinks the noise, so he sweeps less floor. Signature: |action| > 0.95 fraction rises or std falls, lives unchanged, meals fall in the free-movement world too. Fits arm K. Published analogue: Crafter's reward-free rows.
+3. *Primacy bias*: decline starts right after the 5k warm-up and never reverses. Test: Nikishin's reset.
+4. *The budget*: one SAC forager at 2M steps with an easier body; flat learners at 25M ≈ 0 on an 8-dim body. A learner at or near random at 300k is what this record expects.
+
+**Ours beside theirs**
+
+| Setting | Published forager / SAC | Ours | Same? cost |
+|---|---|---|---|
+| temperature | learned, target −dim(A) (SAC v2, ML-Agents, Zoo) | fixed 0.1 (`pilot_b.py:297`) | DIFFERS; no multi-dim precedent |
+| entropy vs task reward a step | fails at 2.8× (Yu) | 0.536 vs −0.036…+0.031: ~15× | DIFFERS |
+| reward | ±1 a food, 0 between | +100 a meal, small negative drift, death lump (`jack_env.py:50-53`) | DIFFERS; targets ~100, alive bonus ≈ a meal |
+| steps, envs | 2M, several agents | 300k, 1 | 1/7 the data |
+| updates a step | 0.1 | 1 | 10× more fitting on less data |
+| actions | 3 discrete branches | 8 continuous | harder search |
+| γ, net, memory | 0.99, 128×2, none | 0.995, 256×2 + LayerNorm, none | similar |
+
+**Known-answer check.** Yu's SimpleChain (5 nodes, −0.05 a step, terminal at the end): fixed α 0.2 must FAIL with V rising; `auto`/SACLite must reach the end. Seconds on a CPU; no published step count read (figure). It tests the mechanism, in our SBX stack. FoodCollector 46.4 needs the Unity player: not a free-CPU row.
+
+**What the record does NOT answer**
+- Learner BELOW its lr-0 twin in a free-movement forager: no published curve. E2c's trace reads it free: std ≈ 1, mean ≈ 0, V rising → cause 1; saturation rising or std falling → cause 2.
+- Fixed 0.1 vs `auto` in his world: arm K + one cost arm, 5 seeds, 300k (~2–3 kernels). Predicted: `auto` drops α below 0.01 inside 50k, the lengthening of meal-less lives shrinks; meals ≥ twin NOT predicted (cause 4).
+- When a learner passes a held-noise random walk on foraging: nobody. How long SAC needs on FoodCollector (curve unread).
+
+**Not verified.** Fig 3b's scale values and MuJoCo per-step rewards (memory); FoodCollector's step axis, area count, random score; Duan's column names; EVAAA ("PPO and DQN only survive level 1-1", summariser); Yoshida 2024; pink noise; Safety Gym SAC; auto-α collapse on sparse continuous tasks (discrete only: TES-SAC [2112.02852](https://arxiv.org/abs/2112.02852)); SBX `auto` start value.
