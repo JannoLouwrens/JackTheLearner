@@ -137,7 +137,7 @@ was network size.
 serves: M3 · PLAN "a fair chance for our own brains" · philosophy 3, 4.
 **done when:** `KNOWN_ANSWERS.md` has one row pair per arm (4) and the repaired entry's row (5), pass or fail.
 state: FAIL both rows, controls hold: `ppo-needs` (−578…−1120), `ppo-lp` (−824…−1059), `wm-latent` (best −321.0; learns, budget binds); row 3: 0 flag reaches each. `wm-dyn`, `wm-latent+ring` wired `8a87941a` (est. 0.8 h / 2 h).
-state: 11-19 02:30 `wm-dyn` HARVESTED → KNOWN_ANSWERS Row J3-4c: FAIL both rows, controls 0/5. Row 1 best windows −547…−874 (learns −1300→−650…−1130, 300 eps); row 3 0 flag reaches. Below wm-latent on row 1.
+state: 11-19 02:23 `wm-dyn` HARVESTED (`bc08a6ef`) → KNOWN_ANSWERS Row J3-4c: FAIL both rows, controls 0/5. Row 1 best windows −547…−874 (learns −1300→−650…−1130, 300 eps); row 3 0 flag reaches. Below wm-latent on row 1.
 state: `dreamer-xs` LAUNCHED 02:23 into the freed session — `jack-cpu-1795054996`, log `/data/jack-logs/j3_inhouse/launch_dreamer-xs.log` (est ≤ 3 h); harvest → KNOWN_ANSWERS Row J3-4d, then `wm-latent+ring` kernel.
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
@@ -196,7 +196,7 @@ other port work until G0 has run. Lead to weigh in the write-up: official
 JAX ran 0.925 vs sheeprl 0.458 grad steps/s on this box (`9ba4e682`).
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6.
 **done when:** G0's pass or fail is in `experiments/brain_a/README.md` with its numbers.
-state: DONE (11-19 02:35, this commit) — G0 PASS in `experiments/brain_a/README.md`: 12m compiled first step 216 s < 600, peak 1.8 GB < 8, finite; compiled == eager bit-for-bit.
+state: DONE `bc08a6ef` (11-19 02:24) — G0 PASS in `experiments/brain_a/README.md`: 12m compiled first step 216 s < 600, peak 1.8 GB < 8, finite; compiled == eager bit-for-bit.
 state: FOUND: Kaggle x86 MLX steps 1m at 17.4 s vs 2.34 s on 1 box ARM core (7.4× slower); 12m 212 s/step. x86 CPU timings are not the Mac's — speed only from the Mac's first-day rows. Next per the report: rung 1.
 
 ### J10 — The walking layer: reproduce a published walk (owner 11-15)
@@ -218,6 +218,7 @@ state: (2′) RULE FROZEN `experiments/humanoid_sac_row.py` (11-18 slot): Zoo en
 state: `61e2950f`: Zoo entry VERIFIED at zoo `d802099a` (matches); SBX hidden defaults = SB3 non-SDE; rule CORRECTED before seed 0: metres = centre-of-mass x (v4 `x_position`), not torso. `evaluate` + `control_run` coded; box control 50k: R 67.96, 0 updates, holds. next: the training-segment body (500k/10.5 h, model + replay buffer carried, resume test on box at ~20k), then launch at rank 5.
 state: 11-18 10:29 `23e375be`: `train_segment` (resume as the rule says) + box `resume_check` 10k+10k: step counter, buffer, n_updates (9000→19000), all params + actor optimiser equal after load, fresh control differs — RESUME OK. Box ~0.018 wall-s/step. Found: replay is float64, ~6.1 GB at 1e6 (rule said 3.1; fits Kaggle 20 GB). Wall-stop callback not exercised. next: kernel wrapper (seg 0 fresh; later segs attach previous output as kernel source), launch seed 0 at rank 5.
 state: 11-18 10:50: Kaggle wrapper `humanoid_sac_row kernel <seed> [segment]` + job text (pins = jack-std venv; fetches only segment.json); `tests/test_humanoid_sac_row_kernel` PASS 4/4. BLOCKED on the machine (INBOX 10:50): gpu.py has no `kernel_sources` (segment ≥1 cannot mount the checkpoint; wrapper refuses) and downloads ALL output (seg 0 would pull ~6.1 GB to /data). next: when both land, launch seed 0 seg 0 detached at rank 5.
+state: 11-19 02:25 SEED 0 SEGMENT 0 LAUNCHED into G0's freed session (machine blocker cleared by SYSTEM `ee81dffd`: kernel_sources + fetch_only; kernel test PASS 5/5) — `jack-cpu-1795055129`, log `/data/jack-logs/j10/launch_s0_seg0.log` → `/data/jack-logs/j10/sac_row/s0_seg0.json` (~10.5 h). next: harvest it, then `kernel 0 1` (first real test of the segment mount path).
 
 **Parked or closed:** `D1.0`, `T2.01` (→ J10), `LF.06`, `LC.09`, `CR.01`,
 `LF.04` — "to earn again" on the chosen brain (ruling 20). `NE.01` → stage 3
