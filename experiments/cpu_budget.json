@@ -1479,11 +1479,12 @@
     "2026-11-19": {
       "by_spec": {
         "detached:launch_m3.log": 0.16,
-        "detached:launch_m4.log": 10.82,
-        "detached:launch_m5.log": 10.46,
-        "detached:launch_m6.log": 10.74
+        "detached:launch_m4.log": 74.46,
+        "detached:launch_m5.log": 113.66,
+        "detached:launch_m6.log": 75.06,
+        "detached:launch_m7.log": 63.93
       },
-      "used_s": 32.18
+      "used_s": 327.27
     }
   },
   "last_child_s": {
