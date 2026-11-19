@@ -687,7 +687,7 @@ Long form: `/data/jack-research/research_notes/senses_together/` (parts A, B, C)
 - Noise inputs: SAC 256-256 cannot learn Humanoid at 90% noise features (clean ~4,500, 1M) (2302.06548).
 - **Body-state hidden = no learning**: EVAAA (NeurIPS 2025, Unity, DreamerV3-S; four needs): the needs-hidden and eye-hidden arms fail to learn; heat sense and collision mattered more than smell. Figures only. DreamerV3 > DQN > PPO. Its heat sense: 9 numbers over a heat field.
 - Reward: drive difference is best of three (Yoshida 2024, abstract; doi 10.1016/j.neunet.2024.106379). Their ant senses each need as ONE number (set-point 0, death at ±1) and cools by a panting action, not by seeking shade.
-- Many needs: 8×8 grid, DQN, 30k steps: one learner per need is near maximum at once; one learner for all needs 1k–10k exploration steps and worsens from 4 to 8 needs (Dulberg 2023).
+- Many needs (Dulberg, arXiv 2204.06608 e-print READ 11-19; RLDM 2022 short form of PNAS 2023): 9×9 walkable grid in a wall ring (11×11, Gaussians at the corners), 3×3 view of 4 resource maps + 4 stats, DQN γ 0.5, ONE 30k-step life. Δ (mean Σ|h*−h| over steps 15k–30k, figure readings, n = 50): monolithic DQN 3.2 [1.9–6.0] with 1 annealing step → 0.95 [0.75–1.35] at 5k → 0.8 at 10k; one DQN per need (GmQ, Q summed) ≈ 0.5–0.6 at every annealing length. No needs-hidden arm. The '4 → 8 needs worsens' claim is NOT in this version (PNAS text not read). Rule: `experiments/needs_grid_row.py`.
 - Touch: ShadowHand, DDPG+HER, 5 seeds: 92 touch sensors reach the level 2.6× sooner (Egg 355 → 115 epochs of 190k samples), final level +16%; **Boolean 2.45× ≈ continuous**; touch WITHOUT proprio 0.24 of baseline. Null control (92 zeros / noise) moved one task 0.30 → 0.34: < 15% at 5 seeds is noise (Melnik 2021, doi 10.3389/frobt.2021.538773).
 - Balance: quadruped, joint positions + gravity 3-vector + base linear and angular velocity give 94–99% of full-state; the rest alone 6–12% (2306.17101). Biped G1, PPO, pushes: with IMU 96.1 ± 0.5% survive, without 90.4 ± 1.1 (2608.29487).
 - MIMo infant (2312.04318; head gyro + accelerometer, full skin; PPO): reach 0.5M, stand 1.5M, catch 4M steps; no sense ablated.
@@ -711,7 +711,7 @@ Long form: `/data/jack-research/research_notes/senses_together/` (parts A, B, C)
 | balance | gravity 3 + gyro 3 | upright cosine, height (`w0.py:310-313`) | no tilt direction, no turn rate |
 | needs | 1 number each, set-point 0 | levels + d(h) + 2 rates (`drives.py:432`) | no precedent, untested |
 
-**Known-answer check** (CPU): Dulberg's 8×8 grid, 4 needs, DQN, 30k steps × 30 agents: separate learners near maximum, single needs thousands of exploration steps (curve); add a needs-hidden arm (EVAAA predicts failure). < 2 h (guess).
+**Known-answer check** (GPU, not CPU — measured 11-19: ~55 min per 30k-step DQN life on one ARM core): Dulberg's grid, 4 needs, DQN, 30k steps × 30 agents: separate learners near maximum, single needs thousands of exploration steps (curve); add a needs-hidden arm (EVAAA predicts failure). < 2 h (guess).
 
 **What the record does NOT answer**
 - Leave-one-sense-out on the brain that eats: 6 arms × 5 seeds × 300k (~30 kernel-h, inf). Predicted: needs-hidden and eye-hidden fail; touch-, audio-hidden inside noise (< 15%).
