@@ -721,3 +721,7 @@ Long form: `/data/jack-research/research_notes/senses_together/` (parts A, B, C)
 - A taste label at the mouth; aversion after one delayed sickness; seeking warmth at ≤ 1M: nobody.
 
 **Not verified.** Yoshida 2024 full text; EVAAA's steps and effect sizes (figures); Dulberg, the robot ant (summariser); MIMo, M3L, CoRAL scores (curves); MuMMI's and sensor dropout's step counts; Seymour 2019, Safety Gym, Crafter health: not read.
+
+## 19. A learner that ends below its untrained twin: entropy against reward size, the survival traps, and what published foragers were set to (2026-11-19; serves J11 (6), J15 (4) E2c, M3)
+
+**Question.** In J11's partial (20/40) every learning arm of brain B eats LESS than its learning-rate-0 twin (late meals/life 0.08–0.16 vs 0.82). B runs SAC with a FIXED entropy coefficient 0.1 on 8 action dims and un-normalised rewards (`pilot_b.py:294-299`). What does the record say causes this, what does each cause look like in a trace, and what were published foragers set to? *Skeleton 16:10 UTC; sub-agents reading. Notes: `/data/jack-research/research_notes/sec19/`.*
