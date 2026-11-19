@@ -87,8 +87,8 @@ serves: M2→M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 
 **done when:** `PILOT_B2.md` has the f-card, the frozen rule, 40 runs and one reading per arm.
 state: DONE — options `move_cost_dial`, `spawn_clear`, `food_floor_only` (`4978e989`, `adf457ca`); c-card 16/16 (leaky world, kept as history, NOT the rule's input); arms, packer, table tool coded and tested (`1eb7af3f`, `2d6808f0`, `1970d4a8`); f4..f7 groups (`31f5e5ac`).
 state: 11-18 20:25 `791d9b55`: f-card FINAL 8/8 in `PILOT_B2.md` §2b (f7 home 19:02): noop 0/2000; held8-k0-ff 37/1970 (upper 2.47%); held8-k1-ff 8/2000 (upper 0.72%); rule-inputs → W = 2 quiets every floor (k1 pred 1.85/0/0, upper 3.33/0.69/0.69).
-state: 11-19 01:10 `99a92146` m-card interim 5/8 (PILOT_B2 §2b): m0–m3, m5 HOME — held8-k0-ff-bm 8/1250 (upper 1.16%; world-motor rate predicts 23.5, P(≤8)=0.0002), k1-ff-bm 0/1250 (upper 0.24%; P(0)=0.0067). Body-motor floor LOWER on both arms, five groups.
-next: m4 `…1795037006` (due ~01:20), m6 `…1795041696`, m7 `…1795046888` RUNNING — harvest each with `card --glob 'm*.json'` as it lands; at 8/8 run `rule-inputs` on the m-card. The rule still waits on the motor-frame ruling (INBOX 12:26).
+state: 11-19 01:25 `da2fd8b4` m-card interim 6/8 (PILOT_B2 §2b): m0–m5 HOME — held8-k0-ff-bm 8/1500 (upper 0.96%; world-motor rate predicts 28.2, P(≤8)=8e-6), k1-ff-bm 0/1500 (upper 0.20%; P(0)=0.0025). Body-motor floor LOWER on both arms, six groups.
+next: m6 `…1795041696`, m7 `…1795046888` RUNNING — harvest each with `card --glob 'm*.json'` as it lands; at 8/8 run `rule-inputs` on the m-card. The rule still waits on the motor-frame ruling (INBOX 12:26).
 state: for the rule writer: seed 401 was stepped once (start at 402); K-lr0 has no card twin (SBX `use_sde` holds a draw 32 decisions).
 state: for the rule writer (`302b34c1`, `ca3f560a`): `PILOT_RULE = {seeds, food_floor_only, eye_frame, motor_frame, rule}`; `pilot_kernel` REFUSES without eye_frame='body' and a named motor_frame. If body: floors are `held8-k0-ff-bm`/`-k1-ff-bm` (groups m0..m7, 4 cells = 2 worlds × both arms; `test_pilot_b2_bm` PASS); if world: m-cards unused, f-card stands.
 
