@@ -1485,17 +1485,20 @@
         "T0.12": 2.93,
         "T0.22": 4.5,
         "VO.01": 165.07,
-        "detached:launch_dreamer-xs.log": 23.24,
+        "W.1": 42.92,
+        "detached:launch_dreamer-xs.log": 197.22,
         "detached:launch_g0.log": 526.22,
         "detached:launch_m3.log": 0.16,
         "detached:launch_m4.log": 162.6,
         "detached:launch_m5.log": 113.66,
         "detached:launch_m6.log": 496.97,
-        "detached:launch_m7.log": 169.57,
-        "detached:launch_s0_seg0.log": 21.53,
+        "detached:launch_m7.log": 327.42,
+        "detached:launch_p0.log": 11.07,
+        "detached:launch_s0_seg0.log": 138.72,
+        "detached:launch_s1_seg0.log": 64.72,
         "detached:launch_wm-dyn.log": 502.75
       },
-      "used_s": 2447.43
+      "used_s": 3015.16
     }
   },
   "last_child_s": {
@@ -1565,7 +1568,7 @@
     "T6.03": 1185.78,
     "TA.01": 635.46,
     "VO.01": 165.07,
-    "W.1": 20.94,
+    "W.1": 42.92,
     "W.2": 94.77,
     "W0.DIAG": 672.79,
     "W0.PL": 91.07,
