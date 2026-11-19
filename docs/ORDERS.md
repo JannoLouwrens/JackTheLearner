@@ -138,7 +138,8 @@ serves: M3 · PLAN "a fair chance for our own brains" · philosophy 3, 4.
 state: FAIL both rows, controls hold: `ppo-needs` (−578…−1120), `ppo-lp` (−824…−1059), `wm-latent` (best −321.0; learns, budget binds); row 3: 0 flag reaches each. `wm-dyn`, `wm-latent+ring` wired `8a87941a` (est. 0.8 h / 2 h).
 state: 11-19 02:23 `wm-dyn` HARVESTED (`bc08a6ef`) → KNOWN_ANSWERS Row J3-4c: FAIL both rows, controls 0/5. Row 1 best windows −547…−874 (learns −1300→−650…−1130, 300 eps); row 3 0 flag reaches. Below wm-latent on row 1.
 state: 11-19 04:40 `dreamer-xs` HARVESTED → KNOWN_ANSWERS Row J3-4d: FAIL both rows, controls 0/5. Row 1 best −392.7, −398.9, −340.0, −286.2, −378.5 → 1/5 reach (first in-house seed in band); row 3 0. (6) read: equal to wm-latent (mean −359.2 vs −364.4). Corrected J3-4b: wm-latent s0 last-10 −839.6.
-next: `wm-latent+ring` kernel when a session frees after J11's p-runs claim theirs (J11 outranks).
+state: 11-19 05:45 (5) WIRED `94406999` (no session free; p0/p1/p2/J10 s1 all RUNNING): arm `wm-latent@repair` = same core/loop, two settings changed — noise direction held 32 decisions (std schedule kept), GAE γ 0.99; fresh seeds 5–9; plain cells byte-identical; test 3/3.
+next: `wm-latent+ring` kernel when a session frees after J11's p-runs claim theirs (J11 outranks); then (5) `…inhouse_rows kernel wm-latent@repair` (log `launch_wm-latent@repair.log`).
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48
