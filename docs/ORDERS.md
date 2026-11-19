@@ -87,8 +87,8 @@ serves: M2→M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 
 **done when:** `PILOT_B2.md` has the f-card, the frozen rule, 40 runs and one reading per arm.
 state: DONE — options `move_cost_dial`, `spawn_clear`, `food_floor_only` (`4978e989`, `adf457ca`); c-card 16/16 (leaky world, kept as history, NOT the rule's input); arms, packer, table tool coded and tested (`1eb7af3f`, `2d6808f0`, `1970d4a8`); f4..f7 groups (`31f5e5ac`).
 state: 11-18 20:25 `791d9b55`: f-card FINAL 8/8 in `PILOT_B2.md` §2b (f7 home 19:02): noop 0/2000; held8-k0-ff 37/1970 (upper 2.47%); held8-k1-ff 8/2000 (upper 0.72%); rule-inputs → W = 2 quiets every floor (k1 pred 1.85/0/0, upper 3.33/0.69/0.69).
-state: 11-19 00:15 m-card interim 4/8 (PILOT_B2 §2b): m0–m3 HOME — held8-k0-ff-bm 6/1000 (upper 1.18%; world-motor rate predicts 18.8, P(≤6)=0.0006), k1-ff-bm 0/1000 (upper 0.30%; P(0)=0.018). Body-motor floor LOWER on both arms, four groups.
-next: m4 `…1795037006`, m5 `…1795037983`, m6 `…1795041696`, m7 `…1795046888` (launched 00:08) all RUNNING — harvest each with `card --glob 'm*.json'` as it lands (m4 ~01:20, m5 ~01:40); at 8/8 run `rule-inputs` on the m-card. The rule still waits on the motor-frame ruling (INBOX 12:26).
+state: 11-19 01:10 `99a92146` m-card interim 5/8 (PILOT_B2 §2b): m0–m3, m5 HOME — held8-k0-ff-bm 8/1250 (upper 1.16%; world-motor rate predicts 23.5, P(≤8)=0.0002), k1-ff-bm 0/1250 (upper 0.24%; P(0)=0.0067). Body-motor floor LOWER on both arms, five groups.
+next: m4 `…1795037006` (due ~01:20), m6 `…1795041696`, m7 `…1795046888` RUNNING — harvest each with `card --glob 'm*.json'` as it lands; at 8/8 run `rule-inputs` on the m-card. The rule still waits on the motor-frame ruling (INBOX 12:26).
 state: for the rule writer: seed 401 was stepped once (start at 402); K-lr0 has no card twin (SBX `use_sde` holds a draw 32 decisions).
 state: for the rule writer (`302b34c1`, `ca3f560a`): `PILOT_RULE = {seeds, food_floor_only, eye_frame, motor_frame, rule}`; `pilot_kernel` REFUSES without eye_frame='body' and a named motor_frame. If body: floors are `held8-k0-ff-bm`/`-k1-ff-bm` (groups m0..m7, 4 cells = 2 worlds × both arms; `test_pilot_b2_bm` PASS); if world: m-cards unused, f-card stands.
 
@@ -137,7 +137,8 @@ was network size.
 serves: M3 · PLAN "a fair chance for our own brains" · philosophy 3, 4.
 **done when:** `KNOWN_ANSWERS.md` has one row pair per arm (4) and the repaired entry's row (5), pass or fail.
 state: FAIL both rows, controls hold: `ppo-needs` (−578…−1120), `ppo-lp` (−824…−1059), `wm-latent` (best −321.0; learns, budget binds); row 3: 0 flag reaches each. `wm-dyn`, `wm-latent+ring` wired `8a87941a` (est. 0.8 h / 2 h).
-state: next: `dreamer-xs` kernel when rank 3 gets a session.
+state: 11-19 01:09 `wm-dyn` LAUNCHED into m5's freed session (rank 0: est 0.8 h) — `jack-cpu-1795050581`, log `/data/jack-logs/j3_inhouse/launch_wm-dyn.log`; harvest → KNOWN_ANSWERS.
+state: next: `dreamer-xs` kernel when J3's session frees (one at a time), then `wm-latent+ring`.
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48

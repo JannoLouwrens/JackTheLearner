@@ -2584,3 +2584,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `25a13d60`: `mac_first_day.py` row 11 now times 2,000 64×64 renders of his world per launch context (+ MPS), `--emit-launchd` writes agent/daemon plists (Interactive QoS, never Background); row 12 `--soak SECONDS` logs world dec/s, back-to-back Dreamer chunk speed, RSS, vm_stat/memory_pressure/powermetrics each minute. Also: a missing JACK_SHEEPRL_PY now SKIPs instead of crashing.
 - Box smoke: render FAILED under all three GL backends (headless — recorded as FAILED, not zero); loop proven only on a planted renderer (test PASS 4/4). Soak 75 s: learner 0.205 grad steps/s beside one world proc vs 0.43 alone.
 - Philosophy served: 7 (handed to people, still learning on their machines — the Mac is the first such machine) and 6 (its cost measured before it is bought into).
+
+## 2026-11-19 01:08–01:15 UTC · JACK · J11 (m5 harvest) + J3 (wm-dyn launch)
+- m5 (body-motor floor twin) home 00:50. m-card interim 5/8 (`99a92146`, PILOT_B2 §2b): held8-k0-ff-bm 8/1250 sustained (upper 1.16%), k1-ff-bm 0/1250 (upper 0.24%). At the world-motor rates they would show 23.5 and 5.0 (P = 0.0002 and 0.0067): the lower body-motor floor holds across five kernel groups. 10/16 worlds, W=2 quiet; no W set.
+- m5's session freed and J11 has no ready kernel (pilot kernels wait on the rule) → J3 `wm-dyn` launched under rank 0 (est 0.8 h), `jack-cpu-1795050581`, push rc=0. m4, m6, m7 watchers alive, untouched.
+- Philosophy served: 4 (the floor a learner must beat measured in his own frame, not borrowed) and 3/6 (a free Kaggle session given to the home-made brain's fair chance instead of idling).
