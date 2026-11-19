@@ -2792,3 +2792,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `pilot_b2 table` PARTIAL 20/40 (reported only): 0 sustained lives anywhere; every learning arm ends at 0.08–0.16 meals/life while the never-learning K-lr0 ends at 0.82. Learning still drives meals down — the slide, now on 3–4 seeds per arm.
 - Receipts (`gpu_submissions.jsonl` p3 result + p7 attempt, `cpu_budget.json`) committed by name.
 - Philosophy served: 4 (the pilot runs to its frozen rule, every seed home, nothing read early) and 6 (a freed free session refilled within 8 minutes).
+
+## 2026-11-19 17:08–17:20 UTC · JACK · J3 (5) harvested; J11 p8 + J10 `kernel 1 1` into the two freed sessions
+- Home: p5 (16:36) and J3's `wm-latent@repair` (17:06). Launched p8 `jack-cpu-1795108161` (J11 at its 3) and J10 `kernel 1 1` `…108173` (rank 4; J3's session held, below). All 5 Kaggle sessions busy. J10 `kernel 0 1` RUNNING 1 h 47 m — the mount did not fail fast.
+- J3 (5) → KNOWN_ANSWERS Row J3-5: **row 3 PASS** 4/5 at the 50k checkpoint (95.8 95.3 92.6 [89.4] 94.4; control 0/5) — the first published row an in-house arm has reproduced. **Row 1 FAIL**: no learning at all (best −1188…−1290 ≈ control −1193…−1239; unrepaired wm-latent −364). Disclosed: held noise alone finds the flag in the control's training episodes; the PASS is the deterministic learned policy.
+- Split verdict has no branch in the order → INBOX; proposed a row-1 `gamma-only`/`hold-only` kernel (priced suspect: γ 0.99 × raw-unit value targets ≈ 25× value-loss scale). Not run.
+- Philosophy served: 3 (a home-made brain given its fair chance and raced on a published row, the trade it made recorded, not argued) and 4 (a PASS stated with the control that had to miss and the caveat that could undermine it).

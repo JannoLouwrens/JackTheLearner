@@ -376,3 +376,32 @@ rows → valid FAILs (PASS needs ≥ 3 of 5 arm seeds).
 - **Row 3: 0 flag reaches** (best training return −0.99), as every in-house arm.
 - **J3 (4) is complete:** all plain arms have rows, all FAIL with controls holding. J3 (5)
   `wm-latent@repair` launched 11-19 15:24 (jack-cpu-1795101867).
+
+## Row J3-5 — the repaired entry `wm-latent@repair`: row 3 PASSES (the first in-house row reproduced), row 1 collapses (11-19, Kaggle CPU)
+
+Rule `3054fbe6` + the repair block `94406999` (noise direction held 32 decisions, GAE γ 0.99, fresh
+seeds 5–9, same verdict clause), unchanged. Kernel jack-cpu-1795101867 at `66b1920c` (home 17:06,
+6,113 s; receipt in `gpu_submissions.jsonl`, `74c883e5`); result
+`/data/jack-logs/j3_inhouse/wm-latent@repair.json` (torch 2.11.0+cpu, gymnasium 1.1.1).
+
+| arm | row 1 best 100-ep window per seed (edge −314.7) | reached | row 3 best deterministic eval per seed (> 90) | reached |
+|---|---|---|---|---|
+| wm-latent@repair | −1279.0, −1290.2, −1187.7, −1288.4, −1216.5 | 0/5 → **FAIL** | **95.8, 95.3, 92.6**, 89.4, **94.4** | 4/5 → **PASS** |
+| never-trains control | −1193.4…−1239.1 | 0/5 | −0.005…−0.00004 | 0/5 |
+
+- **Row 3 PASS — the first row any in-house arm has reproduced.** 4 of 5 seeds above 90 at the
+  **50k** checkpoint, i.e. inside the published SAC budget (§5: 50k), not only the 3× allowance;
+  seed 8 is 88.7 at 50k and 89.4 at 150k (a miss by 0.6, counted as a miss). Every plain arm read 0
+  flag reaches. Not monotone: at 100k three seeds dipped (59.3, −56.1, −58.5) and recovered by 150k.
+  **Disclosed:** the held noise alone finds the flag — the never-trains control's TRAINING episodes
+  reach it (first-10 mean 54–79) — but its deterministic eval (the frozen mean) reads ~0, so the
+  PASS is the learned policy, as the rule measures. The repair is the exploration (§15 candidate 1).
+- **Row 1 FAIL, and worse than the unrepaired arm:** no learning at all — first-10 → last-10
+  episode means −1310 → −1192, −1299 → −1449, −1346 → −1126, −1272 → −1476, −1371 → −1306, inside
+  the control's range (best windows −1188…−1290 vs control −1193…−1239). Plain `wm-latent` reached
+  a best window of −364 mean on seeds 0–4 and learned −1300 → −650. The repair traded row 1 for row 3.
+- **Which change broke row 1 is not measured.** Priced candidate (not a finding): value targets are
+  in raw task units (docstring "reward raw"); at γ 0.99 Pendulum's discounted return reaches ~−600
+  vs ~−120 at 0.95, so the value-loss term is ~25× larger in the core's shared loss. The other
+  candidate: noise held 32 decisions (16% of a 200-step episode) on a task that needs fine torque
+  corrections. One kernel with `hold-only` and `gamma-only` cells on row 1 separates them.
