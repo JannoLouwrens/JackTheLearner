@@ -1480,9 +1480,10 @@
       "by_spec": {
         "detached:launch_m3.log": 0.16,
         "detached:launch_m4.log": 10.82,
+        "detached:launch_m5.log": 10.46,
         "detached:launch_m6.log": 10.74
       },
-      "used_s": 21.72
+      "used_s": 32.18
     }
   },
   "last_child_s": {
