@@ -2712,3 +2712,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Rule frozen before any cell: 6 cells × 10 seeds, never-trains control must sit above Δ 5 else VOID. Net depth derived from the stated 1.09e6 params. `test_needs_grid_row` 4/4 with planted failures.
 - Smoke: 117 s per 1,500 DQN steps on one ARM core → ~55 min per life on CPU; it is a ~2 T4-h GPU kernel, not the "< 2 h CPU" §18 guessed. Not launched (no session; needs a GPU slot).
 - Philosophy served: 3 and 4 (a sense ablation with a control that must fail, frozen before it runs, on the primary text rather than a summary of it).
+
+## 2026-11-19 10:37–10:47 UTC · JACK · Next-up 3: brain A fed one key per sense — design note (text only)
+- All 4 Kaggle sessions RUNNING (`kernels status`: J11 p2/p3/p4, J15 gate 3); J3/J10 wait; J14 not before 11-21; Next-up 1–2 done → item 3.
+- Read sheeprl 0.8.5 (jack-a-probe venv): a Box env with >1 mlp key keeps only the first (utils/env.py:192-202) → per-sense keys need a Dict-space `make`; decoder then gets one head per key, runner unedited.
+- Loss: dreamer_v3_5.py:155-156 sums symlog_mse over keys and numbers → pull by width: vision 43 %, needs 8 % (widths measured 32/16/8/12/6 = 74). Width-normalised loss and whole-sense dropout have no knob → runner change → raced arms beside keys-sum, never defaults. Hide-at-test is env-side.
+- Philosophy served: 3 (how his senses are fused is written down as raced choices, not assumed) and 1 (one connected brain that can tell its senses apart).

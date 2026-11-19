@@ -219,6 +219,8 @@ published expected FAILURE. Ruling 33's form; no run before the rule.
 3. Brain A fed one key per sense (§18 item 2): a design note in
 `brain_a/in_world.py`'s docstring — the keys, the width-normalised loss,
 ours beside theirs. No code change to the frozen A1–A3 rows.
+   state: 11-19 10:45 NOTE WRITTEN in `brain_a/in_world.py` docstring (text only; rows + smoke untouched). Widths measured: vision 32, audio 16, touch 8, proprio 12, needs 6 = 74. sheeprl 0.8.5 keeps only the FIRST mlp key on a Box env → per-sense needs a Dict-space `make`; then one decoder head per key with no runner edit. Its loss SUMS keys by width (needs pull 8 %); width-normalised loss and whole-sense dropout both need a runner change → raced arms, not defaults. Hide-at-test is env-side, no edit.
+   next: after J11 — `keys=per_sense` path in `make` + smoke against this file's DONE (1)–(4).
 4. `row128` vs 16 rays under B (body frame): rule text only, after J11.
 5. Stage-2 rule, first draft from `STAGE2_PREDICTION.md` + J11's readings
 → `docs/research/prereg/stage2_a_vs_b.md` (text; the Director freezes it).

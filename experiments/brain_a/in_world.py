@@ -28,6 +28,34 @@ already 40 physics sub-steps; DMC's 2 is a property of DMC's control rate); a li
 (terminated) — no time limit; `algo.total_steps=20000` = decisions summed over the 4 envs
 (sheeprl counts policy_step = decisions x envs, rows.py's unit check), i.e. 5,000 per env;
 buffer size 20,000 and no buffer checkpoint (the rows' 500k memmap is sized for 200k runs).
+
+DESIGN NOTE — brain A fed one key per sense (Next-up 3, PUBLISHED_PRIORS §18 item 2; 2026-11-19).
+TEXT ONLY: nothing above changes; the frozen A1–A3 rows and this smoke keep the one flat key.
+  Today: `JackEnv._obs` concatenates SENSES into one Box(74); sheeprl's gym path wraps a Box as
+  {mlp_keys.encoder[0]: obs} and, given >1 mlp key on a Box, WARNS and keeps only the first
+  (sheeprl 0.8.5 utils/env.py:192-202). So A sees one key `state`: one decoder head, no per-sense
+  loss, no way to hide one sense.
+  The keys (widths measured 11-19 on make(0).reset, w.observe()): vision 32 (body-frame eye),
+  audio 16, touch 8, proprio 12, needs 6 = 74. Language (cores.MODALITIES, 32) is
+  empty today and gets no key until it carries something.
+  How, with the runner unedited: a `keys=per_sense` path in `make` returning
+  spaces.Dict({k: Box(width_k)}) from `w.observe()` (a Dict env passes sheeprl's wrapper as is),
+  and overrides `algo.mlp_keys.encoder=[vision,audio,touch,proprio,needs]` + the same list for
+  `algo.mlp_keys.decoder`. sheeprl then builds one encoder MLP over the concatenated keys and one
+  decoder head per key (agent.py:842-868, 909-935) — the official Dreamer form.
+  The loss, ours beside theirs: dreamer_v3_5.py:155-156 SUMS symlog_mse over keys, each summed
+  over its numbers, at one `observation_scale` — a sense's pull is its width (official rssm/agent
+  likewise; §18). At equal per-number error vision pulls 32/74 = 43 %, audio 22 %, proprio 16 %, touch 11 %,
+  needs 8 % — the sense §18 says must not be hidden gets the least. The width-normalised loss
+  (CoRAL 2302.05342; M3L 2311.00924) = each key's sum divided by its width (equal 20 % each) has
+  NO knob in sheeprl: it is a one-line change at :156 and therefore a CHANGED RUNNER, a setting
+  that differs from Dreamer's recipe, to be listed as such and raced (sum vs width-normalised),
+  never assumed. Whole-sense dropout (TORCS 1705.10422) cannot be done env-side without also
+  zeroing the decoder's TARGET (the env feeds both); it too needs an encoder-side mask = runner
+  change. Hide-at-test (§18 "record does NOT answer") is env-side and needs no edit: zero /
+  shuffle / matched-noise one key in the wrapper, eval lives only.
+  Order when it is run (after J11, not before): arm keys-sum (no edit) first, its smoke must
+  reproduce this file's DONE (1)–(4); keys-norm and dropout only as raced arms beside it.
 """
 from __future__ import annotations
 
