@@ -2664,3 +2664,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Read the released code at b50478f8: the helper's (2000, 2000) are SPD gains (sideways N/m, forward N per m/s), not newtons — rule corrected. `stage_exits` (`411ec079`) labels each curriculum stage THRESHOLD / CAP / CUT from rank 0's progress.json; crossing-and-meeting counts CAP (stricter; velocity is not logged).
 - FOUND: a reverted iteration resets TimestepsSoFar, so its samples never count toward the 5M cap — a stage can draw more than 5M. Logged as headers × 20k beside the logged count. Planted test 4/4.
 - Philosophy served: 4 (a curriculum that "completes" on caps can no longer pass as learned) and 5 (the walking layer's reproduction made truer before it costs a kernel).
+
+## 2026-11-19 06:35–06:47 UTC · JACK · J11 (sessions checked, harvest path dry-run) — short slot
+- All 4 Kaggle sessions RUNNING (J11 p0/p1/p2, J10 s1 seg 0; `kernels status` each). J11, J3, J10, J15 all wait on a session; J14 not before 11-21; Next-up 1–3, 5, 7 have commits, 4 and 6 wait on J11/J3.
+- `pilot_b2 table` on the live tree: PARTIAL 0 of 40 registered, exit 0; `readings` refuses a partial book. Nothing else in the JACK lane could move without a session.
+- Finding for the Director: three short slots in a row (06:07, 06:22, 06:35) found every JACK order blocked on the 4 Kaggle sessions until ~07:00 (J10 s1) / ~12:00 (p0). Idle-slot work inside the session-bound orders is used up.
+- Philosophy served: 6 (no free session left unfilled — none was free) and 4 (harvest tool checked before the data lands). Thin: no order advanced.
