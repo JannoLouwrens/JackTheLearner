@@ -120,10 +120,12 @@ seed 801 that a miss at 300k is weak evidence. Amend the frozen E2c text
 with these three lines before any run; 15 runs = 15 sessions at J11's rank.
 serves: M3 · PLAN stage 1 "proof that the task can be learned with his senses" · philosophy 3, 4.
 **done when:** f5's gate row, E2b's row or its closure, and E2c's row are in `WORLD_CARD.md`, each with its control.
-state: 11-18 16:40 `6aae85f8`: E2c wrapper CODED ahead of J11's rule — `experiments/handed_sense.py` `HandedSense(env, mode, encoding)`: food / random_point (frozen control) / zero (INBOX 16:14, option only); radpi (frozen default) / cossin (option only). `test_handed_sense` PASS (planted geometry; his senses byte-identical on arm-K world; point held, kept through truncation, re-drawn per life). E2c still needs J11's frozen rule + a `run_b` call with the wrapper; the Director's 16:14 ruling picks encoding/control.
-state: rules + collector DONE `760ae70a` (`experiments/forager_clone.py` docstring: E2b train seeds 701–740, test 741–760, clone ≥2 of 3 seeds, permuted twin must fail; E2c 300k × 5 seeds 801–805, random-point control). `test_forager_clone` PASS.
-state: 13:25 FULL kernel CODED (`forager_clone kernel-full`): re-collects 701–740 in-kernel, checks each seed's (x,a) sha256 against `experiments/forager_clone_teacher.json` (mismatch reported, not fatal — declared in the docstring), trains the 6 students (train_clone unchanged), runs the 140 cells; fetches clone_full.json + 6 weights. Refuses without a committed 40-seed manifest. Test PASS 6/6. Est 9 h (GUESS) vs 9.5 h timeout.
-state: 11-19 06:41 Director: E2b as frozen not run (ruling 50). next: (1) f5 + planted test on the box, (2) its gate kernel.
+state: E2c wrapper CODED `6aae85f8` (`experiments/handed_sense.py`: food / random_point / zero; radpi / cossin; `test_handed_sense` PASS). E2c still needs J11's forty runs + the three amended lines + a `run_b` call with the wrapper.
+state: E2b rules + collector `760ae70a`, FULL kernel `forager_clone kernel-full` coded (6/6) — NOT RUN (ruling 50); (3) amends its docstring to teacher = f5 only if gate 3 passes.
+state: 11-19 07:25 (1) DONE: `f5_act(row)` + `RowForager` in `eye_forager.py` — nearest blob that is ≥ 0.11 m wide AND ≥ 0.10 m in front of both flanks, else the middle of the widest open gap; no state, no draw. `experiments/tests/test_f5.py` PASS 5/5 (same row twice 0 diffs; shuffled replay of 400 rows 0 diffs; f4 under the same replay differs 400/400; non-row noise 0; planted rows). Smoke (153/154, one life cut at 3,000): v1 any blob 0 meals (parked on ladder rails), v2 +width 1 / 2, v3 the ruler 9 / 2 — it parks on what it reaches, food or not.
+state: (2) GATE 3 FROZEN in the docstring before any cell: f5 / g5 shuffled / b5, d0 only, seeds 281–300, bar unmoved, no extension, a miss is a miss of THIS hand ruler. Launch: `scripts/launch_detached.sh /data/jack-logs/eye_forager/launch_gate3.log $PY -m experiments.eye_forager kernel3`; score: `eye_forager score3 /data/jack-logs/eye_forager/gate3_d075.json`.
+state: (2) LAUNCHED 07:30 `jack-cpu-1795073402` at `9882df51` (log `/data/jack-logs/eye_forager/launch_gate3.log`, est 5 h) into the session J10 s1 seg 0 freed at 07:08 (rank 2; J11 holds p0/p1/p2). Two earlier launch tries this slot were refused on box load (6.8, 8.1 > 6.0, other projects' test runs).
+next: harvest gate 3 → WORLD_CARD row (with meals-from-one-food per row); pass → (3), miss → closure text + (4).
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48, 52
@@ -163,7 +165,7 @@ serves: M3 · PLAN "a fair chance for our own brains" · philosophy 3, 4.
 state: 11-19 02:23 `wm-dyn` HARVESTED (`bc08a6ef`) → KNOWN_ANSWERS Row J3-4c: FAIL both rows, controls 0/5. Row 1 best windows −547…−874 (learns −1300→−650…−1130, 300 eps); row 3 0 flag reaches. Below wm-latent on row 1.
 state: 11-19 04:40 `dreamer-xs` HARVESTED → KNOWN_ANSWERS Row J3-4d: FAIL both rows, controls 0/5. Row 1 best −392.7, −398.9, −340.0, −286.2, −378.5 → 1/5 reach (first in-house seed in band); row 3 0. (6) read: equal to wm-latent (mean −359.2 vs −364.4). Corrected J3-4b: wm-latent s0 last-10 −839.6.
 state: 11-19 05:45 (5) WIRED `94406999` (no session free; p0/p1/p2/J10 s1 all RUNNING): arm `wm-latent@repair` = same core/loop, two settings changed — noise direction held 32 decisions (std schedule kept), GAE γ 0.99; fresh seeds 5–9; plain cells byte-identical; test 3/3.
-next: `wm-latent+ring`, then `wm-latent@repair`, one session at a time at rank 3.
+next: `wm-latent+ring`, then `wm-latent@repair`, one session at a time at rank 3 (07:10 a `wm-latent+ring` launch was refused on load; the session then went to J15's gate 3, rank 2).
 
 ### J16 — Brain A on the Mac: the port's rung 1 (G0 passed 11-19)
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` (its step table, rows 0.4–1.3; gate G1); `experiments/brain_a/README.md`
@@ -193,9 +195,9 @@ layer KEEPS LEARNING (owner 11-15 19:21).
 serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked in parallel from now" · philosophy 1, 2.
 **done when:** row (2′) is in `KNOWN_ANSWERS.md`, pass or fail.
 state: (2′) RULE FROZEN `experiments/humanoid_sac_row.py`: Zoo entry, seeds 0–2, PASS R ≥ 5,950 AND ≥ 12 m/1,000 steps on ≥ 2/3, 1M median in [3,784, 5,866], late-start control < 500 else VOID; resume = 500k segments, model + replay (float64, ~6.1 GB) carried; box resume_check OK (`23e375be`).
-state: s0 seg 0 HOME (500k, 490k updates; output holds model.zip + replay.pkl); s1 seg 0 `jack-cpu-1795059827` RUNNING (log `/data/jack-logs/j10/launch_s1_seg0.log`). `resolve_prev_dir` (`27d5c364`) finds the segment-1 mount or fails fast (test 6/6).
+state: s0 seg 0 HOME (500k, 490k updates; output holds model.zip + replay.pkl); s1 seg 0 `jack-cpu-1795059827` HOME 07:08 (500k hit, 490k updates, 11,774 s train; `j10/sac_row/s1_seg0.json`). `resolve_prev_dir` (`27d5c364`) finds the segment-1 mount or fails fast (test 6/6).
 state: 11-19 06:25 (2) `411ec079`: Yu rule's "2000 N" corrected to SPD gains (N/m sideways, N per m/s forward; human_walker.py:175-212); `stage_exits` per-stage log THRESHOLD / CAP / CUT wired into the smoke body; FOUND reverted iterations draw 20k samples the cap never counts — reported as headers × 20k. Verdicts must name "k of n stages advanced on the cap". Test 4/4.
-next: harvest s1 seg 0 → `kernel 0 1` when rank 4 gets a session.
+next: `kernel 0 1` (the first real mount test), then `kernel 1 1`, when rank 4 gets a session.
 
 **Parked or closed:** `D1.0`, `T2.01` (→ J10), `LF.06`, `LC.09`, `CR.01`,
 `LF.04` — "to earn again" on the chosen brain (ruling 20). `NE.01` → stage 3
@@ -290,6 +292,7 @@ seed average that admits a failing seed. (8) `T0.13`'s dead clauses;
 
 ## INBOX — one line each, workers add, the Director empties
 (emptied 11-19 06:41 — every line of 11-18/19 is ruled in 49–56 or became J15, J16, S11, Next-up 1–3.)
+- 11-19 07:30 JACK J15: f5 cannot know which texture is food (geom ids, so textures, shift per world) and never gives a thing up — it parks; a seed can pass gate 3 by sitting on one regrowing food. If gate 3 misses, the order's closure sentence over-reads one hand ruler: propose "THIS memoryless hand rule does not meet the bar (k of 20)". Also disclosed in the rule: seed 281's world was built once to print its geom table (no policy stepped).
 
 ## DONE (kept one day)
 

@@ -2670,3 +2670,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `pilot_b2 table` on the live tree: PARTIAL 0 of 40 registered, exit 0; `readings` refuses a partial book. Nothing else in the JACK lane could move without a session.
 - Finding for the Director: three short slots in a row (06:07, 06:22, 06:35) found every JACK order blocked on the 4 Kaggle sessions until ~07:00 (J10 s1) / ~12:00 (p0). Idle-slot work inside the session-bound orders is used up.
 - Philosophy served: 6 (no free session left unfilled — none was free) and 4 (harvest tool checked before the data lands). Thin: no order advanced.
+
+## 2026-11-19 07:07–07:35 UTC · JACK · J15 (1)–(2): f5 built, proven memoryless, gate 3 frozen and on Kaggle
+- J10 s1 seg 0 came home 07:08 (500k hit, 490k updates) → one session free. A J3 `wm-latent+ring` launch was refused twice on box load (6.8, 8.1 > 6.0; other projects' test runs, untouched); by the time load fell (5.3) J15's gate was frozen and outranks it.
+- `f5_act(row)` (`9882df51`): nearest blob ≥ 0.11 m wide and ≥ 0.10 m in front of both flanks, else the middle of the widest open gap. `test_f5` PASS 5/5: same row twice 0 diffs, shuffled replay of 400 rows 0 diffs, f4 under the same replay differs 400/400 (control), non-row noise 0 diffs, planted rows.
+- Smoke on tuning seeds 153/154 only (one life cut at 3,000 decisions): v1 any blob 0 meals (parked on the ladder rails); v2 + width 1 / 2; v3, the ruler, 9 / 2. FOUND: food's texture is not a constant (geom ids shift per world), so no memoryless rule can know what is food; f5 parks on whatever it reaches — 5 of seed 153's 9 meals came from one food regrowing under him.
+- Gate 3 frozen before any cell (f5 / g5 shuffled / b5, d0, seeds 281–300, bar unmoved, no extension) and LAUNCHED 07:30 `jack-cpu-1795073402`, RUNNING on Kaggle. Sessions: p0, p1, p2, gate 3. INBOX: the closure sentence over-reads one hand ruler.
+- Philosophy served: 4 (the ruler's rule, its three shaping variants and its weakness written down before the fresh seeds run) and 3 (whether finding food on his eye needs memory becomes a measurement).
