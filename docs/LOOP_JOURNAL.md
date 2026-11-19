@@ -2641,3 +2641,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - FOUND: `pilot_b2 table` prints numbers but no reading — the §3 verdicts would have been applied by hand after the data. Coded `pilot_readings` / `pilot_b2 readings` (`ebb59a38`): every clause of the frozen rule (broken, floor moved, INCOMPLETE, SUSTAINED, EATS BUT STARVES / θ too easy, SLIDES, NEAR RANDOM); refuses a partial book.
 - Planted test 9/9: a base book reads each arm as built; each VOID/broken clause fires on its own plant and spares the other arms. Four seams in the text resolved toward the stricter reading and written into PILOT_B2 §3 before any run is home.
 - Philosophy served: 4 (the reading fixed in code before the data, so nobody gets to interpret it afterwards).
+
+## 2026-11-19 05:22–05:30 UTC · JACK · J11 (p2 launched) — short slot
+- J10 s0 seg 0 `…1795055129` came home 05:17 (500k target hit, 490k updates, 9,756 s train; `j10/sac_row/s0_seg0.json`) — the 05:07 slot ended before it saw the freed session.
+- J11 outranks J10's later segments → p2 launched into it, `jack-cpu-1795065783` (push rc=0, HEAD pushed). Sessions now: p0, p1, p2, J10 s1 seg 0. J10 s0 seg 1 waits behind p3..p9.
+- Committed the dirty gpu_submissions result row + cpu_budget receipt.
+- Philosophy served: 6 (a free Kaggle session filled within 6 minutes of freeing) and 4 (the pilot's frozen book filling run by run).
