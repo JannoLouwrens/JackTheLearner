@@ -84,10 +84,10 @@ serves: M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 7.
 **done when:** `PILOT_B2.md` has the frozen rule, 40 runs and one reading per arm.
 state: (3) RULE FROZEN 11-19 04:35 `e2c3c378` (`PILOT_B2.md` §3 + `PILOT_RULE`): seeds 402–406, W = 2, U 0.64 k0-bm / 0.80 k1-bm → floor(U) = 0, native_substep, body eye. **Motor frame body by the 07:40 written default** (no ruling landed); a `world` ruling re-drafts on seeds 407+ with the f-card arms.
 state: 11-19 13:35 `d3815ce6` §3c (reported, no run; p0–p2 home, 0 cut/crash): movement energy = E0+intake−basal per energy death. Control K (moving free) reads ~0. B0/P/G: movement falls Q2→Q4 in 6/6 cells (25–55 %, ~0.21→0.12 × basal) while meals fall — the slide; entropy does not override the cost; P did not stop it. 13:22 all 5 sessions still RUNNING.
-state: 11-19 15:23 p4 HOME 15:20 (`pilot_p4.json`, 18,721 s); p6 LAUNCHED `jack-cpu-1795101811` (`launch_p6.log`) into p4's session. Running: p3 `…82879`, p5 `…90316`, p6. J11 holds 3; the other two went to J3 (5) and J10 (rank 3, 4).
-state: `pilot_b2 table` PARTIAL 8/40 (reported, NOT the reading): 0 sustained lives in any arm; every learner's meals/life falls early→late (K 0.90→0.14, B0 0.30→0.12); K-lr0 (no learning) 1.40→0.62 is the best late row so far.
+state: 11-19 15:38 p3 HOME 15:30 (`pilot_p3.json`, 19,330 s); p7 LAUNCHED `jack-cpu-1795102676` (`launch_p7.log`, push rc 0) into p3's session. Running: p5 `…90316`, p6 `…101811`, p7. J11 holds 3; J3 (5) and J10 hold the other two.
+state: `pilot_b2 table` PARTIAL 20/40 (reported, NOT the reading): 0 sustained lives in any arm; every learning arm's meals/life falls early→late to 0.08–0.16 (K 0.85→0.16, B0 0.80→0.13, KP 1.33→0.12); K-lr0 (no learning) 1.47→0.82 stays best late — learning still makes him eat less.
 state: 11-19 12:45 `7d3b18fc` §3b (reported, no run): fixed ent_coef 0.1 × 8 action dims → entropy bonus ≤ 0.555/decision vs task reward −0.036 (meal-less K) / +0.031 (K-lr0 meals) — 15–18×; ≈ 111 discounted vs +100 a meal (Haarnoja 2018: too-small reward scale → near-uniform policy). E2c's trace tests it: std/saturation rising = confirmed.
-next: p7..p9 as J11's sessions free (p3 ~17:30, p5 ~19:30, p6 ~20:30); then `table` + `readings` → §4.
+next: p8, p9 as J11's sessions free (p5 ~19:30, p6 ~22:30, p7 ~23:00); then `table` + `readings` → §4.
 
 ### J15 — The learnability proof, part 2: a forager his network can copy, then a learner given the direction
 part: Learning to eat · stage: 1 (stage-1 line "a copy of it inside his own network, and a learner given the direction to food") · step: 2 → 3 · prior: §17 (read it whole); J12; ruling 50

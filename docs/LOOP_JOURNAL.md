@@ -2786,3 +2786,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J3 (4) HARVESTED → KNOWN_ANSWERS Row J3-4e: `wm-latent+ring` FAIL both rows, controls 0/5. Row 1 best windows −425.7 −453.0 −347.3 −263.2 −353.7 (1/5; mean −368.6 vs wm-latent −364.4, dreamer-xs −359.2 — the ring adds nothing); row 3 0 flag reaches. Every plain in-house arm now has its rows; only the repaired entry remains.
 - p4 home (`pilot_p4.json`), not yet read: J11 table waits for all 10.
 - Philosophy served: 3 (a home-made arm raced on a published row and recorded beside its siblings; the repaired fair chance is running) and 6 (no freed free session left idle).
+
+## 2026-11-19 15:37–15:45 UTC · JACK · J11: p3 home, p7 launched, table 20/40
+- p3 came home 15:30 (`pilot_p3.json`); p7 launched into its Kaggle session (`jack-cpu-1795102676`, push rc 0). Running now: p5, p6, p7 (J11's 3), J3 (5) repair, J10 `kernel 0 1`.
+- `pilot_b2 table` PARTIAL 20/40 (reported only): 0 sustained lives anywhere; every learning arm ends at 0.08–0.16 meals/life while the never-learning K-lr0 ends at 0.82. Learning still drives meals down — the slide, now on 3–4 seeds per arm.
+- Receipts (`gpu_submissions.jsonl` p3 result + p7 attempt, `cpu_budget.json`) committed by name.
+- Philosophy served: 4 (the pilot runs to its frozen rule, every seed home, nothing read early) and 6 (a freed free session refilled within 8 minutes).
