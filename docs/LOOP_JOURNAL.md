@@ -2652,3 +2652,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - All 4 Kaggle sessions held (J11 p0/p1/p2 + J10 s1 seg 0 RUNNING, checked on Kaggle); J11 has nothing launchable → next order J3.
 - J3 (5) wired `94406999`: `wm-latent@repair` = the same learner with only §15's named cure — noise direction held 32 decisions, γ 0.99 — fresh seeds 5–9, same verdict clause. Plain cells byte-identical (only cpu_s), test 3/3. Ready to dispatch the moment a session frees (after J11's p-runs and `wm-latent+ring`).
 - Philosophy served: 4 (a FAIL turned into a repair, not filed) and 3 (the home-made brain gets its fair chance under the record's cure).
+
+## 2026-11-19 06:07–06:20 UTC · JACK · J10 (the resume path checked before it is spent) — short slot
+- All 4 Kaggle sessions RUNNING (J11 p0/p1/p2, J10 s1 seg 0; checked on Kaggle). J11, J3, J15 wait on a session; J12/J13 done; J14 not before 11-21; Next-up 1–3, 5, 7 already have commits → J10.
+- s0 seg 0's Kaggle output really holds model.zip + replay.pkl (kernel log RESULT 500k/490k updates, JACK_OUT /kaggle/working). `kaggle kernels files` sizes are NOT file sizes (segment.json listed 847 B, real 175 B) — don't read a checkpoint's health from them.
+- The /kaggle/input/<slug> mount for segment 1 was never verified; `resolve_prev_dir` (`27d5c364`) now takes the rule's path or the single deeper mount carrying the slug, else fails fast naming what is mounted — so a wrong guess costs a pip install, never a 10-h session. Test 6/6 with planted mounts.
+- Philosophy served: 5 (the walking layer's 2M-step reproduction made cheaper to finish) and 6 (no free Kaggle session wasted on a mis-mounted resume).
