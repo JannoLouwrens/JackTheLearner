@@ -451,3 +451,28 @@ coin-flip logp (|logit| to 100). Logs `/data/jack-logs/mlx/rung1_{vs_official,st
   port then deviates from the official code here on purpose — one row in `mlx_maths.py`'s table.
 Next (row 1.3): fill `mlx_maths.py` until `rung1.py` exits 0 (9/9 eager and compiled), each
 deviation in its "ours beside theirs" table; then the same on the PyPI wheel on Kaggle.
+
+## J16 (c) — row 1.3: the maths module; rung 1 PASS on the box (11-19)
+
+`experiments/brain_a/mlx_maths.py` filled line for line from the official lines it cites.
+**`rung1.py` exits 0: 9/9 tests pass eager AND `mx.compile`d** (mlx 0.32.4, box ARM CPU; log
+`/data/jack-logs/mlx/rung1_pass.log`): `squash`, `bins`, `twohot`, `decode`, `unimix`, `kl`,
+`straight_through`, `normal`, `binary`. Worst errors, as multiples of rung 1's per-element scale:
+bins 1.6e-7, decode 5.7e-7 (cond), KL values 1.9e-7, every gradient ≤ 1.6e-7; uniform and mirrored
+decode exactly 0 eager and compiled; both stop-gradients exactly 0; free bits → zero gradient.
+`--planted` re-run with the filled module: still 9/9 CAUGHT (`rung1_planted_filled.log`).
+
+Two deviations from the official code, both in the module's "ours beside theirs" table:
+- **decode**: `(p3 − p1[::-1]) · b3` — mirrored probabilities cancelled before the multiply. Same sum
+  in exact arithmetic (bins mirrored bit for bit); the official form gives +0.164 compiled (probe
+  re-printed in the planted log), this one exactly 0.
+- **the bins grid — measured, not in the report**: the first fill used `mx.linspace` and FAILED
+  `bins` at 1.92e-6 (8/9). The official grid is not the jaxpr's arithmetic: XLA:CPU rewrites
+  `iota/127` to `iota · f32(1/127)` (optimized HLO) and LLVM contracts `1 − iota·r` into one fma, so
+  each point is `−20 · fma(−i, r, 1)`. Measured on the 128 points: `mx.linspace` misses JAX's grid
+  at 41, the jaxpr computed op by op at 41, the fma form at **0**. The port computes that fma as one
+  float64 rounding on the CPU stream (an f32·f32 product is exact in float64; bins are built once).
+  Remaining bin differences are expm1's last ulp (12/255, ≤ 1.6e-7). Lesson for later rungs: parity
+  with the official code means parity with what its COMPILER emits, read from the optimized HLO.
+
+Next: the same `rung1.py` on the PyPI MLX wheel (report's row after 1.3), then rung 2.
