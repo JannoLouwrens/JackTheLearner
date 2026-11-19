@@ -332,3 +332,27 @@ Controls reach 0/5 on both rows → both readings are valid FAILs.
 - **Row 3: the reward is never sampled** (0 flag reaches), as for every in-house arm — the shared
   learner's white action noise; the named cure (correlated noise, §15) is J3 (5)'s repaired entry.
 - Remaining under (4): `dreamer-xs` (jack-cpu-1795054996, launched 11-19 02:23), then `wm-latent+ring`.
+
+## Row J3-4d — `dreamer-xs` misses both rows; the first in-house seed to reach row 1's band (11-19, Kaggle CPU)
+
+Rule `3054fbe6`, unchanged. Kernel jack-cpu-1795054996 (home 03:45); result
+`/data/jack-logs/j3_inhouse/dreamer-xs.json`. Controls reach 0/5 on both rows → valid FAILs
+(PASS needs ≥ 3 of 5 arm seeds).
+
+| arm | row 1 best 100-ep window per seed (band edge −314.7) | reached | row 3 flag reaches (5 × 150 eps) | reached |
+|---|---|---|---|---|
+| dreamer-xs | −392.7, −398.9, −340.0, **−286.2**, −378.5 | 1/5 | 0 | 0/5 |
+| control | −1195.3…−1258.5 | 0/5 | 0 | 0/5 |
+
+- **Row 1: seed 3 reaches (−286.2)** — the first in-house seed under this rule to do so; 2 more
+  were needed. Last 10 training eps per seed −429.8, −311.5, −283.7, −277.0, −228.0. Cost ~844
+  CPU-s a seed (wm-latent 1,188), row 3 ~2,022 (wm-latent 2,783).
+- **J3 (6), dreamer-xs beside wm-latent: equal within seed noise.** Mean best window −359.2 vs
+  −364.4 (wm-latent −396.7, −321.0, −397.2, −349.2, −358.0); 1/5 vs 0/5 reaches. By (6)'s own
+  reading, wm-latent's distance from PPO was not its home-made losses — the shared learner at this
+  network size is what both are. (`wm-efe` = `dreamer-xs` on these rows, ruling 44: same row.)
+- **Correction to Row J3-4b.** Recomputed from `wm-latent.json`: wm-latent seed 0's last 10 training
+  eps average −839.6 (it collapsed late: −2.8 … −1,365 alternating), not "−231…−335 on all 5 seeds";
+  seeds 1–4 are −334.9, −231.5, −274.0, −247.1. The near-miss reading for row 1 stands on 4 of 5.
+- **Row 3: 0 flag reaches**, as every in-house arm (white action noise; J3 (5) is the cure).
+- Remaining under (4): `wm-latent+ring`.

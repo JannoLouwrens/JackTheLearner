@@ -88,7 +88,8 @@ serves: M2→M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 
 state: DONE (1)–(2): f-card 8/8 (`791d9b55`); m-card FINAL 8/8 (m7 home 04:09): held8-k0-ff-bm 9/2000 (upper 0.785%), held8-k1-ff-bm 1/2000 (upper 0.237%) — body-motor floor below world-motor on both arms (P 2.6e-8 / 0.0030). rule-inputs → W = 2.
 state: (3) RULE FROZEN 11-19 04:35 `e2c3c378` (`PILOT_B2.md` §3 + `PILOT_RULE`): seeds 402–406, W = 2, U 0.64 k0-bm / 0.80 k1-bm → floor(U) = 0, native_substep, body eye. **Motor frame body by the 07:40 written default** (no ruling landed); a `world` ruling re-drafts on seeds 407+ with the f-card arms.
 state: (4) p0 LAUNCHED 04:27 `jack-cpu-1795062415` (log `/data/jack-logs/pilot_b2/launch_p0.log`, est ≤ 7.5 h). Tests PASS: kernels (refusal now with an empty rule), frames, bm.
-next: p1..p9 into each Kaggle session as it frees (`scripts/launch_detached.sh /data/jack-logs/pilot_b2/launch_pN.log $PY -m experiments.pilot_b2 pilot-kernel --name pN`); J11 outranks J10's later segments. When all 10 home: `pilot_b2 table` → §4, one reading per arm by §3.
+state: p1 LAUNCHED 11-19 04:37 `jack-cpu-1795063080` (log `launch_p1.log`) into dreamer-xs's freed session; p0 RUNNING.
+next: p2..p9 into each Kaggle session as it frees (`scripts/launch_detached.sh /data/jack-logs/pilot_b2/launch_pN.log $PY -m experiments.pilot_b2 pilot-kernel --name pN`); J11 outranks J10's later segments. When all 10 home: `pilot_b2 table` → §4, one reading per arm by §3.
 
 ### J12 — DONE `7d547777` — His eye: body-frame, 128-ray row, and the proof his senses can find food
 part: Eye + Learning to eat (the learnability proof) · stage: 1 (ready-list "the eye designed") · step: 2 (combine) · prior: §12; LAB `find_himself.py` (`99e588f0`), `eye_streak.py`; rulings 37, 38
@@ -136,7 +137,8 @@ serves: M3 · PLAN "a fair chance for our own brains" · philosophy 3, 4.
 **done when:** `KNOWN_ANSWERS.md` has one row pair per arm (4) and the repaired entry's row (5), pass or fail.
 state: FAIL both rows, controls hold: `ppo-needs` (−578…−1120), `ppo-lp` (−824…−1059), `wm-latent` (best −321.0; learns, budget binds); row 3: 0 flag reaches each. `wm-dyn`, `wm-latent+ring` wired `8a87941a` (est. 0.8 h / 2 h).
 state: 11-19 02:23 `wm-dyn` HARVESTED (`bc08a6ef`) → KNOWN_ANSWERS Row J3-4c: FAIL both rows, controls 0/5. Row 1 best windows −547…−874 (learns −1300→−650…−1130, 300 eps); row 3 0 flag reaches. Below wm-latent on row 1.
-state: `dreamer-xs` LAUNCHED 02:23 into the freed session — `jack-cpu-1795054996`, log `/data/jack-logs/j3_inhouse/launch_dreamer-xs.log` (est ≤ 3 h); harvest → KNOWN_ANSWERS Row J3-4d, then `wm-latent+ring` kernel.
+state: 11-19 04:40 `dreamer-xs` HARVESTED → KNOWN_ANSWERS Row J3-4d: FAIL both rows, controls 0/5. Row 1 best −392.7, −398.9, −340.0, −286.2, −378.5 → 1/5 reach (first in-house seed in band); row 3 0. (6) read: equal to wm-latent (mean −359.2 vs −364.4). Corrected J3-4b: wm-latent s0 last-10 −839.6.
+next: `wm-latent+ring` kernel when a session frees after J11's p-runs claim theirs (J11 outranks).
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48

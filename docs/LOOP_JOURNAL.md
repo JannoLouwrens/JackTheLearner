@@ -2629,3 +2629,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Rule FROZEN `e2c3c378`: PILOT_B2 §3 filled exactly as the draft allowed (W, U, motor frame) + `PILOT_RULE` set (seeds 402–406). Motor frame body by the 07:40 written default — the ruling never landed, gate 2's h4 (body eye + world motor 0/20) answers it; a `world` ruling re-drafts on 407+ (INBOX). SUSTAINED bar's chance at k1-bm's upper recomputed P = 0.047 (bar unchanged).
 - p0 launched into m7's freed session `jack-cpu-1795062415`. Tests PASS: pilot_b2 kernels (refusal now tested with an empty rule), frames, bm, arms.
 - Philosophy served: 4 (every bar fixed before the first learner seed, floors measured in the same frame as the arms) and 7 (no compass in eye or motor — the body the finished Jack will have).
+
+## 2026-11-19 04:37–04:45 UTC · JACK · J11 (p1 launched) + J3 (dreamer-xs harvest, (6) read) — short slot
+- dreamer-xs `…1795054996` had come home 03:45 and its session sat idle → J11 p1 launched into it, `jack-cpu-1795063080` (push rc=0). p0 RUNNING.
+- J3 Row J3-4d: dreamer-xs FAILS both rows, controls 0/5. Row 1 best windows −392.7, −398.9, −340.0, −286.2, −378.5 → 1/5 (seed 3 is the first in-house seed inside the band; 3 needed); row 3 0 flag reaches.
+- J3 (6): dreamer-xs ≈ wm-latent (mean best −359.2 vs −364.4) → the gap to PPO is the shared learner at this size, not the home-made losses. Corrected J3-4b: wm-latent s0's last-10 is −839.6 (late collapse), not in the band.
+- Philosophy served: 3 (the home-made brains' race read honestly, a past over-claim corrected) and 6 (no free Kaggle session left idle).
