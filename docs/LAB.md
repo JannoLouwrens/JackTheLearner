@@ -103,5 +103,21 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   Wiskott 2007 (slow features of a simulated rat's view are place cells);
   learned recall keys on record needed 10^6–10^9 frames of pixels (PRIORS
   §6); ours has 2,880 looks of 256 numbers per world — the record is silent
-  at that size. Rule frozen in the docstring before worlds 730–749 exist;
-  tuned on 690–692 only.
+  at that size. Rule frozen in the docstring (`de328d98`) before worlds
+  730–749 existed; tuned on 690–692 only (ring key .933/.950/.958 vs turn
+  search .936; untrained .51, time-shuffled .57 on 690; plain MLP key .36).
+  **IN FLIGHT — no verdict yet.** 11-18 collected 730–739 and stopped; 11-19
+  the box's load guard (ceiling 6.0, other projects at ~6) held the second
+  collector back 19 min, so by 11:40 worlds 730–748 were home, 749 was
+  collecting and no row was fit. The fit is chained through
+  `launch_detached.sh` (`/data/tmp/find_himself/pk_chain.sh 0|1`: wait for
+  the worlds, `place_key fit 730 20 part0|part1`, then the full fit; logs
+  `pk_chain_0.log`, `pk_chain_1.log`). Disclosed: three metered jobs were
+  alive at once for ~15 min (cap 2; two were sleeping waiters).
+  **Next sitting, first act:** read `/data/tmp/find_himself/place_key_730_20.json`
+  (`verdict`, `kt_ring`, `kt_ring_un`, `kt_ring_sh`, `b128`); if absent, check
+  `pk_chain_0.log` and re-run `$PY -m experiments.place_key fit 730 20` (rows
+  are cached per world). Write the number here whatever it reads; nothing in
+  the rule or SETTINGS may change. If ALIVE: INBOX line proposing the ring key
+  as the diary's key for stage 3 "memory and sleep". END-FIT 2, 4.
+  Philosophy 1, 2, 3, 4.

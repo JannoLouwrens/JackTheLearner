@@ -2718,3 +2718,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Read sheeprl 0.8.5 (jack-a-probe venv): a Box env with >1 mlp key keeps only the first (utils/env.py:192-202) → per-sense keys need a Dict-space `make`; decoder then gets one head per key, runner unedited.
 - Loss: dreamer_v3_5.py:155-156 sums symlog_mse over keys and numbers → pull by width: vision 43 %, needs 8 % (widths measured 32/16/8/12/6 = 74). Width-normalised loss and whole-sense dropout have no knob → runner change → raced arms beside keys-sum, never defaults. Hide-at-test is env-side.
 - Philosophy served: 3 (how his senses are fused is written down as raced choices, not assumed) and 1 (one connected brain that can tell its senses apart).
+
+## 2026-11-19 11:05–11:45 UTC · LAB · place key learned from time: registered run launched, verdict NOT yet read
+- Inherited the 11-18 bet (rule frozen `de328d98`, worlds 730–739 collected, 740–749 never). No new idea opened until this one has its number.
+- Load guard refused launches for ~19 min (load 6.1–6.6 from other projects, ceiling 6.0); 730–748 home by 11:40, 749 collecting; fit chained detached (`pk_chain.sh`), verdict → `/data/tmp/find_himself/place_key_730_20.json`.
+- Scar: my first retry loop reported "both up" on a `pgrep -f` that matched its own shell and a LAUNCH header a refused launch had written; caught by `ps`, fixed with a `[f]` pattern.
+- Philosophy served: 4 (the frozen rule runs on all 20 worlds before anything is read) and 3 (the diary's key is raced, not assumed).
