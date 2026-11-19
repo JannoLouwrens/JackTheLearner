@@ -675,6 +675,127 @@ def pilot_table(paths, seeds) -> tuple:
     return "\n".join(out), missing
 
 
+# ---- J11 item 4: THE RULE's readings, transcribed (11-19 05:20, before any
+# pilot run is home). PILOT_B2.md §3 frozen `e2c3c378`, clause by clause; the
+# table above stays verdict-free. Transcription choices where the frozen text
+# leaves a seam (each the stricter reading; none can make an arm look better):
+#  (a) crash vs cut: rc = -9 (our own CHILD_TIMEOUT kill) or a record marked
+#      `cut` with no rc (Kaggle's cap, reassembled) is a CUT; any other rc != 0
+#      or an `error` key is a CRASH (the "rc != 0 / non-finite loss" clause —
+#      a non-finite loss is not logged separately; SB3 raises on it -> rc 1).
+#  (b) noop's floor(U) is 0 like held8's (card noop sustained 2/2000 lives,
+#      U at W=2 < 1); a noop crossing at any W is the broken clause anyway.
+#  (c) the EATS-BUT-STARVES floor for K/KP (held8-k0 has no in-pilot twin):
+#      the MORE crossing of K-lr0 (its in-pilot bound) and held8.
+#  (d) SLIDES' "lives unfed >= 0.9 x noop's median life": the late quarter's
+#      median unfed-life seconds (run_stats) vs the median seconds over every
+#      finished noop life pooled; a late quarter with no unfed life is not
+#      the signature.
+PILOT_W = 2
+PILOT_FLOOR_U = {"held8-k0-ff-bm": 0.64, "held8-k1-ff-bm": 0.80}
+PILOT_FLOOR_MAX = 0                      # floor(U) for U < 1, every floor
+PILOT_READ_ARMS = ("B0", "K", "P", "G", "KP")
+PILOT_NAMED = {"B0": "held8", "P": "held8", "G": "held8",   # in-pilot k1 twin
+               "K": "K-lr0", "KP": "K-lr0"}                # k0: in-pilot bound
+PILOT_NEED = 3
+PILOT_MIN_DEC = 150_000
+
+
+def _decisions(rec: dict) -> int:
+    return int(rec.get("decisions_reached")
+               or sum(l["decisions"] for l in rec["lives"]))
+
+
+def _crash(rec: dict) -> bool:
+    rc = rec.get("rc")
+    if rc == -9 or (rc is None and rec.get("cut")):
+        return False
+    return rc not in (0, None) or "error" in rec
+
+
+def pilot_readings(runs: dict, seeds) -> dict:
+    """THE RULE (§3) on the 40 registered runs; anything missing raises (no
+    reading on partial books). Returns {"verdict", "arms": {arm: reading},
+    "why": [...], counts}."""
+    import statistics as st
+    from experiments import pilot_b_report as R
+    if PILOT_T != R.T:
+        raise RuntimeError("pilot_readings: pilot_b_report scores at T_RUN != PILOT_T")
+    seeds = tuple(seeds)
+    reg = [R.rid(a, s) for a, s in pilot_cells(seeds)]
+    miss = [r for r in reg if r not in runs]
+    if miss:
+        raise ValueError(f"no reading: missing {miss}")
+    by = {a: [runs[R.rid(a, s)] for s in seeds] for a in PILOT_LEARNERS + PILOT_FLOORS}
+    sc = {a: [R.score(r) for r in v] for a, v in by.items()}
+    n_sus = {a: {W: sum(s["sustained", W].event for s in v) for W in R.WS} for a, v in sc.items()}
+    n_th3 = {a: sum(s["theta", 3].event for s in v) for a, v in sc.items()}
+    W = PILOT_W
+    res = {"W": W, "n_sustained": n_sus, "n_theta3": n_th3, "why": [], "arms": {}}
+    # -- our code is broken if
+    broken = []
+    if n_sus["noop"][1] > 0:
+        broken.append(f"noop crosses at W=1 in {n_sus['noop'][1]} run(s) (card 0/2000)")
+    if n_sus["K-lr0"][W] >= 2:
+        broken.append(f"K-lr0 crosses at W={W} in {n_sus['K-lr0'][W]} of {len(seeds)}")
+    for a in PILOT_LEARNERS:
+        c = sum(_crash(r) for r in by[a])
+        if c >= 2:
+            broken.append(f"{a}: {c} runs crashed (rc != 0, not a cut)")
+    if broken:
+        res.update(verdict="VOID — broken", why=broken)
+        return res
+    # -- floor clause: in-pilot floors at W must show <= floor(U)
+    moved = {f: n_sus[f][W] for f in ("noop", "held8", "K-lr0") if n_sus[f][W] > PILOT_FLOOR_MAX}
+    for f, n in moved.items():
+        res["why"].append(f"floor moved: {f} crosses at W={W} in {n} > floor(U)={PILOT_FLOOR_MAX}")
+    # -- noop's median life (SLIDES)
+    noop_s = [l["seconds"] for r in by["noop"] for l in r["lives"] if l["cause"] != "unfinished"]
+    noop_med = st.median(noop_s) if noop_s else float("nan")
+    res["noop_median_life_s"] = noop_med
+    for a in PILOT_READ_ARMS:
+        floor = PILOT_NAMED[a]
+        if "noop" in moved or floor in moved:
+            res["arms"][a] = "VOID — floor moved"
+            continue
+        if sum(_decisions(r) < PILOT_MIN_DEC for r in by[a]) >= 2:
+            res["arms"][a] = "INCOMPLETE"
+            continue
+        if n_sus[a][W] >= PILOT_NEED:
+            res["arms"][a] = "SUSTAINED"
+            continue
+        fth = n_th3[floor] if a not in ("K", "KP") else max(n_th3["K-lr0"], n_th3["held8"])
+        if n_th3[a] >= PILOT_NEED:
+            res["arms"][a] = ("EATS BUT STARVES" if fth <= 1
+                              else "VOID — θ too easy (floor crosses θ in "
+                                   f"{fth} of {len(seeds)})")
+            continue
+        slid = 0
+        for r in by[a]:
+            x = R.run_stats(r)
+            e, l_ = x["early"], x["late"]
+            if (e and l_ and l_["fed"] < e["fed"] and l_["unfed_s"] == l_["unfed_s"]
+                    and noop_med == noop_med and l_["unfed_s"] >= 0.9 * noop_med):
+                slid += 1
+        res.setdefault("slides_runs", {})[a] = slid
+        res["arms"][a] = "SLIDES" if slid >= PILOT_NEED else "NEAR RANDOM"
+    res["verdict"] = "READ"
+    return res
+
+
+def readings_md(res: dict) -> str:
+    out = [f"**Readings by §3 (frozen `e2c3c378`, W = {res['W']}): {res['verdict']}**", ""]
+    out += [f"- {w}" for w in res["why"]]
+    for a, v in res["arms"].items():
+        out.append(f"- {a}: **{v}** — sustained runs W1/2/3 "
+                   f"{'/'.join(str(res['n_sustained'][a][w]) for w in (1, 2, 3))}, "
+                   f"θ runs at W3 {res['n_theta3'][a]}"
+                   + (f", slide-signature runs {res['slides_runs'][a]}"
+                      if a in res.get("slides_runs", {}) else ""))
+    out.append("- K-lr0 is a bound for K/KP, not read (§3 Named floors).")
+    return "\n".join(out)
+
+
 def st_mean(v) -> float:
     return float(sum(v) / len(v))
 
@@ -688,7 +809,7 @@ def _poisson_upper(k: int, conf: float = 0.95) -> float:
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table"])
+    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings"])
     p.add_argument("--arm", default="noop-k1")
     p.add_argument("--seed", type=int, default=601)
     p.add_argument("--lives", type=int, default=CARD_LIVES)
@@ -723,6 +844,12 @@ def main(argv):
         md, missing = pilot_table(sorted(OUT.glob("pilot_p*.json")), seeds)
         print(md)
         raise SystemExit(3 if missing else 0)
+    elif a.cmd == "readings":
+        md, missing = pilot_table(sorted(OUT.glob("pilot_p*.json")), PILOT_RULE["seeds"])
+        if missing:
+            raise SystemExit(f"readings: PARTIAL, {len(missing)} runs missing -> no reading")
+        runs, _ = load_pilot(sorted(OUT.glob("pilot_p*.json")))
+        print(readings_md(pilot_readings(runs, PILOT_RULE["seeds"])))
     elif a.cmd == "rule-inputs":
         print(rule_inputs(sorted(OUT.glob(a.glob))))
     else:
