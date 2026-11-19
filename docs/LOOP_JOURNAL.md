@@ -2732,3 +2732,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Sessions: p5 `jack-cpu-1795090316`, J3 `wm-latent+ring` `jack-cpu-1795090393` (held ~4 min by the 2-detached cap: LAB's fits; J3's first try died on my own dirty tree).
 - Philosophy served: 4 (a miss written as a miss of the ruler it measured, no wider; the counter's blindness said, not papered over) and 3 (the handed-direction test made runnable with its must-fail control).
 - 12:40 addendum — scar: my bounded retry loop kept retrying J3 after I re-launched it by hand (its first 4 tries died on the dirty-tree guard) and pushed a DUPLICATE `jack-cpu-1795090752` at 12:19. Killed only its local watcher (PIDs 510947/510938) so one result writes the arm's file; the Kaggle copy runs out ~3 h, no J11 run displaced (next frees ~17:30). INBOX line on the launcher.
+
+## 2026-11-19 12:22–12:40 UTC · JACK · J15 (4): E2c made diagnosable before seed 801; J11 partial read
+- Nothing to launch: 5 Kaggle sessions RUNNING (p3, p4, p5, J3 ×2 incl. the duplicate); J11/J15/J3 wait; J14 not before Sat.
+- J11 partial (12/40, reported only): every learner arm ends BELOW K-lr0 (no learning) in the same world — late meals/life K 0.14 vs K-lr0 1.01; K's reward/life falls with learning (−19→−94). K/KP lives stay ~550 s, so in the free-movement world it is not the lie-still slide; B0/P/G lengthen 276→~500 s (slide signature). Warm-up (5k decisions) covers 1–3 of the first 5 lives; post-warm-up lives agree. INBOX line.
+- The pilot logs no loss/entropy, so WHY is unreadable. Added `run_b(trace=True)`: every 5k decisions the action mean/std/saturation + SAC actor/critic loss, ent_coef; on for E2C_ARMS only. `test_pilot_b_trace`: lives byte-identical on/off (other-seed control differs), losses finite, ent_coef 0.1; test_e2c_kernel 3/3.
+- Philosophy served: 4 (a failure gets an instrument that can say why, before the next run, not after) and 5 (the test loop made truer).
