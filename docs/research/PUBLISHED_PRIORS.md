@@ -677,6 +677,47 @@ Long form: `/data/jack-research/research_notes/walking_layer/` (`part_a_yu2018.m
 
 ## 18. The other senses, all together: touch, balance, taste, pain, temperature, body-state, and many senses in one small brain (2026-11-19; serves PLAN part "Other senses, all together" (step 0), M5; stage 3)
 
-Long form and raw notes: `/data/jack-research/research_notes/senses_together/`.
+Long form: `/data/jack-research/research_notes/senses_together/` (parts A, B, C). Nothing pretrained is inside any agent below.
 
-*Skeleton committed 04:13 UTC; the slot is researching three parts: (A) many senses fused in one learner, (B) touch, balance and pain, (C) body-state, taste and temperature. Findings replace this line.*
+**Already known**
+- **Nobody has fused more than 3 distinct senses in one from-scratch RL learner with per-sense ablations.** The only Dreamer result with > 4 keys: Minecraft (image + inventory, health, hunger, breath; 200M weights, 100M steps), no per-key ablation (arXiv 2301.04104).
+- Dreamer (official `rssm.py:215-230`, `agent.py:80-83`; sheeprl `loss.py:74`): vector keys concatenated into one MLP, one decoder head per key, each loss at scale 1.0 SUMMED over its numbers: a sense's pull is its width; no per-key knob.
+- More senses can lose: Habitat SPL depth 0.79, RGB+depth 0.70 (75M, 1904.01201); Kinetics RGB 72.6, +audio 71.4 (1905.12681); two-sense MNIST single 99.14, joint 45.26, rebalanced 91.01 (2202.05306).
+- Cures: per-sense loss and weight (CoRAL 2302.05342, 1M steps; M3L 2311.00924, touch weight 10, 95% masking, ~3M); whole-sense dropout in training (TORCS: loss under noise 51.7% → 9.8%, 1705.10422); product-of-experts (MuMMI 2107.02339: walker-run 466.7 vs concat 71.3).
+- Noise inputs: SAC 256-256 cannot learn Humanoid at 90% noise features (clean ~4,500, 1M) (2302.06548).
+- **Body-state hidden = no learning**: EVAAA (NeurIPS 2025, Unity, DreamerV3-S; four needs): the needs-hidden and eye-hidden arms fail to learn; heat sense and collision mattered more than smell. Figures only. DreamerV3 > DQN > PPO. Its heat sense: 9 numbers over a heat field.
+- Reward: drive difference is best of three (Yoshida 2024, abstract; doi 10.1016/j.neunet.2024.106379). Their ant senses each need as ONE number (set-point 0, death at ±1) and cools by a panting action, not by seeking shade.
+- Many needs: 8×8 grid, DQN, 30k steps: one learner per need is near maximum at once; one learner for all needs 1k–10k exploration steps and worsens from 4 to 8 needs (Dulberg 2023).
+- Touch: ShadowHand, DDPG+HER, 5 seeds: 92 touch sensors reach the level 2.6× sooner (Egg 355 → 115 epochs of 190k samples), final level +16%; **Boolean 2.45× ≈ continuous**; touch WITHOUT proprio 0.24 of baseline. Null control (92 zeros / noise) moved one task 0.30 → 0.34: < 15% at 5 seeds is noise (Melnik 2021, doi 10.3389/frobt.2021.538773).
+- Balance: quadruped, joint positions + gravity 3-vector + base linear and angular velocity give 94–99% of full-state; the rest alone 6–12% (2306.17101). Biped G1, PPO, pushes: with IMU 96.1 ± 0.5% survive, without 90.4 ± 1.1 (2608.29487).
+- MIMo infant (2312.04318; head gyro + accelerometer, full skin; PPO): reach 0.5M, stand 1.5M, catch 4M steps; no sense ablated.
+- Pain as an INPUT: one 2×2 exists (arm, CACLA): −31% error, p = 0.152 — not significant (doi 10.3389/fnbot.2017.00010). Predicting own future health is what survives poison: Doom with poison vials, 50M steps: DQN 25.4, A3C 59.3, DFP 84.1 (1611.01779).
+- Taste: no agent has a contact chemical sense; poison is told by sight. A 30–60 s gap from cause to payoff defeats LSTM agents at γ 0.998; memory recall solves it (1810.06721). No RL agent shows one-trial aversion over minutes.
+
+**Candidates**
+- **A. Concat + per-sense prediction, each sense's loss normalised by its width, plus whole-sense dropout.** The record's default. Proven with 2–3 senses, 1M–100M steps. Weak: wide senses dominate. Expect: works for 5 vector senses; touch and audio add less than seed noise at 300k (inf).
+- **B. Masked cross-sense prediction** (ours, `cores.py:216-256`; M3L's form). Proven only with attention at ~3M steps.
+- **C. One value head per need** (Dulberg), once there are four needs. Grid only.
+- **New senses, per the record:** touch = Boolean per region, ≤ 16 regions; balance = gravity 3-vector + gyro 3 in the head frame; pain and taste = no input shown to help — predict the integrity and energy change instead (DFP); temperature = 1 body number + ≤ 9 ambient numbers.
+
+**Ours beside theirs**
+
+| setting | published | ours | cost |
+|---|---|---|---|
+| senses fused | 2–3, one an image | 5 vectors, 74 numbers (`jack_env.py:336,799`) | beyond the record |
+| brain A keys | one head per sense | one flat key `state` (`brain_a/rows.py:76`) | no per-sense loss, no hide-it |
+| loss weight | by width (sum) | `needs` ×2 (`cores.py:82`); row128 eye vs needs ≈ 40:1 in A (inf) | needs under-weighted |
+| touch | Boolean, 16–92 | 4 × [force, flag] (`w0.py:286`) | coarse for hands |
+| balance | gravity 3 + gyro 3 | upright cosine, height (`w0.py:310-313`) | no tilt direction, no turn rate |
+| needs | 1 number each, set-point 0 | levels + d(h) + 2 rates (`drives.py:432`) | no precedent, untested |
+
+**Known-answer check** (CPU): Dulberg's 8×8 grid, 4 needs, DQN, 30k steps × 30 agents: separate learners near maximum, single needs thousands of exploration steps (curve); add a needs-hidden arm (EVAAA predicts failure). < 2 h (guess).
+
+**What the record does NOT answer**
+- Leave-one-sense-out on the brain that eats: 6 arms × 5 seeds × 300k (~30 kernel-h, inf). Predicted: needs-hidden and eye-hidden fail; touch-, audio-hidden inside noise (< 15%).
+- A test-time hide / shuffle / matched-noise test of a sense: no published protocol (all above are training-time); ours is new.
+- Needs as one deviation each vs our six numbers: 2 arms × 5 seeds. No prediction.
+- Gravity + gyro vs the upright cosine, human-like body, pushes. Predicted: ~6 points of survival.
+- A taste label at the mouth; aversion after one delayed sickness; seeking warmth at ≤ 1M: nobody.
+
+**Not verified.** Yoshida 2024 full text; EVAAA's steps and effect sizes (figures); Dulberg, the robot ant (summariser); MIMo, M3L, CoRAL scores (curves); MuMMI's and sensor dropout's step counts; Seymour 2019, Safety Gym, Crafter health: not read.
