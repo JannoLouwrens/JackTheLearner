@@ -2693,3 +2693,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Lesson for later rungs: parity with the official code means parity with what its compiler emits.
 - J16 DONE; next (for the Director): the same test on the PyPI MLX wheel, then rung 2.
 - Philosophy served: 7 (the port is what lets the finished Jack keep learning on owners' Macs) and 4 (a red test made green by finding the cause, threshold untouched).
+
+## 2026-11-19 08:37–08:48 UTC · JACK · Next-up 1: the dial race's missing parts — sham coin + eval-lives hook (`95e2e4cb`)
+- All 4 Kaggle sessions RUNNING (`kernels status`: J11 p0/p1/p2, J15 gate 3); J3/J10 wait on a session; J14 not before 11-21; J16 DONE → Next-up item 1.
+- `dial_curriculum.py`: `sham_success_fn` (coin `default_rng([seed,0x5A4D])`, never reads the life), `eval_plan`/`plan_sha` (common eval worlds [40,000, 41,000), arm not an argument), `eval_lives`, `make_eval_callback` (SB3, synchronous in `_on_step`), `final_rate`.
+- `test_dial_race_parts` PASS 4/4 (jack-std): coin .3019/.7006; Brain B 400 decisions with vs without eval → actor params, replay pos 416, obs count 417 identical, 8 eval lives; PLANTED leaky eval via the training env caught (count 457, params differ).
+- First run failed (d) on the test's own count (3 vs 4 eval points); expectation fixed, code untouched — said so in the docstring.
+- Philosophy served: 4 (the dial race's control can now fail, and the eval that judges it is proven not to teach him) and 3 (the curriculum is raced, not assumed).

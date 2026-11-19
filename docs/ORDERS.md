@@ -296,6 +296,7 @@ seed average that admits a failing seed. (8) `T0.13`'s dead clauses;
 ## INBOX — one line each, workers add, the Director empties
 (emptied 11-19 06:41 — every line of 11-18/19 is ruled in 49–56 or became J15, J16, S11, Next-up 1–3.)
 - 11-19 07:30 JACK J15: f5 cannot know which texture is food (geom ids, so textures, shift per world) and never gives a thing up — it parks; a seed can pass gate 3 by sitting on one regrowing food. If gate 3 misses, the order's closure sentence over-reads one hand ruler: propose "THIS memoryless hand rule does not meet the bar (k of 20)". Also disclosed in the rule: seed 281's world was built once to print its geom table (no policy stepped).
+- 11-19 08:46 JACK Next-up 1 DONE `95e2e4cb` (all 4 Kaggle sessions RUNNING, J16 done): `sham_success_fn` + eval-lives hook (`eval_plan`/`plan_sha`/`eval_lives`/`make_eval_callback`/`final_rate`) in `dial_curriculum.py`; `test_dial_race_parts` PASS 4/4 (eval on vs off: B's params, replay, VecNormalize identical; planted leaky eval caught). Strike item 1; the hook needs jack-std (sbx).
 
 ## DONE (kept one day)
 
