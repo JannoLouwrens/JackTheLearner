@@ -85,7 +85,8 @@ any E2c cell runs; nothing else above changes:
   3. Said before seed 801: survival by repeated eating at 300k is on no
      published record (nearest: SAC PointGoal1, shaped, 1M), so a MISS at
      300k is weak evidence: "not learned in 300k", never "cannot learn".
-  15 runs (3 arms x 5 seeds), one per Kaggle session at J11's rank.
+  15 runs (3 arms x 5 seeds), packed 4 a kernel as J11's (Kaggle's 4
+  cores): `pilot_b2 e2c-kernel e0..e3` = 4 sessions at J11's rank.
 E2b CLOSED 2026-11-19 (gate 3, WORLD_CARD J15 (2)): the only memoryless
 teacher, f5, met the bar on 5 of 20 seeds -> "not clonable by a memoryless
 net, by measurement" for that teacher; `kernel-full` does not run.

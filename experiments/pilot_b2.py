@@ -427,6 +427,20 @@ PILOT_ARMS = {
     "K-lr0": dict(kind="b", move_cost_dial=True, reward=REWARD, gamma=None, lr=0.0),
 }
 
+# ---- J15 (4) E2c: brain B on arm K's world, HANDED the direction to food ---
+# Rule: forager_clone.py "RULE E2c" + its 11-19 AMENDMENT (cossin; zero is the
+# primary control, random_point reported only; a 300k miss is weak evidence).
+# Each arm is arm K exactly (same world, same B0 SAC, lr, gamma) with the
+# observation extended by handed_sense.HandedSense(mode, "cossin") -- a sense
+# computed from the simulator: scored-and-ineligible, never his. Kept out of
+# PILOT_ARMS so the pilot's 40-run packing is untouched. Known difference:
+# PilotLives' cap respawn is not a JackEnv truncation, so random_point
+# re-draws there too (a new body = a new life for the control).
+E2C_ENCODING = "cossin"
+E2C_ARMS = {f"E-{m}": dict(PILOT_ARMS["K"], handed=m)
+            for m in ("food", "zero", "random_point")}
+E2C_SEEDS = (801, 802, 803, 804, 805)
+
 
 def pilot_world(arm: str, food_floor_only: bool, eye_frame: str = "world",
                 motor_frame: str = "world", native_substep: bool = False):
@@ -434,12 +448,19 @@ def pilot_world(arm: str, food_floor_only: bool, eye_frame: str = "world",
     The frames apply to EVERY arm, floors included: held8 holds a push, and in
     the body motor frame that push turns with him, so a floor run in another
     motor frame than the learners' is not their floor."""
-    c = PILOT_ARMS[arm]
-    return lambda seed: make_world(seed, move_cost_dial=c["move_cost_dial"],
-                                   food_floor_only=food_floor_only,
-                                   reward=c["reward"], eye_frame=eye_frame,
-                                   motor_frame=motor_frame,
-                                   native_substep=native_substep)
+    c = PILOT_ARMS[arm] if arm in PILOT_ARMS else E2C_ARMS[arm]
+
+    def world(seed):
+        env = make_world(seed, move_cost_dial=c["move_cost_dial"],
+                         food_floor_only=food_floor_only,
+                         reward=c["reward"], eye_frame=eye_frame,
+                         motor_frame=motor_frame,
+                         native_substep=native_substep)
+        if "handed" not in c:
+            return env
+        from experiments.handed_sense import HandedSense   # E2c only
+        return HandedSense(env, c["handed"], E2C_ENCODING, seed=seed)
+    return world
 
 
 def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
@@ -447,7 +468,7 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
                    motor_frame: str = "world", native_substep: bool = False) -> dict:
     """One pilot run of `arm` (PILOT_ARMS) for T decisions."""
     from experiments.pilot_b import run_b, run_floor
-    c = PILOT_ARMS[arm]
+    c = PILOT_ARMS[arm] if arm in PILOT_ARMS else E2C_ARMS[arm]
     world = pilot_world(arm, food_floor_only, eye_frame, motor_frame, native_substep)
     if c["kind"] == "floor":
         rec = run_floor(c["policy"], seed, T, world=world, partial_path=partial_path)
@@ -456,6 +477,8 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
         rec = run_b(seed, T, world=world, gamma=c["gamma"],
                     partial_path=partial_path, **kw)
     rec["pilot_arm"] = arm
+    if "handed" in c:
+        rec["handed"], rec["handed_encoding"] = c["handed"], E2C_ENCODING
     rec["food_floor_only"] = bool(food_floor_only)
     rec["eye_frame"], rec["motor_frame"] = eye_frame, motor_frame
     return rec
@@ -564,7 +587,8 @@ def pilot_job_body(cells: list, food_floor_only: bool, T: int = PILOT_T,
             .replace("__NATIVE__", repr(bool(native_substep))))
 
 
-def pilot_kernel(name: str, rule: dict | None = None) -> dict:
+def pilot_kernel(name: str, rule: dict | None = None, cells: list | None = None,
+                 out_name: str | None = None) -> dict:
     """Submit pilot group p0..p9 as one Kaggle CPU kernel -> OUT/<name>.json.
     REFUSES without a rule (PILOT_RULE, set only by the rule's commit)."""
     rule = PILOT_RULE if rule is None else rule
@@ -589,7 +613,8 @@ def pilot_kernel(name: str, rule: dict | None = None) -> dict:
                            "(ORDERS: every new run in his world)")
     from experiments.gpu import build_job, result_json, submit
     from experiments.pilot_b import cells_from_artifacts
-    cells = pilot_groups(rule["seeds"])[name]
+    if cells is None:
+        cells = pilot_groups(rule["seeds"])[name]
     body = pilot_job_body(cells, rule["food_floor_only"], rule.get("T", PILOT_T),
                           rule.get("rule", ""), rule["eye_frame"], rule["motor_frame"],
                           rule["native_substep"])
@@ -604,12 +629,44 @@ def pilot_kernel(name: str, rule: dict | None = None) -> dict:
         print(f"pilot_b2 pilot kernel {name}: no summary ({sub.message or 'missing'}); "
               f"assembled from per-cell files", flush=True)
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"pilot_{name}.json").write_text(json.dumps(r, indent=1) + "\n")
+    (OUT / (out_name or f"pilot_{name}.json")).write_text(json.dumps(r, indent=1) + "\n")
     for k, rec in r["cells"].items():
         print(f"{k}: {len(rec['lives'])} lives"
               + (" (cut)" if rec.get("cut") else "")
               + (f" ERROR {rec['error']}" if "error" in rec else ""), flush=True)
     return r
+
+def e2c_cells() -> list:
+    """15 runs, seed-major across the three E2c arms."""
+    return [(a, s) for s in E2C_SEEDS for a in E2C_ARMS]
+
+
+def e2c_groups() -> dict:
+    c, n = e2c_cells(), PILOT_PER_KERNEL
+    return {f"e{j}": c[n * j:n * (j + 1)] for j in range((len(c) + n - 1) // n)}
+
+
+def e2c_ready() -> list:
+    """What still blocks E2c: ORDERS J15 (4) runs it only after J11's forty
+    runs are home (it inherits their readings). [] = ready."""
+    paths = sorted(OUT.glob("pilot_p*.json"))
+    _md, missing = pilot_table(paths, PILOT_RULE["seeds"])
+    return list(missing)
+
+
+def e2c_kernel(name: str) -> dict:
+    """Submit E2c group e0..e3 -> OUT/e2c_<name>.json, on J11's frozen world
+    (PILOT_RULE's frames, food_floor_only, native_substep, T). REFUSES while
+    any of J11's forty runs is missing."""
+    missing = e2c_ready()
+    if missing:
+        raise RuntimeError(f"e2c_kernel: J11's pilot is not home ({len(missing)} "
+                           "runs missing) -- ORDERS J15 (4) runs E2c after it")
+    rule = dict(PILOT_RULE, rule="forager_clone.py RULE E2c + AMENDED 2026-11-19; "
+                                 "world = " + PILOT_RULE["rule"])
+    return pilot_kernel(name, rule, cells=e2c_groups()[name],
+                        out_name=f"e2c_{name}.json")
+
 
 # ---- J11 item 5: the pilot's TABLE, descriptive only (11-18 06:40, NO rule yet)
 # Written before the rule and before any pilot run, so it decides nothing: no
@@ -809,7 +866,7 @@ def _poisson_upper(k: int, conf: float = 0.95) -> float:
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings"])
+    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel"])
     p.add_argument("--arm", default="noop-k1")
     p.add_argument("--seed", type=int, default=601)
     p.add_argument("--lives", type=int, default=CARD_LIVES)
@@ -837,6 +894,8 @@ def main(argv):
         Path(a.out).write_text(json.dumps(rec) + "\n")
     elif a.cmd == "pilot-kernel":
         pilot_kernel(a.name)
+    elif a.cmd == "e2c-kernel":
+        e2c_kernel(a.name)
     elif a.cmd == "table":
         seeds = (PILOT_RULE or {}).get("seeds")
         if not seeds:
