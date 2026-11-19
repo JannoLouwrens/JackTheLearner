@@ -2705,3 +2705,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - p0 (09:57) and p1 (09:43) home: 8 cells, 0 cut/crash → no re-launch owed. p3 `jack-cpu-1795082879`, p4 `jack-cpu-1795082927` LAUNCHED 10:08, p3 confirmed RUNNING on Kaggle. Sessions: p2, p3, p4, gate 3.
 - Partial `pilot_b2 table` (8/40, not the reading): 0 sustained lives anywhere; every learning arm eats LESS late than early (K 0.90→0.14 meals/life); the lr-0 twin is the best late row (0.62). If that holds at 40, the learners are un-learning food under this world's cost, not failing to find it — the slide the record predicts.
 - Philosophy served: 4 (the pilot's frozen rule runs to its full 40 without peeking-to-stop) and 3 (the setup for the decisive test is being measured, not assumed).
+
+## 2026-11-19 10:22–10:35 UTC · JACK · Next-up 2: needs-hidden known-answer — rule + kernel body (`5464c5b8`)
+- All 4 Kaggle sessions busy (J11 p2/p3/p4, J15 gate 3); J3/J10 wait; J14 not before 11-21; Next-up 1 done → item 2.
+- Read Dulberg from the arXiv e-print (rldm.tex + figures), not the summariser: grid is 9×9 walkable in a wall ring (measured off Fig 1a), stats are 4 numbers, DQN γ 0.5, one 30k life; Δ bands read off the box plots (DQN@5000 0.95 [0.75–1.35], GmQ ≈ 0.5). The paper has NO needs-hidden arm — R3 is a TEST of EVAAA's prediction, read only if R1 reproduces. §18's "8×8" and "4→8 needs" lines were summariser error; corrected.
+- Rule frozen before any cell: 6 cells × 10 seeds, never-trains control must sit above Δ 5 else VOID. Net depth derived from the stated 1.09e6 params. `test_needs_grid_row` 4/4 with planted failures.
+- Smoke: 117 s per 1,500 DQN steps on one ARM core → ~55 min per life on CPU; it is a ~2 T4-h GPU kernel, not the "< 2 h CPU" §18 guessed. Not launched (no session; needs a GPU slot).
+- Philosophy served: 3 and 4 (a sense ablation with a control that must fail, frozen before it runs, on the primary text rather than a summary of it).

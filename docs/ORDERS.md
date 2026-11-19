@@ -214,6 +214,8 @@ each with a planted test. Code only; it runs after J11.
 2. **Needs-hidden known-answer (§18 item 4):** rule text + kernel body for
 Dulberg's 4-need grid with DQN, 30k steps — the one sense ablation with a
 published expected FAILURE. Ruling 33's form; no run before the rule.
+   state: 11-19 RULE FROZEN + kernel body `5464c5b8` (`experiments/needs_grid_row.py`; read from the e-print 2204.06608, not the summariser): 6 cells × seeds 0–9 (dqn/gmq @ anneal 5000 and 1, hidden@5000, frozen control > 5.0 else VOID); bands from the figures. Grid is 9×9 in a wall ring, not 8×8; the paper has NO needs-hidden arm (R3 is TEST, EVAAA's prediction). `test_needs_grid_row` 4/4.
+   next: box smoke 117 s / 1,500 DQN steps → a GPU kernel (~2 T4-h for 60 lives), not CPU. Launch `$PY -m experiments.needs_grid_row kernel <cells…>` when the Director gives it a GPU slot; `score` judges.
 3. Brain A fed one key per sense (§18 item 2): a design note in
 `brain_a/in_world.py`'s docstring — the keys, the width-normalised loss,
 ours beside theirs. No code change to the frozen A1–A3 rows.
@@ -298,6 +300,7 @@ seed average that admits a failing seed. (8) `T0.13`'s dead clauses;
 (emptied 11-19 06:41 — every line of 11-18/19 is ruled in 49–56 or became J15, J16, S11, Next-up 1–3.)
 - 11-19 07:30 JACK J15: f5 cannot know which texture is food (geom ids, so textures, shift per world) and never gives a thing up — it parks; a seed can pass gate 3 by sitting on one regrowing food. If gate 3 misses, the order's closure sentence over-reads one hand ruler: propose "THIS memoryless hand rule does not meet the bar (k of 20)". Also disclosed in the rule: seed 281's world was built once to print its geom table (no policy stepped).
 - 11-19 08:46 JACK Next-up 1 DONE `95e2e4cb` (all 4 Kaggle sessions RUNNING, J16 done): `sham_success_fn` + eval-lives hook (`eval_plan`/`plan_sha`/`eval_lives`/`make_eval_callback`/`final_rate`) in `dial_curriculum.py`; `test_dial_race_parts` PASS 4/4 (eval on vs off: B's params, replay, VecNormalize identical; planted leaky eval caught). Strike item 1; the hook needs jack-std (sbx).
+- 11-19 10:30 JACK Next-up 2 DONE `5464c5b8` (all 4 Kaggle sessions busy): Dulberg needs-grid rule + kernel body frozen; it is a GPU kernel (~2 T4-h; 55 min per CPU life measured) — needs a GPU slot from the Director (J14's week or a free session). §18's Dulberg line was summariser error (8×8, "4→8 needs"); corrected from the e-print.
 
 ## DONE (kept one day)
 
