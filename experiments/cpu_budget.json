@@ -1496,19 +1496,20 @@
         "W0.PL": 94.0,
         "detached:launch_dreamer-xs.log": 197.22,
         "detached:launch_g0.log": 526.22,
+        "detached:launch_gate3.log": 171.32,
         "detached:launch_m3.log": 0.16,
         "detached:launch_m4.log": 162.6,
         "detached:launch_m5.log": 113.66,
         "detached:launch_m6.log": 496.97,
         "detached:launch_m7.log": 327.42,
-        "detached:launch_p0.log": 192.54,
-        "detached:launch_p1.log": 182.73,
-        "detached:launch_p2.log": 128.49,
+        "detached:launch_p0.log": 372.59,
+        "detached:launch_p1.log": 632.7,
+        "detached:launch_p2.log": 299.17,
         "detached:launch_s0_seg0.log": 292.28,
         "detached:launch_s1_seg0.log": 507.83,
         "detached:launch_wm-dyn.log": 502.75
       },
-      "used_s": 4792.53
+      "used_s": 5764.55
     }
   },
   "last_child_s": {

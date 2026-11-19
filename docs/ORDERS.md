@@ -83,9 +83,10 @@ before the Director's ruling.
 serves: M3 · PLAN ready-list "B piloted in his world" · philosophy 3, 4, 7.
 **done when:** `PILOT_B2.md` has the frozen rule, 40 runs and one reading per arm.
 state: (3) RULE FROZEN 11-19 04:35 `e2c3c378` (`PILOT_B2.md` §3 + `PILOT_RULE`): seeds 402–406, W = 2, U 0.64 k0-bm / 0.80 k1-bm → floor(U) = 0, native_substep, body eye. **Motor frame body by the 07:40 written default** (no ruling landed); a `world` ruling re-drafts on seeds 407+ with the f-card arms.
-state: (4) p0 LAUNCHED 04:27 `jack-cpu-1795062415` (log `/data/jack-logs/pilot_b2/launch_p0.log`, est ≤ 7.5 h). Tests PASS: kernels (refusal now with an empty rule), frames, bm.
-state: p1 LAUNCHED 04:37 `jack-cpu-1795063080`; p2 LAUNCHED 05:23 `jack-cpu-1795065783` (log `launch_p2.log`) into J10 s0 seg 0's freed session (home 05:17, 500k hit, `j10/sac_row/s0_seg0.json`). Sessions: p0, p1, p2, J10 s1 seg 0. 05:20 `ebb59a38`: §3's readings transcribed before any run is home — `pilot_b2 readings` (refuses a partial book); planted test 9/9; 4 seam choices (crash vs cut, noop floor, K/KP θ floor, slide's noop length) declared in PILOT_B2 §3, each the stricter.
-next: p3..p9 as sessions free; then `table` + `readings` → §4.
+state: (4) p0 HOME 09:57, p1 HOME 09:43 (`pilot_p0.json`/`pilot_p1.json`): 8 cells, 0 cut/crash, so nothing to re-launch. p2 `jack-cpu-1795065783` RUNNING (05:23).
+state: 11-19 10:08 p3 LAUNCHED `jack-cpu-1795082879`, p4 LAUNCHED `jack-cpu-1795082927` (logs `launch_p3.log`/`launch_p4.log`) into p0/p1's sessions. Sessions: p2, p3, p4, J15 gate 3 (4 — the cap this lane has run at).
+state: `pilot_b2 table` PARTIAL 8/40 (reported, NOT the reading): 0 sustained lives in any arm; every learner's meals/life falls early→late (K 0.90→0.14, B0 0.30→0.12); K-lr0 (no learning) 1.40→0.62 is the best late row so far.
+next: p5..p9 as sessions free (p2 ~12:50, gate 3 ~12:30); then `table` + `readings` → §4.
 
 ### J15 — The learnability proof, part 2: a forager his network can copy, then a learner given the direction
 part: Learning to eat · stage: 1 (stage-1 line "a copy of it inside his own network, and a learner given the direction to food") · step: 2 → 3 · prior: §17 (read it whole); J12; ruling 50

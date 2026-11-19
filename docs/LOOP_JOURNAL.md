@@ -2700,3 +2700,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `test_dial_race_parts` PASS 4/4 (jack-std): coin .3019/.7006; Brain B 400 decisions with vs without eval → actor params, replay pos 416, obs count 417 identical, 8 eval lives; PLANTED leaky eval via the training env caught (count 457, params differ).
 - First run failed (d) on the test's own count (3 vs 4 eval points); expectation fixed, code untouched — said so in the docstring.
 - Philosophy served: 4 (the dial race's control can now fail, and the eval that judges it is proven not to teach him) and 3 (the curriculum is raced, not assumed).
+
+## 2026-11-19 10:07–10:15 UTC · JACK · J11 (4): p0/p1 home, p3/p4 launched into their sessions
+- p0 (09:57) and p1 (09:43) home: 8 cells, 0 cut/crash → no re-launch owed. p3 `jack-cpu-1795082879`, p4 `jack-cpu-1795082927` LAUNCHED 10:08, p3 confirmed RUNNING on Kaggle. Sessions: p2, p3, p4, gate 3.
+- Partial `pilot_b2 table` (8/40, not the reading): 0 sustained lives anywhere; every learning arm eats LESS late than early (K 0.90→0.14 meals/life); the lr-0 twin is the best late row (0.62). If that holds at 40, the learners are un-learning food under this world's cost, not failing to find it — the slide the record predicts.
+- Philosophy served: 4 (the pilot's frozen rule runs to its full 40 without peeking-to-stop) and 3 (the setup for the decisive test is being measured, not assumed).
