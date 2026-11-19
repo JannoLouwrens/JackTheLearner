@@ -32,7 +32,9 @@ Rules this script obeys (§10 "Take as-is"):
     `platform.system()` branch. On the Linux box it runs as a smoke (CPU
     rows only; MPS/MLX rows SKIP).
 
-Automated here: 1-10 and 11's MPS-context line. Rows 9 and 10 run
+Automated here: 1-10; 11 in the context it is run from (MPS + 2,000 timed 64x64 renders of Jack's
+world through mujoco.Renderer; `--emit-launchd DIR` writes the LaunchAgent/LaunchDaemon plists that
+run it in the other two); 12 by `--soak 86400` (its own mode, not part of the default sweep). Rows 9 and 10 run
 `experiments/brain_a/mac_dreamer.py` (sheeprl's own agent and train(), fixed
 data; row 10's pass/divergence rule is in its docstring) under the interpreter
 in JACK_SHEEPRL_PY (default: this one; SKIP without sheeprl==0.8.5). Row 9's
@@ -62,6 +64,13 @@ Row 9 JAX arm, box 11-18 02:40 (official_speed --size 1m --warm 3 --timed 10, 1 
   Through `--only 9 --quick` (92 s): JAX cpu 1M 0.925/s beside sheeprl cpu 1M 0.458/s at the same
   641,641 weights (~2x; 10 timed steps, a smoke not a reading); MPS SKIP. Both interpreters absent ->
   the row SKIPS with both reasons.
+Rows 11-12 box smoke, 11-19 00:24-00:30 (load 5-8, nice 19; plumbing only, not a Mac estimate):
+  11 terminal, MPS false; render FAILED under MUJOCO_GL unset / egl / osmesa (headless box, no GL
+     library) -- recorded as FAILED with the error, the path the LaunchDaemon may also take. The
+     timing loop itself is proven on a planted renderer (experiments/tests/test_mac_first_day.py).
+  12 --soak 75 --soak-procs 1 --soak-interval 25 --soak-device cpu --soak-chunk 3 with
+     JACK_SHEEPRL_PY=jack-a-probe: world 14.8-18.3 dec/s, one learner chunk 0.205 grad steps/s
+     (0.43 alone minutes earlier: the contention the row exists to measure); RSS + MemAvailable logged.
 """
 from __future__ import annotations
 
@@ -89,10 +98,12 @@ ESTIMATE = {  # §10's scaled figures, verbatim, so each row prints beside its g
     11: "MPS available in which launch contexts",
 }
 NOT_AUTOMATED = {
-    11: "2,000 renders of a 64x64 eye frame logged in, over SSH, from a LaunchAgent and from a "
-        "LaunchDaemon after a no-login reboot; run this script with --only 11 in each context.",
-    12: "24 h soak: 6 world processes (--only 5 --procs 6 --seconds 86400) + 1 Dreamer learner on MPS, "
-        "behind a wall meter; log vm_stat, memory_pressure, powermetrics each minute.",
+    11: "the other contexts: --only 11 timed the renders in THIS one. Run --only 11 once over SSH; "
+        "--emit-launchd DIR writes the LaunchAgent and LaunchDaemon plists (install lines printed); "
+        "the daemon's reading must come from a reboot with nobody logged in.",
+    12: "24 h soak: under caffeinate -dimsu, `--soak 86400` (6 world processes + 1 Dreamer learner on "
+        "MPS, logged each minute to soak_*.jsonl; `sudo visudo` a NOPASSWD powermetrics line first or "
+        "that column SKIPS); read the wall meter's kWh by hand at start and end.",
 }
 
 
@@ -398,22 +409,97 @@ def m8(a):
     return rec
 
 
+def _context(a):
+    """Which launch context this run is in. `--context` (the launchd plists pass it) wins; else guessed."""
+    if getattr(a, "context", ""):
+        return a.context
+    return ("ssh" if os.environ.get("SSH_CONNECTION") else
+            "launchd" if os.environ.get("XPC_SERVICE_NAME", "0") not in ("0", "") else "terminal")
+
+
 def m11(a):
-    ctx = ("ssh" if os.environ.get("SSH_CONNECTION") else
-           "launchd" if os.environ.get("XPC_SERVICE_NAME", "0") not in ("0", "") else "terminal")
-    rec = {"context": ctx, "user": os.environ.get("USER")}
+    """Row 11 in ONE context: MPS availability + timed 64x64 renders of Jack's world (mujoco.Renderer).
+    Run it in each of the four contexts (logged-in Terminal, SSH, LaunchAgent, LaunchDaemon after a
+    no-login reboot); `--emit-launchd DIR` writes the two plists. A render that cannot start is
+    recorded as FAILED with its error, never as zero frames/s -- 'cannot render here' IS the reading."""
+    rec = {"context": _context(a), "user": os.environ.get("USER"), "uid": os.getuid(),
+           "MUJOCO_GL": os.environ.get("MUJOCO_GL", "(unset)")}
     try:
         import torch
         rec["mps_available"] = bool(torch.backends.mps.is_available())
     except ImportError:
         rec["mps_available"] = "SKIPPED: no torch"
+    n = 200 if a.quick else 2000
+    try:
+        import mujoco
+        env = _jack_world()
+        r = mujoco.Renderer(env.w.model, 64, 64)
+        for _ in range(10):  # warm-up: context creation and first upload are not frames
+            r.update_scene(env.w.data)
+            r.render()
+        t = time.perf_counter()
+        for _ in range(n):
+            r.update_scene(env.w.data)
+            px = r.render()
+        dt = time.perf_counter() - t
+        rec["render"] = {"status": "RAN", "frames": n, "shape": list(px.shape),
+                         "frames_per_s": round(n / dt, 1), "nonblank": bool(px.std() > 0)}
+        r.close()
+    except Exception as e:  # noqa: BLE001  -- the failure is the reading for this context
+        rec["render"] = {"status": "FAILED", "error": f"{type(e).__name__}: {e}"[:400]}
     return rec
+
+
+LAUNCHD = {  # label suffix -> (directory it is installed in, extra keys)
+    "launchagent": ("~/Library/LaunchAgents", ""),
+    "launchdaemon": ("/Library/LaunchDaemons", "  <key>UserName</key><string>{user}</string>\n"),
+}
+
+
+def emit_launchd(out_dir: str, results_dir: str):
+    """Write the two row-11 plists. ProcessType Interactive, never Background: background QoS pins
+    work to efficiency cores (§10 'Take as-is'). RunAtLoad: the agent fires at login, the daemon at
+    boot with nobody logged in -- which is the context the row asks about."""
+    out = Path(out_dir).expanduser()
+    out.mkdir(parents=True, exist_ok=True)
+    res = str(Path(results_dir).expanduser().resolve())
+    written = []
+    for ctx, (where, extra) in LAUNCHD.items():
+        label = f"com.jackthelearner.firstday11.{ctx}"
+        args = [sys.executable, str(Path(__file__).resolve()), "--only", "11", "--context", ctx, "--out", res]
+        body = ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" "
+                "\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+                "<plist version=\"1.0\"><dict>\n"
+                f"  <key>Label</key><string>{label}</string>\n"
+                "  <key>ProgramArguments</key><array>\n"
+                + "".join(f"    <string>{x}</string>\n" for x in args) +
+                "  </array>\n"
+                f"  <key>WorkingDirectory</key><string>{REPO}</string>\n"
+                "  <key>RunAtLoad</key><true/>\n"
+                "  <key>ProcessType</key><string>Interactive</string>\n"
+                f"  <key>StandardOutPath</key><string>{res}/{label}.out</string>\n"
+                f"  <key>StandardErrorPath</key><string>{res}/{label}.err</string>\n"
+                + extra.format(user=os.environ.get("USER", "jack")) +
+                "</dict></plist>\n")
+        p = out / f"{label}.plist"
+        p.write_text(body)
+        written.append((p, where, label))
+    for p, where, label in written:
+        sudo = "sudo " if where.startswith("/") else ""
+        print(f"install: {sudo}cp {p} {where}/ && {sudo}launchctl bootstrap "
+              f"{'system' if sudo else 'gui/$(id -u)'} {where}/{p.name}")
+        print(f"  remove after the run: {sudo}launchctl bootout {'system' if sudo else 'gui/$(id -u)'}/{label}")
+    return [str(p) for p, _, _ in written]
 
 
 def _sheeprl_py():
     """The interpreter with J14's pin (sheeprl==0.8.5): JACK_SHEEPRL_PY, else this one."""
     py = os.environ.get("JACK_SHEEPRL_PY", sys.executable)
-    r = subprocess.run([py, "-c", "import sheeprl; print(sheeprl.__version__)"], capture_output=True, text=True)
+    try:
+        r = subprocess.run([py, "-c", "import sheeprl; print(sheeprl.__version__)"], capture_output=True, text=True)
+    except OSError as e:
+        raise Skip(f"interpreter {py} cannot run ({type(e).__name__})")
     if r.returncode != 0:
         raise Skip(f"no sheeprl in {py} (set JACK_SHEEPRL_PY to a venv with sheeprl==0.8.5)")
     return py, r.stdout.strip()
@@ -488,6 +574,134 @@ def m10(a):
     return rec
 
 
+# ---------------------------------------------------------------- row 12: the soak
+def _soak_worker(kw, seed, slot, counts, stop):
+    """One world process: steps Jack's world with random actions until told to stop; publishes its
+    running decision count in counts[slot] (read once per interval by the sampler)."""
+    sys.path.insert(0, str(REPO))
+    import numpy as np
+    from experiments.jack_env import JackEnv
+    env = JackEnv(j0=1.0, alpha=1.0, **kw)
+    env.reset(seed=seed)
+    rng = np.random.RandomState(seed)
+    while not stop.is_set():
+        _, _, term, trunc, _ = env.step(rng.uniform(-1, 1, env.action_space.shape[0]))
+        counts[slot] += 1
+        if term or trunc:
+            env.reset()
+
+
+def _soak_sample():
+    """Memory and power, once. Darwin: vm_stat, memory_pressure -Q, powermetrics through `sudo -n`
+    (SKIPPED, not zero, when sudo needs a password). Linux (the box smoke): loadavg + MemAvailable."""
+    rec = {}
+    if platform.system() == "Darwin":
+        rec["vm_stat"] = _cmd(["vm_stat"])[:1500]
+        rec["memory_pressure"] = _cmd(["memory_pressure", "-Q"])[-300:]
+        pm = subprocess.run(["sudo", "-n", "powermetrics", "-n", "1", "-i", "1000",
+                             "--samplers", "cpu_power,gpu_power,thermal"],
+                            capture_output=True, text=True, timeout=30)
+        rec["powermetrics"] = pm.stdout[-3000:] if pm.returncode == 0 else \
+            f"SKIPPED: sudo -n powermetrics rc={pm.returncode} ({pm.stderr.strip()[:120]})"
+    elif platform.system() == "Linux":
+        rec["loadavg"] = Path("/proc/loadavg").read_text().split()[:3]
+        mem = dict(l.split(":", 1) for l in Path("/proc/meminfo").read_text().splitlines() if ":" in l)
+        rec["mem_available_kb"] = int(mem["MemAvailable"].split()[0])
+    return rec
+
+
+def _rss_kb(pids):
+    out = {}
+    for pid in pids:
+        v = _cmd(["ps", "-o", "rss=", "-p", str(pid)])
+        out[str(pid)] = int(v) if v.strip().isdigit() else None
+    return out
+
+
+def soak(a):
+    """Row 12: `--soak SECONDS`. N world processes (`--soak-procs`, default 6, shipped arm) + one
+    sheeprl Dreamer learner on `--soak-device` (default mps) run back to back in `--soak-chunk` (300) step speed chunks
+    (mac_dreamer.py `speed`, unmodified), sampled every `--soak-interval` s into a JSONL: each world
+    process's decisions/s, every finished learner chunk's grad steps/s, child RSS (creep), memory
+    pressure and powermetrics. The wall meter is read by hand (kWh at start and end). Throttling or
+    creep is read from the file afterwards; nothing here judges it."""
+    import multiprocessing as mp
+    ctx = mp.get_context("spawn")
+    stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+    path = Path(a.out) / f"soak_{socket.gethostname()}_{stamp}.jsonl"
+    counts = ctx.Array("q", a.soak_procs, lock=False)
+    stop = ctx.Event()
+    procs = [ctx.Process(target=_soak_worker, args=({}, 153 + i, i, counts, stop)) for i in range(a.soak_procs)]
+    for p in procs:
+        p.start()
+    learner, lfile, chunks = None, None, []
+    try:
+        lpy, lver = _sheeprl_py()
+    except Skip as e:
+        lpy, lver = None, f"SKIPPED: {e}"
+    head = {"kind": "header", "utc": stamp, "seconds": a.soak, "interval": a.soak_interval,
+            "world_procs": a.soak_procs, "learner": lver, "learner_device": a.soak_device,
+            "system": platform.system(), "machine": platform.machine()}
+    with open(path, "w") as f:
+        f.write(json.dumps(head) + "\n")
+        f.flush()
+        print(json.dumps(head), flush=True)
+        t0 = last_t = time.perf_counter()
+        last = list(counts)
+        total_chunks = 0
+        lpath = Path(a.out) / f"soak_learner_{stamp}.tmp"
+        try:
+            def tend_learner():  # restart the learner the moment a chunk ends: no idle gap
+                nonlocal learner, lfile, total_chunks
+                if not lpy or (learner is not None and learner.poll() is None):
+                    return
+                if learner is not None:
+                    lfile.seek(0)
+                    line = (lfile.read().strip().splitlines() or [""])[-1]
+                    chunks.append({"rc": learner.returncode, "t": round(time.perf_counter() - t0, 1),
+                                   "result": json.loads(line) if line.startswith("{") else line[-300:]})
+                    total_chunks += 1
+                    lfile.close()
+                lfile = open(lpath, "w+")
+                learner = subprocess.Popen([lpy, "-m", "experiments.brain_a.mac_dreamer", "speed",
+                                            "--device", a.soak_device, "--size", "1M", "--warm", "5",
+                                            "--timed", str(a.soak_chunk)], stdout=lfile, stderr=subprocess.DEVNULL,
+                                           cwd=str(REPO), env=_one_thread_env())
+
+            while time.perf_counter() - t0 < a.soak:
+                tick_end = min(last_t + a.soak_interval, t0 + a.soak)
+                while time.perf_counter() < tick_end:
+                    tend_learner()
+                    time.sleep(min(1.0, max(0.0, tick_end - time.perf_counter())))
+                now, cur = time.perf_counter(), list(counts)
+                dt = now - last_t
+                rates = [round((c - l) / dt, 1) for c, l in zip(cur, last)]
+                rec = {"kind": "sample", "t": round(now - t0, 1), "world_dec_per_s": rates,
+                       "world_sum": round(sum(rates), 1), "alive": [p.is_alive() for p in procs],
+                       "learner_chunks_done": total_chunks, "new_learner_chunks": chunks,
+                       "rss_kb": _rss_kb([p.pid for p in procs] + ([learner.pid] if learner else []))}
+                rec.update(_soak_sample())
+                chunks = []
+                f.write(json.dumps(rec) + "\n")
+                f.flush()
+                print(f"[soak t={rec['t']}s] world {rec['world_sum']} dec/s, learner chunks "
+                      f"{rec['learner_chunks_done']}", flush=True)
+                last, last_t = cur, now
+        finally:
+            stop.set()
+            if learner is not None and learner.poll() is None:
+                learner.terminate()
+            for p in procs:
+                p.join(timeout=10)
+                if p.is_alive():
+                    p.terminate()
+            if lfile is not None:
+                lfile.close()
+                lpath.unlink(missing_ok=True)
+    print(f"wrote {path}")
+    return str(path)
+
+
 MEASURE = {1: m1, 2: m2, 3: m3, 4: m4, 5: m5, 6: m6, 7: m7, 8: m8, 9: m9, 10: m10, 11: m11}
 
 
@@ -506,8 +720,21 @@ def main():
     ap.add_argument("--seconds", type=float, default=0, help="measurement 5 duration override")
     ap.add_argument("--out", default=".")
     ap.add_argument("--timeout", type=float, default=3600)
+    ap.add_argument("--context", default="", help="row 11: name the launch context (the plists pass it)")
+    ap.add_argument("--emit-launchd", default="", metavar="DIR",
+                    help="row 11: write the LaunchAgent + LaunchDaemon plists into DIR and print how to install them")
+    ap.add_argument("--soak", type=float, default=0, metavar="SECONDS",
+                    help="row 12: run the soak for SECONDS (86400 on the Mac) and log to soak_*.jsonl")
+    ap.add_argument("--soak-procs", type=int, default=6)
+    ap.add_argument("--soak-interval", type=float, default=60)
+    ap.add_argument("--soak-device", default="mps")
+    ap.add_argument("--soak-chunk", type=int, default=300, help="learner grad steps per timed chunk")
     ap.add_argument("--child", type=int, default=0, help=argparse.SUPPRESS)
     a = ap.parse_args()
+    if a.emit_launchd:
+        return emit_launchd(a.emit_launchd, a.out)
+    if a.soak:
+        return soak(a)
     a.procs = [int(x) for x in a.procs.split(",") if x]
     if a.child:
         return child(a.child, a)
@@ -523,6 +750,8 @@ def main():
             t0 = time.perf_counter()
             args = [sys.executable, str(Path(__file__).resolve()), "--child", str(k),
                     "--procs", ",".join(map(str, a.procs)), "--seconds", str(a.seconds)]
+            if a.context:
+                args += ["--context", a.context]
             if a.quick:
                 args.append("--quick")
             try:
