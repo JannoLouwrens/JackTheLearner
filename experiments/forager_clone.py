@@ -73,6 +73,22 @@ Reading  pass (sustained on >= 3 of 5, control < 3) = the task is learnable
          learner or the world, not the eye. Reported, decides no seat.
 Extension  NONE. E2c's code (the two-number wrapper) is written when J11's
          rule is frozen — it inherits that rule's readings verbatim.
+AMENDED 2026-11-19 12:2x UTC (ORDERS J15 (4), ruling 50), before seed 801 or
+any E2c cell runs; nothing else above changes:
+  1. Encoding: `handed_sense.HandedSense(encoding="cossin")` — THREE numbers,
+     cos(bearing), sin(bearing), distance (no jump at +-pi), not radpi.
+  2. Controls, BOTH run on seeds 801..805: `mode="zero"` (the numbers present,
+     always 0) is the PRIMARY control, the field's (input removed): the pass
+     clause's "control < 3" is read on it. `mode="random_point"` (the clause
+     above) is REPORTED ONLY: a fixed point read in the body frame leaks
+     odometry (§17), so it may learn something and it does not void the row.
+  3. Said before seed 801: survival by repeated eating at 300k is on no
+     published record (nearest: SAC PointGoal1, shaped, 1M), so a MISS at
+     300k is weak evidence: "not learned in 300k", never "cannot learn".
+  15 runs (3 arms x 5 seeds), one per Kaggle session at J11's rank.
+E2b CLOSED 2026-11-19 (gate 3, WORLD_CARD J15 (2)): the only memoryless
+teacher, f5, met the bar on 5 of 20 seeds -> "not clonable by a memoryless
+net, by measurement" for that teacher; `kernel-full` does not run.
 """
 from __future__ import annotations
 
