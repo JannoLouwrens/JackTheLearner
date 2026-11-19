@@ -4,172 +4,171 @@
 > item in `docs/FIELD_WATCH_LOG.md`. This page NOMINATES arms; it adopts
 > nothing and changes no spec, threshold or decision.
 
-**Sweep:** 2026-11-16 (Mon). First sweep under `docs/PLAN.md` (11-15, "research
-first"), so it was aimed at what `PUBLISHED_PRIORS.md` marks as open or
-unverified, plus new papers 11-09 → 11-13 (nothing newer was listed).
+**Sweep:** 2026-11-19 (Thu). Aimed first at the fronts 11-16 left unread
+(homeostatic RL, adults as teachers and judges, small ears, word learning),
+then new papers 11-10 → 11-18, then the record's own sources.
 
-**Evidence marks.** **[V]** read in the page text by a fetch tool (quotes capped
-at 125 chars) · **[V†]** only a summariser's extraction of that page · **[c]**
-claim, source not opened · **[R]** read in this repository today.
+**Evidence marks.** **[V]** page text read verbatim by a fetch tool · **[V†]**
+only a summariser's extraction of that page (long HTML is cut at ~40k
+characters; the rest arrives summarised) · **[c]** claim, source not opened ·
+**[R]** read in this repository today.
 
 ## Coverage
 
-| Front | Enumerated (arXiv API, newest first) | Opened |
+| Front | Enumerated | Opened |
 |---|---|---|
-| 1 Cores | world model + RL; Dreamer / TD-MPC2 (titles back to July); model-based RL; active inference; SAC / replay ratio | 2611.11868, 2611.10316, 2607.19749, 2611.14955 |
-| 2 Fusion | multimodal + RL; modality imbalance; tactile + RL | none cleared |
-| 3 Memory | episodic memory; plasticity / continual RL; replay / consolidation | 2607.19749 |
-| 4 Curriculum, curiosity | curriculum + RL; UED / open-ended; intrinsic motivation; sparse-reward exploration | 2611.11868 |
-| 5 Worlds | Craftax / survival; MuJoCo; MuJoCo changelog; PyPI `mujoco`, `mujoco-core`, `dm-control` | changelog [V] |
-| 6 Adults | keyword spotting; small ASR; TTS (search page) | abstracts only |
-| Senses / biology | olfaction, vocal learning (search pages) | 2611.05738 |
-| The record's own sources | `danijar/dreamerv3`, sheeprl, r2dreamer, MLX, SBX, `dreamer-mlx` | repos / PyPI [V] |
+| 1 Cores | search pages: DreamerV3, TD-MPC2, model-based RL, active inference, replay ratio; API: world model + RL | 2611.24115, 2611.21465, 2611.01666, 2609.39151 |
+| 2 Fusion | multimodal world model (3 results, newest August); tactile + RL (newest 11-05) | none cleared |
+| 3 Memory | episodic memory + RL (newest 10-30); loss of plasticity (newest 10-30); continual RL; replay + sleep (2 results) | 2609.38598, 2611.21598, 2611.21879, 2611.22470 |
+| 4 Curriculum, curiosity | UED; intrinsic motivation; curriculum + open-ended; curiosity + novelty (newest 11-09); Craftax back to September | 2610.04604, 2610.15328 |
+| 5 Worlds | Craftax; MuJoCo changelog; mujoco_playground, Craftax, TD-MPC2 repos | changelog [V] |
+| 6 Adults | VLM reward + RL; LLM teacher + RL; keyword spotting; two release cards | 2611.18597, 2610.13447, 2611.19389, 2611.19844, ZONOS3-Mini, ARK-ASR cards |
+| Senses, biology | homeostatic RL (18 results, read whole); vocal learning; child-directed speech | 2608.27843, 2611.22499, 2611.21969 |
 
-**Gaps — not covered, not "nothing found".** The arXiv API refused (HTTP 429)
-after ~20 queries, and four fallback search pages returned zero results because
-of my query syntax. So this sweep did NOT read: LLM/VLM as teacher or judge,
-homeostatic / needs RL, q-bio.NC, from-scratch small ears, word learning in RL
-agents. No conference enumeration. No PDF read. The six-month window was
-re-read for Dreamer only, and there by title.
-
----
-
-## HAZARD (front 5) — MuJoCo 4.x is, by its own changelog, a different world for him
-
-Carried from 11-12 and now sharper. `requirements.txt:23` still reads
-`mujoco>=3.1.0` with no upper bound [R].
-
-- **The integrator he lives under changed.** 4.0.0: RK4 is now fourth-order for
-  free and ball joint orientations — "This changes the simulation of models
-  with ball or free joints that use `RK4`" [V]. `playground.py:527` sets
-  `integrator="RK4"`, his root joint is `type="free"` (`:280`) and loose objects
-  are free joints (`:417`, `:447`) [R]. A PASS carries the world it was earned
-  in (LESSONS 4): every World certificate was earned on 3.x.
-- **Other result-changing items in 4.0.0 [V]:** saturated `actuatorfrcrange`
-  actuators no longer contribute implicit derivatives (changes `implicit` /
-  `implicitfast`, the integrator PRIORS §10 prices as the speed route; no
-  `actuatorfrcrange` in `playground.py` or `w0.py` [R]); contact pairs with
-  undefined `solref` are mixed differently; convex-collision fixes "can
-  slightly change contacts". 4.0.1 fixes a wrong Newton Hessian factor that
-  4.0.0 introduced.
-- **Packaging [V]:** `mujoco` 4.x is a pure-Python shell; the engine moved to
-  `mujoco-core` (wheels for Linux aarch64 and macOS arm64, Python 3.11–3.15;
-  3.10 dropped). `dm-control` 1.0.52 (11-11) requires `mujoco>=4.0.1`, so an
-  unpinned `dm-control` install pulls 4.x. `mujoco` 3.17.0 remains on PyPI with
-  aarch64 and macOS-arm64 wheels for Python 3.10–3.15 — PRIORS §5's pin
-  (`3.17.0` + `dm-control==1.0.50`) installs on this box and on the Mac.
-
-**For the Director.** The Mac (late December) is a fresh environment and PLAN's
-ready-list already says "re-certified, running on macOS". Either pin it to the
-version the certificates were earned on, or make 4.x a deliberate
-re-certification — never a silent resolve. Not an arm. I cannot see the
-installed version (no shell).
+**Gaps — not covered, not "nothing found".** The arXiv API answered 2 of 12
+queries, then HTTP 429; the search pages answered 33 of 33 but only the first
+~15 rows of each page are verbatim. Three queries returned zero rows through
+my own wording (MuJoCo humanoid from scratch; small CPU ASR; small-data speech
+representation). Four `OR` queries (autotelic, olfaction, vocal learning,
+child-directed speech) returned unrelated floods — those four topics are
+**unread**, not empty. q-bio.NC was not enumerated at all. No PDF was read;
+limitations sections of long papers are mostly [V†].
 
 ---
 
 ## NOMINATIONS
 
-### N1 — Coloured action noise, applied only when choosing the action (brain B's exploration test)
+### N1 — A non-commutative rotating register, against the seated ring (Working memory)
 
-**Source.** *Fade to… Red? Scheduling Coloured Noise Exploration…* —
-arXiv:2611.11868v2, cs.RO, 11-09, López & Cruz, accepted ACRA 2026 [V]. No code
-link found.
+**Source.** *Reinforcement Learning with Complex (valued) Memories* —
+arXiv:2609.38598, cs.LG, 09-29; Bhethanabhotla, Gavves, Biedenkapp; "Accepted
+at the 19th European Workshop on Reinforcement Learning 2026"; code
+`github.com/Sathya98/qurl` (JAX, on the POBAX benchmark) [V].
 
-**Verified.** SAC + HER in Stable-Baselines3 on four sparse-reward tasks
-(Fetch Reach / Push / PickAndPlace, ShadowHand rotate), 50 noise conditions,
-"trained with 30 random seeds" each [V]. Learning efficiency as z vs white
-noise, 95% paired-bootstrap CIs: **gSDE −0.75 [−0.88, −0.63]**, pink +0.35
-[+0.18, +0.52], red +0.26 [+0.11, +0.42]; end performance: gSDE −0.52, pink
-0.00, red −0.03 [V]. Movement jerk vs white: pink 0.53, red 0.32 [V]. The
-colour touches action selection only — "gradient updates use the standard
-i.i.d. Gaussian reparameterisation" — and the noise's lowest frequency is set
-by episode length ("f_min = 1/T_ep") [V].
+**Verified.** Three unitary recurrent cells dropped into recurrent PPO in
+place of a GRU, same hidden size, 5 seeds [V]. The plain cell's transition is
+a product of diagonal phases, Householder reflections, a Fourier transform and
+a fixed permutation; the tunable one is layered 2×2 rotations (only L = 2 run)
+[V] — products that do not commute. No write gate in the equations [V].
+RockSample (11,11): "roughly 2×" the GRU and PPO-LD plateaus; Craftax
+(no-inventory, 100M steps): two of the three "far exceed the two GRU
+baselines" [V]. **T-Maze with a 75-step corridor — the one pure memory probe —
+all cells "converge to similar returns"** as the GRU [V]; Battleship no gain
+[V†]; the input-conditioned cell fails on Craftax, put down to "insufficient
+tuning" [V]. Parameter counts are not given; the abstract's "2–3×" has no
+matching number in the text I read.
 
-**Seat / arena.** Learning core (arena LC.*), as brain B's exploration setting:
-PRIORS §5 lists "which exploration finds food first" in the last 10% and offers
-the Zoo gSDE recipe or pink noise. This is 30-seed evidence on that fork: real
-SB3 gSDE trailed plain white noise on all four sparse tasks pooled, and it
-shows the clean form of pink noise that avoids the trap §5 names (the
-pink-noise package also recolours the noise inside the update). It is also the
-new evidence LAB 11-12 "Exploration in bouts" lacked for its unrun stage B
-(coloured noise inside the learner).
+**Seat / arena.** Working memory — BY VERDICT `WM.02` (ring 0.902 vs GRU
+0.579). LAB 11-11 lists as open "a non-commutative register". This is that
+register, published, with code. Arm: the layered-rotation cell at the ring's
+size inside `WM.02`'s own task, shuffled and no-rotation controls unchanged.
 
-**Cost.** Zero parameters, CPU. One or two extra arms (pink, red; sequence as
-long as a life) in the exploration test B already owes: 5 seeds each at B's
-pilot budget.
+**Cost.** CPU, minutes per seed at `WM.02`'s size (the ring is 1,031
+parameters). The paper's runs are GPU-batched JAX at 5M–100M steps — its
+speeds and its Craftax scores do not transfer; only the cell does.
 
-**Might win:** in his world, pink or red selection noise reaches the first meal
-in fewer decisions than B's current held-noise default (SBX `use_sde`), with
-red adding smoother movement for the human-like body later. **Might lose:**
-(i) white never fails outright here and end performance is equal — the gain is
-speed only; (ii) HER relabelling does much of the sparse-reward work and Jack
-has no goal to relabel; (iii) on PickAndPlace 15 of 48 coloured schedules
-learned slower than white [V]; (iv) Fetch-Reach drives most of the pooled gain
-[V†]; (v) our own noise-only probe found pink roams 1.7× wider and feeds no
-more often — direction, not range.
+**Might win:** the ring's rotations commute, so it can hold *how much* but not
+*in what order*; a non-commuting product can, and order is what "heard, said,
+did" needs. **Might lose:** (i) on the paper's own memory probe it ties the
+GRU — the gains are on tasks where memory is one of several things; (ii) it is
+ungated and LAB's no-write-gate ring died at 0.119; (iii) sizes are not
+parameter-matched in the paper; (iv) workshop paper, untuned by the authors'
+own word.
 
-### N2 — Smell has a published record now: a prior for the Smell seat, and two world-side arms
+### N2 — If the forager's clone misses, the published cure is 2,304 weights of leaky linear memory (J15, row E2b)
 
-**Source.** *OdorSpaces: Visual-Olfactory Embodied Navigation in 3D
-Environments* — arXiv:2611.05738, cs.RO, 11-03, Lee et al. (Maryland),
-"Accepted at … CoRL 2026" [V]. Project page listed; no code link found.
+**Source.** *Linear Recurrent Memory Suffices to Distil a World-Model Policy
+for Robot Air Hockey* — arXiv:2609.39151v2, cs.RO, 09-30 / 11-15; Fan & Obst
+(UNSW); code `github.com/unswei/airhockey-distillation` [V].
 
-**Verified.** Gas fields from a fire-dynamics simulator, queried inside
-Habitat scenes; the agent must find an invisible propane leak or an early
-fire. The nose samples gas density at the body centre "plus four directional
-offsets" at several heights [V]. Policy: PPO, separate encoders for vision,
-smell and pose history into "a recurrent memory backbone" [V]. Start distance
-is a curriculum, "from 1.5 m to 9.0 m over 30M training steps" [V]. Propane,
-SPL % (two scene sets): temporal-gradient search 4.6 / 1.8, greedy chemotaxis
-17.3 / 27.1, moth-like casting 36.1 / 33.6, learned 65.3 / 63.8 [V]. On fire
-plumes every hand-written searcher scores 0.00 and the learned policy 24.7
-[V]. One sensing height instead of several: fire SPL 0.00 [V†]. Recurrence
-helps propane (54.0 → 65.3) and hurts fire (28.7 → 24.7) [V†].
+**Verified.** A DreamerV3 teacher (1M steps) cloned by plain regression into
+students of 5,602–28,898 weights, 5 matched seeds, main result on a test split
+"opened only after all models and analyses were frozen" [V]. With the puck
+hidden for 400 ms: memoryless student **44.4% [33.5, 56.4]** saves; a ten-step
+input stack 86.0% [79.0, 91.8]; a 64-channel memory whose only recurrence is
+`z ← diag(tanh α)·z + B·x` (12,002 weights, 2,304 in the memory, timescales
+initialised 40 ms–2 s) **98.3% [96.5, 99.6]**; GRU-64 (28,898) no better
+(paired difference 0.5, CI [−1.2, 2.5] [V†]) [V]. "Nonlinear recurrence adds
+no clear gain" [V]. One round of the teacher labelling the student's own
+states lifted a pilot from 67.1% to 98.7% [V]. Timed on one desktop Intel
+thread (23 µs a step) — not our hardware, and not the claim nominated.
 
-**Seat / arena.** Smell — VACANT, arena `SM.02`. PLAN has "Other senses" at
-step 0, and LAB killed smell three times ("a sense that works goes unused by
-the reactive learner") at 13k–52k decisions. The one published from-scratch
-smell learner used a start-distance curriculum, a nose with spatial spread
-and memory, and **30M steps** — about 600× our largest smell run. Under
-LESSONS 17 those kills are pilots below the published budget, not verdicts on
-the sense. Nomination: (a) enter this as the Smell row of `PUBLISHED_PRIORS.md`;
-(b) two arms when smell is next tested — a multi-point nose (centre + offsets)
-against today's single reading, and start distance as a dial (it is already
-J2's dial for food).
+**Seat / arena.** Row E2b of order J15 (no seat moves; Working memory's
+`WM.02` for the cell itself). J15's own disclosure [R]: the teacher holds a
+remembered target on 0.551 of decisions, the frozen student is memoryless
+(256-256-256-8), and "a memoryless clone may miss for the forager's memory,
+not the eye". This paper is that exact situation with numbers. Nominated as
+the **declared follow-up arm if E2b misses** — same data, same bar, same
+permuted twin, plus a diagonal leaky memory — so a miss is read as memory or
+eye, not left ambiguous. The frozen E2b rule is untouched.
 
-**Cost.** None to read. Their simulator is not ours (offline fluid dynamics,
-days per scene on 8–16 cores [V†]); our smell is an analytic field and stays
-CPU-cheap. A multi-point nose is four more field reads per decision.
+**Cost.** CPU; J15 measured 4.4 CPU-s per 1e5 samples for the memoryless
+clone — a recurrent student costs more per sample (unmeasured here).
 
-**Might win:** smell that carries its own spatial gradient lets a memoryless
-learner climb, and our `steer` result (14/40 fed vs babble 3/40 with the want
-given) says a measured rise is enough. **Might lose:** (i) one training seed,
-three test seeds [V]; (ii) I found no no-smell control, so "the policy uses
-smell" is not shown in what I read; (iii) their target is invisible, ours is
-food his rays may also see; (iv) 30M PPO steps is far outside our budget and
-nothing shows the result holds at 1M; (v) idealised sensor, no wind, no noise
-— the authors' own limits.
+**Might win:** half the teacher's decisions depend on something the eye does
+not show this instant; a 2 s leaky trace is the smallest thing that can carry
+it. **Might lose:** (i) the forager's other 45% is a coin held 25 decisions
+that no memory of the *input* recovers (PRIORS §17); (ii) their blackout is
+0.4 s, his lives are 9,000 steps; (iii) one simulated set-piece, one teacher;
+(iv) the student is cloned, never learns on — this says nothing about a
+learner that must find the behaviour himself.
+
+### N3 — The teacher-proposed curriculum arm, with its must-fail control (Curriculum, `CR.01`)
+
+**Source.** *Anticipating the Consequences of Curriculum Decisions with Large
+Language Models* — arXiv:2610.04604, cs.LG, 10-03; Pappalardo, Herr,
+Rocktäschel (UCL); code `github.com/Octavio-Pappalardo/curriculum-foresight`
+[V].
+
+**Verified.** The learner is from scratch (PPO, ~6.2M weights [V†]) on 256
+textual goals in Craftax [V]. The LLM never picks a task during training: once,
+offline, it writes a graph of "training on s helps t" and which goals are
+feasible from nothing; task choice is then learning progress × (weight +
+downstream potential from that graph) [V†]. Abstract: "the strongest gains
+when optimizing for individual target tasks" [V]. Single target after ~1.5B
+steps, 5 seeds: Furnace 79% vs 0% for learning progress alone, Dungeon 44% vs
+2% [V†]. With uniform weights over all goals the two "end similar" [V†]. A
+**shuffled-graph control (PERM) "still retains some benefit"** [V†].
+
+**Seat / arena.** Curriculum — VACANT, `CR.01`. GOAL names "what the adults
+around him say and propose" as part of what is raced; 11-11 nominated the
+easy-only and reversed-order controls. This adds the form of the adult arm
+that keeps him unpuppeted — the adult writes an order of the world once, his
+own learning progress still chooses — and its control: the same graph with
+labels permuted must lose.
+
+**Cost.** The graph is a few hundred calls to a free open LLM (theirs was a
+closed Gemini — not free, not ours). Their 1.5B–3B steps are ~10,000× a
+300k-decision life; only the design transfers. Our goal set is a handful of
+needs and rules, not 256.
+
+**Might win:** when one hard thing matters (fire, shelter), learning progress
+alone never samples its prerequisites; a told dependency order does. **Might
+lose:** (i) the permuted graph kept part of the gain — some of the effect is
+reweighting, not knowledge; (ii) no gain when all goals count equally; (iii)
+the effect numbers are [V†], one sigma shading, no intervals; (iv) with five
+goals a graph may be nothing a person could not write on a card — in which
+case the card is the arm.
 
 ---
 
-## CHECKS ON THE RECORD (`PUBLISHED_PRIORS.md`) — nothing overturned
+## CHECKS ON THE RECORD — nothing overturned
 
-- `danijar/dreamerv3` head is still `e01491f` (Oct 4, 2026) [V].
-- sheeprl: stable 0.8.5 (10-27), `1.0.0rc7` the same day; the README carries
-  no DreamerV3.5 score — only a single-run training-time table "on 4 CPUs",
-  task unnamed [V]. §2's "no published scores" stands.
-- MLX: 0.32.4 is still the latest [V]. **One line to check before the port
-  spike:** the 0.32.3 notes say "Support shapeless compilation of scan
-  operations" [V], while §11 lists scan as missing. I could not tell whether
-  that is a loop primitive or cumulative-sum-style scans.
-- `mathDR/dreamer-mlx`: 6 commits, one-line README, no result [V]. SBX: PyPI
-  0.28.0 [V].
-- **A first, partial T4 number for a Dreamer-shaped model** (§2 says speed is
-  measured nowhere): arXiv:2611.10316 profiles an RSSM (512-unit GRU, 32×32
-  latents, PyTorch) on a T4 — 0.387 J per batch-32, 20-step imagined rollout at
-  68.19 W, "about 176 calls per second" [V]. Derived from power, inference
-  only, no gradients, no encoder: it bounds nothing about training. E3 remains
-  ours to measure.
+- **MuJoCo:** 4.0.1 (11-11) is still the newest release [V]. `requirements.txt:23`
+  is still `mujoco>=3.1.0`, unbounded [R]; `dm-control` 1.0.52 requires
+  `mujoco>=4.0.1` [V]. The 11-16 hazard stands unchanged (RK4 on free joints
+  changes results in 4.x; pin the Mac or re-certify deliberately). Two more
+  4.0.0 items read this time: tendon `sidesite` semantics "can change the
+  behavior of existing models"; flex elasticity constants corrected [V].
+- `danijar/dreamerv3` head still `e01491f` (10-04) [V]. MLX still 0.32.4 [V];
+  the "scan" line in 0.32.3 is unresolved a second sweep. SBX 0.28.0 [V].
+- `mujoco_playground` v1.0.1 (11-09), notes not read; Craftax v1.7.0
+  (10-27); TD-MPC2: no successor [V].
+- **11-16's N2 (smell) is in the record** as PRIORS §14 [R]. 11-12's N1 (judge
+  gate) reads "yes, queued" in `DECISIONS_RESOLVED.md` [R]. Still live and
+  unentered: 11-16 N1 (pink / red selection noise, 2611.11868 — §5 names pink
+  noise, the paper is not cited), 11-12 N2 (permanent/transient split,
+  2611.07327), 11-11 N1–N3.
 
 ---
 
@@ -177,34 +176,45 @@ nothing shows the result holds at 1M; (v) idealised sensor, no wind, no noise
 
 | Item | What it is | Promote on |
 |---|---|---|
-| **Dream rehearsal** 2607.19749, code | Dreamer-style agent on MiniGrid task chains: the world model keeps old tasks (reward retention 0.99–1.06) while the actor loses them; cloning the best *imagined* trajectories passes 3/3 four-task chains vs plain replay 0/3 [V]. Bears on Consolidation (`NE.05`) and "still learning without losing what he knew". | Brain A living in his world; more than n = 3, a single author and a 17M model. |
-| **Posterior-prior gap** 2611.14955 | A probe for "obstacle ahead" reads AUC 0.85 on filtered states and 0.71 after 15 imagined steps; ensemble disagreement does not flag the loss (0.52) [V]. A cheap diagnostic for A: does "food ahead" survive 15 steps of imagination? | More than one seed; a probe retrained on imagined states (the authors' own confound). |
-| **Antalia-2 Mini** 2611.13811 | 7.6M-parameter TTS, weights Apache-2.0, "41 times real time on an Apple M5 laptop CPU (2 threads)" [V]. Turkish only. An ADULT voice, never his. | An English model of this class, timed on our hardware. |
-| **Marimba** 2611.18330, code + weights | Yes/no questions about speech (term present, turn ended, speaker changed) read from a frozen 0.6B ASR; Speech Commands 4-way 0.93 [V]. A listener-judge candidate. | A licence and a CPU or T4 timing. |
-| Carried, not re-checked | The six 11-12 watchlist items (Phonon TTS, hawkmoth, leverage-score replay, failure-driven restarts, child-scale LMs, world2vec). | As 11-12. |
+| **Pixel-KWS** 2611.19389 | An open-vocabulary ear from scratch: 4-layer Conformer + small text encoder, **0.85–0.86M weights**, trained on LibriSpeech-derived phrases only; hard / easy error 12.4 / 0.63% at that size, 9.6 / 0.4% at 11.4M [V]. The next rung after J14's 12-word row: "is this the word I was told?" for any word. 4 GPUs, model unnamed; **no code**. | J14's ear row in band; code or a T4 timing. |
+| **Oído** 2610.13447, code | 13M streaming English ASR on a $5 microcontroller, one core, real-time factor 0.54–0.72, 7.1 / 16.4% word error [V]. Built from NVIDIA's released weights [V] — an ADULT listener, never his ear. | A licence read at the source ([V†] GPLv3) and a timing on this box. |
+| **ZONOS3-Mini** (Zyphra, 11-09) | TTS, Apache-2.0, 800M weights, 100M active per token, 43 languages, CPU runtime exists [V]. Only H100 and phone first-audio figures — no CPU speed. Adult voice. | A CPU real-time factor on ARM. |
+| **ARK-ASR-0.6B** (Edge0) | ASR, Apache-2.0, 19 languages [V]; speeds on H200 only. | A CPU timing. |
+| **Evolutionary Neuroplastic Agent** 2611.21598, code | Gradient-free; evolved nets of 4+2 hidden units kept as an archive of specialists; after a physics change retains 115.6% vs PPO 39.2% (20 runs) [V†]. But the archive is FROZEN members (scored-and-ineligible), and the authors say the evidence "does not isolate" the cause [V]. | A continual-learning order opening; a non-frozen variant. |
+| **Episodic repulsion in planning** 2611.22470 | States visited this episode repel the planner; success 31.8 → 46.7% on one world model, 3 seeds [V]. Random cost of equal scale ties it on one task; settings chosen on the test tasks [V†]. | Brain A planning in his world. |
+| **Does the model hear its own action?** 2611.01666 | A randomisation test for whether a world model's prediction moves with the action; the usual zeroed-input check gave false effects [V†]. Low power: TD-MPC2 1 of 6 tasks [V]. | A second reading. |
+| **Skills return cheaply** 2611.24844, code | From-scratch language models: a withheld skill returns at 1.1–22% of the data [V†]. Bears on "a sense added later". | An RL replication. |
+| Carried, not re-checked | The four 11-16 items; six 11-12 items. | As before. |
 
-**Carried live, unrun:** 11-12's N1 (matched-counterfactual gate for any adult
-that scores him, 2611.13596) and N2 (permanent/transient value split,
-2611.07327); 11-11's N1–N3. Neither 11-12 id appears in `PUBLISHED_PRIORS.md` [R].
+**Biology, one line.** 94 mother–child pairs at age 2: adult–child–adult
+exchanges separate the low and high language groups (η² = 0.22), cognitive
+scores do not [V]. Measured at one age — a correlation, not a cause. For the
+talkative parent: answering him may matter more than talking near him.
 
 ---
 
 ## NO-ACTION
 
-- **1 Cores.** Nothing at the small end. In window: a cyber-defence Dreamer
-  (3 days on one GPU), a lander, quantised TD-MPC2 at 317M, Koopman MBRL. No
-  small-Dreamer score, no Apple-silicon Dreamer, no new port.
-- **2 Fusion.** Nothing new; IPR (2611.13782) was dropped 11-12. No tactile +
-  RL paper in the window.
-- **3 Memory.** Retrieval: LLM-agent stores only. Plasticity / continual RL:
-  no paper in the window.
-- **4 Curriculum, curiosity.** No UED or open-ended paper in the window; the
-  curriculum hits were network planning and proof repair.
+- **1 Cores.** Nothing at our size. Relational world model (2611.24115): 4M
+  on top of a 200M DreamerV3, A100, needs an object detector; Crafter 15.8 ±
+  2.0 vs 14.5 ± 1.6 — overlapping [V†]. Jacobian warm start (2611.21465): no
+  closed-loop numbers. No new small-Dreamer score, no Apple-silicon Dreamer.
+- **2 Fusion.** No paper in the window; ninth sweep without one.
+- **3 Memory.** No episodic-retrieval or plasticity paper since 10-30.
+  2611.21879 is tabular theory. "Replay, Don't Resample" is LLM distillation.
+- **4 Curiosity / UED.** Nothing since 11-09. Anchor-and-Harvest (2610.15328):
+  +4.8 on Craftax at 2B steps, but removing both of its named parts leaves
+  45.1 ± 2.8 vs 46.7 [V†] and the authors call its value over simpler
+  curricula "open".
 - **5 Worlds.** No new survival or needs world.
-- **6 Adults.** Thin and partly unread (see Gaps).
-- **Voice.** No vocal-learning paper since 11-01.
+- **Needs.** The whole homeostatic-RL listing read: one new item since
+  August, 2608.27843 — a hand-built Bayesian controller with a frozen text
+  encoder in a scripted exchange. Not a learner.
+- **Voice.** 2611.22499 is hand-built spiking articulation, no sound, nothing
+  learned. Adults as reward: 2611.18597 uses a frozen CLIP on H200 nodes and
+  no arm with the adult removed.
 
-**Philosophy served:** 3 (a dead sense and an assumed exploration recipe each
-meet a published record), 4 (the engine version is part of every World
-certificate), 5 (research before the next race; the record's own sources
-re-checked), 2 (adult voices and listeners kept outside him).
+**Philosophy served:** 3 (a seated memory and a vacant curriculum each get a
+published challenger; a miss in J15 gets its reading before it happens), 4
+(every arm above arrives with the control that must fail), 2 (ears and voices
+sorted into his and the adults'), 5 (research before the race).
