@@ -62,7 +62,9 @@ STATUS: rule + eval + late-start control (`evaluate`, `control_run`; box smoke
 11-18) + `train_segment` (resume as the rule says; box resume test
 `resume_check`, 11-18) + Kaggle wrapper `kernel` (segment n > 0 mounts
 segment n-1's kernel via gpu.py `kernel_sources`; the /kaggle/input/<slug>
-mount path is unverified until the first segment 1 runs — it fails fast).
+mount path is unverified until the first segment 1 runs; `resolve_prev_dir`
+(11-19) finds the checkpoint at the rule's path or the ONE deeper mount
+carrying the slug, else fails fast listing what is mounted).
 """
 from __future__ import annotations
 
@@ -253,11 +255,38 @@ import subprocess as _s, sys as _y
 _s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
 import json, os
 os.chdir("/tmp/jack")
-from experiments.humanoid_sac_row import train_segment
+from experiments.humanoid_sac_row import train_segment, resolve_prev_dir
 out = os.environ["JACK_OUT"]
-r = train_segment(__SEED__, out, __PREV__, __SEGMENT__)
+_p = __PREV__
+_p = resolve_prev_dir(_p) if _p else None
+print("PREV_DIR " + repr(_p), flush=True)
+r = train_segment(__SEED__, out, _p, __SEGMENT__)
 print("RESULT " + json.dumps(r), flush=True)
 '''
+
+
+def resolve_prev_dir(expected: str, root: str = "/kaggle/input") -> str:
+    """Where the previous segment's checkpoint is actually mounted. The rule's
+    path is /kaggle/input/<slug>; Kaggle has also mounted kernel sources one or
+    more levels deeper (e.g. .../notebooks/<owner>/<slug>), and that path was
+    never verified (J10 11-19). Returns `expected` if it holds model.zip AND
+    replay.pkl; else the ONE directory under `root` holding both whose path
+    contains the slug; else raises with what IS mounted, so a wrong mount costs
+    one pip install, never a fresh-start segment mislabelled as a resume."""
+    import os
+    need = ("model.zip", "replay.pkl")
+    if all(os.path.isfile(os.path.join(expected, n)) for n in need):
+        return expected
+    slug = os.path.basename(expected.rstrip("/"))
+    hits, seen = [], []
+    for d, _dirs, files in os.walk(root):
+        seen.append(d)
+        if all(n in files for n in need) and slug in d.split(os.sep):
+            hits.append(d)
+    if len(hits) == 1:
+        return hits[0]
+    raise FileNotFoundError(f"checkpoint for {slug!r}: {len(hits)} candidates {hits} "
+                            f"under {root}; dirs seen: {seen[:40]}")
 
 
 def segment_job_body(seed: int, segment: int, prev_dir: str | None = None) -> str:

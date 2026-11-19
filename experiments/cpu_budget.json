@@ -1493,14 +1493,14 @@
         "detached:launch_m5.log": 113.66,
         "detached:launch_m6.log": 496.97,
         "detached:launch_m7.log": 327.42,
-        "detached:launch_p0.log": 75.02,
-        "detached:launch_p1.log": 64.82,
-        "detached:launch_p2.log": 11.19,
+        "detached:launch_p0.log": 106.97,
+        "detached:launch_p1.log": 96.69,
+        "detached:launch_p2.log": 43.24,
         "detached:launch_s0_seg0.log": 292.28,
-        "detached:launch_s1_seg0.log": 117.95,
+        "detached:launch_s1_seg0.log": 149.79,
         "detached:launch_wm-dyn.log": 502.75
       },
-      "used_s": 3361.91
+      "used_s": 3489.62
     }
   },
   "last_child_s": {
