@@ -1517,20 +1517,21 @@
         "detached:launch_p2.log": 471.35,
         "detached:launch_p3.log": 477.62,
         "detached:launch_p4.log": 459.5,
-        "detached:launch_p5.log": 214.82,
-        "detached:launch_p6.log": 11.48,
+        "detached:launch_p5.log": 581.52,
+        "detached:launch_p6.log": 107.1,
+        "detached:launch_p7.log": 96.24,
         "detached:launch_s0_seg0.log": 292.28,
-        "detached:launch_s0_seg1.log": 16.81,
+        "detached:launch_s0_seg1.log": 112.56,
         "detached:launch_s1_seg0.log": 507.83,
         "detached:launch_wm-dyn.log": 502.75,
         "detached:launch_wm-latent+ring.log": 305.57,
-        "detached:launch_wm-latent@repair.log": 12.59,
+        "detached:launch_wm-latent@repair.log": 254.01,
         "detached:pk_chain_0.log": 2104.13,
         "detached:pk_chain_1.log": 2152.12,
         "detached:pk_col_c.log": 964.89,
         "detached:pk_col_d.log": 930.54
       },
-      "used_s": 15376.13
+      "used_s": 16271.86
     }
   },
   "last_child_s": {
