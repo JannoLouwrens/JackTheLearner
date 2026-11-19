@@ -77,7 +77,7 @@ reports d = 1.0.
   has ≥ 6 eval points (150k), else it is a missing seed; ≥ 2 missing seeds in
   any arm → the arm is "incomplete", no reading.
 
-**Code this rule still needs (none written yet):** an eval-lives hook (paused
+**Code this rule needed — WRITTEN 11-19 (`dial_curriculum.py`: `sham_success_fn`, `eval_plan`/`plan_sha`, `eval_lives`, `make_eval_callback`, `final_rate`; proof `tests/test_dial_race_parts.py` PASS, planted leaky eval caught). Was:** an eval-lives hook (paused
 learner, common eval seeds, no replay write) in the pilot runner; `sham`'s
 `success_fn` (a seeded coin, `default_rng([seed, 0x5A4D])`). `sham` seed s
 runs after `gated` seed s is home (its P(up) is that run's measured rate).

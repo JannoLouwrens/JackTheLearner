@@ -177,3 +177,129 @@ class DialCurriculum(_Wrapper):
             self._need_rebuild = True
             info = dict(info, dial_d=self._current["d"], dial_ceiling=self.dial.ceiling)
         return o, r, term, trunc, info
+
+
+# ---- The dial race's two missing parts (ORDERS JACK Next-up 1, 11-19) -------
+# Rule: docs/research/prereg/dial_gated_vs_uniform.md ("Code this rule still
+# needs"). Code only; nothing runs a learner here and nothing imports it yet.
+# Proof: experiments/tests/test_dial_race_parts.py.
+
+EVAL_SEED_LO, EVAL_SEED_HI = 40_000, 41_000   # rule: [40,000, 41,000); W0 cap 41,010
+EVAL_DS = (0.75, 1.0)                         # rule: 20 lives at each
+EVAL_PER_D = 20
+EVAL_EVERY = 25_000                           # decisions between eval points
+
+
+def sham_success_fn(seed: int, p_up: float):
+    """`sham` arm's success_fn: a seeded coin, P(up) = p_up, that NEVER reads
+    the life (rule: default_rng([seed, 0x5A4D]); p_up = the same seed's
+    `gated` training success rate, so sham seed s runs after gated seed s)."""
+    if not 0.0 <= float(p_up) <= 1.0:
+        raise ValueError(f"p_up must be in [0, 1], got {p_up}")
+    rng = np.random.default_rng([int(seed), 0x5A4D])
+    p = float(p_up)
+
+    def coin(_row) -> bool:
+        return bool(rng.random() < p)
+    coin.p_up = p
+    return coin
+
+
+def eval_plan(run_seed: int, n_points: int, per_d: int = EVAL_PER_D,
+              ds=EVAL_DS) -> list:
+    """Every eval life a run will play: [(point, d, world_seed), ...], drawn
+    from ONE stream default_rng([run_seed, 0xE7A1]) in [40,000, 41,000).
+    A function of (run_seed, n_points, per_d, ds) ONLY — never of the arm —
+    so every arm of seed s plays the same worlds (common worlds)."""
+    rng = np.random.default_rng([int(run_seed), 0xE7A1])
+    out = []
+    for p in range(int(n_points)):
+        for d in ds:
+            for _ in range(int(per_d)):
+                out.append((p, float(d), int(rng.integers(EVAL_SEED_LO, EVAL_SEED_HI))))
+    return out
+
+
+def plan_sha(plan) -> str:
+    """The rule's VOID check: printed per run; any arm-to-arm difference voids."""
+    import hashlib
+    return hashlib.sha256(repr([(int(p), round(float(d), 6), int(s))
+                                for p, d, s in plan]).encode()).hexdigest()[:16]
+
+
+def build_at(world, world_seed: int, d: float):
+    """world(seed) -> JackEnv, rebuilt at difficulty d (as DialCurriculum's
+    set_world does: d == 1.0 is today's world, difficulty None)."""
+    e = world(int(world_seed))
+    want = None if float(d) == 1.0 else float(d)
+    if e.difficulty != want:
+        e.difficulty = want
+        e._build(int(world_seed))
+        e._pending_obs = None
+    return e
+
+
+def eval_lives(act, world, entries, cap: int | None = None) -> list:
+    """Play one life per (point, d, world_seed) entry with `act(obs) -> action`
+    (deterministic; no learner is touched — the caller passes only a function).
+    Each life is a fresh world in its own PilotLives, so nothing is written to
+    any training env or replay. Returns PilotLives rows + point/d/world_seed."""
+    from experiments.pilot_b import PilotLives, LIFE_CAP
+    rows = []
+    for p, d, ws in entries:
+        w = PilotLives(build_at(world, ws, d), cap=LIFE_CAP if cap is None else cap)
+        o, info = w.reset(seed=int(ws))
+        while True:
+            o, r, term, trunc, info = w.step(act(o))
+            if term or trunc:
+                break
+        rows.append(dict(w.lives[-1], point=int(p), d=float(d), world_seed=int(ws)))
+    return rows
+
+
+def sb3_actor(model, venv):
+    """The trained actor as `act(obs)`: obs normalised by the TRAINING
+    VecNormalize's current statistics without updating them (normalize_obs
+    reads obs_rms; only the env's own step updates it), mean action."""
+    def act(o):
+        x = venv.normalize_obs(np.asarray(o, dtype=np.float32)[None]) \
+            if hasattr(venv, "normalize_obs") else np.asarray(o)[None]
+        a, _ = model.predict(x, deterministic=True)
+        return a[0]
+    return act
+
+
+def make_eval_callback(venv, world, run_seed: int, T: int,
+                       every: int = EVAL_EVERY, per_d: int = EVAL_PER_D,
+                       cap: int | None = None):
+    """SB3 callback: at every `every` decisions, the eval lives of that point.
+    It runs inside `_on_step`, i.e. synchronously between env steps: learning
+    is paused by construction and no transition of an eval life reaches the
+    replay buffer (the eval worlds are not the training env). Results in
+    `cb.rows`; the plan's sha in `cb.sha`."""
+    from stable_baselines3.common.callbacks import BaseCallback
+    n_points = int(T) // int(every)
+    plan = eval_plan(run_seed, n_points, per_d)
+
+    class _Eval(BaseCallback):
+        def __init__(self):
+            super().__init__()
+            self.rows, self.plan, self.sha = [], plan, plan_sha(plan)
+            self._next = 0
+
+        def _on_step(self) -> bool:
+            if self._next < n_points and self.num_timesteps >= (self._next + 1) * every:
+                pt = self._next
+                ents = [e for e in plan if e[0] == pt]
+                self.rows += [dict(r, at=int(self.num_timesteps)) for r in
+                              eval_lives(sb3_actor(self.model, venv), world, ents, cap)]
+                self._next += 1
+            return True
+    return _Eval()
+
+
+def final_rate(rows, d: float, last_points: int = 3) -> float:
+    """Rule: sustained / lives over the last 3 eval points at difficulty d."""
+    pts = sorted({r["point"] for r in rows})[-int(last_points):]
+    sel = [r for r in rows if r["point"] in pts and float(r["d"]) == float(d)]
+    return (sum(bool(r["sustained"]) for r in sel) / len(sel)) if sel else float("nan")
