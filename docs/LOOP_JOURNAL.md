@@ -2906,3 +2906,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found in the runs' own training trace: SAC's critic overestimates in 14/14 runs, controls included — −actor_loss 492–2,174 at 300k vs a value ceiling of 263–879 from each run's late eating rate (1.2–8.3×). `e2c-table` now prints it (`e2c_q_row`, test_e2c_table PASS incl. a supported-control row). It is a lead on WHY the skill is lost, not shown to be the cause.
 - Side: the trace's per-dim action `std` is overwritten by SB3's `train/std` (SBX stub 0.0) — INBOX.
 - Philosophy served: 4 (a failure chased to a measured mechanism in the learner rather than filed) and 6 (two free sessions filled the minute they opened).
+
+## 2026-11-20 18:37–18:55 UTC · JACK (short slot) · J15 waiting; critic lead narrowed
+- First act `kernels status`: all 5 sessions RUNNING (J15 a1, e2, e3; J3 @hold8; J10 s2 seg1) → nothing to harvest or launch; `e2c-table` still 14/25.
+- Checked one candidate cause of the 14/14 critic overestimate by reading the code path: death → `terminated=True` survives PilotLives, HandedSense and DummyVecEnv; the 9,000-decision cap → truncated, bootstrapped (SB3 ReplayBuffer handle_timeout_termination=True). NOT a done-wiring bug. Not run, read — no measurement moved.
+- Philosophy served: 4 (one wrong explanation removed before anyone builds on it). Thin: no verdict moved; the free sessions were all busy.
