@@ -2924,3 +2924,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `7a3a4f6e` `pilot_b2 e2c-readings`: rule E2c's reading clause + ruling 57's table as code, written while 7/25 runs are still out; refuses a partial book. Seams in the frozen text are printed, not chosen (does "on ≥ 4/5" bind SUSTAINED; zero "eats as well"; no branch fires). Planted test 8/8 PASS; test_e2c_table PASS.
 - Peek on the complete auto arms: E-food-auto eats under both readings (late meals/life > 0.82 on 4/5, one at 0.84), E-zero-auto 0/5. E-food is 2/3 sustained so far → "both food arms eat" is likely, and the table has no branch for it (INBOX 17:15, still unruled).
 - Philosophy served: 4 (the reading fixed in code before the last data, so the verdict cannot be shaped by it). Thin: no verdict moved.
+
+## 2026-11-20 19:37–19:55 UTC · JACK (short slot) · J15 waiting; two candidate causes of the lost skill narrowed
+- First act `kernels status`: all 5 sessions RUNNING (J15 e2, e3; J3 @hold8; J10 s2 seg1, s0 seg3) → nothing to harvest or launch. All Next-up items already done.
+- Read: replay eviction cannot explain learned-then-lost — `make_b` buffer = max(T, 50k) = 300k ≥ T, nothing is ever evicted.
+- Measured on the 18 home traces (same numbers as `e2c-table`'s Q columns): Q climbs smoothly in every run with no break at the last capped life (Q there 236–673), and the 10 never-eating controls climb as high or higher (300k median 996 vs food 788; ≈ equal at 90k). So my 18:35 critic lead is generic to this SAC in this world, not the loss's mechanism. INBOX line.
+- Philosophy served: 4 (a lead I raised was tested against its control and weakened before anyone built on it). Thin: no verdict moved.
