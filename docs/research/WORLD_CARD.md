@@ -551,11 +551,11 @@ early (first capped life 18–38k) and lost late: the last capped life is at
 win-then-lose shape the fixed arms show. Ruling 57's table is read only when
 all 25 runs are in.
 
-## J15 — E2c, the full book: 25 of 25, READ (2026-11-20 22:15 UTC)
+## J15 — E2c, the full book: 25 of 25, READ (2026-11-20 22:10 UTC)
 
 All five arms are home: seeds 801–805, 300k decisions, kernels e0–e3 and a0–a2. The
 last kernel is e2 (`jack-cpu-1795192704`, harvested 21:55). The numbers come from
-`$PY -m experiments.pilot_b2 e2c-readings` and `e2c-table`, run at 22:10. No run
+`$PY -m experiments.pilot_b2 e2c-readings` and `e2c-table`, run at 22:05. No run
 crashed and none was short. The two readings, J11 (sustained on ≥ 3/5) and STRICT
 (≥ 4/5), give the same verdict on every arm, so `e2c-readings` prints no seam.
 
