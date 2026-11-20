@@ -2880,3 +2880,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Next-up 4: `docs/research/prereg/stage2_a_vs_b.md` (text only, Director freezes): gated on B eating somewhere (E2c) + A1–A3 in band + harness 13 checks + 20-run pilot; A vs B + matched-update B, floors/shuffled must fail, f4 ceiling must pass; PRIORS §8 log-rank, 2 looks at 0.025, censored at 1M; battery with the record's predicted ordering; PLAN's decision table. Five OPEN lines left to the freeze.
 - Found: the only ceiling forager row (f4) is on row128; stage 2's world is 16 rays — a ceiling on the race's own eye does not exist yet.
 - Philosophy served: 3 (the brain is raced, not assumed — rule written before any run) and 4 (floors that must fail, a ceiling that must pass, the "not distinguished" meaning written in advance).
+
+## 2026-11-20 16:37–16:55 UTC · JACK (short slot) · J15: a2 home, e2 launched
+- First act `kernels status`: a2 COMPLETE (harvested 16:02), S12's TPU probe took the 16:04 slot and finished (TPU not viable) → 4/5 busy → E2c e2 LAUNCHED `jack-cpu-1795192704` rc 0. e3 waits for the next free session.
+- a2 = 2 of the 10 auto runs, read descriptively, NO verdict (rule reads the full book). E-food-auto s805: 4 lives survived to the cap (43/31/39/48 meals) between 13k and 89k, then ≈0–2 meals/life from life 18 to the end; late 0.84/life, SUSTAINED W2 no. E-zero-auto s805: no capped life, late 0.08.
+- Found: a learned-then-lost skill reads as "did not eat" under end-of-run readings. INBOX for the Director/forge; frozen rule untouched.
+- Philosophy served: 4 (the run read as it is, no verdict on 2 of 10) and 6 (a free Kaggle session spent the minute it opened).
