@@ -92,7 +92,7 @@ state: (4) E2c rule AMENDED `35a6c2d2` (cossin; zero primary, random_point repor
 state: 11-20 12:11 E2c e0 `jack-cpu-1795176676` + e1 `…176785` LAUNCHED at `b4aa10f3` (8/15 fixed runs; both RUNNING 12:45). CLI: `e2c-kernel --name eN`.
 state: 11-20 12:45 (1)+(2) DONE `8c551f77`: `E2C_AUTO_ARMS` (separate dict, kernels a0 4 / a1 4 / a2 2), `ent_coef` knob in `make_b`/`run_b` (default 0.1 unchanged); `test_e2c_auto` PASS under `/data/venvs/jack-std` (sbx lives there): e2c_groups sha pinned pre-edit, fixed E-food 2k decisions identical, auto α 0.76→0.57 learned, lives differ. Rule AMENDED 11-20 in `forager_clone.py` (items 4–5, the table).
 state: 13:09–13:16 a0 `jack-cpu-1795180195`, a1 `…180238`, a2 `…180505` LAUNCHED at `c1b11f6b` (all 3 auto kernels = 10 auto runs in flight; a2 first refused twice by Kaggle's 5-session cap, went when J10 s0-seg2 came home). Kaggle 5/5 held: e0, e1, a0, a1, a2.
-next: when a session frees (e0/e1 ~15:45–19:40), launch e2 then e3 (`… launch_eN.log $PY -m experiments.pilot_b2 e2c-kernel --name eN`) BEFORE J10 segments (rank 1 > 3); harvest e0/e1, then a0–a2 (~7.5 h est).
+next: 14:40 all 5 still RUNNING (e0, e1, a0–a2). When a session frees (e0/e1 ~15:45–19:40), launch e2 then e3 (`… launch_eN.log $PY -m experiments.pilot_b2 e2c-kernel --name eN`) BEFORE J10 segments (rank 1 > 3); harvest e0/e1, then a0–a2 (~7.5 h est).
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7, §18 item 4; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48, 52, 62
@@ -193,6 +193,7 @@ smoke against that file's DONE (1)–(4). The frozen A1–A3 rows untouched.
 2. `world_card`: a per-food eat count per life (today `BOUT_GAP` = 5 is
 shorter than regrowth, so `floor_bouts` = `floor_eats_all` and "meals from
 one food" cannot be read) — with a planted test; no old row re-scored.
+   state: 11-20 14:55 DONE `7f20a8c3`: `FoodTally` → `floor_eats_by_food` + `max_eats_one_food` per life; `test_world_card_by_food` 4/4 (planted; control: one food ×3 vs three ×1 both (3,3) on old fields, max 3 vs 1; real d8_d00 s153 1,500 dec old keys identical). Seen: at d=0, 254 of 262 eats from ONE food (body parked on it). Reported only.
 3. `row128` vs 16 rays under B (body frame): rule text only; it runs after
 J15 names the setting.
 4. Stage-2 rule, first draft from `STAGE2_PREDICTION.md` + pilot 2's

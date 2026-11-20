@@ -2857,3 +2857,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J3 `5ec9879e`: `wm-latent@hold8` (ruling 59: hold 8, γ 0.99, rows 1+3, seeds 10–14, same verdict) written before any cell; test PASS. Waits behind e2/e3 for a session.
 - J16 `d5d840d1` → `df2b7bc2`: rung 2 tests committed failing 0/4 (refs 20/20 vs official e01491f under jit; planted 4/4), then module filled → 4/4 eager + compiled. Found: eager `jnp.percentile(x,100)` is one ulp of rank off; jit exact. (d) needs Kaggle (GLIBC) → INBOX.
 - Philosophy served: 3 (one setting for both rows, raced not assumed) and 4 (rules and failing tests written before the runs/the fill); J16 serves 7 (the Mac port Jack is handed on).
+
+## 2026-11-20 14:37–14:58 UTC · JACK (short slot) · all orders waiting on Kaggle → Next-up 2 DONE
+- First act `kernels status`: e0, e1, a0, a1, a2 all RUNNING (5/5) → J15 e2/e3, J3 @hold8, J10 next segments cannot launch. J10 s0-seg2, s1-seg2 (1.5M) and s2-seg0 (500k) already harvested by watchers; no eval at those marks.
+- Next-up 2 `7f20a8c3`: `world_card.FoodTally` adds per-life `floor_eats_by_food` + `max_eats_one_food`; test 4/4 incl. control (old fields read one-food×3 and three-foods×1 identically) and a real 1,500-decision d=0 run with every old key identical to pre-edit code. At d=0 254 of 262 eats came from one food.
+- Philosophy served: 4 (an instrument that can now tell "fed from one spot" from "foraged", tested against a case the old fields failed) and 5 (his world's measurements).
