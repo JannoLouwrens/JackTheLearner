@@ -246,15 +246,27 @@ print("DONE", flush=True)
 '''
 
 
-def kernel_body() -> str:
-    """rows.kernel_body's tested preamble (speed._JOB before `def one(`), plus jack_env's pins."""
+def kernel_out_name(keys: str = "flat") -> str:
+    """The json `run` writes on the GPU for `keys` (the flat name predates the per-sense path)."""
+    if keys not in KEYS:
+        raise ValueError(f"keys must be one of {KEYS}, got {keys!r}")
+    return "brain_a_inworld.json" if keys == "flat" else f"inworld_s0_body_{keys}.json"
+
+
+def kernel_body(keys: str = "flat") -> str:
+    """rows.kernel_body's tested preamble (speed._JOB before `def one(`), plus jack_env's pins.
+    keys="flat" is byte-identical to the body before the `keys` arg (11-20, tested); any other
+    value only adds `keys=` to the one `run` call."""
     from experiments.brain_a import speed
     from experiments.pilot_b2 import KERNEL_PINS
     head = speed._JOB.split("\ndef one(")[0]
     assert "INSTALL" in head and "WORK =" in head, "speed._JOB preamble moved"
     head = (head.replace("__DEV__", repr("cuda")).replace("__RUNS__", "[]")
             .replace("__BASE__", "[]").replace("__PIP__", repr(["sheeprl==0.8.5"] + KERNEL_PINS)))
-    return head + "\nprint('VERSIONS', json.dumps(_versions()), flush=True)\n" + _KERNEL_TAIL
+    kernel_out_name(keys)   # validates keys
+    tail = _KERNEL_TAIL if keys == "flat" else _KERNEL_TAIL.replace(
+        'run(WORK, device="cuda")', f'run(WORK, device="cuda", keys={keys!r})')
+    return head + "\nprint('VERSIONS', json.dumps(_versions()), flush=True)\n" + tail
 
 
 OUT = "/data/jack-logs/brain_a/in_world"
@@ -263,7 +275,8 @@ PROBE_PY = "/data/venvs/jack-a-probe/bin/python"   # the box's sheeprl==0.8.5
 
 def main(argv) -> int:
     """smoke [N] [--per-sense]   box, CPU, compile off, N decisions (default 600): the plumbing only
-    kernel      Kaggle GPU: the 20k-decision smoke (J14 b), harvested to OUT/inworld.json"""
+    kernel [--per-sense]  Kaggle GPU: the 20k-decision smoke (J14 b), harvested to OUT/inworld.json
+                          (--per-sense: OUT/inworld_per_sense.json, Next-up 1 item (2))"""
     _os.makedirs(OUT, exist_ok=True)
     cmd = argv[1] if len(argv) > 1 else ""
     if cmd == "smoke":
@@ -283,13 +296,15 @@ def main(argv) -> int:
         return 0 if r["verdict"]["done"] else 1
     if cmd == "kernel":
         from experiments.gpu import build_job, result_json, submit
-        sub = submit(build_job(kernel_body()), prefer="kaggle", est_hours=1.0,
-                     timeout_s=4 * 3600, fetch=["brain_a_inworld.json"])
+        keys = "per_sense" if "--per-sense" in argv else "flat"
+        fname = kernel_out_name(keys)
+        sub = submit(build_job(kernel_body(keys)), prefer="kaggle", est_hours=1.0,
+                     timeout_s=4 * 3600, fetch=[fname])
         print("SUBMIT", sub.backend, sub.ok, sub.job_id, sub.message, flush=True)
         if not sub.ok:
             return 1
-        dst = _os.path.join(OUT, "inworld.json")
-        open(dst, "w").write(_json.dumps(result_json(sub, "brain_a_inworld.json")))
+        dst = _os.path.join(OUT, "inworld.json" if keys == "flat" else f"inworld_{keys}.json")
+        open(dst, "w").write(_json.dumps(result_json(sub, fname)))
         print("WROTE", dst, flush=True)
         return 0
     print(main.__doc__)

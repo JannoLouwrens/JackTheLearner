@@ -154,3 +154,29 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# 11-20 Next-up 1 (2): `kernel --per-sense`. sha256 of kernel_body() taken from the file
+# BEFORE the keys arg existed (HEAD 69ce1eac): the flat GPU job must not move.
+FLAT_KERNEL_SHA = "853d1a4617c95405355188619643e617fa6b81ce6a4f8f2941bfcd9dacfe65e2"
+
+
+def test_kernel_body_flat_unchanged_and_per_sense_only_adds_keys():
+    import hashlib
+    from experiments.brain_a import in_world as w
+    flat = w.kernel_body()
+    assert hashlib.sha256(flat.encode()).hexdigest() == FLAT_KERNEL_SHA
+    assert w.kernel_body("flat") == flat
+    ps = w.kernel_body("per_sense")
+    assert ps != flat   # control: the arg reaches the job
+    assert ps == flat.replace('run(WORK, device="cuda")', 'run(WORK, device="cuda", keys=\'per_sense\')')
+    compile(ps, "job", "exec")
+    assert w.kernel_out_name("flat") == "brain_a_inworld.json"
+    # the name the GPU run writes must be the name the kernel fetches
+    assert w.kernel_out_name("per_sense") == "inworld_s0_body_per_sense.json"
+    try:
+        w.kernel_body("per-sense")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("an unknown keys arm reached the job")
