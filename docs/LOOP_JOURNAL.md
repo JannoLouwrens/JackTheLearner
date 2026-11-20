@@ -2843,5 +2843,5 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 ## 2026-11-20 12:27–12:52 UTC · JACK (short slot) · J15 ruling 57: E2c auto twins built, tested, ruled, a0 launched
 - `8c551f77`: `E-food-auto`/`E-zero-auto` (ent_coef="auto") in a separate dict, kernels a0/a1/a2; `make_b`/`run_b` ent_coef knob, default 0.1 unchanged.
 - `test_e2c_auto` PASS (7m23s, jack-std venv — sbx is not in the project venv): fixed arms' packing sha pinned from pre-edit code; fixed E-food 2,000 decisions identical; auto α learned 0.76→0.57 vs fixed 0.1; lives differ (control).
-- RULE E2c AMENDED 11-20 in `forager_clone.py` (arms + outcome table) before any auto seed. a0 LAUNCHED 12:49; a1 refused twice by the load guard (8.96, 6.37) — next slot.
+- RULE E2c AMENDED 11-20 in `forager_clone.py` (arms + outcome table) before any auto seed. NOTHING LAUNCHED: a0 hit the dirty-tree guard (my own edit), then a0/a1 hit the load guard (8.96, 6.37, 6.51) — next slot launches a0–a2.
 - Philosophy served: 3 (the entropy setting is raced, not assumed) and 4 (rule and controls written before the seeds).
