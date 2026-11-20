@@ -1593,13 +1593,14 @@
         "detached:lane-guard-seat1": 0.09,
         "detached:lane-guard-seat2": 0.08,
         "detached:launch_diag59.log": 249.74,
+        "detached:launch_e0.log": 0.18,
         "detached:launch_p9.log": 630.88,
         "detached:launch_s0_seg2.log": 166.46,
-        "detached:launch_s1_seg2.log": 155.37,
+        "detached:launch_s1_seg2.log": 166.34,
         "detached:launch_s2_seg0.log": 166.85,
         "detached:real.log": 0.03
       },
-      "used_s": 3295.47
+      "used_s": 3306.62
     }
   },
   "last_child_s": {

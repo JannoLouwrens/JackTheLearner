@@ -2827,3 +2827,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - New probe, rule first `f1841fc1` (`place_key_carried.py`, 3m48s box, nice 19): key trained once on 720–724, judged on 730–749 at 15/60/360 lives: **ALIVE** .294/.680/.945 vs turn search .266/.628/.933 vs home-grown .202/.542/.934 (ahead of home 20/20); twins ≤ .252 at 60.
 - INBOX proposal (diary key for stage 3); no ledger row, no seat moved. Disclosed: judged worlds not fresh for the carried probe.
 - Philosophy served: 1 (remembers across death), 2 (learned from scratch, no borrowed descriptor), 3, 4 (twins that failed).
+
+## 2026-11-20 12:07–12:25 UTC · JACK · J11 DONE (40/40 read); J3 (5′) cause measured; J15 E2c e0/e1 launched
+- J11 p9 home (11:07) → 40/40, 0 cut/crash. `pilot_b2 readings` (frozen `e2c3c378`, W = 2): B0 NEAR RANDOM, K/P/G/KP SLIDES; 0 sustained lives in any learner; floors held. Every learner ends at 0.08–0.16 meals/life vs never-learning K-lr0 0.82 / held8 0.95 — in K's movement-free world too. §13's "K eats inside 300k" failed. `PILOT_B2.md` §4.
+- J3 (5′) diag home: held noise alone kills Pendulum row 1 (@hold-only 0/5 learn, ≈ control); γ 0.99 alone keeps it (5/5); @plain59 5/5 (not VOID). The γ/value-scale suspect is refuted. KNOWN_ANSWERS J3-5 addendum.
+- E2c unlocked → e0 `jack-cpu-1795176676`, e1 `…176785` into the two freed sessions (8/15 runs). Not added: the unruled `ent_coef=auto` twin (INBOX).
+- Philosophy served: 4 (a pilot read to its frozen rule, its prediction's failure written plainly; a failure chased to its measured cause) and 6 (freed free sessions refilled at once).
