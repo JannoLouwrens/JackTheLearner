@@ -112,6 +112,9 @@ def drain_job_ids() -> list[str]:
 # Kaggle's free allowance. Colab's is unpublished and elastic, so it is not
 # budgeted — it is simply tried first for short work.
 KAGGLE_WEEKLY_HOURS = 30.0
+# S12: the TPU has its own weekly line on Kaggle's meter (`kaggle quota`).
+KAGGLE_TPU_WEEKLY_HOURS = 20.0
+KAGGLE_T4, KAGGLE_TPU = "nvidiaTeslaT4", "Tpu1VmV38"
 
 # Hours a provider billed for a run that returned nothing get their own bucket
 # per week: `{backend}` is work, `{backend}_failed` is waste. Both count against
@@ -567,9 +570,11 @@ class Budget:
         return self.productive_hours(backend) + self.failed_hours(backend)
 
     def remaining(self, backend: str) -> float:
-        if backend != "kaggle":
+        cap = {"kaggle": KAGGLE_WEEKLY_HOURS,
+               "kaggle-tpu": KAGGLE_TPU_WEEKLY_HOURS}.get(backend)
+        if cap is None:
             return float("inf")
-        return max(0.0, KAGGLE_WEEKLY_HOURS - self.used_hours("kaggle"))
+        return max(0.0, cap - self.used_hours(backend))
 
     def unattributable_hours(self, backend: str) -> float:
         """This week's productive hours that no `charged_jobs` row accounts for.
@@ -1099,8 +1104,13 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
                   fetch: Optional[list[str]] = None,
                   journal: Optional[Path] = None, cpu: bool = False,
                   kernel_sources: Optional[list[str]] = None,
-                  fetch_only: bool = False) -> JobResult:
+                  fetch_only: bool = False,
+                  accelerator: str = KAGGLE_T4) -> JobResult:
     """Push a kernel, poll to completion, retrieve output.
+
+    `accelerator=KAGGLE_TPU` (S12): backend "kaggle-tpu", `enable_tpu`, no
+    Pascal torch fix, hours on their own weekly line. The default pushes the
+    byte-identical T4 job every caller pushed before (t0_12 pins it).
 
     `kernel_sources=["user/slug", ...]` goes into kernel-metadata.json, so the
     kernel mounts those kernels' outputs read-only under /kaggle/input/ (a
@@ -1125,7 +1135,8 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     the real log — a refusal with no cause in the test's own inputs.
     """
     t0 = time.time()
-    backend = "kaggle-cpu" if cpu else "kaggle"
+    tpu = not cpu and accelerator.lower().startswith("tpu")
+    backend = "kaggle-cpu" if cpu else "kaggle-tpu" if tpu else "kaggle"
     refusal = _claim_reuse(os.environ.get("JACK_REUSE_KERNEL", "").strip())
     if refusal:
         return JobResult(backend, False, billable_s=0.0, message=refusal)
@@ -1157,9 +1168,9 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         except ValueError:
             pass
     else:
-        slug = f"jack-{'cpu' if cpu else 'ladder'}-{int(t0)}"
+        slug = f"jack-{'cpu' if cpu else 'tpu' if tpu else 'ladder'}-{int(t0)}"
     # Pascal-compatible torch first (GPU only), then the job itself.
-    (work / "kernel.py").write_text(_kernel_body(script.read_text(), cpu))
+    (work / "kernel.py").write_text(_kernel_body(script.read_text(), cpu or tpu))
 
     (work / "kernel-metadata.json").write_text(json.dumps({
         "id": f"{username}/{slug}",
@@ -1168,7 +1179,8 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         "language": "python",
         "kernel_type": "script",
         "is_private": True,
-        "enable_gpu": not cpu,
+        "enable_gpu": not cpu and not tpu,
+        **({"enable_tpu": True} if tpu else {}),
         "enable_internet": True,
         "kernel_sources": list(kernel_sources or []),
     }, indent=2))
@@ -1181,7 +1193,7 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         # the local script has since diverged, refuse before anything is
         # fetched or recorded — the kernel and its artifact stay on Kaggle, and
         # reattaching from the submitting commit recovers them at zero quota.
-        local_sha = _kernel_sha256(script, cpu)
+        local_sha = _kernel_sha256(script, cpu or tpu)
         verdict, info = reattach_code_check(slug, local_sha, submissions(journal))
         if verdict == "mismatch":
             if not os.environ.get("JACK_REATTACH_ACCEPT_MISMATCH", "").strip():
@@ -1217,7 +1229,7 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
 
     if not reuse:
         rc, out, err = _run([KAGGLE, "kernels", "push", "-p", str(work)]
-                            + ([] if cpu else ["--accelerator", "nvidiaTeslaT4"]), 300)
+                            + ([] if cpu else ["--accelerator", accelerator]), 300)
         said = " ".join((out + " " + err).split())[:400]
         print(f"kaggle push {job_id}: rc={rc} {said}", file=sys.stderr, flush=True)
         # S2 (2026-11-12): the CLI refuses a push on STDOUT with rc=0 —
@@ -1410,6 +1422,8 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
     """
     budget = budget or Budget()
     order = ["colab", "kaggle"] if prefer == "colab" else ["kaggle", "colab"]
+    if prefer == "kaggle-tpu":
+        order = ["kaggle-tpu"]   # S12: never fails over onto the T4 quota
     if prefer == "kaggle-cpu":
         # S1: a CPU job never fails over onto a GPU backend — that would spend
         # the scarce quota on work that needs none.
@@ -1428,6 +1442,10 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
 
     head = _head_sha()
     for backend in order:
+        if backend == "kaggle-tpu" and not budget.afford(backend, est_hours):
+            attempts.append(f"kaggle-tpu: {budget.remaining(backend):.1f}h "
+                            f"left, need {est_hours}h")
+            continue
         if backend == "kaggle" and not reuse and not budget.afford("kaggle", est_hours):
             lo, hi = budget.remaining_range("kaggle")
             attempts.append(
@@ -1482,14 +1500,16 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
                             # sha of the exact kernel a kaggle push would send,
                             # recorded so a later reattach can prove the kernel
                             # it recovers ran THIS code (overseer 20th-audit B1).
-                            "kernel_sha256": (_kernel_sha256(script, backend == "kaggle-cpu")
+                            "kernel_sha256": (_kernel_sha256(script, backend != "kaggle")
                                               if backend.startswith("kaggle") else None),
                             "pid": os.getpid()}, journal)
         res = (run_on_colab(script, gpu, timeout_s, fetch) if backend == "colab"
                else run_on_kaggle(script, timeout_s, fetch, journal,
                                   cpu=backend == "kaggle-cpu",
                                   kernel_sources=kernel_sources,
-                                  fetch_only=fetch_only))
+                                  fetch_only=fetch_only,
+                                  accelerator=KAGGLE_TPU if backend == "kaggle-tpu"
+                                  else KAGGLE_T4))
         stdout_path = ""
         try:  # the WHOLE stdout, before anything can fail; best-effort
             STDOUT_DIR.mkdir(parents=True, exist_ok=True)
