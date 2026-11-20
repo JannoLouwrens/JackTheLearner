@@ -2798,3 +2798,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J3 (5) → KNOWN_ANSWERS Row J3-5: **row 3 PASS** 4/5 at the 50k checkpoint (95.8 95.3 92.6 [89.4] 94.4; control 0/5) — the first published row an in-house arm has reproduced. **Row 1 FAIL**: no learning at all (best −1188…−1290 ≈ control −1193…−1239; unrepaired wm-latent −364). Disclosed: held noise alone finds the flag in the control's training episodes; the PASS is the deterministic learned policy.
 - Split verdict has no branch in the order → INBOX; proposed a row-1 `gamma-only`/`hold-only` kernel (priced suspect: γ 0.99 × raw-unit value targets ≈ 25× value-loss scale). Not run.
 - Philosophy served: 3 (a home-made brain given its fair chance and raced on a published row, the trade it made recorded, not argued) and 4 (a PASS stated with the control that had to miss and the caveat that could undermine it).
+
+## 2026-11-20 09:37–09:50 UTC · JACK (short slot) · J11 p9 + J10 segments into idle Kaggle sessions
+- Found all 5 Kaggle sessions idle since 11-19 ~20:42 (no JACK slot ran for ~16 h; INBOX). Home: J11 p6/p7/p8, J10 `kernel 0 1` + `kernel 1 1`.
+- Launched J11 p9 `jack-cpu-1795167486` (the last of 10), J10 `kernel 2 0` `…167564`, `kernel 0 2` `…167600`. `kernel 1 2` refused twice by the load guard (7.9 / 6.3 > 6.0), not forced.
+- J10 1M check (reported): s0 R 4,065 / 3.47 m, s1 R 5,294 / 5.08 m — both inside the published [3,784, 5,866]; segment mounting works across Kaggle sessions.
+- J11 `table` PARTIAL 36/40: every learning arm 5/5 seeds, 0 sustained lives; all slide early→late to 0.08–0.16 meals/life while no-learning K-lr0 ends at 0.82. Reading waits for p9.
+- Philosophy served: 6 (free compute that had sat idle put back to work) and 4 (pilot runs to its frozen rule; the walk row judged only at its registered 2M eval).
