@@ -87,7 +87,7 @@ any E2c cell runs; nothing else above changes:
      300k is weak evidence: "not learned in 300k", never "cannot learn".
   15 runs (3 arms x 5 seeds), packed 4 a kernel as J11's (Kaggle's 4
   cores): `pilot_b2 e2c-kernel e0..e3` = 4 sessions at J11's rank.
-AMENDED 2026-11-20 13:xx UTC (ruling 57), before ANY seed of the two arms
+AMENDED 2026-11-20 12:4x UTC (ruling 57), before ANY seed of the two arms
 below exists; the three fixed-alpha arms above are unchanged (their packing
 and lives byte-identical, tests/test_e2c_auto.py) and finish as frozen:
   4. Two ADDED arms, seeds 801..805, trace on: `E-food-auto`, `E-zero-auto` =

@@ -2839,3 +2839,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `3a35ec8d`: `make(keys="per_sense")` splits the flat 74 into vision 32 / audio 16 / touch 8 / proprio 12 / needs 6; overrides set encoder + decoder keys. Tests 7/7 incl. a planted one-off split caught.
 - Box sheeprl smoke 1,200 dec: rc 0, Encoder/Decoder MLP keys = 5 senses; STEPS + NO NaN yes, reward_loss 5.537 = flat smoke; LEARNS undecidable at 1 logged step → GPU kernel. Found: smoke from the project venv could not read its own losses (no tensorboard) → re-execs under jack-a-probe.
 - Philosophy served: 1 (each sense its own reconstruction target — the precondition to hide one and test it) and 3 (the per-sense form now runnable so sum vs width-normalised can be raced, not assumed).
+
+## 2026-11-20 12:27–12:52 UTC · JACK (short slot) · J15 ruling 57: E2c auto twins built, tested, ruled, a0 launched
+- `8c551f77`: `E-food-auto`/`E-zero-auto` (ent_coef="auto") in a separate dict, kernels a0/a1/a2; `make_b`/`run_b` ent_coef knob, default 0.1 unchanged.
+- `test_e2c_auto` PASS (7m23s, jack-std venv — sbx is not in the project venv): fixed arms' packing sha pinned from pre-edit code; fixed E-food 2,000 decisions identical; auto α learned 0.76→0.57 vs fixed 0.1; lives differ (control).
+- RULE E2c AMENDED 11-20 in `forager_clone.py` (arms + outcome table) before any auto seed. a0 LAUNCHED 12:49; a1 refused twice by the load guard (8.96, 6.37) — next slot.
+- Philosophy served: 3 (the entropy setting is raced, not assumed) and 4 (rule and controls written before the seeds).

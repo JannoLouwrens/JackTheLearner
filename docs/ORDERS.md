@@ -89,8 +89,10 @@ e3 as sessions free (rank 1). (4) Harvest; one row per arm in
 serves: M3 · PLAN stage 1 "proof that the task can be learned with his senses" · philosophy 3, 4.
 **done when:** E2c's five arm rows (3 fixed, 2 auto) are in `WORLD_CARD.md`, each beside its control, and the table's branch is named.
 state: (4) E2c rule AMENDED `35a6c2d2` (cossin; zero primary, random_point reported; 300k miss = weak); kernel `37e8cf32`; trace `run_b(trace=True)` on E2C_ARMS only; §3b's trace reading corrected 11-20 10:30 before seed 801.
-state: 11-20 12:11 J11's 40 home → **E2c e0 `jack-cpu-1795176676` + e1 `…176785` LAUNCHED** at `b4aa10f3` (push rc 0; `launch_e0.log`/`launch_e1.log`): E-food/E-zero/E-random_point × 801, 802, 803(food, zero). 8 of 15 runs. NOTE: the CLI form is `e2c-kernel --name eN`. NO `ent_coef=auto` twin (INBOX §19 line, unruled) — a miss stays confounded with the setting.
-next: (ruling 57) add the auto arms + tests + rule text, launch a0–a2 FIRST, then e2/e3 (`… e2c-kernel --name eN`); harvest e0/e1 ~15:45; score with J11's frozen readings + §3b's trace reading; rows in WORLD_CARD.
+state: 11-20 12:11 E2c e0 `jack-cpu-1795176676` + e1 `…176785` LAUNCHED at `b4aa10f3` (8/15 fixed runs; both RUNNING 12:45). CLI: `e2c-kernel --name eN`.
+state: 11-20 12:45 (1)+(2) DONE `8c551f77`: `E2C_AUTO_ARMS` (separate dict, kernels a0 4 / a1 4 / a2 2), `ent_coef` knob in `make_b`/`run_b` (default 0.1 unchanged); `test_e2c_auto` PASS under `/data/venvs/jack-std` (sbx lives there): e2c_groups sha pinned pre-edit, fixed E-food 2k decisions identical, auto α 0.76→0.57 learned, lives differ. Rule AMENDED 11-20 in `forager_clone.py` (items 4–5, the table).
+state: 12:49 a0 LAUNCHED (`launch_a0.log`, ADMITTED; check its push line); a1 REFUSED by the load guard (6.37 > 6.0). J10 s2-seg0 + s1-seg2 COMPLETE → 1 Kaggle session still free.
+next: launch `scripts/launch_detached.sh /data/jack-logs/pilot_b2/launch_aN.log $PY -m experiments.pilot_b2 e2c-kernel --name aN` for a1, a2, then e2, e3, as load/sessions allow; harvest e0/e1 ~15:45.
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7, §18 item 4; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48, 52, 62
