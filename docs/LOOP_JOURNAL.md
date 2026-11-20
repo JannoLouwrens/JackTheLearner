@@ -2821,3 +2821,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `kernels status` 10:40: all 5 sessions RUNNING (J11 p9, J3 diag `…170409`, J10 s2 seg0 / s0 seg2 / s1 seg2); nothing home, nothing launchable (E2c waits for J11's 40, J14 opens Sat, Next-up 1–3 DONE, 4–6 after J11).
 - MEASURED with Kaggle's own meter (`kaggle quota`): TPU 0.00 / 20.00 h used, refreshes 11-21 00:00 — this week's TPU hours lapse unused. CLI can push `--accelerator Tpu1VmV38`; `gpu.py:1220` hardcodes T4, so the TPU gate needs an S-lane backend first. INBOX line; nothing pushed.
 - Philosophy served: 6 (free compute — the unused TPU quota and the honest meter for it, surfaced before the next week starts). No order advanced: that is the slot's honest result.
+
+## 2026-11-20 11:05–11:20 UTC · LAB · the place key: learned from time, then carried across worlds
+- Read the 11-19 run (`place_key`, 730–749): **ALIVE** — ring key .934 ± .028 vs 128-turn search .933; untrained .443, time-shuffled .273, tags .026 vs chance .021; MLP key .447.
+- New probe, rule first `f1841fc1` (`place_key_carried.py`, 3m48s box, nice 19): key trained once on 720–724, judged on 730–749 at 15/60/360 lives: **ALIVE** .294/.680/.945 vs turn search .266/.628/.933 vs home-grown .202/.542/.934 (ahead of home 20/20); twins ≤ .252 at 60.
+- INBOX proposal (diary key for stage 3); no ledger row, no seat moved. Disclosed: judged worlds not fresh for the carried probe.
+- Philosophy served: 1 (remembers across death), 2 (learned from scratch, no borrowed descriptor), 3, 4 (twins that failed).

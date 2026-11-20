@@ -89,35 +89,43 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   material dropped from the control before believing it.
   END-FIT 1, 2, 4. Philosophy 1, 3, 4.
 
-- 11-18 · **A place key he learns from the passing of time** (Death &
+- 11-18/20 · **A place key he learns from the passing of time** (Death &
   persistence, VACANT; the diary's key; PLAN "Memory and sleep" right column;
-  `place_key.py`). Bet: yesterday's body-frame eye re-finds his place only by
-  trying all 128 turns of a look against every memory (.933; compared once
-  .54). A small ring-shaped network trained from scratch only to give looks a
-  moment apart in one life close keys — no place tags, no compass — learns a
-  key compared ONCE that loses ≤ .10 to the turn search. Why it might: he
-  turns faster than he travels, so time itself teaches "same place, other
-  heading" (the slowness account of place cells). Kill: the key fails to find
-  him (< .50), or leads its untrained and time-shuffled twins by < .10 / on
-  < 16 of 20 worlds, or trails the turn search by > .10. Prior: Franzius &
-  Wiskott 2007 (slow features of a simulated rat's view are place cells);
-  learned recall keys on record needed 10^6–10^9 frames of pixels (PRIORS
-  §6); ours has 2,880 looks of 256 numbers per world — the record is silent
-  at that size. Rule frozen in the docstring (`de328d98`) before worlds
-  730–749 existed; tuned on 690–692 only (ring key .933/.950/.958 vs turn
-  search .936; untrained .51, time-shuffled .57 on 690; plain MLP key .36).
-  **IN FLIGHT — no verdict yet.** 11-18 collected 730–739 and stopped; 11-19
-  the box's load guard (ceiling 6.0, other projects at ~6) held the second
-  collector back 19 min, so by 11:40 worlds 730–748 were home, 749 was
-  collecting and no row was fit. The fit is chained through
-  `launch_detached.sh` (`/data/tmp/find_himself/pk_chain.sh 0|1`: wait for
-  the worlds, `place_key fit 730 20 part0|part1`, then the full fit; logs
-  `pk_chain_0.log`, `pk_chain_1.log`). Disclosed: three metered jobs were
-  alive at once for ~15 min (cap 2; two were sleeping waiters).
-  **Next sitting, first act:** read `/data/tmp/find_himself/place_key_730_20.json`
-  (`verdict`, `kt_ring`, `kt_ring_un`, `kt_ring_sh`, `b128`); if absent, check
-  `pk_chain_0.log` and re-run `$PY -m experiments.place_key fit 730 20` (rows
-  are cached per world). Write the number here whatever it reads; nothing in
-  the rule or SETTINGS may change. If ALIVE: INBOX line proposing the ring key
-  as the diary's key for stage 3 "memory and sleep". END-FIT 2, 4.
-  Philosophy 1, 2, 3, 4.
+  `place_key.py`, rule first `de328d98`). Bet: a small ring-shaped network
+  trained from scratch only to give looks a moment apart in one life close
+  keys — no place tags, no compass — learns a key compared ONCE that loses
+  ≤ .10 to the 128-turn search. Kill: < .50, or < .10 over its untrained /
+  time-shuffled twins, or > .10 behind the turn search. Prior: Franzius &
+  Wiskott 2007 (slow features of a rat's view are place cells); learned
+  recall keys on record needed 10^6–10^9 pixel frames (PRIORS §6) — silent
+  at 2,880 looks of 256 numbers. **ALIVE** (worlds 730–749, read 11-20):
+  ring key **.934 ± .028 vs turn search .933** (ahead of both twins 20/20;
+  untrained .443, time-shuffled .273; shuffled tags .026 vs chance .021);
+  median miss 0.31 m; a plain MLP key .447 (DEAD: the ring anatomy is
+  needed). Reported: a stranger's key (trained next door) .932.
+  END-FIT 2, 4. Philosophy 1, 2, 3, 4.
+
+- 11-20 · **The key carried across death into a new world** (same seat;
+  `place_key_carried.py`, rule first `f1841fc1`). Bet: the key is a skill,
+  not a map — trained ONCE on worlds 720–724 (14,400 looks), never again, it
+  serves his first lives in an unseen world as well as the turn search on
+  the same few memories and better than a key grown there. Kill: > .05
+  behind the turn search at 15 or 60 lives, or < .10 over its twins, or
+  < .05 over the home-grown key at 15 lives (16/20 worlds). Prior: place
+  descriptors transfer when trained on many places (NetVLAD 2016, pixels,
+  10^5+ images, from memory); nothing from scratch at 10^4 looks.
+  **ALIVE** (730–749; remembered lives 15 / 60 / 360): carried **.294 /
+  .680 / .945** vs turn search .266 / .628 / .933 vs home-grown .202 / .542
+  / .934 (carried ahead of home 20/20 at 15 lives); untrained .126 / .252 /
+  .435, time-shuffled .088 / .155 / .322; tags .022 vs chance .021. One
+  training world alone: .284 / .657 / .940. So what survives death is two
+  things: the KEY (carried everywhere, 10,000 weights, one comparison per
+  memory) and the LOOKS (per world; coverage is still the limit — 15 lives
+  = .29). Disclosed: judged worlds were not fresh (the 11-19 run's stranger
+  number prompted the bet; the carried 15/60 numbers were unseen at rule
+  time). **ENTERED as an INBOX proposal** (diary key for stage 3 "memory and
+  sleep"). Cannot say: inside a brain also learning to eat; a different
+  kind of world or the humanoid's eye; trained online from a 16-ray or
+  128-ray eye under a real policy rather than random pushes. Not tried:
+  the key's output as the brain's place input (a learned "where am I").
+  END-FIT 2, 4. Philosophy 1, 2, 3, 4.
