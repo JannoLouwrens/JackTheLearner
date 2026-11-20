@@ -41,6 +41,46 @@ def test_recurrent_repair_refuses():
     raise AssertionError("recurrent @repair did not refuse")
 
 
+def test_diag_arms_settings_rows_seeds():
+    """J3 (5'): each diag arm changes exactly one setting (or none), row 1 only."""
+    assert ir._settings("wm-latent@repair") == ("wm-latent", ir.REPAIR_HOLD, ir.REPAIR_GAMMA)
+    assert ir._settings("wm-latent@gamma-only") == ("wm-latent", 1, ir.REPAIR_GAMMA)
+    assert ir._settings("wm-latent@hold-only") == ("wm-latent", ir.REPAIR_HOLD, None)
+    assert ir._settings("wm-latent@plain59") == ("wm-latent", 1, None)
+    assert ir._settings("wm-latent") == ("wm-latent", 1, None)
+    c = ir.cells(["wm-latent" + a for a in ir.DIAG])
+    assert len(c) == 30 and {r for _, r, _, _ in c} == {1}
+    assert {s for _, _, s, _ in c} == {5, 6, 7, 8, 9}
+    assert ir.rows_for("wm-latent@repair") == (1, 3)
+
+
+def test_diag_plain59_is_plain_and_reading_fires(tmp_path=None):
+    """@plain59 seed 5 == the plain loop at seed 5 (only cpu_s/arm differ);
+    the reading names the planted cause and voids on a non-learning plain."""
+    import json, tempfile
+    from pathlib import Path
+    a = ir.run_cell("wm-latent@plain59", 1, 5, steps=300)
+    b = ir.run_cell("wm-latent", 1, 5, steps=300)
+    assert a["returns"] == b["returns"] and a["opt_steps"] == b["opt_steps"]
+    gc = ir.run_cell("wm-latent@gamma-only", 1, 5, train=False, steps=300)
+    bc = ir.run_cell("wm-latent", 1, 5, train=False, steps=300)
+    assert gc["returns"] == bc["returns"]        # same white noise, same draws
+    g = ir.run_cell("wm-latent@gamma-only", 1, 5, steps=300)
+    assert g["returns"] != b["returns"]          # gamma reaches the update
+    h = ir.run_cell("wm-latent@hold-only", 1, 5, steps=300)
+    assert h["returns"] != b["returns"]          # the held-noise knob is live
+    d = Path(tempfile.mkdtemp())
+    def plant(arm, ms):
+        for s, m in zip(ir.REPAIR_SEEDS, ms):
+            (d / ir._name("wm-latent" + arm, 1, s, False)).write_text(json.dumps({"metric": m}))
+    assert ir.diag_reading(d)["reading"] == "INCOMPLETE"
+    plant("@plain59", [-350] * 5); plant("@hold-only", [-400] * 4 + [-1200])
+    plant("@gamma-only", [-1250] * 5)
+    assert ir.diag_reading(d)["reading"] == "GAMMA 0.99 kills row 1"
+    plant("@plain59", [-1200] * 5)
+    assert ir.diag_reading(d)["reading"].startswith("VOID")
+
+
 if __name__ == "__main__":
     for _n, _f in sorted(globals().items()):
         if _n.startswith("test_"):

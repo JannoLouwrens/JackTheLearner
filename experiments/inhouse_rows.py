@@ -134,8 +134,72 @@ REPAIR_GAMMA = 0.99
 REPAIR_SEEDS = (5, 6, 7, 8, 9)
 
 
+# J3 (5′) — WHICH CHANGE BROKE ROW 1 (added 11-20 10:40, before any of these
+# cells ran; the rule and @repair are UNCHANGED). @repair split: row 3 PASS
+# 4/5, row 1 best windows -1188..-1290, i.e. no learning (never-trains control
+# -1193..-1239; plain wm-latent on seeds 0-4 learned to -321..-397). Three
+# row-1-only diagnostic arms, fresh seeds 5-9 like @repair, ctrl cells kept:
+#   @gamma-only  gamma 0.99, white noise (hold 1)
+#   @hold-only   noise held 32 decisions, gamma 0.95 (survival.GAMMA)
+#   @plain59     neither change — plain wm-latent on seeds 5-9
+# Reading, fixed now: a cell LEARNS iff its best 20k window >= -800 (midway
+# between controls ~-1220 and plain ~-360). An arm KEEPS row 1 iff >= 4/5 cells
+# learn; KILLS it iff <= 1/5; else MIXED. @plain59 must KEEP, else the reading
+# is VOID (the seed set, not a setting, is the difference). Cause = the single
+# change that KILLS while the other KEEPS; both KILL = each alone suffices;
+# both KEEP = only the combination kills. Diagnostic, reported-only: it picks
+# which repair goes to the other arms; no verdict row moves.
+DIAG = {"@gamma-only": (1, REPAIR_GAMMA), "@hold-only": (REPAIR_HOLD, None),
+        "@plain59": (1, None)}
+LEARNS_AT = -800.0
+
+
+def _settings(arm: str):
+    """(core_name, hold, gamma or None for survival._gae)."""
+    if arm.endswith(REPAIR_SUFFIX):
+        return arm[:-len(REPAIR_SUFFIX)], REPAIR_HOLD, REPAIR_GAMMA
+    for suf, (hold, gamma) in DIAG.items():
+        if arm.endswith(suf):
+            return arm[:-len(suf)], hold, gamma
+    return arm, 1, None
+
+
+def rows_for(arm: str) -> tuple:
+    return (1,) if any(arm.endswith(s) for s in DIAG) else tuple(ROWS)
+
+
 def seeds_for(arm: str) -> tuple:
-    return REPAIR_SEEDS if arm.endswith(REPAIR_SUFFIX) else SEEDS
+    return REPAIR_SEEDS if _settings(arm)[0] != arm else SEEDS
+
+
+def diag_reading(outdir) -> dict:
+    """The J3 (5') reading from row-1 cells of the three DIAG arms."""
+    def arm_read(arm):
+        ms = []
+        for s in REPAIR_SEEDS:
+            f = Path(outdir) / _name(arm, 1, s, False)
+            if not f.exists():
+                return None, None
+            ms.append(json.loads(f.read_text())["metric"])
+        k = sum(m is not None and m >= LEARNS_AT for m in ms)
+        return ("KEEPS" if k >= 4 else "KILLS" if k <= 1 else "MIXED"), ms
+    out = {a: arm_read("wm-latent" + a) for a in DIAG}
+    if any(v[0] is None for v in out.values()):
+        return {"reading": "INCOMPLETE", **{a: v for a, v in out.items()}}
+    g, h, p = out["@gamma-only"][0], out["@hold-only"][0], out["@plain59"][0]
+    if p != "KEEPS":
+        cause = "VOID (plain wm-latent does not learn on seeds 5-9)"
+    elif g == "KILLS" and h == "KEEPS":
+        cause = "GAMMA 0.99 kills row 1"
+    elif h == "KILLS" and g == "KEEPS":
+        cause = "HELD NOISE kills row 1"
+    elif g == "KILLS" and h == "KILLS":
+        cause = "EACH change alone kills row 1"
+    elif g == "KEEPS" and h == "KEEPS":
+        cause = "ONLY THE COMBINATION kills row 1"
+    else:
+        cause = "MIXED (no single cause at 5 seeds)"
+    return {"reading": cause, **out}
 
 
 def _gae_g(rewards, values, boot, terminal, gamma):
@@ -190,11 +254,10 @@ def _eval(core, env_id: str, scale: float, seed: int) -> float:
 def run_cell(arm: str, row: int, seed: int, train: bool = True,
              steps: int | None = None) -> dict:
     """One arm-row-seed. Mirrors survival.run_survival's 'core' branch."""
-    repair = arm.endswith(REPAIR_SUFFIX)
-    core_name = arm[:-len(REPAIR_SUFFIX)] if repair else arm
+    core_name, hold, gamma = _settings(arm)
     if core_name in REC_ARMS:
-        if repair:
-            raise ValueError("@repair is wired for non-recurrent arms only")
+        if core_name != arm:
+            raise ValueError("@repair/diag arms are wired for non-recurrent arms only")
         return run_cell_rec(arm, row, seed, train, steps)
     import gymnasium as gym
     torch.set_num_threads(1)
@@ -221,7 +284,7 @@ def run_cell(arm: str, row: int, seed: int, train: bool = True,
         nonlocal seg_obs, seg_act, seg_rew, seg_val
         if not seg_rew:
             return
-        adv, tgt = (_gae_g(seg_rew, seg_val, boot, terminal, REPAIR_GAMMA) if repair
+        adv, tgt = (_gae_g(seg_rew, seg_val, boot, terminal, gamma) if gamma is not None
                     else _gae(seg_rew, seg_val, boot, terminal))
         for i in range(len(seg_rew)):
             ring.push(seg_obs[i], seg_act[i], float(tgt[i]), float(adv[i]))
@@ -235,8 +298,8 @@ def run_cell(arm: str, row: int, seed: int, train: bool = True,
             v = float(core.critic(s))
         frac = min(1.0, k / max(1, n - 1))
         std = EXPLORE_STD[0] + (EXPLORE_STD[1] - EXPLORE_STD[0]) * frac
-        if repair:
-            if held_eps is None or since_draw >= REPAIR_HOLD:
+        if hold > 1:
+            if held_eps is None or since_draw >= hold:
                 held_eps, since_draw = rng.randn(ACTION_DIM), 0
             since_draw += 1
             a = np.clip(mean + std * held_eps, -1.0, 1.0)
@@ -432,7 +495,7 @@ def run_cell_rec(arm: str, row: int, seed: int, train: bool = True,
 def cells(arms: list) -> list:
     out = []
     for arm in arms:
-        for row in ROWS:
+        for row in rows_for(arm):
             for s in seeds_for(arm):
                 out += [(arm, row, s, False), (arm, row, s, True)]
     return out
@@ -520,13 +583,14 @@ def kernel(arm: str) -> dict:
     """Submit one arm (20 cells) as one Kaggle CPU kernel; explode the cells
     into KERNEL_OUT/cells/ and print the verdict."""
     from .gpu import build_job, result_json, submit
-    sub = submit(build_job(job_body([arm])), prefer="kaggle-cpu", est_hours=3.0,
+    arms = arm.split(",")          # a comma list runs several arms in one kernel
+    sub = submit(build_job(job_body(arms)), prefer="kaggle-cpu", est_hours=3.0,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["inhouse_cells.json"])
     if not sub.ok:
         raise RuntimeError(f"inhouse_rows kernel {arm}: {sub.message}")
     r = result_json(sub, "inhouse_cells.json")
     (KERNEL_OUT / "cells").mkdir(parents=True, exist_ok=True)
-    (KERNEL_OUT / f"{arm}.json").write_text(json.dumps(r, indent=1) + "\n")
+    (KERNEL_OUT / f"{arm.replace(',', '__')}.json").write_text(json.dumps(r, indent=1) + "\n")
     for name, rec in r["cells"].items():
         (KERNEL_OUT / "cells" / name).write_text(json.dumps(rec))
     print(json.dumps(verdict(KERNEL_OUT / "cells"), indent=1), flush=True)
@@ -546,6 +610,8 @@ def main(argv: list) -> None:
         run_all(argv[2], argv[3].split(","), workers=w)
     elif argv[1] == "kernel":
         kernel(argv[2])
+    elif argv[1] == "diag":
+        print(json.dumps(diag_reading(argv[2] if len(argv) > 2 else KERNEL_OUT / "cells"), indent=1))
     elif argv[1] == "verdict":
         print(json.dumps(verdict(argv[2]), indent=1))
     else:
