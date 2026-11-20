@@ -1,0 +1,3 @@
+[
+ {"date": "2026-11-20", "baseline": "brain B (SAC), arm K world, fixed entropy bonus", "rate": "0 (0 sustained lives in any of 25 learner runs, 300k decisions)", "floor": "not measured as a rate; the same brain never learning eats 0.82 meals a life, the learners 0.08-0.16", "source": "pilot 2 (J11, b4aa10f3), read by its frozen rule"}
+]

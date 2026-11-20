@@ -137,7 +137,8 @@ budget stops; a result file whose metric code hash differs from the frozen one
 is refused. (3) `scripts/forge_scoreboard.py` → `docs/FORGE_SCOREBOARD.md`
 (rounds, survivors per rung, per-source yield, cost, the one number).
 **done when:** the tests pass and a dry round on synthetic results renders.
-state: (new 11-20.)
+state: DONE 11-20 14:35. `experiments/forge/` (ladder rule + `metric.py`, sustained-life rate over late lives, hash covers the harness mark), `tests/test_forge_round.py` 22/22 (the five planted cases + 7 rule clauses each caught when mutated), `scripts/forge_scoreboard.py` (`--check`, `--dry` renders a synthetic round; the real board shows no round and the one number = 0 from pilot 2).
+A round = `experiments/forge/rounds/<id>/spec.json` (committed before any seed) + `results.jsonl`. Readings of the charter the Director may overrule (INBOX 11-20): equal never climbs; a non-control candidate must also beat the control source's mean; above S the best control runs as a yardstick; a tie across the top-third cut drops.
 
 ### F2 — Seed the pool
 **Do.** `docs/FORGE_POOL.md`: ≤ 20 candidates for brain B at the entry rung,
