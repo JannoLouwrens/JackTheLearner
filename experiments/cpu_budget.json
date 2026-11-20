@@ -1590,12 +1590,13 @@
         "VO.01": 145.31,
         "W.1": 20.89,
         "W0.PL": 92.36,
-        "detached:launch_p9.log": 34.15,
-        "detached:launch_s0_seg2.log": 33.68,
-        "detached:launch_s1_seg2.log": 22.44,
-        "detached:launch_s2_seg0.log": 33.75
+        "detached:launch_diag59.log": 13.22,
+        "detached:launch_p9.log": 67.54,
+        "detached:launch_s0_seg2.log": 67.15,
+        "detached:launch_s1_seg2.log": 55.93,
+        "detached:launch_s2_seg0.log": 67.16
       },
-      "used_s": 2049.99
+      "used_s": 2196.97
     }
   },
   "last_child_s": {
