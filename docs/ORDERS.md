@@ -230,9 +230,9 @@ CPU session count", quota) is reported as a REFUSAL by name, never `rc=0`
 our own meter (the account is shared; ours counts only our runs).
 serves: objective 3 (spend the free compute) · philosophy 5, 6.
 **done when:** the TPU verdict line exists with its table, and a planted refused push is named as a refusal.
-state: (a) door DONE `7689b52b` (`tests/test_gpu_accelerator.py` 9/9: T4/CPU jobs byte-identical to pre-edit, TPU own 20 h line, no failover; planted default caught). Gate kernel `experiments/brain_a/tpu_probe.py` (debug preset + 1m f32/bf16 + 12m bf16; image jax, then pin 0.4.33).
-state: 15:12 first push REFUSED by Kaggle "Maximum batch CPU session count of 5" — TPU sessions count against the same cap (J15 holds 5/5); 0 h billed. `scripts/tpu_wait.sh` (detached, worktree /data/wt_tpu_probe, log `/data/jack-logs/tpu_probe.log`) polls status every 10 min, fires once a session frees, gives up 21:30 UTC.
-state: next slot: `python -m experiments.brain_a.tpu_probe table /data/jack-logs/mlx/tpu_probe.json` → verdict + table to PUBLISHED_EVIDENCE + INBOX; delete tpu_wait.sh and the worktree. If GAVE UP, the TPU week lapsed unspent — say so. (b) already half-true: the refusal reads `push failed: …session count…`, ok=False, 0 h.
+state: (a) door DONE `7689b52b`; gate kernel `experiments/brain_a/tpu_probe.py`.
+state: 11-20 NO TPU ATTACHED twice: the 16:04 push (`Tpu1VmV38`) and the 21:09 push (`TpuV6E8`, `4937120d`) were both accepted, metadata says TPU, but the box was CPU (`jax.devices()=[CpuDevice]`, no libtpu) and `kaggle quota` billed 0.00 TPU h. 16:06's "TPU NOT viable" was FALSE — `verdict()` now refuses to judge without a TPU device (real output → NO TPU ATTACHED; planted TpuDevice still judged). This week's 20 TPU h lapse unspent.
+state: blocked on the owner (INBOX 21:15): the API batch push does not get a TPU on this account — maybe a TPU needs the Kaggle website (phone-verified account, interactive session) or a different id. No more sessions spent guessing ids. (b): refusal reads `push failed: …session count…`, ok=False, 0 h; a silent CPU fallback is now named by the probe, not by `gpu.py`.
 
 ### S9 — Every settled FAIL gets a named fate; the two red ratchets get an owner
 part: (machine — nothing faked) · stage: — · step: —
@@ -296,6 +296,8 @@ six PASSes gated on a seed average that admits a failing seed. (9)
 
 - **JACK 19:45 (J15, narrows my 18:35 critic lead — read it as weaker):** on 18/18 traces Q (−actor_loss) climbs smoothly with no break at the last capped life, and the 10 control runs that never eat reach as high or higher (300k median 996 vs food 788; ≈ equal at 90k) — the overestimate is generic to this SAC in this world, not the loss's mechanism. Replay eviction also ruled out (buffer 300k ≥ T). The loss's cause is still unshown; forge/§19 should not build on the critic lead alone.
 - **JACK 20:24 (J16 (d)):** the wheel check is now ONE command, ~0.3 h of a Kaggle CPU session, no GPU-hours (`wheel_kernel.py`, `c6611404`); 1 of 5 sessions free tonight (J15 e2 + J10 ×3 RUNNING). Rank it and the next idle slot launches it.
+
+- **SYSTEM 21:15 (S12 (a), the TPU never came):** two pushes asking Kaggle for a TPU (old id `Tpu1VmV38` at 16:04, current `TpuV6E8` at 21:09) were accepted and ran on a plain CPU box — 0.00 TPU h billed, no libtpu. The 16:06 "TPU NOT viable" in the log was false and is now refused by the probe itself. The batch API does not seem to hand this account a TPU: owner, can a TPU session be started from the Kaggle website (is the account phone-verified for TPU)? If not, rule S12 (a) closed as "TPU unreachable from the box" and drop the TPU line.
 
 ## DONE (kept one day)
 

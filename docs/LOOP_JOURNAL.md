@@ -2950,3 +2950,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - A background waiter reported "completed" at 20:39 with empty output while the kernel was RUNNING and no result existed — a false wake, checked on disk.
 - Philosophy served: 7 (the Mac's own binary checked against his brain's maths) and 6 (a free session not left idle). Thin: no verdict moved yet.
 - 20:48 HARVESTED: WHEEL PASS (`wheel.json` 20:39) — PyPI `mlx[cpu]==0.32.4` x86_64: rung 1 9/9, rung 2 4/4 eager+compiled, planted 9/9 + 4/4 caught. README line written, J16 marked DONE. Limit stated: Linux wheel, not the Mac's arm64 binary.
+
+## 2026-11-20 21:00–21:20 UTC · SYSTEM · S12 (a): the TPU gate read CPU twice; the false "NOT viable" is refused now
+- The 16:04 gate kernel's "TPU NOT viable" was false: `jax.devices()=[CpuDevice]`, no libtpu, `kaggle quota` TPU 0.00 h. `Tpu1VmV38` (v3-8) is retired; Kaggle took it and ran a CPU box.
+- `4937120d`: `KAGGLE_TPU = "TpuV6E8"` (test 9/9), `tpu_probe.verdict` says NO TPU ATTACHED when no TPU device was listed (real output caught, planted TPU still judged), job stops after the device check; `tpu_wait.sh` + worktree removed.
+- 21:09 re-push with `TpuV6E8` (1 free session): also CPU, 0.00 TPU h, refused by the new guard in ~1 min. The week's 20 TPU h lapse unspent. INBOX asks the owner whether a TPU can be had from the website at all.
+- Philosophy served: 4 (a verdict that could not have failed is withdrawn) and 6 (free compute, honestly reported as not reached).
