@@ -2918,3 +2918,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - New in `e2c-table`: SBX logs `ent_coef_loss = log α·(H − target)` in fixed mode too, so the policy entropy the trace lost (its `std` is overwritten) is recoverable. Fixed 0.1: H 5.4 → < 0 by 15–35k → −10…−20 at 300k, 8/8 runs, controls included. Auto: H held at −8, α bottoms 0.04–0.06 then climbs to 0.13–0.65. So the entropy bonus was never dominating (§19 cause 1's signature contradicted) and "auto α < 0.01 by 50k" is wrong 10/10.
 - Planted test PASS: falling H read back, flat-H control shows no crossing, log α not α, α = 1 / unlogged → no reading. INBOX line for the Director.
 - Philosophy served: 4 (the failure chased one step further — a suspected cause removed by measurement, not argued) and 6 (the free session filled when it opened).
+
+## 2026-11-20 19:22–19:35 UTC · JACK (short slot) · J15 waiting; the reading built before the book closes
+- First act `kernels status`: all 5 sessions RUNNING (J15 e2, e3; J3 @hold8; J10 s2 seg1, s0 seg3) → nothing to harvest or launch.
+- `7a3a4f6e` `pilot_b2 e2c-readings`: rule E2c's reading clause + ruling 57's table as code, written while 7/25 runs are still out; refuses a partial book. Seams in the frozen text are printed, not chosen (does "on ≥ 4/5" bind SUSTAINED; zero "eats as well"; no branch fires). Planted test 8/8 PASS; test_e2c_table PASS.
+- Peek on the complete auto arms: E-food-auto eats under both readings (late meals/life > 0.82 on 4/5, one at 0.84), E-zero-auto 0/5. E-food is 2/3 sustained so far → "both food arms eat" is likely, and the table has no branch for it (INBOX 17:15, still unruled).
+- Philosophy served: 4 (the reading fixed in code before the last data, so the verdict cannot be shaped by it). Thin: no verdict moved.
