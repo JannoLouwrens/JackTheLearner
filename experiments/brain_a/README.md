@@ -496,3 +496,13 @@ under stop-gradient in the official losses; the port's stats must carry zero gra
 stats gradient exactly 0, slow count 10/10; rung 1 still 9/9. One deviation, in the module's table:
 percentile = flat sort + linear interpolation, rank/weight in Python float64 (= jit'd `jnp.percentile`).
 Next (PORT report): the rest of row 1.4 by the report's step table, or (d) on Kaggle.
+
+## J16 (d) — the PyPI wheel line (11-20): **WHEEL PASS**
+Kaggle CPU kernel `jack-cpu-1795207086` (`experiments/brain_a/wheel_kernel.py`, verdict fixed before
+the run, `c6611404`), PyPI `mlx[cpu]==0.32.4`, x86_64 / glibc 2.39 / Python 3.13.18; result
+`/data/jack-logs/mlx/wheel.json`. All four runs rc 0: `rung1.py` **RUNG 1: 9/9** eager AND compiled
+(mlx 0.32.4) -> PASS (34 s); `rung1.py --planted` **9/9 caught**; `rung2.py` **RUNG 2: 4/4** eager AND
+compiled -> PASS (15 s); `rung2.py --planted` **4/4 caught**. Tests unchanged from the box's conda-forge run.
+Limit, stated: this is PyPI's Linux x86_64 wheel of the same version, not the Mac's macOS arm64 binary —
+the source and version the Mac will install pass, the Mac's own binary is first read on the Mac.
+Next (PORT report): the rest of row 1.4 by the report's step table.
