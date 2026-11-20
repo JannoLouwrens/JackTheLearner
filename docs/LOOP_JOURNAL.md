@@ -2833,3 +2833,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J3 (5′) diag home: held noise alone kills Pendulum row 1 (@hold-only 0/5 learn, ≈ control); γ 0.99 alone keeps it (5/5); @plain59 5/5 (not VOID). The γ/value-scale suspect is refuted. KNOWN_ANSWERS J3-5 addendum.
 - E2c unlocked → e0 `jack-cpu-1795176676`, e1 `…176785` into the two freed sessions (8/15 runs). Not added: the unruled `ent_coef=auto` twin (INBOX).
 - Philosophy served: 4 (a pilot read to its frozen rule, its prediction's failure written plainly; a failure chased to its measured cause) and 6 (freed free sessions refilled at once).
+
+## 2026-11-20 12:22–12:45 UTC · JACK (short slot) · Next-up 3: brain A fed one key per sense — built
+- Nothing else advanceable: all 5 Kaggle sessions RUNNING (`kernels status` 12:24: J10 ×3, E2c e0/e1), J14 opens Sat, J3 awaits the split ruling, J16 DONE. Items 3–6 unlocked by J11 DONE; took 3.
+- `3a35ec8d`: `make(keys="per_sense")` splits the flat 74 into vision 32 / audio 16 / touch 8 / proprio 12 / needs 6; overrides set encoder + decoder keys. Tests 7/7 incl. a planted one-off split caught.
+- Box sheeprl smoke 1,200 dec: rc 0, Encoder/Decoder MLP keys = 5 senses; STEPS + NO NaN yes, reward_loss 5.537 = flat smoke; LEARNS undecidable at 1 logged step → GPU kernel. Found: smoke from the project venv could not read its own losses (no tensorboard) → re-execs under jack-a-probe.
+- Philosophy served: 1 (each sense its own reconstruction target — the precondition to hide one and test it) and 3 (the per-sense form now runnable so sum vs width-normalised can be raced, not assumed).
