@@ -169,3 +169,30 @@ def binary_logp(logit, event):
     logp = -mx.logaddexp(0.0, -logit)
     lognotp = -mx.logaddexp(0.0, logit)
     return event * logp + (1 - event) * lognotp
+
+
+# ---------------------------------------------------------------- rung 2 (step 1.4)
+# STUBS until the fill: tests (`rung2.py`) are committed while these FAIL.
+# agent.py L482-490
+def lambda_return(last, term, rew, val, boot, disc, lam):
+    raise NotImplementedError("rung 2: lambda_return")
+
+
+# utils.py L84-88: jnp.percentile, method 'linear' (MLX has none: sort + interpolate)
+def percentile(x, q):
+    raise NotImplementedError("rung 2: percentile")
+
+
+# utils.py L44-56, L90-91 (impl 'perc')
+def perc_update(lo, hi, corr, x, rate, perclo, perchi, debias):
+    raise NotImplementedError("rung 2: perc_update")
+
+
+# utils.py L58-73 (impl 'perc'): sg(lo * corr), sg(max(limit, (hi - lo) * corr))
+def perc_stats(lo, hi, corr, rate, limit, debias):
+    raise NotImplementedError("rung 2: perc_stats")
+
+
+# utils.py L113-119
+def slow_update(src, dst, count, rate, every):
+    raise NotImplementedError("rung 2: slow_update")

@@ -476,3 +476,19 @@ Two deviations from the official code, both in the module's "ours beside theirs"
   with the official code means parity with what its COMPILER emits, read from the optimized HLO.
 
 Next: the same `rung1.py` on the PyPI MLX wheel (report's row after 1.3), then rung 2.
+
+## J16 (e) — rung 2 tests written, FAILING against stubs (11-20, step 1.4 first half)
+
+`experiments/brain_a/rung2.py`: λ-returns (agent.py L482–490, disc 1−1/333 and 1, λ 0.95), percentile
+(linear, = `jnp.percentile`), the `perc` return normaliser (utils.py L16–91, retnorm config, debias
+False and True), slow-critic average (utils.py L113–119, rate 0.02, every 1 and 3). Forward only (all
+under stop-gradient in the official losses; the port's stats must carry zero gradient — tested).
+- `--vs-official` (jack-dv3, jax 0.4.33): **20/20 references hold** against the official code.
+  Finding: EAGER `jnp.percentile(x, 100)` lands one float32 ulp below the top rank (399.99448 for a
+  max of 400.0); under `jax.jit` — how the training step runs — it is exact, so the reference is the
+  compiled value (rung 1's lesson). `SlowModel.update` is restated, not run (needs a tracked module).
+- port (jack-mlx): **0/4 — stubs in `mlx_maths.py` raise** (step 1.4's "tests exist and fail").
+- `--planted`: **4/4 CAUGHT** (TD(λ) without the boot term, nearest-rank percentile, scale without
+  limit/debias, slow mix ignoring `every`). Rung 1 re-run: still 9/9.
+- (d), the PyPI wheel: cannot load on this box (GLIBC 2.34 < 2.35, see stage 0.1) — needs a Kaggle CPU session.
+Next: fill the five rung-2 functions until `rung2.py` exits with RUNG 2 PASS eager and compiled.
