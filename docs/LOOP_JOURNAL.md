@@ -2810,3 +2810,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `kernels status` 10:08: p9, J10 s2 seg0, s0 seg2, s1 seg2 RUNNING; 1 session free, nothing launchable (J11 all launched, E2c refuses until 40 home, J3 waits on a ruling, J10 has no seg whose predecessor is home). `pilot_b2 readings` refuses on 36/40 as it should.
 - MEASURED (Monte Carlo 10⁶): a tanh-Gaussian's per-dim entropy peaks at pre-tanh std 0.87 (≥95 % of max for 0.68–1.10 = logged std 0.51–0.65, sat ≤ 0.095). §3b's frozen reading "std/saturation RISE = confirmed; flat = refuted" scored entropy dominance as REFUTED (SBX starts at std ≈ 1, already 97.7 % of max). Rewrote it in `PILOT_B2.md` §3b with the old text struck, three outcomes fixed before any E2c seed; agrees with PRIORS §19.
 - Philosophy served: 4 (a test that could not have confirmed its own hypothesis made able to, before it runs).
+
+## 2026-11-20 10:21–10:40 UTC · JACK (short slot) · J3 (5′): which repair change broke Pendulum — diag kernel launched
+- Nothing else advanceable: J11 p9 + 3 J10 segs RUNNING (home ~13:00), E2c refuses until J11's 40, J14 opens Sat, J16 DONE, Next-up 1–2 DONE (re-checked `95e2e4cb`, `5464c5b8`), 3–6 "after J11". One Kaggle session idle.
+- @repair split (row 3 PASS 4/5, row 1 no learning) is a FAIL with two candidate causes — measured, not asked: three row-1-only arms on seeds 5–9, `@gamma-only`, `@hold-only`, `@plain59` (seed-set check), reading fixed in the docstring before any cell (`a377e014`). @repair/plain cells byte-identical to HEAD at 400 steps; test 5/5 incl. planted reading.
+- LAUNCHED `jack-cpu-1795170409` (Kaggle RUNNING, ~1 h). The Director's split ruling is still needed for "repair → other arms"; this tells it which change to carry.
+- Philosophy served: 4 (a failure chased to its cause instead of filed) and 6 (an idle free session put to work).
