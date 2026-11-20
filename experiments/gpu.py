@@ -114,7 +114,7 @@ def drain_job_ids() -> list[str]:
 KAGGLE_WEEKLY_HOURS = 30.0
 # S12: the TPU has its own weekly line on Kaggle's meter (`kaggle quota`).
 KAGGLE_TPU_WEEKLY_HOURS = 20.0
-KAGGLE_T4, KAGGLE_TPU = "nvidiaTeslaT4", "Tpu1VmV38"
+KAGGLE_T4, KAGGLE_TPU = "nvidiaTeslaT4", "TpuV6E8"
 
 # Hours a provider billed for a run that returned nothing get their own bucket
 # per week: `{backend}` is work, `{backend}_failed` is waste. Both count against

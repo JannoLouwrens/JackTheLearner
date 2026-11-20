@@ -3,7 +3,7 @@
 1. Every existing caller pushes the BYTE-IDENTICAL job: kernel.py, kernel-
    metadata.json and the push command line are compared against the gpu.py of
    commit c4db9a61 (before the edit), loaded side by side, same frozen clock.
-2. `submit(prefer="kaggle-tpu")` asks for Tpu1VmV38 with enable_tpu, skips the
+2. `submit(prefer="kaggle-tpu")` asks for TpuV6E8 with enable_tpu, skips the
    Pascal torch fix, bills its own weekly line (20 h), never touches the T4
    line and never fails over to colab/T4.
 3. Control: the pre-edit gpu.py has no TPU door — the same call is refused.
@@ -114,7 +114,7 @@ def main() -> int:
     res, p, bpath, colab = _drive(gpu, tpu)
     cmd, body, meta = p[-1] if p else ([], b"", {})
     b = gpu.Budget(bpath)
-    checks["tpu_asks_for_tpu"] = (cmd[-2:] == ["--accelerator", "Tpu1VmV38"]
+    checks["tpu_asks_for_tpu"] = (cmd[-2:] == ["--accelerator", "TpuV6E8"]
                                   and meta.get("enable_tpu") is True
                                   and meta.get("enable_gpu") is False
                                   and meta.get("id", "").startswith("stubuser/jack-tpu-"))
@@ -135,7 +135,7 @@ def main() -> int:
 
     # control: the pre-edit module cannot reach a TPU
     _, cp, _, _ = _drive(old, tpu)
-    control_fails = not any(c[0][-2:] == ["--accelerator", "Tpu1VmV38"] for c in cp)
+    control_fails = not any(c[0][-2:] == ["--accelerator", "TpuV6E8"] for c in cp)
 
     for k, v in checks.items():
         print(f"{'PASS' if v else 'FAIL'} {k}")

@@ -1,4 +1,4 @@
-"""S12 (a), the owner's gate of 2026-11-20: is Kaggle's free TPU (Tpu1VmV38, 20 h/week) usable for Brain A?
+"""S12 (a), the owner's gate of 2026-11-20: is Kaggle's free TPU (TpuV6E8 — v3-8 `Tpu1VmV38` is retired: 11-20 Kaggle took the push and ran a CPU box, 0 TPU h billed; 20 h/week) usable for Brain A?
 
 One kernel, the official danijar/dreamerv3 @ e01491f, nothing inside the agent touched:
   1. `official_debug.py` (the `debug` preset, 200 env steps, Dummy74 world) with `--jax.platform tpu`
@@ -65,6 +65,8 @@ for jaxv in ("image", "0.4.33"):
     a = {"jax": jaxv, "versions": sh([_y.executable, "-c",
          "import jax, numpy; print(jax.__version__, numpy.__version__, jax.devices())"], 600)}
     res["attempts"].append(a); save()
+    if "tpu" not in a["versions"].get("out", "").lower():
+        break  # no TPU attached: nothing on this box can answer the gate
     a["debug"] = sh([_y.executable, "-c", DEBUG, jaxv], 2400); save()
     print(jaxv, "debug rc", a["debug"]["rc"], flush=True)
     if a["debug"]["rc"] != 0:
@@ -98,6 +100,9 @@ def table(r: dict) -> str:
 
 
 def verdict(r: dict) -> str:
+    # 11-20: a retired accelerator id was accepted and ran on CPU; that is a refusal, not a TPU result.
+    if not any("tpu" in a.get("versions", {}).get("out", "").lower() for a in r.get("attempts", [])):
+        return "NO TPU ATTACHED: the session's jax.devices() never listed a TPU — no verdict on the TPU"
     best = max((v.get("grad_steps_per_s", 0) for a in r.get("attempts", []) for k, v in a.items()
                 if k.startswith("speed_1m") and isinstance(v, dict)), default=0)
     clean = any(a.get("debug", {}).get("rc") == 0 for a in r.get("attempts", []))
