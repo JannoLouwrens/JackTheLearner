@@ -2862,3 +2862,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First act `kernels status`: e0, e1, a0, a1, a2 all RUNNING (5/5) → J15 e2/e3, J3 @hold8, J10 next segments cannot launch. J10 s0-seg2, s1-seg2 (1.5M) and s2-seg0 (500k) already harvested by watchers; no eval at those marks.
 - Next-up 2 `7f20a8c3`: `world_card.FoodTally` adds per-life `floor_eats_by_food` + `max_eats_one_food`; test 4/4 incl. control (old fields read one-food×3 and three-foods×1 identically) and a real 1,500-decision d=0 run with every old key identical to pre-edit code. At d=0 254 of 262 eats came from one food.
 - Philosophy served: 4 (an instrument that can now tell "fed from one spot" from "foraged", tested against a case the old fields failed) and 5 (his world's measurements).
+
+## 2026-11-20 14:59–15:20 UTC · SYSTEM · S12 (a): the TPU door is built; the gate kernel waits for a Kaggle session
+- `7689b52b` gpu.py `accelerator` arg: `submit(prefer="kaggle-tpu")` → Tpu1VmV38, `enable_tpu`, no torch fix, own 20 h weekly line, no failover. Test 9/9 incl. byte-identical T4/CPU/direct jobs vs c4db9a61 (a planted P100 default is caught).
+- `841a663e` `tpu_probe.py`: official dreamerv3@e01491f debug preset + row-9 speed on the TPU, image jax then pin 0.4.33; verdict line + table.
+- Found: Kaggle's 5-session batch cap counts TPU sessions too — the push was refused (J15 holds 5/5), named in the receipt, 0 h billed. `tpu_wait.sh` (detached, status polls only) fires the probe once a session frees, deadline 21:30 UTC; TPU quota lapses Sat 00:00.
+- Philosophy served: 6 (free compute spent before it expires) and 3 (the TPU raced, not assumed, before any plan uses it).

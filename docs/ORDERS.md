@@ -223,7 +223,9 @@ CPU session count", quota) is reported as a REFUSAL by name, never `rc=0`
 our own meter (the account is shared; ours counts only our runs).
 serves: objective 3 (spend the free compute) · philosophy 5, 6.
 **done when:** the TPU verdict line exists with its table, and a planted refused push is named as a refusal.
-state: (new 11-20.)
+state: (a) door DONE `7689b52b` (`tests/test_gpu_accelerator.py` 9/9: T4/CPU jobs byte-identical to pre-edit, TPU own 20 h line, no failover; planted default caught). Gate kernel `experiments/brain_a/tpu_probe.py` (debug preset + 1m f32/bf16 + 12m bf16; image jax, then pin 0.4.33).
+state: 15:12 first push REFUSED by Kaggle "Maximum batch CPU session count of 5" — TPU sessions count against the same cap (J15 holds 5/5); 0 h billed. `scripts/tpu_wait.sh` (detached, worktree /data/wt_tpu_probe, log `/data/jack-logs/tpu_probe.log`) polls status every 10 min, fires once a session frees, gives up 21:30 UTC.
+state: next slot: `python -m experiments.brain_a.tpu_probe table /data/jack-logs/mlx/tpu_probe.json` → verdict + table to PUBLISHED_EVIDENCE + INBOX; delete tpu_wait.sh and the worktree. If GAVE UP, the TPU week lapsed unspent — say so. (b) already half-true: the refusal reads `push failed: …session count…`, ok=False, 0 h.
 
 ### S9 — Every settled FAIL gets a named fate; the two red ratchets get an owner
 part: (machine — nothing faked) · stage: — · step: —
