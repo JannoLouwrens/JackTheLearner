@@ -87,6 +87,23 @@ any E2c cell runs; nothing else above changes:
      300k is weak evidence: "not learned in 300k", never "cannot learn".
   15 runs (3 arms x 5 seeds), packed 4 a kernel as J11's (Kaggle's 4
   cores): `pilot_b2 e2c-kernel e0..e3` = 4 sessions at J11's rank.
+AMENDED 2026-11-20 13:xx UTC (ruling 57), before ANY seed of the two arms
+below exists; the three fixed-alpha arms above are unchanged (their packing
+and lives byte-identical, tests/test_e2c_auto.py) and finish as frozen:
+  4. Two ADDED arms, seeds 801..805, trace on: `E-food-auto`, `E-zero-auto` =
+     E-food / E-zero exactly with SAC's ent_coef="auto" (SBX: learned alpha,
+     init 1.0, target entropy -8). Kernels `pilot_b2 e2c-kernel --name
+     a0..a2` (10 runs, 4/4/2). Read by the SAME frozen readings
+     (pilot_b2 readings, W = 2) and §3b's corrected trace reading.
+  5. The table, fixed before seed 801 of either:
+     - auto-food EATS (reading SUSTAINED, or late meals/life > K-lr0's 0.82,
+       on >= 4/5 seeds) while fixed E-food does not -> the fixed 0.1 was the
+       wall; every later B run in his world uses `auto`.
+     - BOTH food arms miss -> weak evidence (300k, item 3); the next question
+       is run length, for the forge's round 1.
+     - a zero-control arm that eats as well as its food arm (same setting) ->
+       the handed sense carries nothing; said so, the food arm's eating is
+       not credited to the sense.
 E2b CLOSED 2026-11-19 (gate 3, WORLD_CARD J15 (2)): the only memoryless
 teacher, f5, met the bar on 5 of 20 seeds -> "not clonable by a memoryless
 net, by measurement" for that teacher; `kernel-full` does not run.

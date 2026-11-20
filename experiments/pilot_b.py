@@ -286,15 +286,17 @@ class PilotLives(_Wrapper):
 
 
 def make_b(venv, seed: int, T: int, lr: float = 3e-4, use_sde: bool = True,
-           gamma: float | None = None):
+           gamma: float | None = None, ent_coef=0.1):
     """Brain B with §1/§5's settings (table above). lr=0 is the floor arm;
     use_sde=False is the item-6 exploration arms' plain SAC sampling.
-    gamma=None is GAMMA (J8's 0.995); J11's arm G passes another discount."""
+    gamma=None is GAMMA (J8's 0.995); J11's arm G passes another discount.
+    ent_coef (11-20, J15 ruling 57): default 0.1 FIXED = unchanged; E2c's auto
+    twins pass "auto" (SBX: learned alpha, target entropy -dim(action))."""
     from sbx import SAC
     return SAC("MlpPolicy", venv, learning_rate=lr, buffer_size=max(int(T), 50_000),
                batch_size=256, tau=0.005, gamma=GAMMA if gamma is None else float(gamma),
                learning_starts=WARMUP,
-               train_freq=TRAIN_FREQ, gradient_steps=TRAIN_FREQ, ent_coef=0.1,
+               train_freq=TRAIN_FREQ, gradient_steps=TRAIN_FREQ, ent_coef=ent_coef,
                use_sde=use_sde, seed=seed, verbose=0,
                policy_kwargs=dict(layer_norm=True, net_arch=[256, 256]))
 
@@ -394,7 +396,7 @@ def _trace_callback(out: list, every: int = TRACE_EVERY):
 
 def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
           world=None, gamma: float | None = None, partial_path=None,
-          trace: bool = False) -> dict:
+          trace: bool = False, ent_coef=0.1) -> dict:
     """One learning run of T decisions; returns the per-life log + timing.
     arm "bwhite"/"bpink" = the item-6 exploration arms (block above).
 
@@ -409,7 +411,9 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
     TRACE_EVERY decisions the returned dict's "trace" list gets one row --
     the window's action mean/std/saturation and SAC's last actor_loss,
     critic_loss, ent_coef -- so a learner that ends below its lr-0 twin
-    (J11 partial 12/40: every arm) can be read for WHY, not only that."""
+    (J11 partial 12/40: every arm) can be read for WHY, not only that.
+    `ent_coef` (11-20, ruling 57): 0.1 = unchanged, no key added; any other
+    value is recorded as rec["ent_coef_setting"]."""
     _single_thread()
     from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
     holder = {}
@@ -423,7 +427,8 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
     venv = VecNormalize(DummyVecEnv([_mk]), norm_obs=True, norm_reward=False,
                         clip_obs=10.0)
     venv.seed(seed)
-    model = make_b(venv, seed, T, lr, use_sde=(arm not in EXPLORE_ARMS), gamma=gamma)
+    model = make_b(venv, seed, T, lr, use_sde=(arm not in EXPLORE_ARMS), gamma=gamma,
+                   ent_coef=ent_coef)
     if arm == "bpink":
         _pink_selection(model, seed)
     t_wall, t_cpu = time.time(), time.process_time()
@@ -445,6 +450,7 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
             **({} if gamma is None else {"gamma": float(model.gamma)}),
             **({} if world is None else {"world": _world_stamp(w.env)}),
             **({"trace": tr, "trace_every": TRACE_EVERY} if trace else {}),
+            **({} if ent_coef == 0.1 else {"ent_coef_setting": str(ent_coef)}),
             "lives": lives}
 
 

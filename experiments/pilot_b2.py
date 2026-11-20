@@ -443,6 +443,21 @@ E2C_ENCODING = "cossin"
 E2C_ARMS = {f"E-{m}": dict(PILOT_ARMS["K"], handed=m, trace=True)
             for m in ("food", "zero", "random_point")}
 E2C_SEEDS = (801, 802, 803, 804, 805)
+# Ruling 57 (11-20, before any of their seeds): the auto twins -- E-food and
+# E-zero exactly, but SAC's entropy coefficient LEARNED (SB3/SBX ent_coef
+# "auto", target entropy -dim(action) = -8). §19: a fixed 0.1 on 8 action dims
+# has no published precedent and pays ~ one meal's value per living decision.
+# A SEPARATE dict and separate kernels a0..a2, so e2c_groups() (e0..e3) and the
+# fixed arms' lives stay byte-identical (tests/test_e2c_auto.py).
+E2C_AUTO_ARMS = {f"{a}-auto": dict(E2C_ARMS[a], ent_coef="auto")
+                 for a in ("E-food", "E-zero")}
+
+
+def arm_cfg(arm: str) -> dict:
+    for d in (PILOT_ARMS, E2C_ARMS, E2C_AUTO_ARMS):
+        if arm in d:
+            return d[arm]
+    raise KeyError(arm)
 
 
 def pilot_world(arm: str, food_floor_only: bool, eye_frame: str = "world",
@@ -451,7 +466,7 @@ def pilot_world(arm: str, food_floor_only: bool, eye_frame: str = "world",
     The frames apply to EVERY arm, floors included: held8 holds a push, and in
     the body motor frame that push turns with him, so a floor run in another
     motor frame than the learners' is not their floor."""
-    c = PILOT_ARMS[arm] if arm in PILOT_ARMS else E2C_ARMS[arm]
+    c = arm_cfg(arm)
 
     def world(seed):
         env = make_world(seed, move_cost_dial=c["move_cost_dial"],
@@ -471,7 +486,7 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
                    motor_frame: str = "world", native_substep: bool = False) -> dict:
     """One pilot run of `arm` (PILOT_ARMS) for T decisions."""
     from experiments.pilot_b import run_b, run_floor
-    c = PILOT_ARMS[arm] if arm in PILOT_ARMS else E2C_ARMS[arm]
+    c = arm_cfg(arm)
     world = pilot_world(arm, food_floor_only, eye_frame, motor_frame, native_substep)
     if c["kind"] == "floor":
         rec = run_floor(c["policy"], seed, T, world=world, partial_path=partial_path)
@@ -479,6 +494,8 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
         kw = {} if c["lr"] is None else {"lr": c["lr"]}
         if c.get("trace"):
             kw["trace"] = True
+        if "ent_coef" in c:
+            kw["ent_coef"] = c["ent_coef"]
         rec = run_b(seed, T, world=world, gamma=c["gamma"],
                     partial_path=partial_path, **kw)
     rec["pilot_arm"] = arm
@@ -651,6 +668,16 @@ def e2c_groups() -> dict:
     return {f"e{j}": c[n * j:n * (j + 1)] for j in range((len(c) + n - 1) // n)}
 
 
+def e2c_auto_cells() -> list:
+    """Ruling 57's 10 runs, seed-major across the two auto twins."""
+    return [(a, s) for s in E2C_SEEDS for a in E2C_AUTO_ARMS]
+
+
+def e2c_auto_groups() -> dict:
+    c, n = e2c_auto_cells(), PILOT_PER_KERNEL
+    return {f"a{j}": c[n * j:n * (j + 1)] for j in range((len(c) + n - 1) // n)}
+
+
 def e2c_ready() -> list:
     """What still blocks E2c: ORDERS J15 (4) runs it only after J11's forty
     runs are home (it inherits their readings). [] = ready."""
@@ -669,7 +696,10 @@ def e2c_kernel(name: str) -> dict:
                            "runs missing) -- ORDERS J15 (4) runs E2c after it")
     rule = dict(PILOT_RULE, rule="forager_clone.py RULE E2c + AMENDED 2026-11-19; "
                                  "world = " + PILOT_RULE["rule"])
-    return pilot_kernel(name, rule, cells=e2c_groups()[name],
+    groups = e2c_auto_groups() if name.startswith("a") else e2c_groups()
+    if name.startswith("a"):
+        rule["rule"] += "; auto twins (ruling 57, ent_coef='auto')"
+    return pilot_kernel(name, rule, cells=groups[name],
                         out_name=f"e2c_{name}.json")
 
 
