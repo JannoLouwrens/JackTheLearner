@@ -2943,3 +2943,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J16 (d): `experiments/brain_a/wheel_kernel.py` (`c6611404`) — one Kaggle CPU kernel installs PyPI `mlx[cpu]==0.32.4` (the wheel the Mac will use; the box's glibc can't load it) and runs rung 1, rung 2 and both planted suites. WHEEL verdict fixed before any run. Test 3/3: the verdict PASSes on the box's real output of the same four commands (9/9, 9/9 caught, 4/4, 4/4 caught, ~13 s) and refuses 6 planted failures.
 - NOT launched: the order says box only and the Director has not ranked the session (INBOX 14:30 + 20:24).
 - Philosophy served: 7 (the Mac is where finished Jack lives; the check that his brain's maths holds on the Mac's own binary is now one command) and 4 (verdict fixed before the run, with planted failures). Thin: no verdict moved.
+
+## 2026-11-20 20:36–20:45 UTC · JACK (short slot) · J16 (d) wheel kernel LAUNCHED; J15/J10 waiting
+- First act `kernels status`: J15 e2 (`…192704`) and J10 s2 seg1, s0 seg3, s1 seg3 all RUNNING → nothing to harvest; 1 of 5 Kaggle sessions free.
+- Ruling 60 rank (0) "any kernel < 1 h" + "no session sits idle while a ready kernel exists" → LAUNCHED J16's wheel kernel `jack-cpu-1795207086` (est 0.3 h, CPU only, push rc 0, receipts `f4887e58`). Last slot held it back on the order's "box only"; the header ruling binds the sessions, so I read that as a launch.
+- A background waiter reported "completed" at 20:39 with empty output while the kernel was RUNNING and no result existed — a false wake, checked on disk.
+- Philosophy served: 7 (the Mac's own binary checked against his brain's maths) and 6 (a free session not left idle). Thin: no verdict moved yet.
