@@ -73,6 +73,21 @@ RULE — DECLARED IN THIS COMMIT, BEFORE THE KERNEL RUNS (2026-11-20):
     python -m experiments.taste_eye smoke            # box, ~1 min
     python -m experiments.taste_eye kernel           # the data kernel
     python -m experiments.taste_eye read [datafile]  # fit + judge + rule
+    python -m experiments.taste_eye reflex           # stage 2, box
+
+STAGE 2 — DOES POINTING FEED HIM? DECLARED 2026-11-20 BEFORE ANY REFLEX WORLD
+IS LIVED, and run only if stage 1 reads ALIVE. NOT a learner and not his: a
+hand reflex used as a ruler — every decision push (body frame) straight along
+the map's peak ray, the other six actions zero.
+  Worlds 1301..1305 (never run), 3,600 decisions each, the same world K.
+  taste-reflex   the reflex on taste128 (initialisation 0, kernel data)
+  shuf-reflex    MUST FAIL: the same reflex on the shuffled-label twin
+  held8          the floor (world_card.Held(seed, 8))
+  told-reflex    reported only: the reflex on the simulator's bearing to the
+                 nearest uneaten floor food (handed_sense), the ceiling
+  ALIVE-2 iff taste-reflex eats more meals than held8 AND than shuf-reflex on
+  >= 4 of 5 worlds, and >= 2x each in total. Else the map points and the
+  pointing does not feed him: said so, stage 1 stands, no entry.
 """
 from __future__ import annotations
 
@@ -109,6 +124,8 @@ KERNEL_PINS = ["gymnasium==1.4.0", "mujoco==3.17.0"]
 def make_env(seed: int):
     from experiments.jack_env import JackEnv, NEEDS_S_TRP, SPAWN_CLEAR_R
     from experiments.pilot_b import LIFE_CAP, REWARD, PilotLives
+    from experiments.sim_speed_kcpu import _compat_multiray
+    _compat_multiray()                # mujoco >= 3.3 on Kaggle; no-op here
     env = JackEnv(seed=seed, difficulty=D0, reward=REWARD,
                   random_needs=NEEDS_S_TRP, random_layout=True,
                   lazy_contact_audio=True, spawn_clear=SPAWN_CLEAR_R,
@@ -291,7 +308,7 @@ def train_told(x, target_ray, init: int, steps=3000, batch=256):
 
 # ── fit + judge + rule ──────────────────────────────────────────────────────
 def read(path=None, train=TRAIN_SEEDS, judge=JUDGE_SEEDS, steps=3000,
-         enforce=True) -> dict:
+         enforce=True, keep_nets=False, only=None) -> dict:
     import torch
     torch.set_num_threads(2)
     z = np.load(path or OUT / DATA_NAME)
@@ -331,9 +348,13 @@ def read(path=None, train=TRAIN_SEEDS, judge=JUDGE_SEEDS, steps=3000,
             ("shuffled", lambda i: train_taste(xt, yshuf, i, steps=steps)),
             ("untrained", lambda i: build_net(N, i)),
             ("told", lambda i: train_told(xt[has], tgt, i, steps=steps))):
+        if only and name not in only:
+            continue
         nets = [fit(i) for i in INITS]
         out_nets[name] = nets
         enter(name, [hits(scores(n_, xj).argmax(1), dist, kf, d, vis) for n_ in nets])
+    if only:
+        return {"_nets": out_nets}
     enter("nearest", [hits(dist.argmin(1), dist, kf, d, vis)])
     enter("taste16", [hits(scores(train_taste(xt, yt, i, stride=8, steps=steps), xj, 8)
                            .argmax(1) * 8, dist, kf, d, vis, stride=8) for i in INITS])
@@ -363,7 +384,61 @@ def read(path=None, train=TRAIN_SEEDS, judge=JUDGE_SEEDS, steps=3000,
            "sd_world": {k: float(v["world"].std()) for k, v in arms.items()},
            "bands_0-2_2-4_4-8m": bands,
            "band_looks": [int(((dmin >= a) & (dmin < b)).sum()) for a, b in ((0, 2), (2, 4), (4, 9))]}
+    if keep_nets:
+        res["_nets"] = out_nets
     return res
+
+
+REFLEX_SEEDS = (1301, 1302, 1303, 1304, 1305)
+REFLEX_DEC = 3600
+
+
+def reflex_cell(arm: str, seed: int, net=None, n_dec: int = REFLEX_DEC) -> dict:
+    import torch
+    from experiments.world_card import Held
+    from experiments.handed_sense import HandedSense
+    w = make_env(seed)
+    pol = Held(seed, 8)
+    hs = HandedSense(w.env, "food", "cossin") if arm == "told-reflex" else None
+    o, info = w.reset(seed=seed)
+    pol.new_life()
+    m0, t0 = int(info["meals"]), time.process_time()
+    for _ in range(n_dec):
+        if arm == "held8":
+            a = pol.act(o)
+        else:
+            a = np.zeros(8, np.float32)
+            if hs is not None:
+                c, s_, _d = hs.extra()
+                a[6], a[7] = c, s_
+            else:
+                with torch.no_grad():
+                    k = int(net(_as_rays(o[None, :2 * N], 1)).squeeze().argmax())
+                a[6], a[7] = math.cos(2 * math.pi * k / N), math.sin(2 * math.pi * k / N)
+        o, _r, term, trunc, info = w.step(a)
+        if term or trunc:
+            o, info = w.reset()
+            pol.new_life()
+    return {"arm": arm, "seed": seed, "meals": int(info["meals"]) - m0,
+            "lives": len(w.lives), "cpu_s": round(time.process_time() - t0, 1)}
+
+
+def reflex(path=None) -> dict:
+    import torch
+    torch.set_num_threads(1)
+    r = read(path, keep_nets=True, only=("taste128", "shuffled"))
+    nets = {"taste-reflex": r["_nets"]["taste128"][0],
+            "shuf-reflex": r["_nets"]["shuffled"][0], "held8": None, "told-reflex": None}
+    rows = [reflex_cell(a, s, nets[a]) for s in REFLEX_SEEDS for a in nets]
+    M = {a: [x["meals"] for x in rows if x["arm"] == a] for a in nets}
+    t = M["taste-reflex"]
+    cl = {}
+    for o_ in ("held8", "shuf-reflex"):
+        cl[f"worlds over {o_} >=4"] = sum(a > b for a, b in zip(t, M[o_])) >= 4
+        cl[f"2x {o_}"] = sum(t) >= 2 * sum(M[o_]) and sum(t) > 0
+    return {"verdict": "ALIVE-2" if all(cl.values()) else "DEAD-2", "clauses": cl,
+            "meals": M, "totals": {a: sum(v) for a, v in M.items()},
+            "cpu_s": sum(x["cpu_s"] for x in rows)}
 
 
 _JOB = r'''
@@ -408,6 +483,8 @@ def main(argv):
     elif cmd == "read":
         r = read(argv[1] if len(argv) > 1 else None)
         print(json.dumps(r, indent=1, default=str))
+    elif cmd == "reflex":
+        print(json.dumps(reflex(argv[1] if len(argv) > 1 else None), indent=1))
     else:
         raise SystemExit(__doc__)
 
