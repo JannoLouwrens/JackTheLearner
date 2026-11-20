@@ -2868,3 +2868,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `841a663e` `tpu_probe.py`: official dreamerv3@e01491f debug preset + row-9 speed on the TPU, image jax then pin 0.4.33; verdict line + table.
 - Found: Kaggle's 5-session batch cap counts TPU sessions too — the push was refused (J15 holds 5/5), named in the receipt, 0 h billed. `tpu_wait.sh` (detached, status polls only) fires the probe once a session frees, deadline 21:30 UTC; TPU quota lapses Sat 00:00.
 - Philosophy served: 6 (free compute spent before it expires) and 3 (the TPU raced, not assumed, before any plan uses it).
+
+## 2026-11-20 15:22–15:40 UTC · JACK (short slot) · Kaggle 5/5 → Next-up 3: row128 vs 16 rays rule DRAFTED
+- First act `kernels status`: e0, e1, a0, a1, a2 all RUNNING → J15 e2/e3, J3 @hold8, J10 segments cannot launch.
+- Next-up 3: `docs/research/prereg/row128_vs_rays16.md` (text only, Director freezes): K-rays16 vs K-row128 under J15's setting S, a K-row128-blind control (wide input, no content — must fail) and a K-lr0-row128 floor; seeds 921–925, 300k, pilot_b2 readings + MWU U≥21/25 & ≥4/5 pairs. Gate: does NOT run if both E2c food arms miss (two floors compared = no reading).
+- INBOX: S12's tpu_wait and J15's e2/e3 race for the same next free session; nobody has ruled which goes first.
+- Philosophy served: 3 (the eye raced, not assumed from a hand reader's .909) and 4 (the control that must fail and the gate written before any seed).

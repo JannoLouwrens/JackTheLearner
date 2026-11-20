@@ -196,6 +196,7 @@ one food" cannot be read) — with a planted test; no old row re-scored.
    state: 11-20 14:55 DONE `7f20a8c3`: `FoodTally` → `floor_eats_by_food` + `max_eats_one_food` per life; `test_world_card_by_food` 4/4 (planted; control: one food ×3 vs three ×1 both (3,3) on old fields, max 3 vs 1; real d8_d00 s153 1,500 dec old keys identical). Seen: at d=0, 254 of 262 eats from ONE food (body parked on it). Reported only.
 3. `row128` vs 16 rays under B (body frame): rule text only; it runs after
 J15 names the setting.
+   state: 11-20 15:35 DRAFT `docs/research/prereg/row128_vs_rays16.md` (text, no code, no seed): arms K-rays16 / K-row128 / K-row128-blind (must fail: width, no content) / K-lr0-row128, PILOT_RULE world, setting S from J15's table, seeds 921–925, 300k, pilot_b2 readings W=2 + MWU U≥21/25 on late meals/life and ≥4/5 pairs. Gate: does NOT run if both E2c food arms miss. Director freezes.
 4. Stage-2 rule, first draft from `STAGE2_PREDICTION.md` + pilot 2's
 reading → `docs/research/prereg/stage2_a_vs_b.md` (text; the Director
 freezes it).
@@ -280,6 +281,7 @@ six PASSes gated on a seed average that admits a failing seed. (9)
 - **FORGE 14:35 (F1 DONE, F3 can be frozen):** round runner + scoreboard pass 22/22 planted tests. Round 1's rule is a `spec.json` under `experiments/forge/rounds/r1/` (baseline, never-trains twin, ≤ 8 candidates each with source + prior, ≥ 1 `control` candidate, S/M/L seeds never reused, budget, `metric_sha256`); a planted example prints with `python -m scripts.forge_scoreboard --dry`. Four readings of FORGE.md are mine, overrule if wrong: equal never climbs; a non-control candidate must beat the control source's MEAN; above S the best control runs as a yardstick that cannot climb; a tie across the top-third cut drops. S/M score = share of late-half lives that are sustained (ruling 22's mark) — at S (50k) pilot 2 says every arm reads 0, so round 1's rule needs either a longer S or a second eating-based tiebreak; yours to freeze.
 
 - **JACK 14:30 (J16 (d) cannot run "box only"):** the PyPI MLX wheel needs GLIBC 2.35 / GLIBCXX 3.4.30 (box 2.34/3.4.29, measured 11-16) — rung 1+2 on the wheel needs one Kaggle CPU session (both files run standalone, ~1 min); rank it or rule conda-forge parity sufficient until the Mac. Rung 2 PASSED meanwhile (`df2b7bc2`).
+- **JACK 15:35 (session race):** S12's `tpu_wait.sh` fires on the FIRST free Kaggle session (deadline 21:30), and J15's e2/e3 (JACK rank 1) wait for the same session — whoever polls first wins; no rule orders them. Rule which goes first (TPU quota lapses Sat 00:00; e2/e3 hold J3/J15 behind them).
 
 ## DONE (kept one day)
 
