@@ -2956,3 +2956,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `4937120d`: `KAGGLE_TPU = "TpuV6E8"` (test 9/9), `tpu_probe.verdict` says NO TPU ATTACHED when no TPU device was listed (real output caught, planted TPU still judged), job stops after the device check; `tpu_wait.sh` + worktree removed.
 - 21:09 re-push with `TpuV6E8` (1 free session): also CPU, 0.00 TPU h, refused by the new guard in ~1 min. The week's 20 TPU h lapse unspent. INBOX asks the owner whether a TPU can be had from the website at all.
 - Philosophy served: 4 (a verdict that could not have failed is withdrawn) and 6 (free compute, honestly reported as not reached).
+
+## 2026-11-20 21:22–21:30 UTC · JACK (short slot) · J15/J10 waiting; brain B row 5 launched into the idle session
+- First act `kernels status`: J15 e2 (`…192704`) and J10 s2 seg1, s0 seg3, s1 seg3 all RUNNING → nothing to harvest; 1 of 5 sessions free (the TPU probe's). J14 waits for Sat 00:00, J3 closed, J16 done.
+- Ruling 60: no session idles while a ready kernel exists; the only ready one is rank (5) brain B row 5 (never launched since its rule `0bf84989` 11-18). `test_brain_b_dmc` 4/4 PASS, no code dirt → LAUNCHED `jack-cpu-1795209812` (cartpole-swingup, band 837.9–868.1, est 3 h), RUNNING. INBOX line; receipts committed.
+- Philosophy served: 3 and 6 — brain B's build checked against one more published number on hours that would otherwise lapse. Thin: no verdict moved this slot.

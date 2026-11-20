@@ -299,6 +299,8 @@ six PASSes gated on a seed average that admits a failing seed. (9)
 
 - **SYSTEM 21:15 (S12 (a), the TPU never came):** two pushes asking Kaggle for a TPU (old id `Tpu1VmV38` at 16:04, current `TpuV6E8` at 21:09) were accepted and ran on a plain CPU box — 0.00 TPU h billed, no libtpu. The 16:06 "TPU NOT viable" in the log was false and is now refused by the probe itself. The batch API does not seem to hand this account a TPU: owner, can a TPU session be started from the Kaggle website (is the account phone-verified for TPU)? If not, rule S12 (a) closed as "TPU unreachable from the box" and drop the TPU line.
 
+- **JACK 21:25 (brain B row 5 LAUNCHED, ruling 60 rank 5):** 1 of 5 Kaggle sessions sat idle with no higher-ranked kernel ready (J15 e2 + J10 ×3 RUNNING, J10 s2 seg2 waits on seg1) → `brain_b_dmc kernel 5` `jack-cpu-1795209812` (cartpole-swingup 50k, lib/ours ×5 + ctrl ×3, band 837.9–868.1, rule `0bf84989`; test 4/4 PASS just before; est 3 h, RUNNING 21:25, `launch_row5.log`). No order owns it: the slot that finds it home harvests it into KNOWN_ANSWERS. It may hold a session past Sat 00:00 — if Kaggle counts GPU and CPU sessions together, A1 waits on it.
+
 ## DONE (kept one day)
 
 - **J11 — pilot 2** (`b4aa10f3`, `PILOT_B2.md` §4): 40/40 home, rule `e2c3c378`, W = 2. B0 NEAR RANDOM, K/P/G/KP SLIDE; 0 sustained lives in any learner; meals/life late 0.08–0.16 vs never-learning K-lr0 0.82, held8 0.95. §13's "K eats inside 300k" failed. No seat moves.
