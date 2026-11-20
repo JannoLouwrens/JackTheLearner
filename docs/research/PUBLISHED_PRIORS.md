@@ -766,6 +766,50 @@ Long form: `/data/jack-research/research_notes/senses_together/` (parts A, B, C)
 
 ## 20. A living Jack: every need at once, a life of hours with no reset, stopped and resumed (2026-11-20; serves M8, and M7's first gate; picked by rule 3 — M8 had no section)
 
-Long form: `/data/jack-research/research_notes/m8_living/` (parts A many needs, B long lives, C resume and integration). SKELETON 16:15 UTC — three sub-agents are reading; the parts land below.
+Long form: `/data/jack-research/research_notes/m8_living/` (partA many needs, partB long lives, partC resume and integration; paper texts beside them). Nothing below was measured by us. One hour of his life = 18,000 decisions.
 
-**Question.** What is on record about ONE from-scratch agent that (A) serves several needs at once, (B) lives and learns for hours without a reset, (C) is stopped, moved and resumed, with everything running together — and what should a multi-hour integration test measure?
+**Question.** What is on record about ONE from-scratch agent that serves several needs at once, lives and learns for hours without a reset, and is stopped, moved and resumed — and what should a multi-hour test measure?
+
+**Already known**
+- **Nobody has shown it.** No paper found has a small network learning online through one multi-hour life and still rising at the end. The nearest, Jelly Bean World (PPO-LSTM and DQN, one non-episodic life, 10M steps, 20 runs), learns for ~1M steps, then every agent "gets stuck, unable to collect any reward" ([2002.06306](https://arxiv.org/abs/2002.06306) Fig. 4).
+- **With several needs, the moving food is the one neglected.** Crafter at 1M: drink 24–80% of episodes, eat cow 12–26% (human 89%), eat plant 0.0–0.1% for every agent; "wake up" is 93.6% for the RANDOM agent, so it shows no learned sleep ([2109.06780](https://arxiv.org/abs/2109.06780) Tables A.1–C.1). Craftax at 1B: eat-plant still "ignored"; lives last ~200 steps of a 100k cap ([2402.16801](https://arxiv.org/abs/2402.16801)).
+- **Four needs in 3-D:** EVAAA (~100k steps a level): PPO and DQN survive only the open field with food and water; DreamerV3-S learns, then drops at the harder levels; needs hidden from the senses = no learning; agents that cannot find food learn to END the life by colliding. No all-needs vs one-need comparison exists.
+- **One critic per need beat one critic for the sum** on an 8×8 grid, 4–8 needs, 30k steps, equal weights: right value map at ~5k vs ~20k steps, and the single critic worsens from 4 to 8 needs while the modular one stays flat (Dulberg 2023 PNAS Figs 2D, 3C/D; curves only).
+- **Mixed reward sizes starve the small one:** one agent on 57 Atari games with unclipped rewards 0.3% median → 107% with per-task return normalisation (PopArt [1809.04474](https://arxiv.org/abs/1809.04474) Table 1). One shared SAC fails half the Meta-World skills that separate SACs each learn (MT10 68.3%, MT50 38.5%).
+- **Long learning decays by itself:** PPO, 2×256, a STATIONARY Ant rises to ~3M steps then collapses, "failing every episode" by 20M; L2 1e-4 or continual backprop held (Dohare 2024, Nature Fig. 3–4). L2 "interfered" in Rainbow/C51; LayerNorm has no reported downside (Lyle [2402.18762](https://arxiv.org/abs/2402.18762)).
+- **No reset = a place to get stuck:** SAC reset-free vs episodic 0.00 vs 1.00 (door, peg), 0.32 vs 0.80 (EARL [2112.09605](https://arxiv.org/abs/2112.09605) Table 1); a world that moves by itself: 0% → 70% (§3).
+- **A cap is not a death:** bootstrapping at time-outs let PPO trained on 200–300-step pieces hop 10^6 steps; without it, no ([1712.00378](https://arxiv.org/abs/1712.00378) Fig. 6; a frozen policy at evaluation).
+- **Resume:** SB3's `save()` omits the replay buffer and the observation normaliser; sheeprl saves the buffer by PATH (`checkpoint.memmap_buffer: reference`, same machine only; read in the installed 0.8.5). The measured dip is from offline→online only: ~1/3 of return lost (4,500 → <3,000, Lee [2107.00591](https://arxiv.org/abs/2107.00591) Fig. 1b), back within 200k steps, with or without the old data (Luo [2303.17396](https://arxiv.org/abs/2303.17396)); 50% old + 50% new per batch with a LayerNorm critic avoids it (RLPD [2302.02948](https://arxiv.org/abs/2302.02948)).
+- **Hours of real-time learning exist, on robots:** Dreamer walks an A1 in 1 h (~72k steps) and re-learns after pushes in 10 min, SAC only rolls over; a sparse-reward arm shows nothing before 2 h of 8 ([2206.14176](https://arxiv.org/abs/2206.14176)). One continuous run each; nobody hands a learner to another machine and measures it.
+
+**Candidates** (for M8's design; none seats anything)
+1. **One summed drive reward + return normalisation** (ours today; DreamerV3's 5–95th percentile scaling, PopArt). Proven: 4 needs, EVAAA, DreamerV3-S, 100k steps a level. Weak: slows as needs grow (grid, 4 → 8). Smallest version: Dulberg's grid. At our budget: 2 needs plausible at 300k–1M; 4+ unknown.
+2. **One value head per need, summed to act** (Dulberg). Proven only on the 8×8 grid, DQN, 30k steps, no death, food that never runs out; needed a learned attention mask when the world changed; the gain vanishes if each head learns only from its own choices. No continuous-action version found. Expect: faster on the 2nd–4th need, unproven in physics.
+3. **Keeping him able to learn for hours:** LayerNorm critic (B has it) + old/new replay mix (§6) + bootstrap at caps (ours has it); L2 1e-4 or continual backprop are proven for PPO only. Expect: the 3–20M collapse is beyond today's 1M runs, inside M8's.
+
+**Ours beside theirs**
+
+| setting | published | ours | same / differs |
+|---|---|---|---|
+| reward over needs | summed convex drive, 4 needs | `homeo-dr` over `DRIVE_DIM` 6 (`drives.py:129`, `jack_env.py:874`) | same form; >4 needs only on a grid |
+| needs in the senses | hidden = no learning (EVAAA) | in the observation | same; J14's needs-hidden row reproduces it |
+| cap vs death | bootstrap at cap (Pardo) | `truncated` ≠ died (`jack_env.py:863-881`) | same |
+| life length | Crafter cap 10k; learned lives ~200 steps | starves in 3,000 decisions (`drives.py:66`); 1 h = 18,000 | differs: longer than any reported learned survival |
+| critic | LayerNorm (RLPD, Lyle) | `layer_norm=True` (`pilot_b.py:301`) | same |
+| B's checkpoint | buffer saved separately | model + buffer (`humanoid_sac_row.py:187-197`) | same on that row; not yet in his world |
+| A's checkpoint | buffer by path, same node | "no buffer checkpoint" (`brain_a/in_world.py:30`) | differs: A moved to the Mac resumes with an EMPTY buffer unless `buffer.checkpoint=True` + `memmap_buffer=copy` |
+| network | 4M–201M weights on Crafter-class | 2×256 | differs; no record at our size |
+
+**Known-answer check**
+- Dulberg's grid (4 needs, 30k steps): single critic right at ~20k, per-need at ~5k. CPU minutes (inf); the authors' code not located.
+- Pardo's time-limit pair (Hopper, PPO, 300-step pieces): with bootstrap it hops past the training length, without it does not. ~1 CPU-h a run (inf).
+- Resume: `humanoid_sac_row.py`'s `resume_check` already passes at toy size; no published number to match.
+
+**What the record does NOT answer**
+- **Stop and resume, his own critic:** B on row 1b, stopped at half, resumed (a) whole, (b) empty buffer, (c) fresh Adam; 5 seeds, box minutes. Predicted: (a) no dip; (b) a dip ≤ 1/3 of return, gone by the row's end (inf from Lee, Luo); (c) none (Asadi).
+- **Does a long life collapse:** only after something eats — the eater continued to 3M decisions, 5 seeds, ~30 kernel-h a run. Predicted: no collapse by 3M with LayerNorm + replay; unknown beyond.
+- **The second need:** summed critic vs per-need heads when water joins food. Predicted: per-need faster, and the gap grows with needs (grid only).
+- **Sum vs "weakest need" reward:** no published head-to-head.
+- **The test itself (to copy):** score = geometric mean over needs (Crafter's: a dropped need drags it down); a mid-life push with a recovery bound (DayDreamer: 10 min); a stop-resume twin with a dip bound; late-life rate ≥ early-life (the Jelly Bean failure).
+
+**Not verified.** Dohare's Nature numbers (summariser of the PMC text; curves only); Keramati–Gutkin and Yoshida 2024 not re-read; Russell–Zimdars' objection to modular Q (memory); Dulberg's SI; PopArt's frame counts; single- vs multi-task SAC "90–95 vs 49–63%" (snippets); the dip sizes in AWAC and Cal-QL (plots); whether SB3 or sheeprl save the recurrent state or the life in flight; any return change from moving MuJoCo builds (the versioning page says results are not reproducible across versions; nobody measured a policy).
