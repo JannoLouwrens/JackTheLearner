@@ -91,8 +91,8 @@ serves: M3 · PLAN stage 1 "proof that the task can be learned with his senses" 
 state: (4) E2c rule AMENDED `35a6c2d2` (cossin; zero primary, random_point reported; 300k miss = weak); kernel `37e8cf32`; trace `run_b(trace=True)` on E2C_ARMS only; §3b's trace reading corrected 11-20 10:30 before seed 801.
 state: 11-20 12:11 E2c e0 `jack-cpu-1795176676` + e1 `…176785` LAUNCHED at `b4aa10f3` (8/15 fixed runs; both RUNNING 12:45). CLI: `e2c-kernel --name eN`.
 state: 11-20 12:45 (1)+(2) DONE `8c551f77`: `E2C_AUTO_ARMS` (separate dict, kernels a0 4 / a1 4 / a2 2), `ent_coef` knob in `make_b`/`run_b` (default 0.1 unchanged); `test_e2c_auto` PASS under `/data/venvs/jack-std` (sbx lives there): e2c_groups sha pinned pre-edit, fixed E-food 2k decisions identical, auto α 0.76→0.57 learned, lives differ. Rule AMENDED 11-20 in `forager_clone.py` (items 4–5, the table).
-state: 12:49 NOTHING LAUNCHED: a0 admitted but its push refused "Commit and push first" (my own uncommitted rule-text edit; tree now clean at `5d654a6a`); re-tries of a0/a1 REFUSED by the load guard (6.37, 6.51 > 6.0). J10 s2-seg0 + s1-seg2 COMPLETE → 2 Kaggle sessions free.
-next: launch `scripts/launch_detached.sh /data/jack-logs/pilot_b2/launch_aN.log $PY -m experiments.pilot_b2 e2c-kernel --name aN` for a0, a1, a2, then e2, e3, as load/sessions allow; harvest e0/e1 ~15:45.
+state: 13:09–13:16 a0 `jack-cpu-1795180195`, a1 `…180238`, a2 `…180505` LAUNCHED at `c1b11f6b` (all 3 auto kernels = 10 auto runs in flight; a2 first refused twice by Kaggle's 5-session cap, went when J10 s0-seg2 came home). Kaggle 5/5 held: e0, e1, a0, a1, a2.
+next: when a session frees (e0/e1 ~15:45–19:40), launch e2 then e3 (`… launch_eN.log $PY -m experiments.pilot_b2 e2c-kernel --name eN`) BEFORE J10 segments (rank 1 > 3); harvest e0/e1, then a0–a2 (~7.5 h est).
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7, §18 item 4; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48, 52, 62
@@ -278,3 +278,4 @@ six PASSes gated on a seed average that admits a failing seed. (9)
 - **J3 (4), (5), (5′):** `wm-latent+ring` FAIL both; `@repair` row 3 PASS 4/5, row 1 FAIL 0/5; diag: held noise is the cause, γ is not.
 - **J15 (1)–(3):** f5 gate MISSES 5/20 (shuffled 0/20) — THIS memoryless hand rule does not meet the bar; E2b closed for this teacher.
 - **Next-up 11-19:** dial race parts (`95e2e4cb`), needs-grid rule + kernel (`5464c5b8`), per-sense design note.
+- **J15 13:11 (machine):** `e2c-kernel` pushes without checking Kaggle's 5-session cap — a2 was refused twice ("Maximum batch CPU session count of 5 reached"), each writing an attempt+ERROR receipt pair; a pre-flight count of RUNNING kernels would refuse it locally. J15 E2c: a0–a2 (auto) in flight 13:16.

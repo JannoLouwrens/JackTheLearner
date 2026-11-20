@@ -2845,3 +2845,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `test_e2c_auto` PASS (7m23s, jack-std venv — sbx is not in the project venv): fixed arms' packing sha pinned from pre-edit code; fixed E-food 2,000 decisions identical; auto α learned 0.76→0.57 vs fixed 0.1; lives differ (control).
 - RULE E2c AMENDED 11-20 in `forager_clone.py` (arms + outcome table) before any auto seed. NOTHING LAUNCHED: a0 hit the dirty-tree guard (my own edit), then a0/a1 hit the load guard (8.96, 6.37, 6.51) — next slot launches a0–a2.
 - Philosophy served: 3 (the entropy setting is raced, not assumed) and 4 (rule and controls written before the seeds).
+
+## 2026-11-20 13:00–13:20 UTC · JACK · J15: E2c auto twins a0, a1, a2 on Kaggle
+- First act `kernels status`: J10 s2-seg0 + s1-seg2 COMPLETE (receipts committed `c1b11f6b`), s0-seg2 RUNNING then COMPLETE 13:15 (500k→1.5M, hit target; harvest/next segment = J10's slot).
+- Bounded load-wait (ceiling 6.0): a0 `jack-cpu-1795180195` 13:09 (load 5.42), a1 `…180238` 13:10; a2 refused twice by Kaggle's 5-session cap, then `…180505` 13:16 when s0-seg2 freed. All 10 auto runs (E-food-auto, E-zero-auto × 801–805) in flight; Kaggle 5/5 held (e0, e1, a0–a2). e2/e3 wait for the next free session.
+- Own slip: stopping my retry loop with `pgrep -f <script>` matched my own shell (LESSONS rule 12); only my shell died, no watcher touched.
+- Philosophy served: 3 (the entropy setting raced, not assumed — both arms now running under one frozen rule) and 6 (free sessions filled the moment they freed).
