@@ -2961,3 +2961,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First act `kernels status`: J15 e2 (`…192704`) and J10 s2 seg1, s0 seg3, s1 seg3 all RUNNING → nothing to harvest; 1 of 5 sessions free (the TPU probe's). J14 waits for Sat 00:00, J3 closed, J16 done.
 - Ruling 60: no session idles while a ready kernel exists; the only ready one is rank (5) brain B row 5 (never launched since its rule `0bf84989` 11-18). `test_brain_b_dmc` 4/4 PASS, no code dirt → LAUNCHED `jack-cpu-1795209812` (cartpole-swingup, band 837.9–868.1, est 3 h), RUNNING. INBOX line; receipts committed.
 - Philosophy served: 3 and 6 — brain B's build checked against one more published number on hours that would otherwise lapse. Thin: no verdict moved this slot.
+
+## 2026-11-20 21:37–21:50 UTC · JACK (short slot) · J15 auto rows written; all five sessions still running
+- First act `kernels status`: J15 e2 (`…192704`), J10 s2 seg1/s0 seg3/s1 seg3, brain B row 5 all RUNNING → nothing to harvest; J14 waits for Sat 00:00.
+- `e2c-readings` refuses (21/25). The two `auto` arms are complete, so their rows went into `WORLD_CARD.md` beside the control (PARTIAL, no branch named): food-auto 30 sustained lives 5/5 seeds, late meals/life >0.82 on 4/5, W=2 3/5; zero-auto 0 everywhere. Win-then-lose holds in 5/5 auto food seeds too.
+- Philosophy served: 4 (the control fails cleanly beside the arm; no branch claimed on a partial book). Thin: no verdict moved.

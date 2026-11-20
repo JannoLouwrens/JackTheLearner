@@ -526,3 +526,27 @@ find food. f5 is one hand rule that cannot tell food from other small things
 rule might pass. Finding food on his eye at this bar has so far needed
 memory, which a recurrent student could learn, but that is not tested here.
 Adult-taught ceiling only.
+
+## J15 — E2c, the two `auto` arms (ruling 57) — PARTIAL: rows only, NO branch read (2026-11-20 21:45 UTC)
+
+Both `auto` arms are complete at 5 of 5 seeds (801–805, 300k decisions,
+kernels a0–a2). They are written here beside their control now. The frozen
+fixed-α arms are 21 of 25: E-random_point s803/s804 and E-food/E-zero s804
+are still out, in kernel e2 (`jack-cpu-1795192704`, RUNNING at 21:40).
+`e2c-readings` refuses a partial book (`PARTIAL — no reading: 4 of 25
+missing`), so **no branch of ruling 57's table is named in this section**.
+The numbers come from `$PY -m experiments.pilot_b2 e2c-table`, 21:40.
+
+| arm | seeds | lives | sustained lives (seeds with any) | late meals/life per seed | seeds > K-lr0's 0.82 | late meals/life, arm | % lives fed early → late |
+|---|---|---|---|---|---|---|---|
+| E-food-auto | 801–805 | 367 | 30 (5/5) | 0.25, 2.28, 1.63, 2.86, 0.84 | 4/5 (s805 by 0.02) | 1.57 | 72 → 47 |
+| E-zero-auto (its control) | 801–805 | 499 | 0 (0/5) | 0.00, 0.17, 0.04, 0.00, 0.08 | 0/5 | 0.06 | 60 → 3 |
+
+W crossings (W=1/2/3): food-auto 5/3/2, zero-auto 0/0/0. So "eats" holds on the
+late-meals clause (4/5) but not on SUSTAINED at W=2 (3/5). That is the seam
+that `e2c-readings` prints rather than choosing. The control fails cleanly:
+the handed direction carries the eating. As in every food run, lives are won
+early (first capped life 18–38k) and lost late: the last capped life is at
+89–189k, and late meals/life is below early in 5/5. This is the same
+win-then-lose shape the fixed arms show. Ruling 57's table is read only when
+all 25 runs are in.
