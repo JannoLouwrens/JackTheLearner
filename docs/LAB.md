@@ -129,3 +129,16 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   128-ray eye under a real policy rather than random pushes. Not tried:
   the key's output as the brain's place input (a learned "where am I").
   END-FIT 2, 4. Philosophy 1, 2, 3, 4.
+
+- 11-20 · **Taste teaches the eye where food is** (Vision encoder, BY
+  DEFAULT; PLAN "Learning to eat" right column; `taste_eye.py`, rule first in
+  this commit). Bet: E2c showed a learner handed the direction to food eats
+  and one with only his eye does not — so grow the direction in him. A ring
+  network over his 128 rays, trained only on "I eat within 2 s" from random
+  held pushes (no direction ever given), points at food with its peak ray.
+  Kill: on 20 fresh worlds the peak hits in-sight food < .50 of looks, or
+  < .25 over its shuffled-label / untrained twins or over "the nearest
+  thing". Prior: weak labels localise at ImageNet scale (Oquab 2015; Zhou
+  2016, from memory); nothing at ~200 meals; LAB's linear want from 14 meals
+  died. **PENDING** — data kernel launched, not read.
+  END-FIT 1, 5. Philosophy 1, 2, 3, 4.
