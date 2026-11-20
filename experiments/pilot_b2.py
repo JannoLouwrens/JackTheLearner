@@ -725,13 +725,14 @@ def load_pilot(paths) -> tuple:
     return runs, src
 
 
-def pilot_table(paths, seeds) -> tuple:
-    """(markdown, missing run ids). Arms in PILOT_LEARNERS + PILOT_FLOORS order."""
+def pilot_table(paths, seeds, arms=None, cells=None) -> tuple:
+    """(markdown, missing run ids). Arms in PILOT_LEARNERS + PILOT_FLOORS order
+    unless `arms` + `cells` are given (E2c's table, `e2c_table`)."""
     from experiments import pilot_b_report as R
     if PILOT_T != R.T:
         raise RuntimeError("pilot_table: pilot_b_report scores at T_RUN != PILOT_T")
     runs, _ = load_pilot(paths)
-    reg = [R.rid(a, s) for a, s in pilot_cells(seeds)]
+    reg = [R.rid(a, s) for a, s in (cells if cells is not None else pilot_cells(seeds))]
     missing = [r for r in reg if r not in runs]
     extra = sorted(set(runs) - set(reg))
     out = [("**PARTIAL** -- " if missing else "") + f"{len(reg) - len(missing)} of "
@@ -740,7 +741,7 @@ def pilot_table(paths, seeds) -> tuple:
            "| arm | runs in | cut/crash | runs crossing W=1/2/3 | lives | sustained lives "
            "| meals/life early -> late | % fed early -> late | unfed life s early -> late |",
            "|---|---|---|---|---|---|---|---|---|"]
-    arms = PILOT_LEARNERS + PILOT_FLOORS
+    arms = tuple(arms) if arms is not None else PILOT_LEARNERS + PILOT_FLOORS
     for arm in arms:
         recs = [runs[R.rid(arm, s)] for s in seeds if R.rid(arm, s) in runs]
         if not recs:
@@ -764,6 +765,33 @@ def pilot_table(paths, seeds) -> tuple:
     out += ["", "Per run (pilot_b_report's columns):", "", R.RUN_HEAD]
     for arm in arms:
         out += R._arm_rows(runs, arm, seeds)
+    return "\n".join(out), missing
+
+
+def e2c_table(paths=None) -> tuple:
+    """E2c's 25 registered runs (3 fixed-alpha arms + ruling 57's 2 auto
+    twins, seeds 801..805), DESCRIPTIVE ONLY: pilot_table's columns unchanged
+    plus, per run, the decision marks (k) at which a life reached the cap, so
+    a skill learned and then lost is visible (J15, 11-20). No reading and no
+    branch of the rule's table is applied here; a missing run -> PARTIAL."""
+    from experiments import pilot_b_report as R
+    paths = sorted(paths if paths is not None else OUT.glob("e2c_*.json"))
+    arms = tuple(E2C_ARMS) + tuple(E2C_AUTO_ARMS)
+    md, missing = pilot_table(paths, E2C_SEEDS, arms=arms,
+                              cells=e2c_cells() + e2c_auto_cells())
+    runs, _ = load_pilot(paths)
+    out = [md, "", "Capped lives, at k decisions (cumulative at the life's end):", ""]
+    for a in arms:
+        for s_ in E2C_SEEDS:
+            r = runs.get(R.rid(a, s_))
+            if r is None:
+                continue
+            t, caps = 0, []
+            for life in r["lives"]:
+                t += life["decisions"]
+                if life["cause"] == "capped":
+                    caps.append(t // 1000)
+            out.append(f"- {R.rid(a, s_)}: {caps if caps else 'none'}")
     return "\n".join(out), missing
 
 
@@ -901,7 +929,7 @@ def _poisson_upper(k: int, conf: float = 0.95) -> float:
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel"])
+    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel", "e2c-table"])
     p.add_argument("--arm", default="noop-k1")
     p.add_argument("--seed", type=int, default=601)
     p.add_argument("--lives", type=int, default=CARD_LIVES)
@@ -931,6 +959,10 @@ def main(argv):
         pilot_kernel(a.name)
     elif a.cmd == "e2c-kernel":
         e2c_kernel(a.name)
+    elif a.cmd == "e2c-table":
+        md, missing = e2c_table()
+        print(md)
+        raise SystemExit(3 if missing else 0)
     elif a.cmd == "table":
         seeds = (PILOT_RULE or {}).get("seeds")
         if not seeds:
