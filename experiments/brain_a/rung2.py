@@ -38,8 +38,8 @@ which two elements are interpolated: a wrong rank misses by far more).
   # each planted wrong implementation must FAIL its test:
   taskset -c 0 nice -n 19 /data/venvs/jack-mlx/bin/python -I experiments/brain_a/rung2.py --planted
 
-STATE 11-20 14:30 (J16 (e)): tests written and committed while the module
-is a stub (step 1.4's "tests exist and fail"); the module fill is next.
+STATE 11-20 (J16 (e)): tests committed failing vs stubs (d5d840d1), then the
+module filled: RUNG 2 4/4 PASS eager and compiled (rung2_pass.log).
 """
 from __future__ import annotations
 

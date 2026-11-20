@@ -172,27 +172,57 @@ def binary_logp(logit, event):
 
 
 # ---------------------------------------------------------------- rung 2 (step 1.4)
-# STUBS until the fill: tests (`rung2.py`) are committed while these FAIL.
+# Filled 11-20 after `rung2.py` was committed failing against stubs (d5d840d1).
+# Ours beside theirs:
+#   percentile  MLX has none: flat sort + linear interpolation at rank
+#               q/100*(n-1), the rank and weight computed in Python float64
+#               (shapes are static) — equals jnp.percentile under jax.jit
+#               (the eager JAX call misses q=100 by one ulp of the rank;
+#               the agent is compiled, so the compiled value is the target).
+#   everything else line for line from the cited official lines.
+
 # agent.py L482-490
 def lambda_return(last, term, rew, val, boot, disc, lam):
-    raise NotImplementedError("rung 2: lambda_return")
+    rets = [boot[:, -1]]
+    live = (1 - term.astype(f32))[:, 1:] * disc
+    cont = (1 - last.astype(f32))[:, 1:] * lam
+    interm = rew[:, 1:] + (1 - cont) * live * boot[:, 1:]
+    for t in reversed(range(live.shape[1])):
+        rets.append(interm[:, t] + live[:, t] * cont[:, t] * rets[-1])
+    return mx.stack(list(reversed(rets))[:-1], 1)
 
 
-# utils.py L84-88: jnp.percentile, method 'linear' (MLX has none: sort + interpolate)
+# utils.py L84-88: jnp.percentile, method 'linear'
 def percentile(x, q):
-    raise NotImplementedError("rung 2: percentile")
+    s = mx.sort(x.astype(f32).reshape(-1))
+    n = s.shape[0]
+    rank = float(q) / 100.0 * (n - 1)
+    lo = int(math.floor(rank))
+    hi = min(lo + 1, n - 1)
+    w = rank - lo
+    if w == 0.0:
+        return s[lo]
+    return s[lo] * (1.0 - w) + s[hi] * w
 
 
 # utils.py L44-56, L90-91 (impl 'perc')
 def perc_update(lo, hi, corr, x, rate, perclo, perchi, debias):
-    raise NotImplementedError("rung 2: perc_update")
+    x = mx.stop_gradient(x.astype(f32))
+    lo = (1 - rate) * lo + rate * mx.stop_gradient(percentile(x, perclo))
+    hi = (1 - rate) * hi + rate * mx.stop_gradient(percentile(x, perchi))
+    if debias:
+        corr = (1 - rate) * corr + rate * 1.0
+    return lo, hi, corr
 
 
-# utils.py L58-73 (impl 'perc'): sg(lo * corr), sg(max(limit, (hi - lo) * corr))
+# utils.py L58-73 (impl 'perc')
 def perc_stats(lo, hi, corr, rate, limit, debias):
-    raise NotImplementedError("rung 2: perc_stats")
+    c = 1.0 / mx.maximum(rate, corr) if debias else 1.0
+    lo, hi = lo * c, hi * c
+    return mx.stop_gradient(lo), mx.stop_gradient(mx.maximum(limit, hi - lo))
 
 
 # utils.py L113-119
 def slow_update(src, dst, count, rate, every):
-    raise NotImplementedError("rung 2: slow_update")
+    mix = mx.where(count % every == 0, rate, 0.0)
+    return mix * src + (1 - mix) * dst, count + 1
