@@ -2893,3 +2893,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `5fecdbc9` `pilot_b2 e2c-table`: E2c's 25-run descriptive table + per-run capped-life marks, PARTIAL until 25/25; planted test PASS; J11's table byte-identical (cmp).
 - INBOX: ruling 57's table has no branch for "fixed food eats" (the likely outcome); corrected my 16:45 line — the W-mark does see learned-then-lost, only late meals/life misses it.
 - Philosophy served: 4 (the reading's hole named before the book is complete, not after) and 6 (the free session filled the minute it opened).
+
+## 2026-11-20 17:36–17:45 UTC · JACK (short slot) · J15 waiting; Next-up 1 (2) built
+- First act `kernels status`: all 5 Kaggle sessions RUNNING (J15 e1, a0, a1, e2, e3; their 5 watchers alive) → nothing to harvest, and J3 @hold8 / J10's next segments / J16 (d) cannot launch.
+- Took Next-up 1: `in_world kernel --per-sense` (`3d3d2962`) — the flat GPU job's body is byte-identical (sha pinned from the pre-edit file), the per-sense job differs only by `keys=` and fetches the file its run actually writes. test_brain_a_in_world 8/8 (run directly; no pytest in any venv).
+- Next free session order unchanged: J15's harvests first, then J3 @hold8, J10 s2 seg1 / s0 seg3 / s1 seg3; from Sat 00:00 J14 first.
+- Philosophy served: 5 (the per-sense GPU smoke is one command away when the free week opens, instead of a code edit in the GPU slot). Thin: no verdict moved.

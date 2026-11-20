@@ -92,7 +92,7 @@ state: 11-20 12:45 (1)+(2) DONE `8c551f77`: `E2C_AUTO_ARMS` (separate dict, kern
 state: ALL 25 LAUNCHED: e0 `jack-cpu-1795176676`, e1 `…176785` (12:11), a0 `…180195`, a1 `…180238`, a2 `…180505` (13:09–13:16), e2 `…192704` (16:38), e3 `…194484` (17:08, rc 0). HOME: a2 (16:02), e0 (16:59) = 6 of 25.
 state: 17:10 SEEN, no verdict: EVERY food run learned to survive, then lost it — E-food s801 capped lives at 32–86k, s802 at 23–118k (both cross W=2,3), E-food-auto s805 22–89k (W=1 only); late meals/life 1.00/3.47/0.84. Zero/random controls: 0 capped. Fixed 0.1 does not look like the wall.
 state: `5fecdbc9` `pilot_b2 e2c-table`: 25-run table (pilot_table's columns) + capped-life marks per run, PARTIAL until all home, rc 3; test PASS; J11's table byte-identical.
-next: harvest e1, a0, a1 (RUNNING 17:08), then e2, e3; at 25/25 `e2c-table` + the frozen readings → WORLD_CARD rows + the table's branch. INBOX 17:15: the table has no branch for "fixed food eats".
+next: harvest e1, a0, a1 (all 5 still RUNNING 17:40, watchers alive), then e2, e3; at 25/25 `e2c-table` + the frozen readings → WORLD_CARD rows + the table's branch. INBOX 17:15: the table has no branch for "fixed food eats".
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7, §18 item 4; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48, 52, 62
@@ -189,7 +189,8 @@ place key (11-20) → stage 3 "memory and sleep", no order now (ruling 63).
 smoke against that file's DONE (1)–(4). The frozen A1–A3 rows untouched.
    state: 11-20 12:40 BUILT `3a35ec8d`: `make(keys="per_sense")` (Dict of 5 Boxes: vision 32/audio 16/touch 8/proprio 12/needs 6, runner unedited) + `overrides(keys=)` + `smoke N --per-sense`; tests 7/7 (bit-exact round trip over 40 steps, a one-off split caught). A1–A3 untouched.
    state: box smoke 1,200 dec: rc 0, sheeprl Encoder/Decoder MLP keys = 5 senses, no first-key warning; (1) STEPS + (3) NO NaN yes (8 Loss/* finite, reward_loss 5.537 = flat smoke); (2) LEARNS undecidable at 1 logged step — same as the flat smoke; (4) 2.2 dec/s loaded box, no claim.
-   next: (2) needs the 20k GPU smoke with keys=per_sense — `kernel` takes no `keys` arg yet (one-line add) — when a session is free and the Director ranks it.
+   state: 11-20 17:40 `kernel --per-sense` BUILT `3d3d2962`: flat GPU job byte-identical (sha pinned), per-sense adds only `keys=` and fetches `inworld_s0_body_per_sense.json`; tests 8/8.
+   next: (2) when a session is free and the Director ranks it: `$PY -m experiments.brain_a.in_world kernel --per-sense` → `/data/jack-logs/brain_a/in_world/inworld_per_sense.json`, judge (2) LEARNS.
 2. `world_card`: a per-food eat count per life (today `BOUT_GAP` = 5 is
 shorter than regrowth, so `floor_bouts` = `floor_eats_all` and "meals from
 one food" cannot be read) — with a planted test; no old row re-scored.
