@@ -1,3 +1,11 @@
+> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
+> NO WORKER HAS FINISHED A RUN FOR 9 HOURS (checked 2026-11-20 02:43 UTC by the clerk, which needs no model). The worker log's last line: 2026-11-20T02:37:20+00:00 STOPPED at 100% weekly usage — all agents paused until the owner resumes
+> So everything below is the PREVIOUS run of the machine and is a RECORD,
+> not current state: its counts, its "current state" framing and any
+> claim about what has or has not moved describe an older world.
+> Stamped 2026-11-20T02:43:01+00:00 by scripts/lib_seal.sh. It disappears the next time the
+> machine completes a run and rewrites this file.
+
 # PROGRESS — for the owner, on a phone
 
 Written 2026-11-19 (Thursday) 06:55 UTC by the Director, daily sitting.
