@@ -1038,10 +1038,108 @@ def _poisson_upper(k: int, conf: float = 0.95) -> float:
     return float(chi2.ppf(conf, 2 * (k + 1)) / 2.0)
 
 
+# ---- J15 11-20 19:45: E2c's READING, transcribed before the book is complete
+# (18/25 home; e2, e3 = E-random_point + the rest of E-food/E-zero still out).
+# Rule E2c "Reading" + ruling 57 items 4-5 (forager_clone.py), clause by clause.
+# Seams in the frozen text, each printed rather than chosen:
+#  (s1) "reading SUSTAINED, or late meals/life > 0.82, on >= 4/5 seeds": does
+#       "on >= 4/5" bind SUSTAINED too? Both readings are computed (STRICT =
+#       sustained on >= 4/5, J11 = sustained on >= 3/5); if they differ on any
+#       arm the branch is printed under both and marked SEAM.
+#  (s2) "a zero-control arm that eats as well as its food arm": read as the
+#       zero arm passing the SAME eats test (the stricter for crediting the
+#       sense: any zero arm that eats withholds the credit).
+#  (s3) none of the three branches fires (fixed E-food eats) -> printed
+#       "NO BRANCH" (INBOX 17:15): the rule names no consequence; the
+#       Director rules it, this code does not.
+# VOID / INCOMPLETE as J11's readings: >= 2 crashed runs in an arm -> VOID;
+# >= 2 runs short of PILOT_MIN_DEC -> INCOMPLETE.
+E2C_NEED = 3            # Reading: "sustained on >= 3 of 5, control < 3"
+E2C_LATE_BAR = 0.82     # ruling 57 item 5: K-lr0's late meals/life (pilot 2)
+E2C_LATE_NEED = 4       # "... on >= 4/5 seeds"
+
+
+def e2c_branch(c: dict) -> dict:
+    """c = {arm: {"sus": n sustained at W=2, "late": n runs late meals/life >
+    0.82, "crash": n, "short": n}} for the five E2c arms -> the reading. Pure."""
+    out = {"arms": {}, "why": []}
+    for a, v in c.items():
+        if v["crash"] >= 2:
+            out["arms"][a] = "VOID — crashed"
+        elif v["short"] >= 2:
+            out["arms"][a] = "INCOMPLETE"
+    if out["arms"]:
+        out["verdict"] = "NO READING — " + ", ".join(f"{a} {r}" for a, r in out["arms"].items())
+        return out
+    sus_ok = c["E-food"]["sus"] >= E2C_NEED
+    ctl_ok = c["E-zero"]["sus"] < E2C_NEED
+    out["pass_clause"] = ("PASS" if sus_ok and ctl_ok else
+                          "VOID — control sustains" if sus_ok else "MISS")
+    out["random_point"] = c["E-random_point"]["sus"]          # reported only
+
+    def eats(v, need_sus):
+        return v["sus"] >= need_sus or v["late"] >= E2C_LATE_NEED
+
+    def branch(need_sus):
+        e = {a: eats(v, need_sus) for a, v in c.items()}
+        fired = []
+        if e["E-food-auto"] and not e["E-food"]:
+            fired.append("THE FIXED 0.1 WAS THE WALL — later B runs in his world use auto")
+        if not e["E-food-auto"] and not e["E-food"]:
+            fired.append("BOTH FOOD ARMS MISS — weak evidence at 300k; next question run length (forge round 1)")
+        for f, z in (("E-food", "E-zero"), ("E-food-auto", "E-zero-auto")):
+            if e[z]:
+                fired.append(f"{z} EATS — the handed sense carries nothing; {f}'s eating not credited to it")
+        return e, fired or ["NO BRANCH — the table names no consequence (INBOX 17:15); Director rules"]
+    e_j11, b_j11 = branch(E2C_NEED)
+    e_str, b_str = branch(E2C_LATE_NEED)
+    out["eats"] = e_j11
+    out["branch"] = b_j11
+    if e_j11 != e_str:
+        out["seam"] = {"strict_eats": e_str, "strict_branch": b_str}
+    out["verdict"] = "READ"
+    return out
+
+
+def e2c_readings(paths=None) -> tuple:
+    """The 25 registered runs -> (markdown, e2c_branch result). Raises on a
+    missing run: no reading on a partial book."""
+    from experiments import pilot_b_report as R
+    paths = sorted(paths if paths is not None else OUT.glob("e2c_*.json"))
+    runs, _ = load_pilot(paths)
+    cells = e2c_cells() + e2c_auto_cells()
+    miss = [R.rid(a, s) for a, s in cells if R.rid(a, s) not in runs]
+    if miss:
+        raise ValueError(f"no reading: {len(miss)} of {len(cells)} missing {miss}")
+    c, late_v = {}, {}
+    for a in tuple(E2C_ARMS) + tuple(E2C_AUTO_ARMS):
+        rs = [runs[R.rid(a, s)] for s in E2C_SEEDS]
+        lm = [(R.run_stats(r)["late"] or {}).get("meals", float("nan")) for r in rs]
+        late_v[a] = lm
+        c[a] = {"sus": sum(R.score(r)["sustained", PILOT_W].event for r in rs),
+                "late": sum(x > E2C_LATE_BAR for x in lm if x == x),
+                "crash": sum(_crash(r) for r in rs),
+                "short": sum(_decisions(r) < PILOT_MIN_DEC for r in rs)}
+    res = e2c_branch(c)
+    md = [f"**E2c reading (rule E2c + ruling 57 items 4-5, W = {PILOT_W}): {res['verdict']}**", ""]
+    for a, v in c.items():
+        md.append(f"- {a}: sustained {v['sus']}/5, late meals/life > {E2C_LATE_BAR} on {v['late']}/5 "
+                  f"({', '.join(f'{x:.2f}' for x in late_v[a])}), crashed {v['crash']}, short {v['short']}"
+                  + (f" -> EATS {res['eats'][a]}" if "eats" in res else ""))
+    if res["verdict"] == "READ":
+        md += ["", f"- Reading clause (E-food vs E-zero): **{res['pass_clause']}**; "
+               f"E-random_point sustained {res['random_point']}/5 (reported only)"]
+        md += [f"- Table branch: **{b}**" for b in res["branch"]]
+        if "seam" in res:
+            md.append("- SEAM (s1): under STRICT (sustained on >= 4/5) -> "
+                      + "; ".join(res["seam"]["strict_branch"]))
+    return "\n".join(md), res
+
+
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel", "e2c-table"])
+    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel", "e2c-table", "e2c-readings"])
     p.add_argument("--arm", default="noop-k1")
     p.add_argument("--seed", type=int, default=601)
     p.add_argument("--lives", type=int, default=CARD_LIVES)
@@ -1075,6 +1173,12 @@ def main(argv):
         md, missing = e2c_table()
         print(md)
         raise SystemExit(3 if missing else 0)
+    elif a.cmd == "e2c-readings":
+        try:
+            md, _ = e2c_readings()
+        except ValueError as e:
+            raise SystemExit(f"e2c-readings: PARTIAL — {e}")
+        print(md)
     elif a.cmd == "table":
         seeds = (PILOT_RULE or {}).get("seeds")
         if not seeds:
