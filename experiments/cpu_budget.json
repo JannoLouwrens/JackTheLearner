@@ -1599,20 +1599,24 @@
         "W0.PL": 92.36,
         "detached:lane-guard-seat1": 0.09,
         "detached:lane-guard-seat2": 0.08,
-        "detached:launch_a0.log": 231.51,
-        "detached:launch_a1.log": 231.38,
+        "detached:launch_a0.log": 402.99,
+        "detached:launch_a1.log": 329.56,
         "detached:launch_a2.log": 634.98,
         "detached:launch_diag59.log": 249.74,
-        "detached:launch_e0.log": 296.78,
-        "detached:launch_e1.log": 297.62,
+        "detached:launch_e0.log": 830.75,
+        "detached:launch_e1.log": 368.74,
+        "detached:launch_e2.log": 109.63,
+        "detached:launch_e3.log": 77.73,
+        "detached:launch_hold8.log": 12.77,
         "detached:launch_p9.log": 630.88,
         "detached:launch_s0_seg2.log": 519.35,
         "detached:launch_s1_seg2.log": 566.45,
         "detached:launch_s2_seg0.log": 438.63,
+        "detached:launch_s2_seg1.log": 11.3,
         "detached:real.log": 0.03,
         "detached:tpu_probe.log": 169.08
       },
-      "used_s": 7653.33
+      "used_s": 8739.51
     }
   },
   "last_child_s": {

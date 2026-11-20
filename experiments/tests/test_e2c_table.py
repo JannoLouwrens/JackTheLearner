@@ -10,6 +10,10 @@ Known answers, each with a control that must fail:
   unregistered run id is reported as ignored, never scored.
 - pilot_table's default path (J11's forty runs) is unchanged by the new
   arms/cells arguments: same registered ids as before the edit.
+- (11-20 18:30) the critic section: a run that never eats with -actor_loss
+  2,000 at 300k reads Q 300k 2000 and a ratio > 4 over SUPPORTED (= 100*d_max
+  + 0.1*8ln2/(1-0.995) = 151.7 + 110.9 = 262.6); control: a run eating 1 meal
+  per 100 decisions (SUPPORTED 200 + 262.6) with Q 300 reads ratio < 1.
 """
 import json
 import tempfile
@@ -65,7 +69,33 @@ def test_pilot_default_unchanged():
     assert md.count("| 0 of ") == len(P.PILOT_LEARNERS + P.PILOT_FLOORS)
 
 
+def _qrec(arm, seed, q300, meal_every):
+    lives = [_life(9000, "capped", 9000 // meal_every if meal_every else 0)
+             for _ in range(300_000 // 9000)]
+    lives.append(_life(300_000 - 9000 * len(lives), "unfinished", 0))
+    trace = [{"t": t, "actor_loss": -q300 * t / 300_000, "ent_coef": 0.1}
+             for t in range(5000, 300_001, 5000)]
+    return dict(_rec(arm, seed, lives), trace=trace)
+
+
+def test_critic_section():
+    with tempfile.TemporaryDirectory() as t:
+        p = Path(t) / "e2c_q0.json"
+        p.write_text(json.dumps({"cells": {
+            "E-zero_s801": _qrec("E-zero", 801, 2000.0, 0),
+            "E-food_s801": _qrec("E-food", 801, 300.0, 100)}}))
+        md, _ = P.e2c_table([p])
+    rows = {l.split(" | ")[0][2:]: l for l in md.splitlines()
+            if l.startswith("| E-") and l.count("|") == 10}
+    z = rows["E-zero_s801"].strip("| ").split(" | ")
+    assert z[4] == "2000" and z[7] == "263" and float(z[8]) > 4, z
+    f = rows["E-food_s801"].strip("| ").split(" | ")
+    assert f[4] == "300" and float(f[8]) < 1, f      # control: supported
+    assert f[1] == "50", f                           # Q at 50k = 300*50/300
+
+
 def main():
+    test_critic_section()
     test_planted_book()
     test_pilot_default_unchanged()
     print("test_e2c_table PASS")

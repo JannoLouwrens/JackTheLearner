@@ -90,9 +90,9 @@ serves: M3 · PLAN stage 1 "proof that the task can be learned with his senses" 
 **done when:** E2c's five arm rows (3 fixed, 2 auto) are in `WORLD_CARD.md`, each beside its control, and the table's branch is named.
 state: 11-20 12:45 (1)+(2) DONE `8c551f77`: `E2C_AUTO_ARMS` (separate dict, kernels a0 4 / a1 4 / a2 2), `ent_coef` knob in `make_b`/`run_b` (default 0.1 unchanged); `test_e2c_auto` PASS under `/data/venvs/jack-std` (sbx lives there): e2c_groups sha pinned pre-edit, fixed E-food 2k decisions identical, auto α 0.76→0.57 learned, lives differ. Rule AMENDED 11-20 in `forager_clone.py` (items 4–5, the table).
 state: ALL 25 LAUNCHED: e0 `jack-cpu-1795176676`, e1 `…176785` (12:11), a0 `…180195`, a1 `…180238`, a2 `…180505` (13:09–13:16), e2 `…192704` (16:38), e3 `…194484` (17:08, rc 0). HOME: a2 (16:02), e0 (16:59) = 6 of 25.
-state: 17:10 SEEN, no verdict: EVERY food run learned to survive, then lost it — E-food s801 capped lives at 32–86k, s802 at 23–118k (both cross W=2,3), E-food-auto s805 22–89k (W=1 only); late meals/life 1.00/3.47/0.84. Zero/random controls: 0 capped. Fixed 0.1 does not look like the wall.
+state: 18:30 14/25 home, no verdict: 6/6 food runs learned whole lives (capped 18–118k) then lost them; controls 1 capped life in 8; auto ≈ fixed. CRITIC OVERESTIMATES 14/14: −actor_loss climbs all run, controls too, to 1.2–8.3× what the run's eating supports; `e2c-table` prints it (planted test PASS). Cause of the loss NOT shown.
 state: `5fecdbc9` `pilot_b2 e2c-table`: 25-run table (pilot_table's columns) + capped-life marks per run, PARTIAL until all home, rc 3; test PASS; J11's table byte-identical.
-next: harvest e1, a0, a1 (all 5 still RUNNING 17:40, watchers alive), then e2, e3; at 25/25 `e2c-table` + the frozen readings → WORLD_CARD rows + the table's branch. INBOX 17:15: the table has no branch for "fixed food eats".
+next: harvest a1, e2, e3 (RUNNING 18:08, watchers alive) → at 25/25 `e2c-table` + the frozen readings → WORLD_CARD rows + the table's branch; the critic section goes beside them as a named finding (INBOX 18:35).
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7, §18 item 4; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48, 52, 62
@@ -137,7 +137,8 @@ state: 11-19 (4) COMPLETE: `wm-dyn`, `dreamer-xs`, `wm-latent+ring` all FAIL bot
 state: 11-19 17:15 (5) `wm-latent@repair` → Row J3-5: **row 3 PASS** 4/5 (first in-house row reproduced), **row 1 FAIL** 0/5, no learning.
 state: 11-20 12:20 (5′) DIAG HARVESTED (`b4aa10f3`, KNOWN_ANSWERS J3-5 addendum): **HELD NOISE kills row 1.** `@hold-only` 0/5 learn (−1199…−1265 ≈ control); `@gamma-only` 5/5 (−284…−759); `@plain59` 5/5 (−354…−521, not VOID). γ/value-scale suspect REFUTED.
 state: 11-20 14:25 (6) RULE WRITTEN before any cell `5ec9879e`: `wm-latent@hold8` in `inhouse_rows.py` (hold 8, γ 0.99, rows 1+3, seeds 10–14, same verdict, no extension); `test_hold8` PASS (file 6/6). NOT launched: Kaggle 5/5 (J15 e0, e1, a0–a2); J15's e2/e3 take the next free sessions first.
-next: after e2/e3 are in, `scripts/launch_detached.sh /data/jack-logs/j3_inhouse/launch_hold8.log $PY -m experiments.inhouse_rows kernel wm-latent@hold8`; harvest → KNOWN_ANSWERS row pair → PASS both = other arms, FAIL either = J3 closes.
+state: 11-20 18:08 `@hold8` LAUNCHED `jack-cpu-1795198133` (`launch_hold8.log`, push rc 0, watcher alive).
+next: harvest → KNOWN_ANSWERS row pair → PASS both = other arms get `@hold8`, FAIL either = J3 closes.
 
 ### J10 — The walking layer: reproduce a published walk (owner 11-15)
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §4; ruling 45
@@ -153,7 +154,8 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 state: (2′) RULE FROZEN `experiments/humanoid_sac_row.py`: Zoo entry, seeds 0–2, PASS R ≥ 5,950 AND ≥ 12 m/1,000 steps on ≥ 2/3, 1M median in [3,784, 5,866], late-start control < 500 else VOID; resume = 500k segments, model + replay (float64, ~6.1 GB) carried; box resume_check OK (`23e375be`).
 state: 11-20 seg 1 HOME both (the segment mount works): **1M check** s0 R 4,065 M 3.47 (3/10 eps fell), s1 R 5,294 M 5.08 (0/10 fell) — both inside [3,784, 5,866]; median waits for s2. M ≪ 12 at 1M: the 2M PASS needs +7 m/1k steps.
 state: 11-20 09:40 LAUNCHED `kernel 2 0` `jack-cpu-1795167564` (`launch_s2_seg0.log`) and `kernel 0 2` `…167600` (`launch_s0_seg2.log`), push rc 0. `kernel 1 2` refused twice by the load guard, then LAUNCHED 09:43 `…167808` (`launch_s1_seg2.log`, rc 0) at load 5.97.
-next: harvest s2 seg0 / s0 seg2; then s2 seg1, seg3s; 2M eval decides.
+state: 11-20 18:09 s2 seg0 (500k), s0 seg2, s1 seg2 (1.5M) all HOME (hit_target). s2 seg1 LAUNCHED `jack-cpu-1795198143` (`launch_s2_seg1.log`, rc 0).
+next: as sessions free: s0 seg3, s1 seg3 (to 2M), then s2 seg2–3; 2M eval decides; s2's 1M check gives the median.
 
 ### J16 — Brain A on the Mac: the wheel check, then rung 2
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` (its step table, the rows after 1.3); `experiments/brain_a/README.md`
@@ -287,6 +289,8 @@ six PASSes gated on a seed average that admits a failing seed. (9)
 - **RESEARCH 16:30 (§20 filed — M8, "a living Jack"; rule 3, no order's prior was missing):** the record has NO small agent still improving at the end of an hours-long no-reset life (Jelly Bean World: learns ~1M steps, then collects nothing; PPO on a stationary Ant collapses 3–20M), and with several needs the moving food is the one dropped. To change: (1) brain A's in-world checkpoint carries no buffer (`in_world.py:30`; sheeprl default saves it by path, same machine) — the Mac hand-over needs `buffer.checkpoint=True` + `checkpoint.memmap_buffer=copy`, or A resumes empty; (2) M8's spec, when registered: geometric mean over needs, a stop-resume twin, a mid-life push, late ≥ early; (3) a box-minutes resume twin on row 1b is the one cheap open test. `PUBLISHED_PRIORS.md` is 118 KB: sections kept ≤ 6 KB (ruling 55), the 70 KB file cap not enforced by me (S11 b).
 - **JACK 16:45 (J15, learned then lost):** E-food-auto s805 learned to eat and survive (4 capped lives, 13k–89k) then LOST it (≈0 meals/life after 105k). The frozen E2c readings look at the run's END — a learned-then-lost skill reads as "never ate". Not a change to the frozen rule; a question for F3/the forge (stability, not only run length).
 - **JACK 17:15 (J15, E2c's table has a hole, rule it before 25/25):** fixed E-food crosses W=2 on 2/2 seeds home (s801, s802) and is on track to read SUSTAINED; ruling 57's table has branches only for "auto eats, fixed does not", "both miss", "zero eats like food" — none for "fixed eats" (with or without auto). Correction to 16:45: the W-mark reads crossings ANYWHERE in the run, so learned-then-lost IS seen by SUSTAINED; only "late meals/life" misses it (all 3 food runs lost it by ~120k). `pilot_b2 e2c-table` prints the capped marks.
+
+- **JACK 18:35 (J15, the critic overestimates — a lead for the forge/§19, no rule touched):** in 14/14 E2c runs home, SAC's own value estimate (−actor_loss, min of twin critics) climbs all run, never-eating controls included, to 1.2–8.3× the ceiling the run's eating supports (fixed α: 1.7–8.3×; E-random_point s801 Q 2,174 vs 263). Record to read: van Hasselt 2018 'deadly triad' (arXiv 1812.02648), reward size 100/meal with γ 0.995. Whether this causes the learned-then-lost skill is NOT shown — a twin with critic-side fixes would be a forge candidate. Also (machine): `pilot_b.trace` stores SB3's `train/std` under the trace's own `std` key, so every window after the first loses the per-dim action std (SBX `get_std()` is a stub = 0.0).
 
 ## DONE (kept one day)
 

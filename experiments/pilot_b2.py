@@ -792,7 +792,58 @@ def e2c_table(paths=None) -> tuple:
                 if life["cause"] == "capped":
                     caps.append(t // 1000)
             out.append(f"- {R.rid(a, s_)}: {caps if caps else 'none'}")
+    out += ["", *E2C_Q_HEAD]
+    for a in arms:
+        for s_ in E2C_SEEDS:
+            r = runs.get(R.rid(a, s_))
+            if r is not None:
+                out.append(e2c_q_row(R.rid(a, s_), r))
     return "\n".join(out), missing
+
+
+# ---- J15 11-20 18:30: the critic's value estimate beside what the run's own
+# eating can support. DESCRIPTIVE, no reading, the frozen rule is untouched.
+# SBX SAC's actor loss is mean(alpha*log pi - min(Q1, Q2)), so -actor_loss =
+# min-critic Q + alpha*H at the policy's own actions. SUPPORTED is a ceiling on
+# the true soft value of a policy that eats at the run's last-50k rate r
+# (meals per decision), in dr100-eat (eat_pay 100, jack_env):
+#   meals    100 * r / (1 - gamma)          (rate-averaged, not a hard bound)
+#   drive    100 * d_max: sum_t g^t (d_t - d_{t+1}) <= d_0 <= d_max, d >= 0
+#   entropy  alpha_max * 8 ln 2 / (1 - gamma): a squashed 8-dim action lives
+#            in [-1, 1]^8, whose largest differential entropy is 8 ln 2
+#   death    charged negative -> omitted (the ceiling only gets looser)
+# A Q many times SUPPORTED, in a run that does not eat, is a critic that
+# overestimates; it says nothing yet about WHY the eating was lost.
+E2C_Q_AT = (50_000, 100_000, 200_000, 300_000)
+E2C_Q_HEAD = (
+    "Critic's value estimate (-actor_loss, min of twin critics, at k decisions) "
+    "beside SUPPORTED = 100·r/(1-γ) + 100·d_max + α_max·8ln2/(1-γ), r = meals per "
+    "decision over the last 50k (see e2c_q_row). DESCRIPTIVE, no reading:",
+    "",
+    "| run | Q 50k | Q 100k | Q 200k | Q 300k | meals/1k last 50k | α max | SUPPORTED | Q 300k ÷ SUPPORTED |",
+    "|---|---|---|---|---|---|---|---|---|")
+
+
+def e2c_q_row(rid: str, rec: dict) -> str:
+    import math
+    from experiments import pilot_b_report as R
+    from experiments.drives import drive
+    from experiments.pilot_b import GAMMA as gamma   # E2c arms = arm K: gamma None -> make_b default
+    d_max = max(drive(e, i, w) for e in (0.0, 1.0) for i in (0.0, 1.0) for w in (0.0, 1.0))
+    trace = [w for w in rec.get("trace", []) if "actor_loss" in w]
+    q = {}
+    for k in E2C_Q_AT:
+        before = [w for w in trace if w["t"] <= k]
+        q[k] = -before[-1]["actor_loss"] if before else None
+    alpha = max([w["ent_coef"] for w in trace if "ent_coef" in w] or [float("nan")])
+    rate = R.run_stats(rec)["meals_per_1k_last50k"] / 1000.0
+    sup = (100.0 * rate / (1 - gamma) + 100.0 * d_max
+           + alpha * 8 * math.log(2) / (1 - gamma))
+    q300 = q[E2C_Q_AT[-1]]
+    ratio = (q300 / sup) if (q300 is not None and sup == sup and sup > 0) else None
+    f = lambda v, nd=0: "–" if v is None or v != v else f"{v:.{nd}f}"
+    return (f"| {rid} | " + " | ".join(f(q[k]) for k in E2C_Q_AT)
+            + f" | {f(1000 * rate, 3)} | {f(alpha, 3)} | {f(sup)} | {f(ratio, 1)} |")
 
 
 # ---- J11 item 4: THE RULE's readings, transcribed (11-19 05:20, before any

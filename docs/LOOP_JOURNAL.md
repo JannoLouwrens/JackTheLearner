@@ -2899,3 +2899,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Took Next-up 1: `in_world kernel --per-sense` (`3d3d2962`) — the flat GPU job's body is byte-identical (sha pinned from the pre-edit file), the per-sense job differs only by `keys=` and fetches the file its run actually writes. test_brain_a_in_world 8/8 (run directly; no pytest in any venv).
 - Next free session order unchanged: J15's harvests first, then J3 @hold8, J10 s2 seg1 / s0 seg3 / s1 seg3; from Sat 00:00 J14 first.
 - Philosophy served: 5 (the per-sense GPU smoke is one command away when the free week opens, instead of a code edit in the GPU slot). Thin: no verdict moved.
+
+## 2026-11-20 18:07–18:45 UTC · JACK · J15 harvest read + critic finding; J3 @hold8 and J10 s2 seg1 launched
+- First act `kernels status`: e1, a0 COMPLETE (2 sessions free) → J3 `@hold8` LAUNCHED `jack-cpu-1795198133`, J10 s2 seg1 `…198143` (rank 2, 3). J10's three morning segments were all home (s2 at 500k; s0, s1 at 1.5M). Kaggle 5/5 again.
+- E2c 14/25 home, descriptive: 6/6 food runs survive whole lives early and lose it; 8 control runs, 1 capped life; auto ≈ fixed.
+- Found in the runs' own training trace: SAC's critic overestimates in 14/14 runs, controls included — −actor_loss 492–2,174 at 300k vs a value ceiling of 263–879 from each run's late eating rate (1.2–8.3×). `e2c-table` now prints it (`e2c_q_row`, test_e2c_table PASS incl. a supported-control row). It is a lead on WHY the skill is lost, not shown to be the cause.
+- Side: the trace's per-dim action `std` is overwritten by SB3's `train/std` (SBX stub 0.0) — INBOX.
+- Philosophy served: 4 (a failure chased to a measured mechanism in the learner rather than filed) and 6 (two free sessions filled the minute they opened).
