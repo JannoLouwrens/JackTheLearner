@@ -762,3 +762,10 @@ Long form: `/data/jack-research/research_notes/senses_together/` (parts A, B, C)
 - When a learner passes a held-noise random walk on foraging: nobody.
 
 **Not verified.** FoodCollector's learning curve, area count, random score; Duan's column names; EVAAA's levels (summariser); Yoshida 2024; pink noise; Safety Gym; auto-α collapse on sparse continuous tasks (discrete only: TES-SAC [2112.02852](https://arxiv.org/abs/2112.02852)); SBX's `auto` start value.
+
+
+## 20. A living Jack: every need at once, a life of hours with no reset, stopped and resumed (2026-11-20; serves M8, and M7's first gate; picked by rule 3 — M8 had no section)
+
+Long form: `/data/jack-research/research_notes/m8_living/` (parts A many needs, B long lives, C resume and integration). SKELETON 16:15 UTC — three sub-agents are reading; the parts land below.
+
+**Question.** What is on record about ONE from-scratch agent that (A) serves several needs at once, (B) lives and learns for hours without a reset, (C) is stopped, moved and resumed, with everything running together — and what should a multi-hour integration test measure?
