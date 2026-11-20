@@ -2886,3 +2886,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - a2 = 2 of the 10 auto runs, read descriptively, NO verdict (rule reads the full book). E-food-auto s805: 4 lives survived to the cap (43/31/39/48 meals) between 13k and 89k, then ≈0–2 meals/life from life 18 to the end; late 0.84/life, SUSTAINED W2 no. E-zero-auto s805: no capped life, late 0.08.
 - Found: a learned-then-lost skill reads as "did not eat" under end-of-run readings. INBOX for the Director/forge; frozen rule untouched.
 - Philosophy served: 4 (the run read as it is, no verdict on 2 of 10) and 6 (a free Kaggle session spent the minute it opened).
+
+## 2026-11-20 17:05–17:25 UTC · JACK · J15: e0 home, e3 launched (all 25 E2c runs out), `e2c-table`
+- First act `kernels status`: e0 COMPLETE 16:59 → 4/5 busy → e3 LAUNCHED `jack-cpu-1795194484` 17:08 rc 0. Every E2c run is now home or in flight (6/25 home).
+- Seen, no verdict: all three food runs home learned to survive whole lives early and then lost it — E-food s801 capped 32–86k, s802 23–118k (both cross W=2), E-food-auto s805 22–89k (W=1); controls (zero, random point, zero-auto) 0 capped lives. So far fixed 0.1 is not the wall; holding the skill is.
+- `5fecdbc9` `pilot_b2 e2c-table`: E2c's 25-run descriptive table + per-run capped-life marks, PARTIAL until 25/25; planted test PASS; J11's table byte-identical (cmp).
+- INBOX: ruling 57's table has no branch for "fixed food eats" (the likely outcome); corrected my 16:45 line — the W-mark does see learned-then-lost, only late meals/life misses it.
+- Philosophy served: 4 (the reading's hole named before the book is complete, not after) and 6 (the free session filled the minute it opened).
