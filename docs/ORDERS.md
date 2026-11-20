@@ -181,6 +181,9 @@ place key (11-20) → stage 3 "memory and sleep", no order now (ruling 63).
 1. Brain A fed one key per sense (§18 item 2): the `keys=per_sense` path in
 `brain_a/in_world.py`'s `make` (Dict space, one decoder head per key) +
 smoke against that file's DONE (1)–(4). The frozen A1–A3 rows untouched.
+   state: 11-20 12:40 BUILT `3a35ec8d`: `make(keys="per_sense")` (Dict of 5 Boxes: vision 32/audio 16/touch 8/proprio 12/needs 6, runner unedited) + `overrides(keys=)` + `smoke N --per-sense`; tests 7/7 (bit-exact round trip over 40 steps, a one-off split caught). A1–A3 untouched.
+   state: box smoke 1,200 dec: rc 0, sheeprl Encoder/Decoder MLP keys = 5 senses, no first-key warning; (1) STEPS + (3) NO NaN yes (8 Loss/* finite, reward_loss 5.537 = flat smoke); (2) LEARNS undecidable at 1 logged step — same as the flat smoke; (4) 2.2 dec/s loaded box, no claim.
+   next: (2) needs the 20k GPU smoke with keys=per_sense — `kernel` takes no `keys` arg yet (one-line add) — when a session is free and the Director ranks it.
 2. `world_card`: a per-food eat count per life (today `BOUT_GAP` = 5 is
 shorter than regrowth, so `floor_bouts` = `floor_eats_all` and "meals from
 one food" cannot be read) — with a planted test; no old row re-scored.
