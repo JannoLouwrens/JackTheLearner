@@ -550,3 +550,50 @@ early (first capped life 18–38k) and lost late: the last capped life is at
 89–189k, and late meals/life is below early in 5/5. This is the same
 win-then-lose shape the fixed arms show. Ruling 57's table is read only when
 all 25 runs are in.
+
+## J15 — E2c, the full book: 25 of 25, READ (2026-11-20 22:15 UTC)
+
+All five arms are home: seeds 801–805, 300k decisions, kernels e0–e3 and a0–a2. The
+last kernel is e2 (`jack-cpu-1795192704`, harvested 21:55). The numbers come from
+`$PY -m experiments.pilot_b2 e2c-readings` and `e2c-table`, run at 22:10. No run
+crashed and none was short. The two readings, J11 (sustained on ≥ 3/5) and STRICT
+(≥ 4/5), give the same verdict on every arm, so `e2c-readings` prints no seam.
+
+| arm | role | lives | sustained lives (seeds W=2) | late meals/life per seed | seeds > 0.82 | late meals/life, arm | EATS |
+|---|---|---|---|---|---|---|---|
+| E-food (fixed α 0.1) | arm | 376 | 33 (4/5) | 1.00, 3.47, 0.57, 0.40, 0.58 | 2/5 | 1.20 | yes (sustained) |
+| E-zero (fixed) | its PRIMARY control | 500 | 1 (0/5) | 0.32, 0.00, 0.16, 0.04, 0.33 | 0/5 | 0.17 | no |
+| E-random_point (fixed) | reported only | 496 | 0 (0/5) | 0.04, 0.50, 0.17, 0.16, 0.08 | 0/5 | 0.19 | no |
+| E-food-auto | arm | 367 | 30 (3/5) | 0.25, 2.28, 1.63, 2.86, 0.84 | 4/5 | 1.57 | yes (late meals) |
+| E-zero-auto | its control | 499 | 0 (0/5) | 0.00, 0.17, 0.04, 0.00, 0.08 | 0/5 | 0.06 | no |
+
+**Rule E2c's own reading clause: PASS.** E-food sustains on 4/5 seeds and its
+control E-zero on 0/5, which is below 3. By the rule's frozen text this means "the
+task is learnable by B when the direction is given → a miss of B0 in J11 is the
+eye". Pilot 2 had no learner eat. Handed the direction to food, the same SAC
+learner wins capped lives on 5/5 seeds in both α settings. Its controls, given the
+same inputs carrying nothing, win 1 such life in 10 runs between them.
+
+**Ruling 57's table: NO BRANCH.** Both food arms eat, and neither zero control eats.
+None of the three written branches fires: "auto eats while fixed does not", "both
+miss", and "a zero arm eats". So the fixed 0.1 is **not shown to be the wall**.
+Fixed α eats too: 33 sustained lives against auto's 30. Auto's late meals/life are
+higher (1.57 vs 1.20; 4/5 vs 2/5 seeds over 0.82), but no rule reads that
+difference, and at 5 seeds it is not a finding. The table names no consequence for
+this outcome, so the Director rules it (INBOX).
+
+**Named findings beside the rows (descriptive, no reading):**
+- *Win-then-lose, every food run, both settings.* At arm level, early meals/life
+  far exceeds late meals/life: fixed 9.84 → 1.20, auto 7.72 → 1.57. Per run, meals/life
+  over the first 20 lives against the last 20 falls in 10/10 food runs: fixed
+  9.9–26.6 → 0.4–3.0, auto 8.9–23.9 → 0.3–3.4. In fixed runs the last capped life
+  comes at 81–118k; in auto runs it comes at 89–189k. "Learnable" here means *learned, then lost*. The loss is the
+  next question. It is not a capability.
+- *Entropy.* The fixed 0.1 does not hold the policy wide. H falls from 5.4 to ≤ 0 by
+  15–35k and reaches −10…−18 at 300k in every fixed run. Auto holds H ≈ −8 (its
+  target) and α climbs from 0.07–0.10 to 0.13–0.65. §19 cause 1's signature (H stays
+  ≈ 5) is contradicted in 15/15 fixed runs.
+- *The critic overestimates everywhere.* At 300k, Q is 1.2–8.3× the SUPPORTED bound.
+  Fixed runs sit at 1.7–8.3× and auto runs are tighter at 1.2–2.2×. Controls that
+  never eat climb as high as food runs, so the overestimate is generic. It is not
+  shown to be the loss's mechanism.

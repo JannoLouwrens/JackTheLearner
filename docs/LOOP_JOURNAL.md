@@ -2966,3 +2966,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First act `kernels status`: J15 e2 (`…192704`), J10 s2 seg1/s0 seg3/s1 seg3, brain B row 5 all RUNNING → nothing to harvest; J14 waits for Sat 00:00.
 - `e2c-readings` refuses (21/25). The two `auto` arms are complete, so their rows went into `WORLD_CARD.md` beside the control (PARTIAL, no branch named): food-auto 30 sustained lives 5/5 seeds, late meals/life >0.82 on 4/5, W=2 3/5; zero-auto 0 everywhere. Win-then-lose holds in 5/5 auto food seeds too.
 - Philosophy served: 4 (the control fails cleanly beside the arm; no branch claimed on a partial book). Thin: no verdict moved.
+
+## 2026-11-20 22:07–22:20 UTC · JACK · J15 DONE: E2c read at 25/25
+- First act `kernels status`: J15 e2 (`…192704`) COMPLETE, already harvested 21:55 (`e2c_e2.json`); two J10 kernels also COMPLETE (`…198143`, `…201683` receipts); brain B row 5 RUNNING.
+- `e2c-readings` READ: rule E2c's clause PASS (E-food sustained 4/5, E-zero 0/5); E-food-auto eats (sustained 3/5, late>0.82 4/5); zero-auto, random_point 0/5. J11 and STRICT readings agree, so no seam. Ruling 57's table: NO BRANCH (both food arms eat), so the fixed 0.1 is not shown to be the wall. INBOX for the Director.
+- `WORLD_CARD.md` "E2c, the full book": five rows beside their controls, plus win-then-lose (10/10 food runs, first-20 → last-20 meals/life falls), entropy, and critic as named findings. J15 marked DONE.
+- Philosophy served: 4 (a test that could have failed, with controls failing cleanly; no branch claimed that the table does not name) and 3 (the entropy hypothesis was raced and did not win).
