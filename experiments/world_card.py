@@ -99,7 +99,9 @@ Per life   as J1, plus floor_eats_all = eat events on EVERY floor food the
            dial made (env.floor_foods), and floor_bouts = those eat events
            not preceded by an eat of the same food within the 5 previous
            decisions (1 s) — a body resting on a food at d=0 eats every
-           decision (J2 item 1 caveat); a bout is one visit.
+           decision (J2 item 1 caveat); a bout is one visit. Added 11-20,
+           reported only (no rule reads it): floor_eats_by_food and
+           max_eats_one_food (meals from ONE food in a life).
 Counted    "eats >= 1 meal" = floor_bouts >= 1 in that life.
            "a still dies"   = <= 1 of a's 200 lives reaches the cap (§8's
            floor-arm rule: <= 1 success in total).
@@ -139,6 +141,38 @@ F2_SEEDS = tuple(range(221, 241))   # fresh: never run by any row before f2's re
 ENTRY_DS = (0.75, 0.5, 0.25, 0.0)   # J2 item 5 grid; d = 1 is J1's rows
 ENTRY_ROWS = tuple(f"{b}_d{int(round(100 * d)):02d}" for d in ENTRY_DS for b in ("a", "d8"))
 BOUT_GAP = 5                        # decisions: an eat within this of the last eat of the same food is the same visit
+
+
+class FoodTally:
+    """Per-life floor-food counts from the env's cumulative `ate_total`.
+    floor_eats_all / floor_bouts exactly as the J2 rule (BOUT_GAP); added
+    11-20 (ORDERS Next-up 2): floor_eats_by_food = eat events per floor food
+    in this life, and max_eats_one_food = the most meals taken from ONE food.
+    Needed because regrowth is longer than BOUT_GAP, so bouts == eats_all
+    and 'meals from one food' could not be read from the old two fields."""
+
+    def __init__(self, foods, ate_total):
+        self.foods = tuple(foods)
+        self.prev = {k: ate_total.get(k, 0) for k in self.foods}
+        self.last = {k: -10 ** 9 for k in self.foods}
+        self.by_food = {k: 0 for k in self.foods}
+        self.eats_all = self.bouts = 0
+
+    def step(self, n, ate_total):
+        for k in self.foods:
+            c = ate_total.get(k, 0)
+            if c > self.prev[k]:
+                self.eats_all += c - self.prev[k]
+                self.by_food[k] += c - self.prev[k]
+                if n - self.last[k] > BOUT_GAP:
+                    self.bouts += 1
+                self.last[k] = n
+            self.prev[k] = c
+
+    def row(self) -> dict:
+        return {"floor_eats_all": int(self.eats_all), "floor_bouts": int(self.bouts),
+                "floor_eats_by_food": {str(k): int(v) for k, v in self.by_food.items()},
+                "max_eats_one_food": int(max(self.by_food.values(), default=0))}
 
 
 def split_row(row: str):
@@ -542,22 +576,12 @@ def run_seed(row: str, seed: int, lives: int = LIVES,
         ate0 = dict(info["ate_total"])
         rew, n, t0 = 0.0, 0, env.w.sim_seconds
         cause = "censored"
-        foods = tuple(env.floor_foods)
-        prev = {k: info["ate_total"].get(k, 0) for k in foods}
-        last = {k: -10 ** 9 for k in foods}
-        eats_all = bouts = 0
+        tally = FoodTally(env.floor_foods, info["ate_total"])
         while n < cap:
             o, r, term, trunc, info = env.step(pol.act(o))
             rew += r
             n += 1
-            for k in foods:
-                c = info["ate_total"].get(k, 0)
-                if c > prev[k]:
-                    eats_all += c - prev[k]
-                    if n - last[k] > BOUT_GAP:
-                        bouts += 1
-                    last[k] = n
-                prev[k] = c
+            tally.step(n, info["ate_total"])
             if term:
                 cause = info["death_cause"]
                 break
@@ -567,7 +591,7 @@ def run_seed(row: str, seed: int, lives: int = LIVES,
                     "floor_meals": int(ate.get("obj0", 0) + ate.get("obj1", 0)),
                     "apples": int(ate.get("apple", 0)), "drinks": "n/a",
                     "cause": cause, "reward": round(rew, 5), "decisions": n,
-                    "floor_eats_all": int(eats_all), "floor_bouts": int(bouts)})
+                    **tally.row()})
         if term:
             o, info = env.reset()
         else:
