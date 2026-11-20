@@ -67,6 +67,7 @@ place, `scripts/models.env`; nothing else names a model.
 | **Field watch** (manager) | `scripts/field_watch.sh` | manager | Mon and Thu | `docs/FIELD_WATCH.md` — papers as arms for a named seat |
 | **Researcher** (manager) | `scripts/ladder_loop.sh research` | manager | 04h, 16h — 2 slots a day | `docs/research/PUBLISHED_PRIORS.md`, an order's `prior:` lines (law 3a) |
 | **Inventor** (manager) | `scripts/ladder_loop.sh lab` | manager | 11h, 23h — 2 slots a day | challenger arms for the cook-offs, `docs/LAB.md` |
+| **Forge** (manager) — the science lab | `scripts/ladder_loop.sh forge` | manager | 02h, 14h — 2 slots a day, taken from lane JACK | `docs/FORGE.md` orders, `docs/FORGE_POOL.md`, `docs/FORGE_SCOREBOARD.md`, `experiments/forge/` — rounds of cook-offs up a short → medium → long ladder; never the judge |
 | **Worker, lane JACK** | `scripts/ladder_loop.sh jack` | worker | hourly, 18 slots a day | Jack's code, runs, the ledger (through the runner) |
 | **Worker, lane SYSTEM** | `scripts/ladder_loop.sh system` | worker | 03, 09, 15, 21h — 4 slots a day | the machine itself |
 | **Clerk** (no model) | `scripts/regate.sh` | — | every 2 h | re-buys cheap stale certificates |

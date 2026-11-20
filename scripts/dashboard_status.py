@@ -1219,7 +1219,7 @@ def research_pages() -> list:
     dst = OUT / "research"
     dst.mkdir(parents=True, exist_ok=True)
     rows, keep = [], set()
-    for src in [REPO / "docs" / "PLAN.md"] + sorted((REPO / "docs" / "research").glob("PUBLISHED_*.md")):
+    for src in [REPO / "docs" / "PLAN.md", REPO / "docs" / "FORGE.md"] + sorted((REPO / "docs" / "research").glob("PUBLISHED_*.md")):
         md = read(src)
         if not md.strip():
             continue

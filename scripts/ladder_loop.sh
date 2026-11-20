@@ -51,12 +51,13 @@ PAUSE="$REPO/.loop-paused"
 # October 2026 measured 5% of commits landing a result and ~78% tending the
 # machinery, with nobody having decided that. First arg, or JACK_LANE, or jack.
 LANE="${1:-${JACK_LANE:-jack}}"
-case "$LANE" in jack|system|lab|outsider|research) ;; *) LANE=jack;; esac
+case "$LANE" in jack|system|lab|outsider|research|forge) ;; *) LANE=jack;; esac
 case "$LANE" in
   system) PROMPT_FILE="$REPO/scripts/system_prompt.md";;
   lab)    PROMPT_FILE="$REPO/scripts/lab_prompt.md";;
   outsider) PROMPT_FILE="$REPO/scripts/outsider_prompt.md";;
   research) PROMPT_FILE="$REPO/scripts/research_prompt.md";;
+  forge)  PROMPT_FILE="$REPO/scripts/forge_prompt.md";;
   *)      PROMPT_FILE="$REPO/scripts/ladder_prompt.md";;
 esac
 # LANE `lab` — the INVENTOR (owner, 2026-11-11: "make an agent try new things ...
@@ -79,6 +80,8 @@ elif [ "$LANE" = "outsider" ]; then
   LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"; LEDGER_ORGAN=outsider
 elif [ "$LANE" = "lab" ]; then
   LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"; LEDGER_ORGAN=lab
+elif [ "$LANE" = "forge" ]; then   # the science lab (owner 2026-11-20; docs/FORGE.md): a manager-model lane, 2 slots a day taken from lane jack
+  LANE_MODEL="$MANAGER_MODEL"; LANE_FALLBACK="$MANAGER_FALLBACK"; LEDGER_ORGAN=forge
 else
   LANE_MODEL="$WORKER_MODEL";  LANE_FALLBACK="$WORKER_FALLBACK";  LEDGER_ORGAN=builder
 fi
