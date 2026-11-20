@@ -2930,3 +2930,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Read: replay eviction cannot explain learned-then-lost — `make_b` buffer = max(T, 50k) = 300k ≥ T, nothing is ever evicted.
 - Measured on the 18 home traces (same numbers as `e2c-table`'s Q columns): Q climbs smoothly in every run with no break at the last capped life (Q there 236–673), and the 10 never-eating controls climb as high or higher (300k median 996 vs food 788; ≈ equal at 90k). So my 18:35 critic lead is generic to this SAC in this world, not the loss's mechanism. INBOX line.
 - Philosophy served: 4 (a lead I raised was tested against its control and weakened before anyone built on it). Thin: no verdict moved.
+
+## 2026-11-20 20:07–20:20 UTC · JACK · J3 CLOSED on @hold8's verdict; J10 s1 seg3 launched; J15 at 21/25
+- First act `kernels status`: e3 (J15) and `@hold8` (J3) COMPLETE, both harvested by their watchers (19:52, 19:58) → 2 sessions free. J10 s1 seg3 (1.5M → 2M) LAUNCHED `jack-cpu-1795205296` rc 0. Second session left free: J15 has nothing to launch, J14 waits for Sat, J3 is closed, J10's other seeds are mid-segment.
+- J3 (6) `wm-latent@hold8` (one setting, both rows, seeds 10–14): row 1 FAIL 0/5 (best windows −993…−1098 vs edge −314.7; control −1171…−1225), row 3 PASS 3/5 (95.6, 94.4, 91.5; 88.6, 82.9). Hold 8 gives back a little of row 1 compared with hold 32 at the same γ (−1188…−1290); nowhere near the band.
+- Ruling 59 applied: J3 CLOSED, KNOWN_ANSWERS Row J3-6 = the row pair + the closing line (every in-house arm set aside with its numbers; return only through FORGE_POOL with an exploration scheme that does not break dense control).
+- J15: e2c-table 21/25, e2 still out.
+- Philosophy served: 3 and 4. The home-made learners got their last pre-registered chance, the rule was not bent when they missed, and the measured reason (held noise trades dense control for sparse discovery) is kept for whoever repairs them.

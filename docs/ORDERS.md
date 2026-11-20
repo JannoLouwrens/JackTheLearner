@@ -92,7 +92,7 @@ state: 11-20 19:25 READING BUILT `7a3a4f6e` (after (1)+(2) `8c551f77`): `pilot_b
 state: ALL 25 LAUNCHED: e0 `jack-cpu-1795176676`, e1 `…176785` (12:11), a0 `…180195`, a1 `…180238`, a2 `…180505` (13:09–13:16), e2 `…192704` (16:38), e3 `…194484` (17:08, rc 0). HOME: a2 (16:02), e0 (16:59) = 6 of 25.
 state: 19:30 18/25 home (a0–a2, e0, e1; both auto arms complete), no verdict: 8/8 food runs learn whole lives (first cap 18–47k) then lose them (last cap 86–189k); 10 control runs, 2 capped lives. CRITIC OVERESTIMATES 18/18; done-wiring ruled out (18:50). 19:45: replay eviction ruled out (buffer = max(T,50k) = 300k ≥ T). Q is NOT tied to eating: it climbs smoothly in every run, no break at the last capped life (Q there 236–673); controls that never eat climb as high or higher (300k median 996 vs food 788; at 90k ≈ equal) → the overestimate is generic, not the loss's mechanism.
 state: 19:30 ENTROPY RECOVERED from the trace (H = −8 + ent_coef_loss/log α; `e2c-table` third section, planted test PASS): fixed 0.1 does NOT hold the policy wide — H 5.4 → below 0 by 15–35k → −10…−20 at 300k in 8/8 fixed runs, controls too (sharper than auto's −8). Auto α bottoms 0.04–0.06 at 15–25k then CLIMBS to 0.13–0.65. §19 cause 1's signature (H stays ≈ 5) and its "auto α < 0.01 by 50k" are both contradicted. Descriptive; cause of the loss still not shown.
-next: harvest e2, e3 (RUNNING 19:25, due ≈ 21:40 / 22:10, watchers alive) → at 25/25 `$PY -m experiments.pilot_b2 e2c-readings` + `e2c-table` → WORLD_CARD rows + the branch it prints (if NO BRANCH: say so, INBOX the Director); the critic and entropy sections go beside them as named findings.
+next: e3 HOME 19:52 → 21/25 (missing E-random_point s803, s804 and E-food, E-zero s804); harvest e2 (RUNNING 20:08, watcher alive) → at 25/25 `$PY -m experiments.pilot_b2 e2c-readings` + `e2c-table` → WORLD_CARD rows + the branch it prints (if NO BRANCH: say so, INBOX the Director); the critic and entropy sections go beside them as named findings.
 
 ### J14 — The free GPU week (opens Sat 11-21 00:00 UTC): brain A's rows, A in his world, the ear's row
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §9 row 7, §7, §18 item 4; J5 (`ca4dcf00`: 51.8 dec/s on a T4); rulings 33, 47, 48, 52, 62
@@ -119,7 +119,7 @@ state: (a) DONE `57574dc7`: rule frozen in `experiments/kws_row.py` (authors' cl
 state: (b) DONE `388c2582`: `experiments/brain_a/in_world.py` — rows' BASE unmodified, env swapped via sheeprl `env=gym` + gymnasium `module:id` (no runner edit); pilot world arm K, body eye, body motor (INBOX default; `--motor world` exists). DONE rule in docstring: steps / ≥2 logged loss steps / all finite / dec/s. Box 1,200-decision smoke: rc 0, env ~290 dec/s, losses finite at the one logged step (reward 5.537 vs §2 5.541); the learns clause is left to the kernel.
 state: 11-19 14:30 PRE-FLIGHT for Sat (no push, no GPU): `gpu.week_key` turns W46→W47 at 11-21 00:00:01 UTC (W46 33.76 h spent, W47 empty); A1/A2/A3/A1-ext, `in_world` and the ear `s0 s1 s2 twin` kernel bodies + `build_job` scripts all build and parse; in_world's `make` passes all five world flags (body eye, body motor, floor food, lazy audio, native substep). Est. 3×2.6 + 1.0 + 6.3 = 15.1 h of the 30 h.
 
-### J3 — The home-made brains' fair chance: ONE last entry, one setting for both rows
+### J3 — DONE (closed, see state) — The home-made brains' fair chance: ONE last entry, one setting for both rows
 part: His brain · stage: 1 · step: 3 (reproduce) · prior: §15, §5; rulings 24, 33, 44, 56, 59
 prior: §15 — all seven arms are ONE on-policy AWR learner with different auxiliary losses; five FAIL both rows unrepaired. Measured 11-20: noise held 32 decisions PASSES sparse row 3 (4/5) and alone KILLS dense row 1 (0/5 learn; γ 0.99 alone 5/5 learn). No published value for the hold on this learner — the 8 below is ours, stated before the run, not from the record.
 prior: no in-house arm has reproduced BOTH rows; B has (1b, 2b, 3, 3b).
@@ -133,12 +133,11 @@ arm set aside with its numbers on record (PLAN: "may return if it is
 repaired"), the hold finding kept in `KNOWN_ANSWERS.md`. No third entry.
 serves: M3 · PLAN "a fair chance for our own brains" · philosophy 3, 4.
 **done when:** `KNOWN_ANSWERS.md` has `@hold8`'s row pair and J3's closing line or the other arms' rows.
-state: 11-19 (4) COMPLETE: `wm-dyn`, `dreamer-xs`, `wm-latent+ring` all FAIL both rows (KNOWN_ANSWERS J3-4c/d/e; best row-1 means ≈ −360…−370, ring adds nothing).
 state: 11-19 17:15 (5) `wm-latent@repair` → Row J3-5: **row 3 PASS** 4/5 (first in-house row reproduced), **row 1 FAIL** 0/5, no learning.
 state: 11-20 12:20 (5′) DIAG HARVESTED (`b4aa10f3`, KNOWN_ANSWERS J3-5 addendum): **HELD NOISE kills row 1.** `@hold-only` 0/5 learn (−1199…−1265 ≈ control); `@gamma-only` 5/5 (−284…−759); `@plain59` 5/5 (−354…−521, not VOID). γ/value-scale suspect REFUTED.
 state: 11-20 14:25 (6) RULE WRITTEN before any cell `5ec9879e`: `wm-latent@hold8` in `inhouse_rows.py` (hold 8, γ 0.99, rows 1+3, seeds 10–14, same verdict, no extension); `test_hold8` PASS (file 6/6). NOT launched: Kaggle 5/5 (J15 e0, e1, a0–a2); J15's e2/e3 take the next free sessions first.
-state: 11-20 18:08 `@hold8` LAUNCHED `jack-cpu-1795198133` (`launch_hold8.log`, push rc 0, watcher alive).
-next: harvest → KNOWN_ANSWERS row pair → PASS both = other arms get `@hold8`, FAIL either = J3 closes.
+state: 11-20 18:08 `@hold8` LAUNCHED `jack-cpu-1795198133`; home 19:58 (6,594 s).
+state: 11-20 20:15 **DONE — J3 CLOSED (ruling 59)**, KNOWN_ANSWERS Row J3-6: `@hold8` row 1 **FAIL** 0/5 (best windows −993…−1098, edge −314.7; control −1171…−1225), row 3 PASS 3/5 (95.6, 94.4, 91.5; 88.6, 82.9). Hold 8 gives back a little of row 1 vs hold 32 (`@repair` −1188…−1290), nowhere near the band. Every in-house arm set aside with its numbers; return only through FORGE_POOL with a repaired exploration scheme.
 
 ### J10 — The walking layer: reproduce a published walk (owner 11-15)
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §4; ruling 45
@@ -155,7 +154,8 @@ state: (2′) RULE FROZEN `experiments/humanoid_sac_row.py`: Zoo entry, seeds 0�
 state: 11-20 seg 1 HOME both (the segment mount works): **1M check** s0 R 4,065 M 3.47 (3/10 eps fell), s1 R 5,294 M 5.08 (0/10 fell) — both inside [3,784, 5,866]; median waits for s2. M ≪ 12 at 1M: the 2M PASS needs +7 m/1k steps.
 state: 11-20 09:40 LAUNCHED `kernel 2 0` `jack-cpu-1795167564` (`launch_s2_seg0.log`) and `kernel 0 2` `…167600` (`launch_s0_seg2.log`), push rc 0. `kernel 1 2` refused twice by the load guard, then LAUNCHED 09:43 `…167808` (`launch_s1_seg2.log`, rc 0) at load 5.97.
 state: 11-20 18:09 s2 seg0 (500k), s0 seg2, s1 seg2 (1.5M) all HOME (hit_target). s2 seg1 LAUNCHED `jack-cpu-1795198143` (`launch_s2_seg1.log`); 19:08 s0 seg3 (→ 2M) LAUNCHED `jack-cpu-1795201683` (`launch_s0_seg3.log`, rc 0).
-next: as sessions free: s1 seg3 (to 2M), then s2 seg2–3; 2M eval decides; s2's 1M check gives the median.
+state: 11-20 20:08 s1 seg3 (1.5M → 2M) LAUNCHED `jack-cpu-1795205296` (`launch_s1_seg3.log`, push rc 0).
+next: harvest s2 seg1 (→1M check, gives the median), s0 seg3, s1 seg3; then s2 seg2–3; 2M eval decides.
 
 ### J16 — Brain A on the Mac: the wheel check, then rung 2
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` (its step table, the rows after 1.3); `experiments/brain_a/README.md`

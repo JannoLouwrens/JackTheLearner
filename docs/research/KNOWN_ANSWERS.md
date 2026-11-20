@@ -416,3 +416,33 @@ seeds 5–9, same verdict clause), unchanged. Kernel jack-cpu-1795101867 at `66b
   somewhat worse). Held noise is what found row 3's flag and what erased row 1's learning. Diagnostic, reported-only:
   no verdict row moves; which repair goes to the other arms (e.g. hold on sparse-reward rows only, or a shorter hold)
   is the Director's split ruling, now with its cause measured.
+
+## Row J3-6 — the one-setting entry `wm-latent@hold8`: row 3 PASSES 3/5, row 1 FAILS 0/5 → J3 CLOSES (11-20, Kaggle CPU)
+
+Rule written before any cell `5ec9879e` (ruling 59: ONE setting for both rows — noise held 8 decisions,
+GAE γ 0.99, everything else as `@repair`; fresh seeds 10–14; the same verdict clauses; never-trains
+control must fail; no extension). Kernel jack-cpu-1795198133 at `22d82a05` (launched 18:08, home 19:58,
+6,594 s; receipt in `gpu_submissions.jsonl`); result `/data/jack-logs/j3_inhouse/wm-latent@hold8.json`
+(python 3.13.18, torch 2.11.0+cpu, gymnasium 1.1.1).
+
+| arm | row 1 best 100-ep window per seed (edge −314.7) | reached | row 3 best deterministic eval per seed (> 90) | reached |
+|---|---|---|---|---|
+| wm-latent@hold8 | −1097.5, −992.6, −1000.9, −1063.1, −999.6 | 0/5 → **FAIL** | **95.6**, 88.6, 82.9, **94.4**, **91.5** | 3/5 → **PASS** |
+| never-trains control | −1171.0…−1225.1 | 0/5 | −0.031…−0.0001 | 0/5 |
+
+- **Row 1: the shorter hold gives back a little learning, nowhere near the band.** First-10 → last-10
+  episode means −1253 → −1030, −1435 → −1345, −1148 → −990, −1316 → −1316, −1300 → −1132 (seeds 10–14).
+  Best windows sit ~150–200 above the control and ~200 above `@repair` (the same γ 0.99 with hold 32:
+  −1188…−1290), but ~600 below `@gamma-only` (γ 0.99, white noise: −284…−759) and ~700 below the edge.
+  Held noise at 8 still kills most of dense row 1's learning; shortening the hold 32 → 8 helps a little
+  (different seed sets, 5 each — a direction, not a measured dose curve).
+- **Row 3 still PASSES but weaker than hold 32:** 3/5 vs `@repair`'s 4/5; seed 11 peaks 88.6, seed 12
+  82.9 at 50k then decays to 67–70; seed 14 reaches only at 100k (−18.0 at 50k).
+- **The finding kept (ruling 59):** on this on-policy AWR core, temporally held exploration noise is what
+  finds the sparse MountainCar flag and what erases the dense Pendulum learning; neither hold tried (8, 32)
+  passes both rows. No setting of this learner reproduces both published rows.
+- **J3 CLOSES (ruling 59, no third entry).** Every in-house arm is set aside with its numbers on record
+  (J3-4 `ppo-needs`; J3-4b `wm-latent`, `ppo-lp`; J3-4c `wm-dyn`; J3-4d `dreamer-xs`; J3-4e
+  `wm-latent+ring`; J3-5 `@repair`; J3-6 `@hold8`). Per PLAN they may return only if repaired — the
+  measured repair target is an exploration scheme that does not break dense-reward control (e.g. one
+  learned or annealed rather than a fixed hold), entered through `docs/FORGE_POOL.md` with its prior.
