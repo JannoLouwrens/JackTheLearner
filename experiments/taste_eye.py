@@ -51,7 +51,9 @@ ARMS (all from scratch; 3 initialisations each, 0..2)
               the food's ray given as the label. If it scores < .80 the
               judge or the network is broken: the run is VOID, not DEAD.
 
-JUDGE. A judge look = a kept judge-world look with at least one UNEATEN floor
+JUDGE (as first written; REPAIRED before any data was read — see the note
+above `judge_tables`: "reads its distance" became "carries its texture").
+A judge look = a kept judge-world look with at least one UNEATEN floor
 food IN SIGHT (a ray within 2 rays of its true bearing reads its distance to
 0.5 m). HIT = the peak ray is within 3 rays (8.4 deg) of an in-sight uneaten
 food's bearing AND reads that food's distance to 0.5 m. (taste16: the ray
@@ -112,7 +114,7 @@ N = 128
 H = 10
 KEEP_WIN = 40
 MAX_FOODS = 5
-SIGHT_RAYS, HIT_RAYS, DIST_TOL = 2, 3, 0.5
+HIT_RAYS = 3
 RAY_RANGE = 8.0
 INITS = (0, 1, 2)
 OUT = Path("/data/jack-logs/taste_eye")
@@ -214,31 +216,80 @@ def collect_all(outdir, train=TRAIN_SEEDS, judge=JUDGE_SEEDS,
 
 
 # ── the judge (simulator truth; never an input to him) ──────────────────────
+# JUDGE REPAIRED 2026-11-20 23:5x, BEFORE ANY KERNEL DATA WAS READ (kernel 2
+# still running; smoke seeds 153/154 only). The first judge called a food "in
+# sight" when a ray near its bearing read its DISTANCE to 0.5 m. Planted check
+# on the smoke data: 1,086 of 1,438 such rays carried a wall's texture (.80)
+# or none — a wall behind the food at a like distance. The ceiling of a
+# perfect eye under that judge was ~.25, so `told` could never reach .80.
+# Now a ray is ON a food iff it is within 3 rays of that food's true bearing
+# AND carries that food's own texture (W0 gives every geom its own, stable).
+# In sight = some ray is on it. HIT = the peak ray is on an uneaten food.
+# Thresholds, arms, worlds, VOID clauses: unchanged.
+#
+# FOUND WHILE REPAIRING IT, ALSO BEFORE ANY DATA (13 worlds built, none lived):
+# W0's ray texture is ((geom index * 0.37) % 0.8) + 0.1 and the geom count
+# differs by world (36..40), so the three foods wear one of THREE colour sets:
+# [.49 .86 .43], [.86 .43 .80] or [.43 .80 .37]. Only .43 is food in every
+# world; .80 is food in two sets and the next object over in the third. "Each
+# food is its own stable texture" holds inside ONE world only. Said before
+# the data: across fresh worlds colour alone cannot name food, so `told` may
+# read < .80 and the rule then says VOID — which would be a finding about his
+# WORLD (a learner carried to a new world meets recoloured food), not about
+# taste. Reported beside the rule, deciding nothing: every arm's HIT split by
+# the judge world's colour set (`by_set`).
+TEX_TOL = 0.004
+
+
 def _circ(a, b, n):
     d = np.abs(a - b) % n
     return np.minimum(d, n - d)
 
 
-def judge_tables(x: np.ndarray, foods: np.ndarray):
-    """Per look and food: its ray, and whether it is uneaten AND in sight."""
-    dist = x[:, 0::2].astype(np.float32) * RAY_RANGE              # (n, N)
+def food_tex(seed: int) -> np.ndarray:
+    """(MAX_FOODS,) the ray texture of each floor food in this seed's world."""
+    from experiments.handed_sense import _floor_names
+    env = make_env(seed).env
+    m, out = env.w.model, np.full(MAX_FOODS, np.nan, np.float32)
+    for i, n in enumerate(_floor_names(env)[:MAX_FOODS]):
+        b = m.body(n).id
+        if int(m.body_geomnum[b]) != 1:
+            raise RuntimeError(f"food {n} has {int(m.body_geomnum[b])} geoms")
+        out[i] = env.w._tex[int(m.body_geomadr[b])]
+    return out
+
+
+def judge_tables(x: np.ndarray, foods: np.ndarray, seed: np.ndarray):
+    """on[look, food, ray]: that ray is on that UNEATEN food."""
+    tex = x[:, 1::2].astype(np.float32)                           # (n, N)
+    ft = np.stack([food_tex(int(s_)) for s_ in np.unique(seed)])
+    ft = ft[np.searchsorted(np.unique(seed), seed)]               # (n, F)
     b, d, un = foods[..., 0], foods[..., 1], foods[..., 2]
-    ok = ~np.isnan(b)
+    ok = ~np.isnan(b) & ~np.isnan(ft) & (un > 0.5)
     kf = np.where(ok, np.rint(np.nan_to_num(b) / (2 * math.pi) * N), 0).astype(int) % N
-    sight = np.zeros(b.shape, bool)
-    for off in range(-SIGHT_RAYS, SIGHT_RAYS + 1):
-        rd = np.take_along_axis(dist, (kf + off) % N, axis=1)
-        sight |= np.abs(rd - np.nan_to_num(d, nan=1e9)) < DIST_TOL
-    return dist, kf, np.nan_to_num(d, nan=1e9), sight & ok & (un > 0.5)
+    ray = np.arange(N)[None, None, :]
+    on = ((_circ(ray, kf[..., None], N) <= HIT_RAYS)
+          & (np.abs(tex[:, None, :] - np.nan_to_num(ft)[..., None]) < TEX_TOL)
+          & ok[..., None])
+    return on, kf, np.where(ok, d, 1e9)
 
 
-def hits(peak: np.ndarray, dist, kf, d, vis, tol=HIT_RAYS, stride=1) -> np.ndarray:
-    """peak: ray index on the 128 row. HIT per look (looks with any vis)."""
-    pd = dist[np.arange(len(peak)), peak][:, None]
-    near = _circ(peak[:, None], kf, N) <= tol
-    if stride > 1:   # the coarse eye: the ray nearest the bearing
-        near = (np.rint(kf / stride).astype(int) * stride) % N == peak[:, None]
-    return (vis & near & (np.abs(pd - d) < DIST_TOL)).any(1)
+def hits(peak: np.ndarray, on: np.ndarray) -> np.ndarray:
+    """HIT per look: the peak ray (index on the 128 row) is on an uneaten food."""
+    return on[np.arange(len(peak)), :, peak].any(1)
+
+
+def selftest(path) -> dict:
+    """The judge must give a perfect eye 1.0 and a random ray ~chance."""
+    z = np.load(path)
+    on, kf, d = judge_tables(z["x"], z["foods"], z["seed"])
+    el = on.any((1, 2))
+    perfect = on.any(1).argmax(1)
+    rnd = np.random.RandomState(0).randint(N, size=len(el))
+    r = {"eligible": float(el.mean()), "perfect": float(hits(perfect, on)[el].mean()),
+         "random": float(hits(rnd, on)[el].mean())}
+    assert r["perfect"] == 1.0 and r["random"] < 0.10, r
+    return r
 
 
 # ── his part: the ring ──────────────────────────────────────────────────────
@@ -317,12 +368,14 @@ def read(path=None, train=TRAIN_SEEDS, judge=JUDGE_SEEDS, steps=3000,
     tr, ju = np.isin(seed, train), np.isin(seed, judge)
     n_meals = sum(w["meals"] for w in summ["worlds"] if w["seed"] in train)
     xt, yt = x[tr], ttm[tr] < H
-    dist_t, kf_t, d_t, vis_t = judge_tables(xt, foods[tr])
+    on_t, kf_t, d_t = judge_tables(xt, foods[tr], seed[tr])
+    vis_t = on_t.any(2)
     xj, sj = x[ju], seed[ju]
-    dist, kf, d, vis = judge_tables(xj, foods[ju])
-    el = vis.any(1)
-    xj, sj, dist, kf, d, vis = xj[el], sj[el], dist[el], kf[el], d[el], vis[el]
-    dmin = np.where(vis, d, 1e9).min(1)
+    on, kf, d = judge_tables(xj, foods[ju], sj)
+    el = on.any((1, 2))
+    xj, sj, on, d = xj[el], sj[el], on[el], d[el]
+    dist = xj[:, 0::2].astype(np.float32) * RAY_RANGE
+    dmin = np.where(on.any(2), d, 1e9).min(1)
     worlds = [s for s in judge if (sj == s).sum() > 0]
 
     def per_world(h):
@@ -341,7 +394,8 @@ def read(path=None, train=TRAIN_SEEDS, judge=JUDGE_SEEDS, steps=3000,
     yshuf = rng.permutation(yt)
     # told: training looks with an uneaten food in sight; label = nearest one
     has = vis_t.any(1)
-    tgt = kf_t[has][np.arange(int(has.sum())), np.where(vis_t[has], d_t[has], 1e9).argmin(1)]
+    jn = np.where(vis_t[has], d_t[has], 1e9).argmin(1)           # nearest in sight
+    tgt = on_t[has][np.arange(int(has.sum())), jn].argmax(1)     # a ray on it
     out_nets = {}
     for name, fit in (
             ("taste128", lambda i: train_taste(xt, yt, i, steps=steps)),
@@ -352,13 +406,17 @@ def read(path=None, train=TRAIN_SEEDS, judge=JUDGE_SEEDS, steps=3000,
             continue
         nets = [fit(i) for i in INITS]
         out_nets[name] = nets
-        enter(name, [hits(scores(n_, xj).argmax(1), dist, kf, d, vis) for n_ in nets])
+        enter(name, [hits(scores(n_, xj).argmax(1), on) for n_ in nets])
     if only:
         return {"_nets": out_nets}
-    enter("nearest", [hits(dist.argmin(1), dist, kf, d, vis)])
+    enter("nearest", [hits(dist.argmin(1), on)])
     enter("taste16", [hits(scores(train_taste(xt, yt, i, stride=8, steps=steps), xj, 8)
-                           .argmax(1) * 8, dist, kf, d, vis, stride=8) for i in INITS])
+                           .argmax(1) * 8, on) for i in INITS])
 
+    sets = {s_: str(np.round(food_tex(int(s_))[:3], 2).tolist()) for s_ in worlds}
+    by_set = {k: {u: round(float(np.mean([v["world"][i] for i, s_ in enumerate(worlds)
+                                           if sets[s_] == u])), 3)
+                  for u in sorted(set(sets.values()))} for k, v in arms.items()}
     t, P = arms["taste128"], {k: v["pooled"] for k, v in arms.items()}
     ahead = {o: int((t["world"] > arms[o]["world"]).sum()) for o in ("shuffled", "untrained")}
     need = min(16, len(worlds)) if not enforce else 16
@@ -380,7 +438,8 @@ def read(path=None, train=TRAIN_SEEDS, judge=JUDGE_SEEDS, steps=3000,
     res = {"verdict": verdict, "void": void, "clauses": clauses, "pooled": P,
            "ahead_of_20": ahead, "worlds": len(worlds), "judge_looks": int(len(xj)),
            "train_looks": int(tr.sum()), "train_pos": int(yt.sum()),
-           "train_meals": int(n_meals),
+           "train_meals": int(n_meals), "by_set": by_set,
+           "set_worlds": {u: sum(v == u for v in sets.values()) for u in set(sets.values())},
            "sd_world": {k: float(v["world"].std()) for k, v in arms.items()},
            "bands_0-2_2-4_4-8m": bands,
            "band_looks": [int(((dmin >= a) & (dmin < b)).sum()) for a, b in ((0, 2), (2, 4), (4, 9))]}
@@ -483,6 +542,8 @@ def main(argv):
     elif cmd == "read":
         r = read(argv[1] if len(argv) > 1 else None)
         print(json.dumps(r, indent=1, default=str))
+    elif cmd == "selftest":
+        print(json.dumps(selftest(argv[1])))
     elif cmd == "reflex":
         print(json.dumps(reflex(argv[1] if len(argv) > 1 else None), indent=1))
     else:
