@@ -56,6 +56,13 @@ TEXT ONLY: nothing above changes; the frozen A1–A3 rows and this smoke keep th
   shuffle / matched-noise one key in the wrapper, eval lives only.
   Order when it is run (after J11, not before): arm keys-sum (no edit) first, its smoke must
   reproduce this file's DONE (1)–(4); keys-norm and dropout only as raced arms beside it.
+  BUILT 11-20 (arm keys-sum, no runner edit): `make(keys="per_sense")` / `overrides(keys=...)` /
+  `smoke N --per-sense`. Box smoke 1,200 decisions, CPU, compile off: rc 0, sheeprl prints
+  "Encoder MLP keys" and "Decoder MLP keys" = [vision, audio, touch, proprio, needs], no
+  only-the-first-key warning; STEPS yes, NO NaN yes (all 8 Loss/* finite at step 1200,
+  reward_loss 5.537 = the flat smoke's), LEARNS not decidable at one logged step — the same
+  reading as the flat smoke, left to a GPU kernel. 2.2 dec/s on a loaded box: no speed claim.
+  Gymnasium sorts a Dict's keys alphabetically; sheeprl reads by name, so nothing depends on it.
 """
 from __future__ import annotations
 
@@ -72,17 +79,54 @@ SMOKE_DECISIONS = 20_000
 NUM_ENVS = 4
 
 
-def make(seed: int = 0, motor_frame: str = "body", render_mode=None, **_ignored):
+KEYS = ("flat", "per_sense")
+
+
+def per_sense_keys() -> list:
+    """The sheeprl mlp keys of the per-sense path, in JackEnv's concatenation order."""
+    from experiments.jack_env import SENSES
+    return list(SENSES)
+
+
+def _per_sense(env):
+    """Next-up 3 (design note above): the flat Box(74) split back into one Box per sense, as a
+    gymnasium Dict, by the widths `w.observe()` reports at construction. JackEnv builds every
+    observation (reset, step, the dying body) with `_obs` = concatenate(SENSES), so the split is
+    exact: concatenating the Dict's values in SENSES order returns the flat vector bit for bit
+    (planted test). Nothing in the world or the runner changes."""
+    import gymnasium as gym
+    import numpy as np
+    from experiments.jack_env import SENSES
+    o = env.w.observe()
+    widths = [int(np.asarray(o[k]).size) for k in SENSES]
+    assert sum(widths) == env.observation_space.shape[0], (widths, env.observation_space.shape)
+    cuts = np.cumsum([0] + widths)
+    space = gym.spaces.Dict({k: gym.spaces.Box(-np.inf, np.inf, (w,), np.float32)
+                             for k, w in zip(SENSES, widths)})
+
+    def split(flat):
+        return {k: np.asarray(flat[cuts[i]:cuts[i + 1]], np.float32) for i, k in enumerate(SENSES)}
+
+    return gym.wrappers.TransformObservation(env, split, space)
+
+
+def make(seed: int = 0, motor_frame: str = "body", render_mode=None, keys: str = "flat",
+         **_ignored):
     """One pilot-world JackEnv (arm K). `render_mode` is accepted and ignored: sheeprl's gym config
-    passes render_mode="rgb_array" and vectors-only needs no renderer."""
+    passes render_mode="rgb_array" and vectors-only needs no renderer. `keys="per_sense"` hands
+    sheeprl a Dict of one Box per sense (vision, audio, touch, proprio, needs) instead of one flat
+    Box; the default "flat" is the frozen rows' and the 11-18 smoke's form, unchanged."""
     from experiments.jack_env import JackEnv, NEEDS_S_TRP, SPAWN_CLEAR_R
     from experiments.pilot_b2 import DIFFICULTY, PILOT_ARMS
+    if keys not in KEYS:
+        raise ValueError(f"keys must be one of {KEYS}, got {keys!r}")
     arm = PILOT_ARMS["K"]
-    return JackEnv(seed=seed, difficulty=DIFFICULTY, reward=arm["reward"],
-                   random_needs=NEEDS_S_TRP, random_layout=True, lazy_contact_audio=True,
-                   spawn_clear=SPAWN_CLEAR_R, move_cost_dial=arm["move_cost_dial"],
-                   food_floor_only=True, eye_frame="body", motor_frame=motor_frame,
-                   native_substep=True)
+    env = JackEnv(seed=seed, difficulty=DIFFICULTY, reward=arm["reward"],
+                  random_needs=NEEDS_S_TRP, random_layout=True, lazy_contact_audio=True,
+                  spawn_clear=SPAWN_CLEAR_R, move_cost_dial=arm["move_cost_dial"],
+                  food_floor_only=True, eye_frame="body", motor_frame=motor_frame,
+                  native_substep=True)
+    return _per_sense(env) if keys == "per_sense" else env
 
 
 def _register():
@@ -95,11 +139,22 @@ _register()
 
 
 def overrides(total: int = SMOKE_DECISIONS, seed: int = 0, motor: str = "body",
-              device: str = "cuda", compile_on: bool = True) -> list:
-    """rows.BASE with the DMC-only keys swapped for his world. The runner is never edited."""
+              device: str = "cuda", compile_on: bool = True, keys: str = "flat") -> list:
+    """rows.BASE with the DMC-only keys swapped for his world. The runner is never edited.
+    keys="per_sense": the encoder AND decoder mlp keys become the five senses (the decoder is
+    named explicitly though the preset defaults it to the encoder, so the arm cannot silently
+    fall back) and the env wrapper gets `keys=per_sense`."""
     from experiments.brain_a.rows import BASE
+    if keys not in KEYS:
+        raise ValueError(f"keys must be one of {KEYS}, got {keys!r}")
     drop = ("env.wrapper.", "env.action_repeat=", "algo.compile.enabled=")
+    if keys == "per_sense":
+        drop = drop + ("algo.mlp_keys.",)
     out = [o for o in BASE if not o.startswith(drop)]
+    if keys == "per_sense":
+        lst = "[" + ",".join(per_sense_keys()) + "]"
+        out += [f"algo.mlp_keys.encoder={lst}", f"algo.mlp_keys.decoder={lst}",
+                "+env.wrapper.keys=per_sense"]
     return out + ["env=gym", f"env.id={GYM_ID}", "env.action_repeat=1",
                   "env.max_episode_steps=-1", f"+env.wrapper.motor_frame={motor}",
                   f"algo.compile.enabled={compile_on}",
@@ -138,19 +193,20 @@ def judge(rec: dict, total: int) -> dict:
 
 def run(out_dir: str, total: int = SMOKE_DECISIONS, seed: int = 0, motor: str = "body",
         device: str = "cuda", compile_on: bool = True, deadline_s: float = 3 * 3600,
-        cmd_prefix: tuple = None) -> dict:
+        cmd_prefix: tuple = None, keys: str = "flat") -> dict:
     from experiments.brain_a.rows import EP_RE
     _os.makedirs(out_dir, exist_ok=True)
-    name = f"inworld_s{seed}_{motor}"
+    name = f"inworld_s{seed}_{motor}" + ("" if keys == "flat" else "_" + keys)
     logdir = _os.path.join(out_dir, "logs_" + name)
     cmd = list(cmd_prefix or [_sys.executable, "-m", "sheeprl"]) + overrides(
-        total, seed, motor, device, compile_on) + [f"log_root={logdir}"]
+        total, seed, motor, device, compile_on, keys) + [f"log_root={logdir}"]
     repo = _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
     env = dict(_os.environ, PYTHONPATH=repo + _os.pathsep + _os.environ.get("PYTHONPATH", ""),
                MUJOCO_GL="disable")
     logf = _os.path.join(out_dir, name + ".log")
     print("RUN", name, " ".join(cmd), flush=True)
-    rec = {"name": name, "cmd": cmd, "cut": False, "total": total, "motor": motor, "device": device}
+    rec = {"name": name, "cmd": cmd, "cut": False, "total": total, "motor": motor, "device": device,
+           "keys": keys}
     t0 = _time.time()
     with open(logf, "w") as log:
         p = _sp.Popen(cmd, cwd=out_dir, stdout=log, stderr=_sp.STDOUT, env=env)
@@ -176,7 +232,8 @@ def run(out_dir: str, total: int = SMOKE_DECISIONS, seed: int = 0, motor: str = 
     if rec["rc"] != 0:
         rec["log_tail"] = text[-3000:]
     rec["verdict"] = judge(rec, total)
-    _json.dump(rec, open(_os.path.join(out_dir, "brain_a_inworld.json"), "w"), default=str)
+    _json.dump(rec, open(_os.path.join(out_dir, name + ".json" if keys != "flat"
+                                       else "brain_a_inworld.json"), "w"), default=str)
     print("INWORLD", _json.dumps(rec["verdict"]), flush=True)
     return rec
 
@@ -201,16 +258,27 @@ def kernel_body() -> str:
 
 
 OUT = "/data/jack-logs/brain_a/in_world"
+PROBE_PY = "/data/venvs/jack-a-probe/bin/python"   # the box's sheeprl==0.8.5
 
 
 def main(argv) -> int:
-    """smoke [N]   box, CPU, compile off, N decisions (default 600): the plumbing only
+    """smoke [N] [--per-sense]   box, CPU, compile off, N decisions (default 600): the plumbing only
     kernel      Kaggle GPU: the 20k-decision smoke (J14 b), harvested to OUT/inworld.json"""
     _os.makedirs(OUT, exist_ok=True)
     cmd = argv[1] if len(argv) > 1 else ""
     if cmd == "smoke":
-        n = int(argv[2]) if len(argv) > 2 else 600
-        r = run(_os.path.join(OUT, "smoke"), total=n, device="cpu", compile_on=False, deadline_s=1800)
+        try:
+            import tensorboard  # noqa: F401  (the judge reads the runner's scalars with it)
+        except ImportError:
+            if _os.path.exists(PROBE_PY) and _os.path.realpath(_sys.executable) != _os.path.realpath(PROBE_PY):
+                # found 11-20: from the project venv the smoke ran but could not read its losses
+                _os.execv(PROBE_PY, [PROBE_PY, "-m", "experiments.brain_a.in_world"] + list(argv[1:]))
+        keys = "per_sense" if "--per-sense" in argv else "flat"
+        rest = [a for a in argv[2:] if not a.startswith("--")]
+        n = int(rest[0]) if rest else 600
+        prefix = (PROBE_PY, "-m", "sheeprl") if _os.path.exists(PROBE_PY) else None
+        r = run(_os.path.join(OUT, "smoke"), total=n, device="cpu", compile_on=False, deadline_s=1800,
+                cmd_prefix=prefix, keys=keys)
         print(_json.dumps({k: v for k, v in r.items() if k not in ("losses", "episodes")}, default=str)[:3000])
         return 0 if r["verdict"]["done"] else 1
     if cmd == "kernel":

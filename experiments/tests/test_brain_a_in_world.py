@@ -70,6 +70,66 @@ def test_run_reports_not_done_when_no_gradient_step_is_logged(tmp_path):
     assert not r["verdict"]["clauses"]["learns"] and not r["verdict"]["done"]
 
 
+def test_per_sense_overrides_name_five_keys_for_encoder_and_decoder():
+    ovr = W.overrides(total=600, keys="per_sense")
+    lst = "[vision,audio,touch,proprio,needs]"
+    assert f"algo.mlp_keys.encoder={lst}" in ovr and f"algo.mlp_keys.decoder={lst}" in ovr
+    assert "+env.wrapper.keys=per_sense" in ovr
+    keys = [o.split("=")[0] for o in ovr]
+    assert len(keys) == len(set(keys)), keys
+    # every other setting is the flat smoke's, unchanged
+    flat = W.overrides(total=600)
+    diff = set(ovr) ^ set(flat)
+    assert diff == {f"algo.mlp_keys.encoder={lst}", f"algo.mlp_keys.decoder={lst}",
+                    "+env.wrapper.keys=per_sense", "algo.mlp_keys.encoder=[state]"}, diff
+    # control: the flat path still feeds one key and no wrapper key
+    assert "algo.mlp_keys.encoder=[state]" in flat and not any("wrapper.keys" in o for o in flat)
+    try:
+        W.overrides(keys="perr_sense")
+        raise AssertionError("a misspelt keys arm was accepted")
+    except ValueError:
+        pass
+
+
+def test_per_sense_split_is_exact_and_a_shifted_split_is_caught():
+    import gymnasium as gym
+    import numpy as np
+    from experiments.jack_env import SENSES
+    flat = gym.make(W.GYM_ID, motor_frame="body").unwrapped
+    per = gym.make(W.GYM_ID, motor_frame="body", keys="per_sense")
+    assert isinstance(per.observation_space, gym.spaces.Dict)
+    # gymnasium sorts a Dict's keys; sheeprl reads them by name, so the set is what binds
+    assert sorted(per.observation_space.spaces) == sorted(SENSES) and W.per_sense_keys() == list(SENSES)
+    widths = {k: per.observation_space[k].shape[0] for k in SENSES}
+    assert sum(widths.values()) == flat.observation_space.shape[0]
+    of, _ = flat.reset(seed=5)
+    od, _ = per.reset(seed=5)
+    rng = np.random.default_rng(0)
+    same = [np.array_equal(of, np.concatenate([od[k] for k in SENSES]))]
+    for _ in range(40):
+        a = rng.uniform(-1, 1, flat.action_space.shape).astype(np.float32)
+        of, rf, tf, _, _ = flat.step(a)
+        od, rd, td, _, _ = per.step(a)
+        same.append(np.array_equal(of, np.concatenate([od[k] for k in SENSES])) and rf == rd and tf == td)
+        assert all(per.observation_space[k].contains(od[k]) for k in SENSES)
+    assert all(same), same.index(False)
+    # planted: a split one number off (vision 31, audio 17) must not round-trip to the same senses
+    cuts = np.cumsum([0] + [widths[k] for k in SENSES])
+    bad = cuts.copy()
+    bad[1] -= 1
+    good_v, bad_v = of[cuts[0]:cuts[1]], of[bad[0]:bad[1]]
+    assert bad_v.shape != good_v.shape or not np.array_equal(bad_v, good_v)
+    assert not np.array_equal(of[bad[1]:bad[2]], od["audio"])
+
+
+def test_make_refuses_an_unknown_keys_arm():
+    try:
+        W.make(0, keys="sum")
+        raise AssertionError("an unknown keys arm built a world")
+    except ValueError:
+        pass
+
+
 def main():
     import pathlib
     import tempfile
