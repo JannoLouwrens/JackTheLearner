@@ -2805,3 +2805,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J10 1M check (reported): s0 R 4,065 / 3.47 m, s1 R 5,294 / 5.08 m — both inside the published [3,784, 5,866]; segment mounting works across Kaggle sessions.
 - J11 `table` PARTIAL 36/40: every learning arm 5/5 seeds, 0 sustained lives; all slide early→late to 0.08–0.16 meals/life while no-learning K-lr0 ends at 0.82. Reading waits for p9.
 - Philosophy served: 6 (free compute that had sat idle put back to work) and 4 (pilot runs to its frozen rule; the walk row judged only at its registered 2M eval).
+
+## 2026-11-20 10:07–10:35 UTC · JACK · J11/J15: E2c's trace reading corrected before seed 801 (no run)
+- `kernels status` 10:08: p9, J10 s2 seg0, s0 seg2, s1 seg2 RUNNING; 1 session free, nothing launchable (J11 all launched, E2c refuses until 40 home, J3 waits on a ruling, J10 has no seg whose predecessor is home). `pilot_b2 readings` refuses on 36/40 as it should.
+- MEASURED (Monte Carlo 10⁶): a tanh-Gaussian's per-dim entropy peaks at pre-tanh std 0.87 (≥95 % of max for 0.68–1.10 = logged std 0.51–0.65, sat ≤ 0.095). §3b's frozen reading "std/saturation RISE = confirmed; flat = refuted" scored entropy dominance as REFUTED (SBX starts at std ≈ 1, already 97.7 % of max). Rewrote it in `PILOT_B2.md` §3b with the old text struck, three outcomes fixed before any E2c seed; agrees with PRIORS §19.
+- Philosophy served: 4 (a test that could not have confirmed its own hypothesis made able to, before it runs).
