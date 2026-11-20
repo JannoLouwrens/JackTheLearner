@@ -172,7 +172,8 @@ serves: M3 · PLAN "the decisive test … on the Mac mini" — every Mac hour an
 state: (a)–(c) DONE `07a65c3d`: G1 IDENTICAL 1,400/1,400; rung 1 PASS 9/9 eager and compiled (mlx 0.32.4); official grid = XLA:CPU's fma form.
 state: 11-20 (e) RUNG 2 PASS `df2b7bc2`: `rung2.py` committed FAILING 0/4 vs stubs `d5d840d1` (refs 20/20 vs official, planted 4/4), then filled → 4/4 eager and compiled (returns, percentile, perc normaliser, slow critic; ≤1.4e-7×(|ref|+1)); rung 1 still 9/9. Found: eager `jnp.percentile` q=100 is 1 ulp off, jit exact.
 state: (d) the PyPI wheel cannot load here (GLIBC 2.34 < 2.35) → needs a Kaggle CPU session. 11-20 20:24 KERNEL READY `c6611404` (not launched — order says box only): `experiments/brain_a/wheel_kernel.py` runs rung1/rung2 + both planted suites on PyPI `mlx[cpu]==0.32.4`; WHEEL verdict fixed (all 4 rc 0 + PASS/OK lines + mlx 0.32.4 printed). Test 3/3 incl. PASS on the box's real output and 6 planted non-PASSes.
-next: once ranked, one ~0.3 h CPU session (no GPU-hours): `scripts/launch_detached.sh /data/jack-logs/mlx/launch_wheel.log $PY -m experiments.brain_a.wheel_kernel kernel` → `/data/jack-logs/mlx/wheel.json` → the wheel line in README.
+state: 11-20 20:38 LAUNCHED `jack-cpu-1795207086` (`/data/jack-logs/mlx/launch_wheel.log`, push rc 0) on the 5th Kaggle session — ruling 60 rank (0): kernel est 0.3 h, session would otherwise sit idle; 4 others RUNNING (J15 e2, J10 ×3).
+next: harvest `/data/jack-logs/mlx/wheel.json` → `$PY -m experiments.brain_a.wheel_kernel verdict /data/jack-logs/mlx/wheel.json` → the wheel line (PASS/FAIL/NO-READING) into `experiments/brain_a/README.md` with the test names.
 
 **Lane `forge` (the science lab, owner 11-20; ruling 61)** reads its orders
 in `docs/FORGE.md`: F1 → F2 → F4; F3 (round 1, the eating wall) after F1's
