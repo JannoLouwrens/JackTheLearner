@@ -2816,3 +2816,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - @repair split (row 3 PASS 4/5, row 1 no learning) is a FAIL with two candidate causes — measured, not asked: three row-1-only arms on seeds 5–9, `@gamma-only`, `@hold-only`, `@plain59` (seed-set check), reading fixed in the docstring before any cell (`a377e014`). @repair/plain cells byte-identical to HEAD at 400 steps; test 5/5 incl. planted reading.
 - LAUNCHED `jack-cpu-1795170409` (Kaggle RUNNING, ~1 h). The Director's split ruling is still needed for "repair → other arms"; this tells it which change to carry.
 - Philosophy served: 4 (a failure chased to its cause instead of filed) and 6 (an idle free session put to work).
+
+## 2026-11-20 10:37–10:58 UTC · JACK (short slot) · nothing advanceable; TPU path checked for the Director
+- `kernels status` 10:40: all 5 sessions RUNNING (J11 p9, J3 diag `…170409`, J10 s2 seg0 / s0 seg2 / s1 seg2); nothing home, nothing launchable (E2c waits for J11's 40, J14 opens Sat, Next-up 1–3 DONE, 4–6 after J11).
+- MEASURED with Kaggle's own meter (`kaggle quota`): TPU 0.00 / 20.00 h used, refreshes 11-21 00:00 — this week's TPU hours lapse unused. CLI can push `--accelerator Tpu1VmV38`; `gpu.py:1220` hardcodes T4, so the TPU gate needs an S-lane backend first. INBOX line; nothing pushed.
+- Philosophy served: 6 (free compute — the unused TPU quota and the honest meter for it, surfaced before the next week starts). No order advanced: that is the slot's honest result.
