@@ -81,6 +81,25 @@ def test_diag_plain59_is_plain_and_reading_fires(tmp_path=None):
     assert ir.diag_reading(d)["reading"].startswith("VOID")
 
 
+def test_hold8_one_setting_both_rows():
+    """J3 (6), ruling 59: @hold8 = @repair with hold 8, rows 1 AND 3, seeds 10-14;
+    the hold knob is live (differs from white-noise gamma-only and from hold 32
+    at the same seed), and @repair/diag/plain settings are untouched."""
+    assert ir._settings("wm-latent@hold8") == ("wm-latent", 8, ir.REPAIR_GAMMA)
+    assert ir.rows_for("wm-latent@hold8") == (1, 3)
+    assert ir.seeds_for("wm-latent@hold8") == (10, 11, 12, 13, 14)
+    assert ir.seeds_for("wm-latent@repair") == (5, 6, 7, 8, 9)
+    assert ir.REPAIR_HOLD == 32 and ir.REPAIR_GAMMA == 0.99
+    c = ir.cells(["wm-latent@hold8"])
+    assert len(c) == 20 and {s for _, _, s, _ in c} == set(ir.HOLD8_SEEDS)
+    assert {r for _, r, _, _ in c} == {1, 3} and sum(ct for *_, ct in c) == 10
+    h8 = ir.run_cell("wm-latent@hold8", 1, 10, train=False, steps=300)
+    g = ir.run_cell("wm-latent@gamma-only", 1, 10, train=False, steps=300)
+    h32 = ir.run_cell("wm-latent@repair", 1, 10, train=False, steps=300)
+    assert h8["returns"] != g["returns"] and h8["returns"] != h32["returns"]
+    assert h8["arm"] == "wm-latent@hold8" and h8["ctrl"] is True
+
+
 if __name__ == "__main__":
     for _n, _f in sorted(globals().items()):
         if _n.startswith("test_"):

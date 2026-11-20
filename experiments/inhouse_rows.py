@@ -153,11 +153,31 @@ DIAG = {"@gamma-only": (1, REPAIR_GAMMA), "@hold-only": (REPAIR_HOLD, None),
         "@plain59": (1, None)}
 LEARNS_AT = -800.0
 
+# J3 (6) — ONE SETTING FOR BOTH ROWS (ruling 59; added 11-20 14:30, before
+# any @hold8 cell ran; the rule, @repair and the diag arms are UNCHANGED).
+# A brain that goes in one creature passes both rows with ONE setting, no
+# per-row hold. `<arm>@hold8` = @repair with the hold shortened:
+#   noise  the Gaussian DIRECTION is redrawn every HOLD8 = 8 decisions (and
+#          at every episode start); std schedule 0.5 -> 0.1 kept.
+#   gamma  0.99 (REPAIR_GAMMA), everything else as @repair.
+# The 8 is OURS, stated before the run, not from the record (no published
+# hold value for this learner): 32 passed row 3 (4/5) and alone killed row 1
+# (0/5); 8 is a guess between white (1) and 32 that may keep both.
+# Rows 1 AND 3, fresh seeds 10-14 (arm and never-trains control), the SAME
+# verdict clause as THE RULE (>= 3/5 reach AND control <= 1/5, else VOID).
+# No extension seeds. PASS both rows -> the other non-recurrent arms get
+# @hold8, one session each, same seeds. FAIL either -> J3 CLOSES (ruling 59).
+HOLD8_SUFFIX = "@hold8"
+HOLD8_HOLD = 8
+HOLD8_SEEDS = (10, 11, 12, 13, 14)
+
 
 def _settings(arm: str):
     """(core_name, hold, gamma or None for survival._gae)."""
     if arm.endswith(REPAIR_SUFFIX):
         return arm[:-len(REPAIR_SUFFIX)], REPAIR_HOLD, REPAIR_GAMMA
+    if arm.endswith(HOLD8_SUFFIX):
+        return arm[:-len(HOLD8_SUFFIX)], HOLD8_HOLD, REPAIR_GAMMA
     for suf, (hold, gamma) in DIAG.items():
         if arm.endswith(suf):
             return arm[:-len(suf)], hold, gamma
@@ -169,6 +189,8 @@ def rows_for(arm: str) -> tuple:
 
 
 def seeds_for(arm: str) -> tuple:
+    if arm.endswith(HOLD8_SUFFIX):
+        return HOLD8_SEEDS
     return REPAIR_SEEDS if _settings(arm)[0] != arm else SEEDS
 
 
