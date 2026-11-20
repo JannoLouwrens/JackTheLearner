@@ -14,6 +14,13 @@ Known answers, each with a control that must fail:
   2,000 at 300k reads Q 300k 2000 and a ratio > 4 over SUPPORTED (= 100*d_max
   + 0.1*8ln2/(1-0.995) = 151.7 + 110.9 = 262.6); control: a run eating 1 meal
   per 100 decisions (SUPPORTED 200 + 262.6) with Q 300 reads ratio < 1.
+- (11-20 19:30) the entropy section: H = -8 + ent_coef_loss / log(alpha). A
+  planted fixed-0.1 run whose true H falls 5.36 -> -17 linearly prints 5.0 at
+  10k, -17.0 at 300k, H min -17.0 and its first H <= 0 at the
+  planted mark (75k); control: a run whose H stays 5.36 prints 5.4 throughout
+  and NO crossing. An auto run (alpha 0.3) with the same planted H reads the
+  same H (the formula divides by log alpha, not alpha -- dividing by alpha
+  would print -7.4, asserted absent). alpha = 1 or no ent_coef_loss -> "–".
 """
 import json
 import tempfile
@@ -94,8 +101,48 @@ def test_critic_section():
     assert f[1] == "50", f                           # Q at 50k = 300*50/300
 
 
+def _hrec(arm, seed, h_of_t, alpha=0.1, drop=False):
+    import math
+    trace = []
+    for t in range(5000, 300_001, 5000):
+        w = {"t": t, "sat": 0.05, "actor_loss": -1.0, "ent_coef": alpha}
+        if not drop:
+            w["ent_coef_loss"] = math.log(alpha) * (h_of_t(t) - (-8.0)) if alpha != 1 else 0.0
+        trace.append(w)
+    return dict(_rec(arm, seed, [_life(300_000, "unfinished", 0)]), trace=trace)
+
+
+def test_entropy_section():
+    fall = lambda t: 5.36 - (5.36 + 17.0) * (t - 5000) / 295_000   # <= 0 from 75,716 -> window 80k
+    flat = lambda t: 5.36
+    with tempfile.TemporaryDirectory() as t:
+        p = Path(t) / "e2c_h0.json"
+        p.write_text(json.dumps({"cells": {
+            "E-food_s801": _hrec("E-food", 801, fall),
+            "E-zero_s801": _hrec("E-zero", 801, flat),
+            "E-food-auto_s801": _hrec("E-food-auto", 801, fall, alpha=0.3),
+            "E-zero-auto_s801": _hrec("E-zero-auto", 801, fall, alpha=1.0),
+            "E-random_point_s801": _hrec("E-random_point", 801, fall, drop=True)}}))
+        md, _ = P.e2c_table([p])
+    rows = {l.split(" | ")[0][2:]: l.strip("| ").split(" | ") for l in md.splitlines()
+            if l.startswith("| E-") and l.count("|") == 13}
+    assert len(rows) == 5, rows
+    f = rows["E-food_s801"]
+    assert f[1] == "5.0" and f[5] == "-17.0" and f[6] == "-17.0" and f[7] == "80", f
+    z = rows["E-zero_s801"]                           # control: no sharpening
+    assert z[1:7] == ["5.4"] * 6 and z[7] == "–", z
+    a = rows["E-food-auto_s801"]
+    assert a[1:8] == f[1:8], (a, f)                   # log(alpha), not alpha
+    assert "-7.4" not in a
+    assert rows["E-zero-auto_s801"][1:8] == ["–"] * 7       # alpha = 1
+    assert rows["E-random_point_s801"][1:8] == ["–"] * 7    # nothing logged
+    assert P.e2c_entropy({"ent_coef": 0.1, "ent_coef_loss": -30.888}) is not None
+    assert abs(P.e2c_entropy({"ent_coef": 0.1, "ent_coef_loss": -30.888}) - 5.415) < 0.01
+
+
 def main():
     test_critic_section()
+    test_entropy_section()
     test_planted_book()
     test_pilot_default_unchanged()
     print("test_e2c_table PASS")

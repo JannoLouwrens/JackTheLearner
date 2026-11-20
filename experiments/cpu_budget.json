@@ -1613,18 +1613,18 @@
         "detached:launch_diag59.log": 249.74,
         "detached:launch_e0.log": 830.75,
         "detached:launch_e1.log": 368.74,
-        "detached:launch_e2.log": 142.35,
-        "detached:launch_e3.log": 122.07,
-        "detached:launch_hold8.log": 46.31,
+        "detached:launch_e2.log": 164.27,
+        "detached:launch_e3.log": 132.99,
+        "detached:launch_hold8.log": 68.2,
         "detached:launch_p9.log": 630.88,
         "detached:launch_s0_seg2.log": 519.35,
         "detached:launch_s1_seg2.log": 566.45,
         "detached:launch_s2_seg0.log": 438.63,
-        "detached:launch_s2_seg1.log": 43.97,
+        "detached:launch_s2_seg1.log": 65.8,
         "detached:real.log": 0.03,
         "detached:tpu_probe.log": 169.08
       },
-      "used_s": 9861.15
+      "used_s": 9937.71
     }
   },
   "last_child_s": {

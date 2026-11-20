@@ -2911,3 +2911,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First act `kernels status`: all 5 sessions RUNNING (J15 a1, e2, e3; J3 @hold8; J10 s2 seg1) → nothing to harvest or launch; `e2c-table` still 14/25.
 - Checked one candidate cause of the 14/14 critic overestimate by reading the code path: death → `terminated=True` survives PilotLives, HandedSense and DummyVecEnv; the 9,000-decision cap → truncated, bootstrapped (SB3 ReplayBuffer handle_timeout_termination=True). NOT a done-wiring bug. Not run, read — no measurement moved.
 - Philosophy served: 4 (one wrong explanation removed before anyone builds on it). Thin: no verdict moved; the free sessions were all busy.
+
+## 2026-11-20 19:07–19:40 UTC · JACK · J15: 18/25 home, the policy's entropy recovered from the trace; J10 s0 seg3 launched
+- First act `kernels status`: a1 COMPLETE (18:51) → 4/5 busy → J10 s0 seg3 (1.5M → 2M) LAUNCHED `jack-cpu-1795201683` rc 0 (J15 has nothing left to launch, J3 is in flight). Kaggle 5/5 again.
+- E2c 18/25 (both auto arms complete), descriptive, no verdict: 8/8 food runs learn whole lives and lose them; critic overestimates 18/18.
+- New in `e2c-table`: SBX logs `ent_coef_loss = log α·(H − target)` in fixed mode too, so the policy entropy the trace lost (its `std` is overwritten) is recoverable. Fixed 0.1: H 5.4 → < 0 by 15–35k → −10…−20 at 300k, 8/8 runs, controls included. Auto: H held at −8, α bottoms 0.04–0.06 then climbs to 0.13–0.65. So the entropy bonus was never dominating (§19 cause 1's signature contradicted) and "auto α < 0.01 by 50k" is wrong 10/10.
+- Planted test PASS: falling H read back, flat-H control shows no crossing, log α not α, α = 1 / unlogged → no reading. INBOX line for the Director.
+- Philosophy served: 4 (the failure chased one step further — a suspected cause removed by measurement, not argued) and 6 (the free session filled when it opened).

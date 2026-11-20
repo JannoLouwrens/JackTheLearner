@@ -798,6 +798,12 @@ def e2c_table(paths=None) -> tuple:
             r = runs.get(R.rid(a, s_))
             if r is not None:
                 out.append(e2c_q_row(R.rid(a, s_), r))
+    out += ["", *E2C_H_HEAD]
+    for a in arms:
+        for s_ in E2C_SEEDS:
+            r = runs.get(R.rid(a, s_))
+            if r is not None:
+                out.append(e2c_h_row(R.rid(a, s_), r))
     return "\n".join(out), missing
 
 
@@ -844,6 +850,61 @@ def e2c_q_row(rid: str, rec: dict) -> str:
     f = lambda v, nd=0: "–" if v is None or v != v else f"{v:.{nd}f}"
     return (f"| {rid} | " + " | ".join(f(q[k]) for k in E2C_Q_AT)
             + f" | {f(1000 * rate, 3)} | {f(alpha, 3)} | {f(sup)} | {f(ratio, 1)} |")
+
+
+# ---- J15 11-20 19:30: the policy's own entropy, recovered from the trace.
+# The trace's per-dim action `std` is lost after the first learning window
+# (SB3's `train/std` overwrites it; INBOX 18:35), so PILOT_B2.md §3b's
+# "std in the band / std falls" reading has no input. But SBX 0.28.0 logs, in
+# BOTH modes (sac.py:359; a fixed coefficient still computes it, sac.py:36),
+#   ent_coef_loss = log(alpha) * (H - target),  H = -mean(log pi) of the batch
+# so H = target + ent_coef_loss / log(alpha), target = -dim(A) = -8.
+# Anchor (real runs, 18 home): at the first learning window (10k, ~5k updates
+# in) the ten auto runs read H 4.7-5.4 and no run exceeds 5.41 -- at or just
+# under 8 x 0.670 = 5.36, PUBLISHED_PRIORS §19's computed entropy of the
+# untrained tanh-Gaussian (ceiling 8 ln 2 = 5.55). H is one 256-row
+# minibatch's mean at the window's last update. alpha = 1 gives no reading (log 0). DESCRIPTIVE, no reading: H is
+# the policy's spread at replayed states, NOT §3b's pooled action std, so the
+# frozen 0.51-0.65 band is not applied to it.
+E2C_H_AT = (10_000, 50_000, 100_000, 200_000, 300_000)
+E2C_H_TARGET = -8.0
+E2C_H_HEAD = (
+    "Policy entropy H (nats, 8 action dims; from the logged ent_coef_loss = "
+    "log α·(H − target), target −8; untrained = 5.36, uniform ceiling 5.55) at "
+    "k decisions. §19 cause 1 (entropy bonus dominates) predicts H staying "
+    "near 5; a falling H is a sharpening policy. DESCRIPTIVE, no reading:",
+    "",
+    "| run | H 10k | H 50k | H 100k | H 200k | H 300k | H min | first H ≤ 0 at k | α 50k | α 300k | sat 50k | sat 300k |",
+    "|---|---|---|---|---|---|---|---|---|---|---|---|")
+
+
+def e2c_entropy(w: dict):
+    """H of one trace window, or None where the window cannot say (no
+    ent_coef_loss / ent_coef logged, alpha <= 0, or alpha == 1)."""
+    import math
+    a, l = w.get("ent_coef"), w.get("ent_coef_loss")
+    if a is None or l is None or a <= 0 or abs(math.log(a)) < 1e-9:
+        return None
+    return E2C_H_TARGET + l / math.log(a)
+
+
+def e2c_h_row(rid: str, rec: dict) -> str:
+    trace = [w for w in rec.get("trace", []) if "t" in w]
+    hs = [(w["t"], e2c_entropy(w)) for w in trace]
+    hs = [(t, h) for t, h in hs if h is not None]
+
+    def at(k, seq):
+        before = [v for t, v in seq if t <= k]
+        return before[-1] if before else None
+    al = [(w["t"], w["ent_coef"]) for w in trace if "ent_coef" in w]
+    sat = [(w["t"], w["sat"]) for w in trace if "sat" in w]
+    first0 = next((t // 1000 for t, h in hs if h <= 0), None)
+    f = lambda v, nd=1: "–" if v is None or v != v else f"{v:.{nd}f}"
+    return (f"| {rid} | " + " | ".join(f(at(k, hs)) for k in E2C_H_AT)
+            + f" | {f(min((h for _, h in hs), default=None))}"
+            + f" | {first0 if first0 is not None else '–'}"
+            + f" | {f(at(50_000, al), 3)} | {f(at(300_000, al), 3)}"
+            + f" | {f(at(50_000, sat), 3)} | {f(at(300_000, sat), 3)} |")
 
 
 # ---- J11 item 4: THE RULE's readings, transcribed (11-19 05:20, before any
