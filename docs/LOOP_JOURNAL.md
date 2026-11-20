@@ -2874,3 +2874,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Next-up 3: `docs/research/prereg/row128_vs_rays16.md` (text only, Director freezes): K-rays16 vs K-row128 under J15's setting S, a K-row128-blind control (wide input, no content — must fail) and a K-lr0-row128 floor; seeds 921–925, 300k, pilot_b2 readings + MWU U≥21/25 & ≥4/5 pairs. Gate: does NOT run if both E2c food arms miss (two floors compared = no reading).
 - INBOX: S12's tpu_wait and J15's e2/e3 race for the same next free session; nobody has ruled which goes first.
 - Philosophy served: 3 (the eye raced, not assumed from a hand reader's .909) and 4 (the control that must fail and the gate written before any seed).
+
+## 2026-11-20 15:37–16:00 UTC · JACK (short slot) · Kaggle 5/5 → Next-up 4: stage-2 rule DRAFTED
+- First act: `kernels status` — e0, e1, a0, a1, a2 all RUNNING (tpu_wait also reads busy=5 at 15:34) → J15 e2/e3, J3 @hold8, J10 cannot launch; J14 opens Sat.
+- Next-up 4: `docs/research/prereg/stage2_a_vs_b.md` (text only, Director freezes): gated on B eating somewhere (E2c) + A1–A3 in band + harness 13 checks + 20-run pilot; A vs B + matched-update B, floors/shuffled must fail, f4 ceiling must pass; PRIORS §8 log-rank, 2 looks at 0.025, censored at 1M; battery with the record's predicted ordering; PLAN's decision table. Five OPEN lines left to the freeze.
+- Found: the only ceiling forager row (f4) is on row128; stage 2's world is 16 rays — a ceiling on the race's own eye does not exist yet.
+- Philosophy served: 3 (the brain is raced, not assumed — rule written before any run) and 4 (floors that must fail, a ceiling that must pass, the "not distinguished" meaning written in advance).

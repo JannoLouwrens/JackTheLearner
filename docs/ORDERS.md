@@ -200,6 +200,7 @@ J15 names the setting.
 4. Stage-2 rule, first draft from `STAGE2_PREDICTION.md` + pilot 2's
 reading → `docs/research/prereg/stage2_a_vs_b.md` (text; the Director
 freezes it).
+   state: 11-20 15:55 DRAFT `docs/research/prereg/stage2_a_vs_b.md` (text, no seed): gate = B eats somewhere (E2c; both food arms miss → stage 2 waits on F3) + A1–A3 in band + 13 harness checks + the 20-run pilot; arms A, B, B@A-ratio, 4 floors + B-shuffled must fail, f4 ceiling must pass; §8 log-rank 2 looks @0.025, censored at 1M; battery with predicted ordering; PLAN's decision table. OPEN for the Director: θ=5 vs SUSTAINED W, battery seeds, added-sense task, ceiling on the 16-ray eye, which shortening.
 
 ---
 
