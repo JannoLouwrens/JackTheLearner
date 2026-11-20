@@ -1240,6 +1240,68 @@ tied; which of them the seat goes to, and whether a seat's race should screen on
 admission BEFORE it scores, is routed to the Review as
 `so10-tie-break-hands-the-seat-to-an-ineligible-arm`.
 
+## 2026-11-20 12:40 UTC — Director, DAILY sitting: rulings
+
+**57. E2c gets learned-temperature twins.** Pilot 2 read every learner
+below the same brain never learning, in the movement-free world too; the
+priced suspect is SAC's fixed `ent_coef` 0.1 (§19: no published precedent
+on 8 action dims; ≈ one meal of discounted value for staying alive). E2c
+was launched on that same setting, so its miss could not be told from the
+setting. Two arms are ADDED before any of their seeds exists —
+`E-food-auto`, `E-zero-auto`, seeds 801–805, read by the same frozen
+readings. The frozen fixed-α arms finish as frozen; nothing is dropped,
+no threshold moves. The branch table is written before kernel a0.
+
+**58. After pilot 2: one owner for the next learner run in his world.**
+The pilot picks no setup: no arm's world made the task learnable for plain
+SAC at 300k. Until J15 reads, no lane launches another learner run in his
+world except J15 (E2c), J14 (brain A's smoke) and the forge's round 1 on a
+rule the Director froze. Round 1 is the eating wall on arm K's world
+(settings and run length, each candidate with a prior, a metric that
+requires eating, plain variation as control). It does not adopt E2c: E2c
+is a learnability proof with its own frozen rule. If forge order F1 has
+not passed its planted tests by the 11-22 sitting, lane jack drafts the
+rule as pilot 3 — the question does not wait on an instrument.
+
+**59. J3's split.** The repaired entry passed sparse row 3 and failed
+dense row 1; the cause is measured (noise held 32 decisions; γ is
+cleared). A per-row hold is refused: a brain that goes into one creature
+reproduces both rows on one setting. One last entry, `wm-latent@hold8`,
+fresh seeds 10–14, rule first, no extension. The 8 is ours, not the
+record's, and is stated as such. Pass both → the other arms get it; fail
+either → J3 closes with every arm's numbers on record.
+
+**60. Kaggle is five CPU sessions, and none idles.** Measured cap 5. The
+ranking's per-order caps bind only while a lower-ranked READY kernel
+waits. Every JACK slot starts by harvesting and refilling. The 13–15
+idle session-hours of 11-19/20 were the weekly usage stop (all agents
+paused at 100% from 00:37 to the 04:00 reset, slots refused before it),
+not a ranking fault; no new organ is added for it. The free TPU (20 h a
+week, 0 used, this week's lapses unused tonight) gets a door in `gpu.py`
+and the owner's gate kernel (S12); no TPU plan before its verdict.
+
+**61. The science lab's place.** Lane `forge` (owner 11-20) keeps its
+orders in `docs/FORGE.md`: F1 → F2 → F4, F3 after F1 passes and J15
+reads. Its fence is confirmed as written — whatever is improved never
+writes its own judge — and the session's corrected advice stands: no LLM
+reward search as the first move; a hand-set pre-registered grid. F5's
+tripwire is S13; separation under another user writes outside the repo
+and is the owner's to grant, so it is not ordered. The forge holds at
+most 2 Kaggle sessions at rank 4. Lane `lab`'s learner or setting
+candidates for brain B enter through `docs/FORGE_POOL.md` with a prior.
+
+**62. The GPU week, completed.** After the ear, the needs-hidden
+known-answer row (rule `5464c5b8`, ~2 T4-h) takes a GPU slot: ≈ 17 of 30
+h ordered. The rest is for brain A's pilot in his world, but only by the
+plan's steps: its rule is drafted after A1–A3 are in band and the smoke
+passes, and frozen at a sitting before any seed.
+
+**63. The lab's place key (11-20).** Two probes read ALIVE (.934 vs turn
+search .933; carried to unseen worlds). "Memory and sleep" is at step 1
+and stage 3; no order now. It is entered in PLAN's table as a last-10%
+candidate; before it goes in him it owes a registered spec on fresh
+worlds, looks from a real policy, and the 16-ray eye beside 128.
+
 ## LG.13 — WINNER — meaning-mass
 meaning-mass beats topk-softmax by 4.13 sigma and clears the null by 56.00 sigma.
 
