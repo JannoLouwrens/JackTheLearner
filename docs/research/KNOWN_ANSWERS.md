@@ -405,3 +405,14 @@ seeds 5–9, same verdict clause), unchanged. Kernel jack-cpu-1795101867 at `66b
   vs ~−120 at 0.95, so the value-loss term is ~25× larger in the core's shared loss. The other
   candidate: noise held 32 decisions (16% of a 200-step episode) on a task that needs fine torque
   corrections. One kernel with `hold-only` and `gamma-only` cells on row 1 separates them.
+- **Addendum 11-20 12:20 — measured: the HELD NOISE broke row 1, not γ.** Diagnostic J3 (5′)
+  (`a377e014`, reading fixed in `inhouse_rows.py` before any cell; kernel jack-cpu-1795170409, home
+  ~11:58, 5,519 s; result `/data/jack-logs/j3_inhouse/wm-latent@gamma-only__wm-latent@hold-only__wm-latent@plain59.json`;
+  `inhouse_rows diag` reads **"HELD NOISE kills row 1"**). Row 1 only, seeds 5–9, learns iff best window ≥ −800:
+  `@plain59` (neither change) −520.7, −390.3, −364.1, −354.4, −369.4 → KEEPS 5/5 (seed set is not the cause; not VOID);
+  `@gamma-only` (γ 0.99, white noise) −567.8, −283.7, −598.9, −758.9, −736.8 → KEEPS 5/5;
+  `@hold-only` (held 32, γ 0.95) −1199.1, −1219.6, −1265.3, −1245.0, −1220.2 → KILLS 0/5 (≈ never-trains control).
+  The priced γ/value-scale suspect above is **refuted**: γ 0.99 alone still learns row 1 (mean −549 vs plain −400,
+  somewhat worse). Held noise is what found row 3's flag and what erased row 1's learning. Diagnostic, reported-only:
+  no verdict row moves; which repair goes to the other arms (e.g. hold on sparse-reward rows only, or a shorter hold)
+  is the Director's split ruling, now with its cause measured.

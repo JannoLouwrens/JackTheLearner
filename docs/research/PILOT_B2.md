@@ -76,7 +76,7 @@ The leak is 0.1% of lives and makes **no** W = 2 run (a statue life is followed 
 
 **m-card, interim 1/8 (11-18 21:25; m2 home 20:46, `pilot_b2 card --glob 'm*.json'`; m0, m1, m3, m4 RUNNING, m5–m7 to launch):** held8-k0-ff-bm 1/250 sustained (0.40%, upper 1.90%), W=1/2/3 runs 1/0/0, meals/life 1.42; held8-k1-ff-bm 0/250 (upper 1.20%), meals/life 1.12. Beside the world-motor f-card at the same count: k0 expects 4.7 at 37/1970 — seeing ≤ 1 has P = 0.052; k1 expects 1.0, P(0) = 0.37. Two worlds only: NOT a reading, no W is set from it.
 
-## 3. The rule — FROZEN 11-19 04:35 (drafted 02:30; this commit sets `PILOT_RULE`). 4. Runs — none yet.
+## 3. The rule — FROZEN 11-19 04:35 (drafted 02:30; this commit sets `PILOT_RULE`). 4. Runs — see §4 below.
 
 **Frozen 11-19 04:35.** The freezing commit changed exactly what the draft allowed: (i) W and U filled from the FINAL m-card's `rule-inputs` by the formula below; (ii) the motor frame set to **body**. On (ii): no Director ruling has landed (INBOX 11-18 07:40 / 12:26, ~21 h open); the frame is set by the 07:40 written default ("if no ruling: both frames body"), which the measurement already answers — gate 2 row h4 (body eye + world motor) 0/20 vs body + body 20/20 — and ruling 38's no-compass principle (a world-axis push is a compass in the motor). **If the Director rules `world`, this rule is re-drafted with the f-card arms (W stays 2; U 0.55 k0 / 0.69 k1) and runs on seeds 407+; no body-motor reading is carried over.** One derived figure changed with U: the SUSTAINED bar's chance at k1-bm's upper 0.80 is P = 0.047 (was 0.033 at the f-card's 0.69) — the bar (≥ 3 of 5) is unchanged.
 
@@ -122,3 +122,16 @@ Why: §3b's cause (entropy bonus ≫ task reward) predicts a policy pushed towar
 - **Where moving costs energy (B0, P, G), movement rate Q2 → Q4, × basal:** B0 0.243 → 0.134, 0.223 → 0.166; G 0.196 → 0.088, 0.173 → 0.106; P 0.217 → 0.125, 0.199 → 0.116. **Falls in 6 of 6 cells** (25–55 %; sign test two-sided p = 0.031), while meals/life fall too (B0 0.19 → 0.06, 0.23 → 0.17; G 0.20 → 0.10, 0.40 → 0.10; P 0.33 → 0.30, 0.30 → 0.07).
 - Reading (reported only): in these worlds learning buys less work, not more. That is the lie-still slide the record predicts (§13), and the entropy bonus does not override it: the energy cost moves the motor's work and the bonus doesn't. It does not refute §3b, which bites where the cost is absent (K) and is about action spread, not work (spread can rise while work falls). It also says P's positive-only reward did not stop the slide in this partial (§3's prediction for P: "stops the slide").
 - Limits: 2 seeds of 5, E0 taken as its mean, mechanical work is not action std. The E2c trace remains the only reading of action spread.
+
+## 4. Runs and readings — 40 of 40 home (11-20 12:15; p9 home 11-20 11:07; 0 cut, 0 crash)
+Readings are the tool's (`pilot_b2 readings`, rule `e2c3c378`, W = 2), not re-derived by hand: **READ**.
+- **B0: NEAR RANDOM** (sustained W1/2/3 0/0/0; θ at W3 0; slide signature 2 of 5).
+- **K: SLIDES** (0/0/0; θ 0; signature 5 of 5).
+- **P: SLIDES** (0/0/0; θ 0; signature 3 of 5).
+- **G: SLIDES** (0/0/0; θ 0; signature 3 of 5).
+- **KP: SLIDES** (0/0/0; θ 0; signature 5 of 5).
+- K-lr0: a bound for K/KP, not read (§3 Named floors) — W=1/2/3 crossings 1/0/0 (one sustained life, s405 at decision 224,198).
+Floor clause held (noop 0 crossings at every W, held8 0) and no "broken" clause fired (noop never crosses W = 1; K-lr0 crosses W = 2 in 0 of 5; every run rc 0).
+`pilot_b2 table` (reported only): meals/life early → late — B0 0.64 → 0.13, K 1.08 → 0.16, P 0.48 → 0.16, G 0.60 → 0.08, KP 1.24 → 0.12; K-lr0 (never learns) 1.36 → 0.82; held8 0.88 → 0.95; noop 0 → 0. % lives fed late: learners 7–10, K-lr0 38, held8 43. **Every learning arm, on every seed, ends below the not-learning K-lr0 and below the held-random floor.**
+Against §13's predictions: K was predicted SUSTAINED — it SLIDES (5/5), and in a world where moving costs nothing (§3c), so the lie-still cure does not explain K's fall; P was predicted NEAR RANDOM (slide stopped) — it SLIDES; B0 was predicted SLIDES — it reads NEAR RANDOM (2 of 5 signature, one short of the bar). G unknown → SLIDES.
+What it picks (reported only, no seat moves): no arm's world made the task learnable for plain SAC at 300k. Learning makes him eat LESS than not learning, in the movement-free world too — that points at the learner's own settings (§3b: entropy bonus ≈ 15–18× the task reward per decision), not at the world. The next learner run is J15's E2c on arm K's world (ORDERS J11 (6)), with the trace §3b's corrected reading needs.
