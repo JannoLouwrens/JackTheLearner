@@ -171,7 +171,8 @@ serves: M3 · PLAN "the decisive test … on the Mac mini" — every Mac hour an
 **done when:** the wheel line and rung 2's pass are in `experiments/brain_a/README.md` with the test names.
 state: (a)–(c) DONE `07a65c3d`: G1 IDENTICAL 1,400/1,400; rung 1 PASS 9/9 eager and compiled (mlx 0.32.4); official grid = XLA:CPU's fma form.
 state: 11-20 (e) RUNG 2 PASS `df2b7bc2`: `rung2.py` committed FAILING 0/4 vs stubs `d5d840d1` (refs 20/20 vs official, planted 4/4), then filled → 4/4 eager and compiled (returns, percentile, perc normaliser, slow critic; ≤1.4e-7×(|ref|+1)); rung 1 still 9/9. Found: eager `jnp.percentile` q=100 is 1 ulp off, jit exact.
-state: (d) the PyPI wheel cannot load here (GLIBC 2.34 < 2.35, README stage 0.1) — INBOX; it needs a Kaggle CPU session. Done-when lacks only the wheel line.
+state: (d) the PyPI wheel cannot load here (GLIBC 2.34 < 2.35) → needs a Kaggle CPU session. 11-20 20:24 KERNEL READY `c6611404` (not launched — order says box only): `experiments/brain_a/wheel_kernel.py` runs rung1/rung2 + both planted suites on PyPI `mlx[cpu]==0.32.4`; WHEEL verdict fixed (all 4 rc 0 + PASS/OK lines + mlx 0.32.4 printed). Test 3/3 incl. PASS on the box's real output and 6 planted non-PASSes.
+next: once ranked, one ~0.3 h CPU session (no GPU-hours): `scripts/launch_detached.sh /data/jack-logs/mlx/launch_wheel.log $PY -m experiments.brain_a.wheel_kernel kernel` → `/data/jack-logs/mlx/wheel.json` → the wheel line in README.
 
 **Lane `forge` (the science lab, owner 11-20; ruling 61)** reads its orders
 in `docs/FORGE.md`: F1 → F2 → F4; F3 (round 1, the eating wall) after F1's
@@ -293,6 +294,7 @@ six PASSes gated on a seed average that admits a failing seed. (9)
 - **JACK 18:35 (J15, the critic overestimates — a lead for the forge/§19, no rule touched):** in 14/14 E2c runs home, SAC's own value estimate (−actor_loss, min of twin critics) climbs all run, never-eating controls included, to 1.2–8.3× the ceiling the run's eating supports (fixed α: 1.7–8.3×; E-random_point s801 Q 2,174 vs 263). Record to read: van Hasselt 2018 'deadly triad' (arXiv 1812.02648), reward size 100/meal with γ 0.995. Whether this causes the learned-then-lost skill is NOT shown — a twin with critic-side fixes would be a forge candidate. Also (machine): `pilot_b.trace` stores SB3's `train/std` under the trace's own `std` key, so every window after the first loses the per-dim action std (SBX `get_std()` is a stub = 0.0).
 
 - **JACK 19:45 (J15, narrows my 18:35 critic lead — read it as weaker):** on 18/18 traces Q (−actor_loss) climbs smoothly with no break at the last capped life, and the 10 control runs that never eat reach as high or higher (300k median 996 vs food 788; ≈ equal at 90k) — the overestimate is generic to this SAC in this world, not the loss's mechanism. Replay eviction also ruled out (buffer 300k ≥ T). The loss's cause is still unshown; forge/§19 should not build on the critic lead alone.
+- **JACK 20:24 (J16 (d)):** the wheel check is now ONE command, ~0.3 h of a Kaggle CPU session, no GPU-hours (`wheel_kernel.py`, `c6611404`); 1 of 5 sessions free tonight (J15 e2 + J10 ×3 RUNNING). Rank it and the next idle slot launches it.
 
 ## DONE (kept one day)
 

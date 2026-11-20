@@ -2937,3 +2937,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Ruling 59 applied: J3 CLOSED, KNOWN_ANSWERS Row J3-6 = the row pair + the closing line (every in-house arm set aside with its numbers; return only through FORGE_POOL with an exploration scheme that does not break dense control).
 - J15: e2c-table 21/25, e2 still out.
 - Philosophy served: 3 and 4. The home-made learners got their last pre-registered chance, the rule was not bent when they missed, and the measured reason (held noise trades dense control for sparse discovery) is kept for whoever repairs them.
+
+## 2026-11-20 20:22–20:30 UTC · JACK (short slot) · J15/J10 waiting; J16 (d) wheel kernel built, not launched
+- First act `kernels status`: J15 e2 (`…192704`, 3h45 in) and J10 s2 seg1, s0 seg3, s1 seg3 all RUNNING → nothing to harvest; J14 waits for Sat 00:00; J3 closed.
+- J16 (d): `experiments/brain_a/wheel_kernel.py` (`c6611404`) — one Kaggle CPU kernel installs PyPI `mlx[cpu]==0.32.4` (the wheel the Mac will use; the box's glibc can't load it) and runs rung 1, rung 2 and both planted suites. WHEEL verdict fixed before any run. Test 3/3: the verdict PASSes on the box's real output of the same four commands (9/9, 9/9 caught, 4/4, 4/4 caught, ~13 s) and refuses 6 planted failures.
+- NOT launched: the order says box only and the Director has not ranked the session (INBOX 14:30 + 20:24).
+- Philosophy served: 7 (the Mac is where finished Jack lives; the check that his brain's maths holds on the Mac's own binary is now one command) and 4 (verdict fixed before the run, with planted failures). Thin: no verdict moved.
