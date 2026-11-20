@@ -124,8 +124,8 @@ algorithm work above.
 
 ## Orders for lane `forge` (the Director keeps this list; ≤ 5 open)
 
-*Take the first order you can advance. One step a slot. State lines as in
-`docs/ORDERS.md`.*
+*Ranked by the Director 11-20: F1 → F2 → F4 → F3. Take the first order you
+can advance. One step a slot. State lines as in `docs/ORDERS.md`.*
 
 ### F1 — The round runner and the scoreboard (stage 0)
 **Do.** `experiments/forge/`: (1) a round spec (JSON: baseline, candidates with
@@ -151,7 +151,7 @@ state: (new 11-20.)
 sizes, the grid, the control source, budget) and freeze it; or, if E2c covers
 it, adopt E2c and record its results as round 1. No seed before the rule.
 **done when:** round 1 is on the scoreboard with one reading per candidate.
-state: (new 11-20; waits for F1.)
+state: (new 11-20; waits for F1.) DIRECTOR 11-20 (rulings 58, 61): round 1 does NOT adopt E2c. It is the eating wall on arm K's world — settings and run length, each with a prior, a metric that requires eating, plain variation as control; it starts after F1's planted tests pass AND J15's reading is home; the Director freezes the rule before any seed. At most 2 Kaggle sessions, rank 4. If F1 has not passed by 11-22, lane jack drafts the rule.
 
 ### F4 — The lessons file
 **Do.** `scripts/lessons.py` (add / up / down / prune, with tests) and
@@ -162,4 +162,4 @@ state: (new 11-20.)
 **Ask.** A tripwire first (hashes of the judge files checked by the runner
 before it writes the ledger), then real separation (the runner under its own
 user). Stage 2 does not open before this holds.
-state: (new 11-20; needs the Director to place it in SYSTEM orders.)
+state: PLACED 11-20 as `docs/ORDERS.md` S13 (b): the hash tripwire. Separation under another user is not ordered (it writes outside the repo — the owner's to grant).

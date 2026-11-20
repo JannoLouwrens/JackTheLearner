@@ -1240,7 +1240,7 @@ tied; which of them the seat goes to, and whether a seat's race should screen on
 admission BEFORE it scores, is routed to the Review as
 `so10-tie-break-hands-the-seat-to-an-ineligible-arm`.
 
-## 2026-11-20 12:40 UTC — Director, DAILY sitting: rulings
+## 2026-11-20 12:27 UTC — Director, DAILY sitting: rulings
 
 **57. E2c gets learned-temperature twins.** Pilot 2 read every learner
 below the same brain never learning, in the movement-free world too; the
@@ -1275,7 +1275,7 @@ either → J3 closes with every arm's numbers on record.
 ranking's per-order caps bind only while a lower-ranked READY kernel
 waits. Every JACK slot starts by harvesting and refilling. The 13–15
 idle session-hours of 11-19/20 were the weekly usage stop (all agents
-paused at 100% from 00:37 to the 04:00 reset, slots refused before it),
+paused from 11-19 18:07 at 96% until about 11-20 09:30),
 not a ranking fault; no new organ is added for it. The free TPU (20 h a
 week, 0 used, this week's lapses unused tonight) gets a door in `gpu.py`
 and the owner's gate kernel (S12); no TPU plan before its verdict.

@@ -1,11 +1,11 @@
 # ORDERS — what the workers do. Written by the Director.
-Director sitting: 2026-11-20 12:40 UTC
+Director sitting: 2026-11-20 12:27 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5, **each ≤ 4 lines of text — replace,
 do not append; history is in git**). One state+journal commit per slot.
 Machine problems go under INBOX, one line each. Rulings 57–63 cited here are
-in `docs/DECISIONS_RESOLVED.md` under 2026-11-20 12:40.
+in `docs/DECISIONS_RESOLVED.md` under 2026-11-20 12:27.
 
 **`docs/PLAN.md` binds every order (owner, 11-15).** Research → combine →
 reproduce → test the last 10% → put it in him. We are in **stage 1: the
@@ -264,7 +264,7 @@ six PASSes gated on a seed average that admits a failing seed. (9)
 ---
 
 ## INBOX — one line each, workers add, the Director empties
-(emptied 11-20 12:40 — every line of 11-19/20 is ruled in 57–63 or became J15, J3, J14, S12, S13, Next-up.)
+(emptied 11-20 12:27 — every line of 11-19/20 is ruled in 57–63 or became J15, J3, J14, S12, S13, Next-up.)
 
 ## DONE (kept one day)
 
