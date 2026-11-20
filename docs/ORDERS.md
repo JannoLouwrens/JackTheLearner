@@ -136,6 +136,8 @@ serves: M3 · PLAN "a fair chance for our own brains" · philosophy 3, 4.
 state: 11-19 (4) COMPLETE: `wm-dyn`, `dreamer-xs`, `wm-latent+ring` all FAIL both rows (KNOWN_ANSWERS J3-4c/d/e; best row-1 means ≈ −360…−370, ring adds nothing).
 state: 11-19 17:15 (5) `wm-latent@repair` → Row J3-5: **row 3 PASS** 4/5 (first in-house row reproduced), **row 1 FAIL** 0/5, no learning.
 state: 11-20 12:20 (5′) DIAG HARVESTED (`b4aa10f3`, KNOWN_ANSWERS J3-5 addendum): **HELD NOISE kills row 1.** `@hold-only` 0/5 learn (−1199…−1265 ≈ control); `@gamma-only` 5/5 (−284…−759); `@plain59` 5/5 (−354…−521, not VOID). γ/value-scale suspect REFUTED.
+state: 11-20 14:25 (6) RULE WRITTEN before any cell `5ec9879e`: `wm-latent@hold8` in `inhouse_rows.py` (hold 8, γ 0.99, rows 1+3, seeds 10–14, same verdict, no extension); `test_hold8` PASS (file 6/6). NOT launched: Kaggle 5/5 (J15 e0, e1, a0–a2); J15's e2/e3 take the next free sessions first.
+next: after e2/e3 are in, `scripts/launch_detached.sh /data/jack-logs/j3_inhouse/launch_hold8.log $PY -m experiments.inhouse_rows kernel wm-latent@hold8`; harvest → KNOWN_ANSWERS row pair → PASS both = other arms, FAIL either = J3 closes.
 
 ### J10 — The walking layer: reproduce a published walk (owner 11-15)
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §4; ruling 45
@@ -166,6 +168,8 @@ theirs" table in the docstring. No training, no speed claims.
 serves: M3 · PLAN "the decisive test … on the Mac mini" — every Mac hour an hour of the real test · philosophy 5, 6, 7.
 **done when:** the wheel line and rung 2's pass are in `experiments/brain_a/README.md` with the test names.
 state: (a)–(c) DONE `07a65c3d`: G1 IDENTICAL 1,400/1,400; rung 1 PASS 9/9 eager and compiled (mlx 0.32.4); official grid = XLA:CPU's fma form.
+state: 11-20 (e) RUNG 2 PASS `df2b7bc2`: `rung2.py` committed FAILING 0/4 vs stubs `d5d840d1` (refs 20/20 vs official, planted 4/4), then filled → 4/4 eager and compiled (returns, percentile, perc normaliser, slow critic; ≤1.4e-7×(|ref|+1)); rung 1 still 9/9. Found: eager `jnp.percentile` q=100 is 1 ulp off, jit exact.
+state: (d) the PyPI wheel cannot load here (GLIBC 2.34 < 2.35, README stage 0.1) — INBOX; it needs a Kaggle CPU session. Done-when lacks only the wheel line.
 
 **Lane `forge` (the science lab, owner 11-20; ruling 61)** reads its orders
 in `docs/FORGE.md`: F1 → F2 → F4; F3 (round 1, the eating wall) after F1's
@@ -271,6 +275,8 @@ six PASSes gated on a seed average that admits a failing seed. (9)
 ## INBOX — one line each, workers add, the Director empties
 (emptied 11-20 12:27 — every line of 11-19/20 is ruled in 57–63 or became J15, J3, J14, S12, S13, Next-up.)
 - **FORGE 14:35 (F1 DONE, F3 can be frozen):** round runner + scoreboard pass 22/22 planted tests. Round 1's rule is a `spec.json` under `experiments/forge/rounds/r1/` (baseline, never-trains twin, ≤ 8 candidates each with source + prior, ≥ 1 `control` candidate, S/M/L seeds never reused, budget, `metric_sha256`); a planted example prints with `python -m scripts.forge_scoreboard --dry`. Four readings of FORGE.md are mine, overrule if wrong: equal never climbs; a non-control candidate must beat the control source's MEAN; above S the best control runs as a yardstick that cannot climb; a tie across the top-third cut drops. S/M score = share of late-half lives that are sustained (ruling 22's mark) — at S (50k) pilot 2 says every arm reads 0, so round 1's rule needs either a longer S or a second eating-based tiebreak; yours to freeze.
+
+- **JACK 14:30 (J16 (d) cannot run "box only"):** the PyPI MLX wheel needs GLIBC 2.35 / GLIBCXX 3.4.30 (box 2.34/3.4.29, measured 11-16) — rung 1+2 on the wheel needs one Kaggle CPU session (both files run standalone, ~1 min); rank it or rule conda-forge parity sufficient until the Mac. Rung 2 PASSED meanwhile (`df2b7bc2`).
 
 ## DONE (kept one day)
 

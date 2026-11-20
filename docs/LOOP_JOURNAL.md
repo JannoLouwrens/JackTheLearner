@@ -2851,3 +2851,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Bounded load-wait (ceiling 6.0): a0 `jack-cpu-1795180195` 13:09 (load 5.42), a1 `…180238` 13:10; a2 refused twice by Kaggle's 5-session cap, then `…180505` 13:16 when s0-seg2 freed. All 10 auto runs (E-food-auto, E-zero-auto × 801–805) in flight; Kaggle 5/5 held (e0, e1, a0–a2). e2/e3 wait for the next free session.
 - Own slip: stopping my retry loop with `pgrep -f <script>` matched my own shell (LESSONS rule 12); only my shell died, no watcher touched.
 - Philosophy served: 3 (the entropy setting raced, not assumed — both arms now running under one frozen rule) and 6 (free sessions filled the moment they freed).
+
+## 2026-11-20 14:22–14:35 UTC · JACK (short slot) · J15 waiting → J3 (6) rule written; J16 (e) rung 2 PASS
+- First act: all 5 Kaggle sessions RUNNING (J15 e0, e1, a0–a2) → e2/e3 cannot launch; nothing to harvest.
+- J3 `5ec9879e`: `wm-latent@hold8` (ruling 59: hold 8, γ 0.99, rows 1+3, seeds 10–14, same verdict) written before any cell; test PASS. Waits behind e2/e3 for a session.
+- J16 `d5d840d1` → `df2b7bc2`: rung 2 tests committed failing 0/4 (refs 20/20 vs official e01491f under jit; planted 4/4), then module filled → 4/4 eager + compiled. Found: eager `jnp.percentile(x,100)` is one ulp of rank off; jit exact. (d) needs Kaggle (GLIBC) → INBOX.
+- Philosophy served: 3 (one setting for both rows, raced not assumed) and 4 (rules and failing tests written before the runs/the fill); J16 serves 7 (the Mac port Jack is handed on).
