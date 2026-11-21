@@ -3022,3 +3022,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Philosophy served: 4 (a failure fixed, not filed — and the guard that caught it kept the record honest) and 6 (free GPU week kept busy).
 
 2026-11-21 · SYSTEM · INBOX 02:30 (ruling 54: a running Jack kernel's fix first) — `gpu.py` whole-output download timeout (300 s vs 0.6-1.2 GB of sheeprl logs) no longer loses a completed job: retry pulls only the `fetch` files + log into a fresh dir; on a double timeout the result returns with billable_s intact so the charge lands. `4319fc30`, tests/test_gpu_output_timeout 3/3 + control. A2-ext watcher still runs the old code (re-harvest via JACK_REUSE_KERNEL if it dies). S12(a) still on the owner; S9 next. Pre-existing red: test_gpu_accelerator `tpu_own_weekly_line`.
+
+## 2026-11-21 03:22–03:40 UTC · JACK (short slot) · J14: A's smoke in his world home and DONE; the ear relaunched
+- First act: ps + `kernels status`: in_world `…227930` COMPLETE (watcher exited clean, JSON written), A2 ext + J10 s2 seg3/f1/f2 RUNNING, 5 pollers alive → one seat free.
+- Ear RELAUNCHED on it (`jack-ladder-1795231396`, fix `9974ab92`), RUNNING at 03:25.
+- Scored A's in-world smoke by its 11-18 rule: STEPS 20k/20k rc 0, LEARNS (world-model loss 26.2→5.27, 19 logged steps), NO NaN, 18.7 dec/s on a T4 → KNOWN_ANSWERS "A's smoke". Pilot cost corrected: ≈ 4.5 T4-h per 300k run, not 1.6.
+- Needs-hidden row waits for a seat (6/6). Its job imports only torch, so the preamble's torchvision miss on py3.13 should not bite — the next slot checks its log.
+- Philosophy served: 3 (the brain that reproduced its rows now runs in his world before any race) and 6 (free GPU week kept busy).

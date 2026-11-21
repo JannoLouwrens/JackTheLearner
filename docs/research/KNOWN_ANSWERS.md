@@ -560,3 +560,18 @@ Kaggle `jack-ladder-1795220723`, COMPLETE; result file read from the watcher's d
 | 200K | 931–967 | 960.0 | 955.8 | 952.4 | **956.1** | 8.0 | in band |
 
 - **Brain A: 2 of 3 rows PASS (A1, A3), A2 owes its extension.**
+
+## A's smoke in his world (J14 b) — **DONE (1)–(4) all hold** (11-21 03:30, Kaggle T4)
+
+Kaggle `jack-ladder-1795227930`, COMPLETE, watcher exited clean (`/data/jack-logs/brain_a/in_world/inworld.json`; GPU receipt 1,485 s). Rule: `experiments/brain_a/in_world.py` docstring, written 11-18 before any run. Flat keys, body motor, seed 0, Tesla T4, torch re-pinned 2.6.0+cu126 (`A_TORCH_REPIN 0`).
+
+| clause | reading |
+|---|---|
+| (1) STEPS | rc 0, last logged step 20,000 of 20,000, not cut |
+| (2) LEARNS | `Loss/world_model_loss` logged at 19 steps: 26.19 @2k → 5.27 @20k; observation 17.14 → 1.80; reward 5.26 → 0.43 |
+| (3) NO NaN | every Loss/* finite; 4 episode returns finite |
+| (4) SPEED | **18.7 decisions/s** wall (20k / 1,069 s, incl. compile); sheeprl's own sps_env 186, sps_train 29 at replay_ratio 0.5 |
+
+- Not read (the rule forbids it at 20k): meals, lives, return. The 4 finished lives (−97, −97, −99, +100) are a smoke, not A eating.
+- Seen, descriptive: `Loss/state_loss` (KL) rises 1.14 @3k → 3.02 @20k while reconstruction falls — the posterior using more of the senses; no claim.
+- Cost for the pilot draft: 300k decisions at 18.7 dec/s ≈ 4.5 T4-h a run (an upper figure: compile time amortises), not ruling 62's ≈ 1.6 h. sheeprl reports sps_train 29 vs sps_env 186: the slow part is training, not his world.
