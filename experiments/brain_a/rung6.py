@@ -45,6 +45,7 @@ port is read against the official float32 GOLDEN this mode dumps, as rung 3.
 
   PYTHONPATH=/data/tools/ninjax362 nice -n 19 /data/venvs/jack-dv3/bin/python -I \
       experiments/brain_a/rung6.py --vs-official [--dump-golden]
+  taskset -c 0 nice -n 19 /data/venvs/jack-mlx/bin/python -I experiments/brain_a/rung6.py
 
 STATE 11-21 16:45 (J16 row 2.2, slot 1): REFERENCES HOLD, --vs-official
 12/12 (9 agreement checks incl. the reset-row and in-batch control, 3
@@ -275,8 +276,97 @@ def main_official():
     return 0 if n == len(rows) else 1
 
 
+# ---------------------------------------------------------------- port tests (MLX)
+# Two tests, each run eager AND under mx.compile:
+#   step_ref    port vs REF_step (float64) on the golden's params and inputs, 1e-6 x(|ref|+1)
+#   step_golden port vs the official f32 jit output dumped in the golden, same tolerance
+# plus, inside each: reset rows equal the port run from a zero carry, and kept
+# rows differ from it (the control that makes the mask check able to fail).
+ACT_SPEC = {CONT: 0, DISC: DISC_N}
+
+
+def _load_golden():
+    G = np.load(GOLDEN)
+    P = {k[len("param/"):]: G[k] for k in G.files if k.startswith("param/")}
+    I = dict(carry=dict(deter=G["in/carry_deter"], stoch=G["in/carry_stoch"]),
+             tokens=G["in/tokens"], reset=G["in/reset"].astype(bool),
+             action={CONT: G[f"in/action_{CONT}"], DISC: G[f"in/action_{DISC}"]})
+    out = {k[len("out/"):]: G[k] for k in G.files if k.startswith("out/")}
+    return P, I, out
+
+
+def _port_run(M, mx, P, I, compiled, reset=None):
+    reset = I["reset"] if reset is None else reset
+    MP = {k: mx.array(v) for k, v in P.items()}
+    args = (dict(deter=mx.array(I["carry"]["deter"]), stoch=mx.array(I["carry"]["stoch"])),
+            mx.array(I["tokens"]), {k: mx.array(v) for k, v in I["action"].items()},
+            mx.array(reset))
+    f = lambda p, c, t, a, r: M.rssm_step(p, c, t, a, r, TOY, ACT_SPEC)  # noqa: E731
+    if compiled:
+        f = mx.compile(f)
+    out = f(MP, *args)
+    return {k: np.asarray(v) for k, v in out.items()}
+
+
+def t_step(M, mx, compiled, against):
+    P, I, gold = _load_golden()
+    got = _port_run(M, mx, P, I, compiled)
+    if against == "ref":
+        P64 = {k: v.astype(np.float64) for k, v in P.items()}
+        tgt = REF_step(P64, {k: v.astype(np.float64) for k, v in I["carry"].items()},
+                       I["tokens"].astype(np.float64),
+                       {CONT: I["action"][CONT].astype(np.float64), DISC: I["action"][DISC]}, I["reset"])
+    else:
+        tgt = {k: gold[k] for k in ("masked_deter", "actemb", "deter", "post", "prior")}
+    rows = [close(f"{k} vs {against.upper()}", got[k], tgt[k], 1.0) for k in
+            ("masked_deter", "actemb", "deter", "post", "prior")]
+    z = dict(I, carry={k: np.zeros_like(v) for k, v in I["carry"].items()})
+    got0 = _port_run(M, mx, P, z, compiled, reset=np.ones(B, bool))
+    R = I["reset"]
+    rows += [close(f"reset rows {k} == zero-carry port step", got[k][R], got0[k][R], 1.0)
+             for k in ("deter", "post")]
+    d = float(np.abs(got["deter"][~R] - got0["deter"][~R]).max())
+    rows.append((d > 1e-3, f"control: kept rows differ from the zero-carry step (max |d| {d:.3g} > 1e-3)"))
+    return rows
+
+
+TESTS = [("step_ref", lambda M, mx, c: t_step(M, mx, c, "ref")),
+         ("step_golden", lambda M, mx, c: t_step(M, mx, c, "golden"))]
+
+
+def _mlx():
+    gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"   # mlx_smoke.py: mx.compile needs it
+    if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
+        os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("TMPDIR", "/data/tmp")
+    import mlx.core as mx
+    return mx
+
+
+def main_mlx():
+    mx = _mlx()
+    import mlx_maths as M
+    n = 0
+    for name, t in TESTS:
+        r = {}
+        for mode, c in (("eager", False), ("compiled", True)):
+            try:
+                rows = t(M, mx, c)
+                r[mode] = all(o for o, _ in rows)
+                det = [d for o, d in rows if not o][:4] or ["all rows ok"]
+            except Exception as e:  # noqa: BLE001 — a stub or crash is a FAIL, reported
+                r[mode], det = False, [f"{type(e).__name__}: {e}"[:200]]
+            if mode == "eager" or not r[mode]:
+                for d in det:
+                    print(f"    {mode[0]}:", d)
+        n += r["eager"] and r["compiled"]
+        print(f"{name:12s} eager {'PASS' if r['eager'] else 'FAIL'}  compiled {'PASS' if r['compiled'] else 'FAIL'}")
+    print(f"RUNG 6: {n}/{len(TESTS)} tests pass eager AND compiled (mlx {mx.__version__}) -> "
+          f"{'PASS' if n == len(TESTS) else 'FAIL'}")
+    return 0 if n == len(TESTS) else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv[1:]:
         sys.exit(main_official())
-    print("rung 6: only --vs-official exists yet (port + tests next slot)")
-    sys.exit(2)
+    sys.exit(main_mlx())

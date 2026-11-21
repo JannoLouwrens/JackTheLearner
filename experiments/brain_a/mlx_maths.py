@@ -280,3 +280,16 @@ def opt_update(params, grads, state, lr, warmup, agc, eps, beta1, beta2):
         upd[k] = -lr_t * u
         newp[k] = p + upd[k]
     return newp, (step, nnu, nmu), upd
+
+
+# ---------------------------------------------------------------- rung 6: one RSSM step
+# Contract: `rung6.py` REF_step (NumPy float64), itself checked 12/12 against
+# the official rssm.py `_observe`/`_core`/`_prior` at e01491f by
+# `rung6.py --vs-official`. Done-test: `rung6.py` exits 0, eager AND compiled.
+def rssm_step(P, carry, tokens, action, reset, cfg, act_spec):
+    """P: {name: mx.array} official param names (without the 'rssm/' prefix);
+    carry: dict(deter [B,D], stoch [B,S,C]); tokens [B,T]; action: {key: array};
+    reset [B] bool; act_spec: {key: classes (int>0) or 0 for continuous}.
+    -> dict(masked_deter, actemb, deter, post, prior) — post/prior are logits
+    [B,S,C]; the posterior SAMPLE is rung 7's."""
+    raise NotImplementedError("rung 6 port not written yet (J16 row 2.2)")
