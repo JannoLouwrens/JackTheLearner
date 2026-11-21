@@ -2980,3 +2980,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J10 → KNOWN_ANSWERS Row J10-1 **FAIL**: s1 2M R 585, 10/10 fell (5,294 at 1M; learned then collapsed); s0 5,834/11.91 → 2 of 3 cannot walk. 1M median IN BAND; control 68 holds.
 - Brain B row 5 → Row B-5: lib MISSES 796.2 (one seed 643.6) vs 837.9–868.1; ours 867.6 not counted; ctrl 101.6. Built the rule's pre-stated extension (`kernel 5 ext`, `judge_ext`, planted 5/5) and LAUNCHED `jack-cpu-1795219999`.
 - Philosophy served: 3 (brain A's published rows finally running, on free GPU hours that would lapse), 4 (two misses written as misses, no rule bent, and the one pre-stated extension used as written), 6 (free compute).
+
+## 2026-11-21 00:37–00:45 UTC · JACK (short slot) · J14: ear's torch wall fixed before launch; third GPU session refused
+- First act `kernels status`: A2b (`…220186`), A3 (`…220723`), brain B row 5 ext (`…219999`) RUNNING on Kaggle; A1 on Colab. Nothing home.
+- Ear kernel checked against the preamble's torch 2.5.1 swap: it imported the image's own torchaudio (built for the image's torch) and only reinstalled on ImportError — an ABI break raises OSError. `9780e3e5`: probe in a child, reinstall torchaudio==<torch base> from torch's CUDA index (--no-deps), stop TORCHAUDIO_MISMATCH before training. test_kws_row 4/4 incl. planted mismatch + failed install.
+- 00:40 launched A in his world: Kaggle refused ("Maximum batch GPU session count of 2 reached"), Colab busy with A1 → 0 h charged. Measured: Kaggle runs 2 GPU sessions at once; in_world and the ear wait for A2b/A3.
+- Philosophy served: 6 (free GPU hours not lost to a crash at pip) and 3 (brain A's in-world smoke and the ear's published row kept on track). No verdict moved.
