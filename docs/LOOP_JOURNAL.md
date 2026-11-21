@@ -3266,3 +3266,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - PUBLISHED_PRIORS §7 had flagged "478 ± 20 vs 528 ± 36: recompute from the per-seed file before use". Recomputed (`experiments/brain_a/band_recompute.py`): all five rows.py numbers = official file averaged over {P−20K, P−10K, P}, pop SD (±0.5); the frozen score reads (0.9P, P]. Single bin at 100K: 527.7 ± 36.4.
 - Matched windows: no frozen verdict flips (A1 100K holds by 1.2; A2-1m misses both ways). A2-v1S: ABOVE on the band's own 30K window (540.6 / 531.8 vs 438–519), IN the file's 10K-bin band (455–601). Window explains ~half the excess. KNOWN_ANSWERS addendum, INBOX for the Director.
 - Philosophy served: 4 (a threshold checked against its source before it judges anything, and nothing loosened: the frozen band stands until ruled).
+
+## 2026-11-21 18:37–18:45 UTC · JACK (short slot) · J16 tail — the wheel re-check of rungs 3/6/7
+- First act: Kaggle — A2-v1S s1 `…268291` now RUNNING (was QUEUED 4.7 h); nothing home. J14/J17/J10 wait on kernels or the Director; Next-up all done or in flight.
+- J16's Do text asks a wheel re-check per rung; rungs 3/6/7 never had one. `wheel_kernel.py` gains set `367` (six runs: each rung + `--planted`), verdict fixed before the run, rung 1/2 job body asserted byte-identical, regexes checked against the real print lines and against a blind-harness line (rejected).
+- Launched `jack-cpu-1795286363` (Kaggle CPU, free). Nothing measured yet; next slot harvests `wheel_367.json`.
+- Philosophy served: 4 (a pass on one binary is re-tested on the binary the Mac will actually install), 6 (free CPU).
