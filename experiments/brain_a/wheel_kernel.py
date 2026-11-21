@@ -20,8 +20,14 @@ build cannot be what ran); FAIL names the first differing run and its tail;
 NO-READING when the result file lacks a run (the kernel died — not a FAIL).
 No speed is read (only the Mac's speed counts, J16 prior).
 
-Usage:  python -m experiments.brain_a.wheel_kernel kernel     (submits; writes OUT/wheel.json)
-        python -m experiments.brain_a.wheel_kernel verdict FILE
+RUNGS 3/6/7 (11-21, J16's "a wheel re-check is one < 1 h Kaggle CPU kernel a
+rung"): `kernel 367` runs rung3/rung6/rung7 and each `--planted` the same way,
+result `wheel_367.json`; same verdict rule (PASS iff all six exit 0 with their
+line, n == m, and mlx 0.32.4 printed by each rung line). Default `kernel` is
+byte-identical to the rung 1/2 run above.
+
+Usage:  python -m experiments.brain_a.wheel_kernel kernel [367]  (submits; writes OUT/wheel[_367].json)
+        python -m experiments.brain_a.wheel_kernel verdict FILE [367]
 """
 import json
 import re
@@ -37,6 +43,13 @@ EXPECT = {"rung1": r"RUNG 1: (\d+)/(\d+) tests pass eager AND compiled \(mlx ([\
           "rung1_planted": r"PLANTED: (\d+)/(\d+) caught -> OK",
           "rung2": r"RUNG 2: (\d+)/(\d+) tests pass eager AND compiled \(mlx ([\w.]+)\) -> PASS",
           "rung2_planted": r"PLANTED: (\d+)/(\d+) caught -> OK"}
+RUNS_367 = [(f"rung{k}{t}", f"rung{k}.py", a, 1200) for k in (3, 6, 7)
+            for t, a in (("", []), ("_planted", ["--planted"]))]
+_PL = r"PLANTED: (\d+)/(\d+) caught, (?:control|unpatched port) passes -> OK"
+EXPECT.update({f"rung{k}": rf"RUNG {k}: (\d+)/(\d+) tests pass eager AND compiled \(mlx ([\w.]+)\) -> PASS"
+               for k in (3, 6, 7)})
+EXPECT.update({f"rung{k}_planted": _PL for k in (3, 6, 7)})
+SETS = {"12": (RUNS, "wheel.json"), "367": (RUNS_367, "wheel_367.json")}
 
 _JOB = r'''
 import subprocess as _s, sys as _y, json, os, platform, time
@@ -63,14 +76,16 @@ print("DONE", flush=True)
 '''
 
 
-def job_body() -> str:
-    return _JOB.replace("__PIN__", repr(PIN)).replace("__RUNS__", repr(RUNS))
+def job_body(which: str = "12") -> str:
+    runs, fname = SETS[which]
+    body = _JOB.replace("__PIN__", repr(PIN)).replace("__RUNS__", repr(runs))
+    return body if which == "12" else body.replace('"wheel.json"', repr(fname))
 
 
-def verdict(res: dict) -> dict:
+def verdict(res: dict, which: str = "12") -> dict:
     runs = res.get("runs", {})
     lines = {}
-    for key, *_ in RUNS:
+    for key, *_ in SETS[which][0]:
         r = runs.get(key)
         if r is None:
             return {"WHEEL": "NO-READING", "why": f"{key} missing (kernel died before it)"}
@@ -79,7 +94,7 @@ def verdict(res: dict) -> dict:
             return {"WHEEL": "FAIL", "first_differing": key, "rc": r.get("rc"),
                     "stdout_tail": r.get("stdout_tail", "")[-1500:],
                     "stderr_tail": r.get("stderr_tail", "")[-800:]}
-        if key in ("rung1", "rung2") and m.group(3) != VERSION:
+        if not key.endswith("_planted") and m.group(3) != VERSION:
             return {"WHEEL": "FAIL", "first_differing": key,
                     "why": f"mlx {m.group(3)} ran, not the pinned {VERSION}"}
         lines[key] = m.group(0)
@@ -87,24 +102,26 @@ def verdict(res: dict) -> dict:
             "libc": res.get("libc"), "python": res.get("python")}
 
 
-def kernel() -> dict:
+def kernel(which: str = "12") -> dict:
     from experiments.gpu import build_job, result_json, submit
-    sub = submit(build_job(job_body()), prefer="kaggle-cpu", est_hours=0.3,
-                 timeout_s=int(2 * 3600), fetch=["wheel.json"])
+    fname = SETS[which][1]
+    sub = submit(build_job(job_body(which)), prefer="kaggle-cpu", est_hours=0.3,
+                 timeout_s=int(2 * 3600), fetch=[fname])
     if not sub.ok:
         raise RuntimeError(f"wheel_kernel: {sub.message}")
-    r = result_json(sub, "wheel.json")
+    r = result_json(sub, fname)
     OUT.mkdir(parents=True, exist_ok=True)
-    r["verdict"] = verdict(r)
-    (OUT / "wheel.json").write_text(json.dumps(r, indent=1) + "\n")
+    r["verdict"] = verdict(r, which)
+    (OUT / fname).write_text(json.dumps(r, indent=1) + "\n")
     print(json.dumps(r["verdict"], indent=1), flush=True)
     return r
 
 
 if __name__ == "__main__":
     if sys.argv[1:2] == ["kernel"]:
-        kernel()
+        kernel(sys.argv[2] if len(sys.argv) > 2 else "12")
     elif sys.argv[1:2] == ["verdict"]:
-        print(json.dumps(verdict(json.loads(Path(sys.argv[2]).read_text())), indent=1))
+        print(json.dumps(verdict(json.loads(Path(sys.argv[2]).read_text()),
+                                 sys.argv[3] if len(sys.argv) > 3 else "12"), indent=1))
     else:
         raise SystemExit(__doc__)
