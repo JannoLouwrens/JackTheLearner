@@ -413,7 +413,7 @@ def read(path=None, train=TRAIN_SEEDS, judge=JUDGE_SEEDS, steps=3000,
     enter("taste16", [hits(scores(train_taste(xt, yt, i, stride=8, steps=steps), xj, 8)
                            .argmax(1) * 8, on) for i in INITS])
 
-    sets = {s_: str(np.round(food_tex(int(s_))[:3], 2).tolist()) for s_ in worlds}
+    sets = {s_: " ".join(f"{v:.2f}" for v in food_tex(int(s_))[:3]) for s_ in worlds}
     by_set = {k: {u: round(float(np.mean([v["world"][i] for i, s_ in enumerate(worlds)
                                            if sets[s_] == u])), 3)
                   for u in sorted(set(sets.values()))} for k, v in arms.items()}
