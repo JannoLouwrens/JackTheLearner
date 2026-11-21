@@ -63,6 +63,16 @@ TEXT ONLY: nothing above changes; the frozen A1–A3 rows and this smoke keep th
   reward_loss 5.537 = the flat smoke's), LEARNS not decidable at one logged step — the same
   reading as the flat smoke, left to a GPU kernel. 2.2 dec/s on a loaded box: no speed claim.
   Gymnasium sorts a Dict's keys alphabetically; sheeprl reads by name, so nothing depends on it.
+
+J14 (d) — THE REPLAY TRAVELS WITH THE CHECKPOINT (2026-11-21). `overrides(ckpt_every=N)` swaps the
+three no-checkpoint settings for sheeprl's own `buffer.checkpoint=True`, `checkpoint.every=N`,
+`checkpoint.save_last=True` and adds `checkpoint.memmap_buffer=copy`; `resume_from=` resumes. Off
+(the default) the list is byte-identical to before (checked against HEAD's module). `resume-test`
+(box, CPU, 3 runs, ~2 min): save 400 decisions -> resume to 480 -> buffer per env 100 -> 120 rows,
+first 100 bit-identical on every key but `truncated` = PASS; CONTROL fresh 80-decision run = 20
+rows, every key differs = FAIL as it must. Tests the BUFFER only (learning_starts 1,024 > both runs:
+no gradient step). Found: a resume merges the old run's config, so it logs into the SAVED run's
+log_root, not its own — `last_checkpoint` looks in both.
 """
 from __future__ import annotations
 
@@ -139,7 +149,8 @@ _register()
 
 
 def overrides(total: int = SMOKE_DECISIONS, seed: int = 0, motor: str = "body",
-              device: str = "cuda", compile_on: bool = True, keys: str = "flat") -> list:
+              device: str = "cuda", compile_on: bool = True, keys: str = "flat",
+              ckpt_every: int = 0, resume_from: str = None, buffer_size: int = None) -> list:
     """rows.BASE with the DMC-only keys swapped for his world. The runner is never edited.
     keys="per_sense": the encoder AND decoder mlp keys become the five senses (the decoder is
     named explicitly though the preset defaults it to the encoder, so the arm cannot silently
@@ -155,13 +166,24 @@ def overrides(total: int = SMOKE_DECISIONS, seed: int = 0, motor: str = "body",
         lst = "[" + ",".join(per_sense_keys()) + "]"
         out += [f"algo.mlp_keys.encoder={lst}", f"algo.mlp_keys.decoder={lst}",
                 "+env.wrapper.keys=per_sense"]
-    return out + ["env=gym", f"env.id={GYM_ID}", "env.action_repeat=1",
-                  "env.max_episode_steps=-1", f"+env.wrapper.motor_frame={motor}",
-                  f"algo.compile.enabled={compile_on}",
-                  f"seed={seed}", f"algo.total_steps={total}",
-                  f"buffer.size={total}", "buffer.checkpoint=False", "buffer.memmap=False",
-                  "checkpoint.every=1000000000", "checkpoint.save_last=False",
-                  "metric.log_every=1000", f"fabric.accelerator={device}"]
+    out = out + ["env=gym", f"env.id={GYM_ID}", "env.action_repeat=1",
+                 "env.max_episode_steps=-1", f"+env.wrapper.motor_frame={motor}",
+                 f"algo.compile.enabled={compile_on}",
+                 f"seed={seed}", f"algo.total_steps={total}",
+                 f"buffer.size={buffer_size or total}", "buffer.checkpoint=False", "buffer.memmap=False",
+                 "checkpoint.every=1000000000", "checkpoint.save_last=False",
+                 "metric.log_every=1000", f"fabric.accelerator={device}"]
+    if ckpt_every:
+        # J14 (d): the checkpoint carries the replay (sheeprl's own options, runner unedited);
+        # memmap_buffer=copy so a memmapped buffer travels with its data, not by file reference
+        # (a Kaggle kernel's resume is on another node). Off (ckpt_every=0) = the list above, byte for byte.
+        swap = {"buffer.checkpoint=False": "buffer.checkpoint=True",
+                "checkpoint.every=1000000000": f"checkpoint.every={int(ckpt_every)}",
+                "checkpoint.save_last=False": "checkpoint.save_last=True"}
+        out = [swap.get(o, o) for o in out] + ["checkpoint.memmap_buffer=copy"]
+    if resume_from:
+        out.append(f"checkpoint.resume_from={resume_from}")
+    return out
 
 
 def _scalars(logdir: str) -> dict:
@@ -193,13 +215,15 @@ def judge(rec: dict, total: int) -> dict:
 
 def run(out_dir: str, total: int = SMOKE_DECISIONS, seed: int = 0, motor: str = "body",
         device: str = "cuda", compile_on: bool = True, deadline_s: float = 3 * 3600,
-        cmd_prefix: tuple = None, keys: str = "flat") -> dict:
+        cmd_prefix: tuple = None, keys: str = "flat", ckpt_every: int = 0,
+        resume_from: str = None, buffer_size: int = None, name: str = None) -> dict:
     from experiments.brain_a.rows import EP_RE
     _os.makedirs(out_dir, exist_ok=True)
-    name = f"inworld_s{seed}_{motor}" + ("" if keys == "flat" else "_" + keys)
+    name = name or f"inworld_s{seed}_{motor}" + ("" if keys == "flat" else "_" + keys)
     logdir = _os.path.join(out_dir, "logs_" + name)
     cmd = list(cmd_prefix or [_sys.executable, "-m", "sheeprl"]) + overrides(
-        total, seed, motor, device, compile_on, keys) + [f"log_root={logdir}"]
+        total, seed, motor, device, compile_on, keys, ckpt_every, resume_from,
+        buffer_size) + [f"log_root={logdir}"]
     repo = _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
     env = dict(_os.environ, PYTHONPATH=repo + _os.pathsep + _os.environ.get("PYTHONPATH", ""),
                MUJOCO_GL="disable")
@@ -232,9 +256,98 @@ def run(out_dir: str, total: int = SMOKE_DECISIONS, seed: int = 0, motor: str = 
     if rec["rc"] != 0:
         rec["log_tail"] = text[-3000:]
     rec["verdict"] = judge(rec, total)
-    _json.dump(rec, open(_os.path.join(out_dir, name + ".json" if keys != "flat"
+    rec["logdir"] = logdir
+    _json.dump(rec, open(_os.path.join(out_dir, name + ".json" if (keys != "flat" or ckpt_every
+                                                                    or resume_from)
                                        else "brain_a_inworld.json"), "w"), default=str)
     print("INWORLD", _json.dumps(rec["verdict"]), flush=True)
+    return rec
+
+
+def last_checkpoint(logdir: str):
+    """(policy_step, ckpt path, its buffer file or None) of the latest `ckpt_<step>_0.ckpt` under logdir."""
+    import glob
+    best = None
+    for c in glob.glob(_os.path.join(logdir, "**", "checkpoint", "ckpt_*_0.ckpt"), recursive=True):
+        m = _re.search(r"ckpt_(\d+)_0\.ckpt$", c)
+        if m and (best is None or int(m.group(1)) > best[0]):
+            best = (int(m.group(1)), c)
+    if best is None:
+        return None
+    buf = _os.path.join(_os.path.dirname(_os.path.dirname(best[1])), "checkpoint_buffers",
+                        f"ckpt_{best[0]}_buffer_rank_0.pt")
+    return best[0], best[1], (buf if _os.path.exists(buf) else None)
+
+
+def buffer_rows(buf_path):
+    """Per env: (rows filled, {key: array of the filled rows, oldest first}) of a saved
+    EnvIndependentReplayBuffer. None when the checkpoint carried no buffer. `len()` of a sheeprl
+    buffer is its CAPACITY, so filled = capacity if full else `_pos` (read, not assumed)."""
+    if not buf_path:
+        return None
+    import numpy as np
+    import torch
+    rb = torch.load(buf_path, weights_only=False)
+    out = []
+    for b in rb.buffer:
+        n = b.buffer_size if b.full else b._pos
+        assert not b.full, "resume test sizes its buffer so it never wraps"
+        out.append((int(n), {k: np.array(b[k][:n]) for k in b.buffer.keys()}))
+    return out
+
+
+def resume_check(saved, resumed, added_per_env: int) -> dict:
+    """J14 (d) clause: the resumed run's buffer = the saved one, then `added_per_env` new rows.
+    PASS iff every env's filled rows = saved + added AND its first `saved` rows equal the saved
+    rows bit for bit on every key except `truncated` (sheeprl's checkpoint writes truncated=1 on
+    the last saved row of each env, by design: the env state is not saved)."""
+    import numpy as np
+    if saved is None or resumed is None:
+        return {"pass": False, "why": "a checkpoint carried no buffer", "saved": saved is not None,
+                "resumed": resumed is not None}
+    per_env = []
+    for (ns, rs), (nr, rr) in zip(saved, resumed):
+        same = {k: bool(np.array_equal(rs[k], rr[k][:ns])) for k in rs if k != "truncated"}
+        per_env.append({"saved": ns, "resumed": nr, "len_ok": nr == ns + added_per_env,
+                        "content_ok": all(same.values()), "keys_differ": [k for k, v in same.items() if not v]})
+    ok = len(saved) == len(resumed) and all(e["len_ok"] and e["content_ok"] for e in per_env)
+    return {"pass": ok, "per_env": per_env}
+
+
+RT_SAVE, RT_MORE = 400, 80   # decisions summed over the 4 envs: 100 rows/env saved, +20 resumed
+
+
+def resume_test(out_dir: str, cmd_prefix=None) -> dict:
+    """Box, CPU: (A) run RT_SAVE decisions, checkpoint at the end with the replay; (B) resume A's
+    checkpoint to RT_SAVE + RT_MORE, checkpoint again; (C, CONTROL, must fail) a FRESH run of
+    RT_MORE decisions with the same options — what a resume without the replay amounts to.
+    learning_starts (1,024) > both runs: random play, no gradient step — this tests the buffer only."""
+    import shutil
+    shutil.rmtree(out_dir, ignore_errors=True)
+    kw = dict(device="cpu", compile_on=False, deadline_s=1800, cmd_prefix=cmd_prefix,
+              ckpt_every=RT_SAVE, buffer_size=4 * RT_SAVE)
+    rec = {"save": RT_SAVE, "more": RT_MORE}
+    a = run(out_dir, total=RT_SAVE, name="rt_save", **kw)
+    ca = last_checkpoint(a["logdir"])
+    rec["A"] = {"rc": a["rc"], "ckpt": ca, "wall_s": a["wall_s"]}
+    if a["rc"] != 0 or not ca:
+        rec["verdict"] = "VOID: the save run did not checkpoint"
+        rec["A"]["log_tail"] = a.get("log_tail")
+        return rec
+    b = run(out_dir, total=RT_SAVE + RT_MORE, name="rt_resume", resume_from=ca[1], **kw)
+    cb = last_checkpoint(b["logdir"]) or last_checkpoint(a["logdir"])
+    if cb and cb[0] <= ca[0]:
+        cb = None
+    rec["B"] = {"rc": b["rc"], "ckpt": cb, "wall_s": b["wall_s"], "log_tail": b.get("log_tail")}
+    c = run(out_dir, total=RT_MORE, name="rt_control_fresh", **kw)
+    cc = last_checkpoint(c["logdir"])
+    rec["C"] = {"rc": c["rc"], "ckpt": cc, "wall_s": c["wall_s"]}
+    sa = buffer_rows(ca[2])
+    per = RT_MORE // NUM_ENVS
+    rec["check"] = resume_check(sa, buffer_rows(cb[2]) if cb else None, per)
+    rec["control"] = resume_check(sa, buffer_rows(cc[2]) if cc else None, per)
+    rec["verdict"] = ("PASS" if rec["check"]["pass"] and not rec["control"]["pass"] else
+                      "FAIL" if not rec["control"]["pass"] else "VOID: control passed")
     return rec
 
 
@@ -276,7 +389,9 @@ PROBE_PY = "/data/venvs/jack-a-probe/bin/python"   # the box's sheeprl==0.8.5
 def main(argv) -> int:
     """smoke [N] [--per-sense]   box, CPU, compile off, N decisions (default 600): the plumbing only
     kernel [--per-sense]  Kaggle GPU: the 20k-decision smoke (J14 b), harvested to OUT/inworld.json
-                          (--per-sense: OUT/inworld_per_sense.json, Next-up 1 item (2))"""
+                          (--per-sense: OUT/inworld_per_sense.json, Next-up 1 item (2))
+    resume-test           box, CPU: J14 (d) — save with the replay, resume, buffer equal + a fresh
+                          control that must fail -> OUT/resume_test.json"""
     _os.makedirs(OUT, exist_ok=True)
     cmd = argv[1] if len(argv) > 1 else ""
     if cmd == "smoke":
@@ -294,6 +409,18 @@ def main(argv) -> int:
                 cmd_prefix=prefix, keys=keys)
         print(_json.dumps({k: v for k, v in r.items() if k not in ("losses", "episodes")}, default=str)[:3000])
         return 0 if r["verdict"]["done"] else 1
+    if cmd == "resume-test":
+        try:
+            import tensorboard  # noqa: F401
+        except ImportError:
+            if _os.path.exists(PROBE_PY) and _os.path.realpath(_sys.executable) != _os.path.realpath(PROBE_PY):
+                _os.execv(PROBE_PY, [PROBE_PY, "-m", "experiments.brain_a.in_world"] + list(argv[1:]))
+        prefix = (PROBE_PY, "-m", "sheeprl") if _os.path.exists(PROBE_PY) else None
+        r = resume_test(_os.path.join(OUT, "resume_test"), prefix)
+        _json.dump(r, open(_os.path.join(OUT, "resume_test.json"), "w"), default=str, indent=1)
+        print("RESUME_TEST", r["verdict"], _json.dumps({k: r.get(k) for k in ("check", "control")},
+                                                       default=str)[:2000], flush=True)
+        return 0 if r["verdict"] == "PASS" else 1
     if cmd == "kernel":
         from experiments.gpu import build_job, result_json, submit
         keys = "per_sense" if "--per-sense" in argv else "flat"

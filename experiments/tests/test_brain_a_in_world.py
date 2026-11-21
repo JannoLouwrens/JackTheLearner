@@ -183,3 +183,61 @@ def test_kernel_body_flat_unchanged_and_per_sense_only_adds_keys():
         pass
     else:
         raise AssertionError("an unknown keys arm reached the job")
+
+
+# --- J14 (d): the replay travels with the checkpoint -------------------------------------------
+
+def test_ckpt_option_off_is_unchanged_and_on_swaps_only_the_checkpoint_settings():
+    from experiments.brain_a.in_world import overrides
+    off = overrides(400, device="cpu", compile_on=False)
+    assert "buffer.checkpoint=False" in off and "checkpoint.save_last=False" in off
+    assert not any(o.startswith(("checkpoint.memmap_buffer", "checkpoint.resume_from")) for o in off)
+    on = overrides(400, device="cpu", compile_on=False, ckpt_every=400)
+    swapped = {"buffer.checkpoint=False": "buffer.checkpoint=True",
+               "checkpoint.every=1000000000": "checkpoint.every=400",
+               "checkpoint.save_last=False": "checkpoint.save_last=True"}
+    assert on == [swapped.get(o, o) for o in off] + ["checkpoint.memmap_buffer=copy"]
+    res = overrides(480, device="cpu", compile_on=False, ckpt_every=400, resume_from="/x/ckpt_400_0.ckpt")
+    assert res[-1] == "checkpoint.resume_from=/x/ckpt_400_0.ckpt"
+    assert overrides(400, buffer_size=1600)[:-1] != overrides(400)[:-1]
+    assert "buffer.size=1600" in overrides(400, buffer_size=1600)
+
+
+def _rows(n_per_env, seed=0, n_envs=4):
+    import numpy as np
+    g = np.random.default_rng(seed)
+    out = []
+    for _ in range(n_envs):
+        out.append((n_per_env, {"state": g.normal(size=(n_per_env, 1, 74)).astype("float32"),
+                                "truncated": np.zeros((n_per_env, 1, 1), "float32")}))
+    return out
+
+
+def _extend(saved, more, seed=1):
+    import numpy as np
+    g = np.random.default_rng(seed)
+    out = []
+    for n, d in saved:
+        e = {k: np.concatenate([v, g.normal(size=(more,) + v.shape[1:]).astype(v.dtype)]) for k, v in d.items()}
+        e["truncated"][n - 1] = 1          # sheeprl marks the last saved row truncated: ignored
+        out.append((n + more, e))
+    return out
+
+
+def test_resume_check_passes_a_true_resume_and_each_failure_is_caught():
+    from experiments.brain_a.in_world import resume_check
+    saved = _rows(100)
+    assert resume_check(saved, _extend(saved, 20), 20)["pass"]
+    # a fresh buffer (what a resume without the replay is) fails on length
+    assert not resume_check(saved, _rows(20, seed=5), 20)["pass"]
+    # right length, wrong content (a different run's rows) fails on content
+    other = _extend(_rows(100, seed=9), 20)
+    r = resume_check(saved, other, 20)
+    assert not r["pass"] and r["per_env"][0]["keys_differ"] == ["state"]
+    # one env short by a row
+    short = _extend(saved, 20)
+    short[2] = (short[2][0] - 1, short[2][1])
+    assert not resume_check(saved, short, 20)["pass"]
+    # no buffer in either checkpoint
+    assert not resume_check(None, saved, 20)["pass"]
+    assert not resume_check(saved, None, 20)["pass"]
