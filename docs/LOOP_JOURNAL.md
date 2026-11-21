@@ -3096,3 +3096,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - No ledger change. Receipts `gpu_submissions.jsonl`, `gpu_budget.json`, `cpu_budget.json` committed by name.
 - Philosophy served: 4 (three rules frozen before their numbers; a gate enforced in code; a must-fail arm proven blind; a failed row re-run with the fault named) and 6 (five free sessions filled, and ~37 free CPU-hours not burned on a crash).
 - 07:40 addendum: timing cell 1 died in 40 s (the v1 config still decoded `rgb`; hydra compose had not caught it) — fixed `f955f6ff`, dry-run of the real runner on the box rc 0, cell 2 `jack-ladder-1795246931` RUNNING. No seed was spent; this is what the timing cell was for.
+
+## 2026-11-21 08:07–08:20 UTC · JACK · J14 (d) built + tested; (b) timing home → seed 0 launched
+- First act: ps + `kernels status`: ear, timing cell 2 and J17 r0–r2 all Kaggle RUNNING; NH-2 on Colab. Nothing home → took J14 (d), the one box step.
+- (d) `bbd54926`: A's in-world runner gets `ckpt_every=` / `resume_from=` (sheeprl's own buffer.checkpoint + memmap_buffer=copy, runner unedited; default overrides byte-identical to HEAD's). Box resume-test PASS: buffer 100 → 120 rows per env after resume, the saved 100 bit-identical on every key; control (fresh run) 20 rows, all keys differ = FAIL as it must. Buffer only, no gradient step. Found: a resume logs into the SAVED run's dir (config merge).
+- (b) timing cell 2 HOME mid-slot: 4.26 T4-h a seed (sps_train 3.24). Seed 0 + control RUNNING `jack-ladder-1795248791`. Seeds 1, 2 wait for the ear's GPU seat.
+- Philosophy served: 4 (a resume that could silently start him with an empty memory now has a test that could fail, with a control that did) and 6 (a freed free-GPU seat refilled within 4 minutes).

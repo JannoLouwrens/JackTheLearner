@@ -1675,7 +1675,7 @@
         "detached:launch_j17_r1.log": 33.93,
         "detached:launch_j17_r2.log": 34.4,
         "detached:launch_k1.log": 16.09,
-        "detached:launch_k2.log": 305.82,
+        "detached:launch_k2.log": 316.94,
         "detached:launch_nh2.log": 3.69,
         "detached:launch_ps1.log": 7.05,
         "detached:launch_resume_test.log": 125.17,
@@ -1687,7 +1687,7 @@
         "detached:pilot_s2.log": 3686.99,
         "detached:pilot_s5.log": 3689.7
       },
-      "used_s": 13403.15
+      "used_s": 13414.27
     }
   },
   "last_child_s": {
