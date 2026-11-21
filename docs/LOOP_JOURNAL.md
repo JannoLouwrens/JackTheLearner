@@ -3325,3 +3325,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J17: new `experiments/j17_onset.py` (read-only): B's critic loss runs away from its blind twin (×1.5, for good) at 10–25k on 3/5 row128 seeds, 70k/140k on the others; blind-vs-blind control quiet until ≥ 200k, while Q and α fire on noise at 15–45k. A 1-seed hunt read at ~30k sees it ~3 in 5 times. WORLD_CARD addendum 2.
 - Row B-6a (swingup_sparse, 150k): **lib MISSES** 541.1 vs 726.9–826.1 (777/408/767/0/754); ours 172.4 (finds the reward 1/5); ctrl 0 valid. Extension can't fit as built and would need 838.7 a seed → Director.
 - Philosophy served: 4 (a reproduction miss written as a miss, and the next hunt sized so it cannot fail to see), 3 (B's seat held only by numbers it hits).
+
+## 2026-11-21 22:22–23:00 UTC · JACK (short slot) · J17 (the cause hunt's apparatus)
+- First act: Kaggle 22:23 — A2-v1S s1, reacher-easy, reacher-hard all RUNNING; Next-up 1–4 done; every order waits a kernel or the Director → J17's hunt apparatus.
+- Found while writing a box-twin rule: at 30k, same-seed row128/blind critic ratio 0.65–4.59 is inside blind-vs-blind seed noise (max 7.34, 9/20 > 1.5×) → my previous slot's "1-seed read at ~30k sees it 3/5" was wrong. Absolute critic loss separates sighted 5/5 from blind 5/5 from 100k (not 60k). `ac684c09`, INBOX corrects.
+- Launched detached 22:24 (jack-std, nice 19, 1 thread each): box K-row128 + blind, s923, 30k; reader `j17_onset box-twin` (SAME TRAJECTORY / ANOTHER DRAW / VOID) frozen with 3 plants before any result.
+- Philosophy served: 4 (a sizing claim that could not have shown the effect, caught and withdrawn before anything was run on it), 5 (the hunt's apparatus checked before paying for arms).
