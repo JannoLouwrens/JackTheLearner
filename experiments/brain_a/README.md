@@ -563,3 +563,14 @@ published default bf16). Toy size (deter 64, hidden 32, stoch 4×8, blocks 8), b
   MISSED — fixed.) Posterior sample values NOT compared (rung 7's sampler); only one-hot shape.
 - Golden `rung6_step_golden_e01491f.npz` (sha256 b3eddc2e…): params, inputs, official outputs.
 - Next: port stub in `mlx_maths.py` + rung 6 tests committed FAILING, then the port, eager and compiled.
+
+## J16 row 2.2 — rung 6: one recurrent step → PASS (11-21, step 2.2)
+
+`experiments/brain_a/rung6.py` (tests `step_ref`, `step_golden`), port `mlx_maths.rssm_step`
+(+ `_core`, `_layer`, `_blocklin`, `_rms`, `_gelu`). References `--vs-official` 12/12 (`5109a823`);
+tests committed failing `f5fa4cad`; port **2/2 eager AND compiled** on mlx 0.32.4 (box CPU):
+masked deter, action embedding, deter', posterior logit, prior logit within 1e-6·(|ref|+1) of the
+NumPy-64 reference and of the official f32 jit golden `rung6_step_golden_e01491f.npz`; reset rows
+equal the zero-carry step, kept rows differ (control). `--planted` 3/3 caught (erf gelu, rms eps
+1e-6, update gate without −1). Toy size (deter 64, blocks 8). The posterior SAMPLE is rung 7's.
+No speed read. Wheel re-check not run.

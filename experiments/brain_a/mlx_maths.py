@@ -292,4 +292,73 @@ def rssm_step(P, carry, tokens, action, reset, cfg, act_spec):
     reset [B] bool; act_spec: {key: classes (int>0) or 0 for continuous}.
     -> dict(masked_deter, actemb, deter, post, prior) — post/prior are logits
     [B,S,C]; the posterior SAMPLE is rung 7's."""
-    raise NotImplementedError("rung 6 port not written yet (J16 row 2.2)")
+    g = cfg["blocks"]
+    keep = mx.logical_not(reset).astype(f32)
+    # rssm.py L72-90 _observe: nets.mask = where(~reset, x, 0)
+    deter = carry["deter"] * keep[:, None]
+    stoch = carry["stoch"] * keep[:, None, None]
+    parts = []
+    for k in sorted(act_spec):                    # nets.DictConcat: sorted keys
+        a = action[k]
+        if act_spec[k]:
+            a = (mx.arange(act_spec[k])[None, :] == a[:, None]).astype(f32)
+        parts.append(a.astype(f32))
+    actemb = mx.concatenate(parts, -1) * keep[:, None]
+    deter2 = _core(P, deter, stoch, actemb, cfg)
+    x = mx.concatenate([deter2, tokens.astype(f32)], -1)
+    for i in range(cfg["obslayers"]):
+        x = _layer(P, f"obs{i}", x)
+    post = _lin(P, "obslogit", x).reshape(x.shape[0], cfg["stoch"], cfg["classes"])
+    x = deter2                                     # rssm.py L164-169 _prior
+    for i in range(cfg["imglayers"]):
+        x = _layer(P, f"prior{i}", x)
+    prior = _lin(P, "priorlogit", x).reshape(x.shape[0], cfg["stoch"], cfg["classes"])
+    return dict(masked_deter=deter, actemb=actemb, deter=deter2, post=post, prior=prior)
+
+
+_GELU_C = math.sqrt(2.0 / math.pi)
+
+
+def _gelu(x):                                      # jax.nn.gelu default approximate=True
+    return 0.5 * x * (1.0 + mx.tanh(_GELU_C * (x + 0.044715 * x * x * x)))
+
+
+def _rms(x, scale):                                # nets.Norm 'rms', eps 1e-4, in f32
+    return x * mx.rsqrt(mx.mean(x * x, -1, keepdims=True) + 1e-4) * scale
+
+
+def _lin(P, name, x):
+    return x @ P[f"{name}/kernel"] + P[f"{name}/bias"]
+
+
+def _blocklin(P, name, x, g):                      # nets.BlockLinear: kernel [g, in/g, out/g]
+    k = P[f"{name}/kernel"]
+    lead = x.shape[:-1]
+    xg = x.reshape(*lead, g, x.shape[-1] // g)
+    y = mx.einsum("...ki,kio->...ko", xg, k).reshape(*lead, -1)
+    return y + P[f"{name}/bias"]
+
+
+def _layer(P, name, x):
+    return _gelu(_rms(_lin(P, name, x), P[f"{name}norm/scale"]))
+
+
+def _core(P, deter, stoch, action, cfg):          # rssm.py L139-162
+    g = cfg["blocks"]
+    lead = deter.shape[:-1]
+    stoch = stoch.reshape(stoch.shape[0], -1)
+    action = action / mx.maximum(1.0, mx.abs(action))
+    x = mx.concatenate([_layer(P, "dynin0", deter), _layer(P, "dynin1", stoch),
+                        _layer(P, "dynin2", action)], -1)
+    x = mx.repeat(mx.expand_dims(x, -2), g, -2)
+    x = mx.concatenate([deter.reshape(*lead, g, -1), x], -1).reshape(*lead, -1)
+    for i in range(cfg["dynlayers"]):
+        x = _gelu(_rms(_blocklin(P, f"dynhid{i}", x, g), P[f"dynhid{i}norm/scale"]))
+    x = _blocklin(P, "dyngru", x, g)
+    xg = x.reshape(*lead, g, -1)
+    n = xg.shape[-1] // 3                           # gates split PER GROUP
+    r, cand, u = (xg[..., j * n:(j + 1) * n].reshape(*lead, -1) for j in range(3))
+    r = mx.sigmoid(r)
+    cand = mx.tanh(r * cand)
+    u = mx.sigmoid(u - 1.0)
+    return u * cand + (1.0 - u) * deter

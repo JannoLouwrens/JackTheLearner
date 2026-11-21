@@ -53,7 +53,15 @@ planted wrong references each CAUGHT: erf gelu, flat GRU gate split, no
 action squash). A first draft of the squash mutant was itself a no-op
 (a*max(1,|a|) re-squashes to sign(a)) and was MISSED — fixed to skip the
 division. Golden: `rung6_step_golden_e01491f.npz` (official f32 jit outputs
-+ params + inputs). Next: port stub in mlx_maths + tests committed FAILING.
++ params + inputs).
+
+STATE 11-21 17:00 (slot 2): tests committed FAILING `f5fa4cad` (stub raised,
+0/2); port `mlx_maths.rssm_step` written -> RUNG 6 PASS 2/2 eager AND
+compiled (step_ref vs NumPy-64, step_golden vs official f32 jit; reset rows
+== zero-carry port step; kept-row control differs). `--planted` 3/3 CAUGHT
+(erf gelu, rms eps 1e-6, update gate without -1); unpatched port passes.
+Ours beside theirs: none beyond rung 1's table — same formulas, f32. Toy size
+only; size1m per-step capture (g1_probe) is still unbuilt (needed for 2.3).
 """
 from __future__ import annotations
 
@@ -366,7 +374,51 @@ def main_mlx():
     return 0 if n == len(TESTS) else 1
 
 
+def main_planted():
+    """Each planted bug is patched into the real port; both tests must FAIL eager."""
+    mx = _mlx()
+    import mlx_maths as M
+    keep = dict(_gelu=M._gelu, _core=M._core, _rms=M._rms)
+    import math as _m
+    bugs = {
+        "gelu as erf form": dict(_gelu=lambda x: 0.5 * x * (1 + mx.erf(x / _m.sqrt(2.0)))),
+        "rms eps 1e-6 not 1e-4": dict(_rms=lambda x, sc: x * mx.rsqrt(mx.mean(x * x, -1, keepdims=True) + 1e-6) * sc),
+        "update gate without -1": dict(_core=None),
+    }
+
+    def core_nominus(P, deter, stoch, action, cfg):
+        orig_sig = mx.sigmoid
+        calls = []
+
+        def sig(v):                                # third sigmoid call is the update gate
+            calls.append(1)
+            return orig_sig(v + 1.0 if len(calls) == 2 else v)
+        M.mx.sigmoid = sig
+        try:
+            return keep["_core"](P, deter, stoch, action, cfg)
+        finally:
+            M.mx.sigmoid = orig_sig
+    bugs["update gate without -1"]["_core"] = core_nominus
+    caught = 0
+    for name, patch in bugs.items():
+        for k, v in patch.items():
+            setattr(M, k, v)
+        try:
+            bad = [d for _, t in TESTS for o, d in t(M, mx, False) if not o]
+        finally:
+            for k, v in keep.items():
+                setattr(M, k, v)
+        caught += bool(bad)
+        print(f"planted [{name}] -> {'CAUGHT' if bad else 'MISSED'}" + (f"  ({bad[0][:80]})" if bad else ""))
+    ctl = all(o for _, t in TESTS for o, _ in t(M, mx, False))
+    print(f"PLANTED: {caught}/{len(bugs)} caught, unpatched port {'passes' if ctl else 'FAILS'} -> "
+          f"{'OK' if caught == len(bugs) and ctl else 'HARNESS BLIND'}")
+    return 0 if caught == len(bugs) and ctl else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv[1:]:
         sys.exit(main_official())
+    if "--planted" in sys.argv[1:]:
+        sys.exit(main_planted())
     sys.exit(main_mlx())
