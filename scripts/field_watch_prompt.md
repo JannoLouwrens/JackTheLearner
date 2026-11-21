@@ -65,8 +65,8 @@ lesson says watch the small end, not just the frontier).
 
 ## Output
 
-Rewrite docs/FIELD_WATCH.md (current-state report, not a log; 12 KB or less —
-the Director and the inventor read it whole) with:
+Rewrite docs/FIELD_WATCH.md (a state, not a log; rewritten inside 12 KB each
+sweep — tighten old prose, never carry it) with:
   - date and sweep coverage (what you searched, so gaps are visible),
   - NOMINATIONS: for each, the source, the verified claim, the SEAT in
     docs/CHAMPIONS.md it would challenge and the ARENA spec it would enter as
@@ -74,8 +74,7 @@ the Director and the inventor read it whole) with:
     estimated cost on our compute, and the falsifiable reason it might WIN
     — plus the reason it might lose (steelman both),
   - WATCHLIST: promising but unverified — what evidence would promote it,
-  - NO-ACTION report: fronts where nothing new cleared the bar (say so
-    plainly; an empty week honestly reported beats a padded one),
+  - NO-ACTION: one line per seat where nothing cleared the bar,
   - one-line entries appended to docs/FIELD_WATCH_LOG.md (date + headline)
     so drift across weeks is visible.
 Write those two files and stop. Nothing else.

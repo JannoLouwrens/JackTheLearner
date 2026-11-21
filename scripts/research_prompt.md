@@ -47,8 +47,8 @@ and leave the rest as a `RESEARCH:` line in INBOX for the next slot.
 ## What you write
 
 **`docs/research/PUBLISHED_PRIORS.md`**: one section per question. Replace the
-section if it exists. Keep each section ≤ 6 KB and the file ≤ 70 KB by tightening old
-sections, never by dropping a finding; the long form lives under
+section if it exists. ≤ 6 KB a section; workers read one section. Never drop a
+finding; the long form lives under
 `/data/jack-research/` and each section points to it. Each section:
 
 - **Question**, the date, the order or milestone it serves.
