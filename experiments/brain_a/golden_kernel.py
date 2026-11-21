@@ -44,16 +44,26 @@ RUNS = [("A", ["--seed", "0"]), ("B", ["--seed", "0"]), ("control", ["--seed", "
 _JOB = r'''
 import subprocess as _s, sys as _y, json, os, platform, time
 t0 = time.time()
-_s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
+# The pins are the box's jack-dv3 venv (Python 3.12); jaxlib 0.4.33 has no wheel for the Kaggle
+# image's Python 3.13 (kernel jack-cpu-1795270995, 11-21) -> a uv-made 3.12 venv, pins unchanged.
+if _y.version_info[:2] == (3, 12):
+    PY = _y.executable
+else:
+    _s.run([_y.executable, "-m", "pip", "install", "-q", "uv"], check=True)
+    _s.run([_y.executable, "-m", "uv", "venv", "-q", "-p", "3.12", "/tmp/v312"], check=True)
+    PY = "/tmp/v312/bin/python"
+_s.run([_y.executable, "-m", "uv", "pip", "install", "-q", "--python", PY] + __PINS__ if PY != _y.executable
+       else [PY, "-m", "pip", "install", "-q"] + __PINS__, check=True)
 _s.run(["git", "clone", "-q", "https://github.com/danijar/dreamerv3", "/tmp/dv3"], check=True)
 _s.run(["git", "-C", "/tmp/dv3", "checkout", "-q", __COMMIT__], check=True)
 os.chdir("/tmp/jack")
 out = os.environ["JACK_OUT"]
-res = {"python": platform.python_version(), "machine": platform.machine(), "cpus": os.cpu_count(),
+res = {"python": _s.run([PY, "-c", "import platform; print(platform.python_version())"],
+                        capture_output=True, text=True).stdout.strip(), "kernel_python": platform.python_version(), "machine": platform.machine(), "cpus": os.cpu_count(),
        "install_s": round(time.time() - t0, 1), "runs": {}}
 noise = "/tmp/noise1m_s0.npz"
 for key, extra in __RUNS__:
-    cmd = [_y.executable, "-m", "experiments.brain_a.g1_probe", "--src", "/tmp/dv3",
+    cmd = [PY, "-m", "experiments.brain_a.g1_probe", "--src", "/tmp/dv3",
            "--preset", "size1m", "--jit", "False", "--steps", str(__STEPS__),
            "--noise-file", noise, "--noise-n", str(__NOISE_N__), "--dump-step", __DUMP__,
            "--dump", os.path.join(out, key + ".npz"), "--set", "agent.opt.warmup=0",
