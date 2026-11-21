@@ -385,7 +385,18 @@ def _key_data(key):
     return np.asarray(key)
 
 
-def save_life(m, d, *, carry_key=True, carry_np=True, carry_env=True):
+def _mujoco_physics(env):
+    """The MuJoCo state a pickled gymnasium MujocoEnv LOSES: it pickles via
+    EzPickle = a fresh env from its constructor args (J10 (a), `d39687f0`), so
+    MjData and the env's own RNG must be carried by hand. None if not MuJoCo."""
+    u = getattr(env, "unwrapped", env)
+    data = getattr(u, "data", None)
+    if data is None or type(data).__name__ != "MjData":
+        return None
+    return {"data": data, "np_random": u.np_random.bit_generator.state}
+
+
+def save_life(m, d, *, carry_key=True, carry_np=True, carry_env=True, carry_physics=True):
     """Save B mid-life so `resume_life` continues bit-identically.
 
     The keyword switches exist ONLY so the test can plant a broken save (each
@@ -407,7 +418,9 @@ def save_life(m, d, *, carry_key=True, carry_np=True, carry_env=True):
             "episode_num": int(getattr(m, "_episode_num", 0)),
             "np_global": np.random.get_state() if carry_np else None,
             "py_random": random.getstate() if carry_np else None,
-            "env": pickle.dumps(m.env.envs[0]) if carry_env else None}
+            "env": pickle.dumps(m.env.envs[0]) if carry_env else None,
+            "physics": (pickle.dumps(_mujoco_physics(m.env.envs[0]))
+                        if carry_env and carry_physics else None)}
     with open(os.path.join(d, "life.pkl"), "wb") as f:
         pickle.dump(life, f)
     return d
@@ -429,6 +442,11 @@ def resume_life(d, env, algo=None):
     m.env.reset()                      # SB3's order check; the life overwrites it below
     if L["env"] is not None:
         m.env.envs[0] = pickle.loads(L["env"])
+    P = pickle.loads(L["physics"]) if L.get("physics") is not None else None
+    if P is not None:                  # MujocoEnv: EzPickle rebuilt fresh physics
+        u = m.env.envs[0].unwrapped
+        u.data = P["data"]
+        u.np_random.bit_generator.state = P["np_random"]
     m._last_obs = L["last_obs"]
     m._last_episode_starts = L["episode_starts"]
     if L["last_original_obs"] is not None:
