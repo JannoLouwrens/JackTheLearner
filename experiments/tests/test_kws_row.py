@@ -56,10 +56,10 @@ def _torchaudio_block():
     return b[b.index("import importlib.metadata as _md"):b.index("import importlib.metadata as md, platform")]
 
 
-def _exec_block(versions, probe_ok_before, probe_ok_after, installs_to=None):
+def _exec_block(versions, probe_ok_before, probe_ok_after, installs_to=None, repin_ok=False):
     """Run the kernel's torchaudio guard with pip, the import probe and package metadata faked."""
     import importlib.metadata as real_md, subprocess as real_sp, types
-    calls, state = [], {"installed": False}
+    calls, state, calls_env = [], {"installed": False}, []
     def version(name):
         if name == "torchaudio" and state["installed"] and installs_to:
             return installs_to
@@ -68,11 +68,19 @@ def _exec_block(versions, probe_ok_before, probe_ok_after, installs_to=None):
         return versions[name]
     def run(cmd, **kw):
         calls.append(cmd)
+        if "pip" in cmd and "torch==2.6.0" in cmd:
+            calls_env.append(kw.get("env"))
+            if repin_ok:
+                versions.update(torch="2.6.0+cu126", torchaudio="2.6.0+cu126")
+                state["installed"], state["repinned"] = False, True
+            return types.SimpleNamespace(returncode=0 if repin_ok else 1, stderr="" if repin_ok else "no wheel", stdout="")
         if "pip" in cmd:
             state["installed"] = True
-            return types.SimpleNamespace(returncode=0, stderr="")
-        ok = probe_ok_after if state["installed"] else probe_ok_before
-        return types.SimpleNamespace(returncode=0 if ok else 1, stderr="" if ok else "OSError: undefined symbol")
+            return types.SimpleNamespace(returncode=0, stderr="", stdout="")
+        if any("get_arch_list" in str(x) for x in cmd):       # the re-pin's arch check
+            return types.SimpleNamespace(returncode=0, stderr="", stdout="EAR_TORCH 2.6.0 ['sm_60'] (6, 0)")
+        ok = True if state.get("repinned") else probe_ok_after if state["installed"] else probe_ok_before
+        return types.SimpleNamespace(returncode=0 if ok else 1, stderr="" if ok else "OSError: undefined symbol", stdout="")
     old = real_md.version
     real_md.version = version
     try:
@@ -103,9 +111,20 @@ def test_torchaudio_matches_the_torch_that_runs():
     assert err is None and len(pips(calls)) == 1
     # PLANTED: the install does not take -> the kernel STOPS on the box's first line, never trains on a mismatch
     calls, err = _exec_block({"torch": "2.5.1+cu121", "torchaudio": "2.8.0"}, False, False, installs_to="2.8.0")
-    assert err and err.startswith("TORCHAUDIO_MISMATCH")
+    assert err and err.startswith(("TORCHAUDIO_MISMATCH", "TORCH_REPIN_FAILED")), err
     calls, err = _exec_block({"torch": "2.5.1+cu121", "torchaudio": "2.8.0"}, True, False, installs_to="2.5.1")
-    assert err and err.startswith("TORCHAUDIO_MISMATCH")
+    assert err and err.startswith(("TORCHAUDIO_MISMATCH", "TORCH_REPIN_FAILED")), err
+    # every failed first install falls back to the 2.6.0+cu126 trio, outside PIP_CONSTRAINT
+    assert any("torch==2.6.0" in c and "torchaudio==2.6.0" in c and "https://download.pytorch.org/whl/cu126" in c
+               for c in pips(calls))
+    # PLANTED 11-21 (kernel jack-ladder-1795228077): no torchaudio 2.5.1 for cp313 -> re-pin the trio, run on 2.6.0
+    calls, err = _exec_block({"torch": "2.5.1+cu121", "torchaudio": "2.11.0"}, False, False, installs_to="2.11.0",
+                             repin_ok=True)
+    assert err is None, err
+    assert len(pips(calls)) == 2 and "torch==2.6.0" in pips(calls)[1]
+    # PLANTED: the re-pin itself fails -> stop, never train
+    calls, err = _exec_block({"torch": "2.5.1+cu121", "torchaudio": "2.11.0"}, False, False, installs_to="2.11.0")
+    assert err and (err.startswith("TORCH_REPIN_FAILED") or err.startswith("TORCHAUDIO_MISMATCH")), err
 
 
 def main():

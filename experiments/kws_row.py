@@ -390,6 +390,27 @@ if _probe.returncode != 0 or _base("torchaudio") != _tv.split("+")[0]:
           "rc", r.returncode, r.stderr[-1500:], flush=True)
 _probe = subprocess.run([sys.executable, "-c", "import torchaudio"], capture_output=True, text=True)
 if _probe.returncode != 0 or _base("torchaudio") != _tv.split("+")[0]:
+    # 11-21 02:30, kernel jack-ladder-1795228077: the Kaggle image is Python 3.13 and torchaudio
+    # 2.5.1 has NO cp313 wheel ("from versions: none") -> TORCHAUDIO_MISMATCH, 0 epochs. Same cure as
+    # brain A (speed._JOB): re-pin the trio to PyTorch's cu126 2.6.0 builds (cp313 wheels; still carry
+    # sm_50..sm_90 for the P100), outside the preamble's PIP_CONSTRAINT, and refuse on an arch miss.
+    import os as _os
+    _env = {k: v for k, v in _os.environ.items() if k != "PIP_CONSTRAINT"}
+    r = subprocess.run([sys.executable, "-m", "pip", "install", "-q", "torch==2.6.0", "torchvision==0.21.0",
+                        "torchaudio==2.6.0", "--index-url", "https://download.pytorch.org/whl/cu126"],
+                       capture_output=True, text=True, env=_env)
+    open("/tmp/jack_torch_pin.txt", "w").write("torch==2.6.0\ntorchvision==0.21.0\ntorchaudio==2.6.0\n")
+    _c = subprocess.run([sys.executable, "-c", "import torch; a = torch.cuda.get_arch_list(); "
+                         "c = torch.cuda.get_device_capability(0) if torch.cuda.is_available() else None; "
+                         "print('EAR_TORCH', torch.__version__, a, c); "
+                         "assert c is None or 'sm_%d%d' % c in a, 'NO KERNELS FOR THIS GPU'"],
+                        capture_output=True, text=True)
+    _tv = _md.version("torch")
+    print("EAR_TORCH_REPIN", r.returncode, r.stderr[-800:], _tv, _c.returncode, _c.stdout, _c.stderr[-800:], flush=True)
+    if r.returncode or _c.returncode:
+        raise SystemExit("TORCH_REPIN_FAILED torch " + _tv + " " + r.stderr[-400:] + _c.stderr[-400:])
+    _probe = subprocess.run([sys.executable, "-c", "import torchaudio"], capture_output=True, text=True)
+if _probe.returncode != 0 or _base("torchaudio") != _tv.split("+")[0]:
     raise SystemExit("TORCHAUDIO_MISMATCH torch " + _tv + " torchaudio " + str(_base("torchaudio"))
                      + " " + _probe.stderr[-800:])
 import importlib.metadata as md, platform, torch
