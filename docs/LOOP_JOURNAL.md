@@ -3151,3 +3151,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Call 1: 14/81 grads exactly zero (rew/val behind zero-init heads, actor mean) → a 1-call golden would be blind there.
 - Found: ninjax 3.6.2 pruned from /data/tmp → reinstalled to /data/tools; the frozen debug G1 golden re-made IDENTICAL 1,400/1,400 (INBOX).
 - Philosophy served: 7 (the Mac port), 4 (the golden's blind spots measured before it is frozen), 6 (kept a 3.4 GB job off the customers' box).
+
+## 2026-11-21 10:37–11:01 UTC · JACK (short slot) · J16 row 2.1: capture for rungs 6, 7, 9
+- First act: Kaggle: ear, A2-v1S s0, J17 r0–r4 all RUNNING → J14/J17 wait; J18 forge's; J10 waits on the Director → J16.
+- `g1_probe.install_model_capture`: wraps RSSM._observe (every posterior step: inputs + deter/stoch/logit), RSSM.imagine (start/feat/act), agent.imag_loss (rew, con, losses, λ-returns) from outside; JVP tracers unwrapped to concrete primals.
+- Debug 1-call smoke: 257 arrays, 0 skipped; the 70 old keys bit-identical to the frozen golden's c1 (capture perturbs nothing); repfeat[:,0..9] = recorded steps 11..21 exactly.
+- Found, not yet named: 22 step records per call — steps 0..10 are a second posterior scan that departs from repfeat after step 1. Every in_reset is 0 → reset masking is unexercised by this batch.
+- Philosophy served: 7 (the Mac port), 4 (the extra scan surfaced before a golden was frozen around it).

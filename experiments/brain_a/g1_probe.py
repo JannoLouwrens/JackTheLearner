@@ -147,6 +147,7 @@ def main(argv=None):
         data["seed"] = agent._seeds(i + a.step_seed_offset, agent.train_mirrored)
         if cap is not None:
             cap["on"] = (i + 1) in dump_steps
+            cap["t"] = 0
             cap["prefix"] = f"c{i + 1}/" if len(dump_steps) > 1 else ""
         if a.disable_jit:
             with jax.disable_jit():
@@ -160,7 +161,8 @@ def main(argv=None):
             draws.append(noise.snapshot())
     if cap is not None:
         np.savez(a.dump, **cap["arrays"])
-        print("DUMP", a.dump, "arrays", len(cap["arrays"]), "calls", dump_steps)
+        print("DUMP", a.dump, "arrays", len(cap["arrays"]), "calls", dump_steps,
+              "skipped_tracers", cap.get("skipped", 0))
         zero_rc = zero_grad_check(cap["arrays"], dump_steps,
                                   {x for x in a.allow_zero.split(",") if x})
     # first step after which each traced param differs from its init (None = never moved)
@@ -241,7 +243,78 @@ def install_capture():
         def __getattr__(self, k):
             return grad if k == "grad" else getattr(ninjax, k)
     ejopt.nj = Proxy()
+    install_model_capture(cap)
     return cap
+
+
+def install_model_capture(cap):
+    """2.1 (golden v1): the intermediates rungs 6, 7 and 9 read, recorded on the armed call by
+    wrapping three official callables from outside (class attribute / module global swapped; no
+    official file edited; listed difference). Values inside the loss are JVP tracers under
+    `value_and_grad`; their primal is concrete when the compiler is off, and that primal is stored.
+    - `RSSM._observe`, every step t of the posterior scan (rungs 6, 7): `rssm/t<ttt>/in_deter`,
+      `in_stoch`, `in_action/<k>`, `in_tokens`, `in_reset` and the step's `out/{deter,stoch,logit}`.
+    - `RSSM.imagine` (multi-step call; rung 9): `imag/start/<k>`, `imag/feat/<k>`, `imag/act/<k>`.
+    - `agent.imag_loss` (rung 9): inputs `imagloss/in_rew`, `in_con`, outputs `imagloss/loss/<k>`
+      and `imagloss/outs/<k>` (lambda-returns `ret` among them).
+    A value that is still a tracer after unwrapping is NOT stored and is counted in
+    `cap["skipped"]`; the probe prints that count, and a nonzero count means the file is partial."""
+    import numpy as np
+    import jax
+    import ninjax
+    from dreamerv3 import rssm as rssm_mod
+    from dreamerv3 import agent as agent_mod
+    cap.setdefault("skipped", 0)
+    cap["t"] = 0
+
+    def conc(x):
+        while isinstance(x, jax.core.Tracer) and hasattr(x, "primal"):
+            x = x.primal
+        return None if isinstance(x, jax.core.Tracer) else np.asarray(x)
+
+    def put(key, tree):
+        for path, leaf in jax.tree_util.tree_flatten_with_path(tree)[0]:
+            sub = "/".join(str(getattr(q, "key", getattr(q, "idx", q))) for q in path)
+            v = conc(leaf)
+            if v is None:
+                cap["skipped"] += 1
+            else:
+                cap["arrays"][cap.get("prefix", "") + key + ("/" + sub if sub else "")] = v
+
+    def armed():
+        return cap["on"] and not ninjax.creating()
+
+    orig_obs = rssm_mod.RSSM._observe
+
+    def _observe(self, carry, tokens, action, reset, training):
+        out = orig_obs(self, carry, tokens, action, reset, training)
+        if armed():
+            k = f"rssm/t{cap['t']:03d}/"
+            put(k + "in_deter", carry["deter"]); put(k + "in_stoch", carry["stoch"])
+            put(k + "in_action", action); put(k + "in_tokens", tokens); put(k + "in_reset", reset)
+            put(k + "out", out[1][1])
+            cap["t"] += 1
+        return out
+    rssm_mod.RSSM._observe = _observe
+
+    orig_imag = rssm_mod.RSSM.imagine
+
+    def imagine(self, carry, policy, length, training, single=False):
+        out = orig_imag(self, carry, policy, length, training, single)
+        if armed() and not single:
+            put("imag/start", carry); put("imag/feat", out[1]); put("imag/act", out[2])
+        return out
+    rssm_mod.RSSM.imagine = imagine
+
+    orig_il = agent_mod.imag_loss
+
+    def imag_loss(act, rew, con, *args, **kw):
+        out = orig_il(act, rew, con, *args, **kw)
+        if armed():
+            put("imagloss/in_rew", rew); put("imagloss/in_con", con)
+            put("imagloss/loss", out[0]); put("imagloss/outs", out[1])
+        return out
+    agent_mod.imag_loss = imag_loss
 
 
 def compare_npz(pa, pb):
