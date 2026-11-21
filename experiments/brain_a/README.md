@@ -549,3 +549,17 @@ Judged by the GOLDEN line fixed in the docstring before the run:
 - noise file sha256 `91e557dd…cf7a`. This is the size1m reference the Mac port is checked against;
   rows 2.2 (one recurrent step → rung 6) and 2.3 (64-step pass → rung 7) still need per-step RSSM
   intermediates the capture does not reach yet.
+
+## J16 row 2.2 — one recurrent step (rung 6): references first (11-21 16:45)
+
+`rung6.py --vs-official` (jack-dv3 venv, `PYTHONPATH=/data/tools/ninjax362`): NumPy float64 `REF_step`
+(reset masking, DictConcat, `_core` with per-block GRU gates, obs layer → posterior logit, `_prior`)
+against the official `RSSM._observe` + `_prior` at e01491f, float32 jitted (COMPUTE_DTYPE f32 as A1–A3;
+published default bf16). Toy size (deter 64, hidden 32, stoch 4×8, blocks 8), batch 4, rows 0/2 reset.
+- **12/12 REFERENCES HOLD**: masked deter + action embedding exact; deter 5.6e-8, post 2.2e-7, prior
+  3.3e-7 ×(|ref|+1); reset rows equal the from-zero-carry step; control: kept rows differ (0.75).
+- Planted wrong references each CAUGHT: erf gelu (official is the tanh form), GRU gates split flat
+  instead of per block, no `max(1,|a|)` action squash. (The first squash mutant was itself a no-op and
+  MISSED — fixed.) Posterior sample values NOT compared (rung 7's sampler); only one-hot shape.
+- Golden `rung6_step_golden_e01491f.npz` (sha256 b3eddc2e…): params, inputs, official outputs.
+- Next: port stub in `mlx_maths.py` + rung 6 tests committed FAILING, then the port, eager and compiled.

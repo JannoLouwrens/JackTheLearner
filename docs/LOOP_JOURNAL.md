@@ -3225,3 +3225,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Golden line (fixed before the run): PASS. Repeat run bit-identical 2,468/2,468; seed-1 control equal on only 533 (fails as it must); episode reset exactly at t032 on even rows in every dumped call; all rc 0; 24 min on free Kaggle CPU.
 - Next: row 2.2 — capture per-step RSSM intermediates, NumPy reference first.
 - Philosophy served: 4 (the reference is only trusted because a repeat matched and a seed control differed), 7 (the Mac port gets a size1m reference to be checked against), 6 (free compute).
+
+## 2026-11-21 16:22–16:50 UTC · JACK (short slot) · J16 row 2.2 references
+- First act: Kaggle — A2-v1S s2 RUNNING, s1 still QUEUED; J17 done, J18 forge's, J10 waits the Director → J16 row 2.2.
+- `experiments/brain_a/rung6.py`: NumPy float64 reference of one RSSM step vs the official code, 12/12 — all within 3.3e-7, reset rows equal a fresh start, kept rows differ (control), three planted wrong references caught (one first draft of a mutant was a no-op and missed; fixed).
+- Golden npz committed. Next: port stub + failing tests.
+- Philosophy served: 4 (a reference trusted only because three wrong ones were caught by it), 7 (the Mac port's recurrent core now has a checked target).
