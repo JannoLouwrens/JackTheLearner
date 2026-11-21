@@ -3081,3 +3081,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Why, from the e-print text + figure: Δ is summed (matches ours). The published map puts each Gaussian's peak ON the walkable corner; ours puts it in the wall, so our best cell gets 37 % of the peak. Next: re-registered rule + 1-seed pilot.
 - Philosophy served: 4 (a failed row read for why, not filed) and 3 (his needs-hidden question stays unread until the apparatus reproduces).
 - 06:26 addendum: `needs_grid_row pilot <seed>` added (frozen row path unchanged) and launched DETACHED on the box, seeds 2 and 5 (pilot, not a row; frozen-μ reads 17.2 / 25.0): μ on the walkable corner. ~1 h; next slot harvests.
+
+## 2026-11-21 06:37–06:50 UTC · JACK (short slot) · J14: nothing home → NH-2 rule drafted before the pilot reads
+- First act: ps + `kernels status`: ear `…231396` Kaggle RUNNING (3h15m); needs-hidden μ-inside pilot seeds 2, 5 alive on the box (13 CPU-min each at 11 min wall). Nothing to harvest.
+- Drafted `docs/research/prereg/needs_hidden_nh2.md` (text, no seed) BEFORE either pilot seed reads: one apparatus change (μ on the walkable corner), σ = I and unbounded stats held, NH-1's cells/bands/clauses unchanged; gate fixed in advance: NH-2 launches only if BOTH pilot seeds read Δ < 5.0, else the next pilot is stat bounds. OPEN: σ 1.4 second pair; this week's hours.
+- Philosophy served: 4 (the gate and bands written before the pilot can shape them; a failed row worked on, not filed).
