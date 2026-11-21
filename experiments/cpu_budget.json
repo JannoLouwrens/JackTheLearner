@@ -1702,6 +1702,8 @@
         "detached:launch_A2b.log": 648.13,
         "detached:launch_A2ext.log": 491.98,
         "detached:launch_A3.log": 281.21,
+        "detached:launch_K-row128-blind.log": 994.41,
+        "detached:launch_K-row128.log": 1016.81,
         "detached:launch_f1.log": 371.6,
         "detached:launch_f2.log": 418.62,
         "detached:launch_golden.log": 294.94,
@@ -1717,21 +1719,22 @@
         "detached:launch_ps1.log": 7.05,
         "detached:launch_resume_test.log": 125.17,
         "detached:launch_row5_ext.log": 633.66,
-        "detached:launch_row6_cartpole-swingup_sparse.log": 78.61,
-        "detached:launch_row6_reacher-easy.log": 78.1,
-        "detached:launch_row6_reacher-hard.log": 78.85,
+        "detached:launch_row6_cartpole-swingup_sparse.log": 307.1,
+        "detached:launch_row6_reacher-easy.log": 328.97,
+        "detached:launch_row6_reacher-hard.log": 329.26,
         "detached:launch_s2_seg2.log": 594.7,
         "detached:launch_s2_seg3.log": 481.55,
         "detached:launch_v1s_s0.log": 373.38,
-        "detached:launch_v1s_s1.log": 342.34,
+        "detached:launch_v1s_s1.log": 593.06,
         "detached:launch_v1s_s2.log": 650.59,
         "detached:launch_v1s_timing.log": 7.98,
         "detached:launch_v1s_timing2.log": 53.74,
         "detached:launch_wheel_367.log": 2.4,
         "detached:pilot_s2.log": 3686.99,
-        "detached:pilot_s5.log": 3689.7
+        "detached:pilot_s5.log": 3689.7,
+        "detached:read_launch.log": 1432.44
       },
-      "used_s": 23770.6
+      "used_s": 28194.75
     }
   },
   "last_child_s": {
