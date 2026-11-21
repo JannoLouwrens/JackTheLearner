@@ -3014,3 +3014,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Both Kaggle watchers died AFTER the jobs finished: whole-output download (1.2 GB) > gpu.py's 300 s timeout. JSONs recovered from the download dirs; receipts not written. INBOX line.
 - Launched A in his world (`jack-ladder-1795227930`) and the ear (`…228077`) — both GPU sessions held; poller cap 6/6 → A2 ext is the next slot's first launch.
 - Philosophy served: 3 (a candidate brain holds its seat only after reproducing the published record) and 6 (the free GPU week kept busy).
+
+## 2026-11-21 02:37–02:50 UTC · JACK (short slot) · J14: the ear's kernel failed at install — fixed; A2 extension launched
+- First act: in_world `…227930` RUNNING on Kaggle; the ear `…228077` ERROR (both backends failed, watcher exited). Its log: image is Python 3.13, the preamble pins torch 2.5.1, torchaudio 2.5.1 has no cp313 wheel → the kernel's own guard stopped it (TORCHAUDIO_MISMATCH), 0 epochs, no false number.
+- Fix `9974ab92`: on a failed torchaudio match, re-pin the trio to 2.6.0+cu126 (brain A's cure; cp313 wheels verified on download.pytorch.org) with an arch check, stop otherwise. test_kws_row PASS incl. 2 planted (re-pin takes / re-pin fails → stop).
+- One poller seat was free (5/6) → the order's first item: A2 extension seeds 3–4 LAUNCHED `jack-ladder-1795228778`. The ear relaunch waits for the next seat.
+- Philosophy served: 4 (a failure fixed, not filed — and the guard that caught it kept the record honest) and 6 (free GPU week kept busy).
