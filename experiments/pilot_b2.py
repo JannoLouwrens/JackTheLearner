@@ -1186,10 +1186,143 @@ def e2c_readings(paths=None) -> tuple:
     return "\n".join(md), res
 
 
+# ---- J17 (3) NEXT: THE RULE's reading, transcribed 11-21 08:30, BEFORE any
+# J17 kernel is home. Rule: prereg/row128_vs_rays16.md FROZEN `98e22036`.
+# Transcription seams (each the stricter reading; none can help row128):
+#  (a) "late" = ruling 65's late half: FINISHED lives whose first decision is
+#      >= J17_LATE_FROM (150,000); an unfinished last life is not counted (as
+#      run_stats). No late life -> NaN, which wins no MWU pair and no seed pair
+#      for row128 in either direction (the life cap 9,000 makes it near-
+#      impossible; NaN can only cost row128). The draft's
+#      last-quarter figure (run_stats "late") is printed beside, NOT read.
+#  (b) MWU one-sided U = #(row128_i > other_j) + 0.5 #(ties) over 25 pairs;
+#      seed pairs = same seed, strict >.
+#  (c) an arm EATS iff its per-arm reading is SUSTAINED or EATS BUT STARVES
+#      (§3's classes; the order's verdict row128 eats / neither / both is read
+#      off the two eyed arms). K's named floor for EATS BUT STARVES is the
+#      in-race bound K-lr0-row128 (held8-k0-ff-bm has no in-race twin; its
+#      card U 0.64 -> floor(U) 0 is the same bar). SLIDES vs NEAR RANDOM needs
+#      noop's median life, which J17 does not run -> both print NOT EATING.
+#  (d) VOID clauses as drafted: blind SUSTAINED >= 3/5; K-lr0-row128 crosses
+#      W=2 on >= 2/5; >= 2 crashed runs in any arm. >= 2/5 runs of an arm below
+#      150k decisions -> INCOMPLETE (re-run on 926+).
+J17_U_NEED = 21
+J17_PAIRS_NEED = 4
+
+
+def j17_late_meals(rec: dict, late_from: int = J17_LATE_FROM) -> float:
+    from experiments import pilot_b_report as R
+    t, ms = 0, []
+    for life in rec["lives"]:
+        if life["cause"] != "unfinished" and t >= late_from:
+            ms.append(R._meals(life))
+        t += life["decisions"]
+    return sum(ms) / len(ms) if ms else float("nan")
+
+
+def j17_capped_marks(rec: dict) -> tuple:
+    """(first, last) capped life, in decisions at the life's end; None if none."""
+    t, caps = 0, []
+    for life in rec["lives"]:
+        t += life["decisions"]
+        if life["cause"] == "capped":
+            caps.append(t)
+    return (caps[0], caps[-1]) if caps else (None, None)
+
+
+def mwu_u(xs, ys) -> float:
+    return sum((x > y) + 0.5 * (x == y) for x in xs for y in ys)
+
+
+def j17_readings(runs: dict) -> dict:
+    """THE RULE on the 20 registered J17 runs; anything missing raises."""
+    from experiments import pilot_b_report as R
+    if J17_T != R.T:
+        raise RuntimeError("j17_readings: pilot_b_report scores at T_RUN != J17_T")
+    miss = [R.rid(a, s) for a, s in j17_cells() if R.rid(a, s) not in runs]
+    if miss:
+        raise ValueError(f"no reading: {len(miss)} of 20 missing {miss}")
+    W, seeds = PILOT_W, J17_SEEDS
+    by = {a: [runs[R.rid(a, s)] for s in seeds] for a in J17_ARMS}
+    sc = {a: [R.score(r) for r in v] for a, v in by.items()}
+    n_sus = {a: sum(x["sustained", W].event for x in v) for a, v in sc.items()}
+    n_th3 = {a: sum(x["theta", 3].event for x in v) for a, v in sc.items()}
+    late = {a: [j17_late_meals(r) for r in v] for a, v in by.items()}
+    res = {"W": W, "n_sustained": n_sus, "n_theta3": n_th3, "late": late,
+           "late_quarter": {a: [(R.run_stats(r)["late"] or {}).get("meals", float("nan"))
+                                for r in v] for a, v in by.items()},
+           "capped": {a: [j17_capped_marks(r) for r in v] for a, v in by.items()},
+           "arms": {}, "why": []}
+    broken = []
+    if n_sus["K-row128-blind"] >= 3:
+        broken.append(f"K-row128-blind SUSTAINED on {n_sus['K-row128-blind']}/5 (must fail)")
+    if n_sus["K-lr0-row128"] >= 2:
+        broken.append(f"K-lr0-row128 crosses W={W} on {n_sus['K-lr0-row128']}/5")
+    for a, v in by.items():
+        c = sum(_crash(r) for r in v)
+        if c >= 2:
+            broken.append(f"{a}: {c} runs crashed (rc != 0, not a cut)")
+    if broken:
+        res.update(verdict="VOID — broken", why=broken)
+        return res
+    floor_th = n_th3["K-lr0-row128"]
+    for a in ("K-rays16", "K-row128", "K-row128-blind"):
+        if sum(_decisions(r) < PILOT_MIN_DEC for r in by[a]) >= 2:
+            res["arms"][a] = "INCOMPLETE"
+        elif n_sus[a] >= PILOT_NEED:
+            res["arms"][a] = "SUSTAINED"
+        elif n_th3[a] >= PILOT_NEED:
+            res["arms"][a] = ("EATS BUT STARVES" if floor_th <= 1 else
+                              f"VOID — θ too easy (K-lr0-row128 crosses θ in {floor_th}/5)")
+        else:
+            res["arms"][a] = "NOT EATING (SLIDES / NEAR RANDOM: no noop arm in J17)"
+    if any(v == "INCOMPLETE" for v in res["arms"].values()):
+        res["verdict"] = "INCOMPLETE — re-run on seeds 926+"
+        return res
+    row, rays, blind = late["K-row128"], late["K-rays16"], late["K-row128-blind"]
+    res["U_rays16"], res["U_blind"] = mwu_u(row, rays), mwu_u(row, blind)
+    res["pairs_rays16"] = sum(x > y for x, y in zip(row, rays))
+    res["pairs_blind"] = sum(x > y for x, y in zip(row, blind))
+    beats_rays = res["U_rays16"] >= J17_U_NEED and res["pairs_rays16"] >= J17_PAIRS_NEED
+    beats_blind = res["U_blind"] >= J17_U_NEED and res["pairs_blind"] >= J17_PAIRS_NEED
+    res["clause"] = ("row128 HELPS" if beats_rays and beats_blind else
+                     "width, not sight" if beats_rays else
+                     "no difference — no eye effect at 300k under S")
+    eats = {a: res["arms"][a] in ("SUSTAINED", "EATS BUT STARVES") for a in ("K-row128", "K-rays16")}
+    res["verdict"] = ("both eat" if all(eats.values()) else
+                      "row128 eats" if eats["K-row128"] else
+                      "rays16 eats (row128 does not)" if eats["K-rays16"] else
+                      "neither eats")
+    return res
+
+
+def j17_md(res: dict) -> str:
+    def f(v):
+        return ", ".join("nan" if x != x else f"{x:.2f}" for x in v)
+
+    def k(m):
+        return "—" if m is None else f"{m // 1000}k"
+    out = [f"**J17 reading (row128_vs_rays16.md FROZEN `98e22036`, W = {res['W']}): "
+           f"{res['verdict']}**", ""]
+    out += [f"- {w}" for w in res["why"]]
+    if "clause" in res:
+        out.append(f"- Primary (late-half meals/life, row128 over): rays16 U {res['U_rays16']:g}/25, "
+                   f"pairs {res['pairs_rays16']}/5; blind U {res['U_blind']:g}/25, pairs "
+                   f"{res['pairs_blind']}/5 (need U >= {J17_U_NEED} AND >= {J17_PAIRS_NEED}/5) "
+                   f"-> **{res['clause']}**")
+    out += ["", "| arm | reading | sustained W2 | θ W3 | late-half meals/life (read) | "
+            "last-quarter (beside, not read) | first / last capped life |", "|---|---|---|---|---|---|---|"]
+    for a in J17_ARMS:
+        caps = "; ".join(f"{k(x)}/{k(y)}" for x, y in res["capped"][a])
+        out.append(f"| {a} | {res['arms'].get(a, 'bound (not read)')} | {res['n_sustained'][a]}/5 "
+                   f"| {res['n_theta3'][a]}/5 | {f(res['late'][a])} | {f(res['late_quarter'][a])} | {caps} |")
+    return "\n".join(out)
+
+
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel", "e2c-table", "e2c-readings", "j17-kernel"])
+    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel", "e2c-table", "e2c-readings", "j17-kernel", "j17-table"])
     p.add_argument("--arm", default="noop-k1")
     p.add_argument("--seed", type=int, default=601)
     p.add_argument("--lives", type=int, default=CARD_LIVES)
@@ -1221,6 +1354,12 @@ def main(argv):
         e2c_kernel(a.name)
     elif a.cmd == "j17-kernel":
         j17_kernel(a.name)
+    elif a.cmd == "j17-table":
+        runs, _ = load_pilot(sorted(OUT.glob("j17_r*.json")))
+        try:
+            print(j17_md(j17_readings(runs)))
+        except ValueError as e:
+            raise SystemExit(f"j17-table: PARTIAL — {e}")
     elif a.cmd == "e2c-table":
         md, missing = e2c_table()
         print(md)
