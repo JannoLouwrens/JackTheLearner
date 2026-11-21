@@ -621,3 +621,16 @@ Raw: `world_card_data/j17/j17_r{0..4}.json` (sha256 d3ced9aa…, 122f0ed3…, c9
 | K-lr0-row128 | 16→14, 16→17, 13→62, 12→14, 15→16 | 1.0 (fixed) |
 
 So the wall is not (only) the eye's information: content in the eye input destabilises B's critic (the wider and richer the content, the worse: row128 > rays16). Trace `std` is SB3's `train/std` (the overwrite fixed in `974f18e6` landed after these kernels left), not the action std — not read.
+
+### J17 addendum (2026-11-21 19:50 UTC, JACK slot): the critic over-values, the entropy does not — DESCRIPTIVE, no reading, no verdict changed
+Made with the existing `pilot_b2.e2c_q_row` / `e2c_h_row` (J15's tools, unchanged) over the 20 harvested `j17_r*.json`; no run.
+SUPPORTED = 100·r/(1−γ) + 100·d_max + α_max·8ln2/(1−γ), a loose ceiling on the soft value a policy eating at its last-50k rate can have.
+
+| arm | Q 300k ÷ SUPPORTED (5 seeds) | Q 50k → 300k | α 50k → 300k | H 300k (target −8) |
+|---|---|---|---|---|
+| K-rays16 | 1.8 1.2 1.8 1.9 2.2 (5/5 > 1) | 141–336 → 473–983, rising | .04–.11 → .08–.30 | −7.9 … −8.3 |
+| K-row128 | 1.7 2.0 1.7 1.4 1.6 (5/5 > 1) | 184–360 → 559–1,360, rising | .05–.10 → .20–.51 | −7.7 … −8.1 |
+| K-row128-blind | 0.4 0.6 0.4 0.8 0.6 (0/5 > 1) | 178–321 → 145–347, flat/falling | .04–.10 → .01–.04 | −7.0 … −8.8 |
+| K-lr0-row128 | 0.0 (never trains) | 1–3 | 1.0 fixed | – |
+
+What it says: (1) the entropy hunt is closed for J17 — auto α holds H on its −8 target in all 15 learning runs, sighted and blind alike (§19 cause 1, "the entropy bonus dominates", does not fit). (2) Every sighted run's min-twin critic ends ABOVE the ceiling its own eating can support and keeps climbing while its eating falls; no blind run does. (3) α rises only where Q rises — consistent with α following the critic's scale, not driving it (an ordering read off 5k windows, not a test). So the cause hunt's first suspect is the critic on eye content (input normalisation of the eye / critic lr / target τ), not reward scale + α. One seed, box-minutes, before any 300k row — still the Director's to name.
