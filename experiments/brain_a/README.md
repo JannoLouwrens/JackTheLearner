@@ -519,3 +519,20 @@ Stubs committed failing `dfde3cf9` (0/2); filled → **RUNG 3: 2/2 PASS eager AN
 (mlx 0.32.4). `--planted` 5/5 caught + the bug-free chain as a control PASSES; a mutant of the real
 port with an unfused outer ramp FAILS (6.5e-6). Rungs 1 (9/9) and 2 (4/4) re-read PASS. Ours beside
 theirs: in `mlx_maths.py` above `opt_update`. Wheel re-check not yet run.
+
+## J16 row 2.1 — golden generator v1 at `size1m`: first measurement (11-21 10:31)
+
+`g1_probe.py --preset size1m` (new; `debug` path unchanged): `defaults` + `size1m` + the golden-file
+rule's `--jax.platform cpu --jax.prealloc False` (listed differences), float32, eager, file noise
+(`--noise-n 12000000`, `/data/jack-logs/mlx/g1v1/noise1m_s0.npz`), warmup 0. Logs `/data/jack-logs/mlx/g1v1/`.
+- **647,705 params** — the report's count, exactly. 261 param arrays, 81 gradients dumped.
+- Batch 16×65 (published): died at init on ninjax 3.6.3's assert — `/data/tmp/ninjax362` had been
+  pruned; reinstalled ninjax 3.6.2 to `/data/tools/ninjax362` (path updated here and in the probe).
+  **Re-check: the frozen debug G1 golden re-made with it is IDENTICAL 1,400/1,400** (sha 583e3c30 unchanged).
+- Batch 4×65 (`--set batch_size=4`, a difference NOT yet adopted): one eager train call **3 m 12 s wall,
+  peak RSS 3.4 GB** (the debug 20-call G1 run peaks ~2.4 GB too) — over the box's ~1.5 GB rule, and
+  shrinking the batch did not bring it under. Call 1: **14/81 grads exactly zero** (rew/val MLPs behind
+  zero-init heads, `pol/head/action/mean`) → the golden must span ≥ 6 calls (debug: actor mean moves at 6).
+- Consequence: the v1 generator (≥ 6–20 calls, run twice + a seed control) belongs on a Kaggle CPU
+  kernel (30 GB), not this box. Not yet captured: per-step recurrent and imagination intermediates
+  (rungs 6, 7, 9 — `install_capture` reaches grads, loss and `outs` only).

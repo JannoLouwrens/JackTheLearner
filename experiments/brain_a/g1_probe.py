@@ -18,7 +18,7 @@ the metrics each call returns. Run twice in separate processes and compare the J
 — 0.4d found the `dyn/prior*` grads all-zero at call 20 (free-nats floor), a hole a golden file
 must not carry silently.
 0.4d iii: `--set agent.opt.warmup=0` passes an official config flag through (listed difference).
-0.4c: `--jit False` = compiler off; needs `PYTHONPATH=/data/tmp/ninjax362` (ninjax 3.6.2) + the AOT skip below.
+0.4c: `--jit False` = compiler off; needs `PYTHONPATH=/data/tools/ninjax362` (ninjax 3.6.2) + the AOT skip below.
 
 0.4b controls (must DIFFER from the seed-0 run, or the identity above proves nothing):
 `--seed 1` (agent seed: init weights + seed stream) and `--step-seed-offset 1000` (same init,
@@ -60,6 +60,10 @@ def main(argv=None):
                     help="0.4d ii: comma list of grad names allowed to be all-zero in every dumped call")
     ap.add_argument("--dump", help="0.4d: .npz path for the intermediates")
     ap.add_argument("--compare-npz", nargs=2, metavar=("A", "B"))
+    ap.add_argument("--preset", choices=["debug", "size1m"], default="debug",
+                    help="2.1: `debug` (G1, unchanged) or `defaults size1m` (+ debug's jax cpu/prealloc only)")
+    ap.add_argument("--noise-n", type=int, default=None,
+                    help="2.1: draws per kind when MAKING the noise file (size1m needs ~2.3M uniform a call)")
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VAL",
                     help="0.4d iii: extra official config flag, e.g. agent.opt.warmup=0 (a LISTED difference)")
     a = ap.parse_args(argv)
@@ -79,8 +83,11 @@ def main(argv=None):
     dv3main.make_env = lambda config, index, **kw: dv3main.wrap_env(Dummy74(config.task), config)
     folder = pathlib.Path(dv3main.__file__).parent
     configs = yaml.YAML(typ="safe").load((folder / "configs.yaml").read_text())
-    config = elements.Config(configs["defaults"]).update(configs["debug"])
-    config = elements.Flags(config).parse([
+    config = elements.Config(configs["defaults"]).update(configs[a.preset])
+    # 2.1 size1m: the published preset on top of defaults; the only extra flags are the golden-file
+    # rule's CPU + no-prealloc (what `debug` sets under jax:) — listed differences, nothing else.
+    cpu = ["--jax.platform", "cpu", "--jax.prealloc", "False"] if a.preset == "size1m" else []
+    config = elements.Flags(config).parse(cpu + [
         "--task", "jack74_v0", "--seed", str(a.seed), "--jax.compute_dtype", "float32",
         "--jax.jit", a.jit,
         "--logdir", tempfile.mkdtemp(prefix="g1probe_")]
@@ -100,7 +107,8 @@ def main(argv=None):
         assert a.jit == "False", "file noise needs --jit False (a Python cursor under jit is baked in)"
         from embodied.jax import outs as ejouts
         from experiments.brain_a.file_noise import FileNoise
-        noise = FileNoise(a.noise_file, seed=a.noise_seed).install(ejouts)
+        kw = {"n": a.noise_n} if a.noise_n else {}
+        noise = FileNoise(a.noise_file, seed=a.noise_seed, **kw).install(ejouts)
     cap = None
     dump_steps = sorted({int(x) for x in a.dump_step.split(",")}) if a.dump_step else []
     if dump_steps:
@@ -160,7 +168,7 @@ def main(argv=None):
                   for k in trace[0]}
     params = {k: hashlib.sha256(np.asarray(jax.device_get(v)).tobytes()).hexdigest()[:16]
               for k, v in sorted(agent.params.items())}
-    rec = {"versions": versions(), "steps": a.steps, "seed": a.seed,
+    rec = {"versions": versions(), "preset": a.preset, "steps": a.steps, "seed": a.seed,
            "step_seed_offset": a.step_seed_offset, "jit": a.jit, "disable_jit": a.disable_jit,
            "first_move": first_move, "batch_keys": sorted(batch),
            "B": B, "T": T, "noise_file": a.noise_file, "noise_at_init": noise_at_init, "noise_draws": draws, "n_params": len(params), "params": params, "metrics": mets_all}
