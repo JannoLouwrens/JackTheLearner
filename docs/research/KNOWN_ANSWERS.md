@@ -513,6 +513,25 @@ so the weights load exactly, and the gap is late-episode MuJoCo chaos between x8
   near the PASS line and one fell, and three seeds cannot tell this recipe's PASS rate from a coin. The FAIL stands
   (a miss is a miss). Next is for the Director: §21's cures (LN critic, resets, TQC) or more seeds of the frozen recipe.
 
+**Addendum 11-21 08:45 — J10 (a), ruling 72: the resume is NOT a clean twin; the differing item is NAMED (box, toy size).**
+- `experiments/j10_resume_twin.py`, run under `/data/venvs/jack-std` (the kernel's pins: sbx 0.28.0, SB3 2.9.2,
+  MuJoCo 3.17.0, jax 0.11.2), the row's own `train_segment` unedited. Seed 0, T = 1,000, 2,000 steps, learning_starts
+  500, 1,500 updates. Arms: U1 and U2 unbroken; R = segment 0 to 1,000, save, load, segment 1 to 2,000. Output
+  `/data/jack-logs/j10_twin/T1000/compare.json`.
+- **Control U1 vs U2: bit-identical on every item** (params, all three optimiser states, sbx PRNG key, replay). So the
+  box is deterministic and the twin can be read.
+- **Twin U1 vs R:** step counter, update count (1,500), buffer pos and the **PRNG key are equal**. The **first 1,000 replay
+  rows are bit-identical, and from row 1,000 on every row differs** (1,000 of 1,000; obs, actions, rewards, dones). All weights
+  and optimiser states differ at 2,000 (critic max |Δ| 0.155). Cause, seen in the rows: at load the R run does NOT continue the episode
+  in progress (R's row 1,000 obs ≠ U1's row-999 next_obs; U1 continues it). SB3 keeps no `_last_obs` in the save, so `learn()`
+  resets the env, and `train_segment` re-seeds that env with `seed*1000 + segment`. Learner state carried exactly
+  (`resume_check` 11-18: load_equal). **What a resume changes is the world's stream:** a cut episode plus fresh env randomness
+  at every 500k mark. That is the same class of change as the forks' re-seed, which both KEPT.
+- Reading: no learner-state fault, so this does not explain s1's collapse by itself. But Row J10-1's runs are not "one unbroken
+  run" as §16's are; each 2M seed is 4 env streams. Two fixes would make the twin bit-identical: carry env RNG state +
+  `_last_obs` + episode step count across the save, or disclose the difference in J10-2's rule. Not yet built; it is the Director's ruling.
+  Limit: toy size (2k steps, 1 seed); the first 1,000 updates after the resume were not traced step by step, only the end state.
+
 ## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:12, Kaggle CPU)
 
 Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed, `0bf84989`): band 837.9–868.1 (853.0 ± 9.2, k = 5);

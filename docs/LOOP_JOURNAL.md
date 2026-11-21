@@ -3109,3 +3109,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 10 planted tests PASS (standalone runner; no pytest on the box), including reached-then-lost reading by the late half, the 150k boundary, and U 21 with 3 pairs NOT passing. 2 mutants (pairs 3, window 0) KILLED. CLI on the empty book: PARTIAL, rc 1.
 - INBOX: the rule never defines "eats"; the reading's choice is named for a ruling before r0–r2 are home.
 - Philosophy served: 4 (the reading and its traps are fixed in code before a single number can shape them).
+
+## 2026-11-21 08:37–08:50 UTC · JACK (short slot) · J10 (a): the resume twin, read
+- First act: Kaggle status: ear `…231396`, A2-v1S s0 `…248791`, J17 r0–r2 all RUNNING; NH-2 really is on Colab (its Kaggle push was refused, the colab CLI keep-alive is live under watcher 2440962). Nothing home, poller cap full → J14/J17 cannot advance → J10 (a).
+- Built `experiments/j10_resume_twin.py` (row's `train_segment` unedited; jack-std venv = kernel pins). Control U1 vs U2 bit-identical. Twin: PRNG key, counters, first 1,000 replay rows equal; all 1,000 rows after the resume differ, so do all weights.
+- Named: at load the episode in progress is dropped (SB3 saves no `_last_obs`) and the env is re-seeded `seed*1000+segment`. Learner state exact. J10-1's seeds are 4 world streams each, not one unbroken run. Addendum in KNOWN_ANSWERS; fix-or-disclose is the Director's ruling before (b).
+- `launch_detached` refused a 2-min job at the poller cap → ran foreground (INBOX).
+- Philosophy served: 4 (a test that could fail, with a control that had to pass, found what "resumed" really changed).

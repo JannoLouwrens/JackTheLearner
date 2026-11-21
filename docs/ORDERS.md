@@ -167,6 +167,8 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 state: J10-1 (rule `humanoid_sac_row.py`, seeds 0–2, 500k segments): 1M median 4,065 IN BAND, control R 68 valid; 2M 1 of 3 → FAIL (00:12).
 state: 01:15 why (`1fdd3d58`): all 11 `model.zip` re-evaluated on the box; load is exact (12/17 early falls on the identical step); s1 collapsed in the LAST segment, α .009→.024, Q rising while return fell.
 state: 05:15 forks `30447a6f`: f1 R 5,863 M 12.19, f2 R 5,303 M 14.07 → {KEPT, KEPT} → CHAOS; 2 forks say nothing about a rate.
+state: 08:45 (a) READ (`experiments/j10_resume_twin.py`, jack-std venv = kernel pins; seed 0, 2k steps, resume at 1k): control U1 vs U2 BIT-IDENTICAL; twin: PRNG key, counters, first 1,000 replay rows equal, EVERY row from 1,000 differs → all weights differ. Named: at load SB3 drops the episode in progress (no `_last_obs` saved) and `train_segment` re-seeds the env `seed*1000+segment`. Learner state exact. Addendum in `KNOWN_ANSWERS.md`.
+state: NEXT: before (b), the Director rules: carry env RNG + `_last_obs` + episode step across the save (then re-run the twin; it must read CLEAN) or disclose it in J10-2's rule. Then (b): rule text first.
 
 ### J16 — Brain A on the Mac: the next rows of the port table
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` step table rows 1.5 → 2.3; `experiments/brain_a/README.md`
@@ -281,6 +283,8 @@ clauses; `verify` VENUE 266 vs 256.
 - 11-21 07:25 JACK · MACHINE: no venv on the box has `pytest`, and `tests/test_needs_grid_row.py` imports it (ran through a stand-in); `test_pilot_b2_kernels` / `test_e2c_kernel` print FAIL under the project venv (no `sbx`) and PASS under `/data/venvs/jack-std` — the header says so, the `run` tooling does not.
 - 11-21 07:10 JACK · MACHINE: `launch_detached.sh`'s cap counts a GPU/CPU-kernel WATCHER as a busy job at launch, so with 2 box jobs computing no kernel can be pushed (the A2-v1S timing cell waited 25 min behind the two needs pilots while a Kaggle GPU seat sat empty); and the 6-poller cap left J17's r3, r4 unlaunched with 2 Kaggle CPU sessions idle (ruling 60: "no session sits idle").
 - 11-21 08:25 JACK · J17: the frozen rule names the verdict "row128 eats / neither / both" but never says what "eats" is; `j17_readings` reads it as §3's SUSTAINED or EATS BUT STARVES (EATS floor = K-lr0-row128, J17 has no held8-k0 twin; no noop arm, so SLIDES vs NEAR RANDOM print together as NOT EATING) — rule on it before r0–r2 are home (~15:00) if that is wrong.
+
+- 11-21 08:45 JACK · MACHINE: `launch_detached.sh` refuses even a 2-CPU-min box job when the 6-poller cap is full ("0 busy detached jobs alive"); J10's twin ran in the foreground instead. The poller cap is starving CPU work as well as r3/r4.
 
 ## DONE (kept one day)
 
