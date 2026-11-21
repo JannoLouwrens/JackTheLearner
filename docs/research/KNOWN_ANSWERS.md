@@ -532,3 +532,31 @@ policy_step 2,000 for all 4 envs).
   only step-0 reading we hold.
 - Settings that differ from the published protocol stay as the rule lists them (v2 port, size 1m not S, compile
   on). Wall per seed on the T4: 1,970–2,665 s for 200K env steps.
+
+## Row A2 — brain A on DMC cartpole_swingup: **MISS at 100K, in band at 200K** → the rule's one extension (seeds 3–4) is due (11-21 02:40, Kaggle T4)
+
+Same rule (`286d6451`). Kaggle `jack-ladder-1795220186` (A2b, after the torch re-pin `01561922`), COMPLETE; the
+watcher died AFTER the job finished — `kaggle kernels output` of the whole 1.2 GB output dir hit gpu.py's 300 s
+timeout (INBOX) — but `brain_a_rows_A2.json` had landed whole (4 runs, rc 0, none cut, 200 episodes each); copied
+to `/data/jack-logs/brain_a/rows/rows_A2.json` and scored by `rows score A2`.
+
+| point (env steps) | band | s0 | s1 | s2 | mean | never-trains control | reading |
+|---|---|---|---|---|---|---|---|
+| 100K | 438–518 | 415.2 | 466.5 | 328.6 | **403.4** | 51.9 | **MISS** (35 under the edge) |
+| 200K | 740–816 | 758.6 | 800.3 | 760.3 | **773.0** | 57.2 | in band |
+
+- Control valid at both points. Verdict MISS at 3 seeds → **seeds 3 and 4 run fresh** (`rows kernel A2 --ext`) and
+  the row is judged once at 5 seeds, same bands. Nothing after that.
+- Two readings, neither explained away (the rule's own words): a broken build, or size 1m (~0.64M params, no
+  published score) being slower early than size S. Seen, not a test: by 200K all three seeds are in band, so the
+  build learns the task; the miss is the EARLY point, and seed 2 carries most of it (328.6).
+
+## Row A3 — brain A on DMC ball_in_cup_catch: **PASS** at 3 seeds (11-21 02:40, Kaggle T4)
+
+Kaggle `jack-ladder-1795220723`, COMPLETE; result file read from the watcher's download dir (4 runs rc 0, none cut).
+
+| point | band | s0 | s1 | s2 | mean | control | reading |
+|---|---|---|---|---|---|---|---|
+| 200K | 931–967 | 960.0 | 955.8 | 952.4 | **956.1** | 8.0 | in band |
+
+- **Brain A: 2 of 3 rows PASS (A1, A3), A2 owes its extension.**
