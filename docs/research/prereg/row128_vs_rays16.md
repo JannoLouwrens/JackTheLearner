@@ -1,10 +1,31 @@
-# Pre-registration DRAFT — `row128` vs 16 rays under brain B (ORDERS Next-up 3)
+# Pre-registration — `row128` vs 16 rays under brain B (ORDERS J17) — FROZEN
 
-**Status: DRAFT, text only, binds nothing.** Written 2026-11-20 by a JACK slot,
-before any seed of any arm below exists. The Director freezes it (ruling 37:
-"`row128` against 16 rays under brain B waits until J11 shows B moves"). It
-runs only after J15 (E2c) names the setting — see the Gate below. No code,
-no kernel, no seed until the freezing commit.
+**Status: FROZEN 2026-11-21 by ruling 66 (`docs/DECISIONS_RESOLVED.md`) = the
+draft as written 11-20, with the pins below. This commit is the freeze: no
+seed of any arm exists (grep at freeze: seeds 921–925 appear in no run, spec,
+kernel or artifact in the repo).** Where a pin and the draft text differ, the
+pin binds.
+
+## THE PINS (rulings 64, 65, 66; ORDERS J17)
+
+- **Setting S = `ent_coef="auto"`** (ruling 64; the Gate below is read: E2c's
+  food arm ate under both settings, the tie-break is auto).
+- **Arms:** `K-rays16` / `K-row128` / `K-row128-blind` (MUST FAIL) /
+  `K-lr0-row128`. World `pilot_b2.PILOT_RULE`, `eye=` the only difference.
+- **Seeds 921–925, 300,000 decisions, every arm. NO extension.**
+- **Primary = LATE meals/life, row128 over rays16: Mann–Whitney one-sided
+  U ≥ 21 of 25 AND ≥ 4 of 5 seed pairs.** "Late" is ruling 65's, which names
+  J17: **the late HALF of the run — the lives that START at decision ≥
+  150,000.** The draft's "last quarter of lives" number (`pilot_b2 table`) is
+  printed beside it and NOT read. (Pinned here before any seed because the
+  draft and ruling 65 name two different windows; one INBOX line says so.)
+  The same window is used for the row128-over-blind clause.
+- **Reported beside it, not read:** first capped life, last capped life
+  ("reached then lost").
+- Per-arm readings (SUSTAINED / EATS BUT STARVES / SLIDES / NEAR RANDOM) and
+  the VOID clauses stand as drafted. The verdict is named as one of: **row128
+  eats / neither eats / both eat**, with the HELPS / width-not-sight / no-
+  difference clause beside it.
 
 ## The question
 
