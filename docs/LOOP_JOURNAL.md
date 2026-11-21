@@ -3095,3 +3095,4 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Also found: the box (mujoco 3.2.3) and Kaggle (3.17.0) worlds diverge under the same actions (0 vs 2 meals in 2,000 decisions) → INBOX.
 - No ledger change. Receipts `gpu_submissions.jsonl`, `gpu_budget.json`, `cpu_budget.json` committed by name.
 - Philosophy served: 4 (three rules frozen before their numbers; a gate enforced in code; a must-fail arm proven blind; a failed row re-run with the fault named) and 6 (five free sessions filled, and ~37 free CPU-hours not burned on a crash).
+- 07:40 addendum: timing cell 1 died in 40 s (the v1 config still decoded `rgb`; hydra compose had not caught it) — fixed `f955f6ff`, dry-run of the real runner on the box rc 0, cell 2 `jack-ladder-1795246931` RUNNING. No seed was spent; this is what the timing cell was for.
