@@ -704,3 +704,22 @@ cell he can stand on cuts Δ 14× (s2) and 13× (s5), to the published order of 
 starved need). It is two seeds of one cell: s2 sits inside the published DQN band 0.65–1.45, s5 above it —
 that is what NH-2's ten fresh seeds (10–19) are for. NH-1 stays FAIL. **NH-2 RUNNING** since 07:34 (Colab T4,
 all six cells, tag `nh2_grid_all6_s10_19`).
+
+## Row NH-2 — Dulberg's grid, μ on the walkable corner (re-registered ONCE, ruling 70): **R1 FAIL (narrowly), R2 FAIL** (11-21 09:22, Colab T4 `ladder-1795246472`)
+
+Rule `docs/research/prereg/needs_hidden_nh2.md` FROZEN `37dcc858` (the one change against NH-1: `MUS_INSIDE`); seeds 10–19, no extension. `needs_grid_row score-nh2` over `/data/jack-logs/needs_grid_row/nh2_grid_all6_s10_19.json` (60 runs, every cell n = 10), verdict SCORED. Kaggle refused the push (2-session cap: ear + A2-v1S); ran on Colab, file recovered from stdout.
+
+| cell | published median [IQR] → band | NH-1 median | **NH-2 median** | NH-2 per-seed Δ (sorted) |
+|---|---|---|---|---|
+| frozen@5000 (CONTROL, > 5.0) | — | 384.4 | **1,233.7** → row valid | 333–1,406 |
+| dqn@5000 (R1) | 0.95 → [0.65, 1.45] | 16.8 | **1.10 — IN BAND** | .59 .80 .82 .89 1.04 1.17 1.18 2.08 3.12 21.3 |
+| gmq@5000 (R1) | 0.5 → [0.32, 0.70] | 8.2 | **0.79 — MISS by 0.09** | .47 .55 .55 .56 .72 .86 1.28 1.77 1.94 3.05 |
+| dqn@1 (R2, ≥ 1.8) | 3.2 [1.9, 6.0] | 40.8 | **7.06 — holds** | 3.1–53.7 |
+| gmq@1 (R2, ≤ 0.80) | 0.6 [0.5, 0.7] | 5.4 | **7.58 — MISS 9×** | .69 3.46 4.17 5.10 5.71 9.45 46.1 61.5 71.0 90.1 |
+| hidden@5000 (R3, TEST) | no arm | 112.9 | **104.5**; > dqn@5000 10/10 pairs | 75–128 |
+
+- **R1 FAIL** (gmq@5000 0.79 > 0.70; dqn in band; gmq < dqn holds). **R2 FAIL** (gmq@1 7.58 > 0.80). R3 computes MET but is **reported, not read** (R1 failed). A second miss is a miss: NH-1 and NH-2 both stand FAIL. No band moves, no extension.
+- What the one change bought: every learner cell 2–15× closer to the paper (dqn@5000 16.8 → 1.10, into the band; gmq@5000 8.2 → 0.79; dqn@1 40.8 → 7.06). Every one of the 20 @5000 runs ends with Σ|5 − h| < 4 (NH-1: 1 of 10 dqn). The "starvation" miss of NH-1 is gone at 5,000-step annealing.
+- Where it still misses, descriptive (`h_final`): gmq@1 is BIMODAL — 6 seeds at 0.7–9.5, 4 seeds at 46–90. Of those 4, three OVERSHOOT (s11 h up to 89, s17 up to 106, s18 21–40: he keeps eating a resource far past the target 5) and one starves (s13, all four ≈ 1.5–3.2). dqn@1 has the same two tails smaller (s10 to 23.9; s15 near 0). NH-1 named cause (b) — unbounded stats, raw into the net and the n = 4 drive — and NH-2 held it; the overshoot tail is what (b) predicts, but it is not tested here.
+- gmq@5000's miss is a median 0.09 above a band built from a figure reading ± 0.1; 6 of 10 seeds are inside it, 3 tail seeds (1.77–3.05) carry the median. Not a pass and not argued as one.
+- Next (not this rule): (b) bounded stats as its OWN pilot then its own rule, per the NH-2 gate text; the Director rules whether the row is worth a third registration (ruling 70 said "re-registered ONCE").
