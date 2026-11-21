@@ -13,6 +13,9 @@ CONTROL (must change the answer): `--planted` resolves theirs with the patterns 
 `.*layers` / `.*units` (what a reader ASSUMES they do) - the encoder/decoder rows must then flip to
 SAME; if they do not flip, the table is not reading the resolved config.
 
+`--matched-enc` (or `--extra k=v ...`) composes extra overrides on top of BASE_V1S, prints
+every flat key they move (BLAST) and the table for the composed config.
+
 Run (needs sheeprl + pyyaml: the probe venv; the official clone at /data/src/dreamerv3_e01491f):
   /data/venvs/jack-a-probe/bin/python -m experiments.brain_a.v1s_diff [--planted]"""
 import subprocess, sys, types
@@ -37,12 +40,12 @@ def theirs(planted: bool = False) -> dict:
     return dict(mod.Config(cfgs["defaults"]).update(block).flat)
 
 
-def ours() -> dict:
+def ours(extra: tuple = ()) -> dict:
     from hydra import compose, initialize_config_module
     from omegaconf import OmegaConf
     from experiments.brain_a import rows
     with initialize_config_module(config_module="sheeprl.configs", version_base="1.3"):
-        cfg = compose(config_name="config", overrides=list(rows.BASE_V1S))
+        cfg = compose(config_name="config", overrides=list(rows.BASE_V1S) + list(extra))
     OmegaConf.resolve(cfg)      # `${algo.dense_units}` etc. -> the value the kernel runs
     flat = {}
 
@@ -129,9 +132,32 @@ def same(a, b) -> bool:
         return str(a) == str(b)
 
 
+# A matched-encoder arm (J14 (b) NEXT, 11-21): the four overrides that would give ours the official
+# dmc_proprio encoder + decoder. NOT frozen, NOT launched - the Director rules whether it runs.
+MATCHED_ENC = (W + "encoder.mlp_layers=5", W + "encoder.dense_units=1024",
+               W + "observation_model.mlp_layers=5", W + "observation_model.dense_units=1024")
+
+
+def blast(extra) -> list:
+    """Every flat key of ours that the extra overrides move: [(key, before, after)]."""
+    a, b = ours(), ours(tuple(extra))
+    return [(k, a.get(k), b.get(k)) for k in sorted(set(a) | set(b)) if a.get(k) != b.get(k)]
+
+
 def main() -> int:
-    planted = "--planted" in sys.argv[1:]
-    t, o = theirs(planted), ours()
+    args = sys.argv[1:]
+    planted = "--planted" in args
+    extra = ()
+    if "--matched-enc" in args:
+        extra = MATCHED_ENC
+    if "--extra" in args:          # --extra k=v [k=v ...] (to the end of the line)
+        extra = tuple(args[args.index("--extra") + 1:])
+    if extra:
+        moved = blast(extra)
+        for k, x, y in moved:
+            print(f"  MOVED    {k}: {x!s} -> {y!s}")
+        print(f"BLAST {len(moved)} key(s) moved by {len(extra)} override(s)")
+    t, o = theirs(planted), ours(extra)
     diffs = []
     for what, tk, ok in TABLE:
         tv = tk(t) if callable(tk) else t[tk]

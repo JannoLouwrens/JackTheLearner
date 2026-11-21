@@ -689,6 +689,19 @@ ours = sheeprl 0.8.5 composed with `rows.BASE_V1S`. **49 of 56 settings SAME; 7 
   file is not the published size) — the Director's to freeze; ~4.3 T4-h a seed, so W48.
 - No band, seed or verdict is changed by this addendum. s1 is still running; `rows v1s-score` judges at 3.
 
+### Row A2-v1S — ADDENDUM 11-21 19:35: the matched-encoder arm checked before anyone freezes it (configs + parameter count; no run)
+
+- `v1s_diff --matched-enc` (the four overrides, now `v1s_diff.MATCHED_ENC`) composes on `BASE_V1S` and **moves exactly 4
+  flat keys** (encoder/decoder `mlp_layers` 2→5, `dense_units` 512→1024); the table then reads **53/56 SAME**, leaving
+  precision, replay size and pretrain steps (all named above). Only size moves.
+- Control for the blast check (must fire, did): `--extra algo.dense_units=1024` (the "obvious" one-line override) moves 8 keys
+  through interpolation and breaks 6 rows that are SAME today (46/56: rssm units, reward/cont heads, actor, critic) — the
+  arm must use the four targeted keys, never the global one.
+- `experiments.brain_a.v1s_params` (sheeprl's own `build_agent`, CPU, cartpole_swingup's 5-dim obs): encoder 266,752 →
+  4,209,664; decoder 1,053,189 → 5,782,533; **world model 7.49M → 16.43M (×2.19)**; actor 1.05M, critic 1.18M unchanged.
+- So the addendum above's "~4.3 T4-h a seed" for this arm is v1S's measured cost, not this arm's: the world model is
+  2.2× larger and nobody has timed it. If frozen, its timing cell goes first (as v1S's did). No speed is claimed here.
+
 ## Row A3 — brain A on DMC ball_in_cup_catch: **PASS** at 3 seeds (11-21 02:40, Kaggle T4)
 
 Kaggle `jack-ladder-1795220723`, COMPLETE; result file read from the watcher's download dir (4 runs rc 0, none cut).
