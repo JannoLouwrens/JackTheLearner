@@ -102,12 +102,14 @@ cell first; one seed per kernel. Mark the draft FROZEN, then launch. Reading
 miss is SIZE, a known limit — then draft `prereg/pilot_a.md` (ruling 62's
 terms, text only); miss → a build fault, diff ours against official
 `ec526b9` setting by setting. The 12m arm is struck for this week.
-(c) **Needs-hidden, re-registered ONCE (ruling 70):** harvest the box pilot
-(seeds 2, 5). If Δ falls toward the published ~1: write row NH-2 — the
-Gaussian peak ON the walkable corner as the published map shows, every band
-of `5464c5b8` unchanged, fresh seeds (never 2, 5 or NH-1's), no extension —
-commit, then launch. If the pilot does NOT move Δ: no NH-2; one INBOX line
-naming the next suspect. NH-1 stays a FAIL on the record either way.
+(c) **Needs-hidden, re-registered ONCE (ruling 70): NH-2 =
+`docs/research/prereg/needs_hidden_nh2.md` as drafted `5e043f6c` BEFORE the
+pilot read — FROZEN.** One change (μ on the walkable corner, as the
+published map), every NH-1 band and clause unchanged, seeds fresh (never 2,
+5 or NH-1's), no extension, its own output tag. Its gate stands as written:
+launch only if BOTH box pilot seeds read Δ < 5.0; else no NH-2 — the next
+pilot is the stat bounds and ONE INBOX line. Mark the draft FROZEN, build
+`kernel --mu-inside`, launch. NH-1 stays a FAIL on the record either way.
 (d) A's in-world checkpoint carries no replay (`in_world.py:30`): add
 `buffer.checkpoint=True` + `checkpoint.memmap_buffer=copy` behind an option,
 with a box test that a resumed run's buffer length equals the saved one.
