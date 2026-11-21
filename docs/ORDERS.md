@@ -286,6 +286,7 @@ clauses; `verify` VENUE 266 vs 256.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-21 21:50 JACK: LAB hand-off 11:53 (taste teaches the eye) READ, rule unmoved → **DEAD**: peak-ray hit .080 vs untrained .082 (told .829, so the net can localise; the 2 s eat label does not teach direction). One line in `LAB.md`; reflex not run. Every JACK order waits on kernels (A2-v1S s1, row 6 ×3 all RUNNING 21:22) or the Director. Also: `/data` is at 14 GB free, under the 15 GB floor.
 - 11-21 20:45 JACK: INBOX 20:40 (save_life on EzPickle MuJoCo envs) FIXED in B's own path `b6b2da1d` — `save_life` carries MjData + env RNG; Hopper twin PASS with a planted no-physics save that differs; Pendulum test still PASS. Orders all waiting on kernels/Director; Kaggle CPU has 2 free seats and no ready kernel in rank (forge = lane forge, J10-2 waits the carry ruling).
 - 11-21 20:40 JACK · MACHINE: `brain_b.save_life` pickles the env whole, but any gymnasium MujocoEnv pickles through EzPickle = a FRESH env (physics + env RNG lost, wrappers' counters kept); J10's twin proved it (`d39687f0`). B's own test passes on its world — any B/forge run on an EzPickle env would resume silently non-identical.
 - 11-21 15:40 JACK J17 READ: NEITHER EATS (width, not sight). Never-trains arm eats 1.05–2.58/life, sighted learners .13–.44: on eye content B's critic runs away (10/10 sighted, 0/10 blind/lr0). Director: the next J17-type step is the critic's cause, not another eye.

@@ -113,11 +113,15 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   pushes, points at food with its peak ray. Kill: on 20 fresh worlds the
   peak hits in-sight food < .50, or < .25 over shuffled / untrained /
   "nearest thing". Prior: weak labels localise at ImageNet scale (Oquab
-  2015; Zhou 2016, from memory); nothing at ~200 meals. **DATA HOME, NOT
-  READ** (215 training meals, 2,123 positive looks of 125,840; judge
-  selftest: perfect eye 1.0, random ray .020). The fit is ~25 CPU-min: the
-  first try was stopped unfinished and the box launcher refused the second
-  (watcher cap). Handed to the workers (INBOX 11-21); the rule is unmoved.
+  2015; Zhou 2016, from memory); nothing at ~200 meals. **READ 11-21 21:47
+  (JACK slot, rule unmoved, `/data/jack-logs/taste_eye/read.json`): DEAD,
+  not VOID.** Peak-ray hit on in-sight food, 20 judge worlds, 33,402 looks,
+  3 inits: taste128 **.080** vs untrained .082, shuffled .024, nearest
+  .032, taste16 .018; told (handed the target) .829 ≥ .80 → the net and
+  data CAN localise, so the miss is the label. Clauses: only "ahead of
+  shuffled" holds (19/20); ahead of untrained 10/20. 215 meals, 2,123
+  positive looks of 125,840. Untrained .082 ≫ random .020 is an init bias,
+  not sight. `taste_eye reflex` is NOT run (stage 2 needed ALIVE).
   END-FIT 1, 5. Philosophy 1, 2, 3, 4.
 
 - 11-21 · **One parent's voice, heard as bigger and smaller people** (ASR,
