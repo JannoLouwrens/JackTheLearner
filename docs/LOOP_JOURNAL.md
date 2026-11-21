@@ -3068,3 +3068,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Per-sense A smoke HOME (Colab, 1,433 s): 20k/20k rc 0; wm loss 25.38 → 5.30 (flat 26.19 → 5.27); all 8 losses finite → (1)–(3) hold. Speed 14.4 vs 18.7 dec/s NOT read as a per-sense cost: sps_train identical (29), the gap is env interaction on a different host.
 - KNOWN_ANSWERS "A's smoke, per-sense keys"; no ledger change. Whether per-sense keys help is a race for a later rule.
 - Philosophy served: 1 (one brain fed each of his senses as its own channel now runs end to end) and 4 (a speed gap not claimed when the host differed).
+
+## 2026-11-21 06:07–06:25 UTC · JACK (short slot) · J14: ear + needs-hidden still RUNNING → fix-of-A draft's open settings read from the source
+- First act: ps + `kernels status`: ear `…231396`, needs-hidden `…234980` both Kaggle RUNNING; nothing to harvest; no other order runnable without a ruling.
+- `a2_size_s.md` said the official prefill was "to be read, not assumed": read the official v1 code (danijar/dreamerv3 `ec526b9`). Prefill = 1,024 random transitions over 4 envs (sheeprl exp: 1,300 → proposed pin 1024). Size: dmc_proprio = deter 512 / units 512 / layers 2 = sheeprl S, a match.
+- Precision: the record ran float16; sheeprl's v1 exp says bf16 (no T4 support); our frozen A1–A3 ran 32-true (read from the smoke log). Bf16 struck; default 32-true, named vs the record; Director picks.
+- Philosophy served: 3 (a setting read from the published code rather than assumed before it is raced). No measurement moved.
