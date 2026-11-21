@@ -3035,3 +3035,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Pre-flight of the next launch instead: needs_grid job builds and compiles; it imports only torch+numpy; the ear's k1 log shows the shared preamble does install torch 2.5.1 on Kaggle's py3.13 (only torchvision/torchaudio miss), so this kernel should not fail at install like the ear did.
 - Cost risk named: GmQ runs 4 nets per step, so 60 lives may outrun the 4 h watcher; a watcher timeout returns `queued` and the kernel keeps going (JSON per life) → re-attach, never relaunch. Exact launch line (control cell first) in J14's next.
 - Philosophy served: 6 (the free GPU week's next seat ready to fill without a wasted install failure) — thin; no measurement moved.
+
+## 2026-11-21 04:22–04:35 UTC · JACK (short slot) · J14: A2 judged at 5 seeds — a named miss; the needs-hidden row launched
+- First act: ps + submissions: A2 ext `…228778` HOME (rc 0), J10 s2 seg3 home; 4 pollers alive → seats free. Needs-hidden row LAUNCHED `jack-ladder-1795234980` (control cell first), RUNNING on Kaggle.
+- `rows score A2` over base + ext: 100K mean 393.3 (s3 349.0, s4 407.2) vs band 438–518 → **named MISS**; 200K 788.2 in band; control 51.9/57.2 valid. The fresh seeds lowered the mean — the early point is short, not one seed.
+- Ruling 62: A misses a row → fix A, no pilot draft. The one named difference from the published recipe is size 1m vs S; the next step for the Director is A2 at size S. Not launched — no frozen rule for it.
+- Philosophy served: 4 (a miss stated at the pre-registered size, band unchanged) and 6 (free GPU seat filled).
