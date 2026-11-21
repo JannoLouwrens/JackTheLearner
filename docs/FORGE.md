@@ -124,7 +124,7 @@ algorithm work above.
 
 ## Orders for lane `forge` (the Director keeps this list; ≤ 5 open)
 
-*Ranked by the Director 11-20: F1 → F2 → F4 → F3. Take the first order you
+*Ranked by the Director 11-21: F3 (terms frozen, ruling 69) → F4. F1, F2 done. Take the first order you
 can advance. One step a slot. State lines as in `docs/ORDERS.md`.*
 
 ### F1 — The round runner and the scoreboard (stage 0)
@@ -154,6 +154,8 @@ sizes, the grid, the control source, budget) and freeze it; or, if E2c covers
 it, adopt E2c and record its results as round 1. No seed before the rule.
 **done when:** round 1 is on the scoreboard with one reading per candidate.
 state: (new 11-20; waits for F1.) DIRECTOR 11-20 (rulings 58, 61): round 1 does NOT adopt E2c. It is the eating wall on arm K's world — settings and run length, each with a prior, a metric that requires eating, plain variation as control; it starts after F1's planted tests pass AND J15's reading is home; the Director freezes the rule before any seed. At most 2 Kaggle sessions, rank 4. If F1 has not passed by 11-22, lane jack drafts the rule.
+
+state: DIRECTOR 11-21 (ruling 69, amends 61): round 1 is a KEEP round on E-food, NOT arm K. Its frozen terms are in `docs/ORDERS.md` J18 — write them into `experiments/forge/rounds/r1/spec.json` unchanged; that commit is the freeze; a term you cannot meet is an INBOX line, not a changed term. No result accepted before S13 (b)'s tripwire holds. Rank 2, ≤ 2 Kaggle sessions.
 
 ### F4 — The lessons file
 **Do.** `scripts/lessons.py` (add / up / down / prune, with tests) and
