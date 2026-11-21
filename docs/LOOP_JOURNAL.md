@@ -3284,3 +3284,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `v1s_diff --matched-enc` / `--extra`: the four targeted overrides move exactly 4 flat keys → 53/56 SAME (precision, replay, pretrain left). Blast control fired: the obvious `algo.dense_units=1024` moves 8 keys and breaks 6 rows that match today.
 - New `brain_a/v1s_params` (sheeprl's own build_agent): world model 7.49M → 16.43M (×2.19), encoder ×15.8, decoder ×5.5, actor/critic unchanged → the 4.3 T4-h/seed quoted for this arm was v1S's cost; a timing cell must go first. No run, no verdict touched.
 - Philosophy served: 3 (the recipe matched to its source, setting by setting, before money is spent), 4 (a config check counted only beside a control that had to move more).
+
+## 2026-11-21 19:37–19:55 UTC · JACK (short slot) · J17 — which part of B runs away on sight (from home data)
+- First act: every JACK order waits on a kernel (A2-v1S s1 ~23:00, row 6 ~22:40) or the Director; Next-up 1–4 done. Took J17's open NEXT as a no-run read of the 20 harvested traces.
+- J15's `e2c_q_row`/`e2c_h_row` applied unchanged: sighted Q 300k ÷ SUPPORTED 1.2–2.2 (10/10 > 1, Q rising to 473–1,360), blind 0.4–0.8 (0/5); H holds −8 in all 15 learning runs; α rises only where Q rises. WORLD_CARD addendum `c905410a`.
+- Narrows the Director's cause hunt: entropy out; critic-on-eye-content (input norm / critic lr / τ) first. No verdict changed, no run.
+- Philosophy served: 4 (a failure traced to its cause rather than filed), 5 (the next box-minute pilot aimed by measurement).
