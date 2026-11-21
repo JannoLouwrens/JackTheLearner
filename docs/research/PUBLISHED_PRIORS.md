@@ -838,3 +838,9 @@ Long form: `/data/jack-research/research_notes/m8_living/` (parts A–C). One ho
 - Win-then-lose in his world with LN already on: resets (b) vs TQC (c) vs plain, E2c's E-food arm, 5 seeds, 300k — the forge's round, frozen by the Director.
 
 **Not verified.** SBX's `layer_norm` placement (critic only or both) and whether SBX ships TQC; MuJoCo's cross-CPU determinism; whether any Zoo per-seed Humanoid curve dips.
+
+## 22. Five keep-it knobs with no prior: 3-step returns, the temperature's cap and target, critic weight decay, DroQ / CrossQ on a CPU, a narrow net at a high update ratio (2026-11-21; serves the forge's F2 pool and its keep round on E-food, M3; answers INBOX `RESEARCH:` FORGE 02:45)
+
+**Question.** The forge's pool (`docs/FORGE_POOL.md`, "No prior in the files yet") names five settings of brain B (`pilot_b.py:296-301`: SBX SAC, 2×256, LayerNorm critic, 1 update a decision, γ 0.995, +100 a meal, 300k decisions on a CPU) that cannot enter a round without a prior. For each: what was it shown to do, at what value, at what scale, and what should it do to a learner that learns to eat and then loses it?
+
+SKELETON — sub-agents reading (04:10 UTC); notes land in `/data/jack-research/research_notes/sec22/`.
