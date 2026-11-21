@@ -32,6 +32,7 @@ Near-tie rule: where the f64 reference's top-two (logit+gumbel) margin is
 
   PYTHONPATH=/data/tools/ninjax362 nice -n 19 /data/venvs/jack-dv3/bin/python -I \
       experiments/brain_a/rung7.py --vs-official [--dump-golden]
+  taskset -c 0 nice -n 19 /data/venvs/jack-mlx/bin/python -I experiments/brain_a/rung7.py
 
 STATE 11-21 17:10 (J16 row 2.3, slot 1): REFERENCES HOLD, --vs-official 15/15
 (deter 8.5e-8, post 3.7e-7, prior 6.9e-7 x(|ref|+1) over all 64 steps, no
@@ -243,8 +244,94 @@ def main_official():
     return 0 if n == len(rows) else 1
 
 
+# ---------------------------------------------------------------- port tests (MLX)
+# Two tests, each run eager AND under mx.compile, on the golden's params, inputs and
+# the 64 REAL sampler calls' uniforms (the prerun's 128 are already skipped there):
+#   scan_ref    port vs REF_observe (float64, same uniforms), TOL7 x(|ref|+1), 0 flips
+#   scan_golden port vs the official f32 scan dumped in the golden, same tolerance, 0 flips
+# plus, inside each: samples one-hot; row 1 at its t=20 reset == the port's own step
+# from a zero carry (post), and row 3 (no reset) differs from it (control); and a
+# constant-noise port pass must flip > 10% of samples (the sampler is read, not ignored).
+ACT_SPEC = {CONT: 0, DISC: DISC_N}
+
+
+def _load_golden():
+    G = np.load(GOLDEN)
+    P = {k[len("param/"):]: G[k] for k in G.files if k.startswith("param/")}
+    I = dict(tokens=G["in/tokens"], reset=G["in/reset"].astype(bool),
+             action={CONT: G[f"in/action_{CONT}"], DISC: G[f"in/action_{DISC}"]})
+    out = {k[len("out/"):]: G[k] for k in G.files if k.startswith("out/")}
+    return P, I, G["uniform"], out
+
+
+def _port_scan(M, mx, P, I, U, compiled):
+    MP = {k: mx.array(v) for k, v in P.items()}
+    c0 = dict(deter=mx.zeros((B, TOY["deter"])), stoch=mx.zeros((B, TOY["stoch"], TOY["classes"])))
+    args = (c0, mx.array(I["tokens"]), {k: mx.array(v) for k, v in I["action"].items()},
+            mx.array(I["reset"]), mx.array(U.astype(np.float32)))
+    f = lambda p, c, t, a, r, u: M.rssm_observe(p, c, t, a, r, u, TOY, ACT_SPEC)  # noqa: E731
+    if compiled:
+        f = mx.compile(f)
+    out = f(MP, *args)
+    return {k: np.asarray(v) for k, v in out.items()}
+
+
+def t_scan(M, mx, compiled, against):
+    P, I, U, gold = _load_golden()
+    got = _port_scan(M, mx, P, I, U, compiled)
+    if against == "ref":
+        P64 = {k: v.astype(np.float64) for k, v in P.items()}
+        tgt = REF_observe(P64, I, U)
+    else:
+        tgt = gold
+    rows = [close7(f"{k} [B,T] vs {against.upper()}", got[k], tgt[k]) for k in ("deter", "post", "prior")]
+    nlat = B * T * TOY["stoch"]
+    fl = int((got["stoch"].argmax(-1) != tgt["stoch"].argmax(-1)).sum())
+    rows.append((fl == 0, f"samples vs {against.upper()}: {fl} flips of {nlat} latents"))
+    st = got["stoch"]
+    rows.append((bool(np.all(st.sum(-1) == 1) and np.all((st == 0) | (st == 1))), "port samples one-hot"))
+    MP = {k: mx.array(v) for k, v in P.items()}
+    z = dict(deter=mx.zeros((B, TOY["deter"])), stoch=mx.zeros((B, TOY["stoch"], TOY["classes"])))
+    a20 = {k: mx.array(v[:, 20]) for k, v in I["action"].items()}
+    r0 = M.rssm_step(MP, z, mx.array(I["tokens"][:, 20]), a20, mx.ones((B,), dtype=mx.bool_), TOY, ACT_SPEC)
+    p0 = np.asarray(r0["post"])
+    rows.append(close7("row 1 at its t=20 reset == zero-carry port step (post)", got["post"][1, 20], p0[1]))
+    d3 = float(np.abs(got["post"][3, 20] - p0[3]).max())
+    rows.append((d3 > 1e-3, f"control: row 3 (no reset at 20) differs from zero-carry ({d3:.3g} > 1e-3)"))
+    cn = _port_scan(M, mx, P, I, np.full_like(U, 0.5), compiled)
+    fc = int((cn["stoch"].argmax(-1) != tgt["stoch"].argmax(-1)).sum())
+    rows.append((fc > nlat // 10, f"control: constant-noise port flips {fc}/{nlat} (> 10%)"))
+    return rows
+
+
+TESTS = [("scan_ref", lambda M, mx, c: t_scan(M, mx, c, "ref")),
+         ("scan_golden", lambda M, mx, c: t_scan(M, mx, c, "golden"))]
+
+
+def main_mlx():
+    mx = rung6._mlx()
+    import mlx_maths as M
+    n = 0
+    for name, t in TESTS:
+        r = {}
+        for mode, c in (("eager", False), ("compiled", True)):
+            try:
+                rows = t(M, mx, c)
+                r[mode] = all(o for o, _ in rows)
+                det = [d for o, d in rows if not o][:4] if not r[mode] else [d for _, d in rows]
+            except Exception as e:  # noqa: BLE001 — a stub or crash is a FAIL, reported
+                r[mode], det = False, [f"{type(e).__name__}: {e}"[:200]]
+            if mode == "eager" or not r[mode]:
+                for d in det:
+                    print(f"    {mode[0]}:", d)
+        n += r["eager"] and r["compiled"]
+        print(f"{name:12s} eager {'PASS' if r['eager'] else 'FAIL'}  compiled {'PASS' if r['compiled'] else 'FAIL'}")
+    print(f"RUNG 7: {n}/{len(TESTS)} tests pass eager AND compiled (mlx {mx.__version__}) -> "
+          f"{'PASS' if n == len(TESTS) else 'FAIL'}")
+    return 0 if n == len(TESTS) else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv[1:]:
         sys.exit(main_official())
-    print("rung 7 port tests not written yet (next slot)")
-    sys.exit(2)
+    sys.exit(main_mlx())

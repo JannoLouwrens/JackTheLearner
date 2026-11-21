@@ -316,6 +316,17 @@ def rssm_step(P, carry, tokens, action, reset, cfg, act_spec):
     return dict(masked_deter=deter, actemb=actemb, deter=deter2, post=post, prior=prior)
 
 
+# ---------------------------------------------------------------- rung 7: 64-step memory pass
+# Contract: `rung7.py` REF_observe (NumPy float64), itself checked 15/15 against
+# the official RSSM.observe scan at e01491f by `rung7.py --vs-official`.
+# Done-test: `rung7.py` exits 0, eager AND compiled.
+def rssm_observe(P, carry, tokens, action, reset, uniforms, cfg, act_spec):
+    """tokens [B,T,K]; action {key: [B,T,...]}; reset [B,T] bool; uniforms [T,B,S,C] =
+    the uniforms the step-t posterior sampler reads (prerun draws already skipped).
+    -> dict(deter [B,T,D], post, prior, stoch [B,T,S,C]) — stoch one-hot samples."""
+    raise NotImplementedError("rung 7 port not written yet")
+
+
 _GELU_C = math.sqrt(2.0 / math.pi)
 
 
