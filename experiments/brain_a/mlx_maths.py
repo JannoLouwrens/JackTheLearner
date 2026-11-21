@@ -324,7 +324,30 @@ def rssm_observe(P, carry, tokens, action, reset, uniforms, cfg, act_spec):
     """tokens [B,T,K]; action {key: [B,T,...]}; reset [B,T] bool; uniforms [T,B,S,C] =
     the uniforms the step-t posterior sampler reads (prerun draws already skipped).
     -> dict(deter [B,T,D], post, prior, stoch [B,T,S,C]) — stoch one-hot samples."""
-    raise NotImplementedError("rung 7 port not written yet")
+    T = tokens.shape[1]
+    mix = cfg["unimix"]
+    out = {k: [] for k in ("deter", "post", "prior", "stoch")}
+    for t in range(T):                             # nj.scan over axis 1 (rssm.py L58-70)
+        r = rssm_step(P, carry, tokens[:, t], {k: v[:, t] for k, v in action.items()},
+                      reset[:, t], cfg, act_spec)
+        st = sample_onehot(r["post"], uniforms[t], mix)
+        carry = dict(deter=r["deter"], stoch=st)
+        for k, v in (("deter", r["deter"]), ("post", r["post"]), ("prior", r["prior"]), ("stoch", st)):
+            out[k].append(v)
+    return {k: mx.stack(v, 1) for k, v in out.items()}
+
+
+def sample_onehot(logit, u, mix):
+    """outs.OneHot(logit, unimix).sample with file noise: argmax(log((1-mix)softmax + mix/C)
+    + Gumbel(u)), u clipped to [1e-7, 1-1e-7] as file_noise.py. Ours beside theirs: the
+    official draws Gumbel from jax.random (here from the golden's uniforms); no
+    straight-through gradient (no training at this rung)."""
+    p = mx.softmax(logit.astype(f32), -1)
+    if mix:
+        p = (1.0 - mix) * p + mix / logit.shape[-1]
+    g = -mx.log(-mx.log(mx.clip(u.astype(f32), 1e-7, 1.0 - 1e-7)))
+    idx = mx.argmax(mx.log(p) + g, -1)
+    return (mx.arange(logit.shape[-1]) == idx[..., None]).astype(f32)
 
 
 _GELU_C = math.sqrt(2.0 / math.pi)

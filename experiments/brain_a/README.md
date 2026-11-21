@@ -593,3 +593,19 @@ batch 4; resets: all rows t=0, row 1 at t=20, row 2 at t=40, row 3 never again.
   must skip that block or read the size1m golden one call off.
 - Golden `rung7_scan_golden_e01491f.npz` (302 KB, sha256 dd3af760…): params, inputs, the real calls'
   uniforms [T,B,4,8], official deter/post/prior/stoch. Next: port stub + failing tests, then the port.
+
+## J16 row 2.3 — rung 7: the 64-step memory pass → PASS (11-21, step 2.3)
+
+`experiments/brain_a/rung7.py` (tests `scan_ref`, `scan_golden`; committed FAILING `eb4ce9e2`, stub
+0/2), port `mlx_maths.rssm_observe` (64 × `rssm_step` + `sample_onehot`). `taskset -c 0 nice -n 19
+/data/venvs/jack-mlx/bin/python -I experiments/brain_a/rung7.py` → **RUNG 7: 2/2 eager AND compiled**
+(mlx 0.32.4, box, 4 s). Tolerance = ladder row 7's 1e-4 ×(|ref|+1) and 0 flips; read worst: vs
+NumPy-64 REF deter 7.9e-8, post 3.0e-7, prior 8.2e-7; vs official f32 golden deter 8.3e-8, post
+3.5e-7, prior 6.9e-7; **0 flips of 1,024 latents** against each. Inside each test: samples one-hot;
+row 1's t=20 reset == the port's own zero-carry step (post, exact); row 3 control differs 0.27;
+constant-noise port flips 760/1,024. `--planted` 4/4 CAUGHT (no unimix, noise one call late, resets
+after t=0 ignored, carry fed probs not the sample); unpatched port passes.
+- Ours beside theirs: Gumbel from the golden's file uniforms (official: jax.random), clip
+  [1e-7, 1-1e-7] as `file_noise.py`; no straight-through gradient (no training at this rung); f32
+  (published bf16); the prerun's 128 uniforms are skipped in the golden, so the port reads call 1 on.
+- Toy size only. No speed read. Wheel re-check not run. **Rungs 3, 6, 7 all PASS → J16's done-when met.**

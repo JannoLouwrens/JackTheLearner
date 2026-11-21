@@ -44,6 +44,10 @@ calls, the scoring pass 1 PRERUN call (128 uniforms, ninjax `_prerun` of step
 0) before the 64 real ones. Golden `rung7_scan_golden_e01491f.npz` (sha256
 dd3af760...): params, inputs, the 64 real calls' uniforms, official outputs.
 Next: port stub + rung 7 tests committed FAILING, then the port.
+
+STATE 11-21 17:40 (slot 2): RUNG 7 PASS — tests `scan_ref`, `scan_golden` committed failing
+(eb4ce9e2), port `mlx_maths.rssm_observe` 2/2 eager AND compiled (worst 8.2e-7 x(|ref|+1) vs a
+1e-4 tolerance, 0 flips of 1,024 against REF and golden); --planted 4/4 caught.
 """
 from __future__ import annotations
 
@@ -331,7 +335,42 @@ def main_mlx():
     return 0 if n == len(TESTS) else 1
 
 
+def main_planted():
+    """Each planted bug is patched into the real port; both tests must FAIL eager."""
+    mx = rung6._mlx()
+    import mlx_maths as M
+    keep = dict(sample_onehot=M.sample_onehot, rssm_observe=M.rssm_observe)
+    so, ro = keep["sample_onehot"], keep["rssm_observe"]
+
+    def no_reset(p, c, t, a, r, u, cfg, spec):
+        return ro(p, c, t, a, mx.concatenate([r[:, :1], mx.zeros_like(r[:, 1:])], 1), u, cfg, spec)
+    bugs = {
+        "no unimix in the sampler": dict(sample_onehot=lambda l, u, mix: so(l, u, 0.0)),
+        "noise read one call late": dict(rssm_observe=lambda p, c, t, a, r, u, cfg, spec:
+                                         ro(p, c, t, a, r, mx.concatenate([u[1:], u[:1]], 0), cfg, spec)),
+        "resets after t=0 ignored": dict(rssm_observe=no_reset),
+        "carry feeds probs, not the sample": dict(sample_onehot=lambda l, u, mix: mx.softmax(l, -1)),
+    }
+    caught = 0
+    for name, patch in bugs.items():
+        for k, v in patch.items():
+            setattr(M, k, v)
+        try:
+            bad = [d for _, t in TESTS for o, d in t(M, mx, False) if not o]
+        finally:
+            for k, v in keep.items():
+                setattr(M, k, v)
+        caught += bool(bad)
+        print(f"planted [{name}] -> {'CAUGHT' if bad else 'MISSED'}" + (f"  ({bad[0][:80]})" if bad else ""))
+    ctl = all(o for _, t in TESTS for o, _ in t(M, mx, False))
+    print(f"PLANTED: {caught}/{len(bugs)} caught, unpatched port {'passes' if ctl else 'FAILS'} -> "
+          f"{'OK' if caught == len(bugs) and ctl else 'HARNESS BLIND'}")
+    return 0 if caught == len(bugs) and ctl else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv[1:]:
         sys.exit(main_official())
+    if "--planted" in sys.argv[1:]:
+        sys.exit(main_planted())
     sys.exit(main_mlx())
