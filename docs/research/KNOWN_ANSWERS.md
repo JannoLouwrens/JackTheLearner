@@ -551,6 +551,24 @@ to `/data/jack-logs/brain_a/rows/rows_A2.json` and scored by `rows score A2`.
   published score) being slower early than size S. Seen, not a test: by 200K all three seeds are in band, so the
   build learns the task; the miss is the EARLY point, and seed 2 carries most of it (328.6).
 
+### Row A2 at 5 seeds — **named MISS at 100K, in band at 200K** (11-21 04:30, Kaggle T4 `jack-ladder-1795228778`)
+
+The rule's one extension, judged once (`rows score A2` over `rows_A2.json` + `rows_A2_ext.json`; all runs rc 0, none cut;
+control from the base file). Nothing runs after this: a miss at 5 seeds is a named miss.
+
+| point | band | s0 | s1 | s2 | s3 | s4 | mean | control | reading |
+|---|---|---|---|---|---|---|---|---|---|
+| 100K | 438–518 | 415.2 | 466.5 | 328.6 | 349.0 | 407.2 | **393.3** | 51.9 | **MISS** (45 under the edge) |
+| 200K | 740–816 | 758.6 | 800.3 | 760.3 | 822.8 | 799.1 | **788.2** | 57.2 | in band |
+
+- The fresh seeds did NOT pull the mean up (3-seed 403.4 → 5-seed 393.3): seed 2 was not the outlier, the EARLY point
+  is. 1 of 5 seeds reaches the band at 100K; 5 of 5 are at or above its lower edge by 200K.
+- Both readings the rule named stay open: a broken build, or size `1m` (~0.64M params, no published score) learning
+  slower early than the published size S. Seen, not a test: every row that passes (A1, A3) and A2 at 200K say the build
+  learns; what is short is speed at the first point. The test that separates them is the same row at size S (published
+  recipe) — a fix of A, owed before A's pilot (ruling 62: "If A misses a row: fix A, no pilot").
+- **Brain A: 2 of 3 rows PASS (A1, A3); A2 a named miss at 100K.**
+
 ## Row A3 — brain A on DMC ball_in_cup_catch: **PASS** at 3 seeds (11-21 02:40, Kaggle T4)
 
 Kaggle `jack-ladder-1795220723`, COMPLETE; result file read from the watcher's download dir (4 runs rc 0, none cut).
