@@ -493,6 +493,16 @@ so the weights load exactly, and the gap is late-episode MuJoCo chaos between x8
   eval. The rule is frozen, so this is recorded, not used.
 - Seed 2 at 1.5M clears both 2M thresholds (not the rule's mark). Its seg3 is running, to 2M as the order says.
 
+**Addendum 11-21 04:45 — seed 2 at 2M home, and the first chaos-or-recipe fork (record only; the FAIL stands).**
+- **Seed 2, 2M** (`jack-cpu-1795223814`, `s2_seg3.json`, Kaggle CPU, the rule's eval): **R 6,490, M 20.07, 0/10 fell**
+  (worst episode 6,468). By the rule's own per-seed marks (R ≥ 5,950 AND M ≥ 12) seed 2 passes — so the row is
+  **1 of 3** (needs 2): s0 5,834/11.91 near-miss, s1 585 collapsed, s2 6,490/20.07. Verdict unchanged: FAIL.
+- **Fork f1** (`experiments/j10_fork.py`, rule in docstring `30447a6f` before either fork; `jack-cpu-1795225164`,
+  `fork/f1.json`): seed 1 resumed from its 1.5M model + replay, reseeded (model, JAX key, env), to 2M →
+  **R 5,863, M 12.19, 0/10 fell = KEPT** (and above both row thresholds). Seed 1's own continuation lost the walk
+  (585, 10/10 fell); one other draw of the same segment keeps it. Fork f2 (`jack-cpu-1795225181`) RUNNING. The
+  reading is f1 KEPT + f2: KEPT → CHAOS, otherwise MIXED. RECIPE is now impossible.
+
 ## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:12, Kaggle CPU)
 
 Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed, `0bf84989`): band 837.9–868.1 (853.0 ± 9.2, k = 5);

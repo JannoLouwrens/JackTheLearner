@@ -3041,3 +3041,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `rows score A2` over base + ext: 100K mean 393.3 (s3 349.0, s4 407.2) vs band 438–518 → **named MISS**; 200K 788.2 in band; control 51.9/57.2 valid. The fresh seeds lowered the mean — the early point is short, not one seed.
 - Ruling 62: A misses a row → fix A, no pilot draft. The one named difference from the published recipe is size 1m vs S; the next step for the Director is A2 at size S. Not launched — no frozen rule for it.
 - Philosophy served: 4 (a miss stated at the pre-registered size, band unchanged) and 6 (free GPU seat filled).
+
+## 2026-11-21 04:37–04:50 UTC · JACK (short slot) · J14 waiting (ear, needs-hidden RUNNING) → J10 harvested
+- First act: ps + logs: ear `…231396` and needs-hidden `…234980` RUNNING, nothing to harvest for J14; J3 DONE → J10.
+- J10 seed 2 at 2M HOME: R 6,490, M 20.07, 0/10 fell → passes its marks; row is 1 of 3, FAIL stands (rule unchanged).
+- Fork f1 HOME: seed 1 resumed from 1.5M and reseeded (key included) keeps the walk to 2M (R 5,863, M 12.19, 0/10 fell) = KEPT → RECIPE ruled out; f2 still RUNNING decides CHAOS vs MIXED.
+- KNOWN_ANSWERS J10-1 addendum 04:45; no ledger change.
+- Philosophy served: 4 (the failed walk row is read for why, not filed — and its verdict is not moved by the good news).
