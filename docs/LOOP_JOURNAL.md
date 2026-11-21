@@ -3197,3 +3197,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `b_row1b_resume_twin.py` (row 1b's `ours` build, unedited; jack-std): control U1=U2 bit-identical. SB3's resume departs at row 1,000 (life in flight dropped). Carrying env RNG + pendulum state + `_last_obs` moves the departure to the first update after load (row 1,001). numpy's global RNG ruled out (RE2 = RE).
 - Not yet CLEAN: the item that changes update 1 is unnamed; next slot dumps state right after load.
 - Philosophy served: 1 (he is stopped, moved and resumed and must carry his life across it), 4 (the resume measured bit-by-bit with a control, not assumed).
+
+## 2026-11-21 13:37–14:00 UTC · JACK (short slot) · J14 (a) harvest + (b) seeds 1–2
+- First act: ear `…231396` watcher exited 13:28 (json written); J17 r0 home (`j17_r0.json`); r1–r4 still out → 2 poller seats free.
+- A2-v1S seed 1 `jack-ladder-1795268291` and seed 2 `…268355` pushed (both GPU seats busy again).
+- Ear = VOID (KNOWN_ANSWERS Row N7-kws): 182 s an epoch on a T4 → 10.1 h a seed vs the 1.5 h guess; the 10 h in-kernel deadline cut seed 0 at epoch 199/200, no test score; 3 seeds never fit one kernel. Rerun shape (one seed per kernel, deadline, or Kaggle CPU) left to the Director in J14 state.
+- Philosophy served: 3 (the ear's seat must be earned by reproducing the published number — the cost of doing so is now measured, not guessed), 4 (a cut run recorded as VOID, not read off its valid curve).
