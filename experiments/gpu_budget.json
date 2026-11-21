@@ -628,6 +628,18 @@
       "ok": true,
       "week": "2026-W47"
     },
+    "jannolouwrens/jack-ladder-1795234980": {
+      "backend": "kaggle",
+      "hours": 1.8545,
+      "ok": true,
+      "week": "2026-W47"
+    },
+    "jannolouwrens/jack-ladder-1795237762": {
+      "backend": "kaggle",
+      "hours": 0.0,
+      "ok": false,
+      "week": "2026-W47"
+    },
     "jannolouwrens/jack-tpu-1795187561": {
       "backend": "kaggle-tpu",
       "hours": 0.0,
@@ -896,6 +908,12 @@
       "backend": "colab",
       "hours": 0.009,
       "ok": false,
+      "week": "2026-W47"
+    },
+    "ladder-1795237765": {
+      "backend": "colab",
+      "hours": 0.3979,
+      "ok": true,
       "week": "2026-W47"
     }
   },
@@ -1266,9 +1284,9 @@
       "kaggle-tpu_failed": 0.0
     },
     "2026-W47": {
-      "colab": 1.899,
+      "colab": 2.2969,
       "colab_failed": 0.009,
-      "kaggle": 1.7828,
+      "kaggle": 3.6373,
       "kaggle_failed": 0.1687
     }
   }
