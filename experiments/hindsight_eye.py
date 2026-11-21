@@ -62,8 +62,25 @@ with the yoked twin in shuffled's place:
   E2c's arm with its handed direction replaced by this sense's own (bearing
   of the peak ray, that ray's distance), the table filled as he lives.
 
+STAGE 2 — DOES POINTING FEED HIM? DECLARED 2026-11-21 23:3x, BEFORE ANY
+STAGE-2 WORLD IS LIVED and before the stage-1 read is home; run only if the
+`colours` form reads ALIVE. NOT a learner: a hand reflex as a ruler
+(taste_eye's stage 2, its worlds — never lived, its reflex was not run —
+and its rule word for word). The table is CARRIED from the 215 train-world
+meals and frozen here; "filled as he lives, from empty" is NOT tested.
+  Worlds 1301..1305, 2,400 decisions each (box budget; taste_eye wrote
+  3,600), the same world K, mujoco 3.17.0 (`/data/venvs/jack-std`).
+  mouth-reflex   when a ray wears an eaten texture, push (body frame) along
+                 the nearest ray wearing the most-eaten one; else held8.
+  yoked-reflex   MUST FAIL: the same reflex on the yoked table.
+  held8          the floor (world_card.Held(seed, 8)).
+  ALIVE-2 iff mouth-reflex eats more meals than held8 AND than yoked-reflex
+  on >= 4 of 5 worlds, and >= 2x each in total. Else the table points and the
+  pointing does not feed him: said so, stage 1 stands.
+
     python -m experiments.hindsight_eye dev     # train worlds only
     python -m experiments.hindsight_eye read    # the one judged read
+    python -m experiments.hindsight_eye reflex  # stage 2 (jack-std venv)
 """
 from __future__ import annotations
 
@@ -204,6 +221,73 @@ def run(train, judge, steps=3000, inits=te.INITS, enforce=True) -> dict:
                            for k, v in arms.items()}}
 
 
+REFLEX_SEEDS, REFLEX_DEC = (1301, 1302, 1303, 1304, 1305), 2400
+
+
+def tables() -> dict:
+    """The two carried tables: eaten texture (2 dp) -> count, train worlds."""
+    z = np.load(te.OUT / te.DATA_NAME)
+    tr = np.isin(z["seed"], te.TRAIN_SEEDS)
+    x, tt, st = z["x"][tr], z["ttm"][tr], z["seed"][tr]
+    out = {}
+    for name, yk in (("mouth-reflex", False), ("yoked-reflex", True)):
+        v, c = np.unique(np.round(labels(x, tt, st, yk)[2], 2), return_counts=True)
+        out[name] = (v, c)
+    return out
+
+
+def reflex_cell(arm: str, seed: int, table, n_dec: int = REFLEX_DEC) -> dict:
+    import math
+    from experiments.world_card import Held
+    w = te.make_env(seed)
+    pol = Held(seed, 8)
+    o, info = w.reset(seed=seed)
+    pol.new_life()
+    m0, t0, steered = int(info["meals"]), time.process_time(), 0
+    for _ in range(n_dec):
+        a = pol.act(o)
+        if table is not None:
+            dist = o[0:2 * N:2].astype(np.float32)
+            tex = o[1:2 * N:2].astype(np.float32)
+            sc = np.zeros(N, np.float32)
+            for v, c_ in zip(*table):
+                sc = np.where(np.abs(tex - v) < 0.006, float(c_), sc)
+            if sc.max() > 0:
+                k = int((sc - dist * 0.5).argmax())
+                a = np.zeros(8, np.float32)
+                a[6], a[7] = math.cos(2 * math.pi * k / N), math.sin(2 * math.pi * k / N)
+                steered += 1
+        o, _r, term, trunc, info = w.step(a)
+        if term or trunc:
+            o, info = w.reset()
+            pol.new_life()
+    return {"arm": arm, "seed": seed, "meals": int(info["meals"]) - m0,
+            "lives": len(w.lives), "steered": steered,
+            "cpu_s": round(time.process_time() - t0, 1)}
+
+
+def reflex(seeds=REFLEX_SEEDS, n_dec=REFLEX_DEC) -> dict:
+    tb = tables()
+    tb["held8"] = None
+    rows = []
+    for s_ in seeds:
+        for a in ("mouth-reflex", "yoked-reflex", "held8"):
+            rows.append(reflex_cell(a, s_, tb[a], n_dec))
+            print(json.dumps(rows[-1]), file=sys.stderr, flush=True)
+    M = {a: [r["meals"] for r in rows if r["arm"] == a] for a in tb}
+    t, cl = M["mouth-reflex"], {}
+    for o_ in ("held8", "yoked-reflex"):
+        cl[f"worlds over {o_} >=4"] = sum(a > b for a, b in zip(t, M[o_])) >= 4
+        cl[f"2x {o_}"] = sum(t) >= 2 * sum(M[o_]) and sum(t) > 0
+    return {"verdict": "ALIVE-2" if all(cl.values()) else "DEAD-2", "clauses": cl,
+            "meals": M, "totals": {a: sum(v) for a, v in M.items()},
+            "lives": {a: [r["lives"] for r in rows if r["arm"] == a] for a in tb},
+            "steered": {a: [r["steered"] for r in rows if r["arm"] == a] for a in tb},
+            "tables": {k: [[round(float(a), 2), int(b)] for a, b in zip(*v)]
+                       for k, v in tb.items() if v is not None},
+            "decisions_per_cell": n_dec, "cpu_s": sum(r["cpu_s"] for r in rows)}
+
+
 def main(argv):
     cmd = argv[0] if argv else "dev"
     if cmd == "dev":
@@ -213,6 +297,12 @@ def main(argv):
         r = run(te.TRAIN_SEEDS, te.JUDGE_SEEDS)
         OUT.mkdir(parents=True, exist_ok=True)
         (OUT / "read.json").write_text(json.dumps(r, indent=1, default=str))
+    elif cmd == "reflex":
+        r = reflex()
+        OUT.mkdir(parents=True, exist_ok=True)
+        (OUT / "reflex.json").write_text(json.dumps(r, indent=1, default=str))
+    elif cmd == "reflex-smoke":            # smoke seed 153 only, 300 decisions
+        r = reflex(seeds=(153,), n_dec=300)
     else:
         raise SystemExit(__doc__)
     print(json.dumps(r, indent=1, default=str))
