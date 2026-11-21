@@ -37,16 +37,18 @@ branch), one where it does not bind. Tolerance as rung 1: |port - ref| <=
   taskset -c 0 nice -n 19 /data/venvs/jack-mlx/bin/python -I experiments/brain_a/rung3.py
   taskset -c 0 nice -n 19 /data/venvs/jack-mlx/bin/python -I experiments/brain_a/rung3.py --planted
 
-STATE 11-21 (J16 row 1.5, first half): references vs the official chain,
-`--vs-official` 10/14 (log /data/jack-logs/mlx/rung3_vs_official.log).
-VIS agrees on every row (update/lr_t <= 1e-7, stored params <= 1.4e-7), and
-so does CFG EAGER (<= 1e-7 a tensor). CFG under jax.jit misses by 1.3e-6 to
-6.4e-6: XLA folds optax's warm-up ramp differently — jitted lr_t is
--2.3e-6 (count 1, 2) and -1.28e-5 (count 3) relative to the eager float32
-value, and three plain float32 re-orderings did not reproduce it. The agent
-trains jitted, so the golden is the JITTED value: next, dump it as a golden
-file (the row's "golden from the generator") and read the port against it.
-No port yet (no stubs in mlx_maths.py; the MLX run is not yet made).
+STATE 11-21 10:10 (J16 row 1.5): references HOLD, `--vs-official` 14/14
+(was 10/14). The CFG-under-jit miss is NAMED and in the reference: XLA:CPU
+runs optax's ramp as lr_t = fma(-lr, fma(-count, f32(1/warmup), 1), lr) —
+the reciprocal rewrite + two fused multiply-adds, the same rewrite as rung
+1's linspace; bit-exact vs jax.jit at every count of four configs (`ramp`).
+Golden = the jitted official chain, 5 steps x 2 configs, params/nu/mu/update:
+`rung3_opt_golden_e01491f.json` (`--vs-official --dump-golden`); the port
+is read against the reference AND the golden. Stubs committed FAILING (0/2).
+`--planted` 5/5 caught + positive control (the reference chain as a port)
+PASSES. Margin note: the eager-ramp planted bug misses by 1.28e-6 against
+the 1e-6 tolerance — caught, but narrowly; the port must build the fma form.
+Next: fill opt_init / opt_update until 2/2 eager AND compiled.
 
 Port API (mlx_maths.py):
   opt_init(params: dict) -> state  (state = (step int, nu dict, mu dict))
@@ -68,19 +70,33 @@ PMIN = 1e-3
 CFG = dict(lr=4e-5, warmup=1000, agc=0.3, eps=1e-20, beta1=0.9, beta2=0.999)
 VIS = dict(lr=0.1, warmup=3, agc=0.3, eps=1e-20, beta1=0.9, beta2=0.999)
 NSTEP = 5
+GOLDEN = os.path.join(HERE, "rung3_opt_golden_e01491f.json")   # --vs-official --dump-golden
 
 
 # ---------------------------------------------------------------- reference
 
-def ramp(lr, warmup, count):
-    """optax.linear_schedule(0, lr, warmup) joined to const lr, AS COMPUTED:
-    polynomial form (init - end) * (1 - count/steps) + end in float32, which
-    cancels (count 1: 4e-5 * 9.99987e-4, 1.3e-5 off the exact 4e-8) — theirs."""
-    f32 = np.float32
+def ramp(lr, warmup, count, jit=True):
+    """optax.linear_schedule(0, lr, warmup) joined to const lr, AS COMPUTED.
+
+    jit=True (default; the agent trains jitted): what XLA:CPU runs, measured
+    11-21 by its HLO + an exhaustive probe — count/warmup becomes
+    count * f32(1/warmup), and LLVM contracts BOTH multiply-adds:
+    frac = fma(-count, r, 1), lr_t = fma(-lr, frac, lr), each one rounding.
+    Matches jax.jit bit for bit at every count 0..warmup+2 on (4e-5, 1000)
+    1003/1003, (3e-4, 1000) 1003/1003, (1e-4, 777) 780/780, (0.1, 3) 6/6;
+    the eager form matches 390, 380, 401 and 6 of those. Same rewrite as
+    rung 1's linspace (mlx_maths._jnp_linspace).
+    jit=False: optax eager, (init - end) * (1 - count/steps) + end in float32,
+    which cancels (count 1: 4e-5 * 9.99987e-4, 1.3e-5 off the exact 4e-8)."""
+    f32, F = np.float32, np.float64
     if not warmup or count >= warmup:
         return float(f32(lr))
+    L = f32(lr)
+    if jit:   # an f32 x f32 product is exact in float64: one rounding = fma
+        frac = f32(F(1) - F(f32(count)) * F(f32(1) / f32(warmup)))
+        return float(f32(F(-L) * F(frac) + F(L)))
     frac = f32(1) - f32(count) / f32(warmup)
-    return float((f32(0) - f32(lr)) * frac + f32(lr))
+    return float((f32(0) - L) * frac + L)
 
 
 def REF_opt(p0, grads_seq, lr, warmup, agc, eps, beta1, beta2):
@@ -177,10 +193,29 @@ def t_opt(M, mx, c, I, cfgname, cfg):
                                   (_flat(rp) - base) / L, 1.0))
         rows.append(close(f"{cfgname} step {i+1} nu", _flat(gs[1]), _flat(rnu), 1.0))
         rows.append(close(f"{cfgname} step {i+1} mu", _flat(gs[2]), _flat(rmu), 1.0))
+    gold = _golden()[cfgname]
+    for i, (gp, gs, gu) in enumerate(got):   # the jitted official itself, every step
+        G = {n: {k: np.array(v) for k, v in gold[i][n].items()} for n in gold[i]}
+        if i:
+            L = ramp(cfg["lr"], cfg["warmup"], i)
+            rows.append(close(f"{cfgname} step {i+1} update/lr_t vs GOLDEN", _flat(gu) / L, _flat(G["update"]) / L, 1.0))
+        rows.append(close(f"{cfgname} step {i+1} nu vs GOLDEN", _flat(gs[1]), _flat(G["nu"]), 1.0))
+        rows.append(close(f"{cfgname} step {i+1} mu vs GOLDEN", _flat(gs[2]), _flat(G["mu"]), 1.0))
     d1 = _flat(got[0][0]) - base
     rows.append((bool(np.all(d1 == 0.0)), f"{cfgname} first update moves nothing (lr 0): max|d| {np.abs(d1).max():.3g}"))
     rows.append((int(np.asarray(got[-1][1][0])) == NSTEP, f"{cfgname} step counter == {NSTEP}"))
     return rows
+
+
+_GOLD = {}
+
+
+def _golden():
+    if not _GOLD:
+        import json
+        with open(GOLDEN) as fh:
+            _GOLD.update(json.load(fh))
+    return _GOLD
 
 
 TESTS = [("opt_cfg", lambda M, mx, c, I: t_opt(M, mx, c, I, "CFG", CFG)),
@@ -218,9 +253,15 @@ def _planted_port(mx, bug):
                 {k: np.zeros(v.shape) for k, v in p.items()})
 
     def opt_update(p, g, s, lr, warmup, agc, eps, beta1, beta2):
+        # bug "none" = the reference chain itself (theirs: jitted ramp, cast
+        # (1 - beta), float32 bias correction) — the positive control, must PASS
         count, nu, mu = s
         step = count + 1
-        lr_t = lr * min(count + (bug == "warmup+1"), warmup) / warmup
+        lr_t = ramp(lr, warmup, count + (bug == "warmup+1"), jit=bug != "eager_ramp")
+        f32 = np.float32
+        m1, m2 = float(f32(beta1)), float(f32(beta2))
+        a1, a2 = float(f32(1 - beta1)), float(f32(1 - beta2))
+        bc = lambda b, n: 1.0 - float(f32(f32(b) ** np.int32(n)))  # noqa: E731
         newp, nnu, nmu, upd = {}, {}, {}, {}
         for k in p:
             pk, u = np.float64(np.asarray(p[k])), np.float64(np.asarray(g[k]))
@@ -228,12 +269,10 @@ def _planted_port(mx, bug):
                 un, pn = np.linalg.norm(u.ravel()), np.linalg.norm(pk.ravel())
                 lim = agc * (pn if bug == "no_pmin" else max(PMIN, pn))
                 u = u / max(1.0, un / lim) if lim > 0 else u * 0
-            nnu[k] = beta2 * nu[k] + (1 - beta2) * u * u
-            bc2 = 1.0 if bug == "no_bias" else (1 - beta2 ** step)
-            u = u / (np.sqrt(nnu[k] / bc2) + eps)
-            nmu[k] = beta1 * mu[k] + (1 - beta1) * u
-            bc1 = 1.0 if bug == "no_bias" else (1 - beta1 ** step)
-            u = nmu[k] / bc1
+            nnu[k] = m2 * nu[k] + a2 * u * u
+            u = u / (np.sqrt(nnu[k] / (1.0 if bug == "no_bias" else bc(beta2, step))) + eps)
+            nmu[k] = m1 * mu[k] + a1 * u
+            u = nmu[k] / (1.0 if bug == "no_bias" else bc(beta1, step))
             upd[k] = mx.array(-lr_t * u)
             newp[k] = mx.array((pk - lr_t * u).astype(np.float32))
         return newp, (step, nnu, nmu), upd
@@ -243,7 +282,8 @@ def _planted_port(mx, bug):
 PLANTED = {"warmup+1": "ramp one step early: update 1 has lr > 0",
            "no_agc": "clipping skipped",
            "no_pmin": "agc without max(pmin, |p|): zero tensor never moves",
-           "no_bias": "no bias correction in rms or momentum"}
+           "no_bias": "no bias correction in rms or momentum",
+           "eager_ramp": "optax's EAGER warm-up ramp, not the jitted fma form the agent runs"}
 
 
 def _mlx():
@@ -265,6 +305,10 @@ def main_mlx(planted_mode):
         print(f"RUNG 3: {n}/{len(res)} tests pass eager AND compiled "
               f"(mlx {mx.__version__}) -> {'PASS' if n == len(res) else 'FAIL'}")
         return 0 if n == len(res) else 1
+    M = _planted_port(mx, "none")                  # positive control: the chain as theirs
+    bad = [d for name, t in TESTS for o, d in t(M, mx, False, I) if not o]
+    ctl = not bad
+    print(f"control   none      [the reference chain, no bug] -> {'PASSES' if ctl else 'FAILS: ' + bad[0][:90]}")
     caught = 0
     for bug, why in PLANTED.items():
         M = _planted_port(mx, bug)
@@ -274,8 +318,10 @@ def main_mlx(planted_mode):
         caught += bool(bad)
         print(f"planted {bug:9s} [{why}] -> {'CAUGHT' if bad else 'MISSED'}"
               + (f"  ({bad[0][:90]})" if bad else ""))
-    print(f"PLANTED: {caught}/{len(PLANTED)} caught -> {'OK' if caught == len(PLANTED) else 'HARNESS BLIND'}")
-    return 0 if caught == len(PLANTED) else 1
+    ok = caught == len(PLANTED) and ctl
+    print(f"PLANTED: {caught}/{len(PLANTED)} caught, control {'passes' if ctl else 'FAILS'} -> "
+          f"{'OK' if ok else ('HARNESS BLIND' if ctl else 'HARNESS REJECTS THE RIGHT CHAIN')}")
+    return 0 if ok else 1
 
 
 # ---------------------------------------------------------------- vs official
@@ -289,7 +335,7 @@ def main_official():
     import optax
     from dreamerv3.agent import Agent
     p0, grads = inputs()
-    rows = []
+    rows, gold = [], {}
     for cfgname, cfg in (("CFG", CFG), ("VIS", VIS)):
         kw = dict(cfg)
         opt = Agent._make_opt(None, lr=kw["lr"], agc=kw["agc"], eps=kw["eps"], beta1=kw["beta1"],
@@ -303,8 +349,12 @@ def main_official():
             return optax.apply_updates(p, u), st, u
         ref = REF_opt(p0, grads, **cfg)
         base = _flat(p0)
+        gold[cfgname] = []
         for i, g in enumerate(grads):
             p, st, u = step(p, {k: jnp.array(v) for k, v in g.items()}, st)
+            nu, mu = st[1][1], st[2][1]   # embodied opt.py: rms/momentum states are (step, tree)
+            gold[cfgname].append({n: {k: np.asarray(v, np.float32).tolist() for k, v in d.items()}
+                                  for n, d in (("params", p), ("nu", nu), ("mu", mu), ("update", u))})
             if i:
                 L = ramp(cfg["lr"], cfg["warmup"], i)
                 chk = [close(f"{cfgname} step {i+1} update/lr_t", _flat(u) / L, _flat(ref[i][3]) / L, 1.0)]
@@ -318,6 +368,14 @@ def main_official():
                 z = bool(np.all(_flat(p) == base))
                 rows.append((z, f"{cfgname} official first update moves nothing: {z}"))
                 print(("  ok  " if z else "  XX  ") + rows[-1][1])
+    if "--dump-golden" in sys.argv:
+        import json
+        gold["meta"] = {"source": "danijar/dreamerv3 e01491f Agent._make_opt under jax.jit (CPU, float32)",
+                        "jax": jax.__version__, "optax": optax.__version__, "cfg": CFG, "vis": VIS,
+                        "inputs": "rung3.inputs() seed 20261121", "steps": NSTEP}
+        with open(GOLDEN, "w") as fh:
+            json.dump(gold, fh)
+        print(f"golden written: {GOLDEN}")
     n = sum(o for o, _ in rows)
     print(f"VS-OFFICIAL (jax {jax.__version__}, optax {optax.__version__}, e01491f): {n}/{len(rows)} agree -> "
           f"{'REFERENCES HOLD' if n == len(rows) else 'A REFERENCE OR A TOLERANCE IS WRONG'}")

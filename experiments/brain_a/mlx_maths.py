@@ -226,3 +226,18 @@ def perc_stats(lo, hi, corr, rate, limit, debias):
 def slow_update(src, dst, count, rate, every):
     mix = mx.where(count % every == 0, rate, 0.0)
     return mix * src + (1 - mix) * dst, count + 1
+
+
+# ---------------------------------------------------------------- rung 3 (step 1.5)
+# agent.py L342-380 `_make_opt` + embodied/jax/opt.py: clip_by_agc -> scale_by_rms
+# -> scale_by_momentum -> warm-up learning rate. STUBS (committed failing,
+# 11-21): rung3.py must read 0/2 before these are filled.
+# state = (step int, nu dict, mu dict).
+
+def opt_init(params):
+    raise NotImplementedError("rung 3 stub: opt_init")
+
+
+def opt_update(params, grads, state, lr, warmup, agc, eps, beta1, beta2):
+    """-> (params', state', updates); updates = the lr-scaled step, pre-store."""
+    raise NotImplementedError("rung 3 stub: opt_update")
