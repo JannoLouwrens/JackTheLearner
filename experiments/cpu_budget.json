@@ -1677,10 +1677,11 @@
         "detached:launch_row5_ext.log": 633.66,
         "detached:launch_s2_seg2.log": 594.7,
         "detached:launch_s2_seg3.log": 481.55,
+        "detached:launch_v1s_timing.log": 7.98,
         "detached:pilot_s2.log": 3686.99,
         "detached:pilot_s5.log": 3689.7
       },
-      "used_s": 13076.35
+      "used_s": 13084.33
     }
   },
   "last_child_s": {

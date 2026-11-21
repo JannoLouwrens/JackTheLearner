@@ -120,6 +120,7 @@ def test_frozen_rows_unmoved_by_the_new_arm():
 def test_v1s_overrides_carry_ruling_67_pins():
     o = R.overrides(R.V1S_ROW, 1, base=R.BASE_V1S)
     for pin in ("exp=dreamer_v3_dmc_walker_walk", "algo=dreamer_v3_S", "fabric.precision=32-true",
+                "algo.cnn_keys.decoder=[]", "algo.mlp_keys.decoder=[state]",   # timing cell 1 died without them
                 "algo.learning_starts=1024", "algo.replay_ratio=0.5", "env.num_envs=4",
                 "env.action_repeat=2", "env.wrapper.task_name=swingup", "seed=1", "algo.total_steps=100000"):
         assert o.count(pin) == 1, pin

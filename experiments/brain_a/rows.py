@@ -365,6 +365,10 @@ V1S_ROW = "A2"
 BASE_V1S = ["exp=dreamer_v3_dmc_walker_walk", "algo=dreamer_v3_S",
             "env.wrapper.from_pixels=False", "env.wrapper.from_vectors=True",
             "algo.cnn_keys.encoder=[]", "algo.mlp_keys.encoder=[state]",
+            # the v1 exp names its decoder keys itself ([rgb]); v3_5's follow the encoder's.
+            # Timing cell 1 (jack-ladder-1795246441, 11-21 07:40) died in 40 s on it:
+            # "CNN keys of the decoder must be contained in the encoder ones ... ['rgb']".
+            "algo.cnn_keys.decoder=[]", "algo.mlp_keys.decoder=[state]",
             "env.num_envs=4", "env.capture_video=False", "env.action_repeat=2",
             "algo.replay_ratio=0.5", "algo.compile.enabled=True",
             "fabric.precision=32-true", "algo.learning_starts=1024"]
