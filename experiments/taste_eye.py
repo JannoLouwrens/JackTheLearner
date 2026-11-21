@@ -308,6 +308,40 @@ def build_net(n_rays: int, init: int):
     return net
 
 
+def fwd(net, X):
+    """The SAME function as net(X).squeeze(1), computed with matmuls (2026-11-21:
+    torch's conv1d backward on this ARM box cost 23 ms a layer, the registered
+    read ~100 CPU-min, over the box rule; this form is ~10x cheaper). Same
+    weights, same initialisation; equality is tested in `fwd_selftest`."""
+    import torch
+    h = X.transpose(1, 2)                                   # (B, n, 2)
+    h = torch.relu(h @ net[0].weight[:, :, 0].T + net[0].bias)
+    h = torch.relu(h @ net[2].weight[:, :, 0].T + net[2].bias)
+    W = net[4].weight                                       # (16, 32, k)
+    k = W.shape[2]
+    p, n = k // 2, h.shape[1]
+    hp = torch.cat([h[:, -p:], h, h[:, :p]], 1)             # circular
+    win = torch.cat([hp[:, j:j + n] for j in range(k)], 2)  # (B, n, k*32)
+    h = torch.relu(win @ W.permute(0, 2, 1).reshape(W.shape[0], -1).T + net[4].bias)
+    return (h @ net[6].weight[:, :, 0].T + net[6].bias).squeeze(2)
+
+
+def fwd_selftest() -> dict:
+    """fwd must equal the conv network, outputs and gradients, both ring sizes."""
+    import torch
+    out = {}
+    for n_rays in (128, 16):
+        net = build_net(n_rays, 0)
+        X = torch.rand(64, 2, n_rays)
+        a, b = net(X).squeeze(1), fwd(net, X)
+        ga = torch.autograd.grad(torch.logsumexp(a, 1).sum(), list(net.parameters()))
+        gb = torch.autograd.grad(torch.logsumexp(b, 1).sum(), list(net.parameters()))
+        out[n_rays] = {"out": float((a - b).abs().max()),
+                       "grad": max(float((u - v).abs().max()) for u, v in zip(ga, gb))}
+        assert out[n_rays]["out"] < 1e-5 and out[n_rays]["grad"] < 1e-4, out
+    return out
+
+
 def _as_rays(x: np.ndarray, stride: int):
     import torch
     r = x.reshape(len(x), N, 2)[:, ::stride].astype(np.float32)
@@ -317,7 +351,7 @@ def _as_rays(x: np.ndarray, stride: int):
 def scores(net, x, stride=1) -> np.ndarray:
     import torch
     with torch.no_grad():
-        return torch.cat([net(_as_rays(x[i:i + 8192], stride)).squeeze(1)
+        return torch.cat([fwd(net, _as_rays(x[i:i + 8192], stride))
                           for i in range(0, len(x), 8192)]).numpy()
 
 
@@ -334,7 +368,7 @@ def train_taste(x, y, init: int, stride=1, steps=3000, batch=256):
         idx = np.concatenate([rng.choice(pos, batch // 2), rng.choice(neg, batch // 2)])
         t = torch.zeros(batch)
         t[:batch // 2] = 1.0
-        loss = lossf(torch.logsumexp(net(X[idx]).squeeze(1), 1), t)
+        loss = lossf(torch.logsumexp(fwd(net, X[idx]), 1), t)
         opt.zero_grad()
         loss.backward()
         opt.step()
@@ -350,7 +384,7 @@ def train_told(x, target_ray, init: int, steps=3000, batch=256):
     X, T = _as_rays(x, 1), torch.from_numpy(target_ray.astype(np.int64))
     for _ in range(steps):
         idx = rng.randint(len(x), size=batch)
-        loss = torch.nn.functional.cross_entropy(net(X[idx]).squeeze(1), T[idx])
+        loss = torch.nn.functional.cross_entropy(fwd(net, X[idx]), T[idx])
         opt.zero_grad()
         loss.backward()
         opt.step()
@@ -361,7 +395,7 @@ def train_told(x, target_ray, init: int, steps=3000, batch=256):
 def read(path=None, train=TRAIN_SEEDS, judge=JUDGE_SEEDS, steps=3000,
          enforce=True, keep_nets=False, only=None) -> dict:
     import torch
-    torch.set_num_threads(2)
+    torch.set_num_threads(1)
     z = np.load(path or OUT / DATA_NAME)
     x, foods, ttm, seed = z["x"], z["foods"], z["ttm"], z["seed"]
     summ = json.loads(str(z["summary"]))
@@ -404,7 +438,11 @@ def read(path=None, train=TRAIN_SEEDS, judge=JUDGE_SEEDS, steps=3000,
             ("told", lambda i: train_told(xt[has], tgt, i, steps=steps))):
         if only and name not in only:
             continue
-        nets = [fit(i) for i in INITS]
+        nets = []
+        for i in INITS:
+            nets.append(fit(i))
+            print(f"fit {name} init {i} done {time.strftime('%H:%M:%S')}",
+                  file=sys.stderr, flush=True)
         out_nets[name] = nets
         enter(name, [hits(scores(n_, xj).argmax(1), on) for n_ in nets])
     if only:
@@ -541,7 +579,10 @@ def main(argv):
         print(json.dumps(kernel()))
     elif cmd == "read":
         r = read(argv[1] if len(argv) > 1 else None)
+        (OUT / "read.json").write_text(json.dumps(r, indent=1, default=str))
         print(json.dumps(r, indent=1, default=str))
+    elif cmd == "fwdtest":
+        print(json.dumps(fwd_selftest()))
     elif cmd == "selftest":
         print(json.dumps(selftest(argv[1])))
     elif cmd == "reflex":
