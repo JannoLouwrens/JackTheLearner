@@ -623,6 +623,33 @@ control from the base file). Nothing runs after this: a miss at 5 seeds is a nam
   recipe) — a fix of A, owed before A's pilot (ruling 62: "If A misses a row: fix A, no pilot").
 - **Brain A: 2 of 3 rows PASS (A1, A3); A2 a named miss at 100K.**
 
+### Brain A rows — ADDENDUM 11-21 18:30: the bands were computed on a 30K window; the score reads 10% of P (no verdict changed)
+
+`python -m experiments.brain_a.band_recompute` over the official per-seed file (`dreamerv3@e01491f`
+`scores/dmc_proprio-dreamerv3.json.gz`, 10K bins, `plot.py` np.histogram [lo, hi) labelled by right edge). Every cited
+number in `rows.py` (794±52, 966±17, 478±20, 778±19, 949±9; also 853±13, reacher 929±19, walker 799±87) is reproduced
+to ±0.5 by ONE method: per seed, the mean of the file's points {P−20K, P−10K, P}, then population SD over 5 seeds. That
+is a ~30K window. The frozen score window is (0.9P, P] — 10K at 100K, 20K at 200K. On a rising curve the wider
+window sits lower: at the file's single bin P, swingup 100K is **527.7 ± 36.4** (band 455–601), 200K 787.7 ± 28.2.
+PUBLISHED_PRIORS §7 had flagged it ("528 ± 36 vs 478 ± 20 … recompute from the per-seed file before use"); never done.
+
+| row · point | frozen band | 3-seed mean, rule's window | same seeds, band's 30K window | reading either way |
+|---|---|---|---|---|
+| A1 100K | 690–898 | 782.3 | **691.2** | in band (by 1.2 on the 30K window) |
+| A1 200K | 932–1000 | 984.1 | 986.4 | in band |
+| A2 (1m, 5 seeds) 100K | 438–518 | 393.3 | ≈ 347.6 | MISS both ways |
+| A2 (1m, 5 seeds) 200K | 740–816 | 788.2 | ≈ 763.0 | in band both ways |
+| A3 200K | 931–967 | 956.0 | 952.5 | in band |
+| A2-v1S s0, s2 100K | 438–518 | 576.2, 596.7 | 540.6, 531.8 | ABOVE both ways (+18 to +23 on 30K) |
+| A2-v1S s0, s2 200K | 740–816 | 843.5, 849.0 | 831.3, 846.3 | ABOVE both ways |
+
+- No ledger verdict moves: every frozen row reads the same on either window. A1's 100K pass is 1.2 from the edge on
+  the band's own window: thinner than it looked.
+- A2-v1S's excess at 100K is ~108 on the rule's window and ~58 on the band's own window. **The window mismatch explains
+  about half of it, not all.** Against the file's 10K-bin band (455–601) both seeds are IN at 100K; at 200K the 10K/20K
+  readings (843.5–850.8) are at or just above 844. n = 2 seeds; s1 not home.
+- Not a re-registration and not a pass: the frozen band stands until the Director rules (INBOX 11-21 18:30).
+
 ## Row A3 — brain A on DMC ball_in_cup_catch: **PASS** at 3 seeds (11-21 02:40, Kaggle T4)
 
 Kaggle `jack-ladder-1795220723`, COMPLETE; result file read from the watcher's download dir (4 runs rc 0, none cut).

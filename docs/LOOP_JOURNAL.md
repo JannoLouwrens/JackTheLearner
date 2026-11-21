@@ -3260,3 +3260,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Built `brain_b.save_life`/`resume_life`: the four items the twin named (life in flight, numpy global RNG, `model.key`, `_last_obs`) now in B's own code; the whole env pickled, so a cut episode's TimeLimit/Monitor counters travel too.
 - Box test `b_life_resume_test.py` (T=1100, save at step 100 of an episode) PASS: control U1=U2; resumed == unbroken on every item; no-key, no-RNG, no-env plants and SB3's own path each DIFFER. Prediction "P_env differs at row 1100" was off by one (1101: `_last_obs` is carried).
 - Philosophy served: 1 (he must never stop learning — a life that can be stopped and moved without changing him), 4 (clean only beside four saves that had to fail and did).
+
+## 2026-11-21 18:22–18:40 UTC · JACK (short slot) · J14 (b) — the band was never recomputed; now it is
+- First act: Kaggle — A2-v1S s1 `…268291` still QUEUED, row-6 CPU kernels RUNNING; nothing home. W47 has no room for s3–4 (23.1 h + s1 4.5 h).
+- PUBLISHED_PRIORS §7 had flagged "478 ± 20 vs 528 ± 36: recompute from the per-seed file before use". Recomputed (`experiments/brain_a/band_recompute.py`): all five rows.py numbers = official file averaged over {P−20K, P−10K, P}, pop SD (±0.5); the frozen score reads (0.9P, P]. Single bin at 100K: 527.7 ± 36.4.
+- Matched windows: no frozen verdict flips (A1 100K holds by 1.2; A2-1m misses both ways). A2-v1S: ABOVE on the band's own 30K window (540.6 / 531.8 vs 438–519), IN the file's 10K-bin band (455–601). Window explains ~half the excess. KNOWN_ANSWERS addendum, INBOX for the Director.
+- Philosophy served: 4 (a threshold checked against its source before it judges anything, and nothing loosened: the frozen band stands until ruled).
