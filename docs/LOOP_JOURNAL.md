@@ -3171,3 +3171,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Capture now skips ignore=True calls and counts them (31 a call). Debug smoke re-run: 10 steps = repfeat bit-exact, carry chain 9/9, the 81 non-rssm arrays identical to the old smoke. The old smoke is the control: it stored the prerun.
 - Still open: in_reset all 0 → the size1m golden batch must cross an episode start. Kernel waits on a CPU seat.
 - Philosophy served: 4 (a golden is not frozen around bookkeeping passes), 7 (the Mac port).
+
+## 2026-11-21 12:22–12:35 UTC · JACK (short slot) · J16 row 2.1: reset path in the golden; golden kernel built
+- First act: Kaggle: ear `…231396` (9 h vs est 6.3 h — INBOX), A2-v1S s0 `…248791`, J17 r0/r3 RUNNING; 8 wrap watchers → J14/J17 wait; J18 forge's; J10 waits on the Director → J16.
+- `g1_probe --episode-start COL` `b0820107`: debug smoke col 5 → in_reset 1 at t004 on even rows only; reset rows depart at t004, odd rows (in-batch control) bit-identical over all 10 steps; no-flag control re-run = the committed smoke 161/161.
+- Scar re-met: without `PYTHONPATH=/data/tools/ninjax362` both runs died in opt.update (venv ninjax 3.6.3) — the kernel pins 3.6.2.
+- `golden_kernel.py` `c4020afc`: A, B repeat, seed-1 control; 8 calls, batch 16, ep start col 33; GOLDEN line fixed before any run; planted verdict test catches 8/8. NOT launched (seats full); Kaggle install path untested.
+- Philosophy served: 7 (the Mac port), 4 (the golden now exercises the reset path it must check, and its line could fail), 6 (the 3.4 GB job kept off the customers' box).
