@@ -184,8 +184,9 @@ claims. A wheel re-check is one < 1 h Kaggle CPU kernel (rank 0) per rung.
 serves: M3 · PLAN "the decisive test … on the Mac mini" — every Mac hour an hour of the real test · philosophy 5, 6, 7.
 **done when:** rungs 3, 6 and 7 pass, with test names in `experiments/brain_a/README.md`.
 state: 11-20 rung 1 9/9, rung 2 4/4 (`df2b7bc2`), eager and compiled; WHEEL PASS `jack-cpu-1795207086` (PyPI `mlx[cpu]==0.32.4`).
-state: 11-21 09:45 row 1.5 started `c0dce0d0`: `brain_a/rung3.py` = float64 reference of the official chain (agc → rms → momentum → warm-up lr), 2 configs × 5 steps, 4 planted bugs, `--vs-official` 10/14: VIS all ≤ 1.4e-7, CFG eager ≤ 1e-7; CFG under jit 1.3e-6–6.4e-6 = XLA folds optax's warm-up ramp (jitted lr_t −2.3e-6/−1.28e-5 rel). Two quirks of theirs kept in the reference (cast (1−β) vs f32 bias correction: +6.6e-6 at step 1; ramp cancellation).
-state: NEXT: dump the JITTED official run as a golden file (agent trains jitted) and read updates against it; then stubs in `mlx_maths.py` (`opt_init`, `opt_update` → params, state, updates), commit FAILING, `--planted` 4/4, then fill.
+state: 11-21 10:10 row 1.5 DONE: jitted warm-up NAMED (XLA runs lr_t = fma(-lr, fma(-count, f32(1/warmup), 1), lr), bit-exact at every count of 4 configs) → references vs official 14/14 (was 10/14), tolerance unchanged. Golden `rung3_opt_golden_e01491f.json` = jitted official; stubs failing `dfde3cf9` (0/2).
+state: **RUNG 3 PASS `ed09045b`: 2/2 eager AND compiled** vs reference and golden; `--planted` 5/5 + bug-free control PASSES; unfused-ramp port mutant FAILS 6.5e-6; rungs 1, 2 re-read PASS. Wheel re-check of rung 3 not run (one < 1 h Kaggle CPU kernel, rank 0).
+state: NEXT: row 2.1 (golden generator at `size1m`, repeat run identical), then 2.2 (one recurrent step → rung 6).
 
 **Lane `forge`** reads `docs/FORGE.md`; its F3 is J18 above (terms frozen);
 F4 after. Lane `lab`: a candidate learner or setting for brain B enters

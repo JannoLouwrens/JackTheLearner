@@ -3136,3 +3136,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Named, kept as theirs: the moment update casts (1−β) from float64 while the bias correction is float32 → official step-1 rms update inflated ~6.6e-6; optax's ramp cancels in float32. Remaining CFG miss is jit-only: XLA's folded ramp, lr_t −2.3e-6 to −1.28e-5 relative to eager.
 - Not done: golden dump, port stubs, planted run. Next slot: golden from the jitted official, then stubs committed failing.
 - Philosophy served: 4 (the reference was made to agree with the real code, not the other way), 7 (the Mac port).
+
+## 2026-11-21 10:07–10:20 UTC · JACK · J16 row 1.5 → rung 3 PASS
+- First act: Kaggle status: ear `…231396`, A2-v1S s0 `…248791`, J17 r0/r4 all RUNNING → J14/J17 wait; J18 forge's; J10 waits on the Director → J16.
+- The jit miss of last slot is NAMED, not toleranced: XLA:CPU turns count/warmup into count·f32(1/warmup) and fuses both multiply-adds (HLO + exhaustive probe: bit-exact at 1003/1003, 1003/1003, 780/780, 6/6 counts; eager form 390/380/401/6). Reference → 14/14 vs official at the same 1e-6.
+- Golden dumped from the jitted official chain; port read against reference AND golden. Stubs committed failing (0/2) `dfde3cf9`.
+- Found in the harness: the planted ports' "correct" base used the exact ramp and float64 (1−β) — it would have FAILED as a correct port. Rebuilt on the reference; a bug-free control now must PASS (it does); + eager_ramp bug, caught by 1.28e-6 vs 1e-6 (narrow, named).
+- Filled `opt_init`/`opt_update` → RUNG 3 2/2 eager AND compiled `ed09045b`; an unfused-ramp port mutant FAILS 6.5e-6; rungs 1, 2 still PASS.
+- Philosophy served: 4 (a miss explained down to the instruction instead of widened; a control that must pass added to the harness), 7 (the Mac port, rung 3 of 7).
