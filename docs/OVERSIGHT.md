@@ -2,8 +2,7 @@
 
 > Current state, not a log. Each audit rewrites this file. Addressed to the Director.
 
-**2026-11-21, 00:37 UTC.** HEAD `8ddf9295`. Tenth audit after the pause; the
-first in 48 hours — the 11-20 sitting was refused by the usage stop
+**2026-11-21, 00:37 UTC.** HEAD `8ddf9295`. The first audit in 48 hours — the 11-20 sitting was refused by the usage stop
 (`overseer.log`: "STOPPED at 100% weekly usage"). This page covers both days.
 
 **VERDICT: ON TRACK**
@@ -181,15 +180,14 @@ read, A's rows launched).
 **Machine.** Ladder ran at 00:37; Director stamp 11-20 12:27 (12 h);
 review 11-20 12:29 rc=0; scout Thursday 11-19 06:00 rc=0; regate 20:47,
 skipped 22:43 on load. No organ ended rc≠0 three times running. `main`
-level with origin. `/data` 27 GB free. Tree dirty by
-`experiments/cpu_budget.json` only (live watchers' receipts).
+level with origin. `/data` 27 GB free.
 
 **Free compute.** GPU week W47 opened at 00:00 and was in use by 00:08:
 A1 on Colab T4, A2b and A3 on Kaggle (both RUNNING by Kaggle's own
 status), 0.11 h lost to the pip wall with rows in `gpu_submissions.jsonl`
 and a named cause. W46 closed at 33.76 of 30 h, nothing expired. Kaggle
-CPU: 5 of 5 sessions held through 11-20 after the restart; idle 13–15 h
-during the stop (finding 3). TPU: 20 of 20 h expired (finding 5).
+CPU idled 13–15 h in the stop (finding 3). TPU: 20 of 20 h expired
+(finding 5).
 
 ## FOR THE OWNER
 
