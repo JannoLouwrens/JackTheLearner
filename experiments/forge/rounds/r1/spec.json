@@ -1,0 +1,197 @@
+{
+ "round": "r1",
+ "question": "KEEP on E-food: which published setting keeps brain B eating in the LATE half of a run (the baseline reaches 4/5 and loses it 10/10)?",
+ "frozen_by": "docs/ORDERS.md J18 FROZEN TERMS (ruling 69, amends 61; rulings 64, 65); the commit of this file is the freeze",
+ "world": {
+  "arm": "E-food exactly as E2c ran it (experiments/pilot_b2.py E2C_ARMS['E-food'] = pilot arm K + handed_sense 'food', encoding 'cossin', trace on)",
+  "food_floor_only": true,
+  "eye_frame": "body",
+  "motor_frame": "body",
+  "native_substep": true,
+  "lazy_contact_audio": true,
+  "difficulty": 0.75,
+  "reward": "dr100-eat",
+  "life_cap_decisions": 9000,
+  "venue": "Kaggle CPU kernels with E2c's pins (mujoco 3.17.0); no box run is set beside a kernel run (INBOX 11-21 07:32)"
+ },
+ "baseline": "E-food",
+ "baseline_settings": {
+  "algo": "sbx.SAC 0.28",
+  "net_arch": [
+   256,
+   256
+  ],
+  "layer_norm": "critic",
+  "lr": 0.0003,
+  "batch_size": 256,
+  "tau": 0.005,
+  "gamma": 0.995,
+  "learning_starts": 5000,
+  "train_freq": 32,
+  "gradient_steps": 32,
+  "ent_coef": 0.1,
+  "use_sde": true,
+  "n_steps": 1,
+  "buffer": "the whole run",
+  "norm_obs": true
+ },
+ "twins": [
+  "E-food-lr0"
+ ],
+ "twin_settings": {
+  "E-food-lr0": {
+   "lr": 0.0,
+   "note": "the baseline never training, same world, same seeds"
+  }
+ },
+ "candidates": [
+  {
+   "id": "K1",
+   "source": "published",
+   "prior": "PUBLISHED_PRIORS §21 recipe (b), §19 — Nikishin 2022 (2205.07802) DMC IQM 501 -> 656 with periodic resets; Nauman 2024 (2403.00514) 'the most robust intervention'",
+   "twin": "E-food-lr0",
+   "change": "full network resets every 50,000 decisions, replay and temperature kept",
+   "settings": {
+    "reset_every": 50000,
+    "param_resets": {
+     "S": [
+      50000,
+      100000
+     ],
+     "M": [
+      50000,
+      100000,
+      150000,
+      200000,
+      250000
+     ]
+    }
+   }
+  },
+  {
+   "id": "K2",
+   "source": "published",
+   "prior": "§21 recipe (c) — Kuznetsov 2020 (2005.04269): truncation controls overestimation, reduces seed variance; §16 Zoo TQC Humanoid 7,239 vs SAC 6,232",
+   "twin": "E-food-lr0",
+   "change": "TQC in place of SAC, 2 top quantiles dropped per net, everything else the baseline",
+   "settings": {
+    "algo": "sbx.TQC",
+    "top_quantiles_to_drop_per_net": 2
+   }
+  },
+  {
+   "id": "K3",
+   "source": "published",
+   "prior": "§19 — SAC v2 (1812.05905), the published default; E2c auto twins: sustained 3/5, lost 5/5 (carried as the second baseline, ruling 64's setting)",
+   "twin": "E-food-lr0",
+   "change": "learned temperature, target -8",
+   "settings": {
+    "ent_coef": "auto"
+   }
+  },
+  {
+   "id": "K5",
+   "source": "published",
+   "prior": "§19 table — the one published SAC forager (ML-Agents FoodCollector) updates 0.1 a step; §21 Nauman 2024: the damage grows with the replay ratio",
+   "twin": "E-food-lr0",
+   "change": "1 update per ~10 decisions (3 updates every 32) instead of 1 per decision",
+   "settings": {
+    "train_freq": 32,
+    "gradient_steps": 3
+   }
+  },
+  {
+   "id": "K6",
+   "source": "published",
+   "prior": "§19 table (published foragers pay +-1 a food, ours +100); SAC v1 Fig 3b (reward scale is SAC's decisive setting); discovery evidence §1",
+   "twin": "E-food-lr0",
+   "change": "reward as the learner sees it divided by 100 (a meal = +1), with the learned temperature",
+   "settings": {
+    "learner_reward_scale": 0.01,
+    "ent_coef": "auto",
+    "note": "a learner-side wrapper; the world's reward option and the meals counted by the metric are untouched"
+   }
+  },
+  {
+   "id": "N3",
+   "source": "published",
+   "prior": "§22 candidate 1 — Rainbow (1710.02298) n=3 best of 1/3/5; D4PG (1804.08617) N=1 unstable on a sparse task; Meng 2020 (2006.12692); one negative on dense reward (BRO 2405.16158)",
+   "twin": "E-food-lr0",
+   "change": "3-step returns",
+   "settings": {
+    "n_steps": 3
+   }
+  },
+  {
+   "id": "C1",
+   "source": "control",
+   "prior": "FORGE.md 'The machine' 5; discovery evidence (Gideoni 2026: plain sampling at the same budget matched or beat the search on 4 of 9 and 6 of 9 problems)",
+   "twin": "E-food-lr0",
+   "change": "plain variation, draw 1: random.Random('forge-control-1') over lr, batch, tau, warm-up near the baseline",
+   "settings": {
+    "lr": 0.000198331,
+    "batch_size": 512,
+    "tau": 0.00761166,
+    "learning_starts": 5000
+   }
+  },
+  {
+   "id": "C2",
+   "source": "control",
+   "prior": "FORGE.md 'The machine' 5; discovery evidence (Gideoni 2026: plain sampling at the same budget matched or beat the search on 4 of 9 and 6 of 9 problems)",
+   "twin": "E-food-lr0",
+   "change": "plain variation, draw 2: random.Random('forge-control-2'), the same box",
+   "settings": {
+    "lr": 0.000378774,
+    "batch_size": 128,
+    "tau": 0.00588961,
+    "learning_starts": 2500
+   }
+  }
+ ],
+ "rungs": {
+  "S": {
+   "decisions": 150000,
+   "seeds": [
+    1401,
+    1402,
+    1403
+   ]
+  },
+  "M": {
+   "decisions": 300000,
+   "seeds": [
+    1411,
+    1412,
+    1413,
+    1414,
+    1415
+   ]
+  }
+ },
+ "outcome": {
+  "metric": "sustained_rate",
+  "requires_eating": true,
+  "late_frac": 0.5,
+  "definition": "share of the run's LATE-half lives (lives ending after half the rung's decisions) that are sustained by the harness mark (ruling 22: reached the life cap AND intake >= basal drain); experiments/forge/metric.py",
+  "tiebreak": "late meals per life (mean over the same late lives), used only to order arms equal on the score",
+  "crash": "a crashed, NaN or cut run scores 0 and counts against its arm",
+  "metric_sha256": "ff3b46358c5b4b738f55cc665fd866a0ece9df780a640623a1b98e238bccc953"
+ },
+ "ladder": {
+  "rule": "experiments/forge climb(): top third (ceil(8/3) = 3 climb at most), strictly above the baseline AND the never-trains twin AND (non-control) the control source's mean; equal never climbs; a tie across the cut drops; above S the best control runs as yardstick",
+  "readings": "the forge's four readings (INBOX 11-20 14:35) stand, per J18"
+ },
+ "budget": {
+  "core_hours": 270,
+  "kernel_hours": 68,
+  "derivation": "E2c receipts: a 300k run = 3-5 h on one Kaggle core, 4 runs a kernel. S: 10 arms x 3 seeds x 150k <= 30 x 2.5 = 75 core-h. M: <= 6 arms (3 climbers, baseline, twin, yardstick) x 5 seeds x 300k <= 30 x 5 = 150 core-h. 225 + 20% (TQC is slower) = 270 core-h; / 4 runs a kernel = 68 kernel-h. Over either line the round stops; it does not borrow."
+ },
+ "machine": {
+  "kaggle_sessions_max": 2,
+  "rank": 2,
+  "box": "no learner run on the box"
+ },
+ "acceptance": "no result row is accepted (written to results.jsonl) before ORDERS S13 (b)'s judge-hash tripwire holds",
+ "forge_filled": "J18 is silent on these; filled at the freeze and reported in INBOX: M seeds = 5 (charter default); the budget above; K1's interval 50,000 (>= 1 reset inside S: at 50k and 100k); one never-trains twin for every arm; seeds 1401-1403 / 1411-1415 (never run in this repo)."
+}
