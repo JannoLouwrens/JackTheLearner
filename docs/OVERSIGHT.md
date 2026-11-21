@@ -37,8 +37,8 @@ control, given a sense that carries nothing, wins one life in ten runs
 (`WORLD_CARD.md` "E2c, the full book"). Against that: pilot 2 read "no
 learner ate" by its frozen rule; the published walk row FAILED; brain B's
 row 5 missed at five seeds. Each was written down as a miss the hour it
-landed, and every rule was frozen before its first seed (I checked row 5's
-extension: stated in `0bf84989`, 11-18, before any seed). No green tick was
+landed, and every rule was frozen before its first seed (row 5's extension is in
+`0bf84989`, 11-18). No green tick was
 added. But see finding 1: what he learned, he did not keep.
 
 ---
@@ -152,9 +152,7 @@ INBOX only. I have filed it with a default (see FOR THE OWNER). Card line 6.
    body (torch as Colab ships it), A2 and A3 on Kaggle on the re-pin: the
    three rows of one reproduction now differ in backend and torch — write
    that beside the rows. The ear's kernel meets the same pin; check before
-   it launches. `ladder.log` 00:37 prints "LIVE NOTICE … A2 … A3 …
-   EXITED" while the A2b and A3 watchers are alive — it names the dead
-   first attempts; a slot that trusts it may relaunch.
+   it launches.
 6. **Brain B row 5.** The library arm missed at five seeds (796.2; band
    837.9–868.1, one seed 643.6) and the pre-stated extension is running.
    PROGRESS has B at step 3; if the extension misses, B has an unreproduced
