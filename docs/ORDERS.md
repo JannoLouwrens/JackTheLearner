@@ -186,7 +186,8 @@ serves: M3 · PLAN "the decisive test … on the Mac mini" — every Mac hour an
 state: 11-20 rung 1 9/9, rung 2 4/4 (`df2b7bc2`), eager and compiled; WHEEL PASS `jack-cpu-1795207086` (PyPI `mlx[cpu]==0.32.4`).
 state: 11-21 10:10 row 1.5 DONE: jitted warm-up NAMED (XLA runs lr_t = fma(-lr, fma(-count, f32(1/warmup), 1), lr), bit-exact at every count of 4 configs) → references vs official 14/14 (was 10/14), tolerance unchanged. Golden `rung3_opt_golden_e01491f.json` = jitted official; stubs failing `dfde3cf9` (0/2).
 state: **RUNG 3 PASS `ed09045b`: 2/2 eager AND compiled** vs reference and golden; `--planted` 5/5 + bug-free control PASSES; unfused-ramp port mutant FAILS 6.5e-6; rungs 1, 2 re-read PASS. Wheel re-check of rung 3 not run (one < 1 h Kaggle CPU kernel, rank 0).
-state: NEXT: row 2.1 (golden generator at `size1m`, repeat run identical), then 2.2 (one recurrent step → rung 6).
+state: 11-21 10:31 row 2.1 STARTED `c05c1736`: `g1_probe --preset size1m` → 647,705 params (= report). One eager size1m train call (batch 4×65) = 3 m 12 s, **peak 3.4 GB** (> box 1.5 GB; batch cut does not fix it); call 1 has 14/81 grads exactly zero → golden needs ≥ 6 calls.
+state: NEXT: row 2.1 on a Kaggle CPU kernel (template `wheel_kernel.py`/`g0_kernel.py`; needs ninjax 3.6.2 + the pin's jax venv): ≥ 6–20 calls at the published batch 16, run twice + a seed control, bit-identical; add rung 6/7/9 intermediates to `install_capture` first. Launch only when a CPU seat frees (J17 holds 5).
 
 **Lane `forge`** reads `docs/FORGE.md`; its F3 is J18 above (terms frozen);
 F4 after. Lane `lab`: a candidate learner or setting for brain B enters
@@ -283,6 +284,7 @@ clauses; `verify` VENUE 266 vs 256.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-21 10:31 JACK: `/data/tmp/ninjax362` (ninjax 3.6.2, needed for every eager G1 golden) had been pruned — the documented path silently ran 3.6.3 and asserted; reinstalled to `/data/tools/ninjax362`. Prune scripts should spare `/data/tools`, and the ~1.5 GB box rule is already exceeded by the frozen debug G1 run (~2.4 GB).
 (emptied 11-21 06:45 — every line of 11-20/21 is ruled in 64–75 or became J17, J18, J14 (b)–(d), J10, S11, S14, Next-up.)
 - 11-21 07:15 JACK · J17 freeze: the draft says primary "late" = last QUARTER of lives, ruling 65 (which names J17) says late HALF of the run. Frozen `98e22036` as ruling 65's late half (lives starting ≥ 150k), the last-quarter number printed beside and not read. No kernel is home before ~15:00 — say so before then if the other window was meant.
 - 11-21 07:32 JACK · MACHINE/WORLD: the box venv runs mujoco 3.2.3, every Kaggle kernel pins 3.17.0, and the worlds are NOT the same world: same seed, same 2,000 random actions on K-row128 → 0 meals (3.2.3) vs 2 meals (3.17.0); first look identical. Any box row (hand forager 20/20, floors) set beside a Kaggle learner row crosses versions. RESEARCH/ruling: one version for both, or every box row re-read on 3.17.0 (`/data/venvs/jack-std` has it).

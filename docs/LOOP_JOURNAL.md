@@ -3144,3 +3144,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found in the harness: the planted ports' "correct" base used the exact ramp and float64 (1−β) — it would have FAILED as a correct port. Rebuilt on the reference; a bug-free control now must PASS (it does); + eager_ramp bug, caught by 1.28e-6 vs 1e-6 (narrow, named).
 - Filled `opt_init`/`opt_update` → RUNG 3 2/2 eager AND compiled `ed09045b`; an unfused-ramp port mutant FAILS 6.5e-6; rungs 1, 2 still PASS.
 - Philosophy served: 4 (a miss explained down to the instruction instead of widened; a control that must pass added to the harness), 7 (the Mac port, rung 3 of 7).
+
+## 2026-11-21 10:22–10:36 UTC · JACK (short slot) · J16 row 2.1: the golden generator at size1m, first measurement
+- First act: Kaggle status: ear `…231396`, A2-v1S s0 `…248791`, J17 r0 all RUNNING → J14/J17 wait; J18 forge's; J10 waits on the Director → J16 row 2.1.
+- `g1_probe --preset size1m` `c05c1736`: 647,705 params, the report's count exactly. One eager train call at batch 4×65: 3 m 12 s, peak 3.4 GB → the v1 golden (≥ 6 calls, twice) belongs on a Kaggle CPU kernel, not the box.
+- Call 1: 14/81 grads exactly zero (rew/val behind zero-init heads, actor mean) → a 1-call golden would be blind there.
+- Found: ninjax 3.6.2 pruned from /data/tmp → reinstalled to /data/tools; the frozen debug G1 golden re-made IDENTICAL 1,400/1,400 (INBOX).
+- Philosophy served: 7 (the Mac port), 4 (the golden's blind spots measured before it is frozen), 6 (kept a 3.4 GB job off the customers' box).
