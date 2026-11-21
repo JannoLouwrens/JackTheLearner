@@ -202,7 +202,8 @@ smoke against that file's DONE (1)–(4). The frozen A1–A3 rows untouched.
    state: 11-20 12:40 BUILT `3a35ec8d`: `make(keys="per_sense")` (Dict of 5 Boxes: vision 32/audio 16/touch 8/proprio 12/needs 6, runner unedited) + `overrides(keys=)` + `smoke N --per-sense`; tests 7/7 (bit-exact round trip over 40 steps, a one-off split caught). A1–A3 untouched.
    state: box smoke 1,200 dec: rc 0, sheeprl Encoder/Decoder MLP keys = 5 senses, no first-key warning; (1) STEPS + (3) NO NaN yes (8 Loss/* finite, reward_loss 5.537 = flat smoke); (2) LEARNS undecidable at 1 logged step — same as the flat smoke; (4) 2.2 dec/s loaded box, no claim.
    state: 11-20 17:40 `kernel --per-sense` BUILT `3d3d2962`: flat GPU job byte-identical (sha pinned), per-sense adds only `keys=` and fetches `inworld_s0_body_per_sense.json`; tests 8/8.
-   next: (2) when a session is free and the Director ranks it: `$PY -m experiments.brain_a.in_world kernel --per-sense` → `/data/jack-logs/brain_a/in_world/inworld_per_sense.json`, judge (2) LEARNS.
+   state: 11-21 05:09 LAUNCHED (ruling 60 rank 0, < 1 h) `in_world kernel --per-sense`, log `brain_a/in_world/launch_ps1.log`: Kaggle refused ("Maximum batch GPU session count of 2" — ear + needs-hidden hold both) → fell back to Colab T4, RUNNING.
+   next: harvest `/data/jack-logs/brain_a/in_world/inworld_per_sense.json`, judge (1)–(4) beside the flat smoke (KNOWN_ANSWERS "A's smoke").
 2. `world_card`: a per-food eat count per life (today `BOUT_GAP` = 5 is
 shorter than regrowth, so `floor_bouts` = `floor_eats_all` and "meals from
 one food" cannot be read) — with a planted test; no old row re-scored.

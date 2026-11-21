@@ -3048,3 +3048,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Fork f1 HOME: seed 1 resumed from 1.5M and reseeded (key included) keeps the walk to 2M (R 5,863, M 12.19, 0/10 fell) = KEPT → RECIPE ruled out; f2 still RUNNING decides CHAOS vs MIXED.
 - KNOWN_ANSWERS J10-1 addendum 04:45; no ledger change.
 - Philosophy served: 4 (the failed walk row is read for why, not filed — and its verdict is not moved by the good news).
+
+## 2026-11-21 05:05–05:15 UTC · JACK · J14 waiting (ear, needs-hidden RUNNING) → J10 fork reading CHAOS; B row 5 ext scored; per-sense smoke launched
+- First act: ps + `kernels status`: ear `…231396`, needs-hidden `…234980` RUNNING; nothing for J14 to harvest.
+- J10: fork f2 HOME (R 5,303, M 14.07, 2/10 fell = KEPT, on the edge) + f1 KEPT → `j10_fork.reading` **CHAOS**: seed 1's collapse was one bad draw. Row stays FAIL (1 of 3); done-when met; next is a Director ruling.
+- Found unharvested: B row 5's one extension home since 04:49 — lib MISSES at k = 15 (833.8 vs 841.7–864.3), though seeds 5–14 alone sit at 852.7 and only seed 3 (643.6) pulls it out. Ours 862.6, uncounted. KNOWN_ANSWERS addenda for both.
+- Per-sense A smoke launched (rank 0, < 1 h): Kaggle caps GPU at 2 concurrent sessions → Colab fallback, RUNNING.
+- Philosophy served: 4 (a failed row read for why — a draw, not the recipe — and a miss kept a miss at its pre-stated k) and 6 (an idle free seat filled).
