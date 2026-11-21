@@ -118,19 +118,21 @@ POOL_DEADLINE_S = int(8.5 * 3600)   # in-kernel stop, leaves pip + queue + fetch
 def make_world(seed: int, move_cost_dial: bool = False,
                food_floor_only: bool = False, reward: str = REWARD,
                eye_frame: str = "world", motor_frame: str = "world",
-               native_substep: bool = False):
-    """The pilot's world. eye_frame / motor_frame default "world" = the f-card's
+               native_substep: bool = False, eye: str | None = None):
+    """The pilot's world. `eye` (J17): None = JackEnv's own default eye, the
+    call below unchanged; only J17's arms name one. eye_frame / motor_frame default "world" = the f-card's
     world byte for byte (the floor cards never pass them); the pilot's runs get
     them from the frozen rule (ruling 39; J12 (0), (2')). native_substep
     (11-19): ORDERS — every new run in his world passes it (identical world,
     J6); default off keeps the card cells' code path unchanged."""
     from experiments.jack_env import JackEnv, NEEDS_S_TRP, SPAWN_CLEAR_R
+    kw = {} if eye is None else {"eye": eye}
     return JackEnv(seed=seed, difficulty=DIFFICULTY, reward=reward,
                    random_needs=NEEDS_S_TRP, random_layout=True,
                    lazy_contact_audio=True, spawn_clear=SPAWN_CLEAR_R,
                    move_cost_dial=move_cost_dial, food_floor_only=food_floor_only,
                    eye_frame=eye_frame, motor_frame=motor_frame,
-                   native_substep=native_substep)
+                   native_substep=native_substep, **kw)
 
 
 def run_card_cell(arm: str, seed: int, lives: int = CARD_LIVES,
@@ -453,8 +455,30 @@ E2C_AUTO_ARMS = {f"{a}-auto": dict(E2C_ARMS[a], ent_coef="auto")
                  for a in ("E-food", "E-zero")}
 
 
+# ---- J17: the eye race, row128 vs 16 rays under brain B ---------------------
+# Rule: docs/research/prereg/row128_vs_rays16.md, FROZEN by ruling 66 (freeze
+# commit 98e22036). Every arm is pilot arm K exactly (K-lr0 for the floor) on
+# PILOT_RULE's world with setting S = ent_coef "auto" (ruling 64); ONLY the
+# eye differs. No handed sense on any arm. A SEPARATE dict and separate
+# kernels r0..r4, so pilot 2's and E2c's groups and arms stay byte-identical
+# (tests/test_j17_eye_arms.py). trace=True as E2c: reads only.
+#   K-row128-blind  MUST FAIL: the row eye's WIDTH (256 numbers) with every
+#                   vision number zero -- the wider input with no content.
+J17_ARMS = {
+    "K-rays16": dict(PILOT_ARMS["K"], ent_coef="auto", trace=True, eye="rays16"),
+    "K-row128": dict(PILOT_ARMS["K"], ent_coef="auto", trace=True, eye="row128"),
+    "K-row128-blind": dict(PILOT_ARMS["K"], ent_coef="auto", trace=True,
+                           eye="row128", blind=True),
+    "K-lr0-row128": dict(PILOT_ARMS["K-lr0"], ent_coef="auto", trace=True,
+                         eye="row128"),
+}
+J17_SEEDS = (921, 922, 923, 924, 925)
+J17_T = 300_000
+J17_LATE_FROM = J17_T // 2     # ruling 65: the late half = lives STARTING at decision >= 150,000
+
+
 def arm_cfg(arm: str) -> dict:
-    for d in (PILOT_ARMS, E2C_ARMS, E2C_AUTO_ARMS):
+    for d in (PILOT_ARMS, E2C_ARMS, E2C_AUTO_ARMS, J17_ARMS):
         if arm in d:
             return d[arm]
     raise KeyError(arm)
@@ -473,7 +497,10 @@ def pilot_world(arm: str, food_floor_only: bool, eye_frame: str = "world",
                          food_floor_only=food_floor_only,
                          reward=c["reward"], eye_frame=eye_frame,
                          motor_frame=motor_frame,
-                         native_substep=native_substep)
+                         native_substep=native_substep, eye=c.get("eye"))
+        if c.get("blind"):
+            from experiments.blind_eye import BlindEye       # J17's must-fail arm only
+            return BlindEye(env)
         if "handed" not in c:
             return env
         from experiments.handed_sense import HandedSense   # E2c only
@@ -503,6 +530,8 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
         rec["handed"], rec["handed_encoding"] = c["handed"], E2C_ENCODING
     rec["food_floor_only"] = bool(food_floor_only)
     rec["eye_frame"], rec["motor_frame"] = eye_frame, motor_frame
+    if "eye" in c:                       # J17 arms only; older records carry no key
+        rec["eye"], rec["blind"] = c["eye"], bool(c.get("blind"))
     return rec
 
 
@@ -676,6 +705,27 @@ def e2c_auto_cells() -> list:
 def e2c_auto_groups() -> dict:
     c, n = e2c_auto_cells(), PILOT_PER_KERNEL
     return {f"a{j}": c[n * j:n * (j + 1)] for j in range((len(c) + n - 1) // n)}
+
+
+def j17_cells() -> list:
+    """20 runs, seed-major: every kernel r0..r4 carries one seed's four arms,
+    so a slow host costs every arm the same."""
+    return [(a, s) for s in J17_SEEDS for a in J17_ARMS]
+
+
+def j17_groups() -> dict:
+    c, n = j17_cells(), PILOT_PER_KERNEL
+    return {f"r{j}": c[n * j:n * (j + 1)] for j in range((len(c) + n - 1) // n)}
+
+
+def j17_kernel(name: str) -> dict:
+    """Submit J17 group r0..r4 -> OUT/j17_<name>.json on PILOT_RULE's world
+    (body eye + body motor, food_floor_only, native_substep), T = 300k."""
+    if PILOT_T != J17_T:
+        raise RuntimeError("j17_kernel: the rule says 300,000 decisions")
+    rule = dict(PILOT_RULE, rule="prereg/row128_vs_rays16.md FROZEN ruling 66 (98e22036); "
+                                 "S = ent_coef auto; world = " + PILOT_RULE["rule"])
+    return pilot_kernel(name, rule, cells=j17_groups()[name], out_name=f"j17_{name}.json")
 
 
 def e2c_ready() -> list:
@@ -1139,7 +1189,7 @@ def e2c_readings(paths=None) -> tuple:
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel", "e2c-table", "e2c-readings"])
+    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel", "e2c-table", "e2c-readings", "j17-kernel"])
     p.add_argument("--arm", default="noop-k1")
     p.add_argument("--seed", type=int, default=601)
     p.add_argument("--lives", type=int, default=CARD_LIVES)
@@ -1169,6 +1219,8 @@ def main(argv):
         pilot_kernel(a.name)
     elif a.cmd == "e2c-kernel":
         e2c_kernel(a.name)
+    elif a.cmd == "j17-kernel":
+        j17_kernel(a.name)
     elif a.cmd == "e2c-table":
         md, missing = e2c_table()
         print(md)

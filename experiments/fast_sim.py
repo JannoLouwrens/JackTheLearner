@@ -73,6 +73,29 @@ def _lazy_step(self, data) -> None:
     self._prev_pairs = set(by_pair)
 
 
+_MR_HAS_NORMAL = None
+
+
+def _multi_ray(model, data, pos, vec, groups, gid, dist, n) -> None:
+    """`mj_multiRay` under either signature. mujoco >= 3.3 added a `normal`
+    out-argument before `nray`; every Kaggle kernel pins 3.17.0 while this box
+    runs 3.2.3. Until 11-21 each caller had to remember
+    `sim_speed_kcpu._compat_multiray()` first, and `pilot_b2` (J17's row128
+    arms) did not: three of four arms would have died at construction on
+    Kaggle. The eye now checks the thing itself. Same rays, same outputs; the
+    normals are not asked for (None)."""
+    global _MR_HAS_NORMAL
+    import mujoco
+    f = mujoco.mj_multiRay
+    if _MR_HAS_NORMAL is None:
+        # a caller's installed shim has no docstring and takes the old 11 arguments
+        _MR_HAS_NORMAL = "normal:" in (getattr(f, "__doc__", None) or "")
+    if _MR_HAS_NORMAL:
+        f(model, data, pos, vec, groups, 1, -1, gid, dist, None, n, mujoco.mjMAXVAL)
+    else:
+        f(model, data, pos, vec, groups, 1, -1, gid, dist, n, mujoco.mjMAXVAL)
+
+
 def _multiray_vision(self) -> np.ndarray:
     import mujoco
     from experiments import w0 as W
@@ -83,8 +106,8 @@ def _multiray_vision(self) -> np.ndarray:
         self._mr_vec = np.ascontiguousarray(self._ray_dirs, dtype=np.float64).reshape(-1)
         self._mr_gid = np.zeros(n, dtype=np.int32)
         self._mr_dist = np.zeros(n, dtype=np.float64)
-    mujoco.mj_multiRay(self.model, self.data, pos, self._mr_vec, W._RAY_GROUPS,
-                       1, -1, self._mr_gid, self._mr_dist, n, mujoco.mjMAXVAL)
+    _multi_ray(self.model, self.data, pos, self._mr_vec, W._RAY_GROUPS,
+               self._mr_gid, self._mr_dist, n)
     out = np.empty(W.MODALITIES["vision"], dtype=np.float32)
     for k in range(n):
         dist = float(self._mr_dist[k])
@@ -134,8 +157,8 @@ def _row_vision(self) -> np.ndarray:
     pos[2] += W.RAY_Z_OFFSET
     if self.__dict__.get("_eye_body"):           # J12 (0): body-frame azimuths
         self._row_vec[:] = _rot_z(self._row_dirs0, body_yaw(self)).reshape(-1)
-    mujoco.mj_multiRay(self.model, self.data, pos, self._row_vec, W._RAY_GROUPS,
-                       1, -1, self._row_gid, self._row_dist, n, mujoco.mjMAXVAL)
+    _multi_ray(self.model, self.data, pos, self._row_vec, W._RAY_GROUPS,
+               self._row_gid, self._row_dist, n)
     dist, gid = self._row_dist, self._row_gid
     miss = (dist < 0) | (dist > W.RAY_MAX_RANGE) | (gid < 0)
     out = np.empty(2 * n, dtype=np.float32)
