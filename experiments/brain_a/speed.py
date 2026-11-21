@@ -69,6 +69,26 @@ RUNS = __RUNS__
 BASE = __BASE__
 PIP = __PIP__
 INSTALL = "none"
+if PIP and os.path.exists("/tmp/jack_torch_pin.txt"):
+    # 11-21 00:12, kernels jack-ladder-1795219724/-802 (A1, A2): gpu.py's Kaggle preamble pins
+    # torch 2.5.1+cu121 (the P100 is sm_60) through PIP_CONSTRAINT, and sheeprl 0.8.5 requires
+    # torch>=2.6 -> "ResolutionImpossible" on both install paths, 0 decisions run. PyTorch's cu126
+    # builds of 2.6.0 still carry sm_50..sm_90, so brain A's jobs re-pin to that pair here and refuse
+    # to run if the device's arch is not in the installed torch's list (no silent CPU/NaN run).
+    _env = {k: v for k, v in os.environ.items() if k != "PIP_CONSTRAINT"}
+    _r = subprocess.run([sys.executable, "-m", "pip", "install", "-q", "torch==2.6.0", "torchvision==0.21.0",
+                         "--index-url", "https://download.pytorch.org/whl/cu126"],
+                        capture_output=True, text=True, env=_env)
+    open("/tmp/jack_torch_pin.txt", "w").write("torch==2.6.0\ntorchvision==0.21.0\n")
+    _c = subprocess.run([sys.executable, "-c", "import torch; a = torch.cuda.get_arch_list(); "
+                         "c = torch.cuda.get_device_capability(0) if torch.cuda.is_available() else None; "
+                         "print('A_TORCH', torch.__version__, a, c); "
+                         "assert c is None or 'sm_%d%d' % c in a, 'NO KERNELS FOR THIS GPU'; "
+                         "x = torch.ones(64, 64, device='cuda' if c else 'cpu'); print('A_MATMUL', float((x @ x).sum()))"],
+                        capture_output=True, text=True)
+    print("A_TORCH_REPIN", _r.returncode, _r.stderr[-800:], _c.stdout.strip(), _c.stderr[-800:], flush=True)
+    if _r.returncode or _c.returncode:
+        raise SystemExit("torch 2.6.0+cu126 re-pin failed or has no kernels for this GPU")
 if PIP:
     # the full pinned install first; if the resolver refuses on this image, say why and install the
     # same pinned runner without its optional video/GUI dependencies (the image's own are used)

@@ -592,6 +592,18 @@
       "ok": true,
       "week": "2026-W46"
     },
+    "jannolouwrens/jack-ladder-1795219724": {
+      "backend": "kaggle",
+      "hours": 0.0601,
+      "ok": false,
+      "week": "2026-W47"
+    },
+    "jannolouwrens/jack-ladder-1795219802": {
+      "backend": "kaggle",
+      "hours": 0.0544,
+      "ok": false,
+      "week": "2026-W47"
+    },
     "jannolouwrens/jack-tpu-1795187561": {
       "backend": "kaggle-tpu",
       "hours": 0.0,
@@ -1216,6 +1228,10 @@
       "colab_failed": 0.0811,
       "kaggle": 33.7646,
       "kaggle-tpu_failed": 0.0
+    },
+    "2026-W47": {
+      "colab_failed": 0.0,
+      "kaggle_failed": 0.1145
     }
   }
 }

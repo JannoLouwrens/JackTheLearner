@@ -1641,9 +1641,10 @@
     },
     "2026-11-21": {
       "by_spec": {
+        "detached:launch_A2.log": 5.07,
         "detached:launch_s2_seg2.log": 10.85
       },
-      "used_s": 10.85
+      "used_s": 15.92
     }
   },
   "last_child_s": {

@@ -158,7 +158,10 @@ if __name__ == "__main__":
 
 # 11-20 Next-up 1 (2): `kernel --per-sense`. sha256 of kernel_body() taken from the file
 # BEFORE the keys arg existed (HEAD 69ce1eac): the flat GPU job must not move.
-FLAT_KERNEL_SHA = "853d1a4617c95405355188619643e617fa6b81ce6a4f8f2941bfcd9dacfe65e2"
+# 11-21: moved ON PURPOSE by speed._JOB's torch 2.6.0+cu126 re-pin (sheeprl 0.8.5 needs torch>=2.6;
+# Kaggle's preamble pinned 2.5.1 -> A1/A2 died at pip). HEAD f11fb1dc's body hashed to the old value
+# 853d1a46...; the new body = old + only the re-pin block (checked by recomputing with HEAD's _JOB).
+FLAT_KERNEL_SHA = "c0ad8d1067efb8ed449e8cadf6865b1ffd7af6c3fe44ccc015710b4400c6b606"
 
 
 def test_kernel_body_flat_unchanged_and_per_sense_only_adds_keys():
