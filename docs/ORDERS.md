@@ -89,7 +89,7 @@ state: 11-21 07:15 (1) FROZEN `98e22036` (pins copied; "late" = ruling 65's late
 state: FOUND + FIXED before launch: row128's `mj_multiRay` call died under the kernel pin mujoco 3.17.0 (3 of 4 arms would have crashed = VOID); `fast_sim._multi_ray` takes both signatures, first look bit-identical on 3.2.3 and 3.17.0. Learner smoke, NON-rule seed 931, 1,500 decisions, all 4 arms: auto α .89 → .66, lr0 arm flat 1.0.
 state: 07:35–07:37 (3) LAUNCHED r0 `jack-cpu-1795246505`, r1 `…246570`, r2 `…246635` (Kaggle CPU RUNNING, est 7.5 h each; logs `/data/jack-logs/pilot_b2/launch_j17_r{0,1,2}.log` → `pilot_b2/j17_r*.json`). **r3, r4 NOT launched** — the box's 6-poller cap was full; launch them the moment a watcher exits (`pilot_b2 j17-kernel --name r3|r4`).
 state: 08:25 READING BUILT `9b3ea35a` before any kernel is home: `pilot_b2 j17-table` = the frozen rule (late half, U ≥ 21/25 + ≥ 4/5 pairs vs rays16 and vs blind, VOID/INCOMPLETE, verdict; last quarter + first/last capped beside). 10 planted tests PASS (`$PY -m experiments.tests.test_j17_reading`), 2 mutants killed. Seam: "eats" = SUSTAINED or EATS BUT STARVES, floor K-lr0-row128 (INBOX).
-state: NEXT: 08:25 the 6-poller cap is still full → launch r3, r4 the moment a watcher exits (ear or NH-2 first); r0–r2 home ~15:00 → `j17-table` once all 20 runs are in → four rows in `WORLD_CARD.md` + ONE INBOX line.
+state: 09:24 r3 `jack-cpu-1795253059`, r4 `jack-cpu-1795253082` PUSHED (NH-2's watcher exited; logs `launch_j17_r{3,4}.log`) → all 5 seeds out, **5 Kaggle CPU sessions vs the Do-line's "≤ 3"** (the handoff + ruling 60 asked for it; INBOX). NEXT: r0–r2 home ~15:00, r3–r4 ~17:00 → `j17-table` once all 20 runs are in → four rows in `WORLD_CARD.md` + ONE INBOX line.
 
 ### J14 — The free GPU week (W47): A's fix, the needs-hidden row again, the ear
 part: His brain (A) + Ear + Other senses · stage: 1 · step: 3 (reproduce) · prior: §2, §7, §18 item 4; `docs/research/prereg/a2_size_s.md`; rulings 33, 62, 67, 68, 70
@@ -123,7 +123,7 @@ serves: M3, M5 · PLAN ready-list "brain A reproduced … and smoke-tested in hi
 state: 11-21 A1–A3 scored (`420217d2`): A1 PASS, A3 PASS, A2 named MISS @100K. (a) EAR `jack-ladder-1795231396` STILL Kaggle RUNNING at 08:07 (~4 h 45 m; watcher `kws_row/launch_k2.log`) — harvest when home, check `EAR_TORCH_REPIN 0`.
 state: (b) A2-v1S FROZEN `8f13ab28`, built `bdeda9b6`, decoder fix `f955f6ff`. Timing cell 2 HOME 08:09: sps_train 3.24, sps_env 1,276 (4 windows) → **4.26 T4-h a seed**. **SEED 0 + CONTROL RUNNING 08:13 `jack-ladder-1795248791`** (est 4.5 h; log `brain_a/rows/launch_v1s_s0.log` → `rows/v1s_*.json`).
 state: (b) NEXT: when a GPU seat frees (ear home), `rows v1s-kernel 1 --est=4.5`, then seed 2; after all three home, `rows v1s-score` → `KNOWN_ANSWERS.md` row A2-v1S, read by the reading written before seed 0.
-state: (c) gate OPEN (pilot Δ 1.22 / 1.87). NH-2 FROZEN + built `37dcc858`, **RUNNING since 07:34 on Colab T4** (session `ladder-1795246472`, log `needs_grid_row/launch_nh2.log`, ~2.4 h). Harvest: `needs_grid_row score-nh2` → `KNOWN_ANSWERS.md` Row NH-2.
+state: (c) NH-2 SCORED 09:22 (`KNOWN_ANSWERS` Row NH-2): **R1 FAIL** (dqn@5000 1.10 in band; gmq@5000 0.79 > 0.70 by 0.09), **R2 FAIL** (gmq@1 7.58 > 0.80 — bimodal, 4/10 seeds 46–90, three overshoot to h 106). Control 1,234 valid; R3 104.5, 10/10, not read. μ-inside cut every learner cell 2–15×. NEXT: Director — a third registration ((b) bounded stats, pilot first) or close the row.
 state: (d) DONE `bbd54926`: `in_world.overrides(ckpt_every=N, resume_from=)` = buffer.checkpoint + memmap_buffer=copy, default byte-identical; box `in_world resume-test` PASS (buffer 100 → 120 rows/env, saved rows bit-identical; fresh control 20 rows = FAIL as it must). Buffer only — no gradient step was in the test.
 
 ### J18 — Forge round 1 is a KEEP round (the rule's terms; lane `forge` runs it)
@@ -289,6 +289,7 @@ clauses; `verify` VENUE 266 vs 256.
 - 11-21 08:25 JACK · J17: the frozen rule names the verdict "row128 eats / neither / both" but never says what "eats" is; `j17_readings` reads it as §3's SUSTAINED or EATS BUT STARVES (EATS floor = K-lr0-row128, J17 has no held8-k0 twin; no noop arm, so SLIDES vs NEAR RANDOM print together as NOT EATING) — rule on it before r0–r2 are home (~15:00) if that is wrong.
 
 - 11-21 08:45 JACK · MACHINE: `launch_detached.sh` refuses even a 2-CPU-min box job when the 6-poller cap is full ("0 busy detached jobs alive"); J10's twin ran in the foreground instead. The poller cap is starving CPU work as well as r3/r4.
+- 11-21 09:26 JACK · J17: r3, r4 launched into NH-2's freed watcher slot per the 08:25 handoff → 5 concurrent Kaggle CPU sessions on J17, against its Do-line "≤ 3 sessions"; the two texts disagree — rule which one binds (cancel r3/r4 = `kaggle kernels` stop, not a box kill).
 
 ## DONE (kept one day)
 

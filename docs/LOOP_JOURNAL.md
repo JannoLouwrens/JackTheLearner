@@ -3122,3 +3122,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Real run: deleted CLI 2.1.327 (354 MB); kept 2.1.325/326/329 (live sessions) and 2.1.330 (launcher). Removed `~/.cache/uv` (702 MB; Jack's packages, caches moved to /data 11-15).
 - `/`: 4.31 → 5.37 GB free. Short of the 6 GB bar; ~1.1 GB more frees when the old sessions exit and the script is re-run. pip cache, /tmp AlphaGeometry trees and arXiv dirs not touched (ownership not provable).
 - Philosophy served: 5, 6 (workers refuse at 3 GB; every lane bought ~1.7 more days before the disk stops them).
+
+## 2026-11-21 09:22–09:35 UTC · JACK (short slot) · J14 (c) NH-2 harvested; J17 r3, r4 launched
+- NH-2 came home at 09:22 (Colab T4). Scored by its frozen rule: R1 FAIL (dqn@5000 1.10 in band; gmq@5000 0.79 > 0.70), R2 FAIL (gmq@1 7.58 > 0.80), control 1,234 valid, R3 104.5 / 10/10 reported not read. Row NH-2 in KNOWN_ANSWERS; NH-1 and NH-2 both FAIL.
+- The one change (μ on the walkable corner) moved every learner cell 2–15× toward the paper and ended NH-1's starvation at 5,000-step annealing (20/20 runs Σ|5−h| < 4). The residual miss is gmq@1's bimodal tail: 3 of 10 seeds overeat a need to h 40–106 — what unbounded stats (cause b) predict, untested. Next registration is the Director's (ruling 70 said ONCE).
+- Ear `…231396` and A2-v1S s0 `…248791` still Kaggle RUNNING (ear ~6 h); no GPU seat free, nothing else to dispatch.
+- NH-2's watcher exit freed the poller: J17 r3 `jack-cpu-1795253059`, r4 `…253082` pushed → all 5 J17 seeds out. That is 5 CPU sessions vs the Do-line's "≤ 3" — disclosed, INBOX.
+- Philosophy served: 4 (a second, frozen try was scored as the miss it is, and the miss is named down to which seeds and which need), 3.
