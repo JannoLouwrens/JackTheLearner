@@ -1,7 +1,10 @@
 # Pre-registration DRAFT — stage 2: brain A against brain B in his world (ORDERS Next-up 4)
 
 **Status: DRAFT, text only, binds nothing.** Written 2026-11-20 by a JACK slot
-(Kaggle 5/5, no order could launch). No seed of any arm below exists. The
+(Kaggle 5/5, no order could launch). Revised 2026-11-21 12:45 (ORDERS Next-up 1):
+ruling 65 written in (mark, gate, futility and decision table read the LATE
+half; "reached then lost" beside), ruling 68 written in (B's gate lists row 5
+as a named miss), E2c's reading and ruling 64 put into gate 1. No seed of any arm below exists. The
 Director freezes it; every `OPEN:` line is a choice left to that sitting.
 Sources: `docs/research/STAGE2_PREDICTION.md` (the prediction, §n = its
 sections), PUBLISHED_PRIORS §8 (test method) and §9 (battery), PLAN stage 2,
@@ -17,18 +20,34 @@ ruling 59); none has today.
 
 ## Gate — this rule does not run until ALL hold (each a ready-list line)
 
-1. **B eats somewhere in his world.** Pilot 2 (16 rays, fixed α 0.1, 300k):
-   every learner arm SLIDES / NEAR RANDOM, 0 sustained lives, late
-   meals/life 0.08–0.16 vs never-learning K-lr0 0.82. STAGE2_PREDICTION §2:
-   "If J11 finds no setup where B eats, the 100k–200k row is void for his
-   world, and stage 2 is premature." So stage 2 waits on J15's E2c table:
-   - auto-food eats → stage 2's world = K's world, B at `ent_coef="auto"`.
-   - both food arms miss at 300k → stage 2 does NOT start; the forge's
-     run-length round (F3) answers first. Running a 1M race where no brain
-     has been seen eating at any length compares two floors.
+1. **B eats somewhere in his world — in the LATE half of its run (ruling
+   65).** Pilot 2 (16 rays, fixed α 0.1, 300k): every learner arm SLIDES /
+   NEAR RANDOM, 0 sustained lives, late meals/life 0.08–0.16 vs
+   never-learning K-lr0 0.82. E2c (25/25 read, ORDERS 11-21): handed the
+   direction to food, B reaches whole sustained lives (4/5 fixed α, 3/5
+   `auto`; a sense carrying nothing 0/5) — **and in 10 of 10 food runs has
+   stopped eating by the end.** Under ruling 65 that is "reached then lost",
+   NOT "eats": **gate 1 is unmet today.** STAGE2_PREDICTION §2: "If J11
+   finds no setup where B eats, … stage 2 is premature." It waits on:
+   - **the eye** (J17, `row128_vs_rays16.md`): a setup where B reaches food
+     without being handed the direction, read on the late half; and
+   - **keeping** (forge round 1, J18): a B setting whose late-half lives
+     stay sustained on E-food.
+   Both met → stage 2's world = that eye + that setting, B at
+   `ent_coef="auto"` (ruling 64) unless round 1 seats another keep setting.
+   Either missing → stage 2 does NOT start: a 1M race where no brain is seen
+   still eating at the end compares two floors (and two forgettings).
 2. **A reproduced** its three rows (J14: A1–A3 in band) and smoke-passed in
    his world (`in_world.py` DONE clauses (1)–(4) at ≥ 20k on the GPU). A
    miss on any row → fix A; stage 2 does not run with an unreproduced A.
+   Today (11-21): A1 PASS, A3 PASS, A2 a named MISS at 100K (393.3 vs
+   438–518, in band at 200K) — open until J14 (b)'s A2-v1S (size S) reads.
+2b. **B reproduced (ruling 68).** Rows 1b, 2b, 3, 3b stand. **Row 5 is a
+   named miss** (rule `0bf84989`: library arm 833.8 vs 841.7–864.3 at
+   k = 15, one seed of 15 at 643.6; ours 862.6, not counted). Nothing of ours
+   is in the library arm, so it orders no fix and does not block this gate;
+   it is printed beside B's rows in every stage-2 report. Row 6 by its own
+   rule, when it reads, is added here as it reads — pass or named miss.
 3. **The harness's thirteen self-checks** (PRIORS §8 "Reproduce first"
    #1–#13) pass through the real pipeline, each with its named test.
 4. **The 20-run pilot** (PLAN: "the number is set by a 20-run pilot") is home
@@ -49,17 +68,26 @@ Fresh seeds, never used in pilot or tuning (§8 Selection: 4–5× worse on
 fresh seeds). No seed replaced; NaN and crashes are outcomes. Runs analysed
 = runs launched.
 
-## Primary outcome and test (PRIORS §8, copied, not invented)
+## Primary outcome and test (ruling 65 over PRIORS §8)
 
-- Outcome: decisions until W consecutive lives each SUSTAINED (pilot 2's
-  reading, ruling 22's mark); unfinished runs censored at T = 1,000,000.
-  `OPEN:` §8 states θ = 5 meals/life; pilot 2 used SUSTAINED at W = 2. One
-  must be chosen, with the floor arms' crossing rate at that W computed
-  BEFORE (as pilot_b2 `rule-inputs` did).
-- Test: A vs B, permutation log-rank, two looks (n/2 and n per arm), each at
-  α 0.025. Sensitivity: Boschloo on runs crossed by T. Futility at look 1:
-  ≤ 1 run past threshold in both arms → "not learnable at this budget"
-  (said so, no brain seated on eating).
+- **Primary (ruling 65): the LATE half.** Per run, the share of lives
+  STARTING at decision ≥ T/2 (= 500,000) that are SUSTAINED (ruling 22's
+  mark, as J17 and forge round 1 read it); tiebreak late meals/life. A run
+  "eats" iff that share clears θ_late, set by the pilot with the floor
+  arms' late-half rate computed BEFORE (as pilot_b2 `rule-inputs` did).
+  `OPEN:` θ_late, and whether θ is §8's 5 meals/life or SUSTAINED.
+- **Reported beside, NOT read ("reached then lost"):** decisions until W
+  consecutive SUSTAINED lives (§8's time-to-event, censored at T =
+  1,000,000), first and last capped life, and the drop from the run's best
+  window to its late half. A brain that eats at 50k and starves at 1M does
+  not win on this column.
+- Test: A vs B on the per-run late-half share, two looks (n/2 and n per
+  arm), each at α 0.025; `OPEN:` permutation test on the share or Boschloo
+  on runs that eat (§8 copies log-rank for time-to-event, which ruling 65
+  demotes to the beside column; its permutation log-rank is still printed).
+  Futility at look 1: ≤ 1 run eating in its late half in both arms → "not
+  learnable to the end at this budget" (said so, no brain seated on
+  eating). Floors: late-half eating only (≤ 1 across all floor runs).
 - "Not distinguished" is written now to mean: **the eating race does not
   choose; the battery and the added sense do** (PLAN), then cost.
 
@@ -86,6 +114,8 @@ distraction gap needs more).
 
 ## Decision table (PLAN, verbatim in effect)
 
+"Eats" below = eats in the late half (ruling 65) everywhere.
+
 - A passes known answers + eats within budget + shows memory/delayed-reward
   advantage; B does not eat → **A**.
 - B eats, A does not, or A shows no predicted advantage → **B** until
@@ -95,6 +125,9 @@ distraction gap needs more).
 - Neither eats by T → no seat moves; "on this world, at this budget, as
   configured".
 - Any floor arm succeeds more than once, or forager-f4 fails → VOID.
+- Either brain reaches and loses (beside column crosses, late half does
+  not) → it does NOT eat; the loss is named in the report as the forge's
+  KEEP problem, not hidden in a mean.
 
 ## Settings that differ from the published recipes (to be filled at freeze)
 
