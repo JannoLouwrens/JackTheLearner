@@ -3219,3 +3219,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found beside it: the never-trains arm eats 1.05–2.58 meals/life late, blind learner .70–2.08, sighted learners .13–.44. Sighted critic loss climbs 2–13× mid→end with α rising (10/10); blind/lr0 flat (10/10). Obs scale checked sane. Raw jsons committed under `world_card_data/j17/`.
 - Next: the critic's cause on eye content (Director; INBOX).
 - Philosophy served: 4 (a control that had to fail, failed; the learner read honestly as below its own untrained floor), 3 (the eye's seat not given by assumption).
+
+## 2026-11-21 15:37–15:55 UTC · JACK (short slot) · J16 row 2.1 harvest — GOLDEN PASS
+- First act: Kaggle — golden `jack-cpu-1795271133` COMPLETE (home 14:50); A2-v1S s2 RUNNING, s1 still QUEUED after 2 h (watchers alive) → s1 likely waits for s2's GPU seat, home ~22:30. J17 done, J18 is forge's, J10 waits the Director → J16's harvest.
+- Golden line (fixed before the run): PASS. Repeat run bit-identical 2,468/2,468; seed-1 control equal on only 533 (fails as it must); episode reset exactly at t032 on even rows in every dumped call; all rc 0; 24 min on free Kaggle CPU.
+- Next: row 2.2 — capture per-step RSSM intermediates, NumPy reference first.
+- Philosophy served: 4 (the reference is only trusted because a repeat matched and a seed control differed), 7 (the Mac port gets a size1m reference to be checked against), 6 (free compute).

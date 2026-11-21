@@ -536,3 +536,16 @@ rule's `--jax.platform cpu --jax.prealloc False` (listed differences), float32, 
 - Consequence: the v1 generator (≥ 6–20 calls, run twice + a seed control) belongs on a Kaggle CPU
   kernel (30 GB), not this box. Not yet captured: per-step recurrent and imagination intermediates
   (rungs 6, 7, 9 — `install_capture` reaches grads, loss and `outs` only).
+
+**Row 2.1 golden v1 — GOLDEN PASS (11-21, Kaggle CPU `jack-cpu-1795271133`, 1,468 s, install 20 s).**
+Kernel `golden_kernel.py` (`c4020afc`, py3.12 uv venv fix `cf507ea9`; kernel image py3.13, x86_64, 4 CPUs);
+result `/data/jack-logs/mlx/g1v1/golden.json`, golden arrays `golden_size1m_A.npz` (251 MB, /data only).
+Judged by the GOLDEN line fixed in the docstring before the run:
+- runs A, B, control: rc 0, 0, 0 (no call with every dumped grad exactly zero).
+- **A vs B: 2,468 / 2,468 dumped items equal** (every array and param hash) → repeatable.
+- **A vs control (seed 1): 533 / 2,468 equal** → the seed is read; the control fails as it must.
+- in_reset: 1 on even rows, 0 on odd, at observe step t032 (EP_COL 33 − 1) in every dumped call
+  (1, 2, 6, 8); 0 at every other of the 256 keys.
+- noise file sha256 `91e557dd…cf7a`. This is the size1m reference the Mac port is checked against;
+  rows 2.2 (one recurrent step → rung 6) and 2.3 (64-step pass → rung 7) still need per-step RSSM
+  intermediates the capture does not reach yet.
