@@ -89,6 +89,11 @@ Kaggle (pushed HEAD first), rank of "Next up" item 2:
   scripts/launch_detached.sh /data/jack-logs/brain_b/launch_row5.log
       $PY -m experiments.brain_b_dmc kernel 5
   ... kernel 6 cartpole-swingup_sparse | reacher-easy | reacher-hard
+The rule's ONE extension (11-21, after row 5's lib missed at 5 seeds, 796.2):
+  ... kernel 5 ext   -> lib + ours on EXT_SEEDS 5..14 (20 cells, no ctrl re-run),
+      judged by `judge_ext` with row5_dmc.json's cells: seeds 0..14, k = 15,
+      band 841.7..864.3, ctrl = the first kernel's seeds 0..2. Written into
+      row5_dmc_ext.json. Code added only; the rule text above is unchanged.
 """
 from __future__ import annotations
 
@@ -256,14 +261,16 @@ def verdict(cells: list, row: str, seeds=SEEDS, k: int = K, tasks=None) -> dict:
     return out
 
 
-def cells_for(row: str, seeds=SEEDS, tasks=None) -> list:
-    """lib first (the rule), then ours, then ctrl; the row's tasks (or a subset)."""
+def cells_for(row: str, seeds=SEEDS, tasks=None, arms=ARMS) -> list:
+    """lib first (the rule), then ours, then ctrl; the row's tasks (or a subset).
+    `arms` narrows it for the rule's ONE extension (lib + ours on EXT_SEEDS; the
+    ctrl seeds 0..2 already ran with the first five and are not re-run)."""
     steps = STEPS[row]
     tasks = list(tasks or ROWS[row])
     bad = [t for t in tasks if t not in ROWS[row]]
     if bad:
         raise ValueError(f"tasks {bad} not in row {row}")
-    return [(a, task, s, steps) for a in ARMS for task in tasks
+    return [(a, task, s, steps) for a in arms for task in tasks
             for s in (CTRL_SEEDS if a == "ctrl" else seeds)]
 
 
@@ -305,31 +312,46 @@ os.environ.setdefault("MUJOCO_GL", "disable")
 os.chdir("/tmp/jack")
 from experiments.brain_b_dmc import run_parallel, verdict
 r = run_parallel(__CELLS__, os.environ["JACK_OUT"])
-json.dump({"cells": r, "verdict": verdict(r, __ROW__, tasks=__TASKS__)},
+json.dump({"cells": r, "verdict": verdict(r, __ROW__, tasks=__TASKS__) if __JUDGE__ else None},
           open(os.path.join(os.environ["JACK_OUT"], "brain_b_dmc.json"), "w"))
 print("DONE", flush=True)
 '''
 
 
-def job_body(row: str, seeds=SEEDS, tasks=None) -> str:
+def job_body(row: str, seeds=SEEDS, tasks=None, ext: bool = False) -> str:
+    cells = (cells_for(row, EXT_SEEDS, tasks, arms=("lib", "ours")) if ext
+             else cells_for(row, seeds, tasks))
     return (_JOB.replace("__PINS__", repr(KERNEL_PINS)).replace("__NODEPS__", repr(KERNEL_NODEPS))
-            .replace("__CELLS__", repr(cells_for(row, seeds, tasks))).replace("__ROW__", repr(row)).replace("__TASKS__", repr(tasks)))
+            .replace("__CELLS__", repr(cells)).replace("__ROW__", repr(row)).replace("__TASKS__", repr(tasks))
+            .replace("__JUDGE__", repr(not ext)))
 
 
-def kernel(row: str, est_hours: float, task: str | None = None) -> dict:
+def judge_ext(first: dict, ext: dict, row: str, tasks=None) -> dict:
+    """The rule's extension reading: seeds 0..14 per arm (k = 15, the narrower
+    band), ctrl = the first kernel's seeds 0..2. Pure, so it is testable."""
+    return verdict(list(first["cells"]) + list(ext["cells"]), row,
+                   seeds=SEEDS + EXT_SEEDS, k=len(SEEDS) + len(EXT_SEEDS), tasks=tasks)
+
+
+def kernel(row: str, est_hours: float, task: str | None = None, ext: bool = False) -> dict:
     """Row 5: one kernel. Row 6: one kernel PER TASK (`kernel 6 <task>`) — the
     three together price at ~10 h on box timing, over one session."""
     from experiments.gpu import build_job, result_json, submit
     if row == "6" and task is None:
         raise ValueError("row 6 runs one task per kernel: kernel 6 <task>")
     tasks = [task] if task else None
-    name = f"row{row}_dmc" + (f"_{task}" if task else "")
-    sub = submit(build_job(job_body(row, SEEDS, tasks)), prefer="kaggle-cpu", est_hours=est_hours,
+    name = f"row{row}_dmc" + (f"_{task}" if task else "") + ("_ext" if ext else "")
+    first = OUT / (f"row{row}_dmc" + (f"_{task}" if task else "") + ".json")
+    if ext and not first.exists():
+        raise RuntimeError(f"the extension is judged with {first}; it is missing")
+    sub = submit(build_job(job_body(row, SEEDS, tasks, ext=ext)), prefer="kaggle-cpu", est_hours=est_hours,
                  timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_dmc.json"])
     if not sub.ok:
         raise RuntimeError(f"brain_b_dmc row {row} kernel: {sub.message}")
     r = result_json(sub, "brain_b_dmc.json")
     OUT.mkdir(parents=True, exist_ok=True)
+    if ext:
+        r["verdict"] = judge_ext(json.loads(first.read_text()), r, row, tasks)
     (OUT / f"{name}.json").write_text(json.dumps(r, indent=1))
     print(json.dumps(r.get("verdict"), indent=1), flush=True)
     return r
@@ -355,8 +377,10 @@ def main(argv):
                   f"1 eval ep {t2 - t1:.1f}s score {ev[0]:.1f}", flush=True)
         return 0
     if len(argv) >= 3 and argv[1] == "kernel":
-        row = argv[2]
-        kernel(row, {"5": 3.0, "6": 5.0}[row], argv[3] if len(argv) > 3 else None)
+        row, rest = argv[2], argv[3:]
+        ext = "ext" in rest
+        rest = [a for a in rest if a != "ext"]
+        kernel(row, {"5": 3.0, "6": 5.0}[row] * (2.0 if ext else 1.0), rest[0] if rest else None, ext=ext)
         return 0
     print(__doc__)
     return 2

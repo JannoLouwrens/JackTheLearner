@@ -1638,6 +1638,12 @@
         "detached:tpu_probe.log": 171.24
       },
       "used_s": 12737.15
+    },
+    "2026-11-21": {
+      "by_spec": {
+        "detached:launch_s2_seg2.log": 10.85
+      },
+      "used_s": 10.85
     }
   },
   "last_child_s": {

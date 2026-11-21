@@ -446,3 +446,45 @@ control must fail; no extension). Kernel jack-cpu-1795198133 at `22d82a05` (laun
   `wm-latent+ring`; J3-5 `@repair`; J3-6 `@hold8`). Per PLAN they may return only if repaired — the
   measured repair target is an exploration scheme that does not break dense-reward control (e.g. one
   learned or annealed rather than a fixed hold), entered through `docs/FORGE_POOL.md` with its prior.
+
+## Row J10-1 — SAC, the RL Zoo's Humanoid entry on Humanoid-v4: **FAIL** (decided at 2 of 3 seeds; s2 still running) (11-21 00:20, Kaggle CPU)
+
+Rule frozen in `experiments/humanoid_sac_row.py` (`23e375be` era, before seed 0): PASS = at 2M R ≥ 5,950 AND
+M ≥ 12 m/1,000 steps on ≥ 2 of 3 seeds; 1M median in [3,784, 5,866]; late-start control < 500 else VOID.
+Segments of 500k chained through Kaggle kernel sources; results `/data/jack-logs/j10/sac_row/s<seed>_seg<n>.json`.
+
+| seed | 1M R | 1M M | 1M fell | 2M R | 2M M | 2M fell | reading |
+|---|---|---|---|---|---|---|---|
+| 0 | 4,065 | 3.47 | 3/10 | **5,834** | 11.91 | 0/10 | misses by 116 R and 0.09 m |
+| 1 | 5,294 | 5.08 | 0/10 | **585** | 3.28 | **10/10** | COLLAPSED (`jack-cpu-1795205296`) |
+| 2 | 3,650 | 7.25 | 6/10 | — | — | — | seg2 running `jack-cpu-1795212583` |
+| control (late start, 50k) | | | | R 68.0, M 0.03 | | | holds (< 500) → run valid |
+
+- **1M check: IN BAND** — median 4,065 inside [3,784, 5,866]. Our build tracks the published 1M curve.
+- **2M: FAIL.** Seeds 0 and 1 both miss, so 2 of 3 can no longer walk whatever seed 2 does. STANDS is also out (it
+  needs R ≥ 5,950 on 2 seeds). Seed 2's 2M reading is recorded when it lands, and cannot change this one.
+- **What the miss is:** seed 0 is a near-miss of the published 6,232 ± 280 (one model, Humanoid-v3). Seed 1 learned a
+  gait and then lost it between 1M and 2M (5,294 → 585, every eval episode falls). There was no eval at 1.5M, so it is
+  not known whether the loss came in segment 2 or segment 3. The resume path did not break seed 0, so the resume is not
+  shown to be the cause, and it is not ruled out either.
+- **Cheapest next check (not run):** evaluate seed 1's 1.5M checkpoint (output of `s1_seg2`'s kernel) with the frozen
+  10-episode eval. That shows which segment the collapse happened in. Late-run collapse of SAC on Humanoid is a known
+  instability. It was not in the rule's prior (§16 quotes one model at 2M).
+
+## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:20, Kaggle CPU)
+
+Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed, `0bf84989`): band 837.9–868.1 (853.0 ± 9.2, k = 5);
+`ours` counts only if `lib` reproduces; VOID if any ctrl seed ≥ 837.9. Kernel `jack-cpu-1795209812` (launched 11-20
+21:23, home in 8,790 s); result `/data/jack-logs/brain_b/row5_dmc.json`.
+
+| arm | per seed (0–4) | mean | reading |
+|---|---|---|---|
+| lib (SBX SAC, SimBa recipe) | 808.1, 832.4, 843.3, **643.6**, 853.5 | **796.2** | below the band → **lib MISSES** |
+| ours (lib + layer_norm, Brain B) | 863.0, 872.0, 875.0, 856.0, 871.9 | 867.6 | inside the band, but not counted (lib missed) |
+| ctrl (never trains, seeds 0–2) | 69.2, 162.4, 73.3 | 101.6 | fails as it must → run valid |
+
+- Without seed 3, lib's mean is 834.3, still just under 837.9. Every lib seed scores at or below ours, and the
+  10-episode evals are almost deterministic (spread < 3 within a seed), so these are differences between seeds.
+- **The rule's ONE extension applies** ("a task that misses at 5 seeds runs seeds 5..14 and is judged once more at
+  k = 15", band 841.7–864.3). Not yet built: `kernel 5` runs seeds 0–4 only. Row 6 waits, because the rule says a
+  miss on row 5 is fixed first, not stacked.

@@ -65,6 +65,33 @@ def test_env_stack_repeat2_500_decisions():
     assert float(env.action_space.low[0]) == -1.0 and float(env.action_space.high[0]) == 1.0
 
 
+def test_extension_cells_and_judge_planted():
+    """The rule's ONE extension: lib + ours on seeds 5..14, no ctrl re-run; judged
+    at k = 15 over seeds 0..14 with the first kernel's ctrl (band 841.7..864.3)."""
+    t = "cartpole-swingup"
+    c = D.cells_for("5", D.EXT_SEEDS, arms=("lib", "ours"))
+    assert len(c) == 20 and {x[2] for x in c} == set(range(5, 15)) and {x[0] for x in c} == {"lib", "ours"}
+    b = D.job_body("5", ext=True)
+    compile(b, "job", "exec")
+    assert "'ctrl'" not in b and "if False else None" in b
+    assert "if True else None" in D.job_body("5")            # the first kernel still judges itself
+    ctrl = [_cell("ctrl", t, s, 70) for s in D.CTRL_SEEDS]
+    first = {"cells": [_cell("lib", t, s, 850) for s in D.SEEDS] + [_cell("ours", t, s, 850) for s in D.SEEDS] + ctrl}
+    ext = {"cells": [_cell("lib", t, s, 850) for s in D.EXT_SEEDS] + [_cell("ours", t, s, 850) for s in D.EXT_SEEDS]}
+    v = D.judge_ext(first, ext, "5")[t]
+    assert v["band"] == [841.7, 864.3] and v["verdict"] == "lib REPRODUCES; ours REPRODUCES"
+    # 838 is inside the k=5 band but outside k=15's: the narrower band binds
+    low = {"cells": [_cell("lib", t, s, 838) for s in D.EXT_SEEDS] + ext["cells"][10:]}
+    first_low = {"cells": [_cell("lib", t, s, 838) for s in D.SEEDS] + first["cells"][5:]}
+    assert D.judge_ext(first_low, low, "5")[t]["verdict"].startswith("lib MISSES")
+    # a missing extension seed is not a pass
+    gap = {"cells": ext["cells"][1:]}
+    assert D.judge_ext(first, gap, "5")[t]["verdict"].startswith("lib MISSES")
+    # ctrl still voids
+    first_bad = {"cells": first["cells"][:-1] + [_cell("ctrl", t, 2, 841.7)]}
+    assert D.judge_ext(first_bad, ext, "5")[t]["verdict"] == "VOID"
+
+
 if __name__ == "__main__":
     n = 0
     for k, v in list(globals().items()):
