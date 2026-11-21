@@ -879,10 +879,45 @@ Long form: `/data/jack-research/research_notes/m8_living/` (parts A–C). One ho
 
 **Not verified.** Nauman's per-intervention values (figures, by eye); Meng 2020 (abstract only); all DroQ / CrossQ scores (figures); SimBa's sign on |A|/2 (code only); openrlbenchmark's SBX report, Ota 2021, D'Oro 2023 on width (not opened).
 
-## 23. One parent's voice: a from-scratch ear trained on one speaker (or TTS only), tested on strangers (2026-11-21; serves M5, the lab's `ear_one_voice.py` rule `8cc61917`; answers INBOX `RESEARCH:` LAB 11:53)
+## 23. One parent's voice: a from-scratch ear trained on one speaker (or TTS only), tested on strangers (2026-11-21; serves M5, PLAN "Ear" right column, the lab's `ear_one_voice.py` rule `8cc61917`; answers INBOX `RESEARCH:` LAB 11:53)
 
-Long form: `/data/jack-research/research_notes/one_voice_*.md`. SKELETON — research in progress (slot 16:05 UTC); parts land below as they arrive.
+Long form: `/data/jack-research/research_notes/one_voice_part{A,B,C,D}.md` (58 KB).
 
-**Question.** Is "train a small keyword ear from scratch on ONE voice (or synthetic voices only), test on unseen human speakers" answered anywhere at 100+ hearings a word? What does the record say augmentation (pitch / vocal-tract warping, speed, noise) buys back?
+**Question.** Is "one voice (or TTS only), from scratch, 100+ hearings a word → unseen human speakers" answered anywhere? **No.** No from-scratch study goes down to one training speaker; Speech Commands has no speaker-count ablation. The neighbours agree: one voice does not carry, and more hearings of it do not fix that.
 
-**Part C landed (augmentation; notes `one_voice_partC.md`; to be folded into the final section):** published VTLP warps LINEAR frequency by moving the mel filter centres, factor N(1, 0.1) clipped to [0.9, 1.1], top of band pinned (Jaitly & Hinton 2013: TIMIT PER 21.7 → 21.1). Ours (`ear_one_voice.py:130`) resamples the finished mel axis by 0.8–1.25 = a real-frequency move of 0.64–1.67×, non-uniform (computed here) — the variant the authors say they tried and found ineffective. Adults → children: speed 8%, directed VTLP 41%, voice conversion 61% of the gap closed (Shahnawazuddin 2020); random VTLP ~14% (Kathania 2022). Pitch/tempo shift: nothing or worse. No one-real-speaker test on strangers is published.
+**Already known**
+- **One human voice, a lot of it:** one speaker × 2,400 sentences, HMM from scratch → word error on three strangers 8.5 / 62.1 / 55.3% (mean 41.9; the two high rows are the other sex) vs 4.5% speaker-independent; a small normaliser fitted on 40 of the stranger's sentences → 6.8% (Huang 1991, ACL H91-1054 Table 8).
+- **Voices vs hearings:** 12 speakers × 600 utterances 7.5–9.0% vs 109 × 40: 6.5–7.1% (ACL H90-1060 Table 1).
+- **Synthetic voice count** (PRETRAINED encoder: shape only): 1 voice 62.4 ± 7.6%, 2 → 75.7, 5 → 86.3, 10 → 92.3, 22 → 94.2; real speakers 2 → 92.6, 5 → 96.9, 77 → 99.1 (Lugosch 2019, arXiv:1910.09463 Figs 3–4).
+- **TTS only, from scratch, real test:** 92 voices × 1 clip a word 56.7% vs 88.7% for as many real clips (Lin 2020, arXiv:2002.01322 Table 1, 385k weights). A new cloned voice for EVERY clip, ~3k a word: 89.3% (73k weights) vs 98.4% real; 92.1–92.6% after a pretrained-recogniser filter (arXiv:2409.12745 Table 1). **Correction to §7:** Lin's 92.6% is the pretrained-embedding head; the from-scratch 92.57% is this paper.
+- **A single voice can hurt:** adding 960 h in ONE high-quality TTS voice to 960 h of real speech moved WER 4.77 → 13.55 (Rosenberg 2019, arXiv:1909.11699).
+- **Few voices heard a lot lose to many heard once** (50k weights, from scratch, synthetic only, vs real-only): 8 voices × ~6,250 clips 75.6% worse; 90k voices × 1 clip 28.9% worse (Werchniak 2021, Tables 5–6; different TTS engines).
+- **A little real speech goes far:** real positives at 1% sampling weight cut the TTS-only miss rate 18.11 → 6.83%, 5% → 3.51, all-real 1.81 (arXiv:2408.10463 Table 3).
+- **Augmentation as stand-in voices:** VTLP on speaker-rich data buys ~0.6 points (TIMIT PER 21.7 → 21.1, Jaitly & Hinton 2013); +0.2–0.4 on Speech Commands (arXiv:2501.03523). Under a real population mismatch (92 adults → children): speed 8% of the gap, directed VTLP 41%, voice conversion 61% (Shahnawazuddin 2020). Pitch and tempo shift: nothing or worse (Lin 2020; arXiv:2503.08954).
+- **The oracle:** 7.5-month-olds carry a word across same-sex talkers, not across sex; 10.5-month-olds do (Houston & Jusczyk 2000). One talker with near-identical tokens fails at 14 months; 18 talkers succeed (Rost & McMurray 2009) — and so does ONE talker varied in pitch level, contour and duration (Galle 2015). Mother → father works at 7.5 months after fluent passages (van Heugten & Johnson 2012). Real input: ~66% from the mother, ~5 talkers a word (Bergelson 2019).
+
+**Candidates**
+1. **A handful of voices (5–10), heard often.** Every curve is steepest from 1 to 5 voices. Needs both sexes. Smallest published: 5 real speakers 96.9% (pretrained encoder). Expect most of the one-to-many gap gone by 5–10 voices.
+2. **One parent whose voice varies** (the oracle's lever: pitch level, contour, rate, loud/soft, fluent context) **+ the published warp.** A TTS parent can do this. Weak alone: random VTLP closes ~14–41% of a population gap; expect a few points.
+3. **Learn the stranger on arrival** (END-FIT: still learning on their machines). 40 sentences took a one-voice recogniser from 41.9 to 6.8% error. The cheapest route on record; no small-net keyword version is published.
+4. **Many cloned voices from a TTS**, one per clip: 89% from scratch with no real speech.
+
+**Ours beside theirs**
+
+| setting | published | ours | cost |
+|---|---|---|---|
+| warp axis | linear frequency, via the mel filter centres | finished mel axis (`ear_one_voice.py:130`) | the variant Jaitly & Hinton tried and call ineffective (no number) |
+| warp size | N(1, 0.1) clipped to [0.9, 1.1]; top of band pinned | log-uniform 0.8–1.25 (`:84`) = 0.64–1.67× in Hz, uneven (computed here) | far outside any vocal tract |
+| test-time | average over 5–21 warps doubles the gain | none | half the gain left |
+| hearings a word | 92–3,000 | 5 (`:35`) | no published neighbour below 31 |
+| parent's sex vs test | the error is across sex | not split in the reading | hides where the loss is |
+
+**Known-answer check.** None exists for one voice. Nearest: Speech Commands 35 words, from scratch, 125 clips a word → 90.3%, 1,000 → 94.8% (Lin 2020; 385k weights, ours 70k); one CPU session.
+
+**What the record does NOT answer** (worth our compute)
+- **Voices × hearings, from scratch.** AudioMNIST (60 speakers × 50 recordings of each digit; from memory, not on disk) or VCTK with word cuts: voices 1, 2, 5, 10, 30 × hearings 5, 15, 50, strangers split by sex. CPU minutes a cell. Predicted: one voice at 50 hearings 40–60% on strangers and far lower across sex; 5 voices ≥ 75% (an unreviewed 5-voice digit run reads 74.1%); voices beat hearings at every equal clip count.
+- **The published warp on one voice**, with test-time averaging, beside ours. Predicted: +2 to +5 points, never the 5-voice line.
+- **One varied voice vs one flat voice** (TTS parent, pitch/rate/contour spread). Predicted: half the gap to 5 voices. Untested in any machine.
+- **Adapting to a stranger from k hearings** (k = 1, 5, 20 a word) without forgetting the parent. Predicted: 20 hearings beat every augmentation.
+
+**Not verified:** Houston & Jusczyk's n (abstract only); Jaitly & Hinton's speaker count; Cui 2015 numbers; AudioMNIST's shape (memory); the FSDD 74.1% is a GitHub README; Lugosch's values come from figure data files and rest on a pretrained encoder; every "predicted" is inference.
