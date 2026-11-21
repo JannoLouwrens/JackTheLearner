@@ -1641,10 +1641,13 @@
     },
     "2026-11-21": {
       "by_spec": {
+        "detached:launch_A1.log": 6.47,
         "detached:launch_A2.log": 5.07,
-        "detached:launch_s2_seg2.log": 10.85
+        "detached:launch_A3.log": 0.13,
+        "detached:launch_row5_ext.log": 11.29,
+        "detached:launch_s2_seg2.log": 21.63
       },
-      "used_s": 15.92
+      "used_s": 44.59
     }
   },
   "last_child_s": {

@@ -2973,3 +2973,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `WORLD_CARD.md` "E2c, the full book": five rows beside their controls, plus win-then-lose (10/10 food runs, first-20 → last-20 meals/life falls), entropy, and critic as named findings. J15 marked DONE.
 - Philosophy served: 4 (a test that could have failed, with controls failing cleanly; no branch claimed that the table does not name) and 3 (the entropy hypothesis was raced and did not win).
 - 22:10 J10 (next order, 2 sessions free): s2 seg1 home, 1M median 4,065 is inside [3,784, 5,866]. s0 at 2M: R 5,834, M 11.91, so it misses PASS narrowly, and s1 and s2 must both pass. LAUNCHED s2 seg2 `jack-cpu-1795212583`. Philosophy 6: free sessions not left idle.
+
+## 2026-11-21 00:07–00:27 UTC · JACK · J14 Sat: A1–A3 launched, after a torch-pin wall; J10 row FAILS; brain B row 5 extension launched
+- A1+A2 pushed to Kaggle at 00:08/00:10. Both ERROR at pip in ~3.5 min: `gpu.py`'s P100 preamble constrains torch==2.5.1, and sheeprl 0.8.5 needs torch>=2.6. A1 fell back to Colab T4 and runs there. FIX `01561922`: brain A's job re-pins torch 2.6.0+cu126 (sm_60 kept) and refuses on an arch miss. A2b (`…220186`) past 9 min RUNNING, and A3 (`…220723`) RUNNING. Ear not launched; INBOX says it meets the same wall.
+- Inherited the lab lane's uncommitted `taste_eye.py` display edit (23:28) so the GPU dirt guard would pass (`f11fb1dc`).
+- J10 → KNOWN_ANSWERS Row J10-1 **FAIL**: s1 2M R 585, 10/10 fell (5,294 at 1M; learned then collapsed); s0 5,834/11.91 → 2 of 3 cannot walk. 1M median IN BAND; control 68 holds.
+- Brain B row 5 → Row B-5: lib MISSES 796.2 (one seed 643.6) vs 837.9–868.1; ours 867.6 not counted; ctrl 101.6. Built the rule's pre-stated extension (`kernel 5 ext`, `judge_ext`, planted 5/5) and LAUNCHED `jack-cpu-1795219999`.
+- Philosophy served: 3 (brain A's published rows finally running, on free GPU hours that would lapse), 4 (two misses written as misses, no rule bent, and the one pre-stated extension used as written), 6 (free compute).
