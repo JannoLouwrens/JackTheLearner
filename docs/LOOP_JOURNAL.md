@@ -3178,3 +3178,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Scar re-met: without `PYTHONPATH=/data/tools/ninjax362` both runs died in opt.update (venv ninjax 3.6.3) — the kernel pins 3.6.2.
 - `golden_kernel.py` `c4020afc`: A, B repeat, seed-1 control; 8 calls, batch 16, ep start col 33; GOLDEN line fixed before any run; planted verdict test catches 8/8. NOT launched (seats full); Kaggle install path untested.
 - Philosophy served: 7 (the Mac port), 4 (the golden now exercises the reset path it must check, and its line could fail), 6 (the 3.4 GB job kept off the customers' box).
+
+## 2026-11-21 12:37–12:50 UTC · JACK (short slot) · Next-up 1: stage-2 rule draft revised
+- First act: Kaggle: ear `…231396`, A2-v1S s0 `…248791`, J17 r0–r4 all RUNNING; 7 watchers → J14/J17 wait; J18 forge's; J10 waits on the Director; J16's golden waits on a CPU seat → Next-up 1.
+- `stage2_a_vs_b.md` (still DRAFT): ruling 65 in — primary = share of lives starting ≥ 500k that are SUSTAINED; §8's time-to-crossing and first/last capped life printed beside, not read; futility, floors and decision table read the late half. Ruling 68 in — gate 2b: B rows 1b/2b/3/3b stand, row 5 a named miss, not blocking.
+- Finding: under ruling 65 gate 1 is UNMET today (E2c reached, then lost 10/10) — stage 2 waits on BOTH J17 (eye) and forge round 1 (keep). Two new OPEN lines: θ_late, and the test on the share.
+- Philosophy served: 1 ("never stop learning" — the race can no longer be won by a brain that eats early and forgets), 3, 4.
