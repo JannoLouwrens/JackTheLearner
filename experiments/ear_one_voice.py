@@ -164,7 +164,11 @@ def fit(arm, X, y, seed):
     return net
 
 
-def run(parents_idx, tag):
+def run(parents_idx, tag, have=None):
+    """`have`: rows of an interrupted run of the SAME rule (every fit is
+    seeded by its parent alone, so a row does not depend on the rows before
+    it). They are kept, except that the LAST logged parent is fitted again
+    whole and its logged rows must reproduce exactly."""
     import torch
     torch.set_num_threads(1)
     os.makedirs(OUT, exist_ok=True)
@@ -177,13 +181,21 @@ def run(parents_idx, tag):
     at = {p: i for i, p in enumerate(train_paths)}
     Xtest = ((E._load(tests) - mu) / sd).astype(np.float16)
     rows = []
+    have = {(r["parent"], r["arm"]): r for r in (have or [])}
+    redo = max((k[0] for k in have), default=None)
     for i, spk, one, many, y in plan:
         for arm in ARMS:
+            if (i, arm) in have and i != redo:
+                rows.append(have[(i, arm)])
+                continue
             ps = many if arm == "many" else one
             X = (F[[at[p] for p in ps]] - mu) / sd
             acc = E._acc(fit(arm, X, y, i), Xtest, ty)
             rows.append({"parent": i, "speaker": spk, "arm": arm, "test": acc})
             print(json.dumps(rows[-1]), flush=True)
+            if (i, arm) in have:
+                assert have[(i, arm)] == rows[-1], ("resume does not reproduce",
+                                                    have[(i, arm)], rows[-1])
     M = {a: np.array([r["test"] for r in rows if r["arm"] == a]) for a in ARMS}
     gw, gn = M["one+warp"] - M["one"], M["one+noise"] - M["one"]
     gap = float(M["many"].mean() - M["one"].mean())
@@ -218,6 +230,9 @@ def main(argv):
         run([12, 13], "smoke")
     elif cmd == "run":
         run(list(range(N_RULE)), "rule")
+    elif cmd == "resume":           # argv[1] = the interrupted run's log
+        rows = [json.loads(l) for l in open(argv[1]) if l.startswith('{"parent"')]
+        run(list(range(N_RULE)), "rule", have=rows)
     else:
         raise SystemExit(__doc__)
 

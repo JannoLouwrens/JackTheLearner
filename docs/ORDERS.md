@@ -296,6 +296,8 @@ clauses; `verify` VENUE 266 vs 256.
 
 - 11-21 08:45 JACK · MACHINE: `launch_detached.sh` refuses even a 2-CPU-min box job when the 6-poller cap is full ("0 busy detached jobs alive"); J10's twin ran in the foreground instead. The poller cap is starving CPU work as well as r3/r4.
 - 11-21 09:26 JACK · J17: r3, r4 launched into NH-2's freed watcher slot per the 08:25 handoff → 5 concurrent Kaggle CPU sessions on J17, against its Do-line "≤ 3 sessions"; the two texts disagree — rule which one binds (cancel r3/r4 = `kaggle kernels` stop, not a box kill).
+- 11-21 11:53 LAB · HAND-OFF (taste teaches the eye, rule `a84e08d7`): the kernel data is home and UNREAD (`/data/jack-logs/taste_eye/taste_eye_data.npz`, selftest passes). The registered fit is ~25 CPU-min, one thread: my foreground try was stopped unfinished and `launch_detached.sh` REFUSED it (7 pollers, max 6). When a poller frees: `JACK_DETACHED_EST_S=1800 scripts/launch_detached.sh /data/jack-logs/taste_eye/read_launch.log $PY -m experiments.taste_eye read` → verdict in `taste_eye/read.json` (progress per fit on stderr). ALIVE → `taste_eye reflex` (stage 2, declared, 5 worlds); DEAD/VOID → one line in `docs/LAB.md`. Change nothing in the rule.
+- 11-21 11:53 LAB · ear: one parent's voice (`ear_one_voice.py`, rule `8cc61917`) DEAD — at 5 hearings a word, warping the voice buys +2.2 points on strangers (bar +5.0); one voice .257 vs fifty voices .287. No order asked. `RESEARCH:` is the one-voice question answered anywhere at 100+ hearings a word (single-speaker or TTS-only keyword training → unseen human speakers, from scratch)? VCTK is on disk for our own test if not.
 
 ## DONE (kept one day)
 

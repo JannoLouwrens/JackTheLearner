@@ -89,56 +89,53 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   material dropped from the control before believing it.
   END-FIT 1, 2, 4. Philosophy 1, 3, 4.
 
-- 11-18/20 · **A place key he learns from the passing of time** (Death &
-  persistence, VACANT; the diary's key; PLAN "Memory and sleep" right column;
-  `place_key.py`, rule first `de328d98`). Bet: a small ring-shaped network
-  trained from scratch only to give looks a moment apart in one life close
-  keys — no place tags, no compass — learns a key compared ONCE that loses
-  ≤ .10 to the 128-turn search. Kill: < .50, or < .10 over its untrained /
-  time-shuffled twins, or > .10 behind the turn search. Prior: Franzius &
-  Wiskott 2007 (slow features of a rat's view are place cells); learned
-  recall keys on record needed 10^6–10^9 pixel frames (PRIORS §6) — silent
-  at 2,880 looks of 256 numbers. **ALIVE** (worlds 730–749, read 11-20):
-  ring key **.934 ± .028 vs turn search .933** (ahead of both twins 20/20;
-  untrained .443, time-shuffled .273; shuffled tags .026 vs chance .021);
-  median miss 0.31 m; a plain MLP key .447 (DEAD: the ring anatomy is
-  needed). Reported: a stranger's key (trained next door) .932.
+- 11-18/20 · **A place key he learns from the passing of time, carried across
+  death** (Death & persistence, VACANT; `place_key.py` rule `de328d98`,
+  `place_key_carried.py` rule `f1841fc1`; long form `8cc61917`) · **ALIVE
+  twice, ENTERED as an INBOX proposal (ruling 63: stage-3 candidate):** a
+  10,000-weight ring trained only to give looks a moment apart close keys,
+  compared ONCE: **.934 vs the 128-turn search .933** (worlds 730–749;
+  untrained .443, time-shuffled .273, tags .026, chance .021; a plain MLP
+  .447 — the ring anatomy is needed). Trained once on worlds 720–724 and
+  carried to unseen worlds at 15 / 60 / 360 remembered lives: **.294 / .680 /
+  .945** vs turn search .266 / .628 / .933 vs home-grown .202 / .542 / .934.
+  What survives death is the KEY (carried) and the LOOKS (per world;
+  coverage is the limit). Disclosed: judged worlds not fresh for the second
+  bet. Cannot say: inside a brain learning to eat; another kind of world;
+  online under a real policy. Not tried: the key as the brain's place input.
   END-FIT 2, 4. Philosophy 1, 2, 3, 4.
 
-- 11-20 · **The key carried across death into a new world** (same seat;
-  `place_key_carried.py`, rule first `f1841fc1`). Bet: the key is a skill,
-  not a map — trained ONCE on worlds 720–724 (14,400 looks), never again, it
-  serves his first lives in an unseen world as well as the turn search on
-  the same few memories and better than a key grown there. Kill: > .05
-  behind the turn search at 15 or 60 lives, or < .10 over its twins, or
-  < .05 over the home-grown key at 15 lives (16/20 worlds). Prior: place
-  descriptors transfer when trained on many places (NetVLAD 2016, pixels,
-  10^5+ images, from memory); nothing from scratch at 10^4 looks.
-  **ALIVE** (730–749; remembered lives 15 / 60 / 360): carried **.294 /
-  .680 / .945** vs turn search .266 / .628 / .933 vs home-grown .202 / .542
-  / .934 (carried ahead of home 20/20 at 15 lives); untrained .126 / .252 /
-  .435, time-shuffled .088 / .155 / .322; tags .022 vs chance .021. One
-  training world alone: .284 / .657 / .940. So what survives death is two
-  things: the KEY (carried everywhere, 10,000 weights, one comparison per
-  memory) and the LOOKS (per world; coverage is still the limit — 15 lives
-  = .29). Disclosed: judged worlds were not fresh (the 11-19 run's stranger
-  number prompted the bet; the carried 15/60 numbers were unseen at rule
-  time). **ENTERED as an INBOX proposal** (diary key for stage 3 "memory and
-  sleep"). Cannot say: inside a brain also learning to eat; a different
-  kind of world or the humanoid's eye; trained online from a 16-ray or
-  128-ray eye under a real policy rather than random pushes. Not tried:
-  the key's output as the brain's place input (a learned "where am I").
-  END-FIT 2, 4. Philosophy 1, 2, 3, 4.
-
-- 11-20 · **Taste teaches the eye where food is** (Vision encoder, BY
-  DEFAULT; PLAN "Learning to eat" right column; `taste_eye.py`, rule first in
-  this commit). Bet: E2c showed a learner handed the direction to food eats
-  and one with only his eye does not — so grow the direction in him. A ring
-  network over his 128 rays, trained only on "I eat within 2 s" from random
-  held pushes (no direction ever given), points at food with its peak ray.
-  Kill: on 20 fresh worlds the peak hits in-sight food < .50 of looks, or
-  < .25 over its shuffled-label / untrained twins or over "the nearest
-  thing". Prior: weak labels localise at ImageNet scale (Oquab 2015; Zhou
-  2016, from memory); nothing at ~200 meals; LAB's linear want from 14 meals
-  died. **PENDING** — data kernel launched, not read.
+- 11-20/21 · **Taste teaches the eye where food is** (Vision encoder, BY
+  DEFAULT; PLAN "Learning to eat" right column; `taste_eye.py`, rule
+  `a84e08d7`, judge repaired before data `fe77023c`). Bet: E2c showed a
+  learner handed the direction to food eats — so grow the direction in him.
+  A ring over his 128 rays, trained only on "I eat within 2 s" from random
+  pushes, points at food with its peak ray. Kill: on 20 fresh worlds the
+  peak hits in-sight food < .50, or < .25 over shuffled / untrained /
+  "nearest thing". Prior: weak labels localise at ImageNet scale (Oquab
+  2015; Zhou 2016, from memory); nothing at ~200 meals. **DATA HOME, NOT
+  READ** (215 training meals, 2,123 positive looks of 125,840; judge
+  selftest: perfect eye 1.0, random ray .020). The fit is ~25 CPU-min: the
+  first try was stopped unfinished and the box launcher refused the second
+  (watcher cap). Handed to the workers (INBOX 11-21); the rule is unmoved.
   END-FIT 1, 5. Philosophy 1, 2, 3, 4.
+
+- 11-21 · **One parent's voice, heard as bigger and smaller people** (ASR,
+  VACANT; PLAN "Ear" right column "one voice that carries over to other
+  voices"; `ear_one_voice.py`, rule first `8cc61917`). Bet: at 5 hearings a
+  word, an ear raised on ONE speaker that warps each hearing's pitch axis
+  (0.8–1.25, a longer or shorter vocal tract) understands strangers better
+  than on the plain hearings. Kill: under +5.0 points over 12 parents, or
+  ahead on < 10, or matched noise does half as well. Prior: the record's
+  ears had ~2,600 speakers; the warp is published only with many speakers
+  already present (Jaitly & Hinton 2013, from memory); one voice: silent.
+  **DEAD** (12 parents, 4,074 strangers' recordings, chance .10): one voice
+  **.257**, warped **.279 (+2.2 points, ahead 8/12)**, matched noise .260
+  (+0.3, fails as it must), 50 voices .287. Reported: at 5 hearings one
+  voice is only 3.0 points behind fifty — but twice as chancy (spread .055
+  vs .030: which parent matters more than how many). The warp is real and
+  small; it closes .74 of a gap that is itself small. Cannot say: anything
+  at the hundreds of hearings a real parent gives (one Speech Commands
+  speaker has 5). Unrun: the same question on VCTK (on disk, 400 sentences
+  a speaker) where one voice can be heard 100+ times.
+  END-FIT 2, 3. Philosophy 2, 3, 4, 7.

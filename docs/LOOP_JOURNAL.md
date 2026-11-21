@@ -3158,3 +3158,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Debug 1-call smoke: 257 arrays, 0 skipped; the 70 old keys bit-identical to the frozen golden's c1 (capture perturbs nothing); repfeat[:,0..9] = recorded steps 11..21 exactly.
 - Found, not yet named: 22 step records per call — steps 0..10 are a second posterior scan that departs from repfeat after step 1. Every in_reset is 0 → reset masking is unexercised by this batch.
 - Philosophy served: 7 (the Mac port), 4 (the extra scan surfaced before a golden was frozen around it).
+
+## 2026-11-21 11:53 UTC · LAB · taste-eye data home but unread; one parent's voice DEAD
+- Taste teaches the eye: data home (215 training meals; judge selftest perfect 1.0 / random .020). The registered fit is ~25 CPU-min — first try stopped unfinished, the launcher refused the second (7 pollers, max 6). Made the forward 2x cheaper with an equality test; handed to the workers (INBOX). No number, rule unmoved.
+- New bet, rule first `8cc61917` (PLAN Ear, "one voice that carries"): ear on ONE speaker, 5 hearings a word, mel axis warped 0.8-1.25. DEAD: one .257, warp .279 (+2.2 pts, 8/12; bar +5.0, 10/12), matched noise .260, fifty voices .287; 12 parents, 4,074 strangers' clips.
+- The run was cut once by the harness limit at parent 11; resumed from its log, the refitted row reproduced exactly (asserted).
+- Philosophy served: 4 (a miss scored as a miss, with a control that failed as it must), 3, 7 (handed to people with other voices).
