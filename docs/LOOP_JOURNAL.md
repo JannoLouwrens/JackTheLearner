@@ -3000,3 +3000,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found: E2c's SAC already runs SBX `layer_norm=True` (`pilot_b.py:301`) and lost 10/10 → LN alone is not the cure in his world; the J10 row has no LN.
 - Cheapest open test named: s1 continued from its 1.5M checkpoint with 2 new RNG seeds (chaos vs recipe). Eval-across-CPU: no source; re-registration needs ≥50 episodes on one stated CPU. INBOX line for the Director.
 - Philosophy served: 3 (the record read before a repair is raced) and 4 (a FAIL followed toward its cause, not filed).
+
+## 2026-11-21 01:37–01:50 UTC · JACK (short slot) · J10 why step 2: chaos or recipe?
+- First act `kernels status`: A2b, A3 hold both GPU sessions (RUNNING), A1 on Colab, J10 s2 seg3 + B row 5 ext on CPU. Nothing home; J15 DONE; J14 blocked on sessions → J10.
+- Took the cheapest open test the last slot named: s1 continued from its 1.5M checkpoint (where it still walked) with 2 new RNG streams. `experiments/j10_fork.py` `30447a6f`, rule + reading frozen in the docstring before either fork: both LOST → RECIPE, both KEPT → CHAOS, else MIXED. Tests 3/3 (job compiles, mounts s1 seg2, refuses forks outside {1,2}, planted reading).
+- LAUNCHED f1 `jack-cpu-1795225164`, f2 `…225181` (Kaggle CPU, ~3 h each; 3 CPU sessions were idle, ruling 60 "no session idle"). Diagnostic only, no ledger row; the row's FAIL stands.
+- Risk named: if sbx's JAX `key` is not an attribute, the reseed only moves env/numpy noise; the row records which reseeds took.
+- Philosophy served: 4 (a FAIL followed toward its cause instead of filed) and 3 (cause measured before any §21 cure is raced).

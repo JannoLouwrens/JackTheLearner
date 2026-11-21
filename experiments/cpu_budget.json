@@ -1641,15 +1641,16 @@
     },
     "2026-11-21": {
       "by_spec": {
-        "detached:launch_A1.log": 9.17,
+        "detached:launch_A1.log": 10.07,
         "detached:launch_A2.log": 5.07,
-        "detached:launch_A2b.log": 65.08,
-        "detached:launch_A3.log": 54.14,
+        "detached:launch_A2b.log": 86.17,
+        "detached:launch_A3.log": 75.66,
         "detached:launch_k1.log": 8.76,
-        "detached:launch_row5_ext.log": 64.66,
-        "detached:launch_s2_seg2.log": 594.7
+        "detached:launch_row5_ext.log": 86.14,
+        "detached:launch_s2_seg2.log": 594.7,
+        "detached:launch_s2_seg3.log": 21.8
       },
-      "used_s": 801.58
+      "used_s": 888.37
     }
   },
   "last_child_s": {
