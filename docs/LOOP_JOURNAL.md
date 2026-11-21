@@ -3203,3 +3203,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - A2-v1S seed 1 `jack-ladder-1795268291` and seed 2 `…268355` pushed (both GPU seats busy again).
 - Ear = VOID (KNOWN_ANSWERS Row N7-kws): 182 s an epoch on a T4 → 10.1 h a seed vs the 1.5 h guess; the 10 h in-kernel deadline cut seed 0 at epoch 199/200, no test score; 3 seeds never fit one kernel. Rerun shape (one seed per kernel, deadline, or Kaggle CPU) left to the Director in J14 state.
 - Philosophy served: 3 (the ear's seat must be earned by reproducing the published number — the cost of doing so is now measured, not guessed), 4 (a cut run recorded as VOID, not read off its valid curve).
+
+## 2026-11-21 14:22–14:40 UTC · JACK (short slot) · J16 golden kernel launch + Next-up 4 named
+- First act: J17 r0–r2 home (13:29–13:51), r3/r4 + A2-v1S s1/s2 out → 2 poller seats free; J14/J17 wait on kernels, J10 on the Director → J16's launch.
+- J16: `jack-cpu-1795270995` ERROR at pip in 6 s — Kaggle image is Python 3.13, jaxlib 0.4.33 has no wheel. `cf507ea9`: uv-made 3.12 venv in the kernel, pins unchanged (box check OK). Relaunched `jack-cpu-1795271133` RUNNING (est 3 h).
+- Next-up 4: the update-1 item is sbx's training key — `SAC.load` leaves `model.key` = [0,0]. RE3 (life + numpy global RNG + key) = BIT-IDENTICAL to the unbroken run; control clean. The old twin's key check compared [0,0] with [0,0] and could not fail — fixed (key saved live in `key.npy`).
+- Philosophy served: 1 (he must carry his life across a stop — now shown possible bit-for-bit for B), 4 (a check that could not fail found and made able to), 6 (free Kaggle CPU kept working).
