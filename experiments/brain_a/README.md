@@ -574,3 +574,22 @@ NumPy-64 reference and of the official f32 jit golden `rung6_step_golden_e01491f
 equal the zero-carry step, kept rows differ (control). `--planted` 3/3 caught (erf gelu, rms eps
 1e-6, update gate without −1). Toy size (deter 64, blocks 8). The posterior SAMPLE is rung 7's.
 No speed read. Wheel re-check not run.
+
+## J16 row 2.3 — the 64-step memory pass (rung 7): references first (11-21 17:10)
+
+`rung7.py --vs-official` (jack-dv3, `PYTHONPATH=/data/tools/ninjax362`): NumPy float64 `REF_observe`
+(rung 6's `REF_step` + the OneHot sampler: unimix 1% → log → argmax(+Gumbel of file uniforms)) for 64
+steps from the zero carry, against the official `RSSM.observe` scan path at e01491f, f32, run under
+`jax.disable_jit()` with `file_noise.FileNoise` so the cursor advances per step. Toy size as rung 6,
+batch 4; resets: all rows t=0, row 1 at t=20, row 2 at t=40, row 3 never again.
+- **15/15 REFERENCES HOLD**: deter 8.5e-8, post 3.7e-7, prior 6.9e-7 ×(|ref|+1) over all 64 steps
+  (no drift growth: deter |d| 0 / 9.9e-8 / 6.8e-8 / 5.5e-8 at t 0/15/31/63); **0 sample flips of 1,024
+  latents, 0 near-ties fed** (tie rule margin < 1e-4); row 1's t=20 reset equals the zero-carry step
+  (deter exactly 0 at init — weak alone — and post 2.4e-7, |logit| 1.69); row 3 control differs 0.27.
+- Controls/planted, each FAILS as it must: constant noise flips 760/1,024; no unimix 9 flips; noise
+  one call late 852; posterior sampled from the prior logit 360; resets after t=0 ignored 7.
+- **Bookkeeping the port must copy**: creation pass = 65 sampler calls; the scoring pass makes 1
+  PRERUN call (ninjax `_prerun` of step 0, 128 uniforms) BEFORE the 64 real ones — a file-noise port
+  must skip that block or read the size1m golden one call off.
+- Golden `rung7_scan_golden_e01491f.npz` (302 KB, sha256 dd3af760…): params, inputs, the real calls'
+  uniforms [T,B,4,8], official deter/post/prior/stoch. Next: port stub + failing tests, then the port.

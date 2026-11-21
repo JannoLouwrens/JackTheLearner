@@ -3237,3 +3237,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Tests committed failing first (`f5fa4cad`, stub 0/2), then the port of one recurrent step in MLX: 2/2 eager AND compiled against the NumPy reference and the official golden; reset rows equal a fresh start, kept rows differ. Three planted wrong ports all caught (`563bce52`).
 - Next: row 2.3, the 64-step memory pass; needs a per-step golden with the posterior sampler.
 - Philosophy served: 4 (pass counted only beside a control and three caught mutants), 7 (the Mac's brain core now has a checked recurrent step).
+
+## 2026-11-21 17:05–17:20 UTC · JACK (short slot) · J16 row 2.3 references
+- First act: Kaggle — A2-v1S s2 RUNNING, s1 still QUEUED (nothing home); J17 done, J18 forge's, J10 waits the Director → J16 row 2.3.
+- `experiments/brain_a/rung7.py --vs-official` 15/15: NumPy-64 reference of the 64-step memory pass (with the posterior sampler reading file noise) vs the official scan — ≤ 6.9e-7 every step, no drift growth, 0 of 1,024 samples flipped; reset and in-batch control hold; four planted wrong references and a constant-noise control all caught.
+- Found: a reset check read "worst 0" because a zero carry gives deter exactly 0 at init — weak alone; the posterior (reads tokens) added as the real check. And ninjax's prerun eats one sampler call before the real 64 — the port must skip it.
+- Philosophy served: 4 (a check that could barely fail spotted and strengthened; reference trusted only beside caught mutants), 7 (the Mac brain's memory pass now has a checked target).
