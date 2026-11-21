@@ -839,26 +839,26 @@ Long form: `/data/jack-research/research_notes/m8_living/` (parts A–C). One ho
 
 **Not verified.** SBX's `layer_norm` placement (critic only or both) and whether SBX ships TQC; MuJoCo's cross-CPU determinism; whether any Zoo per-seed Humanoid curve dips.
 
-## 22. Five keep-it knobs with no prior: 3-step returns, the temperature's cap and target, critic weight decay, DroQ / CrossQ on a CPU, a narrow net at a high update ratio (2026-11-21; serves the forge's F2 pool and its keep round on E-food, M3; answers INBOX `RESEARCH:` FORGE 02:45)
+## 22. Five keep-it knobs with no prior: 3-step returns, temperature cap and target, critic weight decay, DroQ / CrossQ on a CPU, a narrow net at a high update ratio (2026-11-21; serves the forge's F2 pool, M3; answers INBOX `RESEARCH:` FORGE 02:45)
 
-**Question.** The forge's pool names five settings of brain B (`pilot_b.py:296-301`: SBX 0.28 SAC, 2×256, LayerNorm critic, 1 update a decision, γ 0.995, +100 a meal, 300k decisions, CPU) with no prior. What was each shown to do, at what value and scale, and what should it do to a learner that eats and then loses it? Long form: `/data/jack-research/research_notes/sec22/`. Read in TeX or code unless under "Not verified".
+**Question.** The forge's pool names five settings of brain B (`pilot_b.py:296-301`: SBX SAC, 2×256, LayerNorm critic, 1 update a decision, γ 0.995, +100 a meal, 300k, CPU) with no prior. What was each shown to do, at what scale, and what should it do to a learner that eats, then loses it? Long form: `/data/jack-research/research_notes/sec22/`.
 
 **Already known**
-- **3-step returns help value learners with sparse reward and a big replay; on SAC-like agents the record is one unquantified negative.** Rainbow ([1710.02298](https://arxiv.org/abs/1710.02298), Atari 200M frames): n=3 best of 1/3/5. D4PG ([1804.08617](https://arxiv.org/abs/1804.08617), DMC): "N=5 is uniformly better", N=1 unstable on a sparse task. Fedus 2020 ([2007.06700](https://arxiv.org/abs/2007.06700)): uncorrected n-step is "uniquely beneficial" with a larger replay but "may hurt … in regimes of high off-policyness". DrQ-v2 ([2107.09645](https://arxiv.org/abs/2107.09645)): n=3, Walker n=1. BRO ([2405.16158](https://arxiv.org/abs/2405.16158), 1M steps): n-step "does not improve the performance" (dense rewards, no number); SimBaV2 uses 1.
-- **Nobody has published a temperature cap.** 16 implementations read (SBX, SB3, rlkit, softlearning, CleanRL, jaxrl, REDQ, BRO, SimBa, …): none clips α. The one cap in print is Meta-SAC's α ≤ 1 ([2007.01932](https://arxiv.org/abs/2007.01932), Humanoid 10M) — looser than our 0.13–0.65.
-- **Every published entropy target other than −|A| is HIGHER:** −|A|/2 (jaxrl, TF-Agents, BRO, SimBa; unablated); REDQ per task: Ant (8 dims, as ours) −4. No sweep found.
-- **Our α climb has a published description:** "τ will grow to infinity if the target entropy is infeasible", then "very high temperatures lead to learning failure" ([2406.05953](https://arxiv.org/abs/2406.05953), DMC). E2c's fixed-α policy settles at −10…−20 nats; auto holds −8 by raising α. Auto α is not reliably better: Hopper fixed 0.2 3,484 ± 324 vs auto 2,572 ± 901 ([2506.05615](https://arxiv.org/abs/2506.05615)).
-- **Critic weight decay alone is weak.** Nauman 2024 ([2403.00514](https://arxiv.org/abs/2403.00514), 2×256 SAC, DMC, replay ratio 2): "generally low performance when used alone", "high synergy with full-parameter resets"; overestimation ≈ the unregularised critic's (≈1e3 vs 2e3; LayerNorm ≈15, spectral norm ≈17, by eye). Li 2023 ([2304.10466](https://arxiv.org/abs/2304.10466)): 0.01 "performs well on DMC … poor on Gym". SimBa: AdamW 1e-2; SimBaV2 removed it.
-- **DroQ** ([2110.02034](https://arxiv.org/abs/2110.02034)): 2×256, dropout 0.01 + LayerNorm, 20 updates a step; LayerNorm alone "is not sufficient in high UTD settings"; cost ≈ a 20-update SAC.
-- **CrossQ** ([1902.05605](https://arxiv.org/abs/1902.05605)): 1 update a step, no target nets, BatchRenorm (warm-up 1e5 steps), critic 2048, lr 1e-3, β1 0.5, policy delay 3. Critic 256 "reduces performance and yet still significantly outperforms SAC"; without BatchRenorm it diverges; plain BatchNorm is "prone to sudden performance collapses". Follow-up ([2502.07523](https://arxiv.org/abs/2502.07523)): weight norms grow, dead units rise; fix = weight norm + target nets back.
-- **Narrow net, many updates: no published 2×64 (or ≤ 2×128) result at ≥ 4 updates a step found.** The nearest points the other way: BRO, "a 26M model with RR=1 achieves significantly better performance than a small model with RR=15".
+- **3-step returns help value learners with sparse reward and a big replay; on SAC the record is one negative, no number.** Rainbow ([1710.02298](https://arxiv.org/abs/1710.02298), Atari): n=3 best of 1/3/5. D4PG ([1804.08617](https://arxiv.org/abs/1804.08617), DMC): "N=5 is uniformly better", N=1 unstable on a sparse task. Fedus 2020 ([2007.06700](https://arxiv.org/abs/2007.06700)): "uniquely beneficial" with a larger replay, "may hurt … in regimes of high off-policyness". BRO ([2405.16158](https://arxiv.org/abs/2405.16158)): "does not improve the performance" (dense rewards); SimBaV2 uses 1.
+- **Nobody has published a temperature cap.** 16 implementations read (SBX, SB3, rlkit, CleanRL, jaxrl, …): none clips α. The one cap in print: Meta-SAC's α ≤ 1 ([2007.01932](https://arxiv.org/abs/2007.01932), Humanoid 10M), above our 0.13–0.65.
+- **Every published entropy target other than −|A| is HIGHER:** −|A|/2 (jaxrl, BRO, SimBa; unablated); REDQ's Ant (8 dims, as ours) −4. No sweep found.
+- **Our α climb is described in print:** "τ will grow to infinity if the target entropy is infeasible" ([2406.05953](https://arxiv.org/abs/2406.05953)). E2c's fixed-α policy settles at −10…−20 nats; auto holds −8 by raising α. Auto is not reliably better: Hopper fixed 0.2 3,484 ± 324, auto 2,572 ± 901 ([2506.05615](https://arxiv.org/abs/2506.05615)).
+- **Critic weight decay alone is weak.** Nauman 2024 ([2403.00514](https://arxiv.org/abs/2403.00514), 2×256 SAC, DMC, replay ratio 2): "generally low performance when used alone", "high synergy with full-parameter resets"; overestimation ≈ no regulariser's (1e3 vs 2e3; LayerNorm 15, spectral norm 17, by eye). Li 2023 ([2304.10466](https://arxiv.org/abs/2304.10466)): 0.01 good on DMC, "poor" on Gym. SimBa 1e-2; SimBaV2 removed it.
+- **DroQ** ([2110.02034](https://arxiv.org/abs/2110.02034)): 2×256, dropout 0.01 + LayerNorm, 20 updates a step, cost ≈ a 20-update SAC.
+- **CrossQ** ([1902.05605](https://arxiv.org/abs/1902.05605)): 1 update a step, no target nets, BatchRenorm (warm-up 1e5 steps), critic 2048, lr 1e-3, policy delay 3. Critic 256 "reduces performance and yet still significantly outperforms SAC"; plain BatchNorm is "prone to sudden performance collapses". Follow-up ([2502.07523](https://arxiv.org/abs/2502.07523)): its weight norms grow and units die; target nets came back.
+- **Narrow net, many updates: no published 2×64 (or ≤ 2×128) result at ≥ 4 updates a step found.** The nearest points the other way (BRO): "a 26M model with RR=1 achieves significantly better performance than a small model with RR=15".
 
 **Candidates** (predictions; knobs read in the installed SBX 0.28)
-1. **`n_steps=3`** — a knob. SBX's target is r₁..₃ + γ³(min Q − α log π): uncorrected, entropy only at the bootstrap state (`sbx/sac/sac.py:292-297`). Fits us on paper: sparse +100, whole-run replay, overestimating critic (Meng 2020: multi-step "significantly less affected"). At OUR budget: earlier first capped life; keeping it unanswered; Fedus's old-data caveat grows with the buffer.
-2. **A LOWER entropy target with auto α** (`target_entropy=-16`) — a knob. Lets the policy be as sharp as the fixed-α runs became, so α need not climb. Mechanism published; the value is ours — no paper ran a target below −|A|. Expect: α stays under 0.1; the loss may remain (fixed 0.1 lost it 5/5 with no α climb).
-3. **CrossQ small** (`sbx.CrossQ`, critic [256,256]) — a knob, ≈ 1× our cost (inf). SBX's default critic is [1024,1024] ≈ 10× (inf), the paper's 2048 ≈ 40× (inf). Its 100k BatchRenorm warm-up is a third of our run, i.e. the collapse-prone plain-BatchNorm phase.
-4. **Weight decay 1e-2 (AdamW) ONLY paired with K1's resets**; alone the record predicts no change. SBX's `optimizer_class` applies to actor and critic alike — critic-only needs code.
-- **Not supported:** a temperature cap (unpublished; a home-made idea → `inventor`, not `published`); DroQ (12–14× update cost (inf), and its only new part over our LayerNorm critic is dropout 0.01); 2×64 at a high update ratio (no positive result, one opposing).
+1. **`n_steps=3`** — a knob. SBX's target is r₁..₃ + γ³(min Q − α log π): uncorrected, entropy only at the bootstrap state (`sbx/sac/sac.py:295`). Fits us on paper: sparse +100, whole-run replay, overestimating critic (Meng 2020, [2006.12692](https://arxiv.org/abs/2006.12692): multi-step "significantly less affected"). At OUR budget: an earlier first capped life; keeping it is unanswered.
+2. **A LOWER entropy target with auto α** (`target_entropy=-16`) — a knob. A target the sharp policy can meet, so α need not climb. Mechanism published; the value is ours — no paper ran a target below −|A|. Expect α under 0.1; the loss may remain (fixed 0.1 lost it 5/5 with no climb).
+3. **CrossQ small** (`sbx.CrossQ`, critic [256,256]) — a knob, ≈ 1× our cost (inf). SBX's default [1024,1024] ≈ 10×, the paper's 2048 ≈ 40× (inf). Its 100k BatchRenorm warm-up is a third of our run — the collapse-prone plain-BatchNorm phase.
+4. **Weight decay 1e-2 (AdamW) ONLY paired with K1's resets**; alone the record predicts no change. SBX's `optimizer_class` sets actor and critic alike; critic-only needs code.
+- **Not supported:** a temperature cap (unpublished: `inventor`); DroQ (12–14× update cost (inf) for dropout 0.01 on top of our LayerNorm); 2×64 at a high update ratio (no result for, one against).
 
 **Ours beside theirs**
 
@@ -866,15 +866,15 @@ Long form: `/data/jack-research/research_notes/m8_living/` (parts A–C). One ho
 |---|---|---|---|
 | n | 3 (Rainbow, DrQ-v2), 5 (D4PG) | 1 | credit for a meal moves 1 step an update |
 | entropy target | −dim(A) or higher (−4 on 8 dims) | fixed α 0.1; auto −8 | skilled policy sits at −10…−20: target infeasible |
-| critic regulariser | LayerNorm; + resets; AdamW 1e-2 | LayerNorm only | same as the top DMC entry, still lost 10/10 |
+| critic | LayerNorm; + resets; AdamW | LayerNorm | the top DMC entry, still lost 10/10 |
 | updates a step · reward | 1–20 · dense | 1 · +100 sparse | high-ratio results and BRO's n-step negative do not transfer |
 
-**Known-answer check.** n-step: none exists for SAC (D4PG: curves only). Temperature: SAC + gSDE, auto α, PyBullet 1M, 10 runs: Ant 3,459 ± 52, Hopper 2,646 ± 45 ([2005.05719](https://arxiv.org/abs/2005.05719)). CrossQ / DroQ: curves only (openrlbenchmark's SBX report not read). CPU wall-clock: NOT measured for any.
+**Known-answer check.** n-step: none exists for SAC (D4PG: curves only). Temperature: SAC + gSDE, auto α, PyBullet 1M: Ant 3,459 ± 52, Hopper 2,646 ± 45 ([2005.05719](https://arxiv.org/abs/2005.05719)). CrossQ / DroQ: curves only. CPU wall-clock: NOT measured for any.
 
-**What the record does NOT answer** (cheapest first)
-- Seconds per 1,000 updates of CrossQ [256,256] / [1024,1024] and SAC with 20 updates on one Kaggle core — minutes; must precede any CrossQ or DroQ candidate.
-- Does n=3 keep the skill, or only reach sooner? E-food, 5 seeds, 300k. Prediction: first capped life earlier than 18–47k; late lives unchanged.
-- Does target −16 stop auto α's climb, and the loss with it? Same arm. Prediction: α stays < 0.1; lost anyway in ≥ 3/5.
-- Weight decay + resets against resets alone — only if K1 survives.
+**What the record does NOT answer**
+- Seconds per 1,000 updates of CrossQ [256,256] / [1024,1024] on one Kaggle core — minutes; before any CrossQ candidate.
+- n=3 on E-food, 5 seeds, 300k. Prediction: first capped life before 18–47k; late lives unchanged.
+- Target −16, same arm. Prediction: α stays < 0.1; lost anyway in ≥ 3/5.
+- Weight decay + resets vs resets alone — only if K1 survives.
 
-**Not verified.** Nauman's per-intervention values (figures, by eye); Meng 2020 (abstract only); BRO's weight-decay value; all DroQ / CrossQ scores (figures); SimBa's sign on |A|/2 (code only); Acme / TD-MPC n-step; Ota 2021, Henderson 2018, D'Oro 2023 on width (not opened).
+**Not verified.** Nauman's per-intervention values (figures, by eye); Meng 2020 (abstract only); all DroQ / CrossQ scores (figures); SimBa's sign on |A|/2 (code only); openrlbenchmark's SBX report, Ota 2021, D'Oro 2023 on width (not opened).
