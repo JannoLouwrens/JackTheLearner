@@ -2601,3 +2601,28 @@ DECIDE: D57
              human-like, or learn to walk more slowly, than a creature
              given a borrowed movement module.
   decide_by: 2026-11-29
+
+---
+
+## D58 — Can the Kaggle account reach its free TPU at all? (Auditor, 2026-11-21)
+
+Kaggle shows this account 20 free TPU-hours a week beside the 30 GPU-hours,
+and you chose the free TPU over a paid trial. Order S12 built the door. Two
+jobs pushed from this box asking for a TPU (the old machine name at 16:04
+and the current one at 21:09 on Nov 20) were accepted and then run on an
+ordinary CPU machine; Kaggle billed 0.00 TPU-hours. All 20 hours of the
+week lapsed. Nothing on the box can tell whether the account is allowed a
+TPU: that shows only on the Kaggle website (is the account phone-verified;
+does a new notebook offer "TPU" under Accelerator). Nothing is blocked —
+brain A's runs are on the free GPU.
+
+DECIDE: D58
+  class:     conduct
+  blocks:    nothing today (order S12 (a), the TPU gate test)
+  default:   STOP TRYING. S12 (a) closes as "TPU unreachable from the box",
+             the TPU line leaves the owner's page, and no further push asks
+             for one. Brain A stays on the free GPU and Colab. Silence
+             adopts this; the cost is 20 free accelerator-hours a week
+             left unused, and the question of whether Dreamer runs faster
+             on a TPU stays unanswered.
+  decide_by: 2026-11-28
