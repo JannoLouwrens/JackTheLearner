@@ -1643,16 +1643,16 @@
       "by_spec": {
         "detached:launch_A1.log": 18.9,
         "detached:launch_A2.log": 5.07,
-        "detached:launch_A2b.log": 129.29,
-        "detached:launch_A3.log": 118.81,
+        "detached:launch_A2b.log": 648.13,
+        "detached:launch_A3.log": 281.21,
         "detached:launch_f1.log": 43.61,
         "detached:launch_f2.log": 43.0,
         "detached:launch_k1.log": 8.76,
         "detached:launch_row5_ext.log": 139.96,
         "detached:launch_s2_seg2.log": 594.7,
-        "detached:launch_s2_seg3.log": 64.98
+        "detached:launch_s2_seg3.log": 75.74
       },
-      "used_s": 1167.08
+      "used_s": 1859.08
     }
   },
   "last_child_s": {

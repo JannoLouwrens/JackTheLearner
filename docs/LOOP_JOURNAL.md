@@ -3007,3 +3007,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - LAUNCHED f1 `jack-cpu-1795225164`, f2 `…225181` (Kaggle CPU, ~3 h each; 3 CPU sessions were idle, ruling 60 "no session idle"). Diagnostic only, no ledger row; the row's FAIL stands.
 - Risk named: if sbx's JAX `key` is not an attribute, the reseed only moves env/numpy noise; the row records which reseeds took.
 - Philosophy served: 4 (a FAIL followed toward its cause instead of filed) and 3 (cause measured before any §21 cure is raced).
+
+## 2026-11-21 02:22–02:45 UTC · JACK (short slot) · J14: brain A's three rows home — A1 and A3 PASS, A2 owes its extension
+- First act `kernels status`: A1 home on Colab (1.90 h); A2b, A3 COMPLETE on Kaggle; J10 s2 seg3, f1, f2 RUNNING.
+- Scored by the frozen rule: A1 PASS (782.3 @100K, 984.1 @200K), A3 PASS (956.1 @200K), A2 MISS @100K (403.4 vs 438–518) but in band @200K → extension seeds 3–4 due. Controls far below every band. Brain A's first reproduced published rows.
+- Both Kaggle watchers died AFTER the jobs finished: whole-output download (1.2 GB) > gpu.py's 300 s timeout. JSONs recovered from the download dirs; receipts not written. INBOX line.
+- Launched A in his world (`jack-ladder-1795227930`) and the ear (`…228077`) — both GPU sessions held; poller cap 6/6 → A2 ext is the next slot's first launch.
+- Philosophy served: 3 (a candidate brain holds its seat only after reproducing the published record) and 6 (the free GPU week kept busy).
