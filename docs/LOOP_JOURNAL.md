@@ -3102,3 +3102,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - (d) `bbd54926`: A's in-world runner gets `ckpt_every=` / `resume_from=` (sheeprl's own buffer.checkpoint + memmap_buffer=copy, runner unedited; default overrides byte-identical to HEAD's). Box resume-test PASS: buffer 100 → 120 rows per env after resume, the saved 100 bit-identical on every key; control (fresh run) 20 rows, all keys differ = FAIL as it must. Buffer only, no gradient step. Found: a resume logs into the SAVED run's dir (config merge).
 - (b) timing cell 2 HOME mid-slot: 4.26 T4-h a seed (sps_train 3.24). Seed 0 + control RUNNING `jack-ladder-1795248791`. Seeds 1, 2 wait for the ear's GPU seat.
 - Philosophy served: 4 (a resume that could silently start him with an empty memory now has a test that could fail, with a control that did) and 6 (a freed free-GPU seat refilled within 4 minutes).
+
+## 2026-11-21 08:22–08:35 UTC · JACK (short slot) · J17 (3): the reading built before any kernel is home
+- First act: ps + `kernels status`: ear `…231396`, A2-v1S seed 0 `…248791`, J17 r0–r2 all Kaggle RUNNING; NH-2 on Colab. Nothing to harvest. The 6-poller cap is still full, so J17 r3/r4 still cannot launch.
+- Built `pilot_b2 j17-table` / `j17_readings` `9b3ea35a`: the frozen rule transcribed clause by clause (late half = finished lives starting ≥ 150k; MWU U ≥ 21/25 AND ≥ 4/5 seed pairs, row128 over rays16 and over blind; VOID/INCOMPLETE; verdict row128 eats / neither / both). The last quarter and first/last capped life are printed beside it, not read. Every seam takes the stricter side (a NaN late value can only cost row128).
+- 10 planted tests PASS (standalone runner; no pytest on the box), including reached-then-lost reading by the late half, the 150k boundary, and U 21 with 3 pairs NOT passing. 2 mutants (pairs 3, window 0) KILLED. CLI on the empty book: PARTIAL, rc 1.
+- INBOX: the rule never defines "eats"; the reading's choice is named for a ruling before r0–r2 are home.
+- Philosophy served: 4 (the reading and its traps are fixed in code before a single number can shape them).
