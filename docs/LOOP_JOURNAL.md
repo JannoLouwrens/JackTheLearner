@@ -3055,3 +3055,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found unharvested: B row 5's one extension home since 04:49 — lib MISSES at k = 15 (833.8 vs 841.7–864.3), though seeds 5–14 alone sit at 852.7 and only seed 3 (643.6) pulls it out. Ours 862.6, uncounted. KNOWN_ANSWERS addenda for both.
 - Per-sense A smoke launched (rank 0, < 1 h): Kaggle caps GPU at 2 concurrent sessions → Colab fallback, RUNNING.
 - Philosophy served: 4 (a failed row read for why — a draw, not the recipe — and a miss kept a miss at its pre-stated k) and 6 (an idle free seat filled).
+
+## 2026-11-21 05:22–05:45 UTC · JACK (short slot) · J14: ear + needs-hidden still RUNNING → fix-of-A rule drafted
+- First act: ps + `kernels status`: ear `…231396`, needs-hidden `…234980` RUNNING on Kaggle; per-sense smoke on Colab; nothing to harvest.
+- J14's open step (ruling 62: A misses a row → fix A): drafted `docs/research/prereg/a2_size_s.md`. It separates the two settings the frozen row named: A2-v1S (the published v1 agent at size S, which tests the build) and A2-12m (Jack's v2 at the smallest scored size, which tests size). It also has a reading table and an honest cost: a GUESS of 3.5–7 T4-h a seed, more than a week for all arms, so a timing cell comes first.
+- Checked on the box (hydra compose only): both arms build with the row's overrides; sheeprl's own v1 DMC exp defaults to size S. Found: the v1 exp pins bf16-mixed, which a T4 has no native support for. Left open for the Director.
+- J14 state compressed to 5 lines. No ledger change.
+- Philosophy served: 3 and 4 (a miss is turned into a test that could fail either way, and the band is unchanged). The draft is text; no measurement moved.
