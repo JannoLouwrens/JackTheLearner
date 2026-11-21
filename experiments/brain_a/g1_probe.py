@@ -64,6 +64,10 @@ def main(argv=None):
                     help="2.1: `debug` (G1, unchanged) or `defaults size1m` (+ debug's jax cpu/prealloc only)")
     ap.add_argument("--noise-n", type=int, default=None,
                     help="2.1: draws per kind when MAKING the noise file (size1m needs ~2.3M uniform a call)")
+    ap.add_argument("--episode-start", type=int, default=None, metavar="COL",
+                    help="2.1: batch column where a new episode starts on EVEN rows only (is_first "
+                         "there, is_last the column before); odd rows are the in-batch control. "
+                         "Default None = the batch byte-identical to before (frozen debug golden)")
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VAL",
                     help="0.4d iii: extra official config flag, e.g. agent.opt.warmup=0 (a LISTED difference)")
     a = ap.parse_args(argv)
@@ -132,6 +136,15 @@ def main(argv=None):
         else:
             v = rng.integers(0, 2**31 - 1, shape).astype(sp.dtype)  # e.g. stepid
         batch[k] = v
+    if a.episode_start is not None:
+        # 2.1: put rung 6's reset path in the golden — a real replay chunk crosses episode
+        # boundaries; ours did not (every in_reset 0). Built AFTER the rng draws, so every
+        # other value is unchanged; only these booleans move.
+        c = a.episode_start
+        assert 1 <= c < T, (c, T)
+        batch["is_first"][0::2, c] = True
+        batch["is_last"][0::2, c - 1] = True
+        print("EPISODE_START col", c, "rows", list(range(0, B, 2)), flush=True)
 
     import jax
     tr = [t for t in a.trace.split(",") if t]
@@ -174,7 +187,7 @@ def main(argv=None):
     rec = {"versions": versions(), "preset": a.preset, "steps": a.steps, "seed": a.seed,
            "step_seed_offset": a.step_seed_offset, "jit": a.jit, "disable_jit": a.disable_jit,
            "first_move": first_move, "batch_keys": sorted(batch),
-           "B": B, "T": T, "noise_file": a.noise_file, "noise_at_init": noise_at_init, "noise_draws": draws, "n_params": len(params), "params": params, "metrics": mets_all}
+           "B": B, "T": T, "episode_start": a.episode_start, "noise_file": a.noise_file, "noise_at_init": noise_at_init, "noise_draws": draws, "n_params": len(params), "params": params, "metrics": mets_all}
     pathlib.Path(a.out).write_text(json.dumps(rec, indent=1, sort_keys=True))
     print("G1_PROBE", a.out, "n_params", len(params), "metric calls", len(mets_all))
     for k, v in first_move.items():
