@@ -218,13 +218,15 @@ def run_one(kind: str, anneal: int, seed: int, steps: int = STEPS, t1: int = T1,
             "delta": float(np.mean(devs)) if devs else None, "h_final": env.h.tolist()}
 
 
-def judge(runs: list) -> dict:
+def judge(runs: list, seeds=None) -> dict:
+    """`seeds` = the rule's seed list (NH-1: SEEDS; NH-2: NH2_SEEDS). Bands and clauses are one text."""
+    SEEDS = globals()["SEEDS"] if seeds is None else list(seeds)
     by = {}
     for r in runs:
         by.setdefault(f"{r['kind']}@{r['anneal']}", {})[r["seed"]] = r["delta"]
     med = {c: float(np.median(list(v.values()))) for c, v in by.items()}
     out = {"medians": med, "n": {c: len(v) for c, v in by.items()}}
-    if any(len(by.get(c, {})) < len(SEEDS) for c in CELLS):
+    if any(set(by.get(c, {})) != set(SEEDS) for c in CELLS):   # exactly the rule's seeds, no other
         out["verdict"] = "INCOMPLETE"
         return out
     if med["frozen@5000"] <= 5.0:
@@ -255,6 +257,61 @@ print("DONE", flush=True)
 '''
 
 
+# ---------------------------------------------------------------------------------------------
+# NH-2 (J14 (c)) — FROZEN by ruling 70, rule text `docs/research/prereg/needs_hidden_nh2.md`.
+# ONE apparatus change against NH-1: mu on the walkable corner (MUS_INSIDE, the published map).
+# Every band and clause is `judge()` above, unchanged. Seeds 10-19 (never 0-9: the pilot looked at
+# two of them), no extension, its own output tag (`nh2_grid_*`, which NH-1's `score` glob
+# `needs_grid_*` cannot match). The rule's GATE is enforced here, not remembered: the kernel is
+# refused unless BOTH pilot files exist and read Delta < 5.0.
+# ---------------------------------------------------------------------------------------------
+NH2_SEEDS = list(range(10, 20))
+NH2_PILOT_SEEDS = (2, 5)
+NH2_GATE = 5.0
+NH2_CELLS = list(CELLS)   # the same six cells, one kernel
+
+_KERNEL_BODY_NH2 = r'''
+import json, sys, time
+from experiments.needs_grid_row import CELLS, MUS_INSIDE, NH2_SEEDS, run_one
+plan = __PLAN__
+runs = []
+for cell in plan:
+    kind, anneal = CELLS[cell]
+    for s in NH2_SEEDS:
+        t0 = time.time(); r = run_one(kind, anneal, s, mus=MUS_INSIDE); r["wall_s"] = round(time.time() - t0, 1)
+        r["mus"] = MUS_INSIDE; r["rule"] = "NH-2"
+        runs.append(r); print("CELL", cell, s, r["delta"], r["wall_s"], flush=True)
+        json.dump({"rule": "NH-2", "mus": MUS_INSIDE, "runs": runs}, open(__TAG__ + ".json", "w"))
+print("DONE", flush=True)
+'''
+
+
+def nh2_gate(out_dir: str = None) -> dict:
+    """The rule's gate, read from the pilot's own files. open=True only if BOTH seeds read
+    Delta < 5.0; a missing or unreadable file is closed (unknown is not a pass)."""
+    out_dir = OUT if out_dir is None else out_dir
+    deltas = {}
+    for s in NH2_PILOT_SEEDS:
+        try:
+            r = json.load(open(os.path.join(out_dir, f"pilot_mu_inside_dqn5000_s{s}.json")))
+            ok = (r.get("seed") == s and r.get("kind") == "dqn" and r.get("anneal") == 5000
+                  and r.get("steps") == STEPS and [tuple(m) for m in r.get("mus", [])] == MUS_INSIDE)
+            deltas[s] = float(r["delta"]) if ok and r.get("delta") is not None else None
+        except Exception:
+            deltas[s] = None
+    is_open = all(d is not None and d < NH2_GATE for d in deltas.values())
+    return {"open": is_open, "deltas": deltas, "gate": NH2_GATE,
+            "reading": "LAUNCH NH-2" if is_open else
+                       ("WAIT: a pilot seed has not read" if any(d is None for d in deltas.values())
+                        else "NO NH-2: moving mu does not explain the miss; next pilot = stat bounds")}
+
+
+def kernel_body_nh2(cells: list, tag: str) -> str:
+    if sorted(cells) != sorted(NH2_CELLS):
+        raise SystemExit(f"NH-2 is all six cells in one kernel, as NH-1: {NH2_CELLS}")
+    return _KERNEL_BODY_NH2.replace("__PLAN__", repr(list(cells))).replace("__TAG__", repr(tag))
+
+
 def kernel_body(cells: list, tag: str) -> str:
     for c in cells:
         if c not in CELLS:
@@ -283,6 +340,34 @@ def main(argv) -> int:
         for p in sorted(glob.glob(os.path.join(OUT, "needs_grid_*.json"))):
             runs += json.load(open(p)).get("runs", [])
         print(json.dumps(judge(runs), indent=1))
+        return 0
+    if cmd == "gate-nh2":
+        g = nh2_gate()
+        print(json.dumps(g))
+        return 0 if g["open"] else 1
+    if cmd == "score-nh2":
+        import glob
+        runs = []
+        for p in sorted(glob.glob(os.path.join(OUT, "nh2_grid_*.json"))):
+            runs += json.load(open(p)).get("runs", [])
+        print(json.dumps(judge(runs, NH2_SEEDS), indent=1))
+        return 0
+    if cmd == "kernel" and "--mu-inside" in argv:   # NH-2: the whole row, one kernel, gated
+        from experiments.gpu import build_job, result_json, submit
+        g = nh2_gate()
+        print("GATE", json.dumps(g), flush=True)
+        if not g["open"]:
+            return 3
+        tag = "nh2_grid_all6_s10_19"
+        body = kernel_body_nh2(NH2_CELLS, tag)
+        sub = submit(build_job(body), prefer="kaggle", est_hours=0.3 + 0.35 * len(NH2_CELLS),
+                     timeout_s=int(3600 * (1 + 0.5 * len(NH2_CELLS))), fetch=[tag + ".json"])
+        print("SUBMIT", sub.backend, sub.ok, sub.job_id, sub.message, flush=True)
+        if not sub.ok:
+            return 1
+        dst = os.path.join(OUT, tag + ".json")
+        open(dst, "w").write(json.dumps(result_json(sub, tag + ".json")))
+        print("WROTE", dst, flush=True)
         return 0
     if cmd == "kernel" and len(argv) > 2:   # e.g. kernel dqn@5000 gmq@5000 frozen@5000
         from experiments.gpu import build_job, result_json, submit

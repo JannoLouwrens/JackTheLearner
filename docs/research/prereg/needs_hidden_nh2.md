@@ -1,10 +1,15 @@
-# NH-2 — the needs-hidden row, re-registered (DRAFT, text only, no seed)
+# NH-2 — the needs-hidden row, re-registered ONCE (FROZEN by ruling 70)
 
-Drafted 2026-11-21 06:45 UTC by the JACK lane (J14), **before the μ-inside
-pilot (`needs_grid_row pilot 2|5`, launched 06:26) has read anything.** The
-Director freezes it; until then no cell of it runs. NH-1 (`5464c5b8`) stays
-frozen and FAILED as recorded (KNOWN_ANSWERS Row NH-1); this rule does not
-re-score it.
+**Status: FROZEN 2026-11-21 by ruling 70 (`docs/DECISIONS_RESOLVED.md`) = the
+draft `5e043f6c` as written BEFORE the μ-inside pilot read anything, with ONE
+amendment: seeds 10–19 (never 2, 5 or NH-1's 0–9 — the pilot looked at two of
+them). This commit is the freeze; no NH-2 cell has run and neither pilot
+seed has read at freeze time.** No extension; own output tag (`nh2_grid_*`);
+σ = I as the text says (the σ 1.4 pair is not added). The gate below stands
+as written and is enforced in code (`needs_grid_row.nh2_gate`: `kernel
+--mu-inside` refuses unless both pilot files read Δ < 5.0). NH-1
+(`5464c5b8`) stays frozen and FAILED as recorded either way; a second miss
+is a miss. Where the text below says "seeds 0–9", read 10–19.
 
 ## Why a new rule (KNOWN_ANSWERS NH-1 + addendum)
 
@@ -50,13 +55,13 @@ read 17.2 (s2) and 25.0 (s5) on the same seeds).
   pilot, then its own rule. A pilot is evidence for WHICH row to run, never a
   row.
 
-## OPEN for the Director
+## OPEN for the Director — CLOSED by ruling 70 (σ = I; runs this week behind the ear and the A2 fix)
 
 1. σ: keep Σ = I (default, the text) or add σ = 1.4 as a second R1 pair
    (+20 runs, ~0.8 T4-h) — the figure reading vs the text.
 2. Whether NH-2 runs on this week's hours behind the ear and the A2 fix.
 
-Code: `experiments/needs_grid_row.py` needs a `kernel --mu-inside` switch
-(the frozen NH-1 path byte-identical, a planted test as for the pilot) and a
-separate output tag so `score` does not mix NH-1 and NH-2 runs. Not built in
-this draft.
+Code (built 11-21 07:20, with this freeze): `needs_grid_row kernel
+--mu-inside` (all six cells, seeds 10–19, tag `nh2_grid_all6_s10_19`),
+`gate-nh2`, `score-nh2`. NH-1's kernel body is tested byte-identical by hash;
+NH-1's seeds cannot score under NH-2 nor NH-2's under NH-1.
