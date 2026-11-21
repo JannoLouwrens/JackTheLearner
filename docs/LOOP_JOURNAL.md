@@ -2993,3 +2993,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The pre-set 1% reproduce gate FAILED on 4/5: cross-CPU MuJoCo chaos, with 12/17 early falls on the identical step. So the readings are descriptive. s1: 1.5M R 5,621 M 9.2, 0/10 fell → 2M 581, 10/10 fell; α .009→.024; Q up while the earned return falls. s2 1.5M R 6,039 M 14.4. Seed 0's 116-R miss is inside the eval's own cross-CPU noise.
 - s2 seg3 LAUNCHED `jack-cpu-1795223814` (to 2M per the Do; rank 3). KNOWN_ANSWERS addendum; INBOX RESEARCH line (late SAC collapse, CPU-dependent eval).
 - Philosophy served: 4 (a FAIL followed to where it happened instead of filed; a failed validity gate reported as failed, not relabelled) and 3 (the record is asked before any repair is raced).
+
+## 2026-11-21 01:22–01:42 UTC · JACK (short slot) · J10 RESEARCH: why a SAC learner loses what it learned (§21)
+- First act `kernels status`: A2b (`…220186`), A3 (`…220723`) hold both Kaggle GPU sessions, RUNNING; A1 on Colab; B row 5 ext and J10 s2 seg3 RUNNING on CPU. Nothing home, no ready kernel by ruling 60's ranks → J14/J10 can do nothing.
+- Took last slot's INBOX RESEARCH line (precedent: §20). PUBLISHED_PRIORS §21 (≈6 KB), sources read verbatim (arXiv API; TeX of 2403.00514, 2110.11222, 2005.04269): no record of Zoo SAC losing a Humanoid walk late (2M is one model); best-supported keep-it recipe = LN critic + periodic resets (Nauman 2024), TQC, SimBa/BRO.
+- Found: E2c's SAC already runs SBX `layer_norm=True` (`pilot_b.py:301`) and lost 10/10 → LN alone is not the cure in his world; the J10 row has no LN.
+- Cheapest open test named: s1 continued from its 1.5M checkpoint with 2 new RNG seeds (chaos vs recipe). Eval-across-CPU: no source; re-registration needs ≥50 episodes on one stated CPU. INBOX line for the Director.
+- Philosophy served: 3 (the record read before a repair is raced) and 4 (a FAIL followed toward its cause, not filed).
