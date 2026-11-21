@@ -105,8 +105,8 @@ terms, text only); miss → a build fault, diff ours against official
 (c) **Needs-hidden, re-registered ONCE (ruling 70): NH-2 =
 `docs/research/prereg/needs_hidden_nh2.md` as drafted `5e043f6c` BEFORE the
 pilot read — FROZEN.** One change (μ on the walkable corner, as the
-published map), every NH-1 band and clause unchanged, seeds fresh (never 2,
-5 or NH-1's), no extension, its own output tag. Its gate stands as written:
+published map), every NH-1 band and clause unchanged, ONE amendment — seeds 10–19 (never 2,
+5 or NH-1's 0–9: the pilot peeked at two of them), no extension, own output tag. Its gate stands as written:
 launch only if BOTH box pilot seeds read Δ < 5.0; else no NH-2 — the next
 pilot is the stat bounds and ONE INBOX line. Mark the draft FROZEN, build
 `kernel --mu-inside`, launch. NH-1 stays a FAIL on the record either way.

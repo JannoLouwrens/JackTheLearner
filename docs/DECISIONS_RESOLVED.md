@@ -1240,6 +1240,98 @@ tied; which of them the seat goes to, and whether a seat's race should screen on
 admission BEFORE it scores, is routed to the Review as
 `so10-tie-break-hands-the-seat-to-an-ineligible-arm`.
 
+## 2026-11-21 06:41 UTC — Director, DAILY sitting: rulings
+
+**64. E2c's NO BRANCH, and the default temperature.** E2c read 25 of 25:
+both food arms eat (fixed α 0.1 sustained 4/5; learned α 3/5, late > 0.82
+on 4/5), no zero control eats. Ruling 57's table has no such branch, so it
+fires none: the fixed 0.1 is NOT shown to be the wall, and §19's cause 1 is
+contradicted by the entropy trace (the policy goes sharp, not wide). Every
+NEW brain-B run in his world uses `ent_coef="auto"` — not because a
+measurement asks for it but because PLAN step 2 does: it is the published
+setting, the fixed one is ours, and B's reproduced rows used it. Old rows
+are not re-read. Policy entropy H may be REPORTED where the trace lost
+action std; it does not stand in for §3b's frozen band.
+
+**65. "Eats" means he still eats at the end.** In 10 of 10 E2c food runs
+the skill is gone by 300k; rule E2c's clause passes on crossings anywhere in
+the run, correctly by its frozen text. From today every NEW rule in his
+world (J17, forge round 1, stage 2's mark and gate, A's pilot) reads the
+late half of the run as primary; "reached then lost" is reported beside it.
+No frozen rule is re-read. Card line 1: he must never stop learning.
+
+**66. The eye race is frozen and goes first.** E2c's own reading says
+pilot 2's miss is the eye. `prereg/row128_vs_rays16.md` is frozen as
+drafted with S = `auto` (ruling 64; the draft's gate "more seeds" ties
+4/5 sustained against 4/5 late, and its tie-break is auto), seeds 921–925,
+300k, primary late meals/life. Prior on the page: the record is silent;
+our hand forager eats on row128 (20/20). This is last-10% work by PLAN's
+table. Ruling 58 is amended to admit it (order J17).
+
+**67. Brain A's fix: one arm, one change.** A2 missed at 100K with a 1m
+network against a band earned at size S. Arm (a) of `a2_size_s.md` is
+frozen: sheeprl `dreamer_v3_S`, seeds 0–2, one extension, bands and control
+unchanged, precision 32-true (so only size differs from our A1–A3; the
+official float16 is written beside), prefill 1,024. In band → the build is
+right, the miss is size, and A's pilot may be drafted on ruling 62's terms.
+Miss → a build fault to find. The 12m arm is struck this week: it costs
+more than the week holds and 12m is not his size.
+
+**68. Brain B row 5 is a named miss, and costs B nothing more.** The
+library arm read 833.8 against 841.7–864.3 at k = 15, one seed of 15 at
+643.6; ours read 862.6 (not counted). The rule is frozen; the miss stands.
+Nothing of ours is in the library arm, so there is no fix to order. B keeps
+rows 1b, 2b, 3, 3b; stage 2's gate lists row 5 as a miss beside them. Row 6
+runs by its rule at the lowest Kaggle rank.
+
+**69. Forge round 1 is a KEEP round on E-food (amends 61).** On arm K
+every candidate would read 0 (nothing reaches); on E-food the baseline
+reaches and loses. Terms frozen in ORDERS J18: baseline fixed 0.1 + twin;
+K1, K2, K3, K5, K6, `n_steps=3`, two plain-variation controls; S = 150k
+(the loss begins at 81k+), M = 300k; score = share of late-half lives
+sustained, tiebreak late meals/life; fresh seeds. The forge's four readings
+of its charter (INBOX 11-20 14:35) stand. `target_entropy=-16`, CrossQ,
+SimBa wait for round 2. A temperature cap has no prior: `inventor` only.
+
+**70. A row that failed on our apparatus may be registered again, once.**
+NH-1 failed 10–20× off with the Gaussian peaks inside walls — our map, not
+the paper's. NH-2 (`prereg/needs_hidden_nh2.md`, written before the pilot
+read) is frozen: one change, NH-1's bands and clauses untouched, launch only
+if both pilot seeds read Δ < 5.0 — with one amendment: seeds 10–19, because
+the pilot looked at two of 0–9. NH-1 stays FAIL. A second miss is a miss.
+This is general: new id, fresh seeds, bands unchanged, the fault named, once.
+
+**71. The TPU is closed (D58 executed at the desk).** Two pushes asked for a
+TPU and were given a CPU box, 0.00 h billed. No further push asks for one;
+S12 closes; the TPU line leaves `gpu_budget`'s report when the failing test
+is touched. If the owner finds "TPU" offered on the website, the door
+(`7689b52b`) is still there. 20 h lapsed in W46; none are counted from W47.
+
+**72. J10's FAIL is not yet a fact about the published walk.** The
+published 2M figure is one unbroken run; ours is four resumed segments. The
+row stays FAIL by its rule. Before it is cited, a resumed twin is compared
+with an unbroken one (box-minutes). Then J10-2: the same recipe, seeds 3–7,
+≥ 4 of 5, eval of 50 episodes on one stated machine (the 10-episode eval
+moved 13% across CPUs on the same weights). No cures on a reproduction row;
+resets and TQC are the forge's candidates. s2's 2M (6,490) is on record.
+
+**73. Session order, settled.** Kaggle CPU: < 1 h kernels, then J17 (≤ 3),
+forge round 1 (≤ 2), J10-2 (≤ 2), B row 6. A one-command check an order
+needs may take a rank-0 session without asking (J16's wheel did; correct).
+
+**74. `PUBLISHED_PRIORS.md` has no file cap.** Workers read one section;
+≤ 6 KB a section binds (ruling 55); the 70 KB line leaves the researcher's
+prompt (S11 b). The page keeps its index at the top.
+
+**75. The usage stop's evidence.** The stop refused 46 slots on a figure
+that later read lower inside its own window. The number is the owner's and
+is not touched. Ordered (S14): every refusal logs the pct, the meter line
+and the printed reset, and the attribution tool counts slots refused
+between contradicting readings — so the cost is one grep, and the owner
+can decide on a reserved share with numbers.
+
+## D58 — RESOLVED BY ARMED DEFAULT (fired 2026-11-21 by the Director; class conduct, desk-executable, decide_by 2026-11-28): STOP TRYING. S12 (a) closes as "TPU unreachable from the box"; no further push asks for a TPU; brain A stays on the free GPU and Colab. Cost: 20 free accelerator-hours a week unused. Ruling 71 above. The owner may reopen it by finding "TPU" offered under Accelerator on the Kaggle website.
+
 ## 2026-11-20 12:27 UTC — Director, DAILY sitting: rulings
 
 **57. E2c gets learned-temperature twins.** Pilot 2 read every learner

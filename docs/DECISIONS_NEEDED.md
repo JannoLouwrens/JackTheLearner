@@ -2626,3 +2626,4 @@ DECIDE: D58
              left unused, and the question of whether Dreamer runs faster
              on a TPU stays unanswered.
   decide_by: 2026-11-28
+ANSWERED D58 — resolved by armed default, fired 2026-11-21 by the Director (class conduct, desk-executable); record in docs/DECISIONS_RESOLVED.md.
