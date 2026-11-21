@@ -364,6 +364,20 @@ def trace_window(actions) -> dict:
             "sat": round(float((np.abs(a) >= 0.95).mean()), 4)}
 
 
+def trace_row(t: int, actions, last: dict) -> dict:
+    """One trace row: the action window (``trace_window``) plus the learner's
+    last logged ``train/*`` values. A learner key that collides with a window
+    key (SBX logs ``train/std`` — the policy's own std — which used to
+    overwrite the window's per-dim action ``std`` after the first window) is
+    stored as ``train_<key>``; the window's value is never overwritten."""
+    row = {"t": int(t), **trace_window(actions)}
+    for k, v in last.items():
+        val = (round(float(v), 5) if isinstance(v, (int, float, np.floating, np.integer))
+               else None)
+        row["train_" + k if k in row else k] = val
+    return row
+
+
 def _trace_callback(out: list, every: int = TRACE_EVERY):
     """SB3 callback that only READS: the actions taken (``locals['actions']``)
     and the last values SBX's SAC.train logged (actor/critic loss, ent_coef).
@@ -385,10 +399,7 @@ def _trace_callback(out: list, every: int = TRACE_EVERY):
         def _on_step(self):
             self._acts.append(np.array(self.locals["actions"], dtype=np.float64).ravel())
             if self.num_timesteps % every == 0:
-                row = {"t": int(self.num_timesteps), **trace_window(self._acts)}
-                row.update({k: (round(float(v), 5) if isinstance(v, (int, float, np.floating, np.integer))
-                                else None) for k, v in self._last.items()})
-                out.append(row)
+                out.append(trace_row(self.num_timesteps, self._acts, self._last))
                 self._acts = []
             return True
     return _Trace()
