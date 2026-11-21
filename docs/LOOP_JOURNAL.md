@@ -3308,3 +3308,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `save_life` gains `carry_physics` (default on): MjData + env RNG pickled beside the env when it is MuJoCo (EzPickle rebuilds a fresh one). `b6b2da1d`.
 - `b_life_mujoco_test` (Hopper-v4, jack-std pins, T=1100, cut 44 steps into an episode): U1=U2, resumed == unbroken on every item → PASS; planted no-physics save differs on 13 items from replay row 1101. Pendulum `b_life_resume_test` re-run: PASS, 4/4 plants caught. One seed, toy length; no ledger.
 - Philosophy served: 1 (he must never stop learning — a life that resumes on any machine is the same life), 4 (claimed only beside a planted break that fired).
+
+## 2026-11-21 21:05–21:15 UTC · SYSTEM · S11 (c) re-run
+- `prune_cli_versions.sh --dry-run`: 0 freeable — 2.1.325/326/329 still exe of 6 owner sessions (1.5–11 d old).
+- Second source searched: `git gc` packed 137 MiB loose objects → `/` 5.09 → 5.23 GiB (fsck clean). Own transcripts 440 MB (auto-aged at 30 d), /tmp mostly not ours; today's growth is root's pcp/dnf/logs — not ours to touch.
+- (c) needs the owner to close those sessions; next SYSTEM slot takes S14 if they are still up.
+- Philosophy served: 6 (free compute only — keep the shared box's disk alive for every lane).
