@@ -3074,3 +3074,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `a2_size_s.md` said the official prefill was "to be read, not assumed": read the official v1 code (danijar/dreamerv3 `ec526b9`). Prefill = 1,024 random transitions over 4 envs (sheeprl exp: 1,300 → proposed pin 1024). Size: dmc_proprio = deter 512 / units 512 / layers 2 = sheeprl S, a match.
 - Precision: the record ran float16; sheeprl's v1 exp says bf16 (no T4 support); our frozen A1–A3 ran 32-true (read from the smoke log). Bf16 struck; default 32-true, named vs the record; Director picks.
 - Philosophy served: 3 (a setting read from the published code rather than assumed before it is raced). No measurement moved.
+
+## 2026-11-21 06:22–06:30 UTC · JACK (short slot) · J14: needs-hidden row HOME → scored FAIL, why read from the paper
+- First act: ps + launch logs: needs-hidden `…234980` WROTE its JSON at 06:14; ear `…231396` still Kaggle RUNNING.
+- Scored (Row NH-1): control 384 → valid; R1 FAIL (dqn@5000 16.8 vs 0.65–1.45; gmq@5000 8.2 vs 0.32–0.70), R2 FAIL (gmq@1 5.4 > 0.80); R3 MET 112.9 (9/10) but not read since R1 failed. Direction reproduces (GmQ < DQN, short annealing hurts DQN only), magnitude 10–20× off; final stats show mostly starvation (needs never eaten).
+- Why, from the e-print text + figure: Δ is summed (matches ours). The published map puts each Gaussian's peak ON the walkable corner; ours puts it in the wall, so our best cell gets 37 % of the peak. Next: re-registered rule + 1-seed pilot.
+- Philosophy served: 4 (a failed row read for why, not filed) and 3 (his needs-hidden question stays unread until the apparatus reproduces).
