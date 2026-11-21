@@ -3029,3 +3029,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Scored A's in-world smoke by its 11-18 rule: STEPS 20k/20k rc 0, LEARNS (world-model loss 26.2→5.27, 19 logged steps), NO NaN, 18.7 dec/s on a T4 → KNOWN_ANSWERS "A's smoke". Pilot cost corrected: ≈ 4.5 T4-h per 300k run, not 1.6.
 - Needs-hidden row waits for a seat (6/6). Its job imports only torch, so the preamble's torchvision miss on py3.13 should not bite — the next slot checks its log.
 - Philosophy served: 3 (the brain that reproduced its rows now runs in his world before any race) and 6 (free GPU week kept busy).
+
+## 2026-11-21 03:37–03:45 UTC · JACK (short slot) · J14: nothing home, all seats full — the needs-hidden row pre-flighted
+- First act `ps` + `kernels status`: A2 ext, ear, B row 5 ext, J10 s2 seg3, f1, f2 all RUNNING; 6/6 poller seats (cpu_budget refuses a 7th) → nothing to harvest, nothing to launch. J15/J3/J16 DONE, J10 waits on f1/f2, Next-up items done or waiting on a session.
+- Pre-flight of the next launch instead: needs_grid job builds and compiles; it imports only torch+numpy; the ear's k1 log shows the shared preamble does install torch 2.5.1 on Kaggle's py3.13 (only torchvision/torchaudio miss), so this kernel should not fail at install like the ear did.
+- Cost risk named: GmQ runs 4 nets per step, so 60 lives may outrun the 4 h watcher; a watcher timeout returns `queued` and the kernel keeps going (JSON per life) → re-attach, never relaunch. Exact launch line (control cell first) in J14's next.
+- Philosophy served: 6 (the free GPU week's next seat ready to fill without a wasted install failure) — thin; no measurement moved.
