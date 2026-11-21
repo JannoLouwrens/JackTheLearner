@@ -878,3 +878,9 @@ Long form: `/data/jack-research/research_notes/m8_living/` (parts A–C). One ho
 - Weight decay + resets vs resets alone — only if K1 survives.
 
 **Not verified.** Nauman's per-intervention values (figures, by eye); Meng 2020 (abstract only); all DroQ / CrossQ scores (figures); SimBa's sign on |A|/2 (code only); openrlbenchmark's SBX report, Ota 2021, D'Oro 2023 on width (not opened).
+
+## 23. One parent's voice: a from-scratch ear trained on one speaker (or TTS only), tested on strangers (2026-11-21; serves M5, the lab's `ear_one_voice.py` rule `8cc61917`; answers INBOX `RESEARCH:` LAB 11:53)
+
+Long form: `/data/jack-research/research_notes/one_voice_*.md`. SKELETON — research in progress (slot 16:05 UTC); parts land below as they arrive.
+
+**Question.** Is "train a small keyword ear from scratch on ONE voice (or synthetic voices only), test on unseen human speakers" answered anywhere at 100+ hearings a word? What does the record say augmentation (pitch / vocal-tract warping, speed, noise) buys back?
