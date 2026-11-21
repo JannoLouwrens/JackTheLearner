@@ -208,6 +208,8 @@ row 5 as a named miss (ruling 68). Still a draft; the Director freezes it.
 after the first window — store both, planted test; no old run re-read.
 4. §20's cheap test: a stop-resume twin on B's row 1b (box-minutes) — the
 resumed run's next 1,000 updates match the unbroken one, or the item named.
+state: 11-21 13:50 READ (`experiments/b_row1b_resume_twin.py`, jack-std = kernel pins, seed 0, T 1,000 = 5 whole Pendulum episodes): control U1=U2 BIT-IDENTICAL. R (SB3 save+load+buffer) departs at replay row 1,000 — the life in flight is dropped (`_last_obs`, env RNG, pendulum state). RE (those three carried) departs ONE row later: row 1,000 equal, action 1,001 differs = the FIRST update after load differs; RE2 (+ numpy global RNG) identical to RE, so numpy is NOT it. PRNG key equal at 2T in every arm.
+state: NEXT: name the update-1 item — dump actor/critic/opt + sbx key right after load vs U1 at T (candidates: sbx re-derives its key in `_setup_learn`, optax state dtype/count on load, ent_coef state). Then the fix goes into B's checkpoint, twin must read CLEAN.
 
 ---
 

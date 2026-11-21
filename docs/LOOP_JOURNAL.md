@@ -3191,3 +3191,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Seed 1 REFUSED by the 6-poller cap (ear + 5 J17 CPU kernels): one GPU seat idle until a watcher exits (INBOX).
 - Next-up 3 `974f18e6`: `pilot_b.trace_row` keeps the window's per-dim action std and stores a colliding learner key as `train_std` (SB3 off-policy logs it under gSDE); planted test + control (old build loses it); test_pilot_b_trace PASS.
 - Philosophy served: 3 (brain A's seat earned by reproduction, not assumed), 4 (a trace that silently overwrote its own number fixed, with a test that could fail).
+
+## 2026-11-21 13:22–14:00 UTC · JACK (short slot) · Next-up 4: B's stop-resume twin on row 1b
+- First act: ear `…231396`, J17 r0–r4 Kaggle RUNNING (checked); 6-poller cap full → J14 s1, J16 golden wait; J10 waits on Director → Next-up 4.
+- `b_row1b_resume_twin.py` (row 1b's `ours` build, unedited; jack-std): control U1=U2 bit-identical. SB3's resume departs at row 1,000 (life in flight dropped). Carrying env RNG + pendulum state + `_last_obs` moves the departure to the first update after load (row 1,001). numpy's global RNG ruled out (RE2 = RE).
+- Not yet CLEAN: the item that changes update 1 is unnamed; next slot dumps state right after load.
+- Philosophy served: 1 (he is stopped, moved and resumed and must carry his life across it), 4 (the resume measured bit-by-bit with a control, not assumed).
