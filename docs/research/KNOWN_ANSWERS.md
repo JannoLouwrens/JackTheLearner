@@ -471,6 +471,28 @@ Segments of 500k chained through Kaggle kernel sources; results `/data/jack-logs
   10-episode eval. That shows which segment the collapse happened in. Late-run collapse of SAC on Humanoid is a known
   instability. It was not in the rule's prior (§16 quotes one model at 2M).
 
+**Addendum 11-21 01:15 — the cheapest check, RUN (descriptive; the row's verdict does not move).** `1fdd3d58`
+`experiments/j10_ckpt_curve.py`: each segment kernel's `model.zip` (20 MB) read on the box with the rule's own eval.
+**Validity:** the pre-set gate (box must reproduce the kernels' own 1M/2M evals within 1% R) **FAILED on 4 of 5**
+(1.7, 4.8, 4.9, 13%, both signs). A check added afterwards (post-hoc): 12 of 17 early falls land on the IDENTICAL step,
+so the weights load exactly, and the gap is late-episode MuJoCo chaos between x86 and ARM. Read these as box numbers:
+
+| seed | 0.5M R / M / fell | 1M | 1.5M | 2M | α 0.5→2M |
+|---|---|---|---|---|---|
+| 0 | 5,282 / 4.7 / 0 | 3,995 / 3.2 / 4 | 5,580 / 8.7 / 0 | 5,552 / 11.0 / 1 | .022 .013 .008 .009 |
+| 1 | 4,501 / 3.9 / 2 | 5,035 / 4.9 / 1 | **5,621 / 9.2 / 0** | **581 / 3.6 / 10** | .022 .013 .009 **.024** |
+| 2 | 4,577 / 5.9 / 5 | 4,136 / 7.5 / 5 | **6,039 / 14.4 / 0** | seg3 `jack-cpu-1795223814` | .025 .017 .011 |
+
+- **Seed 1 collapsed inside the LAST segment (1.5M→2M), from its best point** (0/10 fell at 1.5M). It was a resumed
+  segment; 7 other resumes did not break, so the resume is still not shown to be the cause. In that segment α rose 2.6×
+  (the auto-entropy target pushed back as the policy narrowed), and the critic's Q at the start state rose 514 → 547,
+  while the return actually earned fell to ~291 (flat-rate discount). That is the same overestimate-while-losing shape
+  E2c showed. It is a lead, not a cause.
+- **The eval's own noise is about the size of seed 0's miss:** the same weights read 5,834 on Kaggle and 5,552 on the box,
+  because one episode falls at step 633 on the box only. The 116-R miss sits inside cross-CPU noise of the 10-episode
+  eval. The rule is frozen, so this is recorded, not used.
+- Seed 2 at 1.5M clears both 2M thresholds (not the rule's mark). Its seg3 is running, to 2M as the order says.
+
 ## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:12, Kaggle CPU)
 
 Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed, `0bf84989`): band 837.9–868.1 (853.0 ± 9.2, k = 5);
