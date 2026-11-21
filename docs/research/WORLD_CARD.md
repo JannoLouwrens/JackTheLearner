@@ -597,3 +597,27 @@ this outcome, so the Director rules it (INBOX).
   Fixed runs sit at 1.7–8.3× and auto runs are tighter at 1.2–2.2×. Controls that
   never eat climb as high as food runs, so the overestimate is generic. It is not
   shown to be the loss's mechanism.
+
+## J17 — the eye under brain B: `row128` vs 16 rays (rule FROZEN `98e22036`; harvested 2026-11-21 15:18 UTC; 20 of 20 runs, rc 0)
+
+Raw: `world_card_data/j17/j17_r{0..4}.json` (sha256 d3ced9aa…, 122f0ed3…, c99bfc7b…, 439e9aaf…, 77a0e0cb…); kernels `jack-cpu-1795246505/246570/246635/253059/253082`; scored by `pilot_b2 j17-table` (planted tests `test_j17_reading` 10/10). Seeds 921–925, 300k decisions, `ent_coef="auto"`, PILOT_RULE world, body frame.
+
+**Verdict by the frozen rule: NEITHER EATS.** Primary clause: row128 over rays16 U 22/25, 4/5 pairs (met), row128 over blind U 0/25, 0/5 (not met) → **width, not sight** — the gain over 16 rays is not credited to the eye. No VOID clause fired (blind sustained 0/5; lr0 W=2 0/5).
+
+| arm | reading | sustained W2 | late-half meals/life (read) | last quarter (beside) |
+|---|---|---|---|---|
+| K-rays16 | NOT EATING | 0/5 | 0.19, 0.15, 0.13, 0.28, 0.34 | 0.08, 0.15, 0.16, 0.29, 0.21 |
+| K-row128 | NOT EATING | 0/5 | 0.44, 0.27, 0.35, 0.40, 0.32 | 0.35, 0.36, 0.12, 0.17, 0.25 |
+| K-row128-blind (control, must fail) | NOT EATING — failed, as it must | 0/5 | 1.43, 0.87, 2.08, 0.70, 0.98 | 1.52, 1.00, 2.15, 0.86, 1.10 |
+| K-lr0-row128 (never trains; floor) | bound (not read) | 0/5 | 1.05, 1.45, 2.58, 1.29, 1.55 | 1.14, 1.95, 2.68, 1.29, 1.10 |
+
+**The finding the verdict does not say (reported, not read): training with real sight makes him eat LESS than never training.** Both sighted arms sit 3–8× below the never-trains floor; the blind learner sits at the floor. In the SAC trace, every sighted run (10/10) shows the critic running away and α climbing, every blind/lr0 run (10/10) does not:
+
+| arm | critic loss mid → end (5 seeds) | auto α mid → end |
+|---|---|---|
+| K-rays16 | 49→304, 24→63, 49→169, 55→120, 68→133 | .16→.30, .09→.08, .15→.28, .13→.26, .21→.25 |
+| K-row128 | 160→1,010, 234→844, 82→408, 53→154, 71→276 | .18→.51, .22→.46, .16→.31, .12→.20, .14→.22 |
+| K-row128-blind | 13→17, 19→10, 2→9, 16→48, 13→13 | .017→.013, .05→.03, .013→.015, .07→.04, .04→.02 |
+| K-lr0-row128 | 16→14, 16→17, 13→62, 12→14, 15→16 | 1.0 (fixed) |
+
+So the wall is not (only) the eye's information: content in the eye input destabilises B's critic (the wider and richer the content, the worse: row128 > rays16). Trace `std` is SB3's `train/std` (the overwrite fixed in `974f18e6` landed after these kernels left), not the action std — not read.

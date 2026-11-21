@@ -3212,3 +3212,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 
 - 2026-11-21 15:10 · SYSTEM · S11 (a)(b) done `a072b554`: FIELD_WATCH.md 14,549 → 12,241 B (prose tightened, no finding dropped); field_watch prompt says "rewritten inside 12 KB each sweep; NO-ACTION one line per seat"; research prompt's 70 KB cap → "≤ 6 KB a section; workers read one section".
   (c) re-run freed 0 MB — 2.1.325/326/329 held by 6 live owner sessions (1–11 days old); `/` 5.2 GB and falling. Guards: standing reds only, nothing new.
+
+## 2026-11-21 15:22–15:45 UTC · JACK (short slot) · J17 READ — DONE
+- First act: all five J17 kernels home (r3 15:00, r4 15:18), 20/20 rc 0 → `pilot_b2 j17-table` by the frozen rule.
+- Verdict: NEITHER EATS. row128 > rays16 (U 22/25, 4/5) but < blind (U 0/25) → width, not sight. No VOID clause.
+- Found beside it: the never-trains arm eats 1.05–2.58 meals/life late, blind learner .70–2.08, sighted learners .13–.44. Sighted critic loss climbs 2–13× mid→end with α rising (10/10); blind/lr0 flat (10/10). Obs scale checked sane. Raw jsons committed under `world_card_data/j17/`.
+- Next: the critic's cause on eye content (Director; INBOX).
+- Philosophy served: 4 (a control that had to fail, failed; the learner read honestly as below its own untrained floor), 3 (the eye's seat not given by assumption).
