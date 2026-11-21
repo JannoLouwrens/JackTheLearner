@@ -642,3 +642,21 @@ Colab GPU session `ladder-1795237765` (Kaggle refused: 2-session cap held by ear
 
 - Speed is NOT read as a per-sense cost: different host (Colab vs Kaggle), and the gap is all in env interaction (104 vs 186 sps) while training is identical (29 vs 29) — a host difference, not the decoder heads.
 - Descriptive: per-sense wm loss plateaus 5.5–5.8 from 6k to 17k before falling to 5.30; KL (state_loss) 3.38 → 3.06 (flat rose 1.14 → 3.02). No claim at 20k; the frozen A1–A3 rows untouched. Next-up 1 is DONE: the per-sense path runs end to end on a GPU. Whether one key per sense HELPS is a race (flat vs per-sense) for a later rule, not this smoke.
+
+## Row NH-1 — Dulberg's homeostatic grid (needs-hidden row, §18 item 4): **R1 FAIL, R2 FAIL** — learning shown, ~10–20× off the published Δ (11-21 06:14, Kaggle T4 `jack-ladder-1795234980`)
+
+Rule frozen `5464c5b8` (`experiments/needs_grid_row.py` docstring), 6 cells × seeds 0–9, one kernel, ~1.9 T4-h (DQN 86 s/run, GmQ 185–194 s/run). `needs_grid_row score` over `/data/jack-logs/needs_grid_row/needs_grid_frozen5000_dqn5000_gmq5000_hidden5000_dqn1_gmq1.json`, verdict SCORED.
+
+| cell | published median [IQR] (figure reading) | ours median Δ (10 seeds) | per-seed Δ |
+|---|---|---|---|
+| frozen@5000 (CONTROL, must be > 5.0) | — | **384.4** → row valid | 155–685 |
+| dqn@5000 (R1) | 0.95 [0.75, 1.35] → band [0.65, 1.45] | **16.8** — MISS | 3.9 3.9 6.4 9.3 16.4 17.2 18.7 25.0 28.1 99.7 |
+| gmq@5000 (R1) | 0.5 [0.42, 0.6] → band [0.32, 0.70] | **8.2** — MISS | 2.0 2.5 2.5 3.1 6.1 10.2 16.8 18.6 42.3 61.8 |
+| dqn@1 (R2, must be ≥ 1.8) | 3.2 [1.9, 6.0] | **40.8** — holds | 11–116 |
+| gmq@1 (R2, must be ≤ 0.80) | 0.6 [0.5, 0.7] | **5.4** — MISS | 2.9–19.0 |
+| hidden@5000 (R3, TEST) | no arm | **112.9**; > dqn@5000 on 9/10 seeds | 93–167 |
+
+- **R1 FAIL, R2 FAIL** (gmq@1 5.4 > 0.80). R3 computes MET (112.9 > 1.45, 9/10 pairs) but per the rule is **reported, not read**: R1 failed. No extension seeds; no band moves.
+- What DID reproduce (direction only, not a pass): every learner beats the never-trains control 23–70×; GmQ < DQN at both annealing lengths (8.2 vs 16.8; 5.4 vs 40.8); 1-step annealing hurts DQN (40.8 vs 16.8) and not GmQ (5.4 vs 8.2) — the paper's Fig 3a pattern. The MAGNITUDE is off by 10–20× in every learner cell.
+- Why, descriptive (from `h_final`, the only per-run state the job kept): the deviation is mostly STARVATION, not overshoot — dqn@5000 has 21 of 40 final stats below 4 and 12 above 6; several sit at −119.5 = 0.5 − 0.004 × 30,000, i.e. that resource was never eaten in the whole life. Only 1 of 10 dqn@5000 runs ends with Σ|h*−h| < 4 (GmQ@1: 5 of 10). The agents keep one or two corners and abandon the rest.
+- Candidate causes in OUR apparatus (untested, each one a setting listed "ours" in the rule's table): (a) the Gaussian is the pdf with Σ = I in CELL units, so the 5×5 centre reads < 1e-5 and γ = 0.5 sees ~2 steps — a corner 6 cells away is invisible to both the view and the value; the paper's grid coordinates may not be cells; (b) unbounded stats (−119…+519) feed raw into the net and into an n=4 drive — huge rewards; the paper may clip; (c) our Δ reading of the figure (per-stat vs summed). Next step: read the PNAS 2023 text / code for (a)–(c) before any rerun; rerun is a re-registered rule, not this one.
