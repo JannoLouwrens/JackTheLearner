@@ -447,7 +447,7 @@ control must fail; no extension). Kernel jack-cpu-1795198133 at `22d82a05` (laun
   measured repair target is an exploration scheme that does not break dense-reward control (e.g. one
   learned or annealed rather than a fixed hold), entered through `docs/FORGE_POOL.md` with its prior.
 
-## Row J10-1 — SAC, the RL Zoo's Humanoid entry on Humanoid-v4: **FAIL** (decided at 2 of 3 seeds; s2 still running) (11-21 00:20, Kaggle CPU)
+## Row J10-1 — SAC, the RL Zoo's Humanoid entry on Humanoid-v4: **FAIL** (decided at 2 of 3 seeds; s2 still running) (11-21 00:12, Kaggle CPU)
 
 Rule frozen in `experiments/humanoid_sac_row.py` (`23e375be` era, before seed 0): PASS = at 2M R ≥ 5,950 AND
 M ≥ 12 m/1,000 steps on ≥ 2 of 3 seeds; 1M median in [3,784, 5,866]; late-start control < 500 else VOID.
@@ -471,7 +471,7 @@ Segments of 500k chained through Kaggle kernel sources; results `/data/jack-logs
   10-episode eval. That shows which segment the collapse happened in. Late-run collapse of SAC on Humanoid is a known
   instability. It was not in the rule's prior (§16 quotes one model at 2M).
 
-## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:20, Kaggle CPU)
+## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:12, Kaggle CPU)
 
 Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed, `0bf84989`): band 837.9–868.1 (853.0 ± 9.2, k = 5);
 `ours` counts only if `lib` reproduces; VOID if any ctrl seed ≥ 837.9. Kernel `jack-cpu-1795209812` (launched 11-20
