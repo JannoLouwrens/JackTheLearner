@@ -40,12 +40,13 @@ def theirs(planted: bool = False) -> dict:
     return dict(mod.Config(cfgs["defaults"]).update(block).flat)
 
 
-def ours(extra: tuple = ()) -> dict:
+def ours(extra: tuple = (), base: list = None) -> dict:
+    """`base` None = rows.BASE_V1S (this file's arm); `v2_diff` passes the frozen A1-A3 overrides."""
     from hydra import compose, initialize_config_module
     from omegaconf import OmegaConf
     from experiments.brain_a import rows
     with initialize_config_module(config_module="sheeprl.configs", version_base="1.3"):
-        cfg = compose(config_name="config", overrides=list(rows.BASE_V1S) + list(extra))
+        cfg = compose(config_name="config", overrides=list(rows.BASE_V1S if base is None else base) + list(extra))
     OmegaConf.resolve(cfg)      # `${algo.dense_units}` etc. -> the value the kernel runs
     flat = {}
 

@@ -702,6 +702,26 @@ ours = sheeprl 0.8.5 composed with `rows.BASE_V1S`. **49 of 56 settings SAME; 7 
 - So the addendum above's "~4.3 T4-h a seed" for this arm is v1S's measured cost, not this arm's: the world model is
   2.2× larger and nobody has timed it. If frozen, its timing cell goes first (as v1S's did). No speed is claimed here.
 
+### Rows A1–A3 (1m, v2 agent) — ADDENDUM 11-21 20:40: the same diff against THEIR official config (configs only; no verdict changed)
+
+INBOX 19:15 (2): the 1m rows were never diffed by the official resolver (the 11-16 README line diff was read by eye).
+`python -m experiments.brain_a.v2_diff` (probe venv): theirs = `dreamerv3@e01491f` `defaults` + `dmc_proprio` resolved by
+the OFFICIAL `elements.Config` (3.19.1, the commit's requirements floor; v2 has no in-repo config.py); ours = sheeprl 0.8.5
+composed with `rows.overrides("A2", 0)`, exactly what the A2 kernels ran.
+- **67/73 SAME; UNDISCLOSED DIFFERS: none.** Unlike v1, v2's `.*\.units` / `.*\.depth` / `.*\.rssm` patterns DO match
+  every flat key: enc/dec/heads/actor/critic all 64 units, rssm 512/64/4, enc/dec 3 layers — the 1m size A1–A3 ran IS the
+  official proprio size (`dmc_proprio` carries the 1m block itself).
+- The 6 DIFFERS, all already named: train ratio 1024 vs 512, repeat 1 vs 2, envs 16 vs 4, bfloat16 vs 32-true (the
+  rule's "ours beside theirs"); replay 5e6 vs 500,000 and prefill none vs `learning_starts` 1024 (README line diff only —
+  the rule's text omits these two; neither binds below 500k decisions except the 1,024-step prefill).
+- Also checked by source, not in the table: norm eps 1e-4 = 1e-4, AGC pmin 1e-3 = 1e-3, LaProp both, `bounded_normal`
+  actor (tanh mean, (max−min)·σ(s+2)+min) both, reward head outscale 0 / continue 1 both.
+- Control (must fire, did): `--planted` resolves theirs from `defaults` alone → **11/11 size rows flip to DIFFERS**
+  (rssm deter 8192, units 1024 …), rc 0. `v1s_diff` after the shared `ours(base=)` change still reads 49/56 (unchanged).
+- Reading: A2's 1m MISS at 100K (393.3) is NOT a hidden-config fault of the v1S kind. What is left is what the rule named:
+  the 2023 recipe (ratio 512, repeat 2, 4 envs) run on the v2 agent at 1m — a recipe nobody published a score for — or the
+  v2 port's code. No band, seed or verdict changed.
+
 ## Row A3 — brain A on DMC ball_in_cup_catch: **PASS** at 3 seeds (11-21 02:40, Kaggle T4)
 
 Kaggle `jack-ladder-1795220723`, COMPLETE; result file read from the watcher's download dir (4 runs rc 0, none cut).
