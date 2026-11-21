@@ -3249,3 +3249,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Tests committed failing first (`eb4ce9e2`, stub 0/2), then the port: `mlx_maths.rssm_observe` 2/2 eager AND compiled vs the NumPy-64 reference and the official f32 scan — worst 8.2e-7 against a 1e-4 tolerance, 0 of 1,024 samples flipped; reset/control rows hold; constant-noise control flips 760. Four planted wrong ports all caught (`75bd15b5`).
 - J16's done-when (rungs 3, 6, 7) met → DONE. Wheel re-checks not run; rungs 6/7 at toy size only.
 - Philosophy served: 4 (a first-try pass counted only after four planted bugs were each caught), 7 (the Mac brain's memory pass is now checked against the official code).
+
+## 2026-11-21 17:37–17:50 UTC · JACK (short slot) · Next-up 2 — brain B row 6 LAUNCHED
+- First act: Kaggle — A2-v1S s2 `…268355` RUNNING, s1 `…268291` still QUEUED (nothing home). J17/J16 done, J18 forge's, J10 waits the Director; Next-up 1, 3, 4 already done → item 2.
+- Ruling 68 lets row 6 run by its rule at the lowest rank; all 5 Kaggle CPU sessions were idle. Pushed one kernel per task (swingup_sparse `jack-cpu-1795282735`, reacher-easy `…282752`, reacher-hard `…282800`), est 5 h each, receipts committed. Nothing measured yet.
+- Philosophy served: 3/4 (brain B's seat is held only by known-answer rows that could fail), 6 (free CPU hours that would have sat idle).

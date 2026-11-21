@@ -1715,14 +1715,14 @@
         "detached:launch_s2_seg2.log": 594.7,
         "detached:launch_s2_seg3.log": 481.55,
         "detached:launch_v1s_s0.log": 373.38,
-        "detached:launch_v1s_s1.log": 220.52,
-        "detached:launch_v1s_s2.log": 220.48,
+        "detached:launch_v1s_s1.log": 264.72,
+        "detached:launch_v1s_s2.log": 265.7,
         "detached:launch_v1s_timing.log": 7.98,
         "detached:launch_v1s_timing2.log": 53.74,
         "detached:pilot_s2.log": 3686.99,
         "detached:pilot_s5.log": 3689.7
       },
-      "used_s": 22532.9
+      "used_s": 22622.32
     }
   },
   "last_child_s": {
