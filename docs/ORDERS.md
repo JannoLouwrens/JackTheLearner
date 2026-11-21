@@ -234,11 +234,11 @@ seat"). (b) `scripts/research_prompt.md`: the 70 KB file cap is replaced by
 removed, none added.
 serves: philosophy 5, 6 · standing objective 4.
 **done when:** `/` has ≥ 6 GB free with the before/after in the state line; FIELD_WATCH ≤ 12 KB; the two prompt lines changed.
-state: (c) 11-21 4.31 → 5.37 GB free: `scripts/prune_cli_versions.sh` (keeps launcher, newest, anything a live
-process has as exe/map/fd; planted test PASS) deleted 2.1.327 (354 MB); `~/.cache/uv` (Jack's toolchain, stale since 11-15) 702 MB.
-NOT at 6: 2.1.325/326/329 (~1.1 GB) are held by live sessions — re-run the script when they end. Left alone as not
-provably ours: `~/.cache/pip` (generic build wheels), `/tmp/aud_rev_*` (AlphaGeometry, another project), /tmp arXiv dirs.
-Next: (c) re-run, then (a), (b).
+state: (c) 11-21 4.31 → 5.37 GB: `scripts/prune_cli_versions.sh` (planted test PASS) freed 2.1.327 + `~/.cache/uv` (1.06 GB).
+11-21 PM re-run freed 0: 2.1.325/326/329 (~1.1 GB) held by 6 owner sessions up 1–11 days; `/` now 5.2 GB, falling.
+Not ours, left: `~/.cache/pip`, `/tmp/aud_rev_*`, /tmp arXiv dirs. (a) DONE `a072b554`: FIELD_WATCH 14,549 → 12,241 B,
+prompt line in. (b) DONE `a072b554`. Left: (c) only — needs those sessions closed (owner) or a 2nd source of ≥ 0.8 GB.
+Next: (c) re-run the script when `ps` shows no 2.1.325/326/329 claude.
 
 ### S14 — A usage refusal carries its evidence (46 slots were refused on a number that later fell)
 part: (machine — truthful gates) · stage: — · step: —

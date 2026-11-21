@@ -3209,3 +3209,6 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J16: `jack-cpu-1795270995` ERROR at pip in 6 s — Kaggle image is Python 3.13, jaxlib 0.4.33 has no wheel. `cf507ea9`: uv-made 3.12 venv in the kernel, pins unchanged (box check OK). Relaunched `jack-cpu-1795271133` RUNNING (est 3 h).
 - Next-up 4: the update-1 item is sbx's training key — `SAC.load` leaves `model.key` = [0,0]. RE3 (life + numpy global RNG + key) = BIT-IDENTICAL to the unbroken run; control clean. The old twin's key check compared [0,0] with [0,0] and could not fail — fixed (key saved live in `key.npy`).
 - Philosophy served: 1 (he must carry his life across a stop — now shown possible bit-for-bit for B), 4 (a check that could not fail found and made able to), 6 (free Kaggle CPU kept working).
+
+- 2026-11-21 15:10 · SYSTEM · S11 (a)(b) done `a072b554`: FIELD_WATCH.md 14,549 → 12,241 B (prose tightened, no finding dropped); field_watch prompt says "rewritten inside 12 KB each sweep; NO-ACTION one line per seat"; research prompt's 70 KB cap → "≤ 6 KB a section; workers read one section".
+  (c) re-run freed 0 MB — 2.1.325/326/329 held by 6 live owner sessions (1–11 days old); `/` 5.2 GB and falling. Guards: standing reds only, nothing new.
