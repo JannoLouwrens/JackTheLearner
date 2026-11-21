@@ -145,7 +145,8 @@ A round = `experiments/forge/rounds/<id>/spec.json` (committed before any seed) 
 each one line with source tag and `prior:` from `PUBLISHED_PRIORS.md`, the
 discovery evidence file or `LAB.md`. No candidate without a prior.
 **done when:** the pool file exists and the Director has ranked it.
-state: (new 11-20.)
+state: 11-21 02:45 POOL SEEDED, WAITS FOR THE DIRECTOR'S RANKING. `docs/FORGE_POOL.md`: 15 lines (published 11, recombine 1 empty seat, control 3, inventor 0), each with `prior:`, split by wall — `keep` on E-food (K1 resets, K2 TQC, K3 auto α, K4 SACLite, K5 1 update/10, K6 reward ÷100 + auto, K7 SimBa, K8 α 0.005) and `reach` on arm K (R1 2M, R2 auto, R3 stack-4, R4 keep-winner). `experiments/forge/pool.py` refuses a line with no prior / unknown source / > 20 / no control; `tests/test_forge_pool.py` 12/12.
+Read in SBX 0.28 source: TQC ships, `param_resets` rebuilds actor+critics and keeps α and replay, `layer_norm=True` is critic-only (§21's three "not verified"). Six ideas have no prior on file and are listed as RESEARCH, not candidates. Forge's suggestion: a keep round first (K1, K2, K5, K6 + K3 as second baseline, C1, C2).
 
 ### F3 — Round 1: the eating wall
 **Do.** Read J11's state and E2c first. Write round 1's rule (rung S and M
