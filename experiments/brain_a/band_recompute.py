@@ -5,6 +5,9 @@ Reads `scores/dmc_proprio-dreamerv3.json.gz` at danijar/dreamerv3@e01491f (local
   1. the method that reproduces rows.py's published numbers (search over file-point windows);
   2. the file's band at the single 10K bin ending at P (the width of OUR score window);
   3. our seeds scored at both widths, both bin conventions.
+  5. the file's individual seeds at the band's own 30K window, beside our v1S seeds scored the
+     same way: n, sample SD, the 95% interval for ONE new seed from n file seeds
+     (m ± t(n-1) · s · sqrt(1 + 1/n)), and how many file seeds each of ours beats.
 Reports only; changes no band and no verdict (rows.py's frozen rule is untouched).
 Run: python -m experiments.brain_a.band_recompute"""
 import glob, gzip, json, statistics as st
@@ -76,6 +79,23 @@ def main():
             w30 = st.mean(ours(r["episodes"], P - 30_000, P, False) for r in seeds)
             print(f"   {f.split('/')[-1]:16s} {row} n={len(seeds)} {P//1000}K band {m-2*sd}..{min(1000, m+2*sd)}"
                   f"  own-window {own:.1f}  30K-window {w30:.1f}")
+
+    print("5. the file's own seeds at the band's 30K window, and our v1S seeds scored the same way (P-30K, P]")
+    T95 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262}
+    v1s = []
+    for f in sorted(glob.glob(RUNS + "v1s_*.json")):
+        v1s += [r for r in json.load(open(f)).get("runs", []) if not r["control"] and r["name"].startswith("A2v1S")]
+    for P in (100_000, 200_000):
+        v = sorted(file_seeds(d, "dmc_cartpole_swingup", P - 20_000, P))
+        n, m, s = len(v), st.mean(v), st.stdev(v)
+        half = T95[n - 1] * s * (1 + 1 / n) ** 0.5
+        print(f"   {P//1000}K file n={n}: " + " ".join(f"{x:.1f}" for x in v)
+              + f" | mean {m:.1f} sample SD {s:.1f} | frozen band {m-2*st.pstdev(v):.0f}..{m+2*st.pstdev(v):.0f}"
+              + f" | 95% one-new-seed interval {m-half:.0f}..{m+half:.0f}")
+        for r in v1s:
+            sc = ours(r["episodes"], P - 30_000, P, False)
+            print(f"      {r['name']:10s} {sc:.1f}  above {sum(sc > x for x in v)} of {n} file seeds,"
+                  f" {(sc - m) / s:+.2f} sample SD, {'inside' if abs(sc - m) <= half else 'OUTSIDE'} the one-seed interval")
 
 
 if __name__ == "__main__":

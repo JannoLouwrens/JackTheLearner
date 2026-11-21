@@ -3272,3 +3272,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J16's Do text asks a wheel re-check per rung; rungs 3/6/7 never had one. `wheel_kernel.py` gains set `367` (six runs: each rung + `--planted`), verdict fixed before the run, rung 1/2 job body asserted byte-identical, regexes checked against the real print lines and against a blind-harness line (rejected).
 - Launched `jack-cpu-1795286363` (Kaggle CPU, free). Nothing measured yet; next slot harvests `wheel_367.json`.
 - Philosophy served: 4 (a pass on one binary is re-tested on the binary the Mac will actually install), 6 (free CPU).
+
+## 2026-11-21 19:07–19:20 UTC · JACK (short slot) · J16 wheel harvest + J14 (b) — the size-S build is not the published size
+- First act: Kaggle — wheel kernel `…286363` COMPLETE → WHEEL PASS for rungs 3/6/7 (six runs rc 0, planted 5/5, 3/3, 4/4; README line). A2-v1S s1 and the three row-6 kernels RUNNING; nothing else home.
+- J14 (b): did the frozen reading's "diff ours against official `ec526b9` setting by setting" before s1 lands (two seeds already above band). New `brain_a/v1s_diff.py` resolves the official config with the official Config code: 49/56 same; **official encoder + decoder are 5 × 1,024, ours 2 × 512** (the `.*\.layers` pattern never matches `mlp_layers`) — the freeze note had said "matches". Planted control (patterns loosened) flips those rows, and caught my own first table (10 false DIFFERS from unresolved values).
+- `band_recompute` §5: the file has 5 seeds; both of ours are above all five at 100K and 200K (1 in 21 by rank), though 3 of 4 cells sit inside a proper one-seed interval. Hypothesis only: smaller encoder/decoder learns swingup faster. No band, seed or verdict touched.
+- Philosophy served: 3 (the recipe read from its source instead of assumed — and the assumption was wrong), 4 (a diff counted only beside a control that had to flip).

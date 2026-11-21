@@ -650,6 +650,45 @@ PUBLISHED_PRIORS §7 had flagged it ("528 ± 36 vs 478 ± 20 … recompute from 
   readings (843.5–850.8) are at or just above 844. n = 2 seeds; s1 not home.
 - Not a re-registration and not a pass: the frozen band stands until the Director rules (INBOX 11-21 18:30).
 
+### Row A2-v1S — ADDENDUM 11-21 19:15: ours beside the official recipe, setting by setting (reads configs only; no verdict changed)
+
+Done BEFORE s1 is home, because the frozen reading orders it on a miss and two seeds already sit above the band.
+`/data/venvs/jack-a-probe/bin/python -m experiments.brain_a.v1s_diff`: theirs = `configs.yaml` at
+danijar/dreamerv3 `ec526b9`, `defaults` + `dmc_proprio`, resolved by that commit's OWN `embodied/core/config.py`;
+ours = sheeprl 0.8.5 composed with `rows.BASE_V1S`. **49 of 56 settings SAME; 7 DIFFER:**
+
+| setting | theirs (official v1, dmc_proprio) | ours (A2-v1S as run) | named before? |
+|---|---|---|---|
+| **encoder MLP** | **5 layers × 1,024 units** | **2 × 512** | **NO — the freeze note said "Matches; nothing to name"** |
+| **decoder MLP** | **5 layers × 1,024 units** | **2 × 512** | **NO — same** |
+| precision | float16 | 32-true | yes (ruling 67's pin) |
+| replay size | 1e6 | 500,000 | no; cannot bind inside 250K decisions |
+| pretrain steps | 1 | 0 | no; one gradient step |
+
+- **Why the freeze note was wrong:** `dmc_proprio` says `.*\.layers: 2` and `.*\.units: 512`. The official `Config.update`
+  `re.match`es those against flat keys; `encoder.mlp_layers` / `encoder.mlp_units` hold no literal `.layers` / `.units`,
+  so they keep the defaults (5, 1,024). Heads, actor, critic and RSSM do shrink to 2 × 512. sheeprl's `dreamer_v3_S`
+  shrinks everything. So A2-v1S is NOT the published size: its encoder and decoder are smaller.
+- Control (must flip, did): `--planted` loosens the two patterns to what a reader assumes they do → the four
+  encoder/decoder rows read SAME (53/56). The control also caught the tool's first table (unresolved `${…}` values; 10 false DIFFERS).
+- Code read beside it (official `agent.py`/`nets.py`/`run/train.py` vs sheeprl `dreamer_v3.py`/`agent.py`), each SAME:
+  chunk start forced `is_first`; KL free bits max(1, ·); layer-norm eps 1e-3; GRU update gate −1; continuous actor
+  Normal(tanh μ, (max−min)·sigmoid(σ+2)+min); imagined continue = mode; weight = cumprod(γ·cont)/γ; λ-return; critic
+  loss + slow-critic log-prob regulariser; first slow update is a hard copy; return norm 5–95 pct; sampled actions
+  in training episodes. Not checked: weight init, replay sampling order, reward/action row alignment.
+- **Ours beside the file's own five seeds** (`band_recompute` §5, the band's 30K window): file 100K = 444.5, 469.4, 481.7,
+  491.8, 503.4 (n = 5, sample SD 22.6); ours 540.6, 531.8 — above all five. 200K file = 748.2 … 801.6; ours 831.3, 846.3 —
+  above all five. A band of mean ± 2 SD from 5 seeds is narrow for judging ONE new seed (the 95% one-seed interval is
+  409–547 at 100K, 713–843 at 200K: three of our four cells are inside it), but 2 of ours above all 5 of theirs has a
+  chance of 1 in 21 if they were the same build (1 in 56 if s1 lands above too). Weak, and it points the same way twice.
+- **Reading, a hypothesis not a verdict:** the only recipe-level difference that could move learning speed is the smaller
+  encoder/decoder (or float32). The frozen rule's "miss → build fault" would then be a SIZE fault of the port's `S` file,
+  in the faster direction. The arm that tests it is one override set, composes today (checked, no run):
+  `algo.world_model.encoder.mlp_layers=5 …encoder.dense_units=1024 …observation_model.mlp_layers=5
+  …observation_model.dense_units=1024`. It is a NEW arm (ruling 70's terms if the Director reads it so; fault named: the port's size
+  file is not the published size) — the Director's to freeze; ~4.3 T4-h a seed, so W48.
+- No band, seed or verdict is changed by this addendum. s1 is still running; `rows v1s-score` judges at 3.
+
 ## Row A3 — brain A on DMC ball_in_cup_catch: **PASS** at 3 seeds (11-21 02:40, Kaggle T4)
 
 Kaggle `jack-ladder-1795220723`, COMPLETE; result file read from the watcher's download dir (4 runs rc 0, none cut).

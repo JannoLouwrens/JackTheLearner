@@ -609,3 +609,13 @@ after t=0 ignored, carry fed probs not the sample); unpatched port passes.
   [1e-7, 1-1e-7] as `file_noise.py`; no straight-through gradient (no training at this rung); f32
   (published bf16); the prerun's 128 uniforms are skipped in the golden, so the port reads call 1 on.
 - Toy size only. No speed read. Wheel re-check not run. **Rungs 3, 6, 7 all PASS → J16's done-when met.**
+
+## J16 tail — the PyPI wheel line for rungs 3 / 6 / 7 (11-21): **WHEEL PASS**
+Kaggle CPU kernel `jack-cpu-1795286363` (`wheel_kernel kernel 367`, verdict fixed before the run,
+`fb0cf19d`), PyPI `mlx[cpu]==0.32.4`, x86_64 / glibc 2.39 / Python 3.13.18; result
+`/data/jack-logs/mlx/wheel_367.json`, re-read by `wheel_kernel verdict FILE 367`. All six runs rc 0:
+`rung3.py` **2/2** eager AND compiled (mlx 0.32.4), `--planted` **5/5 caught**; `rung6.py` **2/2**,
+`--planted` **3/3 caught**; `rung7.py` **2/2** (deter 8.7e-8, post 3.0e-7, prior 7.9e-7 vs the NumPy-64
+reference, 0 of 1,024 samples flipped, constant-noise control flips 760), `--planted` **4/4 caught**.
+Tests unchanged from the box's conda-forge run. Same limit as the rung 1/2 line: Linux x86_64 wheel,
+not the Mac's macOS arm64 binary; rungs 6/7 at toy size; no speed read.
