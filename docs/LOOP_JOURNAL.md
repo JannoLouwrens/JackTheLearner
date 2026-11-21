@@ -3231,3 +3231,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `experiments/brain_a/rung6.py`: NumPy float64 reference of one RSSM step vs the official code, 12/12 — all within 3.3e-7, reset rows equal a fresh start, kept rows differ (control), three planted wrong references caught (one first draft of a mutant was a no-op and missed; fixed).
 - Golden npz committed. Next: port stub + failing tests.
 - Philosophy served: 4 (a reference trusted only because three wrong ones were caught by it), 7 (the Mac port's recurrent core now has a checked target).
+
+## 2026-11-21 16:37–17:02 UTC · JACK (short slot) · J16 row 2.2 — RUNG 6 PASS
+- First act: Kaggle — A2-v1S s2 RUNNING, s1 still QUEUED (nothing home); J17 done, J18 forge's, J10 waits the Director → J16.
+- Tests committed failing first (`f5fa4cad`, stub 0/2), then the port of one recurrent step in MLX: 2/2 eager AND compiled against the NumPy reference and the official golden; reset rows equal a fresh start, kept rows differ. Three planted wrong ports all caught (`563bce52`).
+- Next: row 2.3, the 64-step memory pass; needs a per-step golden with the posterior sampler.
+- Philosophy served: 4 (pass counted only beside a control and three caught mutants), 7 (the Mac's brain core now has a checked recurrent step).
