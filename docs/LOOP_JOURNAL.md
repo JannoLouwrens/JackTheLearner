@@ -3290,3 +3290,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J15's `e2c_q_row`/`e2c_h_row` applied unchanged: sighted Q 300k ÷ SUPPORTED 1.2–2.2 (10/10 > 1, Q rising to 473–1,360), blind 0.4–0.8 (0/5); H holds −8 in all 15 learning runs; α rises only where Q rises. WORLD_CARD addendum `c905410a`.
 - Narrows the Director's cause hunt: entropy out; critic-on-eye-content (input norm / critic lr / τ) first. No verdict changed, no run.
 - Philosophy served: 4 (a failure traced to its cause rather than filed), 5 (the next box-minute pilot aimed by measurement).
+
+## 2026-11-21 20:07–20:45 UTC · JACK (short slot) · J14 (b) — the 1m rows diffed against their own official config
+- First act: Kaggle 20:10 — A2-v1S s1 `…268291` and the three row-6 CPU kernels RUNNING; nothing home. W47 ~2.4 GPU-h left: no v1S seed fits the second GPU seat. Took INBOX 19:15 (2), J14 (b)'s open no-run thread.
+- New `brain_a/v2_diff` (official `elements.Config` 3.19.1 on `e01491f` defaults + dmc_proprio vs sheeprl as A2 ran): **67/73 SAME, 0 undisclosed**; the 6 differs are the named recipe (ratio, repeat, envs, precision) + README-only replay/prefill. Planted control (defaults only) flips 11/11 size rows. `v1s_diff` still 49/56.
+- Reading: the 1m A2 miss is not a v1S-style hidden-size fault. KNOWN_ANSWERS addendum; no verdict, band or seed changed.
+- Philosophy served: 3 (the recipe checked against its source by its own code), 4 (a check counted only because its control fired).
