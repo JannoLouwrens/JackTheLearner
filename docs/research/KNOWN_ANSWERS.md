@@ -668,3 +668,20 @@ Rule frozen `5464c5b8` (`experiments/needs_grid_row.py` docstring), 6 cells × s
 - Pixel colours along res 1's bottom edge from the corner (cells ≈ 24.5 px; background 0.12 on the viridis scale, wall 0): ≈ 1, 0.72, 0.34, 0.2 of the peak above background. Σ = I in cell units gives 1, 0.61, 0.14, 0.01 — the drawn map falls off more slowly (σ ≈ 1.4 cells fits better). Colour → value is our reading, ± ~0.1.
 - Also in all four maps: one dark (= wall-valued) cell at walkable (1, 1) from the top-left — an obstacle or an agent marker; the text says neither. Ours has no such cell.
 - Not yet a fix: the re-registered rule must pick μ ON the walkable corner (the figure's reading) and say whether σ stays 1 (the text) or not. Cheapest test first: one dqn@5000 seed with μ moved, as a pilot (stated so), before a 60-run kernel.
+
+### NH-1 addendum 2 — the μ-inside PILOT read (11-21 07:30, box, 2 seeds; a pilot, NOT a row)
+
+`needs_grid_row pilot 2|5`: dqn@5000, 30,000 steps, the ONE change = each Gaussian's peak on the walkable
+corner (`MUS_INSIDE`), 3,686 s / 3,689 s wall on the box.
+
+| seed | Δ frozen μ (NH-1, peaks in the wall) | Δ μ inside (pilot) | final stats h (target 5.0) |
+|---|---|---|---|
+| 2 | 17.2 | **1.22** | 4.53 / 5.33 / 5.05 / 4.66 |
+| 5 | 25.0 | **1.87** | 4.59 / 5.53 / 5.14 / 5.01 |
+
+Gate (written 06:45 in `prereg/needs_hidden_nh2.md`, before either seed read): launch NH-2 iff BOTH < 5.0 →
+**OPEN** (`needs_grid_row gate-nh2`, enforced inside `kernel --mu-inside`). Reading: moving the peak onto a
+cell he can stand on cuts Δ 14× (s2) and 13× (s5), to the published order of magnitude; all four needs end near 5 (no
+starved need). It is two seeds of one cell: s2 sits inside the published DQN band 0.65–1.45, s5 above it —
+that is what NH-2's ten fresh seeds (10–19) are for. NH-1 stays FAIL. **NH-2 RUNNING** since 07:34 (Colab T4,
+all six cells, tag `nh2_grid_all6_s10_19`).

@@ -85,7 +85,10 @@ with this ruling, commit — that commit is the freeze. (2) Build the arms in
 `WORLD_CARD.md` beside its control; ONE INBOX line with the reading.
 serves: M3 · PLAN "Learning to eat" last 10% ("can 16 rays tell food from a wall?") · philosophy 1, 3, 4.
 **done when:** the four arm rows are in `WORLD_CARD.md` and the rule's verdict is named — row128 eats / neither eats / both eat.
-state: (new 11-21.)
+state: 11-21 07:15 (1) FROZEN `98e22036` (pins copied; "late" = ruling 65's late half = lives STARTING at decision ≥ 150k; the draft's last-quarter number printed beside, not read — INBOX). 07:32 (2) BUILT `59bbdf90`: `J17_ARMS` separate, r0..r4 = one seed's four arms each; old groups byte-identical (5 sha pins); blind arm 298 wide, 256 vision numbers 0, rest identical to K-row128 over 2,000 actions.
+state: FOUND + FIXED before launch: row128's `mj_multiRay` call died under the kernel pin mujoco 3.17.0 (3 of 4 arms would have crashed = VOID); `fast_sim._multi_ray` takes both signatures, first look bit-identical on 3.2.3 and 3.17.0. Learner smoke, NON-rule seed 931, 1,500 decisions, all 4 arms: auto α .89 → .66, lr0 arm flat 1.0.
+state: 07:35–07:37 (3) LAUNCHED r0 `jack-cpu-1795246505`, r1 `…246570`, r2 `…246635` (Kaggle CPU RUNNING, est 7.5 h each; logs `/data/jack-logs/pilot_b2/launch_j17_r{0,1,2}.log` → `pilot_b2/j17_r*.json`). **r3, r4 NOT launched** — the box's 6-poller cap was full; launch them the moment a watcher exits (`pilot_b2 j17-kernel --name r3|r4`).
+state: NEXT, before any kernel is home (~15:00): build the reading — `j17-table` (late-half meals/life per run, MWU U ≥ 21/25 + ≥ 4/5 pairs, row128 vs rays16 and vs blind; first/last capped life beside) with planted tests; then harvest → four rows in `WORLD_CARD.md`.
 
 ### J14 — The free GPU week (W47): A's fix, the needs-hidden row again, the ear
 part: His brain (A) + Ear + Other senses · stage: 1 · step: 3 (reproduce) · prior: §2, §7, §18 item 4; `docs/research/prereg/a2_size_s.md`; rulings 33, 62, 67, 68, 70
@@ -116,10 +119,11 @@ with a box test that a resumed run's buffer length equals the saved one.
 Before any A run longer than the smoke.
 serves: M3, M5 · PLAN ready-list "brain A reproduced … and smoke-tested in his world"; "Ear" 2 → 3 · objective 3 · philosophy 2, 3, 4.
 **done when:** the ear row, A2-v1S's row and NH-2 (or its named no) are in `KNOWN_ANSWERS.md`, and (d)'s test passes.
-state: 11-21 A1–A3 HOME + SCORED (`420217d2`): A1 PASS, A3 PASS, A2 named MISS @100K at 5 seeds. A1 ran on Colab (stock torch), A2/A3 on Kaggle (torch 2.6.0+cu126 re-pin `01561922`) — written beside the rows.
-state: 03:30 A's smoke in his world DONE: 20k/20k, wm loss 26.2→5.27, finite, 18.7 dec/s on a T4 → a 300k pilot ≈ 4.5 T4-h. 05:45 per-sense keys smoke DONE (Colab): 25.38→5.30, finite.
-state: 06:25 NEEDS-HIDDEN Row NH-1: control 384 valid; **R1 FAIL** (dqn@5000 16.8 vs [0.65,1.45]; gmq@5000 8.2 vs [0.32,0.70]), **R2 FAIL** (gmq@1 5.4). Direction reproduces, magnitude 10–20× off. Why: ours puts each Gaussian peak in the wall (best walkable cell 37% of peak); the paper on the walkable corner.
-state: 06:26 box PILOT RUNNING `needs_grid_row pilot 2|5` (μ inside, dqn@5000; frozen-μ seeds read 17.2 / 25.0), logs `needs_grid_row/pilot_s{2,5}.log`. EAR still Kaggle RUNNING (`kws_row/launch_k2.log`).
+state: 11-21 A1–A3 scored (`420217d2`): A1 PASS, A3 PASS, A2 named MISS @100K. (a) EAR `jack-ladder-1795231396` STILL Kaggle RUNNING at 07:38 (4 h 15 m; watcher `kws_row/launch_k2.log`) — harvest when home, check `EAR_TORCH_REPIN 0`.
+state: (b) A2-v1S FROZEN `8f13ab28` (reading written before seed 0), arm built `bdeda9b6` (`rows.py` BASE_V1S; hydra: dense 512, deter 512, discrete 32, 32-true, prefill 1024; frozen A1–A3 lines tested byte-identical). TIMING CELL RUNNING 07:34 `jack-ladder-1795246441` (Kaggle GPU; log `brain_a/rows/launch_v1s_timing.log` → `rows/v1s_timing.json`, key `projection.hours`; no score read).
+state: (b) NEXT: read the projection → `rows v1s-kernel 0 --control --est=<h>` then seeds 1, 2, one per kernel (`v1s-score` judges by row A2's rule). If projection is None the runner's `Time/*` scalars did not log — read `time_scalars` in the json, do not guess.
+state: (c) pilot HOME 07:30: μ inside reads Δ **1.22 (s2), 1.87 (s5)** vs frozen-μ 17.2 / 25.0 → gate (< 5.0 both) OPEN. NH-2 FROZEN + built `37dcc858` (gate in code, seeds 10–19, tag `nh2_grid_*`). **NH-2 RUNNING 07:34 on Colab T4** (Kaggle refused: 2 GPU sessions held; session `ladder-1795246472`, watcher pid 2440962, log `needs_grid_row/launch_nh2.log`, ~2.4 h). Harvest: `needs_grid_row score-nh2` → `KNOWN_ANSWERS.md` Row NH-2.
+state: (d) NOT started (replay in A's in-world checkpoint + resume-length test) — before any A run longer than the smoke.
 
 ### J18 — Forge round 1 is a KEEP round (the rule's terms; lane `forge` runs it)
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19, §21, §22; `docs/FORGE_POOL.md`; rulings 61 (amended), 65, 69
@@ -270,6 +274,11 @@ clauses; `verify` VENUE 266 vs 256.
 
 ## INBOX — one line each, workers add, the Director empties
 (emptied 11-21 06:45 — every line of 11-20/21 is ruled in 64–75 or became J17, J18, J14 (b)–(d), J10, S11, S14, Next-up.)
+- 11-21 07:15 JACK · J17 freeze: the draft says primary "late" = last QUARTER of lives, ruling 65 (which names J17) says late HALF of the run. Frozen `98e22036` as ruling 65's late half (lives starting ≥ 150k), the last-quarter number printed beside and not read. No kernel is home before ~15:00 — say so before then if the other window was meant.
+- 11-21 07:32 JACK · MACHINE/WORLD: the box venv runs mujoco 3.2.3, every Kaggle kernel pins 3.17.0, and the worlds are NOT the same world: same seed, same 2,000 random actions on K-row128 → 0 meals (3.2.3) vs 2 meals (3.17.0); first look identical. Any box row (hand forager 20/20, floors) set beside a Kaggle learner row crosses versions. RESEARCH/ruling: one version for both, or every box row re-read on 3.17.0 (`/data/venvs/jack-std` has it).
+- 11-21 07:32 JACK · MACHINE: `fast_sim` row/multiray eyes needed each caller to remember `sim_speed_kcpu._compat_multiray()`; `pilot_b2` did not (fixed in the eye itself, `59bbdf90`). `eye_streak.py:173` and `find_himself.py:132` still call the 3.2.3 signature directly.
+- 11-21 07:25 JACK · MACHINE: no venv on the box has `pytest`, and `tests/test_needs_grid_row.py` imports it (ran through a stand-in); `test_pilot_b2_kernels` / `test_e2c_kernel` print FAIL under the project venv (no `sbx`) and PASS under `/data/venvs/jack-std` — the header says so, the `run` tooling does not.
+- 11-21 07:10 JACK · MACHINE: `launch_detached.sh`'s cap counts a GPU/CPU-kernel WATCHER as a busy job at launch, so with 2 box jobs computing no kernel can be pushed (the A2-v1S timing cell waited 25 min behind the two needs pilots while a Kaggle GPU seat sat empty); and the 6-poller cap left J17's r3, r4 unlaunched with 2 Kaggle CPU sessions idle (ruling 60: "no session sits idle").
 
 ## DONE (kept one day)
 

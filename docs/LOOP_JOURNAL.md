@@ -3086,3 +3086,12 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First act: ps + `kernels status`: ear `…231396` Kaggle RUNNING (3h15m); needs-hidden μ-inside pilot seeds 2, 5 alive on the box (13 CPU-min each at 11 min wall). Nothing to harvest.
 - Drafted `docs/research/prereg/needs_hidden_nh2.md` (text, no seed) BEFORE either pilot seed reads: one apparatus change (μ on the walkable corner), σ = I and unbounded stats held, NH-1's cells/bands/clauses unchanged; gate fixed in advance: NH-2 launches only if BOTH pilot seeds read Δ < 5.0, else the next pilot is stat bounds. OPEN: σ 1.4 second pair; this week's hours.
 - Philosophy served: 4 (the gate and bands written before the pilot can shape them; a failed row worked on, not filed).
+
+## 2026-11-21 07:07–07:45 UTC · JACK · J14 (b)+(c) frozen, built, launched; J17 (1)–(3) frozen, built, 3 of 5 kernels launched
+- First act: ps + `kernels status`: ear `…231396` Kaggle RUNNING; needs-hidden pilots s2/s5 still computing on the box (both box seats held → the launch guard refused the timing cell until 07:30). One Kaggle GPU seat and all 5 CPU sessions were empty.
+- J14 (b): `a2_size_s.md` FROZEN `8f13ab28` (ruling 67 pins, reading before seed 0); arm A2-v1S built beside the frozen rows `bdeda9b6` (compose-checked against sheeprl's own configs; A1–A3 command lines byte-identical); timing cell RUNNING `…246441`.
+- J14 (c): NH-2 FROZEN + `kernel --mu-inside` built with the gate in code `37dcc858`, both before either pilot seed read. Pilot HOME 07:30: Δ 1.22 / 1.87 (was 17.2 / 25.0) → gate open → NH-2 RUNNING on Colab (Kaggle's 2-GPU cap refused it).
+- J17: rule FROZEN `98e22036`; arms + blind eye + r0..r4 built `59bbdf90`. Running the arms under the kernel's own mujoco (3.17.0) found the row128 eye crashing at construction — fixed in `fast_sim` (bit-identical first look on both versions) before any Kaggle hour was spent. r0–r2 RUNNING; r3, r4 wait on the poller cap.
+- Also found: the box (mujoco 3.2.3) and Kaggle (3.17.0) worlds diverge under the same actions (0 vs 2 meals in 2,000 decisions) → INBOX.
+- No ledger change. Receipts `gpu_submissions.jsonl`, `gpu_budget.json`, `cpu_budget.json` committed by name.
+- Philosophy served: 4 (three rules frozen before their numbers; a gate enforced in code; a must-fail arm proven blind; a failed row re-run with the fault named) and 6 (five free sessions filled, and ~37 free CPU-hours not burned on a crash).
