@@ -1100,6 +1100,35 @@ def output_pattern(fetch: Optional[list[str]]) -> list[str]:
     return ["--file-pattern", f"(^|/)({names})$"]
 
 
+def _kaggle_fetch_output(ref: str, work: Path, fetch: Optional[list[str]],
+                         fetch_only: bool, timeout_s: int = 300) -> tuple[Path, str]:
+    """Download a finished kernel's output; never let the download eat the result.
+
+    THE SCAR (11-21, J14): A2b/A3 left 0.6-1.2 GB of sheeprl logs, the
+    whole-output pull hit its 300 s timeout, and `TimeoutExpired` escaped
+    AFTER the GPU job completed: no result receipt, ~3.8 T4-h never charged.
+    On a timeout the named `fetch` files (+ console log) are pulled again into
+    a FRESH dir (the first may hold truncated files). Returns (dir, note);
+    note is "" when the first pull finished."""
+    def pull(d: Path, pattern: list[str]) -> bool:
+        d.mkdir(exist_ok=True)
+        try:
+            _run([KAGGLE, "kernels", "output", ref, "-p", str(d)] + pattern, timeout_s)
+            return True
+        except subprocess.TimeoutExpired:
+            return False
+
+    first = work / "out"
+    if pull(first, output_pattern(fetch if fetch_only else None)):
+        return first, ""
+    if fetch and not fetch_only:
+        retry = work / "out_named"
+        if pull(retry, output_pattern(list(fetch) + [ref.split("/")[-1] + ".log"])):
+            return retry, (f"whole-output download timed out after {timeout_s}s; "
+                           f"re-fetched only {', '.join(fetch)}")
+    return first, f"output download timed out after {timeout_s}s"
+
+
 def run_on_kaggle(script: Path, timeout_s: int = 1800,
                   fetch: Optional[list[str]] = None,
                   journal: Optional[Path] = None, cpu: bool = False,
@@ -1257,11 +1286,12 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     # status when reusing, not only for `complete`.
     artifacts, log_path, k_out, k_err = {}, "", "", ""
     if status == "complete" or reuse:
-        outdir = work / "out"
-        outdir.mkdir(exist_ok=True)
-        _run([KAGGLE, "kernels", "output", f"{username}/{slug}", "-p", str(outdir)]
-             + output_pattern(fetch if fetch_only else None), 300)
+        outdir, fetch_note = _kaggle_fetch_output(f"{username}/{slug}", work, fetch,
+                                                  fetch_only)
         artifacts, log_path, k_out, k_err = _kaggle_collect(outdir, slug)
+        if fetch_note:
+            poll_note = f"{poll_note}; {fetch_note}" if poll_note else fetch_note
+            print(f"!! {job_id}: {fetch_note}", file=sys.stderr, flush=True)
 
     if reuse:
         # THE 15x SCAR (10th overseer audit, 2026-08-12). With the meter opened
