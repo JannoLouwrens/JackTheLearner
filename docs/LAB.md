@@ -60,12 +60,9 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   want. Not entered (a given want is advice, not his). Philosophy 1, 3, 4.
 
 - 11-15 · **Ear — taught by his own prediction of sound** (ASR, VACANT;
-  `ear_predict.py`, long form `837b4c6f`; 70k weights, 5.5 h of unlabelled
-  Speech Commands, then 25 hearings per word) · **DEAD:** next-tick MSE +1.8
-  points at 200 ms, +2.3 at 40 ms (bar +5.0; shuffled twin −0.5 / +0.3); CPC
-  +0.5. He predicts the next tick and it buys his words nothing; published
-  gains start at 100 h. Unrun: listening hours as the dial; the narrator's
-  label as the loss. Data `/data/jack_corpora/speech_commands_v2`. Philosophy 2, 3, 4.
+  `ear_predict.py`; 70k weights, 5.5 h unlabelled speech, 25 hearings a word) ·
+  **DEAD:** +1.8 / +2.3 points (bar +5.0; shuffled −0.5 / +0.3); CPC +0.5.
+  Published gains start at 100 h. Unrun: the narrator's label as the loss.
 
 - 11-16 · **Eye — a streak, not a grid** (Vision encoder; `eye_streak.py`, rule
   first `bddffac4`; long form `78902da4`) · **ALIVE, ENTERED (now order J12):**
@@ -106,40 +103,38 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   END-FIT 2, 4. Philosophy 1, 2, 3, 4.
 
 - 11-20/21 · **Taste teaches the eye where food is** (Vision encoder, BY
-  DEFAULT; PLAN "Learning to eat" right column; `taste_eye.py`, rule
-  `a84e08d7`, judge repaired before data `fe77023c`). Bet: E2c showed a
-  learner handed the direction to food eats — so grow the direction in him.
-  A ring over his 128 rays, trained only on "I eat within 2 s" from random
-  pushes, points at food with its peak ray. Kill: on 20 fresh worlds the
-  peak hits in-sight food < .50, or < .25 over shuffled / untrained /
-  "nearest thing". Prior: weak labels localise at ImageNet scale (Oquab
-  2015; Zhou 2016, from memory); nothing at ~200 meals. **READ 11-21 21:47
-  (JACK slot, rule unmoved, `/data/jack-logs/taste_eye/read.json`): DEAD,
-  not VOID.** Peak-ray hit on in-sight food, 20 judge worlds, 33,402 looks,
-  3 inits: taste128 **.080** vs untrained .082, shuffled .024, nearest
-  .032, taste16 .018; told (handed the target) .829 ≥ .80 → the net and
-  data CAN localise, so the miss is the label. Clauses: only "ahead of
-  shuffled" holds (19/20); ahead of untrained 10/20. 215 meals, 2,123
-  positive looks of 125,840. Untrained .082 ≫ random .020 is an init bias,
-  not sight. `taste_eye reflex` is NOT run (stage 2 needed ALIVE).
-  END-FIT 1, 5. Philosophy 1, 2, 3, 4.
+  DEFAULT; `taste_eye.py`, rule `a84e08d7`; long form `3c17e958`) · **DEAD:**
+  a ring over 128 rays trained only on "I eat within 2 s" points at in-sight
+  food on **.080** of 33,402 judge looks vs untrained .082, shuffled .024,
+  nearest .032; handed the food's ray (told) .829 — so the miss is the LABEL.
+  Found: food wears one of 4 colour sets by world; only .43 is always food.
 
 - 11-21 · **One parent's voice, heard as bigger and smaller people** (ASR,
-  VACANT; PLAN "Ear" right column "one voice that carries over to other
-  voices"; `ear_one_voice.py`, rule first `8cc61917`). Bet: at 5 hearings a
-  word, an ear raised on ONE speaker that warps each hearing's pitch axis
-  (0.8–1.25, a longer or shorter vocal tract) understands strangers better
-  than on the plain hearings. Kill: under +5.0 points over 12 parents, or
-  ahead on < 10, or matched noise does half as well. Prior: the record's
-  ears had ~2,600 speakers; the warp is published only with many speakers
-  already present (Jaitly & Hinton 2013, from memory); one voice: silent.
-  **DEAD** (12 parents, 4,074 strangers' recordings, chance .10): one voice
-  **.257**, warped **.279 (+2.2 points, ahead 8/12)**, matched noise .260
-  (+0.3, fails as it must), 50 voices .287. Reported: at 5 hearings one
-  voice is only 3.0 points behind fifty — but twice as chancy (spread .055
-  vs .030: which parent matters more than how many). The warp is real and
-  small; it closes .74 of a gap that is itself small. Cannot say: anything
-  at the hundreds of hearings a real parent gives (one Speech Commands
-  speaker has 5). Unrun: the same question on VCTK (on disk, 400 sentences
-  a speaker) where one voice can be heard 100+ times.
-  END-FIT 2, 3. Philosophy 2, 3, 4, 7.
+  VACANT; `ear_one_voice.py`, rule `8cc61917`; long form `3c17e958`) ·
+  **DEAD:** at 5 hearings a word, one voice .257 on strangers, pitch-warped
+  **.279 (+2.2 points, bar +5.0, ahead 8/12)**, matched noise .260, 50 voices
+  .287. Which parent matters more than how many (spread .055 vs .030).
+  PRIORS §23 since: the record says voices, not hearings. Unrun: VCTK.
+
+- 11-21 · **The mouth names it, the eye remembers backwards** (Vision
+  encoder, BY DEFAULT; PLAN "Learning to eat" right column; `hindsight_eye.py`,
+  rules first `3a8495b6`, `4463800b`). Bet: taste_eye died on its label, so
+  make the label at the meal — imprint the texture of the NEAREST ray when he
+  eats, walk back 8 s marking that texture. Kill: taste_eye's bars (hit
+  < .50, or < .25 over a yoked twin imprinted at random moments / untrained
+  / nearest). Prior: hindsight relabelling and track-back labels are
+  published at 10^4–10^6 clips (Andrychowicz 2017, Pathak 2017, from
+  memory); at ~200 meals: silent. **ALIVE, ENTERED (INBOX proposal).**
+  215 meals, 20 judge worlds, 33,402 looks: as a plain MEMORY (a count of
+  eaten colours, no net) **.890** — above the simulator-taught net's .829 —
+  yoked .000, ahead 20/20; as a ring NET on the same marks **.434, DEAD**
+  (yoked .201, untrained .082). The imprint is 74% on food. By colour set
+  .97 / .99 / .74 / .61. **Stage 2** (reflex along the peak ray, carried
+  table, worlds 1301–1305, 2,400 decisions): **50 meals vs held8 2, yoked
+  0 — ALIVE-2**; read it as "reaches a food by ~18 s and camps on it": 10
+  meals a world is the 50 s regrow clock, 5/5 worlds. Disclosed: judge worlds
+  were read once by taste_eye; told not refitted. Cannot say: a learner uses
+  it; the table filled from empty as he lives; a camera eye (W0's colour is
+  one clean number per object — there the net form is needed, and it is
+  the dead one). Unrun: the net with the table's output as its teacher.
+  END-FIT 1, 2, 5. Philosophy 1, 2, 3, 4.

@@ -3332,3 +3332,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Launched detached 22:24 (jack-std, nice 19, 1 thread each): box K-row128 + blind, s923, 30k; reader `j17_onset box-twin` (SAME TRAJECTORY / ANOTHER DRAW / VOID) frozen with 3 plants before any result.
 - Philosophy served: 4 (a sizing claim that could not have shown the effect, caught and withdrawn before anything was run on it), 5 (the hunt's apparatus checked before paying for arms).
 - 22:41 box twin HOME (23.5 CPU-min a 30k cell): `j17_onset box-twin` → **ANOTHER DRAW**, 0/5 critic windows equal Kaggle's. World identical (5k warm-up window and life 0 = 2,506 decisions bit-equal); split from life 1 = learner float maths across CPUs. Box blind s923 critic 12.3 @30k vs Kaggle 3.0 — the box is a fresh seed draw. Every hunt arm carries its own blind twin. Data copied to `world_card_data/j17/box_twin/`.
+
+### 2026-11-21 23:50 · LAB · the mouth names it (hindsight_eye)
+- Follow-up to taste_eye's dead label: imprint the nearest ray's texture AT the meal, walk back 8 s. Rules committed before each read (`3a8495b6`, `4463800b`); dev on train worlds only.
+- Stage 1 (20 judge worlds, 33,402 looks): colour-count memory .890 ALIVE (told .829, yoked .000, 20/20); ring net on the same marks .434 DEAD (yoked .201).
+- Stage 2 (worlds 1301–1305, 2,400 decisions, jack-std): reflex 50 meals vs held8 2 vs yoked 0 = ALIVE-2; he camps on one food (10 a world = regrow clock). INBOX proposal; no learner run launched.
+- Philosophy served: 1, 2 (his own mouth is the teacher), 3, 4 (yoked twin fails at zero).
