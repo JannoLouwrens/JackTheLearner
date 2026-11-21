@@ -198,7 +198,7 @@ smoke against that file's DONE (1)–(4). The frozen A1–A3 rows untouched.
    state: box smoke 1,200 dec: rc 0, sheeprl Encoder/Decoder MLP keys = 5 senses, no first-key warning; (1) STEPS + (3) NO NaN yes (8 Loss/* finite, reward_loss 5.537 = flat smoke); (2) LEARNS undecidable at 1 logged step — same as the flat smoke; (4) 2.2 dec/s loaded box, no claim.
    state: 11-20 17:40 `kernel --per-sense` BUILT `3d3d2962`: flat GPU job byte-identical (sha pinned), per-sense adds only `keys=` and fetches `inworld_s0_body_per_sense.json`; tests 8/8.
    state: 11-21 05:09 LAUNCHED (ruling 60 rank 0, < 1 h) `in_world kernel --per-sense`, log `brain_a/in_world/launch_ps1.log`: Kaggle refused ("Maximum batch GPU session count of 2" — ear + needs-hidden hold both) → fell back to Colab T4, RUNNING.
-   next: harvest `/data/jack-logs/brain_a/in_world/inworld_per_sense.json`, judge (1)–(4) beside the flat smoke (KNOWN_ANSWERS "A's smoke").
+   state: 11-21 05:45 **DONE** — HOME (Colab, 1,433 s), KNOWN_ANSWERS "A's smoke, per-sense keys": (1) 20k/20k rc 0, (2) wm loss 25.38→5.30 (flat 26.19→5.27), (3) all finite → hold; (4) 14.4 dec/s vs flat 18.7 NOT comparable (Colab host: sps_env 104 vs 186, sps_train 29 = 29). Flat vs per-sense HELPS = a future race, not this smoke.
 2. `world_card`: a per-food eat count per life (today `BOUT_GAP` = 5 is
 shorter than regrowth, so `floor_bouts` = `floor_eats_all` and "meals from
 one food" cannot be read) — with a planted test; no old row re-scored.

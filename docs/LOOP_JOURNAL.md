@@ -3062,3 +3062,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Checked on the box (hydra compose only): both arms build with the row's overrides; sheeprl's own v1 DMC exp defaults to size S. Found: the v1 exp pins bf16-mixed, which a T4 has no native support for. Left open for the Director.
 - J14 state compressed to 5 lines. No ledger change.
 - Philosophy served: 3 and 4 (a miss is turned into a test that could fail either way, and the band is unchanged). The draft is text; no measurement moved.
+
+## 2026-11-21 05:37–05:50 UTC · JACK (short slot) · J14 waiting (ear, needs-hidden RUNNING) → Next-up 1 harvested (per-sense A smoke) DONE
+- First act: ps + `kernels status`: ear `…231396`, needs-hidden `…234980` both RUNNING on Kaggle; nothing for J14 to harvest. J15/J3/J16 DONE, J10 waits on a ruling → Next-up 1.
+- Per-sense A smoke HOME (Colab, 1,433 s): 20k/20k rc 0; wm loss 25.38 → 5.30 (flat 26.19 → 5.27); all 8 losses finite → (1)–(3) hold. Speed 14.4 vs 18.7 dec/s NOT read as a per-sense cost: sps_train identical (29), the gap is env interaction on a different host.
+- KNOWN_ANSWERS "A's smoke, per-sense keys"; no ledger change. Whether per-sense keys help is a race for a later rule.
+- Philosophy served: 1 (one brain fed each of his senses as its own channel now runs end to end) and 4 (a speed gap not claimed when the host differed).

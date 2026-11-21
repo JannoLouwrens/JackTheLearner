@@ -628,3 +628,17 @@ Kaggle `jack-ladder-1795227930`, COMPLETE, watcher exited clean (`/data/jack-log
 - Not read (the rule forbids it at 20k): meals, lives, return. The 4 finished lives (−97, −97, −99, +100) are a smoke, not A eating.
 - Seen, descriptive: `Loss/state_loss` (KL) rises 1.14 @3k → 3.02 @20k while reconstruction falls — the posterior using more of the senses; no claim.
 - Cost for the pilot draft: 300k decisions at 18.7 dec/s ≈ 4.5 T4-h a run (an upper figure: compile time amortises), not ruling 62's ≈ 1.6 h. sheeprl reports sps_train 29 vs sps_env 186: the slow part is training, not his world.
+
+### A's smoke, per-sense keys (Next-up 1, §18 item 2) — **(1)–(3) hold; (4) not comparable** (11-21 05:45)
+
+Colab GPU session `ladder-1795237765` (Kaggle refused: 2-session cap held by ear + needs-hidden), rc 0, receipt 1,433 s; `/data/jack-logs/brain_a/in_world/inworld_per_sense.json`. Same rule as the flat smoke (`in_world.py` docstring), same seed 0, body motor, 20k decisions, compile on; only change: `keys=per_sense` (5 encoder AND decoder mlp keys: vision, audio, touch, proprio, needs). GPU model not recorded by the job.
+
+| clause | flat (Kaggle T4) | per-sense (Colab) |
+|---|---|---|
+| (1) STEPS | 20,000/20,000, rc 0 | 20,000/20,000, rc 0, not cut |
+| (2) LEARNS | wm loss 26.19 → 5.27; obs 17.14 → 1.80; reward 5.26 → 0.43 | wm loss 25.38 → 5.30; obs 16.47 → 1.85; reward 5.26 → 0.36 |
+| (3) NO NaN | all Loss/* finite | all 8 Loss/* finite at 19 logged steps; 2 lives finite (−98.8, +2.5) |
+| (4) SPEED | 18.7 dec/s; sps_env 186, sps_train 29 | 14.4 dec/s; sps_env 104, sps_train 29 |
+
+- Speed is NOT read as a per-sense cost: different host (Colab vs Kaggle), and the gap is all in env interaction (104 vs 186 sps) while training is identical (29 vs 29) — a host difference, not the decoder heads.
+- Descriptive: per-sense wm loss plateaus 5.5–5.8 from 6k to 17k before falling to 5.30; KL (state_loss) 3.38 → 3.06 (flat rose 1.14 → 3.02). No claim at 20k; the frozen A1–A3 rows untouched. Next-up 1 is DONE: the per-sense path runs end to end on a GPU. Whether one key per sense HELPS is a race (flat vs per-sense) for a later rule, not this smoke.
