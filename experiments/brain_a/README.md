@@ -506,3 +506,16 @@ compiled -> PASS (15 s); `rung2.py --planted` **4/4 caught**. Tests unchanged fr
 Limit, stated: this is PyPI's Linux x86_64 wheel of the same version, not the Mac's macOS arm64 binary —
 the source and version the Mac will install pass, the Mac's own binary is first read on the Mac.
 Next (PORT report): the rest of row 1.4 by the report's step table.
+
+## J16 row 1.5 — rung 3: the optimiser → PASS (11-21, step 1.5)
+
+`experiments/brain_a/rung3.py` (tests `opt_cfg`, `opt_vis`; configs.yaml exactly + a visible-step
+config, 5 steps, agc bind / pmin / free branches). References vs the official `_make_opt` under
+`jax.jit`: **14/14** (`--vs-official`). The jitted warm-up ramp is named: XLA:CPU runs
+`lr_t = fma(-lr, fma(-count, f32(1/warmup), 1), lr)` (as rung 1's linspace), bit-exact at every
+count of four configs. Golden = the jitted official chain, `rung3_opt_golden_e01491f.json`
+(`--vs-official --dump-golden`); the port is read against reference AND golden at 1e-6.
+Stubs committed failing `dfde3cf9` (0/2); filled → **RUNG 3: 2/2 PASS eager AND `mx.compile`d**
+(mlx 0.32.4). `--planted` 5/5 caught + the bug-free chain as a control PASSES; a mutant of the real
+port with an unfused outer ramp FAILS (6.5e-6). Rungs 1 (9/9) and 2 (4/4) re-read PASS. Ours beside
+theirs: in `mlx_maths.py` above `opt_update`. Wheel re-check not yet run.

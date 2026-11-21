@@ -229,15 +229,54 @@ def slow_update(src, dst, count, rate, every):
 
 
 # ---------------------------------------------------------------- rung 3 (step 1.5)
-# agent.py L342-380 `_make_opt` + embodied/jax/opt.py: clip_by_agc -> scale_by_rms
-# -> scale_by_momentum -> warm-up learning rate. STUBS (committed failing,
-# 11-21): rung3.py must read 0/2 before these are filled.
-# state = (step int, nu dict, mu dict).
+# agent.py L342-380 `_make_opt` + embodied/jax/opt.py: clip_by_agc(agc, pmin
+# 1e-3) -> scale_by_rms(beta2, eps) -> scale_by_momentum(beta1) -> (wd 0) ->
+# optax.scale_by_learning_rate(warm-up). state = (step, nu dict, mu dict),
+# step an int32 mx.array (counts updates done; optax's schedule count = step).
+# Ours beside theirs:
+#   | warm-up lr | optax linear_schedule (count/steps, (init-end)*frac+end) | `_ramp`: fma(-lr, fma(-count, f32(1/warmup), 1), lr), each fma one float64 rounding | what XLA:CPU runs under jit (rung3.ramp, measured bit-exact); the agent trains jitted |
+#   | pow        | jnp `f32(beta) ** step` | mx.power(f32(beta), f32(step)) | MLX has no integer_pow; read to 1e-6 by rung 3 |
+
+_PMIN = 1e-3
+
+
+def _ramp(lr, warmup, count):
+    if not warmup:
+        return mx.array(lr, f32)
+    L = mx.array(lr, f32).astype(mx.float64, stream=mx.cpu)
+    r = (mx.array(1.0, f32) / mx.array(float(warmup), f32)).astype(mx.float64, stream=mx.cpu)
+    c = mx.minimum(count, warmup).astype(f32).astype(mx.float64, stream=mx.cpu)
+    frac = mx.subtract(1.0, c * r, stream=mx.cpu).astype(f32, stream=mx.cpu)
+    lr_t = (-L * frac.astype(mx.float64, stream=mx.cpu) + L).astype(f32, stream=mx.cpu)
+    return mx.where(count < warmup, lr_t, mx.array(lr, f32))
+
 
 def opt_init(params):
-    raise NotImplementedError("rung 3 stub: opt_init")
+    z = {k: mx.zeros(v.shape, f32) for k, v in params.items()}
+    return (mx.array(0, mx.int32), z, {k: mx.zeros(v.shape, f32) for k, v in params.items()})
 
 
 def opt_update(params, grads, state, lr, warmup, agc, eps, beta1, beta2):
     """-> (params', state', updates); updates = the lr-scaled step, pre-store."""
-    raise NotImplementedError("rung 3 stub: opt_update")
+    count, nu, mu = state
+    step = count + 1
+    lr_t = _ramp(lr, warmup, count)
+    # opt.py casts (1 - decay) from Python float64 to f32; bias correction in f32
+    b1, b2 = mx.array(beta1, f32), mx.array(beta2, f32)
+    a1, a2 = mx.array(1 - beta1, f32), mx.array(1 - beta2, f32)
+    bc1 = 1 - mx.power(b1, step.astype(f32))
+    bc2 = 1 - mx.power(b2, step.astype(f32))
+    newp, nnu, nmu, upd = {}, {}, {}, {}
+    for k in params:
+        p, u = params[k], grads[k]
+        # clip_by_agc: u * 1/max(1, |u| / (clip * max(pmin, |p|)))
+        un = mx.sqrt(mx.sum(u * u))
+        pn = mx.sqrt(mx.sum(p * p))
+        u = u * (1 / mx.maximum(1, un / (agc * mx.maximum(_PMIN, pn))))
+        nnu[k] = b2 * nu[k] + a2 * u * u
+        u = u / (mx.sqrt(nnu[k] / bc2) + eps)
+        nmu[k] = b1 * mu[k] + a1 * u
+        u = nmu[k] / bc1
+        upd[k] = -lr_t * u
+        newp[k] = p + upd[k]
+    return newp, (step, nnu, nmu), upd
