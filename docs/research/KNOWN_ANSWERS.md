@@ -510,3 +510,25 @@ Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed, `0bf84989`):
 - **The rule's ONE extension applies** ("a task that misses at 5 seeds runs seeds 5..14 and is judged once more at
   k = 15", band 841.7–864.3). Not yet built: `kernel 5` runs seeds 0–4 only. Row 6 waits, because the rule says a
   miss on row 5 is fixed first, not stacked.
+
+## Row A1 — brain A (sheeprl `dreamer_v3_5`, size 1m) on DMC cartpole_balance: **PASS** at 3 seeds (11-21 02:30, Colab T4)
+
+Rule `experiments/brain_a/rows.py` (frozen `286d6451` before any seed; control corrected to no gradient step before
+any seed ran). Kaggle refused the first push at pip (torch pin, fixed `01561922`); the job fell back to Colab
+`ladder-1795219944` (1.90 GPU-h, result recovered from stdout). File `/data/jack-logs/brain_a/rows/rows_A1.json`;
+scored by `python -m experiments.brain_a.rows score A1`. Unit check passed on all 4 runs (first episode at
+policy_step 2,000 for all 4 envs).
+
+| point (env steps) | band | s0 | s1 | s2 | mean | never-trains control | reading |
+|---|---|---|---|---|---|---|---|
+| 100K | 690–898 | 826.3 | 843.5 | 677.0 | **782.3** | 312.5 | in band |
+| 200K | 932–1000 | 973.8 | 994.1 | 984.3 | **984.1** | 296.9 | in band |
+
+- **Verdict PASS; no extension due.** The control sits far below both bands → the row is valid. This is brain A's
+  first reproduced published row (and the first reproduced row of any candidate on a DreamerV3 curve).
+- Seed 2 alone is under the 100K band (677 < 690); the rule judges the 3-seed mean, which is inside. Stated, not used.
+- Not readable: §2's step-0 check. The first logged scalars are at policy step 5,000 (after training began:
+  reward_loss 3.29–3.32, value 2.56–2.85), not step 0. The box smoke (11-17) read 5.541 at step 1,100 — the
+  only step-0 reading we hold.
+- Settings that differ from the published protocol stay as the rule lists them (v2 port, size 1m not S, compile
+  on). Wall per seed on the T4: 1,970–2,665 s for 200K env steps.
