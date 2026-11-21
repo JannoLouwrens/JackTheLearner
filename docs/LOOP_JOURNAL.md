@@ -3129,3 +3129,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Ear `…231396` and A2-v1S s0 `…248791` still Kaggle RUNNING (ear ~6 h); no GPU seat free, nothing else to dispatch.
 - NH-2's watcher exit freed the poller: J17 r3 `jack-cpu-1795253059`, r4 `…253082` pushed → all 5 J17 seeds out. That is 5 CPU sessions vs the Do-line's "≤ 3" — disclosed, INBOX.
 - Philosophy served: 4 (a second, frozen try was scored as the miss it is, and the miss is named down to which seeds and which need), 3.
+
+## 2026-11-21 09:37–09:50 UTC · JACK (short slot) · J16 row 1.5: the optimiser references
+- First act: Kaggle status: ear `…231396`, A2-v1S s0 `…248791`, J17 r0 RUNNING → nothing home; J14/J17 wait on kernels, J18 is the forge's, J10 waits on the Director → J16.
+- Built `experiments/brain_a/rung3.py` `c0dce0d0`: NumPy float64 reference of the official optimiser chain (agent.py L342-380, opt.py), configs.yaml exactly + a visible-step config, 5 steps, branches hit (agc binds, pmin, free). `--vs-official` 10/14.
+- Named, kept as theirs: the moment update casts (1−β) from float64 while the bias correction is float32 → official step-1 rms update inflated ~6.6e-6; optax's ramp cancels in float32. Remaining CFG miss is jit-only: XLA's folded ramp, lr_t −2.3e-6 to −1.28e-5 relative to eager.
+- Not done: golden dump, port stubs, planted run. Next slot: golden from the jitted official, then stubs committed failing.
+- Philosophy served: 4 (the reference was made to agree with the real code, not the other way), 7 (the Mac port).
