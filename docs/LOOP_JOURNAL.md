@@ -3184,3 +3184,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `stage2_a_vs_b.md` (still DRAFT): ruling 65 in — primary = share of lives starting ≥ 500k that are SUSTAINED; §8's time-to-crossing and first/last capped life printed beside, not read; futility, floors and decision table read the late half. Ruling 68 in — gate 2b: B rows 1b/2b/3/3b stand, row 5 a named miss, not blocking.
 - Finding: under ruling 65 gate 1 is UNMET today (E2c reached, then lost 10/10) — stage 2 waits on BOTH J17 (eye) and forge round 1 (keep). Two new OPEN lines: θ_late, and the test on the share.
 - Philosophy served: 1 ("never stop learning" — the race can no longer be won by a brain that eats early and forgets), 3, 4.
+
+## 2026-11-21 13:05–13:15 UTC · JACK (short slot) · J14 (b) harvest + Next-up 3
+- First act: Kaggle: ear `…231396`, J17 r0–r4 RUNNING; A2-v1S s0 `…248791` HOME 12:44 (watcher exited cleanly).
+- A2-v1S s0 (size S, 32-true, prefill 1,024): 576.2 @100K vs band 438–518 (ABOVE), 843.5 @200K vs 740–816; control 61.8/53.6. Not judged — 1 of 3 seeds. The 1m miss (393) does not recur at size S on this seed.
+- Seed 1 REFUSED by the 6-poller cap (ear + 5 J17 CPU kernels): one GPU seat idle until a watcher exits (INBOX).
+- Next-up 3 `974f18e6`: `pilot_b.trace_row` keeps the window's per-dim action std and stores a colliding learner key as `train_std` (SB3 off-policy logs it under gSDE); planted test + control (old build loses it); test_pilot_b_trace PASS.
+- Philosophy served: 3 (brain A's seat earned by reproduction, not assumed), 4 (a trace that silently overwrote its own number fixed, with a test that could fail).
