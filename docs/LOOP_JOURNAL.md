@@ -3302,3 +3302,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `train_segment(carry_life=True)` (default off, J10-1 path unchanged, kernel test 6/6) = B's `save_life`/`resume_life` + MjData/env-RNG `physics.pkl`. Finding on the way: gymnasium MujocoEnv pickles via EzPickle → fresh physics; save_life alone still differed from row 1,000 (reward/next_obs).
 - Twin (jack-std pins, seed 0): T=1,000 and T=1,010 (cut 16 steps into an episode) → control equal, R differs from the cut, RC bit-identical on every item. `d39687f0`, KNOWN_ANSWERS addendum, INBOX line (B's save_life on EzPickle envs).
 - Philosophy served: 4 (a failure's cause fixed, not filed; claimed only beside two planted breaks that fired), 1 (a life that resumes is the same life).
+
+## 2026-11-21 20:37–20:50 UTC · JACK (short slot) · Next-up 4 follow-on — B's save_life carries MuJoCo physics
+- First act: Kaggle 20:38 — A2-v1S s1 `…268291` RUNNING, row-6's three CPU kernels RUNNING; nothing home. J14/J17/J10 wait on kernels or the Director, J18 is forge's, J16 done → took INBOX 20:40's named fault (B's own checkpoint path).
+- `save_life` gains `carry_physics` (default on): MjData + env RNG pickled beside the env when it is MuJoCo (EzPickle rebuilds a fresh one). `b6b2da1d`.
+- `b_life_mujoco_test` (Hopper-v4, jack-std pins, T=1100, cut 44 steps into an episode): U1=U2, resumed == unbroken on every item → PASS; planted no-physics save differs on 13 items from replay row 1101. Pendulum `b_life_resume_test` re-run: PASS, 4/4 plants caught. One seed, toy length; no ledger.
+- Philosophy served: 1 (he must never stop learning — a life that resumes on any machine is the same life), 4 (claimed only beside a planted break that fired).

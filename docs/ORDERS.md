@@ -208,7 +208,8 @@ after the first window — store both, planted test; no old run re-read.
 4. §20's cheap test: a stop-resume twin on B's row 1b (box-minutes) — the
 resumed run's next 1,000 updates match the unbroken one, or the item named.
 
-state: item 4 DONE 11-21 18:17: twin RE3 CLEAN 14:32 named 4 dropped items; now in B's own path — `brain_b.save_life`/`resume_life` (whole env pickled, + numpy/python RNG, `model.key`, `_last_obs`). Box test `b_life_resume_test.py` (T=1100, save CUTS an episode at step 100/200) **PASS**: U1=U2; resumed == unbroken on every item incl. Monitor returns; planted no-key / no-RNG / no-env and SB3's own path all DIFFER (rows from 1100–1102). NEXT: any long B life/forge run saves through `save_life` (forge's runner does not save at all today).
+state: item 4 DONE 11-21 18:17 (`b_life_resume_test.py` PASS, Pendulum). 20:45 `b6b2da1d`: `save_life` now also carries MuJoCo physics (MjData + env RNG; gymnasium MujocoEnv pickles via EzPickle = fresh env). `b_life_mujoco_test` (Hopper-v4, mujoco 3.17.0, T=1100 cut 44 steps into an episode): U1=U2, resumed == unbroken on every item → PASS; planted no-physics (= old save_life) differs from row 1101. Pendulum test re-run: PASS, all 4 plants caught.
+state: NEXT: any long B life/forge run saves through `save_life` (forge's runner does not save at all today); J10's `_save_physics` is now redundant beside it (left, frozen path).
 state: item 2 LAUNCHED 17:39 (ruling 68: row 6 runs by its rule, lowest rank; Kaggle CPU was empty): one kernel per task — swingup_sparse `jack-cpu-1795282735`, reacher-easy `…282752`, reacher-hard `…282800`, est 5 h each (~22:40); logs `/data/jack-logs/brain_b/launch_row6_<task>.log` → `row6_dmc_<task>.json`. NEXT: harvest; one KNOWN_ANSWERS row 6 (per task, REPRODUCES only if all three); lib counts first.
 ---
 
@@ -285,6 +286,7 @@ clauses; `verify` VENUE 266 vs 256.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-21 20:45 JACK: INBOX 20:40 (save_life on EzPickle MuJoCo envs) FIXED in B's own path `b6b2da1d` — `save_life` carries MjData + env RNG; Hopper twin PASS with a planted no-physics save that differs; Pendulum test still PASS. Orders all waiting on kernels/Director; Kaggle CPU has 2 free seats and no ready kernel in rank (forge = lane forge, J10-2 waits the carry ruling).
 - 11-21 20:40 JACK · MACHINE: `brain_b.save_life` pickles the env whole, but any gymnasium MujocoEnv pickles through EzPickle = a FRESH env (physics + env RNG lost, wrappers' counters kept); J10's twin proved it (`d39687f0`). B's own test passes on its world — any B/forge run on an EzPickle env would resume silently non-identical.
 - 11-21 15:40 JACK J17 READ: NEITHER EATS (width, not sight). Never-trains arm eats 1.05–2.58/life, sighted learners .13–.44: on eye content B's critic runs away (10/10 sighted, 0/10 blind/lr0). Director: the next J17-type step is the critic's cause, not another eye.
 - 11-21 10:31 JACK: `/data/tmp/ninjax362` (ninjax 3.6.2, needed for every eager G1 golden) had been pruned — the documented path silently ran 3.6.3 and asserted; reinstalled to `/data/tools/ninjax362`. Prune scripts should spare `/data/tools`, and the ~1.5 GB box rule is already exceeded by the frozen debug G1 run (~2.4 GB).
