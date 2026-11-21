@@ -1712,17 +1712,20 @@
         "detached:launch_ps1.log": 7.05,
         "detached:launch_resume_test.log": 125.17,
         "detached:launch_row5_ext.log": 633.66,
+        "detached:launch_row6_cartpole-swingup_sparse.log": 33.74,
+        "detached:launch_row6_reacher-easy.log": 33.63,
+        "detached:launch_row6_reacher-hard.log": 34.19,
         "detached:launch_s2_seg2.log": 594.7,
         "detached:launch_s2_seg3.log": 481.55,
         "detached:launch_v1s_s0.log": 373.38,
-        "detached:launch_v1s_s1.log": 264.72,
-        "detached:launch_v1s_s2.log": 265.7,
+        "detached:launch_v1s_s1.log": 298.22,
+        "detached:launch_v1s_s2.log": 650.59,
         "detached:launch_v1s_timing.log": 7.98,
         "detached:launch_v1s_timing2.log": 53.74,
         "detached:pilot_s2.log": 3686.99,
         "detached:pilot_s5.log": 3689.7
       },
-      "used_s": 22622.32
+      "used_s": 23142.27
     }
   },
   "last_child_s": {

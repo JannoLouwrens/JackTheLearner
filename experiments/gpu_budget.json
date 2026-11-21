@@ -670,6 +670,12 @@
       "ok": true,
       "week": "2026-W47"
     },
+    "jannolouwrens/jack-ladder-1795268355": {
+      "backend": "kaggle",
+      "hours": 4.3983,
+      "ok": true,
+      "week": "2026-W47"
+    },
     "jannolouwrens/jack-tpu-1795187561": {
       "backend": "kaggle-tpu",
       "hours": 0.0,
@@ -1331,7 +1337,7 @@
     "2026-W47": {
       "colab": 4.0941,
       "colab_failed": 0.009,
-      "kaggle": 18.7289,
+      "kaggle": 23.1272,
       "kaggle_failed": 0.1687
     }
   }

@@ -361,6 +361,89 @@ def make_row1(arm: str, seed: int, steps: int = ROW1_STEPS):
     raise ValueError(f"arm {arm!r} not in {ROW1_ARMS}")
 
 
+# -----------------------------------------------------------------------------
+# B's own checkpoint path (Next-up 4 follow-on, 11-21). The stop-resume twin
+# (`b_row1b_resume_twin.py`, RE3 CLEAN 14:32) named what SB3/sbx's own
+# save()+load() drop: (1) the life in flight (env RNG + physical state +
+# `_last_obs`/episode starts), (2) numpy's GLOBAL RNG (SB3's replay sampler
+# draws batch indices from it), (3) sbx's TRAINING key `model.key`, which
+# SAC.load leaves at [0, 0]. This path carries all of them, and more than the
+# twin did: the WHOLE inner env is pickled (Monitor counters, TimeLimit's
+# elapsed steps — the twin saved only on an episode boundary, so a cut episode
+# was never tested), plus Python's `random` state. An env that cannot be
+# pickled raises: unknown is not zero (LESSONS_CORE 11), never a silent
+# partial save. Test: `experiments/b_life_resume_test.py`.
+# -----------------------------------------------------------------------------
+LIFE_FILES = ("model.zip", "replay.pkl", "key.npy", "life.pkl")
+
+
+def _key_data(key):
+    import numpy as np
+    import jax
+    if hasattr(jax.random, "key_data") and jax.dtypes.issubdtype(key.dtype, jax.dtypes.prng_key):
+        key = jax.random.key_data(key)
+    return np.asarray(key)
+
+
+def save_life(m, d, *, carry_key=True, carry_np=True, carry_env=True):
+    """Save B mid-life so `resume_life` continues bit-identically.
+
+    The keyword switches exist ONLY so the test can plant a broken save (each
+    one False must make the twin differ); every caller leaves them True."""
+    import pickle
+    import random
+    import numpy as np
+    os.makedirs(d, exist_ok=True)
+    if len(m.env.envs) != 1:
+        raise ValueError("save_life: one env per model (DummyVecEnv of 1) only")
+    m.save(os.path.join(d, "model.zip"))
+    m.save_replay_buffer(os.path.join(d, "replay.pkl"))
+    if carry_key:
+        np.save(os.path.join(d, "key.npy"), _key_data(m.key))
+    life = {"last_obs": m._last_obs.copy(),
+            "episode_starts": m._last_episode_starts.copy(),
+            "last_original_obs": (None if getattr(m, "_last_original_obs", None) is None
+                                  else m._last_original_obs.copy()),
+            "episode_num": int(getattr(m, "_episode_num", 0)),
+            "np_global": np.random.get_state() if carry_np else None,
+            "py_random": random.getstate() if carry_np else None,
+            "env": pickle.dumps(m.env.envs[0]) if carry_env else None}
+    with open(os.path.join(d, "life.pkl"), "wb") as f:
+        pickle.dump(life, f)
+    return d
+
+
+def resume_life(d, env, algo=None):
+    """Load what `save_life` wrote. `env` is a fresh env of the same kind (SB3
+    needs one to rebuild spaces); it is replaced by the pickled life if the
+    save carried it. Continue with `m.learn(n, reset_num_timesteps=False)`."""
+    import pickle
+    import random
+    import numpy as np
+    if algo is None:
+        from sbx import SAC as algo
+    m = algo.load(os.path.join(d, "model.zip"), env=env)
+    m.load_replay_buffer(os.path.join(d, "replay.pkl"))
+    with open(os.path.join(d, "life.pkl"), "rb") as f:
+        L = pickle.load(f)
+    m.env.reset()                      # SB3's order check; the life overwrites it below
+    if L["env"] is not None:
+        m.env.envs[0] = pickle.loads(L["env"])
+    m._last_obs = L["last_obs"]
+    m._last_episode_starts = L["episode_starts"]
+    if L["last_original_obs"] is not None:
+        m._last_original_obs = L["last_original_obs"]
+    m._episode_num = L["episode_num"]
+    if L["np_global"] is not None:
+        np.random.set_state(L["np_global"])
+        random.setstate(L["py_random"])
+    kp = os.path.join(d, "key.npy")
+    if os.path.exists(kp):
+        import jax.numpy as jnp
+        m.key = jnp.asarray(np.load(kp))
+    return m
+
+
 def versions() -> dict:
     from importlib.metadata import version, PackageNotFoundError
     out = {"python": sys.version.split()[0]}

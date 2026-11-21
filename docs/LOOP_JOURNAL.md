@@ -3254,3 +3254,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First act: Kaggle — A2-v1S s2 `…268355` RUNNING, s1 `…268291` still QUEUED (nothing home). J17/J16 done, J18 forge's, J10 waits the Director; Next-up 1, 3, 4 already done → item 2.
 - Ruling 68 lets row 6 run by its rule at the lowest rank; all 5 Kaggle CPU sessions were idle. Pushed one kernel per task (swingup_sparse `jack-cpu-1795282735`, reacher-easy `…282752`, reacher-hard `…282800`), est 5 h each, receipts committed. Nothing measured yet.
 - Philosophy served: 3/4 (brain B's seat is held only by known-answer rows that could fail), 6 (free CPU hours that would have sat idle).
+
+## 2026-11-21 18:07–18:25 UTC · JACK · J14 (b) harvest s2 + Next-up 4 follow-on — B's checkpoint path
+- First act: Kaggle — A2-v1S s2 `…268355` HOME 18:05: 596.7 @100K, 849.0 @200K (s0 576.2 / 843.5) — both ABOVE the 438–518 band, which the frozen rule reads as MISS; NOT JUDGED 2/3. s1 `…268291` still QUEUED (4.7 h) with s2's seat free. Row-6 CPU kernels RUNNING. INBOX line on above-band.
+- Built `brain_b.save_life`/`resume_life`: the four items the twin named (life in flight, numpy global RNG, `model.key`, `_last_obs`) now in B's own code; the whole env pickled, so a cut episode's TimeLimit/Monitor counters travel too.
+- Box test `b_life_resume_test.py` (T=1100, save at step 100 of an episode) PASS: control U1=U2; resumed == unbroken on every item; no-key, no-RNG, no-env plants and SB3's own path each DIFFER. Prediction "P_env differs at row 1100" was off by one (1101: `_last_obs` is carried).
+- Philosophy served: 1 (he must never stop learning — a life that can be stopped and moved without changing him), 4 (clean only beside four saves that had to fail and did).
