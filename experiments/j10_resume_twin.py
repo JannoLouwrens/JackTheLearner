@@ -14,7 +14,10 @@ Toy size: learning_starts = T/2 so both halves train; buffer 4T. The rule's
 SAC_KW otherwise. Ours beside the row: the row's segments are 500k; here T is
 a few thousand — this tests the path, not the scale.
 
-    python -m experiments.j10_resume_twin WORK T [U1|U2|R|compare]
+    python -m experiments.j10_resume_twin WORK T [U1|U2|R|RC|compare]
+
+RC (J10 (a) fix): R through train_segment(carry_life=True); R stays the
+planted broken resume and must still differ.
 """
 import json
 import os
@@ -32,9 +35,12 @@ def run_arm(work, T, arm):
     if arm in ("U1", "U2"):
         return train_segment(0, os.path.join(work, arm), None, 0, seg_steps=2 * T,
                              total=2 * T, eval_at=(), sac_kw=kw, wall_h=1.0)
-    a, b = os.path.join(work, "R0"), os.path.join(work, "R1")
-    r0 = train_segment(0, a, None, 0, seg_steps=T, total=2 * T, eval_at=(), sac_kw=kw, wall_h=1.0)
-    r1 = train_segment(0, b, a, 1, seg_steps=T, total=2 * T, eval_at=(), sac_kw=kw, wall_h=1.0)
+    c = arm == "RC"                    # RC: the same resume with carry_life=True (the fix)
+    a, b = os.path.join(work, arm + "0"), os.path.join(work, arm + "1")
+    r0 = train_segment(0, a, None, 0, seg_steps=T, total=2 * T, eval_at=(), sac_kw=kw, wall_h=1.0,
+                       carry_life=c)
+    r1 = train_segment(0, b, a, 1, seg_steps=T, total=2 * T, eval_at=(), sac_kw=kw, wall_h=1.0,
+                       carry_life=c)
     return {"seg0": r0, "seg1": r1}
 
 
@@ -74,7 +80,8 @@ def _state(d):
 
 def compare(work):
     import numpy as np
-    S = {k: _state(os.path.join(work, k)) for k in ("U1", "U2", "R1")}
+    arms = ["U1", "U2", "R1"] + (["RC1"] if os.path.isdir(os.path.join(work, "RC1")) else [])
+    S = {k: _state(os.path.join(work, k)) for k in arms}
 
     def diff(x, y):
         sx, mx = S[x]; sy, my = S[y]
@@ -103,7 +110,14 @@ def compare(work):
                and not twin["differing"] else
                "BOX NOT DETERMINISTIC: the control differs, the twin cannot be read" if not deterministic
                else "RESUME DIFFERS: " + ", ".join(twin["differing"]))
-    return {"control_U1_vs_U2": ctrl, "twin_U1_vs_R": twin, "reading": reading}
+    out = {"control_U1_vs_U2": ctrl, "twin_U1_vs_R": twin, "reading": reading}
+    if "RC1" in S:                     # the fix: must read CLEAN where R (the planted break) differs
+        fix = diff("U1", "RC1")
+        out["twin_U1_vs_RC"] = fix
+        out["reading_RC"] = ("CLEAN" if deterministic and not fix["differing"] else
+                             "CONTROL DIFFERS" if not deterministic else
+                             "RC DIFFERS: " + ", ".join(fix["differing"]))
+    return out
 
 
 if __name__ == "__main__":

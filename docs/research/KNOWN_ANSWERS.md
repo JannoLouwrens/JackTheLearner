@@ -532,6 +532,22 @@ so the weights load exactly, and the gap is late-episode MuJoCo chaos between x8
   `_last_obs` + episode step count across the save, or disclose the difference in J10-2's rule. Not yet built; it is the Director's ruling.
   Limit: toy size (2k steps, 1 seed); the first 1,000 updates after the resume were not traced step by step, only the end state.
 
+**Addendum 11-21 20:35 — J10 (a)'s named fix is BUILT behind an option and the twin reads CLEAN (box, toy size; not yet in any row).**
+- `humanoid_sac_row.train_segment(carry_life=True)`, default False, so J10-1's path and its kernels are unchanged (arm R below
+  re-reads exactly as the 08:45 addendum did). Save/load goes through B's `brain_b.save_life`/`resume_life` (pickled env +
+  wrappers, `_last_obs`, episode starts, numpy/python RNG, PRNG key), **plus `physics.pkl`**: gymnasium's MujocoEnv pickles
+  through EzPickle, which rebuilds a FRESH env from its constructor args. So `save_life` alone carried the wrappers' counters
+  but not the physics. Measured: with save_life only, obs/action row 1,000 were equal but reward/next_obs at row 1,000 differed
+  (999 + 1,000 rows), and so did every weight. MjData (pickled, bit-exact) + the env's `np_random` state close it.
+- `j10_resume_twin.py` arm RC (same seed 0, same SAC_KW toy settings, jack-std pins) — **T = 1,000: control U1 = U2
+  bit-identical; R DIFFERS from row 1,000 (as before); RC = U1 on EVERY item** (all params, all three optimiser states,
+  PRNG key, replay obs/actions/rewards/dones/next_obs, 1,500 updates). The cut there fell 1 step into an episode (done at 998),
+  which is a weak cut, so it was **re-run at T = 1,010 (cut 16 steps into the episode that ends at 1,019): control equal, R differs from
+  row 1,010, RC CLEAN** (2,020 steps, 1,515 updates). Outputs `/data/jack-logs/j10_twin/carry_T{1000,1010}/compare.json`.
+- Two planted breaks both fired: R (no carry) and the save_life-only RC (no physics). Limit: toy size, 1 seed, box (aarch64);
+  the Kaggle segment kernel (`segment_job_body`) still calls the default, and nothing checks that the mounted previous kernel carries
+  `life.pkl` + `physics.pkl` (~0.7 MB). Wiring that in is J10-2's rule text, once the Director rules carry vs disclose.
+
 ## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:12, Kaggle CPU)
 
 Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed, `0bf84989`): band 837.9–868.1 (853.0 ± 9.2, k = 5);

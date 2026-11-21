@@ -165,15 +165,42 @@ class _WallStop:
         return Stop()
 
 
+def _save_physics(model, d):
+    """gymnasium's MujocoEnv pickles through EzPickle = a FRESH env from its
+    constructor args, so save_life's pickled env carries the wrappers'
+    counters but not the physics. Carry MjData (bit-exact) + the env RNG."""
+    import os, pickle
+    u = model.env.envs[0].unwrapped
+    with open(os.path.join(d, "physics.pkl"), "wb") as f:
+        pickle.dump({"data": u.data, "np_random": u.np_random.bit_generator.state}, f)
+
+
+def _restore_physics(model, d):
+    import os, pickle
+    with open(os.path.join(d, "physics.pkl"), "rb") as f:
+        P = pickle.load(f)
+    u = model.env.envs[0].unwrapped
+    u.data = P["data"]
+    u.np_random.bit_generator.state = P["np_random"]
+
+
 def train_segment(seed: int, out_dir: str, prev_dir: str | None = None, segment: int = 0,
                   wall_h: float = SEGMENT_WALL_H, seg_steps: int = SEGMENT_STEPS,
                   total: int = TOTAL_STEPS, eval_at=(CHECK_STEPS, TOTAL_STEPS),
-                  sac_kw: dict | None = None, keep: list | None = None) -> dict:
+                  sac_kw: dict | None = None, keep: list | None = None,
+                  carry_life: bool = False) -> dict:
     """One resume segment of the rule. Fresh model if prev_dir is None, else
     loads model + replay buffer from prev_dir. Trains until the next seg_steps
     mark (capped at `total`) or wall_h, saves model + buffer to out_dir, and
     runs the rule's eval only when num_timesteps lands EXACTLY on an eval_at
-    mark. The env is re-seeded seed*1000 + segment (disclosed in the rule)."""
+    mark. The env is re-seeded seed*1000 + segment (disclosed in the rule).
+
+    carry_life=True (J10 (a)'s named fix, OFF by default so J10-1's path is
+    byte-identical): save/load through brain_b.save_life/resume_life — the
+    pickled env (episode in progress, env RNG, TimeLimit + Monitor counters),
+    `_last_obs`, numpy/python RNG and the PRNG key cross the save, so the
+    resumed segment continues the unbroken run instead of a re-seeded reset.
+    Read by `experiments/j10_resume_twin.py` arm RC."""
     import json, os, time
     from sbx import SAC
     t0 = time.time()
@@ -183,18 +210,28 @@ def train_segment(seed: int, out_dir: str, prev_dir: str | None = None, segment:
     if prev_dir is None:
         model = SAC("MlpPolicy", env, seed=seed, verbose=0, **(sac_kw or SAC_KW))
     else:
-        mp, rp = _ckpt_paths(prev_dir)
-        model = SAC.load(mp, env=env)
-        model.load_replay_buffer(rp)
+        if carry_life:
+            from experiments.brain_b import resume_life
+            model = resume_life(prev_dir, env, algo=SAC)
+            _restore_physics(model, prev_dir)
+        else:
+            mp, rp = _ckpt_paths(prev_dir)
+            model = SAC.load(mp, env=env)
+            model.load_replay_buffer(rp)
     start = int(model.num_timesteps)
     target = min(total, (start // seg_steps + 1) * seg_steps)
     # SB3 reads total_timesteps as an increment when reset_num_timesteps=False
     model.learn(total_timesteps=target - start, reset_num_timesteps=prev_dir is None,
                 callback=_WallStop(t0 + wall_h * 3600.0))
     end = int(model.num_timesteps)
-    mp, rp = _ckpt_paths(out_dir)
-    model.save(mp)
-    model.save_replay_buffer(rp)
+    if carry_life:
+        from experiments.brain_b import save_life
+        save_life(model, out_dir)          # writes the same model.zip + replay.pkl, + life.pkl
+        _save_physics(model, out_dir)
+    else:
+        mp, rp = _ckpt_paths(out_dir)
+        model.save(mp)
+        model.save_replay_buffer(rp)
     row = {"seed": seed, "segment": segment, "start": start, "end": end, "target": target,
            "hit_target": end == target, "buffer_size": int(model.replay_buffer.size()),
            "n_updates": int(getattr(model, "_n_updates", -1)), "train_s": time.time() - t0}
