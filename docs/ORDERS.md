@@ -228,7 +228,11 @@ seat"). (b) `scripts/research_prompt.md`: the 70 KB file cap is replaced by
 removed, none added.
 serves: philosophy 5, 6 · standing objective 4.
 **done when:** `/` has ≥ 6 GB free with the before/after in the state line; FIELD_WATCH ≤ 12 KB; the two prompt lines changed.
-state: (ordered 11-19, never started — it sat behind the TPU door.)
+state: (c) 11-21 4.31 → 5.37 GB free: `scripts/prune_cli_versions.sh` (keeps launcher, newest, anything a live
+process has as exe/map/fd; planted test PASS) deleted 2.1.327 (354 MB); `~/.cache/uv` (Jack's toolchain, stale since 11-15) 702 MB.
+NOT at 6: 2.1.325/326/329 (~1.1 GB) are held by live sessions — re-run the script when they end. Left alone as not
+provably ours: `~/.cache/pip` (generic build wheels), `/tmp/aud_rev_*` (AlphaGeometry, another project), /tmp arXiv dirs.
+Next: (c) re-run, then (a), (b).
 
 ### S14 — A usage refusal carries its evidence (46 slots were refused on a number that later fell)
 part: (machine — truthful gates) · stage: — · step: —

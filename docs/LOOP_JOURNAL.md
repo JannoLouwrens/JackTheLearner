@@ -3116,3 +3116,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Named: at load the episode in progress is dropped (SB3 saves no `_last_obs`) and the env is re-seeded `seed*1000+segment`. Learner state exact. J10-1's seeds are 4 world streams each, not one unbroken run. Addendum in KNOWN_ANSWERS; fix-or-disclose is the Director's ruling before (b).
 - `launch_detached` refused a 2-min job at the poller cap → ran foreground (INBOX).
 - Philosophy served: 4 (a test that could fail, with a control that had to pass, found what "resumed" really changed).
+
+## 2026-11-21 ~09:00 UTC · SYSTEM · S11 (c): root-disk prune, by hand
+- `scripts/prune_cli_versions.sh` + `test_prune_cli_versions.sh` (planted: 5 fake versions, one held open by a live fd, one launcher target, one newest → exactly 2 deleted; dry run deletes nothing; dangling launcher refuses rc 2). PASS.
+- Real run: deleted CLI 2.1.327 (354 MB); kept 2.1.325/326/329 (live sessions) and 2.1.330 (launcher). Removed `~/.cache/uv` (702 MB; Jack's packages, caches moved to /data 11-15).
+- `/`: 4.31 → 5.37 GB free. Short of the 6 GB bar; ~1.1 GB more frees when the old sessions exit and the script is re-run. pip cache, /tmp AlphaGeometry trees and arXiv dirs not touched (ownership not provable).
+- Philosophy served: 5, 6 (workers refuse at 3 GB; every lane bought ~1.7 more days before the disk stops them).
