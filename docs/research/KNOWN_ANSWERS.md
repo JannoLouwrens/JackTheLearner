@@ -503,6 +503,16 @@ so the weights load exactly, and the gap is late-episode MuJoCo chaos between x8
   (585, 10/10 fell); one other draw of the same segment keeps it. Fork f2 (`jack-cpu-1795225181`) RUNNING. The
   reading is f1 KEPT + f2: KEPT → CHAOS, otherwise MIXED. RECIPE is now impossible.
 
+**Addendum 11-21 05:15 — fork f2 home: the reading is CHAOS (record only; the FAIL stands).**
+- **Fork f2** (`jack-cpu-1795225181`, `fork/f2.json`, reseeded `set_random_seed`, `key`, `env`): seed 1 from 1.5M to
+  2M → **R 5,303, M 14.07, 2/10 fell = KEPT** (on the edge: KEPT allows ≤ 2 falls; falls at 259 and 560 steps, the
+  other 8 episodes R 5,992–6,071). By the row's per-seed marks f2 would miss (R < 5,950); f1 would miss by 87 R.
+- `j10_fork.reading` over f1 + f2: **{1: KEPT, 2: KEPT} → CHAOS**. Seed 1's collapse (585, 10/10 fell) was one
+  unlucky continuation, not the recipe driving this policy off its walk. Two forks say nothing about a RATE of
+  collapse (the rule's limit). So Row J10-1's 1-of-3 reading is noise-limited: two of three seeds end at or
+  near the PASS line and one fell, and three seeds cannot tell this recipe's PASS rate from a coin. The FAIL stands
+  (a miss is a miss). Next is for the Director: §21's cures (LN critic, resets, TQC) or more seeds of the frozen recipe.
+
 ## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:12, Kaggle CPU)
 
 Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed, `0bf84989`): band 837.9–868.1 (853.0 ± 9.2, k = 5);
@@ -520,6 +530,21 @@ Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed, `0bf84989`):
 - **The rule's ONE extension applies** ("a task that misses at 5 seeds runs seeds 5..14 and is judged once more at
   k = 15", band 841.7–864.3). Not yet built: `kernel 5` runs seeds 0–4 only. Row 6 waits, because the rule says a
   miss on row 5 is fixed first, not stacked.
+
+**Addendum 11-21 05:15 — the one extension home: lib MISSES at k = 15 (final; no further extension).**
+Kernel `jack-cpu-1795219999` (`kernel 5 ext`, Kaggle CPU, 16,541 s), `/data/jack-logs/brain_b/row5_dmc_ext.json`,
+judged by `judge_ext` over seeds 0–14, band 841.7–864.3.
+
+| arm | seeds 5–14 | mean 5–14 | mean 0–14 | reading |
+|---|---|---|---|---|
+| lib (SBX SAC, SimBa recipe) | 857.8, 856.1, 846.5, 872.2, 849.3, 834.2, 849.3, 853.5, 858.7, 849.1 | 852.7 | **833.8** | below 841.7 → **lib MISSES** |
+| ours (lib + layer_norm, Brain B) | 857.9, 864.9, 870.7, 864.4, 855.6, 852.1, 877.5, 817.9, 867.5, 872.2 | 860.1 | 862.6 | in band, not counted (lib missed) |
+
+- The fresh 10 lib seeds sit inside the band (852.7 ± 9.8); the k = 15 mean misses because seed 3 (643.6) drags it
+  21 points down. Without seed 3: 847.4 (in band). Median 849.3. Stated, NOT used — the rule judges the mean.
+- So the miss is one outlier seed out of 15, not a shifted curve; our build of the library is close to the
+  published 853.0. That is a description; the row is a named MISS and stays one. Row 6 still waits (the rule fixes
+  a miss on row 5 first). What a fix would be (the one outlier: an apparatus question about seed 3's cell) is for the Director.
 
 ## Row A1 — brain A (sheeprl `dreamer_v3_5`, size 1m) on DMC cartpole_balance: **PASS** at 3 seeds (11-21 02:30, Colab T4)
 
