@@ -366,13 +366,32 @@ def smoke() -> int:
 _KERNEL_BODY = r'''
 import json, os, subprocess, sys
 subprocess.run([sys.executable, "-m", "pip", "install", "-q", "tqdm", "requests"], capture_output=True)
-try:
-    import torchaudio  # noqa: F401
-except ImportError:
-    import torch
-    v = torch.__version__.split("+")[0]
-    r = subprocess.run([sys.executable, "-m", "pip", "install", "-q", "torchaudio==" + v], capture_output=True, text=True)
-    print("PIP_TORCHAUDIO", v, r.returncode, r.stderr[-1500:], flush=True)
+# gpu.py's preamble swaps the image's torch for 2.5.1+cu121 (P100 sm_60). The image's own
+# torchaudio was built for the image's torch: its C++ lib then fails at import (OSError, not
+# ImportError) or loads against the wrong ABI. Probe in a child process so a broken import
+# cannot poison this one, and on any miss install torchaudio built for the torch that RUNS
+# (same base version, same CUDA index, --no-deps so torch itself is never touched).
+import importlib.metadata as _md
+def _base(name):
+    try:
+        return _md.version(name).split("+")[0]
+    except _md.PackageNotFoundError:
+        return ""
+_tv = _md.version("torch")
+_probe = subprocess.run([sys.executable, "-c", "import torchaudio"], capture_output=True, text=True)
+if _probe.returncode != 0 or _base("torchaudio") != _tv.split("+")[0]:
+    _was = _base("torchaudio") or None
+    _cmd = [sys.executable, "-m", "pip", "install", "-q", "--no-deps", "--force-reinstall",
+            "torchaudio==" + _tv.split("+")[0]]
+    if "+cu" in _tv:
+        _cmd += ["--index-url", "https://download.pytorch.org/whl/" + _tv.split("+")[1]]
+    r = subprocess.run(_cmd, capture_output=True, text=True)
+    print("PIP_TORCHAUDIO", _tv, "was", _was, "probe_rc", _probe.returncode,
+          "rc", r.returncode, r.stderr[-1500:], flush=True)
+_probe = subprocess.run([sys.executable, "-c", "import torchaudio"], capture_output=True, text=True)
+if _probe.returncode != 0 or _base("torchaudio") != _tv.split("+")[0]:
+    raise SystemExit("TORCHAUDIO_MISMATCH torch " + _tv + " torchaudio " + str(_base("torchaudio"))
+                     + " " + _probe.stderr[-800:])
 import importlib.metadata as md, platform, torch
 print("VERSIONS", json.dumps({"python": platform.python_version(), "torch": torch.__version__,
       "torchaudio": md.version("torchaudio"), "cuda": torch.cuda.is_available(),

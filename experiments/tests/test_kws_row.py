@@ -51,8 +51,65 @@ def test_plan_and_body():
     compile(b, "kernel", "exec")
 
 
+def _torchaudio_block():
+    b = K._KERNEL_BODY
+    return b[b.index("import importlib.metadata as _md"):b.index("import importlib.metadata as md, platform")]
+
+
+def _exec_block(versions, probe_ok_before, probe_ok_after, installs_to=None):
+    """Run the kernel's torchaudio guard with pip, the import probe and package metadata faked."""
+    import importlib.metadata as real_md, subprocess as real_sp, types
+    calls, state = [], {"installed": False}
+    def version(name):
+        if name == "torchaudio" and state["installed"] and installs_to:
+            return installs_to
+        if versions.get(name) is None:
+            raise real_md.PackageNotFoundError(name)
+        return versions[name]
+    def run(cmd, **kw):
+        calls.append(cmd)
+        if "pip" in cmd:
+            state["installed"] = True
+            return types.SimpleNamespace(returncode=0, stderr="")
+        ok = probe_ok_after if state["installed"] else probe_ok_before
+        return types.SimpleNamespace(returncode=0 if ok else 1, stderr="" if ok else "OSError: undefined symbol")
+    old = real_md.version
+    real_md.version = version
+    try:
+        g = {"subprocess": types.SimpleNamespace(run=run), "sys": __import__("sys")}
+        try:
+            exec(_torchaudio_block(), g)
+            return calls, None
+        except SystemExit as e:
+            return calls, str(e)
+    finally:
+        real_md.version = old
+
+
+def test_torchaudio_matches_the_torch_that_runs():
+    pips = lambda calls: [c for c in calls if "pip" in c]
+    # matching pair already present: no install, no stop
+    calls, err = _exec_block({"torch": "2.5.1+cu121", "torchaudio": "2.5.1+cu121"}, True, True)
+    assert err is None and not pips(calls)
+    # PLANTED: the image's 2.8.0 torchaudio beside the preamble's 2.5.1 (imports OR not) -> reinstall 2.5.1 from cu121, no deps
+    for ok in (True, False):
+        calls, err = _exec_block({"torch": "2.5.1+cu121", "torchaudio": "2.8.0+cu126"}, ok, True, installs_to="2.5.1+cu121")
+        assert err is None, err
+        (c,) = pips(calls)
+        assert "torchaudio==2.5.1" in c and "--no-deps" in c and "https://download.pytorch.org/whl/cu121" in c
+        assert not any(x.startswith("torch==") for x in c)
+    # missing torchaudio -> installed
+    calls, err = _exec_block({"torch": "2.5.1+cu121", "torchaudio": None}, False, True, installs_to="2.5.1+cu121")
+    assert err is None and len(pips(calls)) == 1
+    # PLANTED: the install does not take -> the kernel STOPS on the box's first line, never trains on a mismatch
+    calls, err = _exec_block({"torch": "2.5.1+cu121", "torchaudio": "2.8.0"}, False, False, installs_to="2.8.0")
+    assert err and err.startswith("TORCHAUDIO_MISMATCH")
+    calls, err = _exec_block({"torch": "2.5.1+cu121", "torchaudio": "2.8.0"}, True, False, installs_to="2.5.1")
+    assert err and err.startswith("TORCHAUDIO_MISMATCH")
+
+
 def main():
-    for t in (test_band_and_pass, test_controls_fail, test_plan_and_body):
+    for t in (test_band_and_pass, test_controls_fail, test_plan_and_body, test_torchaudio_matches_the_torch_that_runs):
         t()
         print(f"{t.__name__}: PASS")
     print("test_kws_row PASS")
