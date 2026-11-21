@@ -3243,3 +3243,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `experiments/brain_a/rung7.py --vs-official` 15/15: NumPy-64 reference of the 64-step memory pass (with the posterior sampler reading file noise) vs the official scan — ≤ 6.9e-7 every step, no drift growth, 0 of 1,024 samples flipped; reset and in-batch control hold; four planted wrong references and a constant-noise control all caught.
 - Found: a reset check read "worst 0" because a zero carry gives deter exactly 0 at init — weak alone; the posterior (reads tokens) added as the real check. And ninjax's prerun eats one sampler call before the real 64 — the port must skip it.
 - Philosophy served: 4 (a check that could barely fail spotted and strengthened; reference trusted only beside caught mutants), 7 (the Mac brain's memory pass now has a checked target).
+
+## 2026-11-21 17:22–17:45 UTC · JACK (short slot) · J16 row 2.3 — RUNG 7 PASS, J16 DONE
+- First act: Kaggle 17:23 — A2-v1S s2 `…268355` RUNNING, s1 `…268291` still QUEUED (4 h; watchers alive); J17 done, J18 forge's, J10 waits the Director → J16 rung 7.
+- Tests committed failing first (`eb4ce9e2`, stub 0/2), then the port: `mlx_maths.rssm_observe` 2/2 eager AND compiled vs the NumPy-64 reference and the official f32 scan — worst 8.2e-7 against a 1e-4 tolerance, 0 of 1,024 samples flipped; reset/control rows hold; constant-noise control flips 760. Four planted wrong ports all caught (`75bd15b5`).
+- J16's done-when (rungs 3, 6, 7) met → DONE. Wheel re-checks not run; rungs 6/7 at toy size only.
+- Philosophy served: 4 (a first-try pass counted only after four planted bugs were each caught), 7 (the Mac brain's memory pass is now checked against the official code).
