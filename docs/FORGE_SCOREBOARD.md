@@ -12,4 +12,13 @@ The current baseline's sustained-life rate at the entry rung, beside its floor.
 
 ## Rounds
 
-No round has been frozen yet.
+### r1 — KEEP on E-food: which published setting keeps brain B eating in the LATE half of a run (the baseline reaches 4/5 and loses it 10/10)?
+
+Baseline `E-food` · outcome `sustained_rate` (requires eating) · cost 0.00 of 270 core-h, 0.00 of 68 kernel-h
+
+Rule frozen; no rung read yet.
+
+| source | in | reached M | reached L | paying (beats plain variation's yield)? |
+|---|---|---|---|---|
+| published | 6 | 0 | 0 | not read yet |
+| control | 2 | 0 | 0 | the yardstick |
