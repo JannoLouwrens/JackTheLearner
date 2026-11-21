@@ -85,13 +85,16 @@ def last_env_step(row: str) -> int:
     return max(ROWS[row]["points"])
 
 
-def overrides(row: str, seed: int, control: bool = False) -> list:
-    """Command-line overrides for one run. The runner itself is never edited."""
+def overrides(row: str, seed: int, control: bool = False, base: list = None) -> list:
+    """Command-line overrides for one run. The runner itself is never edited.
+    `base` = another arm's settings (A2-v1S); None = the frozen rows' BASE, byte for byte."""
     r = ROWS[row]
     total_policy = last_env_step(row) // ACTION_REPEAT
-    out = BASE + [f"env.wrapper.domain_name={r['domain']}", f"env.wrapper.task_name={r['task']}",
-                  f"seed={seed}", f"algo.total_steps={total_policy}"]
+    out = (BASE if base is None else list(base)) + [
+        f"env.wrapper.domain_name={r['domain']}", f"env.wrapper.task_name={r['task']}",
+        f"seed={seed}", f"algo.total_steps={total_policy}"]
     if control:
+        out = [o for o in out if not o.startswith("algo.learning_starts=")]   # Hydra refuses a key twice
         # 2 x total, not total + 1: the runner floors learning_starts to whole iterations
         # (sheeprl utils.off_policy_schedule: learning_starts // num_envs), so total + 1 = 100,001 // 4
         # = 25,000 = total_iters trained ~2 gradient steps on the LAST iteration (box smoke 11-17 14:30:
@@ -215,12 +218,13 @@ def _first_scalars(logdir: str) -> dict:
 
 
 def run_one(row: str, seed: int, control: bool, out_dir: str, device: str = "cuda",
-            deadline: float = None, extra: tuple = (), cmd_prefix: tuple = None) -> dict:
+            deadline: float = None, extra: tuple = (), cmd_prefix: tuple = None,
+            base: list = None, tag: str = None) -> dict:
     """One unmodified runner process. `extra` = (key, value) replacements, SMOKE ONLY.
     `cmd_prefix` replaces `python -m sheeprl` (tests drive a fake runner through it)."""
-    name = f"{row}_s{seed}" + ("_control" if control else "")
+    name = f"{tag or row}_s{seed}" + ("_control" if control else "")
     logdir = _os.path.join(out_dir, "logs_" + name)
-    ovr = overrides(row, seed, control)
+    ovr = overrides(row, seed, control, base)
     for k, v in extra:
         ovr = _set(ovr, k, v)
     cmd = list(cmd_prefix or [_sys.executable, "-m", "sheeprl"]) + ovr + [
@@ -267,18 +271,22 @@ def run_one(row: str, seed: int, control: bool, out_dir: str, device: str = "cud
 
 
 def run_row(row: str, seeds, out_dir: str, device: str = "cuda", control: bool = True,
-            deadline_s: float = ROW_DEADLINE_S, extra: tuple = (), cmd_prefix: tuple = None) -> dict:
-    """Control first, then each seed; the file is rewritten after every run."""
+            deadline_s: float = ROW_DEADLINE_S, extra: tuple = (), cmd_prefix: tuple = None,
+            base: list = None, tag: str = None) -> dict:
+    """Control first, then each seed; the file is rewritten after every run.
+    `base`/`tag`: another arm of the same row (A2-v1S) — its own settings and its own file name."""
     t_end = _time.time() + deadline_s
     res = {"row": row, "seeds": list(seeds), "control": control, "runs": [], "stopped": None}
-    path = _os.path.join(out_dir, f"brain_a_rows_{row}.json")
+    if tag:
+        res["arm"] = tag
+    path = _os.path.join(out_dir, f"brain_a_rows_{tag or row}.json")
     plan = ([(CONTROL_SEED, True)] if control else []) + [(s, False) for s in seeds]
     for seed, ctl in plan:
         if _time.time() > t_end:
-            res["runs"].append({"name": f"{row}_s{seed}" + ("_control" if ctl else ""), "row": row,
+            res["runs"].append({"name": f"{tag or row}_s{seed}" + ("_control" if ctl else ""), "row": row,
                                 "seed": seed, "control": ctl, "not_started": "row deadline"})
             continue
-        r = run_one(row, seed, ctl, out_dir, device, t_end, extra, cmd_prefix)
+        r = run_one(row, seed, ctl, out_dir, device, t_end, extra, cmd_prefix, base, tag)
         res["runs"].append(r)
         _json.dump(res, open(path, "w"))
         if not (r["unit"] or {}).get("ok", False):
@@ -338,13 +346,130 @@ def kernel_body(row: str, seeds=SEEDS, control: bool = True) -> str:
     return head + "\nprint('VERSIONS', json.dumps(_versions()), flush=True)\n" + tail
 
 
+# ---------------------------------------------------------------------------------------------
+# ARM A2-v1S (J14 (b)) — FROZEN by ruling 67, rule text `docs/research/prereg/a2_size_s.md`
+# (freeze commit 8f13ab28). Row A2 again with the PUBLISHED agent and size: sheeprl's v1 port
+# (`dreamer_v3`) at `dreamer_v3_S`. Bands, score window, seeds 0-2, the one extension (3-4) and the
+# never-trains control are ROWS["A2"]'s, unchanged — `judge()` above is the judge, untouched.
+# Pins: `fabric.precision=32-true` (the v1 exp file says bf16-mixed; A1-A3 ran 32-true, so only
+# agent + size move against our rows) and `algo.learning_starts=1024` (the official prefill; the
+# exp file says 1300). One seed per kernel; a timing cell before seed 0 — no score is read from it.
+#
+# Ours beside theirs: sheeprl's v1 port, not the official JAX code (danijar/dreamerv3 ec526b9);
+# 32-true vs the official float16; compile on (numerics, not recipe). Control: in the v1 runner a
+# run that never reaches learning_starts plays uniform-random actions (dreamer_v3.py:759), where
+# the v2 runner's twin played its untrained policy — neither takes a gradient step.
+# ---------------------------------------------------------------------------------------------
+V1S_TAG = "A2v1S"
+V1S_ROW = "A2"
+BASE_V1S = ["exp=dreamer_v3_dmc_walker_walk", "algo=dreamer_v3_S",
+            "env.wrapper.from_pixels=False", "env.wrapper.from_vectors=True",
+            "algo.cnn_keys.encoder=[]", "algo.mlp_keys.encoder=[state]",
+            "env.num_envs=4", "env.capture_video=False", "env.action_repeat=2",
+            "algo.replay_ratio=0.5", "algo.compile.enabled=True",
+            "fabric.precision=32-true", "algo.learning_starts=1024"]
+TIMING_POLICY_STEPS = 6000      # 1,024 prefill + ~2,488 gradient steps at ratio 0.5
+TIMING_LOG_EVERY = 1000
+V1S_EST_HOURS = 4.0             # a GUESS until the timing cell reads; the draft's 3.5-7 T4-h a seed
+
+
+def time_scalars(logdir: str) -> dict:
+    """Every logged value of the runner's own `Time/*` scalars: {tag: [(step, value), ...]}."""
+    try:
+        import glob
+        from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
+        out = {}
+        for f in glob.glob(_os.path.join(logdir, "**", "events.out.tfevents.*"), recursive=True):
+            ea = EventAccumulator(_os.path.dirname(f), size_guidance={"scalars": 0})
+            ea.Reload()
+            for tag in ea.Tags().get("scalars", []):
+                if tag.startswith("Time/"):
+                    out[tag] = sorted((e.step, round(e.value, 3)) for e in ea.Scalars(tag))
+        return out
+    except Exception as e:
+        return {"error": repr(e)[:200]}
+
+
+def project_seed_hours(time_series: dict, total_policy: int, learning_starts: int = 1024,
+                       replay_ratio: float = 0.5):
+    """T4-hours for one full seed from the runner's own rates. The FIRST logged window is dropped
+    (it carries torch.compile); None when fewer than two windows of either rate exist — an
+    unreadable meter is not a zero (LESSONS 11)."""
+    tr = [v for _, v in time_series.get("Time/sps_train", [])][1:]
+    en = [v for _, v in time_series.get("Time/sps_env_interaction", [])][1:]
+    if not tr or not en or min(tr) <= 0 or min(en) <= 0:
+        return None
+    sps_tr, sps_en = sum(tr) / len(tr), sum(en) / len(en)
+    grad = (total_policy - learning_starts) * replay_ratio
+    return {"sps_train": round(sps_tr, 2), "sps_env": round(sps_en, 2), "windows": len(tr),
+            "hours": round((grad / sps_tr + total_policy / sps_en) / 3600, 2)}
+
+
+def timing_cell(out_dir: str, device: str = "cuda", cmd_prefix: tuple = None) -> dict:
+    """Seed 0, TIMING_POLICY_STEPS policy steps, the arm's own settings; reads rates only."""
+    extra = (("algo.total_steps", TIMING_POLICY_STEPS), ("metric.log_every", TIMING_LOG_EVERY),
+             ("checkpoint.every", 10 ** 9), ("checkpoint.save_last", "False"),
+             ("buffer.checkpoint", "False"))
+    r = run_one(V1S_ROW, 0, False, out_dir, device, None, extra, cmd_prefix, BASE_V1S, V1S_TAG + "_timing")
+    ts = time_scalars(_os.path.join(out_dir, "logs_" + r["name"]))
+    total = last_env_step(V1S_ROW) // ACTION_REPEAT
+    res = {"arm": V1S_TAG, "timing_only": True, "rc": r["rc"], "wall_s": r["wall_s"], "unit": r["unit"],
+           "cmd": r["cmd"], "time_scalars": ts, "projection": project_seed_hours(ts, total),
+           "n_episodes_seen_NOT_SCORED": len(r.get("episodes", [])), "log_tail": r.get("log_tail")}
+    _json.dump(res, open(_os.path.join(out_dir, "brain_a_v1s_timing.json"), "w"))
+    print("TIMING " + _json.dumps({k: res[k] for k in ("rc", "wall_s", "unit", "projection")}), flush=True)
+    return res
+
+
+_KERNEL_TAIL_V1S = r"""
+from experiments.brain_a.rows import run_row, BASE_V1S, V1S_ROW, V1S_TAG
+_r = run_row(V1S_ROW, __SEEDS__, WORK, "cuda", control=__CONTROL__, base=BASE_V1S, tag=V1S_TAG)
+os.replace(os.path.join(WORK, "brain_a_rows_" + V1S_TAG + ".json"), os.path.join(WORK, __FETCH__))
+print("RESULT " + json.dumps({"arm": V1S_TAG, "stopped": _r["stopped"],
+      "runs": [(x["name"], x.get("rc"), x.get("cut"), len(x.get("episodes", []))) for x in _r["runs"]]}), flush=True)
+print("DONE", flush=True)
+"""
+_KERNEL_TAIL_TIMING = r"""
+from experiments.brain_a.rows import timing_cell
+_t = timing_cell(WORK, "cuda")
+print("DONE", flush=True)
+"""
+
+
+def _kernel_head() -> str:
+    from experiments.brain_a import speed
+    head = speed._JOB.split("\ndef one(")[0]
+    assert "INSTALL" in head and "WORK =" in head, "speed._JOB preamble moved"
+    head = (head.replace("__DEV__", repr("cuda")).replace("__RUNS__", "[]")
+            .replace("__BASE__", "[]").replace("__PIP__", repr(["sheeprl==0.8.5", "dm_control"])))
+    return head + "\nprint('VERSIONS', json.dumps(_versions()), flush=True)\n"
+
+
+def v1s_fetch_name(seeds, control: bool) -> str:
+    return "brain_a_v1s_" + "_".join(f"s{s}" for s in seeds) + ("_c" if control else "") + ".json"
+
+
+def kernel_body_v1s(seeds, control: bool) -> str:
+    """One kernel = the control (when asked) then the given seed(s). One seed per kernel by rule."""
+    return _kernel_head() + (_KERNEL_TAIL_V1S.replace("__SEEDS__", repr(list(seeds)))
+                             .replace("__CONTROL__", repr(control))
+                             .replace("__FETCH__", repr(v1s_fetch_name(seeds, control))))
+
+
+def kernel_body_timing() -> str:
+    return _kernel_head() + _KERNEL_TAIL_TIMING
+
+
 OUT = "/data/jack-logs/brain_a/rows"
 
 
 def main(argv) -> int:
     """kernel ROW [--ext]   (Kaggle GPU; --ext = the rule's one extension, seeds 3-4, no control)
     score ROW            (judge every harvested file of the row)
-    smoke                (box, CPU: A2 control, 2,100 policy steps, compile off — the unit check)"""
+    smoke                (box, CPU: A2 control, 2,100 policy steps, compile off — the unit check)
+    v1s-timing           (arm A2-v1S: the timing cell, Kaggle GPU; rates only, no score)
+    v1s-kernel SEED [--control] [--est=H]   (arm A2-v1S: one seed per kernel)
+    v1s-score            (judge every harvested A2-v1S file by row A2's rule)"""
     _os.makedirs(OUT, exist_ok=True)
     cmd = argv[1] if len(argv) > 1 else ""
     if cmd == "smoke":
@@ -376,6 +501,31 @@ def main(argv) -> int:
         dst = _os.path.join(OUT, f"rows_{row}{'_ext' if ext else ''}.json")
         open(dst, "w").write(_json.dumps(r))
         print("WROTE", dst, flush=True)
+        return 0
+    if cmd in ("v1s-timing", "v1s-kernel"):
+        from experiments.gpu import build_job, result_json, submit
+        if cmd == "v1s-timing":
+            body, name, est, dst = kernel_body_timing(), "brain_a_v1s_timing.json", 0.5, "v1s_timing.json"
+        else:
+            seeds = tuple(int(a) for a in argv[2:] if a.isdigit())
+            control = "--control" in argv
+            if len(seeds) != 1 or seeds[0] not in SEEDS + EXTENSION_SEEDS:
+                print("one seed per kernel, from", SEEDS + EXTENSION_SEEDS)
+                return 2
+            est = float(next((a.split("=")[1] for a in argv if a.startswith("--est=")), V1S_EST_HOURS))
+            body, name = kernel_body_v1s(seeds, control), v1s_fetch_name(seeds, control)
+            dst = name.replace("brain_a_", "")
+        sub = submit(build_job(body), prefer="kaggle", est_hours=est, timeout_s=REMOTE_TIMEOUT_S, fetch=[name])
+        print("SUBMIT", sub.backend, sub.ok, sub.job_id, sub.message, flush=True)
+        if not sub.ok:
+            return 1
+        open(_os.path.join(OUT, dst), "w").write(_json.dumps(result_json(sub, name)))
+        print("WROTE", _os.path.join(OUT, dst), flush=True)
+        return 0
+    if cmd == "v1s-score":
+        import glob
+        paths = sorted(glob.glob(_os.path.join(OUT, "v1s_s*.json")))
+        print(_json.dumps(judge_files(V1S_ROW, paths), indent=1, default=str))
         return 0
     print(main.__doc__)
     return 2

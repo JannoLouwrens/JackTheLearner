@@ -98,6 +98,86 @@ def test_kernel_body_is_python_and_names_the_row():
         assert "sheeprl==0.8.5" in src and "__" + "ROW__" not in src
 
 
+# ---- arm A2-v1S (J14 (b), ruling 67) ------------------------------------------------------------
+FROZEN_A2_S0 = ["exp=dreamer_v3_5_dmc_walker_walk", "algo=dreamer_v3_5_1M",
+                "env.wrapper.from_pixels=False", "env.wrapper.from_vectors=True",
+                "algo.cnn_keys.encoder=[]", "algo.mlp_keys.encoder=[state]",
+                "env.num_envs=4", "env.capture_video=False", "env.action_repeat=2",
+                "algo.replay_ratio=0.5", "algo.compile.enabled=True",
+                "env.wrapper.domain_name=cartpole", "env.wrapper.task_name=swingup",
+                "seed=0", "algo.total_steps=100000"]
+
+
+def test_frozen_rows_unmoved_by_the_new_arm():
+    # the A1-A3 command lines, written out here by hand, are what overrides() still returns
+    assert R.overrides("A2", 0) == FROZEN_A2_S0
+    assert R.overrides("A2", 0, control=True) == FROZEN_A2_S0 + ["algo.learning_starts=200000"]
+    # control: the new arm's line is NOT the frozen one (a test that cannot tell them apart is none)
+    assert R.overrides("A2", 0, base=R.BASE_V1S) != FROZEN_A2_S0
+    assert R.BASE[0] == "exp=dreamer_v3_5_dmc_walker_walk" and "algo.learning_starts=1024" not in R.BASE
+
+
+def test_v1s_overrides_carry_ruling_67_pins():
+    o = R.overrides(R.V1S_ROW, 1, base=R.BASE_V1S)
+    for pin in ("exp=dreamer_v3_dmc_walker_walk", "algo=dreamer_v3_S", "fabric.precision=32-true",
+                "algo.learning_starts=1024", "algo.replay_ratio=0.5", "env.num_envs=4",
+                "env.action_repeat=2", "env.wrapper.task_name=swingup", "seed=1", "algo.total_steps=100000"):
+        assert o.count(pin) == 1, pin
+    keys = [x.split("=")[0] for x in o]
+    assert len(keys) == len(set(keys))                    # Hydra refuses a key given twice
+    assert not any("bf16" in x or "12M" in x or "v3_5" in x for x in o)   # struck settings stay out
+    c = R.overrides(R.V1S_ROW, 0, control=True, base=R.BASE_V1S)
+    ck = [x.split("=")[0] for x in c]
+    assert len(ck) == len(set(ck)) and "algo.learning_starts=200000" in c and "algo.learning_starts=1024" not in c
+    assert 200000 // R.NUM_ENVS > 100000 // R.NUM_ENVS    # never reaches a gradient step
+    assert R.ROWS["A2"]["points"] == {100_000: (478, 20), 200_000: (778, 19)}   # bands unchanged
+    assert R.band(478, 20) == (438, 518) and R.band(778, 19) == (740, 816)
+
+
+def test_v1s_run_row_has_its_own_names(tmp_path):
+    res = R.run_row(R.V1S_ROW, (0,), str(tmp_path), "cpu", cmd_prefix=_fake_runner(tmp_path, 2000),
+                    base=R.BASE_V1S, tag=R.V1S_TAG)
+    assert [r["name"] for r in res["runs"]] == ["A2v1S_s0_control", "A2v1S_s0"] and res["arm"] == "A2v1S"
+    assert (tmp_path / "brain_a_rows_A2v1S.json").exists() and not (tmp_path / "brain_a_rows_A2.json").exists()
+    assert "algo=dreamer_v3_S" in res["runs"][1]["cmd"] and "algo.learning_starts=200000" in res["runs"][0]["cmd"]
+    # the harvested file is judged by row A2's own rule
+    j = R.judge_files(R.V1S_ROW, [str(tmp_path / "brain_a_rows_A2v1S.json")])
+    assert j["verdict"] == "NOT JUDGED" and "seeds missing: [1, 2]" in j["notes"]
+
+
+def test_v1s_kernel_bodies():
+    src = R.kernel_body_v1s((0,), True)
+    ast.parse(src)
+    assert 'run_row(V1S_ROW, [0], WORK, "cuda", control=True, base=BASE_V1S, tag=V1S_TAG)' in src
+    assert "'brain_a_v1s_s0_c.json'" in src and "sheeprl==0.8.5" in src and "__" + "SEEDS__" not in src
+    assert R.v1s_fetch_name((2,), False) == "brain_a_v1s_s2.json"
+    t = R.kernel_body_timing()
+    ast.parse(t)
+    assert "timing_cell(WORK" in t and "run_row(" not in t
+    # one seed per kernel: the command refuses two seeds and a seed outside the rule's list
+    assert R.main(["rows", "v1s-kernel", "0", "1"]) == 2 and R.main(["rows", "v1s-kernel", "7"]) == 2
+
+
+def test_timing_projection_arithmetic_and_unknown_is_not_zero(tmp_path):
+    ts = {"Time/sps_train": [(1000, 0.5), (2000, 10.0), (3000, 10.0)],
+          "Time/sps_env_interaction": [(1000, 50.0), (2000, 100.0), (3000, 100.0)]}
+    p = R.project_seed_hours(ts, 100_000)
+    # first window (compile) dropped: (100000-1024)*0.5/10 + 100000/100 = 4948.8 + 1000 s
+    assert p["windows"] == 2 and p["sps_train"] == 10.0 and abs(p["hours"] - 5948.8 / 3600) < 0.01
+    # planted: with the compile window kept, the train time ALONE (2.01 h) exceeds the whole estimate (1.65 h)
+    assert (98976 * 0.5 / ((0.5 + 10 + 10) / 3)) / 3600 > p["hours"] + 0.3
+    # one window only, or no train rate at all: no number, never a zero
+    assert R.project_seed_hours({k: v[:1] for k, v in ts.items()}, 100_000) is None
+    assert R.project_seed_hours({"Time/sps_env_interaction": ts["Time/sps_env_interaction"]}, 100_000) is None
+    assert R.project_seed_hours({"error": "x"}, 100_000) is None
+    # the cell itself, through a fake runner: file written, timing-only, no projection without scalars
+    res = R.timing_cell(str(tmp_path), "cpu", cmd_prefix=_fake_runner(tmp_path, 2000))
+    on_disk = json.load(open(tmp_path / "brain_a_v1s_timing.json"))
+    assert on_disk["timing_only"] is True and on_disk["projection"] is None and res["unit"]["ok"]
+    assert "algo.total_steps=6000" in on_disk["cmd"] and "algo.total_steps=100000" not in on_disk["cmd"]
+    assert "scores" not in on_disk and "episodes" not in on_disk
+
+
 def main():
     ok = True
     for name, fn in list(globals().items()):
