@@ -167,7 +167,8 @@ state: J10-1 (rule `humanoid_sac_row.py`, seeds 0–2, 500k segments): 1M median
 state: 01:15 why (`1fdd3d58`): all 11 `model.zip` re-evaluated on the box; load is exact (12/17 early falls on the identical step); s1 collapsed in the LAST segment, α .009→.024, Q rising while return fell.
 state: 05:15 forks `30447a6f`: f1 R 5,863 M 12.19, f2 R 5,303 M 14.07 → {KEPT, KEPT} → CHAOS; 2 forks say nothing about a rate.
 state: 08:45 (a) READ (`experiments/j10_resume_twin.py`, jack-std venv = kernel pins; seed 0, 2k steps, resume at 1k): control U1 vs U2 BIT-IDENTICAL; twin: PRNG key, counters, first 1,000 replay rows equal, EVERY row from 1,000 differs → all weights differ. Named: at load SB3 drops the episode in progress (no `_last_obs` saved) and `train_segment` re-seeds the env `seed*1000+segment`. Learner state exact. Addendum in `KNOWN_ANSWERS.md`.
-state: NEXT: before (b), the Director rules: carry env RNG + `_last_obs` + episode step across the save (then re-run the twin; it must read CLEAN) or disclose it in J10-2's rule. Then (b): rule text first.
+state: 20:35 `d39687f0` the CARRY is built, default off: `train_segment(carry_life=True)` = `brain_b.save_life` + `physics.pkl` (MjData + env RNG; gymnasium's EzPickle rebuilds fresh physics, so save_life alone still differed). Twin arm RC at T=1,000 and 1,010 (cut 16 steps into an episode): control equal, R differs from the cut, **RC bit-identical on every item**. Box, toy, 1 seed.
+state: NEXT: Director rules carry vs disclose — carry is now one keyword; if carry, J10-2's rule text names `carry_life=True` and `segment_job_body` passes it (+ a check that the mounted kernel holds life.pkl/physics.pkl). Then (b): rule text first.
 
 ### J16 — Brain A on the Mac: the next rows of the port table
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` step table rows 1.5 → 2.3; `experiments/brain_a/README.md`
@@ -284,6 +285,7 @@ clauses; `verify` VENUE 266 vs 256.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
+- 11-21 20:40 JACK · MACHINE: `brain_b.save_life` pickles the env whole, but any gymnasium MujocoEnv pickles through EzPickle = a FRESH env (physics + env RNG lost, wrappers' counters kept); J10's twin proved it (`d39687f0`). B's own test passes on its world — any B/forge run on an EzPickle env would resume silently non-identical.
 - 11-21 15:40 JACK J17 READ: NEITHER EATS (width, not sight). Never-trains arm eats 1.05–2.58/life, sighted learners .13–.44: on eye content B's critic runs away (10/10 sighted, 0/10 blind/lr0). Director: the next J17-type step is the critic's cause, not another eye.
 - 11-21 10:31 JACK: `/data/tmp/ninjax362` (ninjax 3.6.2, needed for every eager G1 golden) had been pruned — the documented path silently ran 3.6.3 and asserted; reinstalled to `/data/tools/ninjax362`. Prune scripts should spare `/data/tools`, and the ~1.5 GB box rule is already exceeded by the frozen debug G1 run (~2.4 GB).
 (emptied 11-21 06:45 — every line of 11-20/21 is ruled in 64–75 or became J17, J18, J14 (b)–(d), J10, S11, S14, Next-up.)

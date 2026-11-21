@@ -3296,3 +3296,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - New `brain_a/v2_diff` (official `elements.Config` 3.19.1 on `e01491f` defaults + dmc_proprio vs sheeprl as A2 ran): **67/73 SAME, 0 undisclosed**; the 6 differs are the named recipe (ratio, repeat, envs, precision) + README-only replay/prefill. Planted control (defaults only) flips 11/11 size rows. `v1s_diff` still 49/56.
 - Reading: the 1m A2 miss is not a v1S-style hidden-size fault. KNOWN_ANSWERS addendum; no verdict, band or seed changed.
 - Philosophy served: 3 (the recipe checked against its source by its own code), 4 (a check counted only because its control fired).
+
+## 2026-11-21 20:22–20:45 UTC · JACK (short slot) · J10 (a) — the resume carry built, twin CLEAN
+- First act: Kaggle 20:23 — A2-v1S s1 `…268291` and row-6's three CPU kernels RUNNING, nothing home; J17 waits the Director, J18 forge's, Next-up done → J10's open fix, built behind an option (the ruling stays the Director's).
+- `train_segment(carry_life=True)` (default off, J10-1 path unchanged, kernel test 6/6) = B's `save_life`/`resume_life` + MjData/env-RNG `physics.pkl`. Finding on the way: gymnasium MujocoEnv pickles via EzPickle → fresh physics; save_life alone still differed from row 1,000 (reward/next_obs).
+- Twin (jack-std pins, seed 0): T=1,000 and T=1,010 (cut 16 steps into an episode) → control equal, R differs from the cut, RC bit-identical on every item. `d39687f0`, KNOWN_ANSWERS addendum, INBOX line (B's save_life on EzPickle envs).
+- Philosophy served: 4 (a failure's cause fixed, not filed; claimed only beside two planted breaks that fired), 1 (a life that resumes is the same life).
