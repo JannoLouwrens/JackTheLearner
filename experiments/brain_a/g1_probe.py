@@ -162,7 +162,8 @@ def main(argv=None):
     if cap is not None:
         np.savez(a.dump, **cap["arrays"])
         print("DUMP", a.dump, "arrays", len(cap["arrays"]), "calls", dump_steps,
-              "skipped_tracers", cap.get("skipped", 0))
+              "skipped_tracers", cap.get("skipped", 0),
+              "prerun_calls_not_stored", cap.get("prerun", 0))
         zero_rc = zero_grad_check(cap["arrays"], dump_steps,
                                   {x for x in a.allow_zero.split(",") if x})
     # first step after which each traced param differs from its init (None = never moved)
@@ -281,8 +282,20 @@ def install_model_capture(cap):
             else:
                 cap["arrays"][cap.get("prefix", "") + key + ("/" + sub if sub else "")] = v
 
+    cap.setdefault("prerun", 0)
+
     def armed():
-        return cap["on"] and not ninjax.creating()
+        # NAMED 11-21 (was "a second posterior scan"): ninjax runs a function once more as a
+        # state-tracking PRERUN before the real pass — `nj.grad` over the whole loss and
+        # `nj.scan` over step 0 (`_prerun`, ninjax 3.6.2 l.450) — inside a context with
+        # ignore=True and its own seed, so its samples differ. Those calls are not the training
+        # computation; they are counted in `cap["prerun"]` and never stored.
+        if not (cap["on"] and not ninjax.creating()):
+            return False
+        if ninjax.context().ignore:
+            cap["prerun"] += 1
+            return False
+        return True
 
     orig_obs = rssm_mod.RSSM._observe
 

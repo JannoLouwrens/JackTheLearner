@@ -3164,3 +3164,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - New bet, rule first `8cc61917` (PLAN Ear, "one voice that carries"): ear on ONE speaker, 5 hearings a word, mel axis warped 0.8-1.25. DEAD: one .257, warp .279 (+2.2 pts, 8/12; bar +5.0, 10/12), matched noise .260, fifty voices .287; 12 parents, 4,074 strangers' clips.
 - The run was cut once by the harness limit at parent 11; resumed from its log, the refitted row reproduced exactly (asserted).
 - Philosophy served: 4 (a miss scored as a miss, with a control that failed as it must), 3, 7 (handed to people with other voices).
+
+## 2026-11-21 12:08–12:25 UTC · JACK (short slot) · J16 row 2.1: the "second posterior scan" named
+- First act: Kaggle: ear `…231396`, A2-v1S s0 `…248791`, J17 r0–r4 all RUNNING → J14/J17 wait; J18 forge's; J10 waits on the Director → J16.
+- Named: not a second scan of the model — ninjax's state-tracking PRERUN (`_prerun`, ignore=True context, its own seed): `nj.grad` re-runs the whole loss once, `nj.scan` re-runs step 0 once, before each real pass. Proof on the old dump: inputs equal, t0/t1 logits equal, sampled stoch differs, t11 = scan prerun, t12..t21 = repfeat cols 0..9.
+- Capture now skips ignore=True calls and counts them (31 a call). Debug smoke re-run: 10 steps = repfeat bit-exact, carry chain 9/9, the 81 non-rssm arrays identical to the old smoke. The old smoke is the control: it stored the prerun.
+- Still open: in_reset all 0 → the size1m golden batch must cross an episode start. Kernel waits on a CPU seat.
+- Philosophy served: 4 (a golden is not frozen around bookkeeping passes), 7 (the Mac port).
