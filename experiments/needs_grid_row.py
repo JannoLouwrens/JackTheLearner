@@ -90,6 +90,8 @@ TARGET_SYNC = 200
 BATCH = 512
 EPS0, EPS1 = 1.0, 0.01
 MOVES = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+# NH-1 addendum pilot only (not the frozen row): the figure's peak sits on the walkable corner
+MUS_INSIDE = [(9, 9), (9, 1), (1, 1), (1, 9)]
 CELLS = {
     "dqn@5000": ("dqn", 5000), "gmq@5000": ("gmq", 5000),
     "dqn@1": ("dqn", 1), "gmq@1": ("gmq", 1),
@@ -102,10 +104,10 @@ OUT = "/data/jack-logs/needs_grid_row"
 class Grid:
     """Dulberg's homeostatic grid. obs = 3x3x4 view (36) + 4 stats = 40."""
 
-    def __init__(self):
+    def __init__(self, mus=None):
         rr, cc = np.mgrid[0:SIZE, 0:SIZE]
         self.res = np.stack([np.exp(-((rr - r) ** 2 + (cc - c) ** 2) / 2.0) / (2 * np.pi)
-                             for r, c in MUS], -1)
+                             for r, c in (mus or MUS)], -1)
         self.wall = np.zeros((SIZE, SIZE), bool)
         self.wall[0, :] = self.wall[-1, :] = self.wall[:, 0] = self.wall[:, -1] = True
         self.res[self.wall] = 0.0
@@ -149,14 +151,15 @@ def mlp(width, hidden):
                          nn.Linear(hidden, 4))
 
 
-def run_one(kind: str, anneal: int, seed: int, steps: int = STEPS, t1: int = T1, t2: int = T2) -> dict:
+def run_one(kind: str, anneal: int, seed: int, steps: int = STEPS, t1: int = T1, t2: int = T2,
+            mus=None) -> dict:
     import torch
     import torch.nn.functional as F
     torch.manual_seed(seed)
     torch.set_num_threads(1)
     dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     rng = np.random.default_rng(seed)
-    env = Grid()
+    env = Grid(mus)
     k = N_RES if kind == "gmq" else 1
     hidden = 500 if kind == "gmq" else 1024
     nets = [mlp(40, hidden).to(dev) for _ in range(k)]
@@ -265,6 +268,14 @@ def main(argv) -> int:
         for kind in ("dqn", "gmq", "hidden", "frozen"):
             t0 = time.time(); r = run_one(kind, 1000, 99, steps=1500, t1=500, t2=1500)
             print("SMOKE", kind, round(r["delta"], 3), f"{time.time() - t0:.1f}s", flush=True)
+        return 0
+    if cmd == "pilot" and len(argv) > 2:   # NOT the row: NH-1 addendum, mu ON the walkable corner
+        seed = int(argv[2])
+        t0 = time.time(); r = run_one("dqn", 5000, seed, mus=MUS_INSIDE); r["wall_s"] = round(time.time() - t0, 1)
+        r["mus"] = MUS_INSIDE
+        os.makedirs(OUT, exist_ok=True)
+        json.dump(r, open(os.path.join(OUT, f"pilot_mu_inside_dqn5000_s{seed}.json"), "w"))
+        print("PILOT", seed, r["delta"], r["h_final"], r["wall_s"], flush=True)
         return 0
     if cmd == "score":
         import glob
