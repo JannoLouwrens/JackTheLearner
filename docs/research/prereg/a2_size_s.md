@@ -1,7 +1,33 @@
-# DRAFT — "Fix A": row A2 at the published size (J14, ruling 62)
+# FROZEN — "Fix A": row A2 at the published size, arm A2-v1S only (J14 (b), ruling 67)
 
-Status: **DRAFT, text only, no seed has run.** Written 2026-11-21 05:40 UTC by a JACK slot. The
-Director freezes it (or strikes arms) before any kernel. Nothing here edits `rows.py`'s frozen rule.
+Status: **FROZEN 2026-11-21 by ruling 67 (`docs/DECISIONS_RESOLVED.md`) — this commit is the freeze. No
+seed has run; only a timing cell (no score read) runs before seed 0.** Drafted 05:40 UTC by a JACK
+slot; the pins below are the Director's. Nothing here edits `rows.py`'s frozen rule for A1–A3.
+
+## THE FROZEN RULE (ruling 67's pins; where the draft below differs, this section binds)
+
+- **Arm: A2-v1S ONLY.** sheeprl `exp=dreamer_v3_dmc_walker_walk` + `algo=dreamer_v3_S` (the v1 agent
+  at size S), DMC `cartpole_swingup`, proprio. **The 12m arm is STRUCK for this week** (it costs more
+  than the week holds and 12m is not his size).
+- **Pins:** `fabric.precision=32-true` (as A1–A3 ran, so ONLY agent+size move against our rows; the
+  official float16 is written under "ours beside theirs"); `algo.learning_starts=1024` (the official
+  prefill count). Everything else as the frozen row: 4 envs, repeat 2, `replay_ratio` 0.5, compile on.
+- **Seeds 0, 1, 2.** ONE extension, stated now: seeds 3–4 if the row misses at 3; judged once more at
+  5, same bands. Nothing after that.
+- **Bands unchanged** (`rows.py` ROWS["A2"]): 100K 438–518, 200K 740–816; score window (0.9 P, P]
+  training-episode returns; a seed with no episode in a window is VOID, not zero.
+- **Control unchanged:** the never-trains twin, seed 0, `learning_starts = 2 × total`; must land
+  below the band's lower edge at every point, else VOID. (Named: in the v1 runner a run that never
+  reaches `learning_starts` plays uniform-random actions; the v2 runner of A1–A3 played its untrained
+  policy. Neither takes a gradient step.)
+- **Order:** timing cell first (seed 0, a few thousand policy steps, prints gradient steps/s; NO
+  score is read from it), then one seed per kernel.
+- **READING — written before seed 0:**
+  - **in band @100K** (and the row's verdict by the rule above) → the build is right and the 1m miss
+    is SIZE, a known limit. Then `prereg/pilot_a.md` is drafted on ruling 62's terms (text only).
+  - **miss** → a BUILD fault: diff ours against official `ec526b9` setting by setting. No A pilot
+    before it is found.
+  - VOID / NOT JUDGED → said as that; no reading.
 
 ## Why
 
@@ -26,7 +52,7 @@ Both arms compose with the row's overrides, and nothing else needs changing (pro
 sheeprl's own v1 DMC exp file defaults to `dreamer_v3_S`, so A2-v1S is the port's own reading of the
 published protocol. v2 has no "S" size; 12m is the smallest v2 size with published scores (§2).
 
-## Arms (proposed)
+## Arms (as drafted — A2-12m STRUCK by ruling 67)
 
 - **A2-v1S** — the published agent AND size. It tests the BUILD: the harness, the env wrapper, the
   scoring window, the unit (env steps = 2 × policy steps).
@@ -81,6 +107,7 @@ WEEK'S 30. So:
 3. If the timing gives > 6 T4-h a seed, the Director picks one arm for this week. The other arm waits
    for next week's hours. It is not shortened: a 100K point needs the full 100K steps.
 
-## OPEN for the Director
+## OPEN for the Director — CLOSED by ruling 67 (A2-v1S frozen, 12m struck, `32-true`, prefill 1,024)
 
+As drafted: 
 Freeze or strike each arm; the precision pin (default `32-true`; bf16 struck); the prefill pin (default `learning_starts=1024`, the official count); whether the 12m arm waits on A2-v1S's verdict.
