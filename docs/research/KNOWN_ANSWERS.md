@@ -581,6 +581,29 @@ judged by `judge_ext` over seeds 0–14, band 841.7–864.3.
   published 853.0. That is a description; the row is a named MISS and stays one. Row 6 still waits (the rule fixes
   a miss on row 5 first). What a fix would be (the one outlier: an apparatus question about seed 3's cell) is for the Director.
 
+## Row B-6a — DMC cartpole-swingup_sparse, 150k decisions: **lib MISSES** at 5 seeds (11-21 22:09, Kaggle CPU `jack-cpu-1795282735`)
+
+Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed; row 6 judged per task, REPRODUCES only if all three).
+Kernel 16,208 s; file `/data/jack-logs/brain_b/row6_dmc_cartpole-swingup_sparse.json` (sha256 5a7c5918…), verdict written
+by the kernel's own `verdict()`. Band 776.5 ± 30.2 (SimBa `results/sac.csv`, 10 seeds) → 726.9–826.1. Pins: sbx-rl 0.28.0,
+SB3 2.9.2, gymnasium 1.4.0, mujoco 3.17.0, jax 0.11.1, Python 3.13.18.
+
+| arm | seeds 0–4 @150k | mean | reading |
+|---|---|---|---|
+| lib (SBX SAC, SimBa recipe) | 777.4, 407.6, 766.5, 0.0, 754.1 | **541.1** | below 726.9 → **lib MISSES** |
+| ours (lib + layer_norm, Brain B) | 0.0, 0.0, 832.2, 29.8, 0.0 | 172.4 | not counted (lib missed) |
+| ctrl (never trains, seeds 0–2) | 0.0, 0.0, 0.0 | 0.0 | fails as it must → run valid |
+
+- Reported, not judged (the 25k-mark evaluations): lib s3 scores 0 at every mark (it never found the sparse reward); lib s1 reached
+  772.2 @125k and fell to 407.6 @150k (reached, then lost); the three lib seeds that solve sit at 754–777, beside the published 776.5.
+  §5's "sparse near zero at 50K on most seeds" holds: 9 of 10 learning cells ≤ 73 at 50k (lib s2 610.8).
+- ours (LayerNorm critic) never finds the reward on 3 seeds and barely on a 4th (29.8); the one that does scores 832.2, above every lib
+  seed. On this task LN went with failing to discover the reward (4/5 vs lib 1/5): 5 seeds, a description, not a test.
+- The rule's ONE extension (seeds 5–14, k = 15, band 739.5–813.5) is NOT launched: (1) as built, `kernel 6 <task> ext` is 20 cells
+  ≈ 13–14 h on 4 workers (cells ran 5,350–6,480 s) against REMOTE_TIMEOUT 9.5 h and Kaggle's 12 h session; (2) to pass, the 10 fresh
+  lib seeds would need a mean of 838.7, above every lib seed seen (max 777.4). Director's call (INBOX). Candidates for the miss, from the
+  rule's own list: flax lecun-normal init vs orthogonal √2; log-std clip vs tanh rescale; eval env seed + 10,000. Reacher-easy/-hard home ~22:40.
+
 ## Row A1 — brain A (sheeprl `dreamer_v3_5`, size 1m) on DMC cartpole_balance: **PASS** at 3 seeds (11-21 02:30, Colab T4)
 
 Rule `experiments/brain_a/rows.py` (frozen `286d6451` before any seed; control corrected to no gradient step before

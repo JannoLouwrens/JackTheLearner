@@ -634,3 +634,14 @@ SUPPORTED = 100·r/(1−γ) + 100·d_max + α_max·8ln2/(1−γ), a loose ceilin
 | K-lr0-row128 | 0.0 (never trains) | 1–3 | 1.0 fixed | – |
 
 What it says: (1) the entropy hunt is closed for J17 — auto α holds H on its −8 target in all 15 learning runs, sighted and blind alike (§19 cause 1, "the entropy bonus dominates", does not fit). (2) Every sighted run's min-twin critic ends ABOVE the ceiling its own eating can support and keeps climbing while its eating falls; no blind run does. (3) α rises only where Q rises — consistent with α following the critic's scale, not driving it (an ordering read off 5k windows, not a test). So the cause hunt's first suspect is the critic on eye content (input normalisation of the eye / critic lr / target τ), not reward scale + α. One seed, box-minutes, before any 300k row — still the Director's to name.
+
+### J17 addendum 2 (2026-11-21 22:30 UTC, JACK slot): WHEN the critic runs away — sizing the cause hunt, DESCRIPTIVE, no run, no verdict changed
+`python -m experiments.j17_onset` over the same 20 harvested runs: per seed, the first 5k window from which the sighted arm's signature stays above 1.5× its own blind twin's for every later window (critic loss and α = median of the last 3 windows; margin and median are the tool's choices, not registered). Control: the same rule on blind(seed+1) vs blind(seed) — no content on either side.
+
+| signature | K-row128 (s921–925) | K-rays16 | CONTROL blind vs blind |
+|---|---|---|---|
+| critic loss | 25k 25k 10k 140k 70k | 40k 295k 80k 150k 45k | 265k never 200k never never |
+| Q (min twin) | 115k 70k 75k 295k 155k | 80k 235k 100k 180k 70k | never never 15k never never |
+| auto α | 45k 65k 60k 160k 105k | 45k 120k 75k 150k 45k | 45k never 20k never never |
+
+What it says: critic loss is the only signature whose control stays quiet until ≥ 200k (Q and α each fire on a blind-vs-blind pair at 15–45k, so they cannot time an onset). On row128 it separates at 10–25k on 3 of 5 seeds, 70k and 140k on the other two. So a one-seed hunt read at ~30k decisions sees the runaway on ~3 seeds in 5, and only ≥ 140k covers all five; J17's Kaggle rate is 13.7–17.5 decisions per CPU-s → 30k ≈ 30–36 CPU-min an arm, 140k ≈ 2.2–2.8 CPU-h an arm (box rate for row128 not measured here). "Box-minutes on 1 seed" is a pilot that can miss on 2 seeds in 5; seeds 923, 921, 922 are the early ones. Each arm needs its blind twin beside it.

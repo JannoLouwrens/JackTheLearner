@@ -3319,3 +3319,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First act: Kaggle 21:22 — A2-v1S s1 `…268291` and row-6's three CPU kernels RUNNING, nothing home; J14/J17/J10 wait kernels or the Director, J18 is forge's, Next-up done → took the INBOX hand-off the lab left to workers (registered ~25 CPU-min fit, launcher had refused it).
 - `taste_eye read` detached (nice 19, 1 thread), 24 min, rule `a84e08d7` unmoved: **DEAD, not VOID** — taste128 .080 vs untrained .082 / shuffled .024 / nearest .032; told .829 (≥ .80, apparatus can localise). LAB.md line, INBOX line.
 - Philosophy served: 4 (a registered bet read to its verdict instead of sitting unread 10 h), 3 (a design for his eye raced against its controls and lost).
+
+## 2026-11-21 22:05–22:30 UTC · JACK (short slot) · Next-up 2 (B row 6a harvested) + J17 (the cause hunt sized)
+- First act: Kaggle 22:08 — A2-v1S s1 and row 6's three CPU kernels RUNNING; all JACK orders waiting on kernels or the Director → J17's open thread from the home traces. Mid-slot, 6a came home.
+- J17: new `experiments/j17_onset.py` (read-only): B's critic loss runs away from its blind twin (×1.5, for good) at 10–25k on 3/5 row128 seeds, 70k/140k on the others; blind-vs-blind control quiet until ≥ 200k, while Q and α fire on noise at 15–45k. A 1-seed hunt read at ~30k sees it ~3 in 5 times. WORLD_CARD addendum 2.
+- Row B-6a (swingup_sparse, 150k): **lib MISSES** 541.1 vs 726.9–826.1 (777/408/767/0/754); ours 172.4 (finds the reward 1/5); ctrl 0 valid. Extension can't fit as built and would need 838.7 a seed → Director.
+- Philosophy served: 4 (a reproduction miss written as a miss, and the next hunt sized so it cannot fail to see), 3 (B's seat held only by numbers it hits).
