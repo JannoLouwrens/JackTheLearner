@@ -92,6 +92,60 @@ def test_extension_cells_and_judge_planted():
     assert D.judge_ext(first_bad, ext, "5")[t]["verdict"] == "VOID"
 
 
+def test_twin_cells_and_job():
+    """J19's cause twin: lib only, the row's seeds and steps, no ctrl, no verdict."""
+    c = D.twin_cells("reacher-hard")
+    assert c == [("lib", "reacher-hard", s, 150_000) for s in D.SEEDS]
+    b = D.twin_job_body("reacher-hard")
+    compile(b, "job", "exec")
+    assert "save=True" in b and "'ours'" not in b and "'ctrl'" not in b and "if False else None" in b
+    assert "save=True" not in D.job_body("6", tasks=["reacher-hard"])     # the row's kernel is unchanged
+    m = D.twin_models("reacher-hard")
+    assert len(m) == 30 and m[0] == "twin_lib_reacher-hard_s0_25000.msgpack" and m[-1].endswith("_s4_150000.msgpack")
+    try:
+        D.twin_cells("cartpole-swingup"); raise AssertionError("a row-5 task accepted")
+    except ValueError:
+        pass
+
+
+def test_twin_reads_only():
+    """The twin's two additions (save at every mark, trace) change NOTHING the
+    row measures: same seed with them on and off -> identical evals, marks and
+    training returns. Control: another seed differs (the check can fail). And
+    each saved model IS the one that was evaluated: loaded back, it replays
+    its mark's ten episode returns exactly. Control: the first mark's model
+    does not replay the final mark's returns."""
+    import tempfile
+    old = (D.LEARNING_STARTS, D.EVAL_EVERY, D.TWIN_TRACE_EVERY)
+    D.LEARNING_STARTS, D.EVAL_EVERY, D.TWIN_TRACE_EVERY = 300, 500, 250
+    try:
+        task, steps = "reacher-hard", 1500
+        d = tempfile.mkdtemp(dir="/data/tmp")
+        on = D.run_cell("lib", task, 0, steps, save_dir=d)
+        off = D.run_cell("lib", task, 0, steps)
+        other = D.run_cell("lib", task, 1, steps)
+        for k in ("eval", "marks", "train_returns", "score"):
+            assert on[k] == off[k], k
+        assert other["train_returns"] != off["train_returns"], "control: another seed must differ"
+        assert "trace" not in off and "models" not in off
+        assert [r["t"] for r in on["trace"]] == [250, 500, 750, 1000, 1250, 1500]
+        late = on["trace"][-1]
+        assert all(isinstance(late[k], float) for k in ("critic_loss", "actor_loss", "ent_coef")), late
+        assert on["models"] == [D.twin_model_name("lib", task, 0, n) for n in (500, 1000, 1500)]
+        import os
+        for n in (500, 1000, 1500):
+            m = D.load_weights("lib", task, 0, os.path.join(d, D.twin_model_name("lib", task, 0, n)))
+            assert D.evaluate(m, task, 0) == on["mark_evals"][str(n)], n
+        fresh = D.make_model("lib", task, 0, 1)          # control: unloaded weights do not replay it
+        assert D.evaluate(fresh, task, 0) != on["mark_evals"]["1500"], "control: a fresh model must differ"
+        assert on["mark_evals"]["500"] != on["mark_evals"]["1500"], "control: marks must differ"
+        size = os.path.getsize(os.path.join(d, on["models"][-1]))
+        assert size < 1_500_000, size
+        print("model file bytes:", size)
+    finally:
+        D.LEARNING_STARTS, D.EVAL_EVERY, D.TWIN_TRACE_EVERY = old
+
+
 if __name__ == "__main__":
     n = 0
     for k, v in list(globals().items()):

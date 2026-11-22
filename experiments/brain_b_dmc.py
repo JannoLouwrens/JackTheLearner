@@ -94,6 +94,21 @@ The rule's ONE extension (11-21, after row 5's lib missed at 5 seeds, 796.2):
       judged by `judge_ext` with row5_dmc.json's cells: seeds 0..14, k = 15,
       band 841.7..864.3, ctrl = the first kernel's seeds 0..2. Written into
       row5_dmc_ext.json. Code added only; the rule text above is unchanged.
+
+THE CAUSE TWIN (ORDERS J19, ruling 81; 11-22, code added only, rule unchanged):
+  ... twin cartpole-swingup_sparse | reacher-hard
+  = the row's `lib` arm ONLY, the same seeds 0..4, the same 150,000 decisions,
+  with TWO additions and nothing else: the model is saved at every evaluation
+  mark (`twin_lib_<task>_s<seed>_<n>.msgpack`: actor + critic weights only,
+  no optimiser, no target, no buffer -- `save_weights`/`load_weights`), and
+  every 10,000 decisions one trace row holds the learner's last logged
+  critic_loss, actor_loss (mean Q is read as -actor_loss, as j17_onset does),
+  ent_coef and n_updates. Both additions only READ (test_twin_reads_only: a
+  cell with them on and off gives identical evals and training returns).
+  NOT a third try at the row: rows 5, 6a, 6c stay named MISSES whatever it
+  scores; it has no verdict (`verdict` is None in its file) and no ctrl.
+  Home: OUT/j19_twin_<task>/ (summary + 30 model files) for the box
+  re-evaluation, whose reading is written into KNOWN_ANSWERS.md B-6 first.
 """
 from __future__ import annotations
 
@@ -211,28 +226,87 @@ def evaluate(model, task: str, seed: int, episodes: int = EVAL_EPISODES) -> list
     return rets
 
 
-def run_cell(arm: str, task: str, seed: int, steps: int) -> dict:
+TWIN_TRACE_EVERY = 10_000
+
+
+def twin_model_name(arm: str, task: str, seed: int, n: int) -> str:
+    return f"twin_{arm}_{task}_s{seed}_{n}.msgpack"
+
+
+def save_weights(model, path) -> None:
+    """Actor + critic WEIGHTS only (flax msgpack, < 1 MB). SB3's `model.save`
+    is 8.4 MB a mark here (optimiser moments, targets): 250 MB a kernel on a
+    disk 1 GB above its floor. Enough to re-evaluate and to read Q; not
+    enough to resume training (that is `brain_b.save_life`)."""
+    from flax.serialization import to_bytes
+    pol = model.policy
+    Path(path).write_bytes(to_bytes({"actor": pol.actor_state.params, "qf": pol.qf_state.params}))
+
+
+def load_weights(arm: str, task: str, seed: int, path):
+    """A fresh model of the cell's own architecture carrying the saved actor
+    and critic weights (its optimiser and target are fresh: evaluate, don't train)."""
+    from flax.serialization import from_bytes
+    model = make_model(arm, task, seed, 1)
+    pol = model.policy
+    w = from_bytes({"actor": pol.actor_state.params, "qf": pol.qf_state.params},
+                   Path(path).read_bytes())
+    pol.actor_state = pol.actor_state.replace(params=w["actor"])
+    pol.qf_state = pol.qf_state.replace(params=w["qf"])
+    return model
+
+
+def run_cell(arm: str, task: str, seed: int, steps: int, save_dir=None) -> dict:
+    """One cell of the rule. `save_dir` (J19's cause twin; default None = the
+    row's cell, unchanged, no key added): save the model at every evaluation
+    mark and keep a trace row every TWIN_TRACE_EVERY decisions. Reads only."""
     from stable_baselines3.common.callbacks import BaseCallback
     t0 = time.time()
     model = make_model(arm, task, seed, steps)
-    marks = {}
+    marks, trace, last = {}, [], {}
+
+    def keep(n):
+        if save_dir is not None:
+            Path(save_dir).mkdir(parents=True, exist_ok=True)
+            save_weights(model, Path(save_dir) / twin_model_name(arm, task, seed, n))
 
     class Marks(BaseCallback):
+        def _on_training_start(self):
+            if save_dir is None:
+                return
+            rec = self.model.logger.record
+
+            def record(key, value, *a, **k):
+                if key.startswith("train/"):
+                    last[key[6:]] = value
+                return rec(key, value, *a, **k)
+            self.model.logger.record = record
+
         def _on_step(self):
             n = self.num_timesteps
+            if save_dir is not None and n % TWIN_TRACE_EVERY == 0:
+                trace.append({"t": int(n), **{k: (round(float(v), 5) if isinstance(v, (int, float))
+                                                  or hasattr(v, "__float__") else None)
+                                              for k, v in last.items()}})
             if n % EVAL_EVERY == 0 and n < steps:
                 marks[n] = evaluate(self.model, task, seed)
+                keep(n)
             return True
 
     model.learn(total_timesteps=steps, callback=Marks())
     final = evaluate(model, task, seed)
     marks[steps] = final
+    keep(steps)
     mon = model.get_env().envs[0]
     return {"arm": arm, "task": task, "seed": seed, "steps": steps,
             "score": sum(final) / len(final), "eval": final,
             "marks": {str(k): sum(v) / len(v) for k, v in sorted(marks.items())},
             "train_returns": [float(x) for x in mon.get_episode_rewards()],
-            "wall_s": round(time.time() - t0, 1), "versions": versions()}
+            "wall_s": round(time.time() - t0, 1), "versions": versions(),
+            **({"mark_evals": {str(k): v for k, v in sorted(marks.items())},
+                "trace": trace, "trace_every": TWIN_TRACE_EVERY,
+                "models": [twin_model_name(arm, task, seed, n) for n in sorted(marks)]}
+               if save_dir is not None else {})}
 
 
 def verdict(cells: list, row: str, seeds=SEEDS, k: int = K, tasks=None) -> dict:
@@ -274,7 +348,7 @@ def cells_for(row: str, seeds=SEEDS, tasks=None, arms=ARMS) -> list:
             for s in (CTRL_SEEDS if a == "ctrl" else seeds)]
 
 
-def run_parallel(cells: list, outdir, workers: int = 4) -> list:
+def run_parallel(cells: list, outdir, workers: int = 4, save: bool = False) -> list:
     import subprocess
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -284,7 +358,8 @@ def run_parallel(cells: list, outdir, workers: int = 4) -> list:
             arm, task, seed, steps = pending.pop(0)
             f = outdir / f"dmc_{arm}_{task}_s{seed}.json"
             p = subprocess.Popen([sys.executable, "-m", "experiments.brain_b_dmc", "cell",
-                                  arm, task, str(seed), str(steps), str(f)], cwd=REPO,
+                                  arm, task, str(seed), str(steps), str(f)]
+                                 + ([str(outdir)] if save else []), cwd=REPO,
                                  stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
             running.append((arm, task, seed, f, p, time.time()))
         time.sleep(5)
@@ -357,10 +432,62 @@ def kernel(row: str, est_hours: float, task: str | None = None, ext: bool = Fals
     return r
 
 
+def twin_cells(task: str) -> list:
+    """J19's cause twin: the row-6 `lib` arm only, the row's seeds and steps."""
+    return cells_for("6", SEEDS, [task], arms=("lib",))
+
+
+def twin_models(task: str) -> list:
+    marks = list(range(EVAL_EVERY, STEPS["6"] + 1, EVAL_EVERY))
+    return [twin_model_name(a, t, s, n) for a, t, s, _ in twin_cells(task) for n in marks]
+
+
+def twin_job_body(task: str) -> str:
+    return (_JOB.replace("__PINS__", repr(KERNEL_PINS)).replace("__NODEPS__", repr(KERNEL_NODEPS))
+            .replace("run_parallel(__CELLS__, os.environ[\"JACK_OUT\"])",
+                     f"run_parallel({twin_cells(task)!r}, os.environ[\"JACK_OUT\"], save=True)")
+            .replace("__ROW__", repr("6")).replace("__TASKS__", repr([task]))
+            .replace("__JUDGE__", "False"))
+
+
+def twin_kernel(task: str, est_hours: float = 5.0) -> dict:
+    """Submit the cause twin for one row-6 task; bring the summary AND every
+    saved model home to OUT/j19_twin_<task>/ (the kernel's work dir is a
+    temp dir). Refuses to report success with a model file missing."""
+    import shutil
+    from experiments.gpu import build_job, result_json, submit
+    want = twin_models(task)
+    sub = submit(build_job(twin_job_body(task)), prefer="kaggle-cpu", est_hours=est_hours,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_dmc.json"])   # whole output comes home; a
+    # download timeout re-fetches the summary only -> the models stay on Kaggle (`kernels output`)
+    home = OUT / f"j19_twin_{task}"
+    home.mkdir(parents=True, exist_ok=True)
+    for name, path in sub.artifacts.items():            # whatever came home, first
+        if name.endswith((".msgpack", ".json")):
+            shutil.copy2(path, home / name)
+    if not sub.ok:
+        raise RuntimeError(f"brain_b_dmc twin {task}: {sub.message} (partial files in {home})")
+    r = result_json(sub, "brain_b_dmc.json")
+    (home / "twin.json").write_text(json.dumps(r, indent=1))
+    missing = [m for m in want if not (home / m).exists()]
+    for c in r["cells"]:
+        print(f"{c.get('arm')} {c.get('task')} s{c.get('seed')}: "
+              f"{c.get('score', c.get('error'))} marks {c.get('marks')}", flush=True)
+    if missing:
+        raise RuntimeError(f"twin {task}: {len(missing)} model files missing, e.g. {missing[:3]}; "
+                           f"pull them: kaggle kernels output <user>/{getattr(sub, 'job_id', '<slug>')} -p {home}")
+    print(f"twin {task}: {len(want)} models + twin.json in {home}", flush=True)
+    return r
+
+
 def main(argv):
     if len(argv) >= 7 and argv[1] == "cell":     # cell <arm> <task> <seed> <steps> <out>
-        rec = run_cell(argv[2], argv[3], int(argv[4]), int(argv[5]))
+        rec = run_cell(argv[2], argv[3], int(argv[4]), int(argv[5]),
+                       save_dir=argv[7] if len(argv) > 7 else None)
         Path(argv[6]).write_text(json.dumps(rec))
+        return 0
+    if len(argv) == 3 and argv[1] == "twin":     # twin <row-6 task>: J19's cause twin
+        twin_kernel(argv[2])
         return 0
     if len(argv) >= 2 and argv[1] == "probe":    # probe [steps]: price one cell per arm
         steps = int(argv[2]) if len(argv) > 2 else 1500
