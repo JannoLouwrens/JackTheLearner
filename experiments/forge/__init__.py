@@ -49,6 +49,7 @@ The ladder's rule (FORGE.md "LADDER"), ours beside the charter's words:
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import subprocess
@@ -56,6 +57,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from experiments.forge.metric import metric_hash
+from experiments.harness.prereg import _committed_and_clean
 
 SOURCES = ("published", "inventor", "recombine", "machine", "control")
 RUNGS = ("S", "M", "L")
@@ -120,13 +122,68 @@ def validate_spec(spec: dict) -> None:
              f"budget.{k} must be a number")
 
 
-def _committed_and_clean(path: Path) -> bool:
+# ---- the judge lock (ORDERS S13 b, FORGE.md "Fences") ---------------------
+LOCK = "judge_lock.json"
+JUDGE = ("experiments/harness", "experiments/registry.py",
+         "experiments/forge/__init__.py", "experiments/forge/metric.py")
+
+
+def _git(repo, *a):
+    return subprocess.run(["git", "-C", str(repo), *a], capture_output=True)
+
+
+def _repo_of(path) -> Path:
     p = Path(path).resolve()
-    tracked = subprocess.run(["git", "-C", str(REPO), "ls-files", "--error-unmatch", str(p)],
-                             capture_output=True).returncode == 0
-    clean = subprocess.run(["git", "-C", str(REPO), "diff", "--quiet", "HEAD", "--", str(p)],
-                           capture_output=True).returncode == 0
-    return tracked and clean
+    out = _git(p if p.is_dir() else p.parent, "rev-parse", "--show-toplevel")
+    return Path(out.stdout.decode().strip()) if out.returncode == 0 else REPO
+
+
+def _sha(b: bytes) -> str:
+    return hashlib.sha256(b).hexdigest()
+
+
+def write_lock(round_dir, named) -> dict:
+    """Hash every judge file AS COMMITTED AT HEAD into `<round>/judge_lock.json`:
+    the harness, the registry, the ladder rule, the metric, the round's own
+    files, and `named` (the round's reader — its own file must be in it — and
+    any rule file the round names). Written once, at the commit BEFORE the
+    first raw file is opened; then commit it alone."""
+    round_dir = Path(round_dir).resolve()
+    repo = _repo_of(round_dir)
+    if (round_dir / LOCK).exists():
+        raise Refused("judge lock already written; a round is locked once")
+    if not named:
+        raise Refused("judge lock: name the round's reader (its own file is judged too)")
+    rel = lambda p: str(Path(p).resolve().relative_to(repo))  # noqa: E731
+    head = _git(repo, "rev-parse", "HEAD").stdout.decode().strip()
+    tracked = _git(repo, "ls-files", "--", *JUDGE, rel(round_dir)).stdout.decode().split()
+    files = {}
+    for n in sorted(set(tracked) | {rel(repo / p) for p in named}):
+        blob = _git(repo, "show", f"{head}:{n}")
+        if blob.returncode or _sha((repo / n).read_bytes()) != _sha(blob.stdout):
+            raise Refused(f"judge lock: {n} is not committed and clean at HEAD")
+        files[n] = _sha(blob.stdout)
+    lock = {"locked_at": head, "files": files}
+    (round_dir / LOCK).write_text(json.dumps(lock, indent=1) + "\n")
+    return lock
+
+
+def check_lock(round_dir) -> dict:
+    """Refuse unless every judge file on disk is byte-equal to its locked hash
+    and the lock itself was committed once and never touched since."""
+    lp = Path(round_dir).resolve() / LOCK
+    repo = _repo_of(lp.parent)
+    if not lp.is_file():
+        raise Refused(f"no judge lock at {lp}: no result is accepted (ORDERS S13 b)")
+    touched = _git(repo, "log", "--format=%H", "--", str(lp)).stdout.split()
+    if len(touched) != 1 or _git(repo, "diff", "--quiet", "HEAD", "--", str(lp)).returncode:
+        raise Refused(f"judge lock {lp.name} is uncommitted or was edited after it was written")
+    lock = json.loads(lp.read_text())
+    moved = [n for n, h in lock["files"].items()
+             if not (repo / n).is_file() or _sha((repo / n).read_bytes()) != h]
+    if moved:
+        raise Refused(f"the judge moved since the lock {lock['locked_at'][:10]}: {moved}")
+    return lock
 
 
 def load_round(round_dir, *, require_committed: bool = True):
@@ -139,9 +196,11 @@ def load_round(round_dir, *, require_committed: bool = True):
         raise Refused(f"no frozen rule at {spec_path}")
     if require_committed and not _committed_and_clean(spec_path):
         raise Refused(f"{spec_path} is not committed and clean in git")
+    res_path = round_dir / "results.jsonl"
+    if require_committed and res_path.is_file():
+        check_lock(round_dir)       # a result is read only under the judge lock
     spec = json.loads(spec_path.read_text())
     validate_spec(spec)
-    res_path = round_dir / "results.jsonl"
     rows = ([json.loads(line) for line in res_path.read_text().splitlines() if line.strip()]
             if res_path.is_file() else [])
     return spec, rows

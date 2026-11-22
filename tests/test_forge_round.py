@@ -293,6 +293,72 @@ def test_real_scoreboard_is_current():
     assert forge_scoreboard.main(["--check"]) == 0
 
 
+def _lock_repo(t):
+    """A temp repo shaped like ours: harness, registry, ladder rule, metric,
+    a round with its spec and reader; committed, then locked and committed."""
+    import subprocess as sp
+    from experiments.forge import write_lock
+    r = Path(t)
+    for n in ("experiments/harness/__init__.py", "experiments/registry.py",
+              "experiments/forge/__init__.py", "experiments/forge/metric.py",
+              "experiments/forge/rounds/r9/spec.json", "experiments/forge/r9_read.py",
+              "experiments/unrelated.py"):
+        (r / n).parent.mkdir(parents=True, exist_ok=True)
+        (r / n).write_text(f"# {n}\n")
+    git = lambda *a: sp.run(["git", "-C", t, "-c", "user.email=t@t", "-c", "user.name=t", *a],  # noqa: E731
+                            check=True, capture_output=True)
+    git("init", "-q")
+    git("add", ".")
+    git("commit", "-qm", "freeze")
+    rd = r / "experiments/forge/rounds/r9"
+    lock = write_lock(rd, [r / "experiments/forge/r9_read.py"])
+    git("add", str(rd / "judge_lock.json"))
+    git("commit", "-qm", "lock")
+    return r, rd, lock, git
+
+
+def test_judge_lock_refuses_a_planted_edited_judge():
+    from experiments.forge import check_lock, write_lock
+    with tempfile.TemporaryDirectory() as t:
+        r, rd, lock, git = _lock_repo(t)
+        assert set(lock["files"]) == {
+            "experiments/harness/__init__.py", "experiments/registry.py",
+            "experiments/forge/__init__.py", "experiments/forge/metric.py",
+            "experiments/forge/rounds/r9/spec.json", "experiments/forge/r9_read.py"}
+        check_lock(rd)                                   # control: untouched judge passes
+        (r / "experiments/unrelated.py").write_text("x = 1\n")
+        check_lock(rd)                                   # a non-judge edit is not a judge edit
+        raises(lambda: write_lock(rd, ["experiments/forge/r9_read.py"]), "locked once")
+        for n in ("experiments/harness/__init__.py",     # plant 1: the harness
+                  "experiments/forge/r9_read.py"):       # plant 2: the reader's own file
+            f = r / n
+            good = f.read_text()
+            f.write_text(good + "THRESHOLD = 0.0\n")
+            raises(lambda: check_lock(rd), "judge moved")
+            git("commit", "-qam", "edit committed")      # committing the edit does not launder it
+            raises(lambda: check_lock(rd), "judge moved")
+            f.write_text(good)
+            git("commit", "-qam", "revert")
+            check_lock(rd)
+        lp = rd / "judge_lock.json"                      # plant 3: re-hash the lock to the edit
+        doc = json.loads(lp.read_text())
+        doc["files"]["experiments/registry.py"] = "0" * 64
+        lp.write_text(json.dumps(doc))
+        raises(lambda: check_lock(rd), "edited after")
+        git("commit", "-qam", "relock")
+        raises(lambda: check_lock(rd), "edited after")
+
+
+def test_no_result_is_read_without_the_lock():
+    import subprocess as sp
+    from experiments.forge import check_lock
+    with tempfile.TemporaryDirectory() as t:
+        rd = Path(t) / "rounds/r8"
+        rd.mkdir(parents=True)
+        sp.run(["git", "init", "-q", t], check=True)
+        raises(lambda: check_lock(rd), "no judge lock")
+
+
 if __name__ == "__main__":
     import sys
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]

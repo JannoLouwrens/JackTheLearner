@@ -1207,13 +1207,6 @@ def _entry_key(key: str) -> tuple:
     return (1, 0, key)
 
 
-def _decision_ids(*texts: str) -> set:
-    """`D` ids that actually have an entry — a heading, at the start of a line.
-    An id cited in prose that resolves to no entry is a typo, exactly as an
-    unresolvable spec id is in `blast_radius`."""
-    return {k for k in _entries(*texts) if re.fullmatch(r"D\d{1,3}", k)}
-
-
 def _reaches_a_desk(ask: dict, entries: dict) -> tuple | None:
     """`(how, D-id)` when this ask has a durable home, else `None`.
 
