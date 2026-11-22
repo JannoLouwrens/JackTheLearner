@@ -3382,3 +3382,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `e3f9a55d`: every usage STOPPED/ABORT/PACING line now ends with the raw meter line (pct + printed reset); METER-NON-MONOTONE events count slots refused/skipped on a reading the later fall contradicts. Planted 96→16 = 3; two mutations caught; test_lib_usage ALL GREEN.
 - Live ledger: 4 falls, 0 refusals on a contradicted reading. Net −8 lines (4 comment blocks shrunk).
 - Philosophy served: 4 (a refusal now carries the evidence that could prove it false), 5 (the Jack lane's lost slots become checkable, not argued).
+
+## 2026-11-22 03:22–03:40 UTC · JACK · J17 (hunt arm h1 built while h0 runs)
+- First act: Kaggle — h0 `jack-cpu-1795311660` still RUNNING (~1 h 45 in); watcher pid 3603478 alive. W47 GPU spent (33.1/30) → J14 nothing to dispatch; J14/J10/J16 wait the Director; J18 `spec.json` exists (forge's); Next-up 1–4 done.
+- `ee287bc6`: §24 arm (b) (Lyle 2024, LN + weight decay) built as h1 = J17's own K-row128 + blind twin with ONE key, `optimizer=adamw` at optax's default wd 1e-4 — the same optimiser h0's SimbaPolicy runs, so h0 vs h1 separates SimBa's architecture from its optimiser. Reader takes the pair from the file name; same cut points.
+- Tests: test_j17_eye_arms PASS (J17 arms unchanged); test_j17_hunt_arms PASS (real sbx zero-grad step: adamw moves every leaf by lr·1e-4·w, adam control 0.0); test_j17_hunt_reader PASS (h1 planted → RUNS AWAY; SimBa keys in an h1 file → VOID).
+- NOT launched: 3 Kaggle sessions busy (forge's 2 chains + h0) = J17's cap. No run, no ledger.
+- Philosophy served: 3 (the next published cure built and raced beside its blind twin, not argued), 5 (the loop's next step ready the hour h0 lands).
