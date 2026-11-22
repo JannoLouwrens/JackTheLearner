@@ -3402,3 +3402,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Instead of a third idle build slot: h1 (J17 pair + `optimizer=adamw`) launched DETACHED on the box 04:38, both arms same CPU (the box twin showed box = another draw, so the pair must share a machine — it does). jack-std, nice 19, 1 thread each, s923, 100k; both workers at 100% CPU at +20 s. ~80 CPU-min a cell.
 - Reader handoff in J17 state: wrap the two pilot-cell files as a kernel-format `j17_hunt_h1.json`, then `j17_onset hunt`. Disclosed: cut points came from Kaggle MLP runs; this pair is a box draw.
 - No ledger, no verdict. Philosophy served: 3 (the second published cure goes into the race now instead of waiting on a queue), 6 (free box CPU, nice 19, 2 workers).
+
+## 2026-11-22 06:07–06:20 UTC · JACK · J17 (hunt h1 read; h2 launched on the box)
+- First act: Kaggle — h0 `jack-cpu-1795311660` still RUNNING (~4.5 h). J14/J10 wait the Director; J17's handoff: h1's box pair home 05:50 (rc 0, ~87 CPU-min a cell).
+- Wrapped both cells as `docs/research/world_card_data/j17/j17_hunt_h1.json`; `j17_onset hunt` → **STILL RUNS AWAY**: sighted Q climb 50k→100k 1.375 (inside MLP sighted 1.32–1.57), blind twin 1.20 (top of MLP blind; below NO-CONTROL 1.32). AdamW wd 1e-4 alone is not the cure on this seed (one seed, box draw — a pilot).
+- Beside, not read: critic loss 100k 33.6 sighted / 63.3 twin (twin spiked to 949 at 90k); late-half meals/life 1.19 vs 0.71.
+- h2 (OFN critic pair) launched DETACHED on the box 06:10, same terms as h1; both workers at 100% CPU, ~600 MB each.
+- No ledger. Philosophy served: 4 (a published cure tested against its own blind twin and named a miss, not filed), 3 (next cure raced the hour the box freed).
