@@ -3477,3 +3477,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Measured: 1.12 decisions/s per cell vs h3's MLP pair ~29/s on the same two-cell Kaggle CPU kernel → SimBa as built ~26× slower; 100k ≈ 25 h > any Kaggle CPU session. Partial file keeps lives, not the trace → zero Q marks. Kept lives: 10 each, all starved, all < 36k (pre-separation), say nothing.
 - Row + raw files in `WORLD_CARD.md` § J17 hunt (`world_card_data/j17/`). Hunt now: 3 read, none cures, h0 unreadable on CPU. NEXT: h0 as one GPU kernel in W48 with trace in the partial; J19 leads meanwhile. INBOX line for the trace-less partial.
 - No ledger, no run. Philosophy served: 4 (a cut run is named VOID, not read as a non-cure), 3 (the last published cure gets a machine that can actually run it, rather than being dropped).
+
+## 2026-11-22 12:07–12:45 UTC · JACK · J19 (twins harvested; re-evaluation launched)
+- First act: J17 waits on Monday's GPU hours; both J19 twins home since 10:25/10:37, unread for 2 h → J19.
+- Twin = the 11-21 row bit for bit on all 10 seeds (eval lists + marks) → Kaggle CPU replays this build exactly; the miss is not a Kaggle draw.
+- Traces (B-6 addendum 12:30): 6a s3 never scores because α→0 by 40k with no reward seen (critic loss 0, Q≈0) — a frozen explorer, not J17's climb. 6a s1 and 6c s4 reached then lost with Q still rising. First read "Q above ceiling" was wrong (action repeat 2 → ceiling ≈200, max 182), caught before writing.
+- Step (2) `reeval` both tasks launched 12:38 detached after the load gate refused at 6.5 (waited for < 5.6). Next worker pastes the tables + reading.
+- No ledger. Philosophy served: 3, 4 (the borrowed learner is held to its published number, and a miss is dissected, not filed).

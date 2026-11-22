@@ -689,6 +689,21 @@ eval: a fresh env at seed + 10,000, re-seeded each mark → the same targets eve
 Also printed, not read: `replay_gap` (fixed's first 10 vs the kernel's own 10 — 0 means the box replays Kaggle's evaluation exactly);
 whether the twin's 150k scores equal the 11-21 row's per seed (same code path, same pins — if not, Kaggle itself is another draw).
 
+**Addendum 11-22 12:30 — both twins HOME (6a `jack-cpu-1795331794`, 6c `jack-cpu-1795334933`); kernel side only, step (2) not yet run.**
+Files `/data/jack-logs/brain_b/j19_twin_<task>/twin.json` + 30 msgpack models each. The rows' verdicts are untouched.
+- **The twin IS the row:** on all 10 seeds the twin's eval lists and 25k marks equal the 11-21 row's (`row6_dmc_<task>.json`)
+  exactly → 6a 541.1, 6c 824.9 again. Kaggle CPU replays this build bit for bit; the miss is not a Kaggle draw.
+- Q below = −actor_loss (α·logπ is < 1 at these α). Action repeat 2 → 500 decisions, reward ≤ 2 each → Q ceiling ≈ 200; no
+  seed exceeds it (max 182, 6c s4), so nothing here is a runaway past the reward's own bound.
+- **6a s3 (0.0 at every mark):** α → 0 by 40k (5.0e-2 @10k, 3e-5 @40k, 0 from 60k), critic loss 0 from 40k, Q ≈ 0
+  throughout; Q 50k→100k climb 0.01 (bar 1.32) → **not** J17's sighted climb. With no reward ever seen the entropy sits above
+  target, the α loss drives α to zero, and the actor's gradient vanishes with it: a frozen explorer, not a runaway critic.
+- **6a s1 (772.2 @125k → 407.6 @150k) and 6c s4 (763.0 @100k → 485.0 @150k):** reached, then lost on the kernel's 10, Q still
+  climbing as the score fell (s1 80→105, s4 141→179) and critic loss at its run high (s1 .48, s4 1.0–1.4) — the J10 1M-s1 shape
+  (Q rising while return fell). Whether this is the win-then-lose of reading 3 is the reeval's call (fixed-100 ≥ band edge), not this note's.
+- Trace gap: the order asked for "mean Q"; the twin logged actor_loss, not the critic's mean on a batch. −actor_loss is the actor's
+  min-of-two Q on its own actions — a usable proxy, named as one.
+
 ## Row A1 — brain A (sheeprl `dreamer_v3_5`, size 1m) on DMC cartpole_balance: **PASS** at 3 seeds (11-21 02:30, Colab T4)
 
 Rule `experiments/brain_a/rows.py` (frozen `286d6451` before any seed; control corrected to no gradient step before

@@ -133,7 +133,9 @@ order's reading is written.
 serves: M3 · PLAN step 3 ("a learner that fails is a suspect, not a contestant") · auditor finding 2 · philosophy 3, 4.
 **done when:** the two kernels' re-evaluation table and its one-line reading are in `KNOWN_ANSWERS.md`, and the stage-2 draft carries B's gate.
 state: 11-22 07:25: twin built + tested (`brain_b_dmc twin <task>`, test_brain_b_dmc 7/7 jack-std): lib only, s0–4, 150k, weights saved each 25k mark (0.82 MB msgpack, `load_weights`), 10k trace. **6a LAUNCHED 07:16 Kaggle `jack-cpu-1795331794`** (log `/data/jack-logs/brain_b/launch_j19_twin_swingup_sparse.log`; home → `/data/jack-logs/brain_b/j19_twin_cartpole-swingup_sparse/`). **6c LAUNCHED 08:08 Kaggle `jack-cpu-1795334933`** (log `/data/jack-logs/brain_b/launch_j19_twin_reacher-hard.log`).
-state: (3) reading WRITTEN (`KNOWN_ANSWERS.md` B-6 addendum 11-22 07:25) and (4) B's gate in `stage2_a_vs_b.md` 2b DONE. NEXT when a twin is home: `launch_detached.sh … /data/venvs/jack-std/bin/python -m experiments.brain_b_dmc reeval <task>` (~1 CPU-h, box) → paste its table + the one-line reading into B-6.
+state: (3) reading WRITTEN (B-6 addendum 07:25) and (4) B's gate in `stage2_a_vs_b.md` 2b DONE.
+state: 11-22 12:40 BOTH TWINS HOME (6a 10:37, 6c 10:25). Twin = row bit for bit on 10/10 seeds → 541.1 / 824.9 again. Kernel traces (B-6 addendum 12:30): 6a s3 = α→0 by 40k, Q≈0, frozen explorer (climb .01, not J17's); 6a s1 772→408 and 6c s4 763→485 with Q still climbing (J10 shape on the kernel's 10). No mean-Q key; −actor_loss used as proxy.
+state: (2) RUNNING on the box since 12:38: `brain_b_dmc reeval` for both tasks, detached, 1 core each (logs `/data/jack-logs/brain_b/launch_j19_reeval_<task>.log`; writes `reeval_s<k>.json` per seed, resumable). NEXT: when `reeval.json` exists in both twin dirs, paste each table + apply readings 1–4 into B-6 → order DONE.
 
 ### J18 — Forge round 1 is a KEEP round (lane `forge` runs it; rung S is running)
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19, §21, §22; `docs/FORGE_POOL.md`; rulings 61, 65, 69, 83
