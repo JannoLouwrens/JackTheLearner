@@ -3376,3 +3376,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First act: Kaggle — hunt pilot `jack-cpu-1795311660` RUNNING (~1 h in). J14/J10/J16 wait the Director, J18 is forge's, Next-up 1–4 all done → J17's own next step: the reading, fixed before the data.
 - On the 20 MLP J17 runs, critic_loss climb 50k→100k overlaps sighted vs blind (1.83–6.20 vs 0.65–2.37); Q climb does not (sighted 1.32–2.03, 10/10; blind 0.92–1.20, 5/5). `ca6ddac3`: `j17_onset hunt` reads SimBa sighted vs its twin on that cut — RUNS AWAY / HELD / UNREAD / NO CONTROL / VOID; planted test PASS.
 - No run, no ledger. Philosophy served: 4 (the one-seed pilot's reading written before it could be bent to the result, with a control reading that must fire).
+
+## 2026-11-22 03:05–03:12 UTC · SYSTEM · S14 DONE (S11 (c) still blocked)
+- S11 (c): `ps` still shows CLI 2.1.325/326/329 held by owner sessions; `/` 5.4 GB; nothing prunable → S14.
+- `e3f9a55d`: every usage STOPPED/ABORT/PACING line now ends with the raw meter line (pct + printed reset); METER-NON-MONOTONE events count slots refused/skipped on a reading the later fall contradicts. Planted 96→16 = 3; two mutations caught; test_lib_usage ALL GREEN.
+- Live ledger: 4 falls, 0 refusals on a contradicted reading. Net −8 lines (4 comment blocks shrunk).
+- Philosophy served: 4 (a refusal now carries the evidence that could prove it false), 5 (the Jack lane's lost slots become checkable, not argued).

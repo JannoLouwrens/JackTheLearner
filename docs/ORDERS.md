@@ -240,7 +240,7 @@ state: (c) 4.31 → 5.37 GB (`prune_cli_versions.sh` + `~/.cache/uv`). 11-21 21:
 still held by 6 owner sessions (up 1.5–11 d). `git gc` here: 137 MiB loose → pack, `/` 5.09 → 5.23 GiB. No other
 source of ours ≥ 0.8 GB: own transcripts 440 MB (CLI ages them out at 30 d), /tmp opc files 430 MB mostly unowned.
 (a)(b) DONE `a072b554`. Left: (c) only — owner closes those 6 sessions (frees ~1.1 GB), then re-run the script.
-Next: re-run when `ps` shows no 2.1.325/326/329 claude; else S14.
+Next: re-run when `ps` shows no 2.1.325/326/329 claude (11-22 03:10: still 1/3/1 held, `/` 5.4 GB); else S13.
 
 ### S14 — A usage refusal carries its evidence (46 slots were refused on a number that later fell)
 part: (machine — truthful gates) · stage: — · step: —
@@ -254,7 +254,9 @@ refused between the two contradicting readings. Planted test: a log with
 96% then 16% in one window reports the refused count.
 serves: philosophy 5 (the loop cheaper and truer) · auditor finding 3.
 **done when:** the planted log reports its refused count, and a real STOPPED line (or a planted one through the real code path) shows pct + reset.
-state: (new 11-21.)
+state: **DONE `e3f9a55d`.** STOPPED/ABORT/PACING lines end `meter read: '<week:all models line>'` (pct + reset); planted
+96/96/96→16 counts 3 refused (test_lib_usage + selftest green). Live ledger: 4 falls, 0 refusals on a contradicted read —
+the "46 slots" in this title are not in `usage_ledger.jsonl` as refused/skipped rows above a later lower reading.
 
 ### S13 — The judge lock's tripwire (forge F5) and the lane-guard test that went red
 part: (machine — nothing faked; FORGE.md "Fences") · stage: — · step: —
