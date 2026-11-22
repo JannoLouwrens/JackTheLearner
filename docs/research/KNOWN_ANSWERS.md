@@ -604,7 +604,7 @@ SB3 2.9.2, gymnasium 1.4.0, mujoco 3.17.0, jax 0.11.1, Python 3.13.18.
   lib seeds would need a mean of 838.7, above every lib seed seen (max 777.4). Director's call (INBOX). Candidates for the miss, from the
   rule's own list: flax lecun-normal init vs orthogonal √2; log-std clip vs tanh rescale; eval env seed + 10,000. Reacher-easy/-hard home ~22:40.
 
-## Row B-6c — DMC reacher-hard, 150k decisions: **lib MISSES** at 5 seeds (11-22 00:30 harvest, Kaggle CPU `jack-cpu-1795282800`)
+## Row B-6c — DMC reacher-hard, 150k decisions: **lib MISSES** at 5 seeds (11-22 00:10 harvest, Kaggle CPU `jack-cpu-1795282800`)
 
 Same rule and pins as B-6a. Kernel 23,339 s; file `/data/jack-logs/brain_b/row6_dmc_reacher-hard.json` (sha256 143e269e…),
 verdict written by the kernel's own `verdict()`. Band 955.8 ± 30.5 (SimBa `results/sac.csv`) → 905.7–1000 at k = 5.
