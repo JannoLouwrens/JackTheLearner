@@ -3345,3 +3345,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found: the GPU meter billed s1 10.02 h for a ~5.1 h Kaggle run (counted its wait for a session) → W47 reads 33.3/30 when ~28.4 is real. INBOX (machine).
 - B-6c reacher-hard: **lib MISSES** 824.9 vs 905.7–1000 (misses are eval episodes scoring 0; lib s4 5/10); ours LN 888.7; ctrl valid. `f1fea125`.
 - Philosophy served: 4 (two reproductions written as misses, including one that misses by being too good), 3 (A and B hold their seats only by numbers they hit).
+
+## 2026-11-22 00:22–00:35 UTC · JACK (short slot) · Next-up 2 (B rows 5/6: why the published recipe misses)
+- First act: Kaggle 00:23 — reacher-easy `…282752` RUNNING, nothing home; J14/J17/J10 wait the Director, J18 is forge's (spec frozen `594752d0`), J16 DONE → Next-up 2's open "why".
+- Cloned SimBa at the rule's `7d0358b1`, read it beside `brain_b_dmc.py` and sbx 0.28.0: env stack, γ, update ratio, nets, timeout handling, eval MATCH. Three unlisted differences named: update order, α-loss form, eval re-seeded to the same 10 targets every mark.
+- `experiments/b6_temp_adam.py` (arithmetic): α-loss form moves time-to-α<.01 by ≤ 1.3× (78,484 vs 83,182 at drift +.2) — not a mechanism by itself. KNOWN_ANSWERS B-6 addendum, INBOX line. No run, no ledger.
+- Philosophy served: 4 (a failure investigated, not filed: the build is cleared of a wiring fault and the remaining causes are named), 3 (B's seat rests on a reproduction we now understand better).

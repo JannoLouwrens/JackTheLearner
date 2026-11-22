@@ -623,6 +623,24 @@ verdict written by the kernel's own `verdict()`. Band 955.8 ± 30.5 (SimBa `resu
   as built 20 cells ≈ 47 cell-hours ≈ 12 h on 4 workers > the 9.5 h timeout. Not launched; Director's call (INBOX). Candidates from the rule's list, unchanged:
   flax lecun-normal init vs orthogonal √2; log-std clip vs tanh rescale; eval env seed + 10,000 (an eval-episode zero is where that would show).
 
+**Addendum 11-22 00:25 — B-5/6 code diff against the reference (no run; rows stay named MISSES).** SimBa cloned at the rule's
+`7d0358b1` (`/data/tmp/simba_ref/src`) and read beside `brain_b_dmc.py` + installed sbx 0.28.0 (`/data/venvs/jack-std`).
+- MATCH, line for line: env stack (`suite.load(task_kwargs random=seed)` → shimmy → Flatten → RescaleAction → TimeLimit(1000 frames)
+  → RepeatAction(2), spaces seeded); γ = 0.99 (base.yaml heuristic, 500 decisions); 2 updates/decision after 5,000 uniform; batch 256;
+  τ .005; CDQ; 2×256 ReLU MLP actor + critic, no obs norm, weight decay 0 (adamw = adam); α init 1.0, target −|A|, lr 3e-4 all three;
+  terminal flag only on `terminated` (SimBa `1 − terminated`; SB3 `handle_timeout_termination`); deterministic tanh-mean eval, 10 episodes.
+  Critic loss SimBa = MSE₁+MSE₂, SBX = ½·Σ — a constant factor, invisible to Adam.
+- NOT in the rule's list (named now, unmeasured as a cause): (1) **update order** — SimBa: actor → α → critic, the critic's target
+  using the NEW actor and NEW α (`sac_agent.py:198–219`); SBX: critic → target soft-update → actor → α. (2) **temperature loss**
+  — SimBa `α·(H − tgt)`, SBX `log α·(H − tgt)` (both parameterise log α). Open-loop arithmetic (`experiments/b6_temp_adam.py`, Adam,
+  300k updates): drift +0.2 ± 1 → α < .01 at update 78,484 (SBX) vs 83,182 (SimBa); constant drive 15,351 vs 20,034; at target
+  identical to 3 digits. A ≤ 1.3× timing difference, not a mechanism by itself; closed-loop effect untested. (3) **eval stream** —
+  SimBa never re-seeds its eval env (each mark draws the NEXT 10 targets of one stream); ours re-seeds at seed + 10,000 every mark,
+  so a seed's 10 eval targets are the SAME 10 at every mark. Unbiased either way, but our per-seed zeros (lib s4 5/10) are
+  the same positions re-tested, not fresh draws — a fixed-set failure the reference's marks would re-sample.
+- So no wiring fault was found; the candidates for a cause are now 6 (3 listed + 3 above), all settings, none a broken build.
+  The one a box twin can settle cheapest is (3): re-evaluate a lib cell at 150k on fresh targets — but the kernels saved no model.
+
 ## Row A1 — brain A (sheeprl `dreamer_v3_5`, size 1m) on DMC cartpole_balance: **PASS** at 3 seeds (11-21 02:30, Colab T4)
 
 Rule `experiments/brain_a/rows.py` (frozen `286d6451` before any seed; control corrected to no gradient step before
