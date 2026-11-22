@@ -497,6 +497,23 @@ J17_HUNT_ARMS = {
                                  eye="row128", blind=True, policy="SimbaPolicy",
                                  policy_kwargs=SIMBA_KW, use_sde=False),
 }
+# ---- hunt h1 (11-22, built while h0 is on Kaggle; PUBLISHED_PRIORS §24 arm
+# (b), Lyle et al. 2024 "layer normalization and weight decay"): J17's OWN
+# K-row128 learner -- MlpPolicy, LN, 2x256, gSDE, everything -- with ONE
+# change: optax.adamw in place of optax.adam, at optax's default weight decay
+# 1e-4, which is exactly what h0's SimbaPolicy runs. So h0 and h1 split
+# SimBa into its two halves: h0 = SimBa's architecture + AdamW, h1 = AdamW
+# alone on our architecture. Differences from Lyle's recipe (stated, not
+# cured): their weight-decay value was not read (abstract only); sbx hands
+# ONE optimiser class to actor and critic, so the actor decays too; the
+# entropy coefficient keeps sbx's own adam; optax decays EVERY parameter
+# (mask None: biases and LN gains too) -- as in h0. Same pilot terms as h0.
+J17_HUNT_ARMS.update({
+    "H-wd-row128": dict(J17_ARMS["K-row128"], optimizer="adamw"),
+    "H-wd-row128-blind": dict(J17_ARMS["K-row128-blind"], optimizer="adamw"),
+})
+J17_HUNT_GROUPS = {"h0": ("H-simba-row128", "H-simba-row128-blind"),
+                   "h1": ("H-wd-row128", "H-wd-row128-blind")}
 J17_HUNT_SEED = 923          # the box twin's seed (j17_onset TWIN_SEED)
 J17_HUNT_T = 100_000         # sighted/blind separate first at 100k (ac684c09)
 J17_T = 300_000
@@ -549,7 +566,7 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
             kw["trace"] = True
         if "ent_coef" in c:
             kw["ent_coef"] = c["ent_coef"]
-        for k in ("policy", "policy_kwargs", "use_sde"):      # J17_HUNT_ARMS only
+        for k in ("policy", "policy_kwargs", "use_sde", "optimizer"):  # J17_HUNT_ARMS only
             if k in c:
                 kw[k] = c[k]
         rec = run_b(seed, T, world=world, gamma=c["gamma"],
@@ -766,7 +783,7 @@ def j17_hunt_kernel(name: str = "h0") -> dict:
     rule = dict(PILOT_RULE, T=J17_HUNT_T,
                 rule="J17 critic hunt PILOT 11-22, SimBa (PUBLISHED_PRIORS §24), "
                      "1 seed, no verdict; world = " + PILOT_RULE["rule"])
-    cells = [(a, J17_HUNT_SEED) for a in J17_HUNT_ARMS]
+    cells = [(a, J17_HUNT_SEED) for a in J17_HUNT_GROUPS[name]]
     return pilot_kernel(name, rule, cells=cells, out_name=f"j17_hunt_{name}.json")
 
 

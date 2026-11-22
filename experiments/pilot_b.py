@@ -287,7 +287,7 @@ class PilotLives(_Wrapper):
 
 def make_b(venv, seed: int, T: int, lr: float = 3e-4, use_sde: bool = True,
            gamma: float | None = None, ent_coef=0.1, policy: str = "MlpPolicy",
-           policy_kwargs: dict | None = None):
+           policy_kwargs: dict | None = None, optimizer: str | None = None):
     """Brain B with §1/§5's settings (table above). lr=0 is the floor arm;
     use_sde=False is the item-6 exploration arms' plain SAC sampling.
     gamma=None is GAMMA (J8's 0.995); J11's arm G passes another discount.
@@ -295,10 +295,17 @@ def make_b(venv, seed: int, T: int, lr: float = 3e-4, use_sde: bool = True,
     twins pass "auto" (SBX: learned alpha, target entropy -dim(action)).
     policy / policy_kwargs (11-22, J17 critic hunt): default = the MlpPolicy
     with layer_norm + 2x256 below, unchanged; J17_HUNT_ARMS pass sbx's
-    published "SimbaPolicy" (PUBLISHED_PRIORS §24) with its own kwargs."""
+    published "SimbaPolicy" (PUBLISHED_PRIORS §24) with its own kwargs.
+    optimizer (11-22, J17 hunt h1): None = the policy's own default (optax.adam
+    for MlpPolicy), unchanged; a name ("adamw") is handed to sbx as
+    policy_kwargs["optimizer_class"] = getattr(optax, name) with optax's own
+    default hyperparameters (adamw: weight_decay 1e-4 = what SimbaPolicy runs)."""
     from sbx import SAC
     if policy_kwargs is None:
         policy_kwargs = dict(layer_norm=True, net_arch=[256, 256])
+    if optimizer is not None:
+        import optax
+        policy_kwargs = dict(policy_kwargs, optimizer_class=getattr(optax, optimizer))
     return SAC(policy, venv, learning_rate=lr, buffer_size=max(int(T), 50_000),
                batch_size=256, tau=0.005, gamma=GAMMA if gamma is None else float(gamma),
                learning_starts=WARMUP,
@@ -414,7 +421,8 @@ def _trace_callback(out: list, every: int = TRACE_EVERY):
 def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
           world=None, gamma: float | None = None, partial_path=None,
           trace: bool = False, ent_coef=0.1, policy: str = "MlpPolicy",
-          policy_kwargs: dict | None = None, use_sde: bool | None = None) -> dict:
+          policy_kwargs: dict | None = None, use_sde: bool | None = None,
+          optimizer: str | None = None) -> dict:
     """One learning run of T decisions; returns the per-life log + timing.
     arm "bwhite"/"bpink" = the item-6 exploration arms (block above).
 
@@ -447,7 +455,8 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
     venv.seed(seed)
     sde = (arm not in EXPLORE_ARMS) if use_sde is None else bool(use_sde)
     model = make_b(venv, seed, T, lr, use_sde=sde, gamma=gamma,
-                   ent_coef=ent_coef, policy=policy, policy_kwargs=policy_kwargs)
+                   ent_coef=ent_coef, policy=policy, policy_kwargs=policy_kwargs,
+                   optimizer=optimizer)
     if arm == "bpink":
         _pink_selection(model, seed)
     t_wall, t_cpu = time.time(), time.process_time()
@@ -472,6 +481,7 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
             **({} if ent_coef == 0.1 else {"ent_coef_setting": str(ent_coef)}),
             **({} if policy == "MlpPolicy" and policy_kwargs is None and use_sde is None
                else {"policy": policy, "policy_kwargs": policy_kwargs, "use_sde": sde}),
+            **({} if optimizer is None else {"optimizer": optimizer}),
             "lives": lives}
 
 

@@ -155,6 +155,11 @@ def box_twin(box: Path = BOX) -> dict:
 # threshold, a pilot's reading.
 HUNT = Path("/data/jack-logs/pilot_b2/j17_hunt_h0.json")   # = pilot_b2.OUT
 HUNT_ARMS = ("H-simba-row128", "H-simba-row128-blind")
+# h1 (11-22 03:45, built while h0 runs, before any h1 run): the SAME reading,
+# cut points and clauses, on the AdamW-only pair (pilot_b2 J17_HUNT_GROUPS;
+# tests/test_j17_hunt_reader pins the two tables equal). The pair is taken
+# from the file's name, j17_hunt_<group>.json.
+HUNT_GROUPS = {"h0": HUNT_ARMS, "h1": ("H-wd-row128", "H-wd-row128-blind")}
 GAP_LO, GAP_HI = 1.20, 1.32
 
 
@@ -163,7 +168,10 @@ def q_climb(tr: dict, t0: int = 50_000, t1: int = 100_000) -> float:
     return value(tr, ts, t1, "Q") / value(tr, ts, t0, "Q")
 
 
-def hunt(path: Path = HUNT) -> dict:
+def hunt(path: Path = HUNT, arms: tuple | None = None) -> dict:
+    if arms is None:
+        g = path.stem.rsplit("_", 1)[-1]
+        arms = HUNT_GROUPS.get(g, HUNT_ARMS)
     if not path.exists():
         return {"verdict": f"VOID ({path} not home)"}
     cells = {}
@@ -171,13 +179,13 @@ def hunt(path: Path = HUNT) -> dict:
         if c.get("error") or c.get("rc", 0) != 0 or not c.get("trace"):
             continue
         cells[k.rsplit("_s", 1)[0]] = {w["t"]: w for w in c["trace"] if "critic_loss" in w}
-    for a in HUNT_ARMS:
+    for a in arms:
         if a not in cells or max(cells[a], default=0) < 100_000 or 50_000 not in cells[a]:
             return {"verdict": f"VOID ({a}: missing, errored or short of 100k)"}
-    s, t = (q_climb(cells[a]) for a in HUNT_ARMS)
+    s, t = (q_climb(cells[a]) for a in arms)
     v = lambda a: value(cells[a], sorted(cells[a]), 100_000, "critic_loss")
     out = {"S_q_climb": round(s, 3), "T_q_climb": round(t, 3),
-           "beside_critic_loss_100k": (round(v(HUNT_ARMS[0]), 2), round(v(HUNT_ARMS[1]), 2))}
+           "beside_critic_loss_100k": (round(v(arms[0]), 2), round(v(arms[1]), 2))}
     out["verdict"] = ("NO CONTROL" if t >= GAP_HI else "STILL RUNS AWAY" if s >= GAP_HI
                       else "HELD" if s <= GAP_LO else "UNREAD")
     return out

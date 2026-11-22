@@ -121,12 +121,83 @@ def test_pair_differs_only_in_blind():
     return "pair = J17 K-row128 + SimBa, twin differs only in blind"
 
 
+def test_h1_pair_is_j17_plus_adamw_only():
+    """h1 (11-22): the AdamW-only pair = J17's own sighted/blind arms + ONE key."""
+    for h, k in (("H-wd-row128", "K-row128"), ("H-wd-row128-blind", "K-row128-blind")):
+        c = dict(P.J17_HUNT_ARMS[h])
+        assert c.pop("optimizer") == "adamw"
+        assert c == P.J17_ARMS[k]
+    assert P.J17_HUNT_GROUPS == {"h0": ("H-simba-row128", "H-simba-row128-blind"),
+                                 "h1": ("H-wd-row128", "H-wd-row128-blind")}
+    got = {}
+
+    def fake_pilot_kernel(name, rule, cells=None, out_name=None):
+        got[name] = (cells, out_name)
+    with _Patch(P, "pilot_kernel", fake_pilot_kernel):
+        P.j17_hunt_kernel("h0"); P.j17_hunt_kernel("h1")
+    assert got["h0"] == ([("H-simba-row128", 923), ("H-simba-row128-blind", 923)],
+                         "j17_hunt_h0.json")                     # h0 = what was launched
+    assert got["h1"] == ([("H-wd-row128", 923), ("H-wd-row128-blind", 923)],
+                         "j17_hunt_h1.json")
+    seen = {}
+
+    def fake_run_b(seed, T, **kw):
+        seen.clear(); seen.update(kw)
+        return {"lives": []}
+    with _Patch(B, "run_b", fake_run_b), _Patch(P, "pilot_world", lambda *a, **k: None):
+        P.run_pilot_cell("H-wd-row128", 923, True, T=10)
+        assert seen["optimizer"] == "adamw" and "policy" not in seen
+        P.run_pilot_cell("K-row128", 923, True, T=10)                      # control
+        assert "optimizer" not in seen
+    got2 = {}
+    with _stub_sbx(got2):
+        B.make_b(None, 1, 1000)
+        assert "optimizer_class" not in got2["policy_kwargs"]               # default unchanged
+        got2.clear()
+        B.make_b(None, 1, 1000, ent_coef="auto", optimizer="adamw")
+        import optax
+        assert got2["policy_kwargs"] == dict(layer_norm=True, net_arch=[256, 256],
+                                             optimizer_class=optax.adamw)
+        assert got2["policy"] == "MlpPolicy" and got2["use_sde"] is True
+    return "h1 = J17 K-row128 pair + adamw only; h0 cells as launched; forwarded only for H-wd"
+
+
+def test_h1_real_critic_decays():
+    """Real sbx (jack-std): with a ZERO gradient, the critic's adamw step moves
+    every weight toward 0 by lr*1e-4*w (the update, unapplied); control: MlpPolicy's adam moves nothing."""
+    try:
+        import gymnasium as gym
+        import jax
+        import jax.numpy as jnp
+        import optax
+        from stable_baselines3.common.vec_env import DummyVecEnv
+    except ImportError:
+        return "SKIPPED (no sbx in this venv)"
+    out = {}
+    for opt in (None, "adamw"):
+        venv = DummyVecEnv([lambda: gym.make("Pendulum-v1")])
+        m = B.make_b(venv, 0, 1000, optimizer=opt)
+        st = m.policy.qf_state
+        zero = jax.tree_util.tree_map(jnp.zeros_like, st.params)
+        upd, _ = st.tx.update(zero, st.opt_state, st.params)
+        w0 = jax.tree_util.tree_leaves(st.params)
+        u = jax.tree_util.tree_leaves(upd)
+        out[opt] = max(float(jnp.max(jnp.abs(x))) for x in u)
+        if opt == "adamw":                  # the update itself (w*(1-3e-8) rounds in f32)
+            for w, x in zip(w0, u):
+                assert jnp.allclose(x, -3e-4 * 1e-4 * w, rtol=1e-4, atol=0), "not lr*wd*w"
+    assert out[None] == 0.0 and out["adamw"] > 0.0, out
+    return f"zero-grad step: adam moves {out[None]:.1e}, adamw moves {out['adamw']:.1e}"
+
+
 def main():
     test_frozen_arms_unchanged()
     print("frozen arms: J17/pilot/E2c byte-identical, no policy keys")
     print("make_b:", test_make_b_default_is_old_call())
     print("run_pilot_cell:", test_cell_forwards_policy_only_for_hunt_arms())
     print("pair:", test_pair_differs_only_in_blind())
+    print("h1:", test_h1_pair_is_j17_plus_adamw_only())
+    print("h1 real:", test_h1_real_critic_decays())
     print("test_j17_hunt_arms PASS")
 
 

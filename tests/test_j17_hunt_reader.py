@@ -32,5 +32,24 @@ def test_planted_readings():
         assert J.hunt(Path(d) / "absent.json")["verdict"].startswith("VOID")
 
 
+def test_h1_reads_its_own_pair():
+    """j17_hunt_h1.json is read on the AdamW pair; the SimBa keys there = VOID."""
+    from experiments import pilot_b2 as P
+    assert J.HUNT_GROUPS == {k: tuple(v) for k, v in P.J17_HUNT_GROUPS.items()}
+    raw = {}
+    for f in sorted(J.DATA.glob("j17_r*.json")):
+        raw.update(json.loads(f.read_text())["cells"])
+    hs, ht = J.HUNT_GROUPS["h1"]
+    with tempfile.TemporaryDirectory() as d:
+        p = Path(d) / "j17_hunt_h1.json"
+        p.write_text(json.dumps({"cells": {f"{hs}_s923": raw["K-row128_s923"],
+                                           f"{ht}_s923": raw["K-row128-blind_s923"]}}))
+        assert J.hunt(p)["verdict"] == "STILL RUNS AWAY"
+        p.write_text(json.dumps({"cells": {f"{S}_s923": raw["K-row128_s923"],
+                                           f"{T}_s923": raw["K-row128-blind_s923"]}}))
+        assert J.hunt(p)["verdict"].startswith("VOID")                  # control
+
+
 if __name__ == "__main__":
-    test_cut_points_are_the_mlp_group_edges(); test_planted_readings(); print("PASS")
+    test_cut_points_are_the_mlp_group_edges(); test_planted_readings()
+    test_h1_reads_its_own_pair(); print("PASS")
