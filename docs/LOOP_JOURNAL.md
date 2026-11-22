@@ -3338,3 +3338,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Stage 1 (20 judge worlds, 33,402 looks): colour-count memory .890 ALIVE (told .829, yoked .000, 20/20); ring net on the same marks .434 DEAD (yoked .201).
 - Stage 2 (worlds 1301–1305, 2,400 decisions, jack-std): reflex 50 meals vs held8 2 vs yoked 0 = ALIVE-2; he camps on one food (10 a world = regrow clock). INBOX proposal; no learner run launched.
 - Philosophy served: 1, 2 (his own mouth is the teacher), 3, 4 (yoked twin fails at zero).
+
+## 2026-11-22 00:07–00:40 UTC · JACK · J14 (b) harvest + Next-up 2 (B row 6c)
+- First act: Kaggle 00:08 — A2-v1S s1 `…268291` HOME 23:41, reacher-hard `…282800` HOME, reacher-easy `…282752` RUNNING. No ready kernel to refill (J17/J10 wait the Director; forge is its own lane).
+- A2-v1S 3/3 seeds: **MISS ABOVE band** — 100K 576.2/657.2/596.7 mean 610.0 (438–518), 200K mean 835.3 (740–816); on the band's own 30K window 6/6 seed-points above all 5 official seeds. Extension due, needs s3+s4 ≤ 380 avg to reach band; no W47 GPU left for a 4.3 h seed. `40552131`.
+- Found: the GPU meter billed s1 10.02 h for a ~5.1 h Kaggle run (counted its wait for a session) → W47 reads 33.3/30 when ~28.4 is real. INBOX (machine).
+- B-6c reacher-hard: **lib MISSES** 824.9 vs 905.7–1000 (misses are eval episodes scoring 0; lib s4 5/10); ours LN 888.7; ctrl valid. `f1fea125`.
+- Philosophy served: 4 (two reproductions written as misses, including one that misses by being too good), 3 (A and B hold their seats only by numbers they hit).
