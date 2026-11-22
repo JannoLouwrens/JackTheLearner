@@ -78,3 +78,51 @@ if __name__ == "__main__":
         if k.startswith("test_"):
             v(); n += 1
     print(f"PASS {n}/{n}")
+
+
+# ---- Row J10-2 (ruling 82): the carry, and the refusal to resume without it ----
+
+def test_j10_2_body_carries_and_checks_before_training():
+    b0 = H.segment_job_body(3, 0, row="J10-2")
+    assert "train_segment(3, out, _p, 0, carry_life=True, eval_seeds=J10_2_EVAL_SEEDS)" in b0
+    b = H.segment_job_body(7, 2, "/kaggle/input/x", row="J10-2")
+    assert "_p = require_carry(resolve_prev_dir(_p)) if _p else None" in b
+    assert b.index("require_carry(resolve_prev_dir") < b.index("r = train_segment(")
+    compile(b, "job", "exec")
+    # control: J10-1's job text is untouched by the J10-2 path
+    assert "require_carry" not in H.segment_job_body(1, 2, "/kaggle/input/x")
+    assert "carry_life" not in H.segment_job_body(0, 0)
+    assert len(H.J10_2_EVAL_SEEDS) == 50 and H.J10_2_SEEDS == (3, 4, 5, 6, 7)
+
+
+def test_j10_2_seeds_are_fresh():
+    _raises(ValueError, H.segment_job_body, 0, 0, None, "J10-2")
+    _raises(ValueError, H.segment_job_body, 3, 0, None, "J10-1")
+
+
+def test_j10_2_refuses_a_mount_without_life_or_physics(tmp_path):
+    """PLANTED: a J10-1-style checkpoint (model + replay only) is what a broken
+    mount or an old kernel source looks like; it must refuse, not resume."""
+    d = tmp_path / "x"
+    d.mkdir()
+    for n in ("model.zip", "replay.pkl"):
+        (d / n).write_bytes(b"0")
+    # resolve_prev_dir accepts it (J10-1's test) — require_carry must not
+    assert H.resolve_prev_dir(str(d), str(tmp_path)) == str(d)
+    _raises(FileNotFoundError, H.require_carry, str(d))
+    (d / "life.pkl").write_bytes(b"0")
+    _raises(FileNotFoundError, H.require_carry, str(d))      # physics still missing
+    (d / "physics.pkl").write_bytes(b"0")
+    assert H.require_carry(str(d)) == str(d)                 # control: full life passes
+
+
+def test_j10_2_verdict_needs_4_of_5():
+    S = H.J10_2_SEEDS
+    r1 = {s: 4000.0 for s in S}
+    walk = {s: 6000.0 for s in S}; m = {s: 13.0 for s in S}
+    assert H.verdict_j10_2(walk, m, r1, 100.0)["reading"] == "PASS"
+    three = dict(walk); three[3] = three[4] = 5000.0
+    assert H.verdict_j10_2(three, m, r1, 100.0)["reading"] == "FAIL"
+    assert H.verdict_j10_2(walk, {s: 1.0 for s in S}, r1, 100.0)["reading"] == "STANDS"
+    assert H.verdict_j10_2(walk, m, r1, 600.0)["reading"] == "VOID"
+    assert H.verdict_j10_2(walk, m, {s: 3000.0 for s in S}, 100.0)["1m"] == "NAMED MISS"

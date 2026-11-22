@@ -88,6 +88,63 @@ SEGMENT_WALL_H = 10.5
 SEGMENT_STEPS = 500_000
 
 
+# ---- Row J10-2 (ruling 82, frozen 2026-11-22 BEFORE seed 3) -------------------
+RULE_J10_2 = """J10-2 — J10-1's frozen recipe exactly (env, learner, SAC_KW, 2M steps,
+segments of 500k / 10.5 h, 1M check band, late-start control), NO cures, with
+ONLY these changes, each named:
+  carry      train_segment(carry_life=True): every segment saves through
+             brain_b.save_life + physics.pkl (episode in progress, env RNG,
+             MjData, _last_obs, numpy/python RNG, PRNG key) and the next loads
+             them, so a resumed run cannot be told from an unbroken one
+             (J10 (a), d39687f0: bit-identical at T=1,000 and 1,010, toy size).
+             The published 2M run is ONE unbroken run; this is its faithful copy.
+             A segment > 0 whose mounted input lacks life.pkl or physics.pkl
+             REFUSES to start (require_carry) — it never falls back to a
+             re-seeded resume.
+  seeds      3, 4, 5, 6, 7 (fresh; 0-2 were J10-1's). Extension: none.
+  eval       at 1M and 2M: 50 deterministic episodes, env seeds 10,000..10,049,
+             separate eval env, R and M as J10-1. Machine: Kaggle CPU, every
+             segment and every eval (one stated machine).
+  PASS       at 2M: R >= 5,950 AND M >= 12.0 on >= 4 of 5 seeds. Return alone is
+             STANDS, never walks.
+  1M check   median R over the 5 seeds inside [3,784, 5,866], else a NAMED MISS.
+  control    as J10-1 (seed 0, never trains, 50k, R < 500 else VOID); the
+             J10-1 control reading stands for the same recipe and eval code,
+             re-read only if the eval code changes.
+  differs from the published recipe: as J10-1, plus the 50-episode eval."""
+J10_2_SEEDS = (3, 4, 5, 6, 7)
+J10_2_EVAL_SEEDS = tuple(range(10_000, 10_050))
+J10_2_PASS_MIN_SEEDS = 4
+J10_2_OUT = "/data/jack-logs/j10/sac_row2"
+CARRY_FILES = ("model.zip", "replay.pkl", "life.pkl", "physics.pkl")
+
+
+def require_carry(d: str) -> str:
+    """J10-2's refusal: a resumed segment starts only from a full life."""
+    import os
+    missing = [n for n in CARRY_FILES if not os.path.isfile(os.path.join(d, n))]
+    if missing:
+        raise FileNotFoundError(f"J10-2 refuses to resume from {d!r}: missing {missing} "
+                                f"(a re-seeded resume is J10-1's broken path)")
+    return d
+
+
+def verdict_j10_2(r2m: dict, m2m: dict, r1m: dict, control_r: float) -> dict:
+    """Pure reading of RULE_J10_2. r2m/m2m/r1m: seed -> value."""
+    if control_r >= CONTROL_MAX_RETURN:
+        return {"reading": "VOID", "why": f"late-start control R={control_r:.1f} >= {CONTROL_MAX_RETURN}"}
+    S = J10_2_SEEDS
+    walks = [s for s in S if r2m.get(s, -1e9) >= PASS_RETURN and m2m.get(s, -1e9) >= PASS_METRES_PER_1000]
+    stands = [s for s in S if r2m.get(s, -1e9) >= PASS_RETURN]
+    vals = sorted(r1m[s] for s in S if s in r1m)
+    med = vals[2] if len(vals) == 5 else None
+    in_band = med is not None and CHECK_BAND_1M[0] <= med <= CHECK_BAND_1M[1]
+    k = J10_2_PASS_MIN_SEEDS
+    reading = "PASS" if len(walks) >= k else ("STANDS" if len(stands) >= k else "FAIL")
+    return {"reading": reading, "walks": walks, "stands": stands, "median_1m": med,
+            "1m_in_band": in_band, "1m": "IN BAND" if in_band else "NAMED MISS"}
+
+
 def verdict(r2m: dict, m2m: dict, r1m: dict, control_r: float) -> dict:
     """Pure reading of the frozen rule. r2m/m2m/r1m: seed -> value."""
     if control_r >= CONTROL_MAX_RETURN:
@@ -188,7 +245,7 @@ def train_segment(seed: int, out_dir: str, prev_dir: str | None = None, segment:
                   wall_h: float = SEGMENT_WALL_H, seg_steps: int = SEGMENT_STEPS,
                   total: int = TOTAL_STEPS, eval_at=(CHECK_STEPS, TOTAL_STEPS),
                   sac_kw: dict | None = None, keep: list | None = None,
-                  carry_life: bool = False) -> dict:
+                  carry_life: bool = False, eval_seeds=EVAL_SEEDS) -> dict:
     """One resume segment of the rule. Fresh model if prev_dir is None, else
     loads model + replay buffer from prev_dir. Trains until the next seg_steps
     mark (capped at `total`) or wall_h, saves model + buffer to out_dir, and
@@ -236,7 +293,7 @@ def train_segment(seed: int, out_dir: str, prev_dir: str | None = None, segment:
            "hit_target": end == target, "buffer_size": int(model.replay_buffer.size()),
            "n_updates": int(getattr(model, "_n_updates", -1)), "train_s": time.time() - t0}
     if end in tuple(eval_at):
-        ev = evaluate(lambda o: model.predict(o, deterministic=True)[0])
+        ev = evaluate(lambda o: model.predict(o, deterministic=True)[0], seeds=eval_seeds)
         row["eval"] = {"at": end, "R": ev["R"], "M": ev["M"], "episodes": ev["episodes"]}
     with open(os.path.join(out_dir, "segment.json"), "w") as f:
         json.dump(row, f, indent=1)
@@ -297,7 +354,7 @@ out = os.environ["JACK_OUT"]
 _p = __PREV__
 _p = resolve_prev_dir(_p) if _p else None
 print("PREV_DIR " + repr(_p), flush=True)
-r = train_segment(__SEED__, out, _p, __SEGMENT__)
+r = train_segment(__SEED__, out, _p, __SEGMENT____EXTRA__)
 print("RESULT " + json.dumps(r), flush=True)
 '''
 
@@ -326,19 +383,32 @@ def resolve_prev_dir(expected: str, root: str = "/kaggle/input") -> str:
                             f"under {root}; dirs seen: {seen[:40]}")
 
 
-def segment_job_body(seed: int, segment: int, prev_dir: str | None = None) -> str:
+def segment_job_body(seed: int, segment: int, prev_dir: str | None = None,
+                     row: str = "J10-1") -> str:
     """The job text for one resume segment. Segment 0 trains fresh; a later
     segment loads model + replay from `prev_dir` (the previous segment's kernel
-    output, mounted as a kernel source under /kaggle/input)."""
-    if seed not in SEEDS:
-        raise ValueError(f"seed {seed} is not in the frozen rule's seeds {SEEDS}")
+    output, mounted as a kernel source under /kaggle/input).
+    row="J10-2": RULE_J10_2 — carry_life=True, the 50-episode eval, and a later
+    segment calls require_carry on its mounted input BEFORE training."""
+    seeds = {"J10-1": SEEDS, "J10-2": J10_2_SEEDS}[row]
+    if seed not in seeds:
+        raise ValueError(f"seed {seed} is not in {row}'s frozen seeds {seeds}")
     if (segment == 0) != (prev_dir is None):
         raise ValueError("segment 0 starts fresh (no prev_dir); every later segment needs one")
-    return (_JOB.replace("__PINS__", repr(KERNEL_PINS)).replace("__SEED__", repr(int(seed)))
-            .replace("__PREV__", repr(prev_dir)).replace("__SEGMENT__", repr(int(segment))))
+    body = _JOB
+    extra = ""
+    if row == "J10-2":
+        extra = ", carry_life=True, eval_seeds=J10_2_EVAL_SEEDS"
+        body = (body.replace("import train_segment, resolve_prev_dir",
+                             "import train_segment, resolve_prev_dir, require_carry, J10_2_EVAL_SEEDS")
+                    .replace("_p = resolve_prev_dir(_p) if _p else None",
+                             "_p = require_carry(resolve_prev_dir(_p)) if _p else None"))
+    return (body.replace("__PINS__", repr(KERNEL_PINS)).replace("__SEED__", repr(int(seed)))
+            .replace("__PREV__", repr(prev_dir)).replace("__SEGMENT__", repr(int(segment)))
+            .replace("__EXTRA__", extra))
 
 
-def kernel(seed: int, segment: int = 0) -> dict:
+def kernel(seed: int, segment: int = 0, row: str = "J10-1") -> dict:
     """Submit one resume segment as a Kaggle CPU kernel; write segment.json to
     /data/jack-logs/j10/sac_row/s<seed>_seg<segment>.json.
 
@@ -349,7 +419,7 @@ def kernel(seed: int, segment: int = 0) -> dict:
     from pathlib import Path
     import json
     from experiments.gpu import build_job, result_json, submit
-    out = Path("/data/jack-logs/j10/sac_row")
+    out = Path({"J10-1": "/data/jack-logs/j10/sac_row", "J10-2": J10_2_OUT}[row])
     sources, prev_dir = None, None
     if segment > 0:
         prev = out / f"s{seed}_seg{segment - 1}.json"
@@ -358,7 +428,7 @@ def kernel(seed: int, segment: int = 0) -> dict:
             raise RuntimeError(f"segment {segment} needs {prev} with a 'kernel' key "
                                f"(the previous segment's Kaggle kernel)")
         sources, prev_dir = [src], f"/kaggle/input/{src.split('/', 1)[1]}"
-    sub = submit(build_job(segment_job_body(seed, segment, prev_dir)), prefer="kaggle-cpu",
+    sub = submit(build_job(segment_job_body(seed, segment, prev_dir, row)), prefer="kaggle-cpu",
                  est_hours=10.5, timeout_s=KERNEL_REMOTE_TIMEOUT_S, fetch=SEGMENT_FETCH,
                  kernel_sources=sources, fetch_only=True)
     r = result_json(sub, "segment.json")
@@ -378,5 +448,8 @@ if __name__ == "__main__":
         r = resume_check(sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 10_000)
         print(json.dumps(r, indent=1))
         print("RESUME OK" if r["ok"] else "RESUME BROKEN")
+    elif sys.argv[1:2] == ["kernel2"]:   # Row J10-2: kernel2 <seed> [segment]
+        print(json.dumps(kernel(int(sys.argv[2]), int(sys.argv[3]) if len(sys.argv) > 3 else 0,
+                                row="J10-2")))
     elif sys.argv[1:2] == ["kernel"]:
         print(json.dumps(kernel(int(sys.argv[2]), int(sys.argv[3]) if len(sys.argv) > 3 else 0)))
