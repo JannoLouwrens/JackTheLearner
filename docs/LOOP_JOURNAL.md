@@ -3409,3 +3409,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Beside, not read: critic loss 100k 33.6 sighted / 63.3 twin (twin spiked to 949 at 90k); late-half meals/life 1.19 vs 0.71.
 - h2 (OFN critic pair) launched DETACHED on the box 06:10, same terms as h1; both workers at 100% CPU, ~600 MB each.
 - No ledger. Philosophy served: 4 (a published cure tested against its own blind twin and named a miss, not filed), 3 (next cure raced the hour the box freed).
+
+## 2026-11-22 06:22–06:42 UTC · JACK · J17 (hunt arm h3 built while h2 runs)
+- First act: Kaggle h0 `jack-cpu-1795311660` RUNNING (~4.7 h); Kaggle at cap 3 (h0 + two other-lane kernels). Box h2 OFN pair at ~135% CPU each since 06:10, home ~07:25 — nothing to harvest. J14/J10 wait the Director; J18's spec.json committed by forge (`594752d0`), so not ours; Next-up 1–4 all done.
+- Built h3 `910a5be4` = §24 arm (d) (Lee 2018 / DreamerV3: separate encoder per sense before fusion): critic first layer split, eye (obs[:256]) → Dense128 → LN, rest + action → Dense128 → LN, concat → ReLU, then sbx's own layers. One key `critic="split"` on J17's K-row128 pair; every difference from the published designs in the module docstring.
+- Tests (jack-std): test_j17_hunt_arms PASS incl. planted — split rest half bit-identical under a ×1e3 random eye; control: sbx default first layer moves 256/256 units. test_j17_hunt_reader PASS. Real world: blind arm zeroes exactly dims 0–255 (sighted 256/256 nonzero); smoke 7k decisions rc 0, 51 dec/CPU-s. (Smoke ran in the foreground, harness moved it to background; read from its output file.)
+- Box RSS note: h2's two workers are ~0.9 GB each (~1.85 GB total), above the ~1.5 GB guide.
+- No ledger. Philosophy served: 3 (the next published cure built and tested before the box frees, so the race does not wait), 4 (a planted test that the default critic fails).
