@@ -604,6 +604,25 @@ SB3 2.9.2, gymnasium 1.4.0, mujoco 3.17.0, jax 0.11.1, Python 3.13.18.
   lib seeds would need a mean of 838.7, above every lib seed seen (max 777.4). Director's call (INBOX). Candidates for the miss, from the
   rule's own list: flax lecun-normal init vs orthogonal √2; log-std clip vs tanh rescale; eval env seed + 10,000. Reacher-easy/-hard home ~22:40.
 
+## Row B-6c — DMC reacher-hard, 150k decisions: **lib MISSES** at 5 seeds (11-22 00:30 harvest, Kaggle CPU `jack-cpu-1795282800`)
+
+Same rule and pins as B-6a. Kernel 23,339 s; file `/data/jack-logs/brain_b/row6_dmc_reacher-hard.json` (sha256 143e269e…),
+verdict written by the kernel's own `verdict()`. Band 955.8 ± 30.5 (SimBa `results/sac.csv`) → 905.7–1000 at k = 5.
+
+| arm | seeds 0–4 @150k | mean | reading |
+|---|---|---|---|
+| lib (SBX SAC, SimBa recipe) | 869.3, 960.8, 956.9, 852.7, 485.0 | **824.9** | below 905.7 → **lib MISSES** |
+| ours (lib + layer_norm, Brain B) | 957.7, 962.0, 584.5, 968.8, 970.7 | 888.7 | not counted (lib missed) |
+| ctrl (never trains, seeds 0–2) | 1.5, 0.2, 1.7 | 1.1 | fails as it must → run valid |
+
+- Reported, not judged: the misses are bimodal EVAL episodes, not a low plateau — of 10 eval episodes, lib s4 has 5 below 100
+  (the rest 950–983), lib s0 and s3 one each, ours s2 four; every other seed 0/10. A solved seed scores 950–970 (published 955.8).
+  25k marks: lib s4 peaked 763.0 @100k and fell to 485.0 (reached, then lost — the B-6a s1 shape again); ours s3 sat ≤ 191.5 to 125k, then 968.8.
+- Two of three row-6 tasks now miss on the published library recipe (6a 541.1, 6c 824.9); 6b (reacher-easy) still running.
+  The rule's extension (k = 15, band 918.4–993.2) would need 10 fresh lib seeds averaging 965.2 — above every lib seed seen (max 960.8);
+  as built 20 cells ≈ 47 cell-hours ≈ 12 h on 4 workers > the 9.5 h timeout. Not launched; Director's call (INBOX). Candidates from the rule's list, unchanged:
+  flax lecun-normal init vs orthogonal √2; log-std clip vs tanh rescale; eval env seed + 10,000 (an eval-episode zero is where that would show).
+
 ## Row A1 — brain A (sheeprl `dreamer_v3_5`, size 1m) on DMC cartpole_balance: **PASS** at 3 seeds (11-21 02:30, Colab T4)
 
 Rule `experiments/brain_a/rows.py` (frozen `286d6451` before any seed; control corrected to no gradient step before

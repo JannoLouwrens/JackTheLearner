@@ -210,7 +210,7 @@ resumed run's next 1,000 updates match the unbroken one, or the item named.
 
 state: item 4 DONE 11-21 18:17 (`b_life_resume_test.py` PASS, Pendulum). 20:45 `b6b2da1d`: `save_life` now also carries MuJoCo physics (MjData + env RNG; gymnasium MujocoEnv pickles via EzPickle = fresh env). `b_life_mujoco_test` (Hopper-v4, mujoco 3.17.0, T=1100 cut 44 steps into an episode): U1=U2, resumed == unbroken on every item → PASS; planted no-physics (= old save_life) differs from row 1101. Pendulum test re-run: PASS, all 4 plants caught.
 state: NEXT: any long B life/forge run saves through `save_life` (forge's runner does not save at all today); J10's `_save_physics` is now redundant beside it (left, frozen path).
-state: item 2 LAUNCHED 17:39, one Kaggle CPU kernel per task. **6a swingup_sparse HOME 22:09 → lib MISSES** (KNOWN_ANSWERS Row B-6a): lib 777/408/767/0/754 = 541.1 vs 726.9–826.1; ours (LN) 0/0/832/30/0 = 172.4; ctrl 0/0/0 valid. Extension not launched: as built ≈ 13–14 h > 9.5 h timeout, and needs fresh lib mean 838.7 (> any lib seed) → INBOX. reacher-easy `…282752`, reacher-hard `…282800` RUNNING (~22:40) → harvest each into B-6b/6c; row 6 already cannot REPRODUCE (needs all three).
+state: item 2 LAUNCHED 17:39, one Kaggle CPU kernel per task. **6a swingup_sparse → lib MISSES** 541.1 vs 726.9–826.1 (ours 172.4). **6c reacher-hard HOME ~00:15 → lib MISSES** 869/961/957/853/485 = 824.9 vs 905.7–1000 (ours LN 888.7, ctrl 1.1 valid; misses are eval episodes scoring 0 — lib s4 5/10). Extensions not launched (each ≈ 12 h > 9.5 h timeout; 6c would need fresh lib mean 965.2 > any seed) → INBOX. reacher-easy `…282752` still RUNNING → B-6b; row 6 already cannot REPRODUCE.
 ---
 
 ## SYSTEM — work on the machine (max 3 open)
@@ -321,6 +321,7 @@ clauses; `verify` VENUE 266 vs 256.
 - 11-21 20:40 JACK · J14 (b): INBOX 19:15 (2) answered — the 1m rows A1–A3 match official v2 `dmc_proprio` on every agent setting (`v2_diff`, 67/73, 0 undisclosed, planted control 11/11); A2's 1m miss is the 2023 recipe on the v2 agent or the port's code, not a hidden size. `rows.py`'s rule text omits two README-named differences (prefill 1,024, replay 500k) — frozen file, not edited.
 - 11-22 00:20 JACK · J14 (b): A2-v1S 3/3 seeds home = MISS ABOVE band (100K mean 610.0 vs 438–518; 200K 835.3 vs 740–816; 6/6 seed-points above all 5 official seeds on their own 30K window). Extension due but unfundable in W47 and arithmetically cannot reach the band unless s3+s4 average ≤ 380. Director: W48 extension or moot; freeze the matched-encoder arm?
 - 11-22 00:20 JACK (machine): the GPU meter billed `jack-ladder-1795268291` 10.02 h (`gpu_budget.json` W47 → 33.3/30, "OVERRUN") but Kaggle ran it ~5.1 h (lastRunTime 18:33, home 23:41; launched 13:38 and waited for a session). The meter charges wait time as GPU time → it overstates W47 by ~4.9 h and will refuse real free hours.
+- 11-22 00:35 JACK · Next-up 2: B row 6c reacher-hard = lib MISSES (824.9 vs 905.7–1000; 3/5 lib seeds solve at 957–961, the misses are eval episodes that score 0 — lib s4 5/10). With 6a, the published SBX recipe misses 2 of 3 DMC tasks on our apparatus → before blaming SAC, the rule's 3 listed differences (init, log-std, eval seed) need a box diff. Director: extension (needs 965.2, ≈ 12 h a kernel) or the diff first?
 
 ## DONE (kept one day)
 
