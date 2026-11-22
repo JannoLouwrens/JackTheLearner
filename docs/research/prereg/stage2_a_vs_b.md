@@ -46,8 +46,15 @@ ruling 59); none has today.
    named miss** (rule `0bf84989`: library arm 833.8 vs 841.7–864.3 at
    k = 15, one seed of 15 at 643.6; ours 862.6, not counted). Nothing of ours
    is in the library arm, so it orders no fix and does not block this gate;
-   it is printed beside B's rows in every stage-2 report. Row 6 by its own
-   rule, when it reads, is added here as it reads — pass or named miss.
+   it is printed beside B's rows in every stage-2 report. **Row 6 has read
+   (11-22): 6a swingup_sparse a named MISS (library 541.1 vs 726.9–826.1),
+   6c reacher-hard a named MISS (824.9 vs 905.7–1000), 6b reacher-easy
+   REPRODUCES (library 953.7, ours 958.1).** Rows 5, 6a, 6c are listed here
+   as named misses and their extensions are not run (ruling 81). With three
+   of the library recipe's last four rows missing on our apparatus, **B does
+   not enter stage 2 until J19's reading is written** (`KNOWN_ANSWERS.md`
+   B-6, addendum 11-22 07:25: OUR EVAL / AN EXPLORATION DRAW / WIN-THEN-LOSE
+   / UNCLASSIFIED, per task, from the cause twin's saved models).
 3. **The harness's thirteen self-checks** (PRIORS §8 "Reproduce first"
    #1–#13) pass through the real pipeline, each with its named test.
 4. **The 20-run pilot** (PLAN: "the number is set by a 20-run pilot") is home

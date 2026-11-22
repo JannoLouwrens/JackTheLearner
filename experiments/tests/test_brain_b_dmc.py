@@ -120,7 +120,7 @@ def test_twin_reads_only():
     D.LEARNING_STARTS, D.EVAL_EVERY, D.TWIN_TRACE_EVERY = 300, 500, 250
     try:
         task, steps = "reacher-hard", 1500
-        d = tempfile.mkdtemp(dir="/data/tmp")
+        d = tempfile.mkdtemp(prefix="j19twin_test_", dir="/data/tmp")
         on = D.run_cell("lib", task, 0, steps, save_dir=d)
         off = D.run_cell("lib", task, 0, steps)
         other = D.run_cell("lib", task, 1, steps)
@@ -139,11 +139,29 @@ def test_twin_reads_only():
         fresh = D.make_model("lib", task, 0, 1)          # control: unloaded weights do not replay it
         assert D.evaluate(fresh, task, 0) != on["mark_evals"]["1500"], "control: a fresh model must differ"
         assert on["mark_evals"]["500"] != on["mark_evals"]["1500"], "control: marks must differ"
+        # J19 step (2)'s re-evaluation, on the files just written:
+        r = D.reeval_seed(task, 0, d, marks=(500, 1500), episodes=10, kernel_cell=on)
+        for n in ("500", "1500"):                       # fixed: its 10 ARE the kernel's 10, at every mark
+            assert r["marks"][n]["fixed"] == on["mark_evals"][n] and r["marks"][n]["replay_gap"] == 0.0
+        m = D.load_weights("lib", task, 0, os.path.join(d, on["models"][-1]))
+        env = D.make_env(task, 0)
+        a, b = D._episodes(m, env, 3), D._episodes(m, env, 3)
+        assert a != b, "stream: the same model must meet NEW targets on the next draw"
+        fx = [D._episodes(m, D.make_env(task, 10_000), 3, reset_seed=10_000) for _ in range(2)]
+        assert fx[0] == fx[1], "fixed: the same model must meet the SAME targets again"
+        assert r["marks"]["1500"]["stream"] != r["marks"]["1500"]["fixed"]
+        planted = {"task": task, "band": [905.7, 1000.0], "fixed_mean_at_target": 1.0, "fixed_in_band": False,
+                   "stream_mean_at_target": 950.0, "stream_in_band": True,
+                   "seeds": {"0": {"marks": {str(D.STEPS["6"]): r["marks"]["1500"]}}}}
+        tb = D.reeval_table(planted)
+        assert "fixed 1.0 (OUT OF band" in tb and "stream 950.0 (IN band)" in tb, tb
         size = os.path.getsize(os.path.join(d, on["models"][-1]))
         assert size < 1_500_000, size
         print("model file bytes:", size)
     finally:
         D.LEARNING_STARTS, D.EVAL_EVERY, D.TWIN_TRACE_EVERY = old
+        import shutil
+        shutil.rmtree(d, ignore_errors=True)
 
 
 if __name__ == "__main__":

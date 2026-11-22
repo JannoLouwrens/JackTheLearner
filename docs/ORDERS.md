@@ -105,7 +105,7 @@ serves: M3 · PLAN "Learning to eat" last 10% · philosophy 1, 3, 4.
 **done when:** all four hunt arms have a read row, and either J17-2's four arm rows are in `WORLD_CARD.md` with its verdict, or branch (4)'s row is written.
 state: 11-21 J17 row DONE (`98e22036` freeze, `59bbdf90` arms, `9b3ea35a` reading): NEITHER EATS; row128 > rays16 (U 22/25) but < blind (U 0/25) → width, not sight. Late meals/life: rays16 .13–.34, row128 .27–.44, blind .70–2.08, never-trains 1.05–2.58.
 state: sizing (`ac684c09`): a hunt arm = ≥ 100k; the box is ANOTHER DRAW from Kaggle (same world bit for bit, learner float maths differ) → every arm carries its own twin on its own machine; ~85 CPU-min per 100k cell on the box.
-state: 11-22 06:40: h1 (AdamW, box) **STILL RUNS AWAY** (Q climb 1.375, twin 1.20; `j17_hunt_h1.json`). **h2 (OFN) RUNNING on the box since 06:10** → `/data/jack-logs/j17_hunt_box_h2/`, home ~07:25; wrap as h1 was (`j17_hunt_h2.json`) → `j17_onset hunt`. **h3 BUILT `910a5be4`** (`--arm H-split-row128[-blind] --seed 923 --decisions 100000`). h0 Kaggle `jack-cpu-1795311660` RUNNING since 01:41 (est 7.5 h).
+state: 11-22 07:25: hunt rows in `WORLD_CARD.md` § J17 hunt. h1 AdamW **STILL RUNS AWAY**. **h2 OFN (box, home 07:19) = NO CONTROL, NOT a cure**: Q climb 1.442 vs twin 1.509; late meals/life sighted 0.56 < twin 0.93 (OFN holds Q small on both arms, 42.5 / 60.7, yet sighted still eats half). **h3 LAUNCHED Kaggle `jack-cpu-1795331300` 07:08** (watcher log `/data/jack-logs/launch_j17_hunt_h3.log` → `pilot_b2/j17_hunt_h3.json`); h0 `jack-cpu-1795311660` RUNNING since 01:41 (→ `pilot_b2/j17_hunt_h0.json`). NEXT: when each is home, `j17_onset hunt <file>` + `pilot_b2.j17_late_meals(cell, 50_000)` → its row; then branch (2) or (4) as ruled.
 
 ### J19 — The library recipe misses published numbers here: find out why, where a published curve says what right looks like
 part: His brain (B) · stage: 1 ("each brain reproduces published numbers") · step: 3 (reproduce) · prior: §1b, §21; `KNOWN_ANSWERS.md` rows B-5, B-6a, B-6b, B-6c + B-6 addendum; rulings 68, 81
@@ -130,7 +130,8 @@ J10/E2c win-then-lose shape, on a published task — say so in one line.
 order's reading is written.
 serves: M3 · PLAN step 3 ("a learner that fails is a suspect, not a contestant") · auditor finding 2 · philosophy 3, 4.
 **done when:** the two kernels' re-evaluation table and its one-line reading are in `KNOWN_ANSWERS.md`, and the stage-2 draft carries B's gate.
-state: (new 11-22.) Row kernels of 11-21 saved no model. Each task's lib-only kernel should fit 9.5 h (lib + ours together took ≈ 9).
+state: 11-22 07:25: twin built + tested (`brain_b_dmc twin <task>`, test_brain_b_dmc 7/7 jack-std): lib only, s0–4, 150k, weights saved each 25k mark (0.82 MB msgpack, `load_weights`), 10k trace. **6a LAUNCHED 07:16 Kaggle `jack-cpu-1795331794`** (log `/data/jack-logs/brain_b/launch_j19_twin_swingup_sparse.log`; home → `/data/jack-logs/brain_b/j19_twin_cartpole-swingup_sparse/`). **6c NOT launched — Kaggle 5/5; launch it the moment a session frees:** `scripts/launch_detached.sh /data/jack-logs/brain_b/launch_j19_twin_reacher-hard.log nice -n 19 $PY -m experiments.brain_b_dmc twin reacher-hard`.
+state: (3) reading WRITTEN (`KNOWN_ANSWERS.md` B-6 addendum 11-22 07:25) and (4) B's gate in `stage2_a_vs_b.md` 2b DONE. NEXT when a twin is home: `launch_detached.sh … /data/venvs/jack-std/bin/python -m experiments.brain_b_dmc reeval <task>` (~1 CPU-h, box) → paste its table + the one-line reading into B-6.
 
 ### J18 — Forge round 1 is a KEEP round (lane `forge` runs it; rung S is running)
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19, §21, §22; `docs/FORGE_POOL.md`; rulings 61, 65, 69, 83

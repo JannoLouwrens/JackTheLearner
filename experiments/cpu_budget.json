@@ -1763,14 +1763,15 @@
         "detached:launch_H-ofn-row128.log": 3593.04,
         "detached:launch_H-wd-row128-blind.log": 4292.09,
         "detached:launch_H-wd-row128.log": 4297.79,
-        "detached:launch_S_chainA.log": 335.35,
-        "detached:launch_S_chainB.log": 337.29,
-        "detached:launch_j17_hunt_h0.log": 377.33,
+        "detached:launch_S_chainA.log": 346.24,
+        "detached:launch_S_chainB.log": 348.52,
+        "detached:launch_j17_hunt_h0.log": 388.13,
+        "detached:launch_j17_hunt_h3.log": 11.73,
         "detached:launch_row6_reacher-easy.log": 663.01,
         "detached:launch_row6_reacher-hard.log": 538.96,
         "detached:smoke.log": 703.11
       },
-      "used_s": 19612.37
+      "used_s": 19657.02
     }
   },
   "last_child_s": {

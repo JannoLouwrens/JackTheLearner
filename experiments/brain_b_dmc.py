@@ -480,11 +480,107 @@ def twin_kernel(task: str, est_hours: float = 5.0) -> dict:
     return r
 
 
+REEVAL_EPISODES = 100
+LOW_EPISODE = 100.0          # an eval episode under this is a "zero" (B-6c's bimodal shape)
+
+
+def _episodes(model, env, n: int, reset_seed=None) -> list:
+    """n deterministic episodes on `env`. `reset_seed` is passed to the FIRST
+    reset only (None = never re-seed: the env's own stream goes on)."""
+    rets = []
+    for ep in range(n):
+        obs, _ = env.reset(seed=reset_seed if ep == 0 else None)
+        done, total = False, 0.0
+        while not done:
+            a, _ = model.predict(obs, deterministic=True)
+            obs, r, term, trunc, _ = env.step(a)
+            total += r
+            done = term or trunc
+        rets.append(float(total))
+    return rets
+
+
+def reeval_seed(task: str, seed: int, home, marks=None, episodes: int = REEVAL_EPISODES,
+                kernel_cell: dict | None = None) -> dict:
+    """J19 step (2), one learner seed: every saved model, `episodes` episodes, two ways.
+      fixed   OUR eval as the row ran it, longer: a fresh eval env at seed +
+              10,000, re-seeded at every mark, so every mark meets the SAME
+              targets and its first 10 are the row's own 10.
+      stream  the reference's eval (SimBa 7d0358b1, KNOWN_ANSWERS B-6
+              addendum (3)): ONE eval env built from the run's own seed, never
+              re-seeded -- each mark draws the NEXT `episodes` targets.
+    `replay_gap` = max |fixed[:10] - the kernel's own 10| per mark: 0.0 means
+    this machine replays the kernel's evaluation exactly; anything else is
+    the box-vs-Kaggle float draw and is reported, not hidden."""
+    home = Path(home)
+    marks = list(marks or range(EVAL_EVERY, STEPS["6"] + 1, EVAL_EVERY))
+    stream_env = make_env(task, seed)
+    out = {"task": task, "seed": seed, "episodes": episodes, "marks": {}}
+    for n in marks:
+        m = load_weights("lib", task, seed, home / twin_model_name("lib", task, seed, n))
+        fixed = _episodes(m, make_env(task, seed + EVAL_SEED_OFFSET), episodes,
+                          reset_seed=seed + EVAL_SEED_OFFSET)
+        stream = _episodes(m, stream_env, episodes)
+        row = {"fixed_mean": sum(fixed) / len(fixed), "stream_mean": sum(stream) / len(stream),
+               "fixed_low": sum(x < LOW_EPISODE for x in fixed),
+               "stream_low": sum(x < LOW_EPISODE for x in stream),
+               "fixed": fixed, "stream": stream}
+        own = ((kernel_cell or {}).get("mark_evals") or {}).get(str(n))
+        if own:
+            row["kernel_mean10"] = sum(own) / len(own)
+            row["replay_gap"] = max(abs(a - b) for a, b in zip(fixed, own))
+        out["marks"][str(n)] = row
+    return out
+
+
+def reeval(task: str, home=None) -> dict:
+    """J19 step (2) for one task: all five seeds -> <home>/reeval.json (one
+    seed's file is written as it finishes) and the table KNOWN_ANSWERS takes.
+    ~30 models x 200 episodes: box, jack-std, nice 19, DETACHED (about an hour)."""
+    home = Path(home or OUT / f"j19_twin_{task}")
+    twin = json.loads((home / "twin.json").read_text())
+    cells = {c["seed"]: c for c in twin["cells"] if "error" not in c}
+    lo, hi = band(*ROWS["6"][task])
+    res = {"task": task, "band": [lo, hi], "seeds": {}}
+    for seed in SEEDS:
+        f = home / f"reeval_s{seed}.json"
+        r = json.loads(f.read_text()) if f.exists() else reeval_seed(task, seed, home, kernel_cell=cells.get(seed))
+        f.write_text(json.dumps(r))
+        res["seeds"][str(seed)] = r
+        print(f"reeval {task} s{seed} done", flush=True)
+    last = str(STEPS["6"])
+    for way in ("fixed", "stream"):
+        per = [res["seeds"][str(s)]["marks"][last][f"{way}_mean"] for s in SEEDS]
+        res[f"{way}_mean_at_target"] = round(sum(per) / len(per), 1)
+        res[f"{way}_in_band"] = lo <= res[f"{way}_mean_at_target"] <= hi
+    (home / "reeval.json").write_text(json.dumps(res, indent=1))
+    print(reeval_table(res), flush=True)
+    return res
+
+
+def reeval_table(res: dict) -> str:
+    last = str(STEPS["6"])
+    L = [f"| seed | kernel's 10 @{last} | fixed 100 (low) | stream 100 (low) | replay gap | fixed 100 by mark |",
+         "|---|---|---|---|---|---|"]
+    for s, r in sorted(res["seeds"].items()):
+        m = r["marks"][last]
+        by = " / ".join(f"{v['fixed_mean']:.0f}" for _, v in sorted(r["marks"].items(), key=lambda kv: int(kv[0])))
+        L.append(f"| {s} | {m.get('kernel_mean10', float('nan')):.1f} | {m['fixed_mean']:.1f} ({m['fixed_low']}) "
+                 f"| {m['stream_mean']:.1f} ({m['stream_low']}) | {m.get('replay_gap', float('nan')):.3g} | {by} |")
+    L.append(f"5-seed mean @{last}: fixed {res['fixed_mean_at_target']} "
+             f"({'IN' if res['fixed_in_band'] else 'OUT OF'} band {res['band']}), "
+             f"stream {res['stream_mean_at_target']} ({'IN' if res['stream_in_band'] else 'OUT OF'} band)")
+    return "\n".join(L)
+
+
 def main(argv):
     if len(argv) >= 7 and argv[1] == "cell":     # cell <arm> <task> <seed> <steps> <out>
         rec = run_cell(argv[2], argv[3], int(argv[4]), int(argv[5]),
                        save_dir=argv[7] if len(argv) > 7 else None)
         Path(argv[6]).write_text(json.dumps(rec))
+        return 0
+    if len(argv) == 3 and argv[1] == "reeval":   # reeval <row-6 task>: J19 step (2), box, jack-std
+        reeval(argv[2])
         return 0
     if len(argv) == 3 and argv[1] == "twin":     # twin <row-6 task>: J19's cause twin
         twin_kernel(argv[2])

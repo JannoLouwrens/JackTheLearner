@@ -656,6 +656,25 @@ verdict written by the kernel's own `verdict()`. Band 955.8 ± 30.5 (SimBa `resu
 - So no wiring fault was found; the candidates for a cause are now 6 (3 listed + 3 above), all settings, none a broken build.
   The one a box twin can settle cheapest is (3): re-evaluate a lib cell at 150k on fresh targets — but the kernels saved no model.
 
+**Addendum 11-22 07:25 — the cause twin (ORDERS J19, ruling 81): the READING, written before any twin result or re-evaluation exists.**
+Not a third try at the rows: 5, 6a, 6c stay named MISSES whatever the twin scores. `brain_b_dmc twin <task>` = the row's `lib` arm only,
+seeds 0–4, 150k decisions, plus two read-only additions (`test_twin_reads_only`: evals, marks and training returns identical with them
+on and off; each saved file loaded back replays its mark's ten returns exactly): actor + critic weights saved at every 25k mark, and a
+10k-step trace of critic_loss, actor_loss (Q = −actor_loss) and α. 6a launched 07:16 (`jack-cpu-1795331794`); 6c takes the next free session.
+Step (2), box, jack-std (`brain_b_dmc reeval <task>`): every saved model, 100 deterministic episodes, two ways — **fixed** (our row's
+eval: a fresh env at seed + 10,000, re-seeded each mark → the same targets every mark; its first 10 are the row's own 10) and **stream**
+(the reference's: one eval env from the run's own seed, never re-seeded → each mark draws the next 100). Read per task, at 150k, in this order:
+1. **OUR EVAL** — the 5-seed mean of **stream** is in the row's band (6a 726.9–826.1, 6c 905.7–1000) while **fixed** is out. Then the
+   miss was our fixed target set; the eval is fixed and the row may be re-registered once (ruling 70).
+2. **AN EXPLORATION DRAW** — still out under stream, and the low seed(s) are flat from the start (every mark's fixed-100 mean < 100).
+   Reported with that seed's Q / critic-loss trace beside J17's sighted shape (Q climb 50k→100k ≥ 1.32 = "the same climb", else not).
+3. **WIN-THEN-LOSE** — still out under stream, and a low seed had a mark with fixed-100 mean ≥ the band's lower edge before ending
+   below it: the J10 / E2c shape on a published task; said in one line beside §21.
+4. Out under stream with neither shape (a seed that is low but neither flat nor fallen, e.g. a rising late learner): reported as
+   UNCLASSIFIED with its curve; no fourth story is fitted after the fact.
+Also printed, not read: `replay_gap` (fixed's first 10 vs the kernel's own 10 — 0 means the box replays Kaggle's evaluation exactly);
+whether the twin's 150k scores equal the 11-21 row's per seed (same code path, same pins — if not, Kaggle itself is another draw).
+
 ## Row A1 — brain A (sheeprl `dreamer_v3_5`, size 1m) on DMC cartpole_balance: **PASS** at 3 seeds (11-21 02:30, Colab T4)
 
 Rule `experiments/brain_a/rows.py` (frozen `286d6451` before any seed; control corrected to no gradient step before

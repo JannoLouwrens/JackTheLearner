@@ -645,3 +645,16 @@ What it says: (1) the entropy hunt is closed for J17 — auto α holds H on its 
 | auto α | 45k 65k 60k 160k 105k | 45k 120k 75k 150k 45k | 45k never 20k never never |
 
 What it says: critic loss is the only signature whose control stays quiet until ≥ 200k (Q and α each fire on a blind-vs-blind pair at 15–45k, so they cannot time an onset). On row128 it separates at 10–25k on 3 of 5 seeds, 70k and 140k on the other two. So a one-seed hunt read at ~30k decisions sees the runaway on ~3 seeds in 5, and only ≥ 140k covers all five; J17's Kaggle rate is 13.7–17.5 decisions per CPU-s → 30k ≈ 30–36 CPU-min an arm, 140k ≈ 2.2–2.8 CPU-h an arm (box rate for row128 not measured here). "Box-minutes on 1 seed" is a pilot that can miss on 2 seeds in 5; seeds 923, 921, 922 are the early ones. Each arm needs its blind twin beside it.
+
+### J17 hunt (ruling 77; PILOT — one seed 923, 100k decisions, each arm beside its own blind twin on its own machine; no verdict on eating)
+
+Reader `j17_onset hunt`: Q climb = Q(100k) ÷ Q(50k), Q = −actor_loss; cut points are the MLP groups' own edges (sighted 1.32–1.57, blind 0.92–1.20), not registered thresholds. CURES (ORDERS J17 branch) = the reader does not print RUNS AWAY **and** sighted late meals/life ≥ its blind twin's (late = lives starting ≥ 50k, `pilot_b2.j17_late_meals`).
+
+| arm | the one change (§24) | machine | sighted Q climb | twin Q climb | reader | late meals/life, sighted / twin | cures? |
+|---|---|---|---|---|---|---|---|
+| h0 | SimBa policy + AdamW | Kaggle `jack-cpu-1795311660` | — | — | running since 01:41 | — | — |
+| h1 | AdamW, wd 1e-4 (Lyle 2024) | box | 1.375 | 1.20 | **STILL RUNS AWAY** | 1.29 / 0.67 | no |
+| h2 | critic features on the unit sphere (OFN, Hussing 2024) | box | 1.442 | 1.509 | **NO CONTROL** | 0.56 / 0.93 | **no** (sighted eats less than its twin) |
+| h3 | critic first layer split by sense (Lee 2018 / DreamerV3) | Kaggle `jack-cpu-1795331300` | — | — | launched 07:08 | — | — |
+
+h2 beside, not read (`world_card_data/j17/j17_hunt_h2.json`): OFN bounds the critic as built — Q at 100k is 42.5 sighted / 60.7 blind against h1's 367.7 / 311.9, critic loss 0.76 / 0.84 (h1 33.6 / 63.3), α 0.014 both. So the RATIO the reader uses climbs on both arms from a small base (twin 1.509 ≥ 1.32 → the reader's own NO CONTROL clause), and the sighted critic is no longer ABOVE its twin's — but the sighted learner still eats about half of what its blind twin eats. On this one seed, holding the critic's scale did not give him sight: the runaway and the not-eating came apart. (h1's late meals/life is re-read here with the project's own function, 1.29 / 0.67; the 06:20 journal line said 1.19 / 0.71 from a hand count that kept the unfinished last life.)
