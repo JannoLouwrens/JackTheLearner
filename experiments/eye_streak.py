@@ -151,6 +151,7 @@ def ray_dirs(n_az: int, elevs) -> np.ndarray:
 def collect(seed: int, n: int = N_FRAMES) -> str:
     import mujoco
     from experiments import w0 as W0MOD
+    from experiments.fast_sim import _multi_ray
     from experiments.jack_env import JackEnv
     from experiments.w0 import random_action
 
@@ -170,8 +171,10 @@ def collect(seed: int, n: int = N_FRAMES) -> str:
         nray = flat[arm].size // 3
         gid = np.full(nray, -1, dtype=np.int32)
         dist = np.zeros(nray, dtype=np.float64)
-        mujoco.mj_multiRay(m, d, pos, flat[arm], groups, 1, -1, gid, dist,
-                           nray, W0MOD.RAY_MAX_RANGE)
+        # J20 (4): the eye's own compat (either mj_multiRay signature). Its
+        # cutoff is mjMAXVAL, not RAY_MAX_RANGE: a hit past the range is still
+        # masked as a miss below, so the features are the same.
+        _multi_ray(m, d, pos, flat[arm], groups, gid, dist, nray)
         miss = (gid < 0) | (dist < 0) | (dist > W0MOD.RAY_MAX_RANGE)
         dn = np.where(miss, 1.0, dist / W0MOD.RAY_MAX_RANGE)
         tx = np.where(miss, 0.0, tex[np.maximum(gid, 0)])

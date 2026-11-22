@@ -112,6 +112,7 @@ DIAL_LIVES = (15, 60, 360)
 def collect(seed: int, n_bouts: int = N_BOUTS) -> str:
     import mujoco
     from experiments import w0 as W0MOD
+    from experiments.fast_sim import _multi_ray
     from experiments.jack_env import JackEnv
     from experiments.w0 import random_action
 
@@ -129,8 +130,10 @@ def collect(seed: int, n_bouts: int = N_BOUTS) -> str:
             np.stack([np.cos(az), np.sin(az), np.zeros(N_AZ)], -1)).ravel()
         gid = np.full(N_AZ, -1, dtype=np.int32)
         dist = np.zeros(N_AZ, dtype=np.float64)
-        mujoco.mj_multiRay(m, d, pos, vec, groups, 1, -1, gid, dist,
-                           N_AZ, W0MOD.RAY_MAX_RANGE)
+        # J20 (4): the eye's own compat (either mj_multiRay signature). Its
+        # cutoff is mjMAXVAL, not RAY_MAX_RANGE: a hit past the range is still
+        # masked as a miss below, so the features are the same.
+        _multi_ray(m, d, pos, vec, groups, gid, dist, N_AZ)
         miss = (gid < 0) | (dist < 0) | (dist > W0MOD.RAY_MAX_RANGE)
         dn = np.where(miss, 1.0, dist / W0MOD.RAY_MAX_RANGE)
         tx = np.where(miss, 0.0, tex[np.maximum(gid, 0)])
