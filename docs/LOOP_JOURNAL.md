@@ -3445,3 +3445,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `5c90a078` `experiments/j20_reread.py`: gate 2 (f4/g4/b4, seeds 261–280 × 10 lives) on the box under mujoco 3.17.0, ruler and bar unchanged, resumable per cell. Box speed 12 ms/decision → d0.75 f4+g4+b4 ≈ 9 CPU-h. **f4 + b4 LAUNCHED 08:26** (40 cells, 2 workers, ~3 h). g4 refused by the day's detached cap (19.5 k + est > 34.6 k s) — next slot / tomorrow.
 - `250942db` J20 (4): eye_streak + find_himself route rays through `fast_sim._multi_ray`. Test PASS: 3.2.3 bit-for-bit vs the old code; 3.17.0 old code FAILS (control). The first compare failed on key V alone — it holds NaN; fixed to equal_nan, every ray feature was already identical.
 - No ledger. Philosophy served: 4 (a box number and a Kaggle number may share a table only in one world — the stage-1 "food is findable from his senses" proof is being re-read in the world every learner now lives in).
+
+## 2026-11-22 08:37–08:47 UTC · JACK · J14 (c) the ear's epoch, stage by stage (box half)
+- First act: Kaggle 3 JACK kernels RUNNING (h0, 6a, 6c), nothing home; J10 cannot launch, J20 runs, g4 waits the cap → J14 (c).
+- `c34634a5` `experiments/kws_epoch_stages.py`: times the AUTHORS' own SpeechCommand/Preprocess/LogMel/BCResNets(8) (pinned, sha ok) on 2,000 real clips. Per epoch (CPU s, box, 1 thread): decode 8.2 (14 cold), noise loop 4.9, mel 22.6, step 303.
+- Reading: the host-side work is < 20 s of the T4's 182 s epoch, so the cost is not reading files. Named suspect: their code moves a whole 4.26 MB noise file to the GPU for every mixed clip — 126 GB an epoch. Not measured here; the Kaggle timing cell reads it.
+- No ledger. Philosophy served: 6 (free GPU hours spent only when a seed is known to fit), 3 (the ear's cost explained before it is raced).

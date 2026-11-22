@@ -220,6 +220,7 @@ serves: M3, M5 · PLAN ready-list "brain A reproduced"; "Ear" step 3 · standing
 state: 11-21: A1 PASS (782 @100K, 984 @200K), A3 PASS (956), A2 MISS @100K (393.3 vs 438–518). A2-v1S frozen `8f13ab28`, 3 seeds: 100K mean 610.0, 200K 835.3, control valid → MISS ABOVE.
 state: ear HOME 11-21 13:28 = VOID: 10.1 T4-h a seed (guess 1.5), cut at epoch 199/200, no test accuracy.
 state: NH-2 SCORED: R1 FAIL (gmq@5000 0.79 > 0.70), R2 FAIL (bimodal, 4/10 seeds 46–90) → the row is CLOSED (ruling 80). Checkpoint-with-replay option DONE `bbd54926` (buffer only; no gradient step in the test).
+state: 11-22 08:45 (c) box half DONE `c34634a5` (`kws_epoch_stages.py`, authors' objects, 2,000 real clips, 1 thread, CPU s per 36,923-clip epoch): decode 8.2 (cold 14), noise loop 4.9, log-mel 22.6, step 303. Decode + loop < 20 s of the T4's 182 s → not the file read. Suspect: `Preprocess` copies a whole 4.26 MB noise file to the GPU per mixed clip = 126 GB an epoch. NEXT: Kaggle timing cell (rank 0) — same stages on CUDA with synchronize, + one arm with the noise held on the device; then size one seed.
 
 ### J21 — Brain A on the Mac: the port table's next rows
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` step table; `experiments/brain_a/README.md`
