@@ -18,7 +18,7 @@ choices (stated, not registered).
              no content, so an onset here means the rule fires on seed noise.
              It must read None (or late) on most seeds.
 
-Usage: python -m experiments.j17_onset [box-twin]
+Usage: python -m experiments.j17_onset [box-twin | hunt [path]]
 """
 from __future__ import annotations
 
@@ -133,7 +133,69 @@ def box_twin(box: Path = BOX) -> dict:
                                                for p in pairs) else "ANOTHER DRAW")
     return out
 
+# ---- SimBa hunt reader (11-22 02:45; written BEFORE `jack-cpu-1795311660`
+# is home, from the 20 MLP J17 runs only) -------------------------------------
+# One seed, so the read must use a signature that separates sighted from
+# blind on EVERY MLP run at 100k. critic_loss climb 50k->100k does not
+# (sighted 1.83-6.20, blind 0.65-2.37: overlap). Q climb does:
+#   Q(100k)/Q(50k)  MLP K-row128 1.32-1.57 (5/5), K-rays16 1.34-2.03 (5/5),
+#                   MLP blind 0.92-1.20 (5/5).   (median-free: Q = -actor_loss
+#                   at the window, as value() reads it.)
+# Reading (SimBa sighted = S, its own blind twin = T, both s923, 100k):
+#   VOID          a cell missing, errored, or its trace short of 100k.
+#   NO CONTROL    T's Q climb >= GAP_HI: the twin itself climbs like a sighted
+#                 run, so this seed cannot tell sight from SimBa.
+#   STILL RUNS    S >= GAP_HI (inside every MLP sighted run) -> SimBa is not
+#   AWAY          the cure; next §24 arm.
+#   HELD          S <= GAP_LO (inside every MLP blind run) -> SimBa holds the
+#                 critic on this seed; then a 5-seed row by rule.
+#   UNREAD        GAP_LO < S < GAP_HI: between the groups; one seed says nothing.
+# Beside, not read: critic_loss at 100k S/T (MLP s923: 56.3/2.6 = 21.7x).
+# The 1.20/1.32 cut points are the MLP groups' own edges; NOT a registered
+# threshold, a pilot's reading.
+HUNT = Path("/data/jack-logs/pilot_b2/j17_hunt_h0.json")   # = pilot_b2.OUT
+HUNT_ARMS = ("H-simba-row128", "H-simba-row128-blind")
+GAP_LO, GAP_HI = 1.20, 1.32
+
+
+def q_climb(tr: dict, t0: int = 50_000, t1: int = 100_000) -> float:
+    ts = sorted(tr)
+    return value(tr, ts, t1, "Q") / value(tr, ts, t0, "Q")
+
+
+def hunt(path: Path = HUNT) -> dict:
+    if not path.exists():
+        return {"verdict": f"VOID ({path} not home)"}
+    cells = {}
+    for k, c in json.loads(path.read_text())["cells"].items():
+        if c.get("error") or c.get("rc", 0) != 0 or not c.get("trace"):
+            continue
+        cells[k.rsplit("_s", 1)[0]] = {w["t"]: w for w in c["trace"] if "critic_loss" in w}
+    for a in HUNT_ARMS:
+        if a not in cells or max(cells[a], default=0) < 100_000 or 50_000 not in cells[a]:
+            return {"verdict": f"VOID ({a}: missing, errored or short of 100k)"}
+    s, t = (q_climb(cells[a]) for a in HUNT_ARMS)
+    v = lambda a: value(cells[a], sorted(cells[a]), 100_000, "critic_loss")
+    out = {"S_q_climb": round(s, 3), "T_q_climb": round(t, 3),
+           "beside_critic_loss_100k": (round(v(HUNT_ARMS[0]), 2), round(v(HUNT_ARMS[1]), 2))}
+    out["verdict"] = ("NO CONTROL" if t >= GAP_HI else "STILL RUNS AWAY" if s >= GAP_HI
+                      else "HELD" if s <= GAP_LO else "UNREAD")
+    return out
+
+
+def mlp_q_climbs(cells: dict | None = None) -> dict:
+    """The MLP groups the cut points come from (re-derivable, tested)."""
+    cells = cells or load()
+    return {arm: [round(q_climb(cells[(arm, s)]), 3) for s in sorted({s for _, s in cells})]
+            for arm in ("K-row128", "K-rays16", BLIND)}
+
+
 def main(argv) -> int:
+    if argv[1:2] == ["hunt"]:
+        print("MLP Q climb 50k->100k:", mlp_q_climbs())
+        for k, v in hunt(Path(argv[2]) if len(argv) > 2 else HUNT).items():
+            print(f"{k}: {v}")
+        return 0
     if argv[1:2] == ["box-twin"]:
         for k, v in box_twin().items():
             print(f"{k}: {v}")
