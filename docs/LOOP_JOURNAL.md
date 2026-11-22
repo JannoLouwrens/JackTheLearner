@@ -3357,3 +3357,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `pilot_b` already normalises obs (VecNormalize, clip 10), so "eye input norm" could only mean outliers or share. `experiments/j17_obs_norm_probe.py` (box, ~2 CPU-min, no learner, no ledger): same seed + same random actions through all 3 eyes.
 - Read: 0 vision entries |z| ≥ 5 (no clip blow-up). Eye share of input energy: row128 91% (L2 15.4 vs 4.8), rays16 56% (5.4 vs 4.8; the column match counts 41 vision dims, not 32 — 9 non-eye dims differ), blind 0. Rest identical (4.76) in all three.
 - Descriptive only — names a candidate (eye block swamps body/need dims), proves nothing about the critic. Philosophy served: 4 (a failure chased toward its cause, not filed), 3 (a suspect measured before an arm is paid for).
+
+## 2026-11-22 01:07–01:35 UTC · JACK · J17 (cause hunt: what the record says)
+- First act: Kaggle 01:08 — reacher-easy `…282752` still RUNNING (7.5 h); J14/J17/J10 wait the Director, J18 is forge's (spec frozen), J16 + Next-up 1–4 done → J17's RESEARCH step (no section existed for its suspect).
+- `PUBLISHED_PRIORS.md` §24 (abstracts verbatim from arxiv.org/abs; API + S2 rate-limited): no published case of a dominant vector-input block driving SAC critic runaway; modality dominance is on record only in supervised nets; the published cures act on critic features (SimBa, LN+WD, penultimate/unit-ball) or per-sense encoders.
+- Checked in sbx 0.28.0: critic = concat → [Dense→LN→ReLU]×2 → Dense; LN critic-only, after the eye/body mix (≈86% of each first unit is eye at lecun init). `SAC("SimbaPolicy")` is shipped.
+- No run, no ledger. Philosophy served: 3 (the suspect's seat checked against the field before an arm is paid for; the inventor's arm demoted to beside), 4 (blind arm noted to lack a width-matched noise control).
