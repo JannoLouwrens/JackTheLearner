@@ -3439,3 +3439,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 3 of 4 hunt arms read, none cures; h0 SimBa `…311660` still RUNNING at 6.5 h → branch waits on it.
 - Kaggle 4/5 busy → J19 6c reacher-hard twin LAUNCHED 08:08 `jack-cpu-1795334933`, as the order wrote.
 - No ledger. Philosophy served: 4 (a third published cure named a non-cure by the rule written before it ran), 3 (B's fault hunted on a published task, a free session filled).
+
+## 2026-11-22 08:22–08:35 UTC · JACK · J20 (gate 2 re-read on 3.17.0 launched; ray callers fixed)
+- First act: Kaggle 5/5 RUNNING (h0 `…311660`, 6a `…331794`, 6c `…334933`, forge 2); nothing home → J17/J19 wait, J10 cannot launch (needs ≤ 3 busy). Advanced J20.
+- `5c90a078` `experiments/j20_reread.py`: gate 2 (f4/g4/b4, seeds 261–280 × 10 lives) on the box under mujoco 3.17.0, ruler and bar unchanged, resumable per cell. Box speed 12 ms/decision → d0.75 f4+g4+b4 ≈ 9 CPU-h. **f4 + b4 LAUNCHED 08:26** (40 cells, 2 workers, ~3 h). g4 refused by the day's detached cap (19.5 k + est > 34.6 k s) — next slot / tomorrow.
+- `250942db` J20 (4): eye_streak + find_himself route rays through `fast_sim._multi_ray`. Test PASS: 3.2.3 bit-for-bit vs the old code; 3.17.0 old code FAILS (control). The first compare failed on key V alone — it holds NaN; fixed to equal_nan, every ray feature was already identical.
+- No ledger. Philosophy served: 4 (a box number and a Kaggle number may share a table only in one world — the stage-1 "food is findable from his senses" proof is being re-read in the world every learner now lives in).

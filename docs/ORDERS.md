@@ -187,7 +187,9 @@ ROADMAP's line changes at the next sitting. (4) `eye_streak.py:173` and
 the eye's own compat, as `59bbdf90` did.
 serves: M3 · auditor finding 3 · philosophy 4 (a box number and a Kaggle number may share a table only in one world).
 **done when:** the 3.17.0 rows stand beside the old ones in `WORLD_CARD.md` and the two callers pass on both versions.
-state: (new 11-22.)
+state: 11-22 08:26 (1) d0.75 RUNNING on the box: `experiments/j20_reread.py` (`5c90a078`; ruler + bar unchanged, resumable) `run 0.75 f4 b4`, 40 cells, 2 workers, log `/data/jack-logs/j20/launch_j20_gate2_d075_f4b4.log`, ~3 h wall (12 ms a decision). g4 (shuffled, must fail) NOT launched: day's detached cap (34,560 s) left 15 k s.
+state: (4) DONE `250942db`: both callers via `fast_sim._multi_ray`; `tests/test_j20_ray_callers.py` PASS on 3.2.3 (bit for bit vs old) and 3.17.0 (old FAILS = control).
+state: NEXT: `launch_detached.sh /data/jack-logs/j20/launch_j20_gate2_d075_g4.log /data/venvs/jack-std/bin/python -m experiments.j20_reread run 0.75 g4` (JACK_DETACHED_EST_S≈6000) when the cap admits it; when all 60 cells home `j20_reread score 0.75` → 3.17.0 row beside gate 2's in WORLD_CARD; then d = 1, then (2).
 
 ### J14 — Brain A and the ear: make W48's GPU hours count before they open
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `docs/research/prereg/a2_size_s.md`; `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws; rulings 67, 78, 79, 86
