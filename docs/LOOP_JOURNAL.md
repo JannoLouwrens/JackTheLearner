@@ -3389,3 +3389,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Tests: test_j17_eye_arms PASS (J17 arms unchanged); test_j17_hunt_arms PASS (real sbx zero-grad step: adamw moves every leaf by lr·1e-4·w, adam control 0.0); test_j17_hunt_reader PASS (h1 planted → RUNS AWAY; SimBa keys in an h1 file → VOID).
 - NOT launched: 3 Kaggle sessions busy (forge's 2 chains + h0) = J17's cap. No run, no ledger.
 - Philosophy served: 3 (the next published cure built and raced beside its blind twin, not argued), 5 (the loop's next step ready the hour h0 lands).
+
+## 2026-11-22 04:22–04:35 UTC · JACK · J17 (hunt arm h2 built while h0 runs)
+- First act: Kaggle — h0 `jack-cpu-1795311660` RUNNING (~2 h 40 in); 3 sessions RUNNING (…321209, …314026, h0) = cap → h1 cannot launch. J14/J10/J16 wait the Director, J18 forge's, Next-up done → J17's next published arm.
+- §24 arm (c) recipe read from Hussing 2024's e-print (2403.05996 main.tex): critic encoder output → x/‖x‖₂ → output layer, critic only.
+- `3f0f8499`: `experiments/ofn_critic.py` (sbx's critic + that one line), `make_b/run_b(critic=)` default unchanged; h2 = J17's K-row128 pair + `critic="ofn"` only. Differences disclosed (LN kept, after-ReLU, eps guard, UTD 1).
+- Tests (jack-std): test_j17_hunt_arms PASS (real sbx at obs ×1e4: |Q−b|−‖W‖ = −0.89 OFN vs +0.33 default — control breaks the bound); test_j17_hunt_reader PASS. Fixed the test's `_stub_sbx` (crashed when sbx already imported). Found: the h1 make_b check needs optax → runs in jack-std only.
+- No run, no ledger. Philosophy served: 3 (the third published cure built from its paper's own text, raced beside its blind twin), 4 (a planted test that the default critic fails).
