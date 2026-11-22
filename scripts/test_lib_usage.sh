@@ -320,6 +320,18 @@ case "$(tail -1 "$JACK_USAGE_LEDGER")" in *'"organ":"builder"'*'"phase":"skipped
     ok "a pace skip writes its row as skipped, not refused";;
   *) bad "a pace skip writes its row as skipped, not refused" "row was [$(tail -1 "$JACK_USAGE_LEDGER")]";; esac
 
+# S14: the STOPPED and PACING lines quote the meter line (pct + reset time).
+run_case "all=96,full=week:all models [#] 96% resets Nov 26 9am (UTC)"
+usage_gate say builder
+case "$LOGLINE" in *"STOPPED at 96%"*"meter read: 'week:all models [#] 96% resets Nov 26 9am (UTC)'"*)
+    ok "a STOPPED line carries the meter line and its reset";;
+  *) bad "a STOPPED line carries the meter line and its reset" "log was [$LOGLINE]";; esac
+run_case "all=87,elapsed=95,fable=100,full=week:all models [#] 87% resets Oct 26 4:59am (UTC)"
+pace_gate say builder
+case "$LOGLINE" in *"PACING"*"meter read: 'week:all models [#] 87% resets Oct 26 4:59am (UTC)'"*)
+    ok "a PACING skip line carries the meter line and its reset";;
+  *) bad "a PACING skip line carries the meter line and its reset" "log was [$LOGLINE]";; esac
+
 # An un-migrated caller (no organ argument) still records the event rather than
 # silently reverting to the write-nothing behaviour B1 exists to end.
 run_case "all=92,full=week:all models [#] 92% resets Oct 26 4:59am (UTC)"

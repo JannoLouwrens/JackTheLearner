@@ -205,18 +205,10 @@ def _reset_epoch(resets: str) -> int | None:
 
 
 def _same_window(a: str, b: str) -> bool:
-    """Do two `resets` strings denote the SAME usage week?
-
-    Compared by PARSED epoch within `WINDOW_FLUTTER_S`, never by the rendered
-    string (155th audit RANK 1: the CLI renders one instant as both
-    `Oct 26, 4:59am (UTC)` and `Oct 26, 5am (UTC)`, so `==` on the string read
-    45% of live same-window pairs as a window CHANGE and exempted them from
-    the monotonicity invariant — a reader keyed on a rendering inherits the
-    renderer's flutter). String equality is still honoured first, so this can
-    only ADD pairs to the invariant relative to the old `==`: it loosens
-    nothing, and an unparseable-but-different pair falls back to the old
-    answer (changed window — the exemption, i.e. the pre-155th behaviour, not
-    a new event class).
+    """Do two `resets` strings denote the SAME usage week? Compared by parsed
+    epoch within `WINDOW_FLUTTER_S` (the CLI renders one instant as both
+    `4:59am` and `5am` — 155th audit); string equality honoured first, and an
+    unparseable pair counts as a changed window.
     """
     if a == b:
         return True
@@ -229,42 +221,27 @@ def _same_window(a: str, b: str) -> bool:
 def meter_non_monotone(rows: list[dict]) -> list[dict]:
     """METER-NON-MONOTONE (154th audit B2): readings that prove themselves false.
 
-    A weekly cumulative meter may never FALL inside its own window. With B1
-    landed, every ledger row carries `pct` and the meter's own `resets` string
-    as a pair from one CLI invocation — so two readings with the SAME `resets`
-    and a FALLING `pct` prove at least one of the pair false. On 2026-10-19/20
-    exactly that shape (7% -> 42% -> 95% held across 15 reads -> 0%, all inside
-    `resets Oct 26`) refused 18 organ slots and was diagnosed three different
-    wrong ways, because nothing recorded could contradict the meter.
-
-    REPORTING-ONLY AND UNFLOORED, in the idiom of D26's armed default (MEASURE
-    ONLY, GATE NOTHING, RELAX NOTHING): this gates nothing, refuses nothing,
-    and moves no PACE_FLOOR/PACE_CAP/90% constant. It is also deliberately NOT
-    the two-in-500 blink retry (154th B3, separate item): a blink is one bad
-    read; this is two internally-consistent reads that cannot both be true.
-
-    Comparison is between consecutive rows that BOTH carry an int `pct` and a
-    str `resets` (rows predating B1 carry no `resets` and are skipped, so the
-    reading goes live as B1 rows accumulate rather than inventing history).
-    Spanning over unreadable rows is sound: the invariant holds between any two
-    readings of the same window, not only adjacent minutes. A fall where the
-    WINDOW changed is the legitimate weekly reset and is not an event — and
-    "same window" is decided by `_same_window`, the PARSED reset instant, never
-    by the rendered string (155th audit RANK 1: the CLI prints one instant as
-    both `Oct 26, 4:59am (UTC)` and `Oct 26, 5am (UTC)`, so string equality
-    exempted 5 of 11 live pairs — 45% — from the invariant inside one real
-    window, with the exemption falling on the benign branch).
+    A weekly cumulative pct may never FALL inside one reset window, so a falling
+    pair with the same window (parsed epoch, `_same_window`) proves one reading
+    false. Rows without `resets` (pre-B1) are skipped; a fall across a CHANGED
+    window is the weekly reset. Reporting-only: gates nothing (D26 default iv).
     """
     events: list[dict] = []
     prev: tuple[str, int, str] | None = None
+    seen: list[dict] = []
     for r in rows:
         pct, resets = r.get("pct"), r.get("resets")
         if not isinstance(pct, int) or not isinstance(resets, str):
             continue
         if prev is not None and _same_window(resets, prev[2]) and pct < prev[1]:
+            # S14: slots refused/skipped on a reading this one contradicts —
+            # same window, earlier, higher pct (the meter cannot fall).
+            n = sum(1 for q in seen if q.get("phase") in ("refused", "skipped")
+                    and q["pct"] > pct and _same_window(q["resets"], resets))
             events.append({"from_ts": prev[0], "from_pct": prev[1],
                            "to_ts": r["ts"], "to_pct": pct,
-                           "resets": resets})
+                           "resets": resets, "refused": n})
+        seen.append(r)
         prev = (r["ts"], pct, resets)
     return events
 
@@ -486,9 +463,9 @@ def line(a: dict) -> str:
         dark += (f"; !! METER-NON-MONOTONE x{len(mnm)}: the gating meter read "
                  f"{last['from_pct']}% at {last['from_ts']} then "
                  f"{last['to_pct']}% at {last['to_ts']} inside the SAME reset "
-                 f"window ('{last['resets']}') — a weekly cumulative meter "
-                 f"cannot fall in its own window, so at least one reading is "
-                 f"false (reporting-only; the gates still act on what they read)")
+                 f"window ('{last['resets']}'), {last['refused']} slot(s) "
+                 f"refused on a reading it contradicts — at least one reading "
+                 f"is false (reporting-only; the gates still act on what they read)")
     if not a["known"]:
         return f"attribution unreadable (this project's own share unknown, NOT zero); {dark}"
     t = a["total"] or 0
@@ -784,6 +761,20 @@ def _selftest() -> int:
         if "METER-NON-MONOTONE" not in txt or "95%" not in txt:
             fails.append(f"non-monotone: the printed line must NAME the "
                          f"contradiction with its values — got {txt!r}")
+
+    # P7e — S14: 96% then 16% in one window; the 3 refused/skipped rows read
+    # above 16 are counted, the 10% refusal below it is not.
+    doc = "\n".join([
+        row("builder",  "2026-11-01T01:00:00+00:00", 10, "refused", W),
+        row("builder",  "2026-11-01T02:00:00+00:00", 96, "refused", W),
+        row("overseer", "2026-11-01T03:00:00+00:00", 96, "refused", W),
+        row("builder",  "2026-11-01T04:00:00+00:00", 96, "skipped", W),
+        row("builder",  "2026-11-01T05:00:00+00:00", 16, "start",   W),
+    ])
+    ev = attribution(doc, log_text="")["meter_non_monotone"]
+    if len(ev) != 1 or ev[0]["refused"] != 3 or "3 slot(s) refused" not in \
+            line(attribution(doc, log_text="")):
+        fails.append(f"non-monotone: 96%->16% must count 3 refused slots — got {ev}")
 
     # P7b — the LEGITIMATE weekly reset: pct falls AND `resets` changes.
     # Flagging this would cry wolf every Monday and bury the real class.

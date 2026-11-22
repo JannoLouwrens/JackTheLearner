@@ -135,30 +135,13 @@ pace_gate() {
     mdl="${JACK_LOOP_MODEL:-opus}"; mdl="${mdl^}"
     mpct=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" --model "$mdl" --pct 2>/dev/null)
     case "$mpct" in ''|*[!0-9]*) extra="week:${mdl} unreadable";; *) extra="week:${mdl} ${mpct}% (not the gate)";; esac
-    # D26's armed default, fired 2026-09-12 (the owner did not rule by
-    # 2026-09-10): (iv) MEASURE ONLY, GATE NOTHING, RELAX NOTHING. The skip line
-    # carries this project's OWN attributed share of the shared meter, split
-    # builder vs desks as a UNION of intervals (the overseer and Review overlap
-    # daily and summing sessions double-counts), plus the consecutive dark-slot
-    # streak — the one fault this gate cannot report about itself, because the
-    # organ that would report it is the organ being skipped. Nothing above is
-    # gated on it: `allow`, `pct` and the branch are untouched. Option (i)
-    # — pace against our own spend instead of the shared total — WIDENS what
-    # the builder may spend, and a default may not loosen a gate; it did not
-    # fire. Never blocks: an unreadable ledger prints "unattributed", and the
-    # 2>/dev/null || true keeps a broken instrument from costing an iteration.
+    # D26's armed default (iv) MEASURE ONLY: the line carries this project's own
+    # share of the shared meter and the dark-slot streak; nothing is gated on it.
     attrib=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/usage_attribution.py" --line 2>/dev/null) || attrib=""
     [ -n "$attrib" ] || attrib="attribution unreadable (this project's own share unknown, NOT zero)"
-    # 89th audit B2: the line's ENDPOINT, printed beside the stop it converges
-    # on. `allow` is a pure function of the clock — PACE_FLOOR + ((PACE_CAP -
-    # PACE_FLOOR) * elapsed + 99)/100, exactly 0.3869 pts/h, zero variance — so
-    # allow(100) is the constant 90, which IS the 90% hard stop. Printed so the
-    # next reader sees in one glance that the line converges on the stop and
-    # that "pace_gate never releases the builder" is unavailable as a sentence.
-    "$say_fn" "PACING: acting on 'week:all models' ${pct}% at ${elapsed}% of the week (line ${allow}%, rising to ${PACE_CAP}% at week's end = the hard stop, so the line always converges); ${extra}; ${attrib} — skipping, budget held for later in the week"
-    # 154th audit B1: a skipped slot writes a ledger row, same contract as
-    # usage_gate's refusal rows above — pct + resets as a pair, never blocks.
-    usage_ledger "$organ" skipped none
+    # 89th B2: `allow` converges on PACE_CAP = the hard stop; printed so it is seen.
+    usage_ledger "$organ" skipped none     # 154th B1: pct + resets as a pair, never blocks
+    "$say_fn" "PACING: acting on 'week:all models' ${pct}% at ${elapsed}% of the week (line ${allow}%, rising to ${PACE_CAP}% at week's end = the hard stop, so the line always converges); ${extra}; ${attrib} — skipping, budget held for later in the week$(_meter_said)"
     return 1
   fi
   return 0
@@ -181,8 +164,8 @@ usage_gate() {
   local pct override_ceiling override_until now
   pct=$(_usage_pct "$organ")
   case "$pct" in ''|*[!0-9]*)
-    "$say_fn" "ABORT: usage unreadable — refusing to run"
     usage_ledger "$organ" refused none
+    "$say_fn" "ABORT: usage unreadable — refusing to run$(_meter_said)"
     return 1;; esac
   if [ "$pct" -lt "${USAGE_STOP:-95}" ]; then return 0; fi
 
@@ -192,21 +175,21 @@ usage_gate() {
     override_until=$(awk -F= '/^until=/{print $2}' "$f" | tr -dc '0-9')
     now=$(date +%s)
     if [ -n "$override_until" ] && [ "$now" -ge "$override_until" ]; then
-      "$say_fn" "owner resume EXPIRED at $(date -d @"$override_until" -Iseconds) — back to the ${USAGE_STOP:-95}% stop at ${pct}%"
-      rm -f "$f"
       usage_ledger "$organ" refused none
+      "$say_fn" "owner resume EXPIRED at $(date -d @"$override_until" -Iseconds) — back to the ${USAGE_STOP:-95}% stop at ${pct}%$(_meter_said)"
+      rm -f "$f"
       return 1
     fi
     if [ -n "$override_ceiling" ] && [ "$pct" -lt "$override_ceiling" ]; then
       "$say_fn" "RESUMED BY OWNER — ${pct}% weekly (ceiling ${override_ceiling}%, expires $(date -d @"$override_until" -Iseconds))"
       return 0
     fi
-    "$say_fn" "STOPPED at ${pct}% — past the owner's resume ceiling of ${override_ceiling}%"
     usage_ledger "$organ" refused none
+    "$say_fn" "STOPPED at ${pct}% — past the owner's resume ceiling of ${override_ceiling}%$(_meter_said)"
     return 1
   fi
-  "$say_fn" "STOPPED at ${pct}% weekly usage — all agents paused until the owner resumes"
   usage_ledger "$organ" refused none
+  "$say_fn" "STOPPED at ${pct}% weekly usage — all agents paused until the owner resumes$(_meter_said)"
   return 1
 }
 
@@ -337,6 +320,11 @@ chain_reading() {
 # write is swallowed. Attribution is worth one line, not an abort — the gates
 # above already own refusal. Detectors on this file must treat it as a shared
 # log (lib_credits.sh precedent): match structure, not prose.
+# S14: every refusal/skip line ends with the meter line the ledger row was cut
+# from (pct + its printed reset time), so a later fall in the same window can be
+# read against the evidence the slot was refused on. Call after usage_ledger.
+_meter_said() { printf " — meter read: '%s'" "${USAGE_LAST_METER:-unreadable}"; }
+
 usage_ledger() {
   local organ="$1" phase="$2" mdl="${3:-${JACK_LOOP_MODEL:-opus}}" out wk pct mpct resets
   out=$(/data/venvs/jackthelearner/bin/python "$REPO/scripts/claude_usage.py" 2>/dev/null)
@@ -353,6 +341,7 @@ usage_ledger() {
   # contract as pct; quotes/backslashes stripped so the value cannot break
   # the JSON line.
   resets=$(printf '%s\n' "$wk" | sed -n 's/.*resets //p' | tr -d '"\\')
+  USAGE_LAST_METER="$wk"                  # S14: the refusal line quotes this read
   case "$pct" in ''|*[!0-9]*) pct=null;; esac
   case "$mpct" in ''|*[!0-9]*) mpct=null;; esac
   if [ -n "$resets" ]; then resets="\"$resets\""; else resets=null; fi
