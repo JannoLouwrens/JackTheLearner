@@ -512,8 +512,20 @@ J17_HUNT_ARMS.update({
     "H-wd-row128": dict(J17_ARMS["K-row128"], optimizer="adamw"),
     "H-wd-row128-blind": dict(J17_ARMS["K-row128-blind"], optimizer="adamw"),
 })
+# ---- hunt h2 (11-22 04:30, built while h0 runs, before any h2 run;
+# PUBLISHED_PRIORS §24 arm (c), Hussing 2024 OFN, read from the e-print):
+# J17's OWN K-row128 pair with ONE key, critic="ofn" = the critic's last
+# hidden features projected onto the unit sphere before its output layer
+# (experiments/ofn_critic.py lists every difference from their recipe: our
+# LN kept, after-ReLU placement, an eps guard, UTD 1). Optimiser stays adam,
+# so h1 vs h2 splits the two non-SimBa cures. Same pilot terms as h0.
+J17_HUNT_ARMS.update({
+    "H-ofn-row128": dict(J17_ARMS["K-row128"], critic="ofn"),
+    "H-ofn-row128-blind": dict(J17_ARMS["K-row128-blind"], critic="ofn"),
+})
 J17_HUNT_GROUPS = {"h0": ("H-simba-row128", "H-simba-row128-blind"),
-                   "h1": ("H-wd-row128", "H-wd-row128-blind")}
+                   "h1": ("H-wd-row128", "H-wd-row128-blind"),
+                   "h2": ("H-ofn-row128", "H-ofn-row128-blind")}
 J17_HUNT_SEED = 923          # the box twin's seed (j17_onset TWIN_SEED)
 J17_HUNT_T = 100_000         # sighted/blind separate first at 100k (ac684c09)
 J17_T = 300_000
@@ -566,7 +578,7 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
             kw["trace"] = True
         if "ent_coef" in c:
             kw["ent_coef"] = c["ent_coef"]
-        for k in ("policy", "policy_kwargs", "use_sde", "optimizer"):  # J17_HUNT_ARMS only
+        for k in ("policy", "policy_kwargs", "use_sde", "optimizer", "critic"):  # J17_HUNT_ARMS only
             if k in c:
                 kw[k] = c[k]
         rec = run_b(seed, T, world=world, gamma=c["gamma"],

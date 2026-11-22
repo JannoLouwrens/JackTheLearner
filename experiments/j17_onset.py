@@ -159,7 +159,8 @@ HUNT_ARMS = ("H-simba-row128", "H-simba-row128-blind")
 # cut points and clauses, on the AdamW-only pair (pilot_b2 J17_HUNT_GROUPS;
 # tests/test_j17_hunt_reader pins the two tables equal). The pair is taken
 # from the file's name, j17_hunt_<group>.json.
-HUNT_GROUPS = {"h0": HUNT_ARMS, "h1": ("H-wd-row128", "H-wd-row128-blind")}
+HUNT_GROUPS = {"h0": HUNT_ARMS, "h1": ("H-wd-row128", "H-wd-row128-blind"),
+               "h2": ("H-ofn-row128", "H-ofn-row128-blind")}   # h2 = OFN critic (11-22)
 GAP_LO, GAP_HI = 1.20, 1.32
 
 
