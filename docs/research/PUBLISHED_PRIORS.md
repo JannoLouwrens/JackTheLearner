@@ -947,12 +947,41 @@ Long form: `/data/jack-research/research_notes/one_voice_part{A,B,C,D}.md` (58 K
 
 **Not verified.** Hussing's normalisation placement and DreamerV3's per-key encoders (abstracts only); Gallici's theorem's conditions; the action's dimension in the critic's input (not counted); whether SimBa's obs norm composes with VecNormalize in SBX without double scaling.
 
-## 25. Beyond the jungle: moving to a new world, learning from another Jack, and being told (2026-11-22; serves M9 — `GEN.06`, `GEN.02`, `GEN.03`, `GEN.09`, `LG.11`; no order yet)
+## 25. Beyond the jungle: a new world, another Jack, and being told (2026-11-22; serves M9 — `GEN.06`, `GEN.02`, `GEN.03`, `GEN.09`, `LG.11`)
 
-**Question.** M9 has three expansions, none with a prior: (1) does a life in
-world A make a from-scratch learner faster in world B than a fresh twin
-(`GEN.06`); (2) can he learn by watching another agent, model what it saw,
-and pass knowledge down generations (`GEN.02`/`.03`/`.09`); (3) can he use a
-fact he was TOLD (`LG.11`)? Picked by rule 3 (earliest milestone with no
-section). SKELETON — research running 04:15 UTC; notes land in
-`/data/jack-research/scratch_sec25{A,B,C}/notes.md`.
+**Question.** Does a life in world A speed him in world B over a fresh twin; can he learn by watching, model what another saw, pass knowledge down generations; USE a told fact? Long form: `/data/jack-research/scratch_sec25{A,B,C}/notes.md`.
+
+**Already known** (read in the paper unless under Not verified)
+- Continual World 2021, SAC MLP 4×256 + LN, 1M steps a task, 20 seeds: plain fine-tuning forward transfer **0.20** [0.17–0.23] (0.32 first ten tasks, 0.08 on revisits; reference ceiling 0.46); most continual methods negative (Table 1, [2105.10919](https://arxiv.org/abs/2105.10919)). With behaviour cloning of old states: 0.18 → **0.54**, the critic carrying most ([2209.13900](https://arxiv.org/abs/2209.13900)). Meta-World 4-stage: fine-tuned SAC "virtually indistinguishable" from scratch ([2402.02868](https://arxiv.org/abs/2402.02868)).
+- Procgen, PPO, 200M steps: overfits small level sets; generalising starts ~500 levels, "as many as 10,000" to close the gap ([1912.01588](https://arxiv.org/abs/1912.01588)). URLB, 2M reward-free steps then 100k: on vector states "a random initialization is competitive with most baselines" ([2110.15191](https://arxiv.org/abs/2110.15191)).
+- Watching: PPO+LSTM beside two experts on a 13×13 grid scores the SAME as solo on every seed; with a predict-the-next-view loss 4/5 seeds beat the experts; with no price on solo error it never appears ([2010.00581](https://arxiv.org/abs/2010.00581)). The 3D version fails without memory or an attention loss, and keeps following a WRONG leader ([2203.00715](https://arxiv.org/abs/2203.00715)).
+- Generations: each from random init, predecessor in view with annealed probability, **1e5–3e5 steps a generation**, 10 seeds: TSP-24 route 20.6 → 17.4 → 13.1 (gen 0/4/7), beating one lifetime of equal total steps ([2406.00392](https://arxiv.org/abs/2406.00392)).
+- False belief: passed only by a SUPERVISED behaviour predictor, not an acting agent ([1802.07740](https://arxiv.org/abs/1802.07740)).
+- Told facts, from scratch: RTFM full task 23% plain, 65 ± 17% after a 4-stage curriculum of 50M frames each ([1910.08210](https://arxiv.org/abs/1910.08210)). Messenger's from-scratch baseline fits train 98% and tests 2.5% — memorises, does not read; the model that reads (85% / 85% / 10%) has **pretrained BERT inside** ([2101.07393](https://arxiv.org/abs/2101.07393)). Dynalang uses hints about dynamics with one-hot tokens at **281M weights, 50M steps**; a model-free learner got worse with more language ([2308.01399](https://arxiv.org/abs/2308.01399)).
+- New word used at once: 0.98 with memory + a reconstruction loss, 0.33 (chance) without, at 1e9 steps ([2009.01719](https://arxiv.org/abs/2009.01719)). Unlived synonyms: from-scratch embeddings 0.49 (chance .50), frozen BERT 0.77 ([2005.09382](https://arxiv.org/abs/2005.09382)).
+
+**Candidates**
+- **Transfer = fine-tune + retention** (carry actor AND critic, clone old behaviour on old states). Proven: SAC, 1M steps a task, 0.54. Weak: pair-dependent, sometimes 0. Smallest: CW pairs. Ours at 300k–1M: 0.2–0.3 between like worlds (inf).
+- **Watching = a brain that predicts what it sees (A), a task with hidden information, a price on solo error, mixed solo/social lives.** Proven on grids only, ~500k episodes. Plain B is the published negative. Ours: marginal at ≤ 1M.
+- **Generations = predecessor visible, annealed away.** The only M9 result inside our budget (1e5 steps a generation); tiny tasks; by sight, not diaries.
+- **Told facts = tokens the world model must predict (A), tiny vocabulary, roles re-drawn every life so memorising fails.** Smallest: Messenger S1, 1M steps (with pretrained T5). Ours: a prediction-probe effect at best at 1M.
+
+**Ours beside theirs**
+
+| Setting | Published | Ours | Cost |
+|---|---|---|---|
+| Worlds seen before the move | 500–10,000 levels | a new layout every life (`jack_env.py:403`) | SAME-rule world B is already in-distribution: `GEN.06` as written (`registry_expansion.py:7722`) reads accumulated training, not abstraction |
+| Seeds | 20 (CW) | 3 (`GEN.*`, `LG.11`) | 0.20 ± pair noise is unreadable at 3 |
+| Shuffled-rules / random-demonstrator control | none published | registered (`:7737`, `:7663`) | no known answer to check against |
+| Learner that watches | recurrent + predictive loss | B: SAC MLP 256×2, no memory (`brain_b.py:40`) | B is predicted to FAIL `GEN.02`; only A can carry it |
+| Transmission | live behaviour in view | diaries + teaching (`:7757`) | no precedent for a diary read by a from-scratch learner |
+| Language model | 148–281M, pretrained text inside most | nothing pretrained inside (law 2) | every "reads" number above BERT/T5 is not ours to expect |
+
+**Known-answer check.** Transfer: Continual World pair, SAC 1M steps a task, fine-tune = 0.20 on CW20 (~1 Kaggle CPU session a task, inf). Generations: Cook's Memory Sequence, PPO + GRU, 1e5 steps a generation, later generations beat an equal-budget single life (curve values not extracted). Told: BabyAI GoToRedBallGrey, 15.9–17.4k episodes to 99% ([1810.08272](https://arxiv.org/abs/1810.08272)).
+
+**What the record does NOT answer**
+- Biome / rule abstraction ("shelter" from "lean-to") at ≤ 1M steps on vector senses: nothing. Experiment: A → B with one rule changed vs fresh vs shuffled-rules B, ≥ 10 seeds; prediction 0–0.3, no gain beyond the shuffled control.
+- A motor or foraging skill learned faster by watching through an eye, with a random-demonstrator control: nothing. Prediction: B no gain; A gains only if the food is hidden.
+- False belief in a reward-only acting agent; a diary as the only inheritance; an anchored-against-unanchored told fact with a stripped control: no test found, pass or fail. `LG.11` would be new; the confound to shut out is the word statistics alone (BERT 0.77).
+
+**Not verified.** XLand / AdA scale; Taylor & Stone's transfer measures; Ndousse's and CTG's step counts; Cook's and Dynalang's curve heights; BIB / AGENT (abstracts).
