@@ -523,9 +523,20 @@ J17_HUNT_ARMS.update({
     "H-ofn-row128": dict(J17_ARMS["K-row128"], critic="ofn"),
     "H-ofn-row128-blind": dict(J17_ARMS["K-row128-blind"], critic="ofn"),
 })
+# ---- hunt h3 (11-22 06:30, built while h2 runs, before any h3 run;
+# PUBLISHED_PRIORS §24 arm (d), Lee 2018 / DreamerV3 "a separate encoder per
+# sense before fusion"): J17's OWN K-row128 pair with ONE key, critic="split"
+# = the critic's first layer split into vision -> Dense(128) -> LN and the
+# rest + action -> Dense(128) -> LN, concat -> ReLU, then sbx's own layers
+# (experiments/split_critic.py lists every difference). Adam kept. Same terms.
+J17_HUNT_ARMS.update({
+    "H-split-row128": dict(J17_ARMS["K-row128"], critic="split"),
+    "H-split-row128-blind": dict(J17_ARMS["K-row128-blind"], critic="split"),
+})
 J17_HUNT_GROUPS = {"h0": ("H-simba-row128", "H-simba-row128-blind"),
                    "h1": ("H-wd-row128", "H-wd-row128-blind"),
-                   "h2": ("H-ofn-row128", "H-ofn-row128-blind")}
+                   "h2": ("H-ofn-row128", "H-ofn-row128-blind"),
+                   "h3": ("H-split-row128", "H-split-row128-blind")}
 J17_HUNT_SEED = 923          # the box twin's seed (j17_onset TWIN_SEED)
 J17_HUNT_T = 100_000         # sighted/blind separate first at 100k (ac684c09)
 J17_T = 300_000

@@ -85,3 +85,7 @@ class OFNVectorCritic(nn.Module):
 
 
 CRITICS = {"ofn": OFNVectorCritic}
+
+# h3 (11-22): a split first layer per sense (experiments/split_critic.py).
+from experiments.split_critic import SplitVectorCritic  # noqa: E402
+CRITICS["split"] = SplitVectorCritic

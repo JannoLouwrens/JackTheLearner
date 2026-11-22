@@ -129,7 +129,8 @@ def test_h1_pair_is_j17_plus_adamw_only():
         assert c == P.J17_ARMS[k]
     assert P.J17_HUNT_GROUPS == {"h0": ("H-simba-row128", "H-simba-row128-blind"),
                                  "h1": ("H-wd-row128", "H-wd-row128-blind"),
-                                 "h2": ("H-ofn-row128", "H-ofn-row128-blind")}   # h2 added 11-22
+                                 "h2": ("H-ofn-row128", "H-ofn-row128-blind"),   # h2 added 11-22
+                                 "h3": ("H-split-row128", "H-split-row128-blind")}   # h3 added 11-22
     got = {}
 
     def fake_pilot_kernel(name, rule, cells=None, out_name=None):
@@ -262,6 +263,84 @@ def test_h2_real_critic_is_bounded():
     return f"|Q-b| - ||W||: ofn {out['ofn']:.1e} (<= 0), sbx default {out[None]:.1e} (> 0)"
 
 
+def test_h3_pair_is_j17_plus_split_only():
+    """h3 (11-22): the split-first-layer pair = J17's own arms + ONE key; forwarded
+    only for H-split; make_b hands sbx the split class only when asked."""
+    for h, k in (("H-split-row128", "K-row128"), ("H-split-row128-blind", "K-row128-blind")):
+        c = dict(P.J17_HUNT_ARMS[h])
+        assert c.pop("critic") == "split"
+        assert c == P.J17_ARMS[k]
+    got = {}
+
+    def fake_pilot_kernel(name, rule, cells=None, out_name=None):
+        got[name] = (cells, out_name)
+    with _Patch(P, "pilot_kernel", fake_pilot_kernel):
+        P.j17_hunt_kernel("h3")
+    assert got["h3"] == ([("H-split-row128", 923), ("H-split-row128-blind", 923)],
+                         "j17_hunt_h3.json")
+    seen = {}
+
+    def fake_run_b(seed, T, **kw):
+        seen.clear(); seen.update(kw)
+        return {"lives": []}
+    with _Patch(B, "run_b", fake_run_b), _Patch(P, "pilot_world", lambda *a, **k: None):
+        P.run_pilot_cell("H-split-row128", 923, True, T=10)
+        assert seen["critic"] == "split" and "optimizer" not in seen
+        P.run_pilot_cell("H-ofn-row128", 923, True, T=10)                  # control
+        assert seen["critic"] == "ofn"
+    try:
+        from experiments.split_critic import SplitVectorCritic
+    except ImportError:
+        return "h3 arms PASS; make_b class check SKIPPED (no sbx in this venv)"
+    got2 = {}
+    with _stub_sbx(got2):
+        B.make_b(None, 1, 1000, ent_coef="auto", critic="split")
+        assert got2["policy_kwargs"] == dict(layer_norm=True, net_arch=[256, 256],
+                                             vector_critic_class=SplitVectorCritic)
+    return "h3 = J17 K-row128 pair + critic split only; forwarded only for H-split"
+
+
+def test_h3_real_critic_blocks_the_eye():
+    """Real flax: in the split critic the non-vision half of the first layer is
+    exactly blind to the eye (any vision input, same rest-half features), and
+    each half is LayerNormed on its own, so a x1e3 eye leaves the rest half
+    unchanged. Control: sbx's own first layer mixes the eye into EVERY unit
+    (changing only the vision dims moves all 256 pre-activations)."""
+    try:
+        import jax
+        import jax.numpy as jnp
+        import numpy as np
+        from sbx.common.policies import ContinuousCritic
+        from experiments.split_critic import SplitContinuousCritic, VISION_DIMS
+    except ImportError:
+        return "SKIPPED (no sbx in this venv)"
+    rng = np.random.default_rng(0)
+    D = 298                                   # row128 obs width (J17 probe)
+    obs = jnp.asarray(rng.normal(size=(32, D)), jnp.float32)
+    obs2 = obs.at[:, :VISION_DIMS].set(jnp.asarray(rng.normal(size=(32, VISION_DIMS)) * 1e3,
+                                                   jnp.float32))
+    act = jnp.asarray(rng.uniform(-1, 1, size=(32, 2)), jnp.float32)
+    m = SplitContinuousCritic(net_arch=[256, 256], use_layer_norm=True)
+    prm = m.init(jax.random.PRNGKey(0), obs, act)
+
+    def rest_half(o):
+        _, st = m.apply(prm, o, act, capture_intermediates=True)
+        return st["intermediates"]["ln_rest"]["__call__"][0]
+    r1, r2 = rest_half(obs), rest_half(obs2)
+    assert r1.shape == (32, 128) and float(jnp.max(jnp.abs(r1 - r2))) == 0.0
+    q1, q2 = m.apply(prm, obs, act), m.apply(prm, obs2, act)
+    assert float(jnp.max(jnp.abs(q1 - q2))) > 0.0              # the eye still reaches Q
+    c = ContinuousCritic(net_arch=[256, 256], use_layer_norm=True)
+    pc = c.init(jax.random.PRNGKey(0), obs, act)
+
+    def first(o):
+        _, st = c.apply(pc, o, act, capture_intermediates=True)
+        return st["intermediates"]["Dense_0"]["__call__"][0]
+    moved = jnp.abs(first(obs) - first(obs2)) > 0
+    assert bool(jnp.all(jnp.any(moved, axis=0)))               # control: every unit sees the eye
+    return "split rest-half exactly eye-blind (control: sbx mixes the eye into 256/256 units)"
+
+
 def main():
     test_frozen_arms_unchanged()
     print("frozen arms: J17/pilot/E2c byte-identical, no policy keys")
@@ -272,6 +351,8 @@ def main():
     print("h1 real:", test_h1_real_critic_decays())
     print("h2:", test_h2_pair_is_j17_plus_ofn_only())
     print("h2 real:", test_h2_real_critic_is_bounded())
+    print("h3:", test_h3_pair_is_j17_plus_split_only())
+    print("h3 real:", test_h3_real_critic_blocks_the_eye())
     print("test_j17_hunt_arms PASS")
 
 
