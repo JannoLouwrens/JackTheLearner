@@ -946,3 +946,13 @@ Long form: `/data/jack-research/research_notes/one_voice_part{A,B,C,D}.md` (58 K
 - Is it the eye's CONTENT or its WIDTH? A width-matched noise eye (256 numbers of shuffled real views) beside row128 — J17's blind arm carries width with zeros, not variance.
 
 **Not verified.** Hussing's normalisation placement and DreamerV3's per-key encoders (abstracts only); Gallici's theorem's conditions; the action's dimension in the critic's input (not counted); whether SimBa's obs norm composes with VecNormalize in SBX without double scaling.
+
+## 25. Beyond the jungle: moving to a new world, learning from another Jack, and being told (2026-11-22; serves M9 — `GEN.06`, `GEN.02`, `GEN.03`, `GEN.09`, `LG.11`; no order yet)
+
+**Question.** M9 has three expansions, none with a prior: (1) does a life in
+world A make a from-scratch learner faster in world B than a fresh twin
+(`GEN.06`); (2) can he learn by watching another agent, model what it saw,
+and pass knowledge down generations (`GEN.02`/`.03`/`.09`); (3) can he use a
+fact he was TOLD (`LG.11`)? Picked by rule 3 (earliest milestone with no
+section). SKELETON — research running 04:15 UTC; notes land in
+`/data/jack-research/scratch_sec25{A,B,C}/notes.md`.
