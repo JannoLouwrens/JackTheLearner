@@ -761,6 +761,27 @@ composed with `rows.overrides("A2", 0)`, exactly what the A2 kernels ran.
   the 2023 recipe (ratio 512, repeat 2, 4 envs) run on the v2 agent at 1m — a recipe nobody published a score for — or the
   v2 port's code. No band, seed or verdict changed.
 
+### Row A2-v1S — 3 SEEDS HOME 11-21 23:41: **MISS (ABOVE band at both points)**; extension due, not fundable in W47
+
+s1 `jack-ladder-1795268291` (launched 13:38, Kaggle run 18:33–23:41 on T4 = ~5.1 h; the ~4.9 h before it waited for a session). `rows v1s-score` over
+`/data/jack-logs/brain_a/rows/v1s_*.json` — the frozen rule (ruling 67), nothing moved:
+
+| point | band | s0 | s1 | s2 | mean | control | reading |
+|---|---|---|---|---|---|---|---|
+| 100K | 438–518 | 576.2 | 657.2 | 596.7 | **610.0** | 61.8 | MISS (above) |
+| 200K | 740–816 | 843.5 | 813.5 | 849.0 | **835.3** | 53.6 | MISS (above) |
+
+- On the band's own 30K window (`band_recompute`, §5): 100K 540.6 / 614.2 / 531.8 (mean 562.2), 200K 831.3 / 813.9 /
+  846.3 (mean 830.5) — **every one of the 6 seed-points sits above all 5 of the official file's seeds**. Above both
+  ways; the window mismatch (addendum 18:30) does not explain it.
+- `extension_due: true` (seeds 3–4). Arithmetic, not a ruling: for the 5-seed 100K mean to reach 518, s3 + s4 must
+  average ≤ 380 — below every v1S seed (min 576) and below the published mean (478). At 200K they must average ≤ 731.
+- Not run this week: a seed costs ~4.3 T4-h; W47 has ~1.6 h by Kaggle's own run time (the meter reads 33.3 of 30
+  because it billed s1 from launch: 10.02 h charged for ~5.1 h run — INBOX).
+- Reading carried from the rule's table: a MISS → build suspect. The named suspect is already on the record (19:15):
+  v1S's encoder + decoder are 2×512, the official size-S recipe's are 5×1,024 — **ours is smaller and learns faster
+  than published**, so size alone does not explain the direction. No verdict, band or seed changed.
+
 ## Row A3 — brain A on DMC ball_in_cup_catch: **PASS** at 3 seeds (11-21 02:40, Kaggle T4)
 
 Kaggle `jack-ladder-1795220723`, COMPLETE; result file read from the watcher's download dir (4 runs rc 0, none cut).

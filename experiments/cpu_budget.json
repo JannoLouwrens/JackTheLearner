@@ -1726,12 +1726,12 @@
         "detached:launch_resume_test.log": 125.17,
         "detached:launch_row5_ext.log": 633.66,
         "detached:launch_row6_cartpole-swingup_sparse.log": 307.1,
-        "detached:launch_row6_reacher-easy.log": 328.97,
-        "detached:launch_row6_reacher-hard.log": 329.26,
+        "detached:launch_row6_reacher-easy.log": 418.45,
+        "detached:launch_row6_reacher-hard.log": 421.12,
         "detached:launch_s2_seg2.log": 594.7,
         "detached:launch_s2_seg3.log": 481.55,
         "detached:launch_v1s_s0.log": 373.38,
-        "detached:launch_v1s_s1.log": 593.06,
+        "detached:launch_v1s_s1.log": 857.74,
         "detached:launch_v1s_s2.log": 650.59,
         "detached:launch_v1s_timing.log": 7.98,
         "detached:launch_v1s_timing2.log": 53.74,
@@ -1740,7 +1740,14 @@
         "detached:pilot_s5.log": 3689.7,
         "detached:read_launch.log": 1432.44
       },
-      "used_s": 28423.33
+      "used_s": 28869.35
+    },
+    "2026-11-22": {
+      "by_spec": {
+        "detached:launch_row6_reacher-easy.log": 11.06,
+        "detached:launch_row6_reacher-hard.log": 538.96
+      },
+      "used_s": 550.02
     }
   },
   "last_child_s": {
