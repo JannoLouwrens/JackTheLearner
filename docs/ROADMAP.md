@@ -11,8 +11,7 @@ milestone. What a milestone IS is the owner's; its tests may only be
 strengthened. **Order (11-15):** the numbers are not a queue. The `needs:`
 lines are: the instrument and the brain (M3's first half, plan stages 1–2)
 come before anything is grown on it (M2's curriculum, M4–M7, stage 3).
-**Which Jack.** Results so far are on the survival stack (`cores.py`,
-`survival.py`, `w0.py`) with home-made learners; tests of the world and the
+**Which Jack.** Results so far are on the survival stack with home-made learners; tests of the world and the
 machine stand, results about his brain are "to earn again" on the brain
 stage 2 chooses. `UnifiedBrain.py` re-enters only as a challenger.
 
@@ -46,11 +45,11 @@ done when: stage 2's rule names a brain; `D1.1`, `LC.07`, `UB.10`/`BO.01`,
 status (11-22): stage 1; NEITHER brain cleared. B: rows 1b, 2b, 3, 3b, 6b
 stand; the library recipe MISSES rows 5, 6a, 6c here (cause twin J19; B's
 stage-2 gate held, ruling 81). A: A1, A3 in band, A2 miss; size-S arm
-missed above and was mis-sized (matched arm W48, J14). **In his world:
+mis-sized (matched arm W48, J14). **In his world:
 handed the direction B eats, then loses it (E2c); on his own eye, 16 or
 128 rays, nothing eats — B's critic runs away on eye content (J17 hunt).**
-Hand forager 20/20 at d0 is a 3.2.3-physics row, re-read on 3.17.0 (J20).
-Keep round running (J18). Stage-2 verdict mid-Jan to Feb 2027 at best.
+Hand forager 20/20 at d0: re-read on mujoco 3.17.0 (J20).
+Keep round running (J18). Stage-2 verdict Jan–Feb 2027 at best.
 Fusion UNDECIDED; control VACANT.
 
 **M4 — One body that moves.** He moves well in the same body he survives in;
@@ -95,5 +94,5 @@ PASSES (to be registered). · status: not started; the first film is order S6.
 
 **M9 — Beyond the jungle.** More worlds, transfer (`GEN.06`), other minds
 (`GEN.02`, `GEN.03`, `GEN.09`), the told world (`LG.11`).
-needs: M8. · stage: 4. · status (11-22): not started; first prior filed
-(§25): `GEN.06`, `GEN.02`, `GEN.09` need amending when M9 opens.
+needs: M8. · stage: 4. · status (11-22): not started; prior §25
+says `GEN.06`/`.02`/`.09` need amending when M9 opens.
