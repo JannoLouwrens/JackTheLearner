@@ -3451,3 +3451,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `c34634a5` `experiments/kws_epoch_stages.py`: times the AUTHORS' own SpeechCommand/Preprocess/LogMel/BCResNets(8) (pinned, sha ok) on 2,000 real clips. Per epoch (CPU s, box, 1 thread): decode 8.2 (14 cold), noise loop 4.9, mel 22.6, step 303.
 - Reading: the host-side work is < 20 s of the T4's 182 s epoch, so the cost is not reading files. Named suspect: their code moves a whole 4.26 MB noise file to the GPU for every mixed clip — 126 GB an epoch. Not measured here; the Kaggle timing cell reads it.
 - No ledger. Philosophy served: 6 (free GPU hours spent only when a seed is known to fit), 3 (the ear's cost explained before it is raced).
+
+## 2026-11-22 09:08–09:35 UTC · SYSTEM · S13 (b) the forge's judge lock
+- `e3e573e5`: `write_lock` / `check_lock` in `experiments/forge/__init__.py`; `load_round` refuses to read `results.jsonl` without an intact lock. Lock = sha256 of harness, registry, ladder rule, metric, round files and the reader's own file at HEAD; the lock itself must have exactly one commit.
+- Planted (tests.test_forge_round 24/24): harness edit and reader edit refused before and after commit; a re-hashed lock refused committed or not; control: untouched judge and a non-judge edit pass. r1 has no lock yet — the forge writes it at its reader's commit.
+- Machine did not grow: +132 / −133 (four dead one-shot launchers, a duplicated helper, a dead function). FAIL-UNOWNED = 1 is SO.01 (INBOX), not acted on.
+- Philosophy served: 4 (the keep round's results cannot be scored by a judge edited after the freeze).

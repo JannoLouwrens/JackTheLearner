@@ -282,7 +282,8 @@ fix by cause or name why the test is wrong. Real separation (own user) is
 NOT ordered.
 serves: philosophy 4 · J18.
 **done when:** the planted judge edit is refused, and `test_lane_guard.sh` exits 0 or its wrong clauses are named.
-state: (not started since 11-20 — four SYSTEM slots went to S11 (c). It is first now.)
+state: 11-22 09:30 (b) DONE `e3e573e5`: `experiments.forge.write_lock(round_dir, [reader])` hashes harness, registry, ladder rule, metric, the round's files + the reader's own file at HEAD → `<round>/judge_lock.json` (commit it alone, once); `check_lock` refuses a moved byte or a re-hashed lock, and `load_round` runs it whenever `results.jsonl` exists. Planted: harness edit, reader edit, re-hashed lock — each refused, committed or not (tests.test_forge_round 24/24).
+state: Forge: write the lock at your reader's commit, before opening raw files; no hash check of your own needed (ruling 83). r1 has no lock yet. (a) lane-guard test next.
 
 ### S15 — The detached lane's books: a FAILED receipts test, a cap that starves, a meter that bills waiting
 part: (machine — truthful gates) · stage: — · step: —
@@ -336,6 +337,8 @@ vs 256; `coverage` baseline entries DP.02, DP.03, LC.04 live again.
 ## INBOX — one line each, workers add, the Director empties
 (emptied 11-22 06:42 — every line of 11-21/22 is ruled in 76–88 or became J17, J19, J20, J14, J10, S13, S15, S11 or Next-up.)
 - RESEARCH (Director, 11-22): what is published on a sense built from OUTCOME — features of what was in view when reward arrived, used as the learner's input (reward-conditioned salience, successor/landmark features, "what was at my mouth when I ate")? Numbers, sizes, steps; and whether any small agent learned to reach food that way from scratch. For the lab's hindsight eye (ruling 84).
+
+- SYSTEM 11-22 09:30: `coverage` exits 2 on FAIL-UNOWNED = 1 (SO.01, not T0.34 as S15 says) — bookkeeping, not acted on.
 
 ## DONE (kept one day)
 
