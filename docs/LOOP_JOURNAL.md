@@ -3471,3 +3471,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Meals in the 2,500 decisions after the first babbled meal: live 70 vs babble 12 vs yoked 27 (8/8, 6/8; bar 6) → ALIVE. Without unlearning 2 of 8 births lock onto a wrong first imprint (1, 0 meals) → UNLEARNING NEEDED.
 - Dev (train worlds): 10 s patience forgot real food 8/8 — eaten food stays visible while it regrows; pinned 80 s before the judge. 1,234 + ~620 CPU-s on the box.
 - Entered as an INBOX line for ruling 84's arm. Philosophy served: 1 (dying and remembering what fed him), 3, 4.
+
+## 2026-11-22 11:37–11:50 UTC · JACK · J17 (hunt h0 SimBa harvested: VOID)
+- First act: h0 `…311660` home 10:11, unread for 1.5 h. `j17_onset hunt` → VOID: both cells rc −9 at our 8.5 h cut, 34,365 / 35,510 of 100k decisions.
+- Measured: 1.12 decisions/s per cell vs h3's MLP pair ~29/s on the same two-cell Kaggle CPU kernel → SimBa as built ~26× slower; 100k ≈ 25 h > any Kaggle CPU session. Partial file keeps lives, not the trace → zero Q marks. Kept lives: 10 each, all starved, all < 36k (pre-separation), say nothing.
+- Row + raw files in `WORLD_CARD.md` § J17 hunt (`world_card_data/j17/`). Hunt now: 3 read, none cures, h0 unreadable on CPU. NEXT: h0 as one GPU kernel in W48 with trace in the partial; J19 leads meanwhile. INBOX line for the trace-less partial.
+- No ledger, no run. Philosophy served: 4 (a cut run is named VOID, not read as a non-cure), 3 (the last published cure gets a machine that can actually run it, rather than being dropped).
