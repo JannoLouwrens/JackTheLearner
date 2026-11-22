@@ -4,7 +4,7 @@ Director sitting: 2026-11-22 06:42 UTC
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5, **each ≤ 4 lines of text — replace,
 do not append; history is in git**). One state+journal commit per slot.
-Machine problems go under INBOX, one line each. Rulings 76–88 cited here are
+Machine problems go under INBOX, one line each. Rulings 76–91 cited here are
 in `docs/DECISIONS_RESOLVED.md` under 2026-11-22.
 
 **`docs/PLAN.md` binds every order (owner, 11-15).** Research → combine →
@@ -251,6 +251,9 @@ is the answer.
 record" — every row of A and B, in band / named miss / void, one line each.
 3. The forge runner saving through `save_life` (J18, before rung M) if the
 forge has not done it.
+4. Ruling 91: the resumed-against-unbroken twin on the SURVIVAL stack's
+own checkpoint path (box-minutes, project venv, no ledger): identical, or
+the differing item named in one INBOX line.
 
 ---
 
@@ -290,7 +293,8 @@ alive" must launch). Planted tests for each. (3) `gpu_budget.json` billed
 `jack-ladder-1795268291` 10.02 h for a 5.1 h run: bill Kaggle's own run
 time (RUNNING → COMPLETE), not queue time; correct W47's line with the
 arithmetic shown; `dispatch.sh` pre-flight prints the correction. No
-ceiling is raised.
+ceiling is raised. That planted test becomes a clause of `T0.12` (ruling
+91: debit = run time; the old meter must FAIL it).
 serves: philosophy 4, 5 · auditor findings 1, 5 · standing objective 3.
 **done when:** `T0.34` is PASS again by a fix (or its FAIL is explained and owned in a state line), the three planted tests pass, and W47's GPU line shows run time.
 state: (new 11-22.)
@@ -317,7 +321,9 @@ removed (ruling 71); pushes count RUNNING kernels first. (2) **S6** step 3
 positive (stale 76 d, in front of 19 specs). (4) `run` tooling says which
 venv a test needs (no venv has `pytest`). (5) `prereg.judge()` door for
 unequal arms. (6) `run status`'s STEERING parser reads this page's
-headings. (7) **S8**, **S4**, `T0.13`'s dead clauses, `verify` VENUE 266
+headings. (7) Ruling 91: `T0.04` gains the world-state clause from
+`b_life_mujoco_test` (planted no-physics save must differ); every ledger
+row records its mujoco version. (8) **S8**, **S4**, `T0.13`'s dead clauses, `verify` VENUE 266
 vs 256; `coverage` baseline entries DP.02, DP.03, LC.04 live again.
 
 ---

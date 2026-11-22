@@ -1354,6 +1354,41 @@ them, and a slot with nothing to advance exits instead of building. The
 meter has contradicted itself four times this month; if it falls again,
 nothing here costs anything.
 
+**89. Sunday: END-FIT's unregistered gates wait for their part to open.**
+The grip rule, the size cook-off and the rest of W2 read "none
+registered". Each belongs to a stage-3 part; the plan forbids a spec with
+no published prior and the standing objective is repair before register.
+They are registered when the part opens, from its section of the
+reference. The collapse guard is the exception already in hand: forge
+round 1 measures it, and its winner's rule becomes the spec. No winner
+adopted this week closes an END-FIT row.
+
+**90. Sunday: GOAL.md read whole; the card is faithful; one seat
+contradicted it.** The Language-routing seat (`meaning-mass`, LG.13) picks
+what he says from a ready-made model's output. GOAL (11-11): nothing
+borrowed inside him, and the adults "never choose his words". The verdict
+stands as a result about the parent rig; the seat is marked a parent-rig
+seat that cannot be adopted into him. His own voice is M6's work. Also
+confirmed: how unified his brain is remains raced, not assumed (Sensory
+fusion UNDECIDED after UB.10; stage 2's added-sense test is its next arena).
+
+**91. Sunday: five passing specs re-examined against the week.** `T0.12`
+(GPU accounting) passes while the meter billed 4.9 h of queue wait: it
+proves refusal, not that the debit is the run. It gains a clause — a
+kernel that waits Q and runs R is debited R — with the old meter as the
+planted failure (S15 (3); it may go red there and is repaired in the same
+order; no downstream spec needs the clause, so no new dependency edge).
+`T0.04` (resume continues) measures optimiser state only; this week a
+resume silently dropped the episode in progress, the world's RNG and the
+physics. It gains a clause — resumed equals unbroken on a physics world,
+a no-physics save must differ — from the test that already passes on
+brain B (SYSTEM Next-up; no edge). `T0.03` and `T0.10` stand: their claims
+(weights round-trip; artifacts return) were not what failed. `LF.03` (one
+whole life) stands as a row about the 3.2.3 world it was bought in; from
+now every ledger row records the physics version it ran on (SYSTEM
+Next-up), and the survival stack's own resume takes the twin test (JACK
+Next-up) — if it differs, M1's "resumes" carries the difference by name.
+
 ## 2026-11-21 06:41 UTC — Director, DAILY sitting: rulings
 
 **64. E2c's NO BRANCH, and the default temperature.** E2c read 25 of 25:
