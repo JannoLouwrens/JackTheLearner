@@ -50,6 +50,28 @@ def test_h1_reads_its_own_pair():
         assert J.hunt(p)["verdict"].startswith("VOID")                  # control
 
 
+def test_wrap_box_reproduces_the_hand_wrapped_h1():
+    """wrap-box on h1's box dir gives the committed hand wrap's cells exactly;
+    a pair with one final file missing (only .partial) is refused."""
+    box = Path("/data/jack-logs/j17_hunt_box_h1")
+    if not box.exists():
+        return
+    ref = json.loads((J.DATA / "j17_hunt_h1.json").read_text())
+    with tempfile.TemporaryDirectory() as d:
+        o = Path(d) / "j17_hunt_h1.json"
+        assert J.wrap_box("h1", box, out=o)["wrapped"]
+        assert json.loads(o.read_text())["cells"] == ref["cells"]
+        assert J.hunt(o)["verdict"] == "STILL RUNS AWAY"
+        assert J.wrap_box("h1", box, out=o)["wrapped"] is None          # no overwrite
+        half = Path(d) / "half"
+        half.mkdir()
+        a = J.HUNT_GROUPS["h1"][0]
+        (half / f"pilot_{a}_s923.json").write_text((box / f"pilot_{a}_s923.json").read_text())
+        r = J.wrap_box("h1", half, out=Path(d) / "x.json")             # control
+        assert r["wrapped"] is None and "not home" in r["why"]
+
+
 if __name__ == "__main__":
+    test_wrap_box_reproduces_the_hand_wrapped_h1()
     test_cut_points_are_the_mlp_group_edges(); test_planted_readings()
     test_h1_reads_its_own_pair(); print("PASS")

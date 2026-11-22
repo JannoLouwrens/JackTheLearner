@@ -18,7 +18,7 @@ choices (stated, not registered).
              no content, so an onset here means the rule fires on seed noise.
              It must read None (or late) on most seeds.
 
-Usage: python -m experiments.j17_onset [box-twin | hunt [path]]
+Usage: python -m experiments.j17_onset [box-twin | hunt [path] | wrap-box <group> <dir> [seed]]
 """
 from __future__ import annotations
 
@@ -193,6 +193,41 @@ def hunt(path: Path = HUNT, arms: tuple | None = None) -> dict:
     return out
 
 
+def wrap_box(group: str, box: Path, seed: int = 923, out: Path | None = None) -> dict:
+    """Wrap a BOX hunt pair (pilot_b2 pilot-cell outputs in `box`) as the
+    kernel-format `j17_hunt_<group>.json` that hunt() reads (11-22; h1 was
+    wrapped by hand, this is that wrap made a command). A cell goes in ONLY
+    from its FINAL file (pilot-cell writes it at the end; `.partial` never
+    counts), with rc 0 written beside it; a missing final file is left out,
+    so hunt() reads VOID. Launch/home times come from the launch logs and
+    file mtimes. Refuses to overwrite an existing wrap."""
+    import datetime as dt
+    arms = HUNT_GROUPS[group]
+    out = out or DATA / f"j17_hunt_{group}.json"
+    if out.exists():
+        return {"wrapped": None, "why": f"{out} exists; not overwritten"}
+    cells, launched, home, missing = {}, [], [], []
+    for a in arms:
+        f = box / f"pilot_{a}_s{seed}.json"
+        lg = box / f"launch_{a}.log"
+        if lg.exists():
+            launched.append(lg.read_text().split()[1])
+        if not f.exists():
+            missing.append(a)
+            continue
+        rec = json.loads(f.read_text())
+        rec["rc"] = 0
+        cells[f"{a}_s{seed}"] = rec
+        home.append(dt.datetime.fromtimestamp(f.stat().st_mtime, dt.timezone.utc).strftime("%H:%M"))
+    if missing:
+        return {"wrapped": None, "why": f"not home: {missing}"}
+    src = (f"box (opc, jack-std venv, nice 19, 1 thread each), launched {min(launched, default='?')}, "
+           f"home {'/'.join(home)} UTC; wrapped by j17_onset wrap-box; "
+           "DISCLOSED: box draw, cut points are Kaggle MLP runs")
+    out.write_text(json.dumps({"source": src, "cells": cells}, indent=1))
+    return {"wrapped": str(out), "cells": sorted(cells)}
+
+
 def mlp_q_climbs(cells: dict | None = None) -> dict:
     """The MLP groups the cut points come from (re-derivable, tested)."""
     cells = cells or load()
@@ -206,6 +241,10 @@ def main(argv) -> int:
         for k, v in hunt(Path(argv[2]) if len(argv) > 2 else HUNT).items():
             print(f"{k}: {v}")
         return 0
+    if argv[1:2] == ["wrap-box"]:          # wrap-box <group> <box dir> [seed]
+        r = wrap_box(argv[2], Path(argv[3]), int(argv[4]) if len(argv) > 4 else 923)
+        print(r)
+        return 0 if r["wrapped"] else 1
     if argv[1:2] == ["box-twin"]:
         for k, v in box_twin().items():
             print(f"{k}: {v}")

@@ -3416,3 +3416,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Tests (jack-std): test_j17_hunt_arms PASS incl. planted — split rest half bit-identical under a ×1e3 random eye; control: sbx default first layer moves 256/256 units. test_j17_hunt_reader PASS. Real world: blind arm zeroes exactly dims 0–255 (sighted 256/256 nonzero); smoke 7k decisions rc 0, 51 dec/CPU-s. (Smoke ran in the foreground, harness moved it to background; read from its output file.)
 - Box RSS note: h2's two workers are ~0.9 GB each (~1.85 GB total), above the ~1.5 GB guide.
 - No ledger. Philosophy served: 3 (the next published cure built and tested before the box frees, so the race does not wait), 4 (a planted test that the default critic fails).
+
+## 2026-11-22 06:37–06:58 UTC · JACK · J17 (h2 harvest made one command; nothing home)
+- First act: Kaggle h0 `…311660`, `…328617`, `…322713` RUNNING = cap 3; box h2 OFN pair at 38k/100k (home ~07:25, after this slot). Box full (2 workers ~0.95 GB each) → h3 not launched. J14/J10/J16 wait the Director.
+- Built `j17_onset wrap-box <group> <dir>`: h1's hand wrap as a command (final file only, never `.partial`; no overwrite). Test PASS: re-wrapping h1's box dir gives the committed `j17_hunt_h1.json` cells exactly and reads STILL RUNS AWAY; control — a pair with one cell missing is refused.
+- No run, no ledger. Philosophy served: 5 (the harvest step that each slot hand-did is now one tested command, so the next slot reads h2 and launches h3 in minutes), 4 (the wrap cannot admit a partial cell).
