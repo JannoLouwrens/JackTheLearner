@@ -3371,3 +3371,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 01:41 launched `pilot_b2 j17-hunt-kernel h0` → Kaggle CPU `jack-cpu-1795311660` RUNNING (load guard refused once at 7.09, waited to < 6). A pilot: 1 seed, reads the critic signature, not eating.
 - B-6b reacher-easy harvested: lib 953.7, ours 958.1, band 929.9–1000 → both REPRODUCE; ctrl 97.3. Row 6 = 1/3 tasks. KNOWN_ANSWERS Row B-6b.
 - Philosophy served: 4 (a red chased toward its cause with a published cure, its blind twin as the control that must differ), 3 (the cure's seat comes from the record, not home-made).
+
+## 2026-11-22 02:36–02:45 UTC · JACK · J17 (SimBa hunt reader, before the result)
+- First act: Kaggle — hunt pilot `jack-cpu-1795311660` RUNNING (~1 h in). J14/J10/J16 wait the Director, J18 is forge's, Next-up 1–4 all done → J17's own next step: the reading, fixed before the data.
+- On the 20 MLP J17 runs, critic_loss climb 50k→100k overlaps sighted vs blind (1.83–6.20 vs 0.65–2.37); Q climb does not (sighted 1.32–2.03, 10/10; blind 0.92–1.20, 5/5). `ca6ddac3`: `j17_onset hunt` reads SimBa sighted vs its twin on that cut — RUNS AWAY / HELD / UNREAD / NO CONTROL / VOID; planted test PASS.
+- No run, no ledger. Philosophy served: 4 (the one-seed pilot's reading written before it could be bent to the result, with a control reading that must fire).
