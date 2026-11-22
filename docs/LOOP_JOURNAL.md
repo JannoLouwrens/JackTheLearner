@@ -3467,3 +3467,7 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Took J10's remaining paper item: "Row J10-2 (SAC, carried)" stub in `KNOWN_ANSWERS.md` — rule pointer `b609b142`, PASS/1M/control pins, outputs path, NOT YET RUN.
 - Found: an older 11-16 "Row J10-2" (Yu, Turk & Liu PPO) already holds that id; marked in both places' reading, INBOX line for a rename. No ledger, no run.
 - Philosophy served: 4 (the frozen rule is on the record before any seed lands, so the verdict cannot be fitted to the result). Thin slot: no compute free.
+- 2026-11-22 11:29 · LAB · `live_eye.py` (rule first `f3654d00`): the hindsight eye's table started EMPTY in 8 never-lived worlds (1401–1408), hand reflex as ruler, no learner.
+- Meals in the 2,500 decisions after the first babbled meal: live 70 vs babble 12 vs yoked 27 (8/8, 6/8; bar 6) → ALIVE. Without unlearning 2 of 8 births lock onto a wrong first imprint (1, 0 meals) → UNLEARNING NEEDED.
+- Dev (train worlds): 10 s patience forgot real food 8/8 — eaten food stays visible while it regrows; pinned 80 s before the judge. 1,234 + ~620 CPU-s on the box.
+- Entered as an INBOX line for ruling 84's arm. Philosophy served: 1 (dying and remembering what fed him), 3, 4.

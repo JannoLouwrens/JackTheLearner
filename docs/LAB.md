@@ -23,33 +23,14 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   Dead variants: angle init ×4 (0.106), no write gate (0.119). Open: a
   non-commutative register; ME.8 / LF.02 with the ring in place. Philosophy 3, 4.
 
-- 11-12/13 · **Curriculum — weaning** (`wean_pilot.py`, `wean_smell_race.sh`;
-  long form `837b4c6f`) · DEAD twice: blind 0/0/0; with smell on the repaired
-  world weaned meals 1/9/1 vs null 2/0/3. Nursing feeds him (18/5/6 vs decoy 0)
-  but r never holds: he learns eating-where-born, not walking up a gradient.
-
-- 11-12 · **World/body findings the weaning kill uncovered** (long form `4b4c2e3`):
-  rays pass over floor food (0 of 584 poses); *eye height* DEAD (1/2/3 vs
-  2/2/3); *smell* DEAD three times (52k: 2/0/3 vs shuffled 20/0/3) — PRIORS §14
-  says that setup cannot learn; pole body topples ~19/20; the pool was a DRIVE
-  TRAP, fixed (`W0.PL`; oracle 23/40 → 38/40); *GAMMA .99* DEAD (1 of 3 seeds).
-  88 of 120 meals sit in 5 "jackpot" lives: a meal-count margin is noise.
-
-- 11-12/13 · **World: shelter law** (J6, `NE.01`) · occlusion-law race NO
-  WINNER (shipped 4/5, cone 2/5, sleeper 2/5, open 0/5); parked (ruling 35).
-
-- 11-12 · **Exploration in bouts** (white / OU / pink, `explore_bout.py`) ·
-  DEAD: fed births 4 / 3 / 6 of 40. Pink roams 1.7× wider and feeds no more:
-  direction, not range, starves him.
-
-- 11-13 · **Meal memory — what he replays** (Consolidation; `meal_memory.py`) ·
-  DEAD at the claim gate (s94–98): fed meal .450 vs fifo .277 vs yoked .352;
-  margin vs yoked .0985 < .10, the only red clause. Stays dead as declared.
-
-- 11-13/14 · **Predict-then-push, three arms** (Deliberation, VACANT; long form
-  `1a18168`) · all DEAD on fed births (babble 5/40): sense lookahead 6/40,
-  ego-frame drive .017 vs bar .10, gain-field model 4/40 (want 9, shuffled 5).
-  He cannot yet predict what a push does to his nose. Philosophy 3, 4.
+- Folded 11-22 (long forms in git at `3b2b7845`): 11-12/13 **weaning** DEAD
+  twice (weaned meals 1/9/1 vs null 2/0/3: he learns eating-where-born);
+  11-12 **world/body**: rays pass over floor food, eye height DEAD, smell DEAD
+  ×3 (PRIORS §14), pool drive trap fixed (`W0.PL`), GAMMA .99 DEAD, 88 of 120
+  meals in 5 jackpot lives; **shelter law** NO WINNER (ruling 35);
+  **exploration in bouts** DEAD (fed births 4/3/6 of 40: direction, not range);
+  11-13 **meal replay** DEAD (margin .0985 < .10); 11-13/14
+  **predict-then-push** ×3 DEAD (6/40, .017, 4/40 vs babble 5/40).
 
 - 11-14/15 · **Run and tumble — climb without predicting** (Deliberation;
   `run_tumble.py`, long form `837b4c6f`) · *told* DEAD 8/40 vs babble 6;
@@ -137,4 +118,28 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   it; the table filled from empty as he lives; a camera eye (W0's colour is
   one clean number per object — there the net form is needed, and it is
   the dead one). Unrun: the net with the table's output as its teacher.
+  END-FIT 1, 2, 5. Philosophy 1, 2, 3, 4.
+
+- 11-22 · **The hindsight eye lit from EMPTY, and unlearning a wrong
+  imprint** (Vision encoder, BY DEFAULT; PLAN "Learning to eat" / "His world"
+  right columns; `live_eye.py`, rule first `f3654d00`). Bet: a newborn's
+  table of one meal cannot out-vote a wrong imprint, so (1) from empty it
+  still lights itself after his first babbled meal, and (2) only if a colour
+  he stands at unfed for 80 s leaves the table. Kill: not above babble and a
+  yoked twin (imprint from a look 200–1,000 decisions earlier) on ¾ of
+  worlds and 2× in total. Prior: Rescorla-Wagner 1972 (a table, tens of
+  trials — our size; from memory); no forager on record taught WHICH thing is
+  food by one look at its own mouth. **ALIVE, ENTERED (INBOX).** 8 fresh
+  worlds 1401–1408, meals in the 2,500 decisions after the first meal:
+  **live 70 (9/9/9/8/8/9/9/9) vs babble 12, yoked 27; ahead 8/8 and 6/8
+  (bar 6).** The ceiling is the 50 s regrow clock (~9). **Unlearning NEEDED:**
+  without it 2 of 8 births lock onto a wrong first imprint (1 and 0 meals
+  where live eats 8 and 8). First meal by babble: decision 176–6,424 (median
+  ~950; 2 worlds only after a death) — the wait is the world's, not the
+  eye's. Dev: patience 10 s forgot REAL food 8/8 (eaten food stays in sight
+  while it regrows). Disclosed: the yoked twin ate 9 in 2 worlds — random
+  imprint + unlearning is itself trial-and-error; the "imprint on food"
+  diagnostic undercounts (says 1 of 9 where he ate 8) and is not quoted.
+  Cannot say: a learner uses it (J17); a camera eye; carrying the table
+  between worlds. Unrun: patience learned from his own regrow waits.
   END-FIT 1, 2, 5. Philosophy 1, 2, 3, 4.
