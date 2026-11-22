@@ -3396,3 +3396,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `3f0f8499`: `experiments/ofn_critic.py` (sbx's critic + that one line), `make_b/run_b(critic=)` default unchanged; h2 = J17's K-row128 pair + `critic="ofn"` only. Differences disclosed (LN kept, after-ReLU, eps guard, UTD 1).
 - Tests (jack-std): test_j17_hunt_arms PASS (real sbx at obs ×1e4: |Q−b|−‖W‖ = −0.89 OFN vs +0.33 default — control breaks the bound); test_j17_hunt_reader PASS. Fixed the test's `_stub_sbx` (crashed when sbx already imported). Found: the h1 make_b check needs optax → runs in jack-std only.
 - No run, no ledger. Philosophy served: 3 (the third published cure built from its paper's own text, raced beside its blind twin), 4 (a planted test that the default critic fails).
+
+## 2026-11-22 04:37–04:50 UTC · JACK · J17 (hunt arm h1 launched on the box)
+- First act: Kaggle — h0 `jack-cpu-1795311660` RUNNING (~3 h); 3 sessions RUNNING = cap → h1/h2 cannot go to Kaggle. J14 waits the Director.
+- Instead of a third idle build slot: h1 (J17 pair + `optimizer=adamw`) launched DETACHED on the box 04:38, both arms same CPU (the box twin showed box = another draw, so the pair must share a machine — it does). jack-std, nice 19, 1 thread each, s923, 100k; both workers at 100% CPU at +20 s. ~80 CPU-min a cell.
+- Reader handoff in J17 state: wrap the two pilot-cell files as a kernel-format `j17_hunt_h1.json`, then `j17_onset hunt`. Disclosed: cut points came from Kaggle MLP runs; this pair is a box draw.
+- No ledger, no verdict. Philosophy served: 3 (the second published cure goes into the race now instead of waiting on a queue), 6 (free box CPU, nice 19, 2 workers).
