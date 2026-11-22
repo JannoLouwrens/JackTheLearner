@@ -3463,3 +3463,7 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `WORLD_CARD.md` § J17 note: verified in code. BlindEye zeroes all 256 vision numbers; VecNormalize maps a constant 0 to 0; the weights on those inputs get zero gradient, so the blind arm is the no-eye learner in a wider shape. Widths checked live: rays16 32, row128 256.
 - So J17's "width, not sight" compared 256 live unit-variance inputs against none. "Runaway on eye CONTENT" and "runaway on many live inputs" both fit every sighted run. J17-2's shuffled arm separates them. Verdict unchanged.
 - No ledger, no run. Philosophy served: 4 (a control that cannot fail the way the claim needs is named before the next row leans on it).
+- 2026-11-22 09:50 · JACK · J10. Kaggle 5/5 busy (J17 h0 SimBa 8 h in, J19 6a/6c, forge S chains A/B all RUNNING at 09:40) → J17, J19, J10 launch all wait; J20 g4 waits on box load.
+- Took J10's remaining paper item: "Row J10-2 (SAC, carried)" stub in `KNOWN_ANSWERS.md` — rule pointer `b609b142`, PASS/1M/control pins, outputs path, NOT YET RUN.
+- Found: an older 11-16 "Row J10-2" (Yu, Turk & Liu PPO) already holds that id; marked in both places' reading, INBOX line for a rename. No ledger, no run.
+- Philosophy served: 4 (the frozen rule is on the record before any seed lands, so the verdict cannot be fitted to the result). Thin slot: no compute free.

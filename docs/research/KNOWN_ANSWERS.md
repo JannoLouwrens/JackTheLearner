@@ -548,6 +548,20 @@ so the weights load exactly, and the gap is late-episode MuJoCo chaos between x8
   the Kaggle segment kernel (`segment_job_body`) still calls the default, and nothing checks that the mounted previous kernel carries
   `life.pkl` + `physics.pkl` (~0.7 MB). Wiring that in is J10-2's rule text, once the Director rules carry vs disclose.
 
+## Row J10-2 (SAC, carried) — the RL Zoo's Humanoid entry again, life carried across segments: **NOT YET RUN** (stub 11-22 09:50)
+
+**Name clash:** the 11-16 heading "Row J10-2 — Yu, Turk & Liu 2018" above is a DIFFERENT, earlier row (PPO, symmetry
+curriculum; `yu2018_walk.py` cites it as "§Row J10-2"). This row is ruling 82's J10-2. Neither heading is renamed here (INBOX).
+
+- Rule: `RULE_J10_2` in `experiments/humanoid_sac_row.py`, frozen at `b609b142` before seed 3 ran. J10-1's recipe exactly,
+  no cures; ONLY changes: `carry_life=True` (a segment > 0 without `life.pkl` + `physics.pkl` REFUSES), fresh seeds 3–7,
+  eval 50 deterministic episodes (env seeds 10,000–10,049) on Kaggle CPU only.
+- PASS at 2M: R ≥ 5,950 AND ≥ 12.0 m/1,000 steps on ≥ 4 of 5 seeds. 1M check: median R in [3,784, 5,866] else a NAMED MISS.
+  Control: J10-1's reading stands (same recipe and eval code). No extension.
+- Published: 4,825 [3,784–5,866] at 1M (10 seeds), 6,232 ± 280 at 2M, each ONE unbroken run (§16).
+- Outputs → `/data/jack-logs/j10/sac_row2`. Launch: `humanoid_sac_row kernel2 <seed> [segment]`, ≤ 2 Kaggle sessions.
+- Status: not launched — Kaggle 5/5 sessions busy at 07:40 and again at 09:40 (J17 h0, J19 6a/6c, forge chains A/B).
+
 ## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:12, Kaggle CPU)
 
 Rule `experiments/brain_b_dmc.py` (committed 11-18 before any seed, `0bf84989`): band 837.9–868.1 (853.0 ± 9.2, k = 5);
