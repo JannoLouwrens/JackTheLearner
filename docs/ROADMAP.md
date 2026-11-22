@@ -43,20 +43,23 @@ against B, 1,000,000 decisions, rule written first. Then every other seat in
 needs: M1; research review 2. · stage: 1 now, then 2.
 done when: stage 2's rule names a brain; `D1.1`, `LC.07`, `UB.10`/`BO.01`,
 `DP.01`–`DP.03` and a size test are held by evidence; END-FIT's gates pass.
-status (11-19): stage 1. Done: `jack_env`, harness checks, B's two SAC
-rows, eye and motor in the BODY frame (rulings 38, 49). **Learnable from
-his senses: hand forager PASS at d0 (20/20), FAIL at d = 1 (3/20 vs 18) —
-shown at the entry rung only (ruling 51).** Running: B's pilot 2 at d0
-(J11, rule frozen); A's rows from 11-21 (J14). Stage-2 mark = a sustained
-life; verdict mid-Jan to Feb 2027. Fusion UNDECIDED; control VACANT.
+status (11-22): stage 1; NEITHER brain cleared. B: rows 1b, 2b, 3, 3b, 6b
+stand; the library recipe MISSES rows 5, 6a, 6c here (cause twin J19; B's
+stage-2 gate held, ruling 81). A: A1, A3 in band, A2 miss; size-S arm
+missed above and was mis-sized (matched arm W48, J14). **In his world:
+handed the direction B eats, then loses it (E2c); on his own eye, 16 or
+128 rays, nothing eats — B's critic runs away on eye content (J17 hunt).**
+Hand forager 20/20 at d0 is a 3.2.3-physics row, re-read on 3.17.0 (J20).
+Keep round running (J18). Stage-2 verdict mid-Jan to Feb 2027 at best.
+Fusion UNDECIDED; control VACANT.
 
 **M4 — One body that moves.** He moves well in the same body he survives in;
 hands that hold, carry and strike.
 needs: the chosen brain (M3); the body review (no published learner does a
 human-like body with hands that also survives). · stage: 3, last and hardest.
 done when: `T2.01` PASS under the seated controller; `LT.08`; a grip test.
-status (11-15): `T2.01` FAIL since Aug 12 (the record expects it at our
-budgets, §4); no more one-world attempts; needs a reflex layer (ruling 20).
+status (11-22): `T2.01` FAIL since Aug 12. Walking layer: published row
+FAIL 1/3; resume fault named and fixed; five-seed re-run ordered (J10).
 
 **M5 — Every sense, in the one brain, each load-bearing.** Eye, learned ear,
 touch, balance, smell, taste, pain, temperature, hunger, thirst, voice — each
@@ -65,7 +68,8 @@ needs: the chosen brain (M3); the eye first (the record: words need sight).
 stage: 3. · done when: `coverage` shows a passing CLAIM per sense in the
 seated brain and the unison gates pass.
 status (11-15): of 22 passing claims, 1 runs in the living stack (`PS.03`);
-the rest are bench or parent-rig proofs, to earn again in him. No learned ear.
+the rest are bench proofs, to earn again in him. No learned ear (11-22:
+ear row VOID; needs-hidden row FAIL twice, closed to stage 3).
 
 **M6 — Words.** The parent voice teaches him; he ties words to his own life,
 says true things about himself, can be advised and is nobody's puppet.
@@ -91,4 +95,5 @@ PASSES (to be registered). · status: not started; the first film is order S6.
 
 **M9 — Beyond the jungle.** More worlds, transfer (`GEN.06`), other minds
 (`GEN.02`, `GEN.03`, `GEN.09`), the told world (`LG.11`).
-needs: M8. · stage: 4. · status: not started.
+needs: M8. · stage: 4. · status (11-22): not started; first prior filed
+(§25): `GEN.06`, `GEN.02`, `GEN.09` need amending when M9 opens.
