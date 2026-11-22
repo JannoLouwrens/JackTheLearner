@@ -1752,10 +1752,11 @@
         "T0.12": 3.25,
         "T0.22": 4.11,
         "T0.26": 239.63,
-        "detached:launch_row6_reacher-easy.log": 56.67,
-        "detached:launch_row6_reacher-hard.log": 538.96
+        "detached:launch_row6_reacher-easy.log": 663.01,
+        "detached:launch_row6_reacher-hard.log": 538.96,
+        "detached:smoke.log": 703.11
       },
-      "used_s": 1028.57
+      "used_s": 2338.02
     }
   },
   "last_child_s": {

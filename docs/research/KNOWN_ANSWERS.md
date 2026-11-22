@@ -604,6 +604,21 @@ SB3 2.9.2, gymnasium 1.4.0, mujoco 3.17.0, jax 0.11.1, Python 3.13.18.
   lib seeds would need a mean of 838.7, above every lib seed seen (max 777.4). Director's call (INBOX). Candidates for the miss, from the
   rule's own list: flax lecun-normal init vs orthogonal √2; log-std clip vs tanh rescale; eval env seed + 10,000. Reacher-easy/-hard home ~22:40.
 
+## Row B-6b — DMC reacher-easy, 150k decisions: **lib REPRODUCES; ours REPRODUCES** at 5 seeds (11-22 01:43 harvest, Kaggle CPU `jack-cpu-1795282752`)
+
+Same rule and pins as B-6a. Kernel 28,760 s; file `/data/jack-logs/brain_b/row6_dmc_reacher-easy.json` (sha256 3b75ccd8…),
+verdict written by the kernel's own `verdict()`. Band (SimBa `results/sac.csv`, k = 5) 929.9–1000.
+
+| arm | seeds 0–4 @150k | mean | reading |
+|---|---|---|---|
+| lib (SBX SAC, SimBa recipe) | 981.4, 866.9, 973.5, 972.4, 974.5 | **953.7** | in band → **lib REPRODUCES** |
+| ours (lib + layer_norm, Brain B) | 983.2, 968.4, 978.7, 879.6, 980.6 | **958.1** | in band → **ours REPRODUCES** |
+| ctrl (never trains, seeds 0–2) | 163.7, 50.2, 77.9 | 97.3 | fails as it must → run valid |
+
+- Reported, not judged: the two low seeds are each ONE zero-ish eval episode of 10 (lib s1 min 0.0, ours s3 min 11.0); every other
+  learner seed 0/10 below 100 (min 937–958). The same eval-episode-zero shape as B-6c, rarer on the easy task.
+- Row 6 now reads 1 of 3 tasks reproduced (6a, 6c lib MISS); the row's REPRODUCE claim stays open on 6a/6c (Director's call, INBOX).
+
 ## Row B-6c — DMC reacher-hard, 150k decisions: **lib MISSES** at 5 seeds (11-22 00:10 harvest, Kaggle CPU `jack-cpu-1795282800`)
 
 Same rule and pins as B-6a. Kernel 23,339 s; file `/data/jack-logs/brain_b/row6_dmc_reacher-hard.json` (sha256 143e269e…),

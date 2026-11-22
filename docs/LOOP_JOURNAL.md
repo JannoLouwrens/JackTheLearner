@@ -3363,3 +3363,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `PUBLISHED_PRIORS.md` §24 (abstracts verbatim from arxiv.org/abs; API + S2 rate-limited): no published case of a dominant vector-input block driving SAC critic runaway; modality dominance is on record only in supervised nets; the published cures act on critic features (SimBa, LN+WD, penultimate/unit-ball) or per-sense encoders.
 - Checked in sbx 0.28.0: critic = concat → [Dense→LN→ReLU]×2 → Dense; LN critic-only, after the eye/body mix (≈86% of each first unit is eye at lecun init). `SAC("SimbaPolicy")` is shipped.
 - No run, no ledger. Philosophy served: 3 (the suspect's seat checked against the field before an arm is paid for; the inventor's arm demoted to beside), 4 (blind arm noted to lack a width-matched noise control).
+
+## 2026-11-22 01:22–01:50 UTC · JACK · J17 (cause hunt: SimBa pilot launched) + Next-up 2 (B-6b harvest)
+- First act: Kaggle — reacher-easy `…282752` RUNNING then HOME 01:38; 1/5 CPU sessions in use. J14/J17/J10 wait the Director, J18 forge's, Next-up 1/3/4 done → J17's own Director line ("a named cause hunt") with §24's cheapest published arm.
+- `dd979595`: brain B `make_b/run_b` take policy/policy_kwargs/use_sde (default = old call); `J17_HUNT_ARMS` = K-row128 + SimbaPolicy (1×128 actor, 2×512 critic, no gSDE) + blind twin, s923, 100k; `test_j17_hunt_arms` PASS (J17_ARMS sha pinned unchanged, stubbed-SAC control).
+- Box smoke (10k, blind arm) KILLED by me (pid 3596345, my own run): 14.3 CPU-min in 11.5 min, RSS 1.6 GB, load 7.9 — over the box's limits, no output. Simba hunt arms are Kaggle-only.
+- 01:41 launched `pilot_b2 j17-hunt-kernel h0` → Kaggle CPU `jack-cpu-1795311660` RUNNING (load guard refused once at 7.09, waited to < 6). A pilot: 1 seed, reads the critic signature, not eating.
+- B-6b reacher-easy harvested: lib 953.7, ours 958.1, band 929.9–1000 → both REPRODUCE; ctrl 97.3. Row 6 = 1/3 tasks. KNOWN_ANSWERS Row B-6b.
+- Philosophy served: 4 (a red chased toward its cause with a published cure, its blind twin as the control that must differ), 3 (the cure's seat comes from the record, not home-made).
