@@ -473,12 +473,38 @@ J17_ARMS = {
                          eye="row128"),
 }
 J17_SEEDS = (921, 922, 923, 924, 925)
+
+# ---- J17 critic hunt (11-22): the cheapest PUBLISHED cure, SimBa ----------
+# PUBLISHED_PRIORS §24: sbx 0.28.0 ships SimBa (Lee et al. 2024, ICLR 2025;
+# SonyResearch/simba) as SAC("SimbaPolicy"): residual LN blocks, AdamW, LN
+# before the head. A SEPARATE dict -- J17_ARMS, PILOT_ARMS and the E2c dicts
+# are untouched (tests/test_j17_hunt_arms.py). Each sighted hunt arm carries
+# its own blind twin (j17_onset box-twin: box runs are another draw).
+# Settings that differ from SimBa's published SAC recipe (stated, not cured):
+#   * use_sde False here -- sbx's Simba actor has no gSDE (get_std() = 0), and
+#     SimBa samples white Gaussian noise; J17's MlpPolicy arms used gSDE.
+#   * sizes: actor 1 block x 128, critic 2 blocks x 512 = SimBa's SAC table;
+#   * obs normaliser: our VecNormalize(clip 10) for SimBa's running-stat norm;
+#   * gamma 0.995 (J8), 1 update a decision, batch 256, ent_coef auto
+#     (ruling 64), learning_starts = WARMUP, his world -- all as J17.
+# A PILOT (1 seed per arm, <= 100k decisions, ruling 33 not engaged): it can
+# show the runaway is or is not still there, not that SimBa eats.
+SIMBA_KW = dict(net_arch=dict(pi=[128], qf=[512, 512]))
+J17_HUNT_ARMS = {
+    "H-simba-row128": dict(PILOT_ARMS["K"], ent_coef="auto", trace=True, eye="row128",
+                           policy="SimbaPolicy", policy_kwargs=SIMBA_KW, use_sde=False),
+    "H-simba-row128-blind": dict(PILOT_ARMS["K"], ent_coef="auto", trace=True,
+                                 eye="row128", blind=True, policy="SimbaPolicy",
+                                 policy_kwargs=SIMBA_KW, use_sde=False),
+}
+J17_HUNT_SEED = 923          # the box twin's seed (j17_onset TWIN_SEED)
+J17_HUNT_T = 100_000         # sighted/blind separate first at 100k (ac684c09)
 J17_T = 300_000
 J17_LATE_FROM = J17_T // 2     # ruling 65: the late half = lives STARTING at decision >= 150,000
 
 
 def arm_cfg(arm: str) -> dict:
-    for d in (PILOT_ARMS, E2C_ARMS, E2C_AUTO_ARMS, J17_ARMS):
+    for d in (PILOT_ARMS, E2C_ARMS, E2C_AUTO_ARMS, J17_ARMS, J17_HUNT_ARMS):
         if arm in d:
             return d[arm]
     raise KeyError(arm)
@@ -523,6 +549,9 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
             kw["trace"] = True
         if "ent_coef" in c:
             kw["ent_coef"] = c["ent_coef"]
+        for k in ("policy", "policy_kwargs", "use_sde"):      # J17_HUNT_ARMS only
+            if k in c:
+                kw[k] = c[k]
         rec = run_b(seed, T, world=world, gamma=c["gamma"],
                     partial_path=partial_path, **kw)
     rec["pilot_arm"] = arm
@@ -726,6 +755,19 @@ def j17_kernel(name: str) -> dict:
     rule = dict(PILOT_RULE, rule="prereg/row128_vs_rays16.md FROZEN ruling 66 (98e22036); "
                                  "S = ent_coef auto; world = " + PILOT_RULE["rule"])
     return pilot_kernel(name, rule, cells=j17_groups()[name], out_name=f"j17_{name}.json")
+
+
+def j17_hunt_kernel(name: str = "h0") -> dict:
+    """J17 critic-hunt PILOT (11-22): J17_HUNT_ARMS (SimBa sighted + its blind
+    twin) on seed J17_HUNT_SEED, J17_HUNT_T decisions, in ONE Kaggle CPU kernel
+    on PILOT_RULE's world -> OUT/j17_hunt_<name>.json. Not a registered row:
+    it reads whether the sighted critic still runs away from its twin by 100k
+    (j17_onset's signature), nothing about eating."""
+    rule = dict(PILOT_RULE, T=J17_HUNT_T,
+                rule="J17 critic hunt PILOT 11-22, SimBa (PUBLISHED_PRIORS §24), "
+                     "1 seed, no verdict; world = " + PILOT_RULE["rule"])
+    cells = [(a, J17_HUNT_SEED) for a in J17_HUNT_ARMS]
+    return pilot_kernel(name, rule, cells=cells, out_name=f"j17_hunt_{name}.json")
 
 
 def e2c_ready() -> list:
@@ -1322,7 +1364,7 @@ def j17_md(res: dict) -> str:
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel", "e2c-table", "e2c-readings", "j17-kernel", "j17-table"])
+    p.add_argument("cmd", choices=["cell", "kernel", "card", "rule-inputs", "pilot-cell", "pilot-kernel", "table", "readings", "e2c-kernel", "e2c-table", "e2c-readings", "j17-kernel", "j17-table", "j17-hunt-kernel"])
     p.add_argument("--arm", default="noop-k1")
     p.add_argument("--seed", type=int, default=601)
     p.add_argument("--lives", type=int, default=CARD_LIVES)
@@ -1354,6 +1396,8 @@ def main(argv):
         e2c_kernel(a.name)
     elif a.cmd == "j17-kernel":
         j17_kernel(a.name)
+    elif a.cmd == "j17-hunt-kernel":
+        j17_hunt_kernel(a.name or "h0")
     elif a.cmd == "j17-table":
         runs, _ = load_pilot(sorted(OUT.glob("j17_r*.json")))
         try:
