@@ -170,6 +170,7 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 state: J10-1: 1M median 4,065 IN BAND, control valid; 2M 1 of 3 → FAIL. s1 collapsed in its LAST segment (α .009→.024, Q rising while return fell); two re-seeded forks both KEPT.
 state: (a) READ 11-21 08:45 (`j10_resume_twin.py`): control bit-identical; twin differs from the resume row — SB3 drops the episode in progress, `train_segment` re-seeds the env. Addendum in `KNOWN_ANSWERS.md`.
 state: 20:35 `d39687f0` carry built, default off: `brain_b.save_life` + `physics.pkl` (MjData + env RNG). Twin RC bit-identical on every item at T=1,000 and 1,010. `b6b2da1d`: `save_life` itself now carries MuJoCo physics (Hopper twin PASS) — `_save_physics` is redundant beside it, left.
+state: 11-22 07:55 `b609b142`: (1)+(2) DONE — `RULE_J10_2` frozen in `humanoid_sac_row.py` before seed 3; `segment_job_body(row="J10-2")` carries + 50-ep eval, `require_carry` refuses a mount lacking life.pkl/physics.pkl (planted PASS, J10-1 text unchanged). Tests 10/10. NOT launched: Kaggle 5/5 at 07:40. NEXT: when ≤ 3 busy, `launch_detached.sh /data/jack-logs/j10/launch_j10_2_s3_seg0.log nice -n 19 $PY -m experiments.humanoid_sac_row kernel2 3` (and s4); ≤ 2 sessions; add the J10-2 row stub to `KNOWN_ANSWERS.md`.
 
 ### J20 — One world: re-read the box's rows about his world on mujoco 3.17.0
 part: His world + Eye · stage: 1 ("proof the task can be learned with his senses") · step: 4 (re-read) · prior: §12; `WORLD_CARD.md` (hand forager d0 / d = 1; the floor card); rulings 51, 76

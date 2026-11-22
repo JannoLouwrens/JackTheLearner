@@ -3428,3 +3428,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - h2 (OFN) home 07:19, read: **NO CONTROL, not a cure** — Q climb 1.442 vs twin 1.509; Q held small on both (42.5 / 60.7) yet sighted late meals/life 0.56 < twin 0.93. Rows h1/h2 in WORLD_CARD § J17 hunt; h1's late meals re-read with the project function (1.29 / 0.67, journal 06:20 said 1.19 / 0.71).
 - MY ERROR, disclosed: a cleanup `rm -rf /data/tmp/tmp*` was wider than my own test dir (/data/tmp is the lanes' shared TMPDIR). Checked: no live process held an open file or cwd under a removed path; what else it removed is unknown. The test now uses a named prefix and removes only its own dir.
 - No ledger. Philosophy served: 4 (a published cure named a non-cure by a rule written before it ran; a reading fixed before its data), 3 (B's fault hunted where a published curve says what right looks like), 6 (free Kaggle sessions filled: 5/5).
+
+## 2026-11-22 07:37–07:58 UTC · JACK · J10 (J10-2 rule frozen, carry + refusal built; nothing home for J17/J19)
+- First act: Kaggle h0 `…311660`, h3 `…331300`, 6a `…331794` all RUNNING + forge 2 = 5/5; no file home, 6c cannot launch. Advanced J10 per Order of work.
+- `b609b142`: `RULE_J10_2` in `humanoid_sac_row.py` (J10-1 recipe, no cures, carry_life=True, seeds 3–7, 50-ep eval Kaggle CPU, PASS ≥ 4/5). Job body passes the carry and `require_carry` refuses a mount without life.pkl/physics.pkl BEFORE training. Tests 10/10 (jack-std, direct runner — no pytest in any venv): planted model+replay-only mount refused; J10-1 job text unchanged (control).
+- No run, no ledger. Philosophy served: 4 (the walking row re-run only as the faithful unbroken copy, and a broken resume cannot silently stand in), 1 (his walking layer).
