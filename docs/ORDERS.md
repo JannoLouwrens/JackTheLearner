@@ -106,6 +106,7 @@ serves: M3 · PLAN "Learning to eat" last 10% · philosophy 1, 3, 4.
 state: 11-21 J17 row DONE (`98e22036` freeze, `59bbdf90` arms, `9b3ea35a` reading): NEITHER EATS; row128 > rays16 (U 22/25) but < blind (U 0/25) → width, not sight. Late meals/life: rays16 .13–.34, row128 .27–.44, blind .70–2.08, never-trains 1.05–2.58.
 state: sizing (`ac684c09`): a hunt arm = ≥ 100k; the box is ANOTHER DRAW from Kaggle (same world bit for bit, learner float maths differ) → every arm carries its own twin on its own machine; ~85 CPU-min per 100k cell on the box.
 state: 11-22 08:10: **3 of 4 read, NONE cures** (rows in `WORLD_CARD.md` § J17 hunt). h1 AdamW STILL RUNS AWAY (1.29/0.67 meals); h2 OFN NO CONTROL (0.56/0.93); **h3 split STILL RUNS AWAY** 1.512 vs twin 1.262, sighted 0.18 meals/life vs twin 4.33. h0 SimBa `jack-cpu-1795311660` STILL RUNNING (6.5 h at 08:08 — Kaggle 12 h cap → home by ~13:40 or dies). NEXT: when h0 home (`/data/jack-logs/pilot_b2/j17_hunt_h0.json`), `j17_onset hunt` + `pilot_b2.j17_late_meals(cell, 50_000)` → row; if not a cure → branch (4); if it cures → CONFIRM on 921/922.
+state: 09:35 idle item 1 DONE: `WORLD_CARD.md` § J17 note — blind = 256 constant zeros through VecNormalize = no live inputs (zero gradient on their weights), so "width, not sight" compared 256 live inputs vs none; content vs live-width is open until J17-2's shuffled arm. h0/6a/6c all RUNNING on Kaggle 09:22.
 
 ### J19 — The library recipe misses published numbers here: find out why, where a published curve says what right looks like
 part: His brain (B) · stage: 1 ("each brain reproduces published numbers") · step: 3 (reproduce) · prior: §1b, §21; `KNOWN_ANSWERS.md` rows B-5, B-6a, B-6b, B-6c + B-6 addendum; rulings 68, 81
@@ -187,7 +188,7 @@ ROADMAP's line changes at the next sitting. (4) `eye_streak.py:173` and
 the eye's own compat, as `59bbdf90` did.
 serves: M3 · auditor finding 3 · philosophy 4 (a box number and a Kaggle number may share a table only in one world).
 **done when:** the 3.17.0 rows stand beside the old ones in `WORLD_CARD.md` and the two callers pass on both versions.
-state: 11-22 08:26 (1) d0.75 RUNNING on the box: `experiments/j20_reread.py` (`5c90a078`; ruler + bar unchanged, resumable) `run 0.75 f4 b4`, 40 cells, 2 workers, log `/data/jack-logs/j20/launch_j20_gate2_d075_f4b4.log`, ~3 h wall (12 ms a decision). g4 (shuffled, must fail) NOT launched: day's detached cap (34,560 s) left 15 k s.
+state: 11-22 08:26 (1) d0.75 RUNNING on the box [09:30: 8/40 cells home after ~1 h → ~5 h wall, not 3; load 4.3, /data 16 G — g4 cannot go beside it]: `experiments/j20_reread.py` (`5c90a078`; ruler + bar unchanged, resumable) `run 0.75 f4 b4`, 40 cells, 2 workers, log `/data/jack-logs/j20/launch_j20_gate2_d075_f4b4.log`, ~3 h wall (12 ms a decision). g4 (shuffled, must fail) NOT launched: day's detached cap (34,560 s) left 15 k s.
 state: (4) DONE `250942db`: both callers via `fast_sim._multi_ray`; `tests/test_j20_ray_callers.py` PASS on 3.2.3 (bit for bit vs old) and 3.17.0 (old FAILS = control).
 state: NEXT: `launch_detached.sh /data/jack-logs/j20/launch_j20_gate2_d075_g4.log /data/venvs/jack-std/bin/python -m experiments.j20_reread run 0.75 g4` (JACK_DETACHED_EST_S≈6000) when the cap admits it; when all 60 cells home `j20_reread score 0.75` → 3.17.0 row beside gate 2's in WORLD_CARD; then d = 1, then (2).
 

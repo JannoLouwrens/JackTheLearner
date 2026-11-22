@@ -3457,3 +3457,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Planted (tests.test_forge_round 24/24): harness edit and reader edit refused before and after commit; a re-hashed lock refused committed or not; control: untouched judge and a non-judge edit pass. r1 has no lock yet — the forge writes it at its reader's commit.
 - Machine did not grow: +132 / −133 (four dead one-shot launchers, a duplicated helper, a dead function). FAIL-UNOWNED = 1 is SO.01 (INBOX), not acted on.
 - Philosophy served: 4 (the keep round's results cannot be scored by a judge edited after the freeze).
+
+## 2026-11-22 09:22–09:40 UTC · JACK · J17 (idle item 1) — what the blind arm was
+- First act: Kaggle h0, 6a, 6c all RUNNING (status 09:22), forge holds 2 → 5/5, J10 cannot launch; J20 f4+b4 at 8/40 cells after ~1 h (→ ~5 h, not 3), load 4.3, /data 16 G → g4 not launched; J14/J21 need Kaggle or a fresh box → ORDERS "next up" item 1.
+- `WORLD_CARD.md` § J17 note: verified in code. BlindEye zeroes all 256 vision numbers; VecNormalize maps a constant 0 to 0; the weights on those inputs get zero gradient, so the blind arm is the no-eye learner in a wider shape. Widths checked live: rays16 32, row128 256.
+- So J17's "width, not sight" compared 256 live unit-variance inputs against none. "Runaway on eye CONTENT" and "runaway on many live inputs" both fit every sighted run. J17-2's shuffled arm separates them. Verdict unchanged.
+- No ledger, no run. Philosophy served: 4 (a control that cannot fail the way the claim needs is named before the next row leans on it).
