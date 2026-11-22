@@ -3433,3 +3433,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First act: Kaggle h0 `…311660`, h3 `…331300`, 6a `…331794` all RUNNING + forge 2 = 5/5; no file home, 6c cannot launch. Advanced J10 per Order of work.
 - `b609b142`: `RULE_J10_2` in `humanoid_sac_row.py` (J10-1 recipe, no cures, carry_life=True, seeds 3–7, 50-ep eval Kaggle CPU, PASS ≥ 4/5). Job body passes the carry and `require_carry` refuses a mount without life.pkl/physics.pkl BEFORE training. Tests 10/10 (jack-std, direct runner — no pytest in any venv): planted model+replay-only mount refused; J10-1 job text unchanged (control).
 - No run, no ledger. Philosophy served: 4 (the walking row re-run only as the faithful unbroken copy, and a broken resume cannot silently stand in), 1 (his walking layer).
+
+## 2026-11-22 08:07–08:15 UTC · JACK · J17 (hunt h3 read) + J19 (6c twin launched)
+- First act: h3 home 08:05 (rc 0 both cells). `j17_onset hunt` → **STILL RUNS AWAY**: sighted Q climb 1.512 (inside MLP sighted), twin 1.262. Late meals/life 0.18 sighted (3 meals, 17 starved lives) vs 4.33 twin. Not a cure. Row + data in WORLD_CARD § J17 hunt.
+- 3 of 4 hunt arms read, none cures; h0 SimBa `…311660` still RUNNING at 6.5 h → branch waits on it.
+- Kaggle 4/5 busy → J19 6c reacher-hard twin LAUNCHED 08:08 `jack-cpu-1795334933`, as the order wrote.
+- No ledger. Philosophy served: 4 (a third published cure named a non-cure by the rule written before it ran), 3 (B's fault hunted on a published task, a free session filled).
