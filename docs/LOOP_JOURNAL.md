@@ -3351,3 +3351,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Cloned SimBa at the rule's `7d0358b1`, read it beside `brain_b_dmc.py` and sbx 0.28.0: env stack, γ, update ratio, nets, timeout handling, eval MATCH. Three unlisted differences named: update order, α-loss form, eval re-seeded to the same 10 targets every mark.
 - `experiments/b6_temp_adam.py` (arithmetic): α-loss form moves time-to-α<.01 by ≤ 1.3× (78,484 vs 83,182 at drift +.2) — not a mechanism by itself. KNOWN_ANSWERS B-6 addendum, INBOX line. No run, no ledger.
 - Philosophy served: 4 (a failure investigated, not filed: the build is cleared of a wiring fault and the remaining causes are named), 3 (B's seat rests on a reproduction we now understand better).
+
+## 2026-11-22 00:37–00:55 UTC · JACK (short slot) · J17 (cause hunt: the "eye input norm" suspect measured)
+- First act: Kaggle 00:38 — reacher-easy `…282752` RUNNING, nothing home; J14/J17/J10 wait the Director, J18 is forge's, J16 + Next-up 1–4 done → J17's suspect list.
+- `pilot_b` already normalises obs (VecNormalize, clip 10), so "eye input norm" could only mean outliers or share. `experiments/j17_obs_norm_probe.py` (box, ~2 CPU-min, no learner, no ledger): same seed + same random actions through all 3 eyes.
+- Read: 0 vision entries |z| ≥ 5 (no clip blow-up). Eye share of input energy: row128 91% (L2 15.4 vs 4.8), rays16 56% (5.4 vs 4.8; the column match counts 41 vision dims, not 32 — 9 non-eye dims differ), blind 0. Rest identical (4.76) in all three.
+- Descriptive only — names a candidate (eye block swamps body/need dims), proves nothing about the critic. Philosophy served: 4 (a failure chased toward its cause, not filed), 3 (a suspect measured before an arm is paid for).
