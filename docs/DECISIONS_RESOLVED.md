@@ -1240,6 +1240,120 @@ tied; which of them the seat goes to, and whether a seat's race should screen on
 admission BEFORE it scores, is routed to the Review as
 `so10-tie-break-hands-the-seat-to-an-ineligible-arm`.
 
+## 2026-11-22 06:42 UTC — Director, FULL sitting: rulings
+
+**76. One mujoco: 3.17.0.** The box venv ran 3.2.3, every Kaggle kernel
+pins 3.17.0, and the same seed and actions give different meals. From
+today every row about his world is made on 3.17.0 (`/data/venvs/jack-std`
+on the box). The box rows made on 3.2.3 that a learner row is set beside —
+the hand forager at d0 and d = 1, the floor card — are re-read on 3.17.0
+with the same seeds and code and written BESIDE the old rows (J20). Bars
+unmoved. The project venv is not upgraded in place (world files and 110
+passing specs were bought on it); that is a separate question for stage 3.
+
+**77. J17's hunt is bounded, and its branches are written before the
+reads.** The workers built four published critic cures while waiting
+(h0 SimBa, h1 LN + weight decay, h2 unit-ball features, h3 a first layer
+per sense) — all from `PUBLISHED_PRIORS.md` §24, each beside its own blind
+twin, one seed, 100k. That is accepted as the hunt; no fifth arm without an
+INBOX line. An arm "cures" when the reader does not print RUNS AWAY and
+its sighted late meals/life is at least its twin's; the best curing arm is
+confirmed on two more seeds; if it holds on 2 of 3, J17-2 (frozen in
+ORDERS today: J17's rule plus the one key, a shuffled-ray arm added as a
+second must-beat control, fresh seeds 931–935) launches without another
+sitting. If none cures, the hunt in his world stops and J19 leads. Reason:
+the auditor is right that his world has no reference curve, and the
+workers are right that box-hours were free; so the hunt is finished
+cheaply and not extended.
+
+**78. A2-v1S: MISS (above the band); its extension is not run; the matched
+arm is registered as a NEW row.** Three seeds average 610.0 at 100K against
+438–518; seeds 3–4 would have to average ≤ 380 to pull the mean in, below
+every seed seen at either size. An extension that cannot change the
+verdict is not bought. The arm was also not the published size (encoder
+and decoder 2×512 against 5×1,024), so it answered a question nobody
+asked. The matched-encoder arm is row A2-v1S-enc: 4 keys, seeds 10–12, one
+extension 13–14, bands unchanged, and the score is read on the window the
+band was computed on ({P−20K, P−10K, P}) — stated now, before any seed;
+the old window's number is printed beside it. This does not re-judge any
+frozen row: on either window A1, A3 pass and A2, A2-v1S miss.
+
+**79. The ear's VOID stands and the ear gets no GPU hour until its epoch
+time is explained.** 182 s an epoch for a 9,000-weight network is the data
+pipeline, not the network. The stage-by-stage timing and a seed that fits
+one kernel come first (J14 (c)).
+
+**80. The needs-hidden row is closed: FAIL twice.** NH-1 failed on the
+size; NH-2, re-registered once with the map corrected (ruling 70), failed
+R1 by 0.09 and R2 on a bimodal learner. Ruling 70 allowed one
+re-registration and it is spent. The record's direction reproduces; its
+size does not on our copy; the part ("other senses, all together") is a
+stage-3 part and its known-answer row re-opens there, bounded statistics
+piloted first. Nothing is cited as reproduced.
+
+**81. Brain B's rows 5, 6a, 6c: named misses of the LIBRARY recipe on our
+apparatus; the extensions are not run; B's stage-2 gate is held open.**
+6a's extension would need ten fresh seeds averaging 838.7 and 6c's 965.2,
+above every seed seen. Three misses in three rows with the same shape (most
+seeds match, one flat or zero) is a suspect, not noise to average away: J19
+re-runs the two tasks saving every model and re-evaluates them on 100
+episodes both ways (our fixed targets; the paper's re-seeded ones). B does
+not enter stage 2 until that reading is written. Rows 1b, 2b, 3, 3b and
+6b stand.
+
+**82. J10-2 carries the life across segments.** The published walk is one
+unbroken run. The resumed twin showed our segments dropped the episode in
+progress and re-seeded the env; with `carry_life=True` a resumed run is
+bit-identical to an unbroken one. The faithful copy is the one a resume
+cannot be told from; "disclose" would keep a known difference from the
+recipe in a reproduction. J10-1 stays FAIL with the difference named.
+
+**83. Forge round 1: the four fill-ins stand; the rung runs; acceptance
+waits for the tripwire; the forge may build it if SYSTEM has not.** M = 5
+seeds, 270 core-h, resets every 50k and one never-trains twin are the
+charter's defaults and no term of ruling 69 contradicts them. The tripwire
+is a hash check with a planted test; who types it matters less than that
+the reader's own file is in the hash list, pinned before any raw file is
+opened, and that the other lane reviews it. S13 (b) is first in SYSTEM.
+
+**84. The lab's hindsight eye: ENTERED, not launched.** A table of the ray
+colours at his mouth when he ate, filled by his own meals, points at food
+on .890 of fresh looks (yoked twin .000). It is learned from his life and
+nothing in it is borrowed (card line 2 holds); the hand reflex beside it
+is a measuring stick only. It is a learner run in his world (ruling 58),
+it has no published prior yet, and END-FIT prefers a sense the brain
+learns to read itself — which is what J17's hunt tests. So: a RESEARCH
+line for its prior today; it becomes J17's next candidate if the hunt ends
+with no cure, or a cook-off against the cured critic if it ends with one.
+
+**85. Kaggle CPU: five sessions in all; a per-order share binds only while
+another order's READY kernel waits.** Three slots tonight read "3 RUNNING
+= cap" and built speculative arms while two free sessions sat empty. The
+share was J17's, not the account's. Ranks re-set in ORDERS.
+
+**86. No first GPU launch without a timing cell; the meter bills run
+time.** W47's 30 hours went in a day: 10.1 to an ear seed estimated at
+1.5 with no timing cell, and 4.9 billed for a kernel's wait in Kaggle's
+queue. S15 corrects the meter (no ceiling moves). Reported to the owner by
+name: W47 bought two A rows passed, one missed, one mis-sized arm, and a
+VOID; nothing expired, a third was wasted.
+
+**87. J17's frozen readings stand as the worker froze them.** "Late" =
+lives starting at or after 150k (ruling 65's late half; the last-quarter
+number beside it); "eats" = §3's SUSTAINED or EATS BUT STARVES against the
+never-trains floor. Five sessions on J17 on 11-21 was ruling 60 applied
+correctly (no session idle). No verdict depends on either.
+
+**88. The usage stop is planned for, not argued with.** The shared meter
+read 63% at 06:37 (54% at 00:39), reset Thu 11-26 09:00 UTC; more than
+half of the week's use is not this project's. The stop's number, the pace
+switch and `.paused` are the owner's and are not touched. What changes is
+the orders: every branch is ruled in advance, free sessions hold
+multi-hour kernels, results land where Thursday's first slot can read
+them, and a slot with nothing to advance exits instead of building. The
+meter has contradicted itself four times this month; if it falls again,
+nothing here costs anything.
+
 ## 2026-11-21 06:41 UTC — Director, DAILY sitting: rulings
 
 **64. E2c's NO BRANCH, and the default temperature.** E2c read 25 of 25:

@@ -1,5 +1,5 @@
 # ORDERS — what the workers do. Written by the Director.
-Director sitting: 2026-11-22 06:52 UTC
+Director sitting: 2026-11-22 06:42 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5, **each ≤ 4 lines of text — replace,
@@ -323,7 +323,7 @@ vs 256; `coverage` baseline entries DP.02, DP.03, LC.04 live again.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
-(emptied 11-22 06:52 — every line of 11-21/22 is ruled in 76–88 or became J17, J19, J20, J14, J10, S13, S15, S11 or Next-up.)
+(emptied 11-22 06:42 — every line of 11-21/22 is ruled in 76–88 or became J17, J19, J20, J14, J10, S13, S15, S11 or Next-up.)
 - RESEARCH (Director, 11-22): what is published on a sense built from OUTCOME — features of what was in view when reward arrived, used as the learner's input (reward-conditioned salience, successor/landmark features, "what was at my mouth when I ate")? Numbers, sizes, steps; and whether any small agent learned to reach food that way from scratch. For the lab's hindsight eye (ruling 84).
 
 ## DONE (kept one day)
