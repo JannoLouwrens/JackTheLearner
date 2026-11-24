@@ -78,8 +78,8 @@ if __name__ == "__main__":
         launch()
     elif sys.argv[1:] == ["read"]:
         print(json.dumps(read(json.loads(OUT.read_text())), indent=1))
-    elif sys.argv[1:] != ["pilot"]:
-        print("usage: python -m experiments.j22_gpu launch|read|pilot")
+    elif sys.argv[1:] not in (["pilot"], ["read-pilot"]):
+        print("usage: python -m experiments.j22_gpu launch|read|pilot|read-pilot")
 
 
 # ---- J22 (3) the pilot itself (11-24 14:30, after the timing read: cuda single
@@ -120,3 +120,30 @@ def launch_pilot() -> dict:
 
 if __name__ == "__main__" and sys.argv[1:] == ["pilot"]:
     launch_pilot()
+
+
+def read_pilot(path: Path = PILOT_OUT) -> dict:
+    """ORDERS J22 (4), written before the pilot is home (11-24 14:30). CURES iff
+    the hunt reader does not print RUNS AWAY for sighted-vs-blind (`j17_onset.hunt`,
+    the h4 pair) AND sighted late meals/life (`j17_late_meals(rec, 50_000)`) >=
+    BOTH twins'. A missing/errored/short cell -> VOID, never a branch."""
+    from experiments.j17_onset import hunt
+    from experiments.pilot_b2 import j17_late_meals
+    if not path.exists():
+        return {"verdict": f"VOID ({path} not home)"}
+    h = hunt(path, arms=ARMS[:2])
+    hs = hunt(path, arms=(ARMS[0], ARMS[2]))          # beside: sighted vs shuffled
+    recs = {k.rsplit("_s", 1)[0]: c for k, c in json.loads(path.read_text())["cells"].items()}
+    if h["verdict"].startswith("VOID") or hs["verdict"].startswith("VOID") or any(
+            a not in recs or recs[a].get("cut") for a in ARMS):
+        return {"verdict": "VOID", "hunt": h, "hunt_shuffled": hs}
+    meals = {a: j17_late_meals(recs[a], 50_000) for a in ARMS}
+    runs_away = "RUNS AWAY" in h["verdict"]
+    cures = (not runs_away) and all(meals[ARMS[0]] >= meals[a] for a in ARMS[1:])
+    return {"hunt": h, "hunt_shuffled": hs, "late_meals_per_life": meals,
+            "branch": "CURES -> CONFIRM on 921, 922" if cures else
+                      "NO CURE -> one row, one INBOX line, B closed on the wide eye (stage 1)"}
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["read-pilot"]:
+    print(json.dumps(read_pilot(), indent=1, default=str))

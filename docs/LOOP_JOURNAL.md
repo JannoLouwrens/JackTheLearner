@@ -3524,3 +3524,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - (2) box half: 6.14 learning dec/s by wall but ~0.7 per CPU-s. That read is not clean: compile time sits inside a subtraction across runs, and it ran world frames. GPU half `24d22fd1` was submitted to Colab T4 at 13:41; its read is pre-written.
 - Seen in passing: both J10-2 seg0 kernels (s3, s4) logged ok results at ~3.5 h each in gpu_submissions.jsonl. That is J10's next worker's to harvest.
 - No ledger. Philosophy served: 3 (the record's image recipe gets its seat with a width-matched control J17 never had), 4 (a ruler disagreement is written down, not used to reopen a branch), 6 (free T4).
+
+## 2026-11-24 14:20–14:40 UTC · JACK · J22 ((2) read, (3) pilot launched on Colab T4)
+- (2) Colab timing home: h4 single 54.3 learning dec/s; three cells at once 12.5/s → 100k ≈ 2.15 h ≤ 8 h → T4 is the venue (read as pre-written).
+- (3) `df11a192`: `j22_gpu pilot` = h4 sighted / blind twin / shuffled twin, s923, 100k, PILOT_RULE world, one machine, pinned jax trio. Launched detached 14:23 on Colab, home ≈ 16:40.
+- (4) read pre-written before the pilot is home: `j22_gpu read-pilot` (hunt reader sighted-vs-blind, beside it sighted-vs-shuffled, late meals/life from 50k; CURES clause as ruled). Smoke on h0's GPU file reproduces h0's STILL RUNS AWAY.
+- No ledger. Philosophy served: 3 (the record's own image recipe raced against both twins), 4 (the read is fixed before any number exists), 6 (free T4).
