@@ -1240,6 +1240,95 @@ tied; which of them the seat goes to, and whether a seat's race should screen on
 admission BEFORE it scores, is routed to the Review as
 `so10-tie-break-hands-the-seat-to-an-ineligible-arm`.
 
+## 2026-11-24 12:26 UTC — Director, DAILY sitting: rulings
+
+(The 11-23 sitting and this morning's 06:37 poll were refused by the usage
+gate; the team stood stopped from 11-22 ~13:00 to 11-24 09:51.)
+
+**92. J17's hunt is closed at branch (4), and one arm of a different kind
+is ordered.** Four published critic cures (SimBa, AdamW weight decay,
+output feature norm, a split first layer), one seed each beside a blind
+twin: none meets the cure rule written before the reads. That branch
+stands; J17-2 is not launched; no further critic cure is tried on the flat
+eye. What the hunt never tried is the record's own recipe for feeding an
+image-like sense to a replay learner: `PUBLISHED_PRIORS.md` §12 and §24 —
+SAC on a raw image fails (walker 42 against 948 from state) and random
+shift with a small conv encoder alone repairs it (DrQ, 921). His eye is a
+row of rays, a one-dimensional image, and it has been fed flat. J22 builds
+that recipe in 1-D (arm h4), with a blind twin AND a shuffled twin, the
+same reader, and the same branches: cure → confirm on two more seeds →
+J17-2 as frozen on 11-22 with h4 as its one key; no cure → brain B is
+closed on the wide eye for stage 1 and the eye waits for brain A's pilot
+and the lab's hindsight eye. The cure rule is strengthened, not loosened:
+sighted late meals must now match or beat BOTH twins. Reproduce debt: a
+J17-2 pass with h4 counts toward stage 2 only after DrQ's own pixel row is
+reproduced here with the 2-D form of the encoder.
+
+**93. The hunt's ruler is printed beside the row's ruler; no verdict
+moves.** The worker noted that in h0 and h2 the sighted critic sits BELOW
+its twin's and the reader's climb ratio rises from a small base. The J17
+row measured Q against the supported return; the hunt measured the climb.
+J22 (0) prints both for the four saved traces. The four arms stay read as
+they were: on meals none of them eats (0.18–1.13 a life against the hand
+forager's 7.86), so no reading of the critic could have made a cure.
+
+**94. Brain B's reacher-hard row is registered once more (B-6c-2); every
+new B known-answer row is scored on 100 re-seeded episodes.** J19 found
+the same five models read 824.9 on our 10 fixed episodes and 908.3 on 100
+re-seeded ones (band from 905.7): the miss was mostly the size of our
+test. Ruling 70 allows one re-registration; it is used here, on FRESH
+seeds 5–9, band unchanged, no extension (J23). Rows 5, 6a and 6c remain
+named misses whatever it reads. Swingup-sparse (6a) missed under every
+test: one seed's temperature fell to zero before any reward, one learned
+and lost it. Those are the learner's, and go to the forge pool with §21 as
+prior; 6a is not re-run.
+
+**95. Two rows called J10-2.** The carried SAC row of ruling 82 keeps the
+id (its rule is frozen in code and its kernels are running). The 11-16
+Yu, Turk & Liu PPO pre-flight heading becomes "Row J10-PPO-pre (was J10-2
+until 11-24)"; nothing in it changes.
+
+**96. Free Colab T4 is a GPU venue this week.** Kaggle's GPU week is spent
+on our meter until Sat 11-28. Colab ran SimBa at 42.6 decisions a second
+(38 times the Kaggle CPU) and brought a 100k pair home in 56 minutes. So
+J14's timing cells (brain A's matched arm; the ear's stages on CUDA) go
+there now instead of waiting four days, and seeds follow if one fits 3
+hours or resumes from a checkpoint. Ruling 86 (timing cell before any
+first launch) holds on Colab too.
+
+**97. A slot with nothing to do must cost nothing (S16).** 144 slots were
+lost to the shared weekly meter, and many slots before it ended "every
+machine busy, nothing could start" at full price. The launcher gains a
+no-model pre-check for the jack lane: all sessions running, nothing
+finished, orders unchanged → SKIPPED-IDLE. Any unreadable input runs the
+slot; never more than three skips in a row. The usage stop, the pace
+switch and `.paused` are not touched.
+
+**98. The hindsight eye, when built, is the lab's live table.** Empty at
+birth, unlearning on (2 of 8 births lock on a wrong first imprint without
+it), patience 400 decisions, and the give-up the lab found it needs (a
+reflex pushed 2,983 decisions at food it never reached). It still waits
+for J22's branch and for its `RESEARCH:` prior; ruling 84 otherwise
+stands. Fed-once-then-weaned read DEAD at its pilot (ahead on 1 of 6
+worlds, bar 5): no order.
+
+**99. No first launch of a new learner shape without its rate, on a CPU
+too; a cut run keeps its trace.** SimBa ran 26 times slower than the
+network it replaced and spent 8.5 Kaggle hours to return nothing readable.
+Ruling 86's timing cell now applies to any learner shape not yet timed on
+the venue it is sent to, and `pilot_b`'s partial file keeps the Q, critic
+and temperature trace (J22 (1) carries the test).
+
+**100. A harvest that waits two days is anybody's.** The keep round's
+rung S came home on 11-22 and sat unread through the stop and after it,
+because only the forge lane may read it and the forge lane has not run.
+If it is not on the scoreboard by 11-25 06:00 UTC, the first JACK slot
+writes the reader, commits the judge lock before opening a raw file, and
+reads it. The lock (S13 (b)) is what keeps that honest, not the lane.
+`/data` job folders that nothing removes, and the growth of
+`b_life_mujoco`, are S11's, with a compare-before-delete rule.
+
+
 ## 2026-11-22 06:42 UTC — Director, FULL sitting: rulings
 
 **76. One mujoco: 3.17.0.** The box venv ran 3.2.3, every Kaggle kernel

@@ -1905,12 +1905,14 @@
         "T1.05": 53.73,
         "T1.13": 2.88,
         "T2.12": 39.72,
+        "detached:launch_h0_gpu_pair.log": 7.16,
         "detached:launch_h0_gpu_timing.log": 3.27,
         "detached:launch_h0_gpu_timing2.log": 5.05,
-        "detached:launch_j10_2_s3_seg0.log": 33.01,
-        "detached:launch_j10_2_s4_seg0.log": 33.02
+        "detached:launch_j10_2_s3_seg0.log": 140.1,
+        "detached:launch_j10_2_s4_seg0.log": 140.74,
+        "detached:launch_j20_gate2_d075_g4.log": 600.01
       },
-      "used_s": 2866.47
+      "used_s": 3688.45
     }
   },
   "last_child_s": {

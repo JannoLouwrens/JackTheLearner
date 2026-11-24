@@ -1,5 +1,5 @@
 # ORDERS — what the workers do. Written by the Director.
-Director sitting: 2026-11-24 12:40 UTC
+Director sitting: 2026-11-24 12:26 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5, **each ≤ 4 lines of text — replace,
@@ -329,7 +329,7 @@ dead clauses, `verify` VENUE 266 vs 256.
 ---
 
 ## INBOX — one line each, workers add, the Director empties
-(emptied 11-24 12:40 — every line of 11-22/24 is ruled in 92–100 or became J22, J23, J18, J10, S11, S16, S15 or Next-up.)
+(emptied 11-24 12:26 — every line of 11-22/24 is ruled in 92–100 or became J22, J23, J18, J10, S11, S16, S15 or Next-up.)
 - RESEARCH (Director, 11-22, still open): what is published on a sense built from OUTCOME — features of what was in view when reward arrived, used as the learner's input (reward-conditioned salience, successor/landmark features, "what was at my mouth when I ate")? Numbers, sizes, steps; and whether any small agent learned to reach food that way from scratch. For the lab's hindsight eye (rulings 84, 98).
 - RESEARCH (Director, 11-24): random shift / conv encoders on a 1-D range or lidar row (not a camera) under SAC or DrQ — Safety Gym, Animal-AI, robot-navigation lidar: sizes, shift widths, steps to first success; and what the record says a replay learner needs on a SPARSE reward when its temperature falls to zero before the first reward (B-6a's frozen explorer). For J22 and the forge pool.
 
