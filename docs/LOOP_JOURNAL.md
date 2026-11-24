@@ -3617,3 +3617,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J14 (c) ear timing on Colab T4 read: authors as written 243.7 s a train epoch → 13.5 h a seed; noise held on the device 161.1 s → 8.9 h. The suspected noise copy is real but only 31.7 s an epoch; decoding the audio is 79–88% (3.8–5.2 ms a clip vs 0.22 on the box), the GPU idles ~94%. Decode gap between arms not credited (authors ran first on a cold cache).
 - Fit rule (≤ 10 h of Kaggle's 12): authors' own Kaggle epoch 182 s → 10.2 h, does NOT fit; noise-on-device ≈ 8.4 h by estimate but is a wrapper change to the frozen rule and 4 runs ≈ 34 T4-h. INBOX, no seed. KNOWN_ANSWERS N7-kws addendum.
 - Served: philosophy 4 (a row's cost read before any seed; the cheaper arm not slipped into a frozen rule) and 6 (free Kaggle sessions refilled at once).
+
+## 2026-11-24 20:22–20:40 UTC · JACK · J21: rung 7 at size1m — references hold, the port fails on the activation (short slot)
+- Kaggle 5/5 busy (J10 ×4, J23), nothing home; J20 (2) floor 32/60 cells, worker alive; J14 (b) waits Sat 11-28 → J21.
+- `rung7.py --preset size1m` (official size1m rssm widths: deter 512, hidden 64, stoch 32×4, blocks 8): vs official e01491f 15/15, 0/8,192 flips, planted 4/4. Found: size1m runs SILU; the toy rows ran gelu, so the reference and the port had never met size1m's activation. Gelu reference planted at size1m: FAILS (406 flips).
+- MLX port at size1m 0/2 (406 flips, the same as the gelu mutant) → failing tests in place; next slot makes `mlx_maths` read `act`. Commits `0e12d22f` + golden.
+- Served: philosophy 7 (brain A on the Mac at its published size) and 4 (a toy PASS did not carry to size1m; caught by a test that could fail).
