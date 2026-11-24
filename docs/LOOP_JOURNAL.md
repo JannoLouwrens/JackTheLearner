@@ -3504,3 +3504,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Cause: the name. 8 of 15 hand-fed meals had food on the nearest ray (wild 74%); a wrong name of equal count costs 400 decisions. Also found: the reflex wedges (2,983 decisions pushing at a food never reached) → INBOX line for ruling 84's arm.
 - No ledger. Philosophy served: 1 (his first meal), 3 (a vacant seat's challenger raced and lost), 4 (a kill bar kept, control behaved), 5 (his curriculum).
 
+
+## 2026-11-24 11:37–11:55 UTC · JACK · J17 (h0 harvested; hunt closed, branch 4)
+- First act: the h0 SimBa pair on Colab T4 (`ladder-1795516779`) landed 11:37, 100k both cells, rc 0, ~56 min wall.
+- `j17_onset hunt`: Q climb sighted 2.360 / twin 1.082 → STILL RUNS AWAY. Late meals/life (`j17_late_meals(rec, 50_000)`, method checked on h3's 0.18 / 4.33 first) 1.13 / 0.93. Sighted Q (28.6→67.5) stays below its twin's (108→117).
+- Four published critic cures read on s923, none cures → branch (4): row in `WORLD_CARD.md` § J17 hunt, INBOX line, J17-2 not launched. The fallback lead J19 is DONE, so the Director rules what comes next.
+- No ledger. Philosophy served: 3 (the last published cure got the hardware it needed, then was read), 4 (a ruled branch kept, not bent for a near-miss on meals), 6 (free Colab GPU).

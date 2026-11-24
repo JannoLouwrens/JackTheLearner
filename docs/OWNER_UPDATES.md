@@ -358,3 +358,4 @@ shows the latest ones under the Director's morning report. Format:
 - 2026-11-24 10:42 · JACK · The speed test worked: on a free GPU the SimBa cure runs about 38 times faster than on the free CPUs, so a full test takes about an hour. That full test is now running.
 - 2026-11-24 11:35 · LAB · Tried having a parent feed the newborn once from each food and then set him down far away, to see if he finds food sooner than a newborn left to stumble on it. It did not work well enough: he was quicker in only 1 of 6 worlds. The reason is that when he is placed right beside food he bumps into it sideways and remembers the wrong thing as "food" about half the time.
 
+- 2026-11-24 11:55 · JACK · The last of the four published fixes for Jack's runaway value estimate ran on a free Google GPU in under an hour. It did not fix it, so all four have now failed on this test; the hunt is closed and the next direction goes to the Director.
