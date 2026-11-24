@@ -78,5 +78,45 @@ if __name__ == "__main__":
         launch()
     elif sys.argv[1:] == ["read"]:
         print(json.dumps(read(json.loads(OUT.read_text())), indent=1))
-    else:
-        print("usage: python -m experiments.j22_gpu launch|read")
+    elif sys.argv[1:] != ["pilot"]:
+        print("usage: python -m experiments.j22_gpu launch|read|pilot")
+
+
+# ---- J22 (3) the pilot itself (11-24 14:30, after the timing read: cuda single
+# 54.3 learning dec/s, trio 12.5/s -> 100k ~ 2.15 h, fits 8 h -> T4 is the venue).
+# Three cells on ONE machine, seed 923 (J17_HUNT_SEED), T = J17_HUNT_T (100k),
+# PILOT_RULE's world: h4 sighted / blind twin / shuffled twin. Same job shape as
+# j17_h0_gpu.pair_body (pinned jax trio, cuda, no XLA preallocation). Read by
+# `j17_onset hunt` + `j17_late_meals(rec, 50_000)`; branch (4) is ruled in ORDERS.
+PILOT_OUT = Path("/data/jack-logs/j22/j22_pilot_h4.json")
+
+
+def pilot_body() -> str:
+    from experiments.pilot_b2 import J17_HUNT_SEED, J17_HUNT_T, PILOT_RULE, pilot_job_body
+    cells = [(a, J17_HUNT_SEED) for a in ARMS]
+    rule = ("J22 h4 PILOT on GPU 11-24: conv eye + random shift (PUBLISHED_PRIORS "
+            "§12/§24, DrQ), sighted/blind/shuffled, 1 seed, no verdict; world = "
+            + PILOT_RULE["rule"])
+    body = pilot_job_body(cells, PILOT_RULE["food_floor_only"], J17_HUNT_T, rule,
+                          PILOT_RULE["eye_frame"], PILOT_RULE["motor_frame"],
+                          PILOT_RULE["native_substep"])
+    first = body.index("\n", body.index("check=True)")) + 1   # after the pins install
+    return G._GPU_ENV + body[:first] + G._TRIO + body[first:]
+
+
+def launch_pilot() -> dict:
+    from experiments.gpu import build_job, result_json, submit
+    sub = submit(build_job(pilot_body()), prefer="colab", est_hours=2.5,
+                 timeout_s=int(3.9 * 3600), fetch=["pilot_b2_cells.json"])
+    if not (sub.ok and "pilot_b2_cells.json" in sub.artifacts):
+        raise RuntimeError(f"j22 h4 GPU pilot: {sub.message}")
+    r = result_json(sub, "pilot_b2_cells.json")
+    PILOT_OUT.parent.mkdir(parents=True, exist_ok=True)
+    PILOT_OUT.write_text(json.dumps(r, indent=1) + "\n")
+    for k, rec in r["cells"].items():
+        print(f"{k}: {len(rec['lives'])} lives" + (" (cut)" if rec.get("cut") else ""), flush=True)
+    return r
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["pilot"]:
+    launch_pilot()
