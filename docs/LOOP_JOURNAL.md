@@ -3556,3 +3556,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J17 ruler disagrees as on h0: sighted Q÷SUP 0.50, lowest of three (0.56 / 0.60); Q(50k) small base 112 vs 191/187. Not running away on content — but a scrambled eye fed more than a seeing one.
 - Branch taken as ruled: WORLD_CARD § J17 hunt row + paragraph, file committed as `world_card_data/j17/j17_hunt_h4.json`, one INBOX line; B closed on the wide eye for stage 1, no h5.
 - Served: philosophy 4 (a published cure given a test that could fail, with the control that must fail — it failed honestly) and 3 (the DrQ recipe lost its seat race on this eye).
+
+## 2026-11-24 16:22–16:35 UTC · JACK · J20 (1) d = 1 + J10 refill (short slot)
+- J22 DONE → next order J20. d = 1 f4+b4 on mujoco 3.17.0 home 16:02: **f4 5/20 → FAILS** (3.2.3: 3/20); 4.18 vs 3.92 meals/life, seed-paired 11/9 p 0.37; b4 0.41. Row in WORLD_CARD `7e296cac`; g4 control launched on box 16:23.
+- Kaggle had 2 sessions busy, both COMPLETE: J10-2 seg0 for s3, s4 home (500k, ~3.4 h, not 10.5). Launched seg1 s3/s4 and seg0 s5/s6 → 4 busy, one left for J18/J23.
+- Served: philosophy 4 (the harder rung's miss read again on the one world, control still owed before the row is final) and 6 (free compute put back to work).

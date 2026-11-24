@@ -155,8 +155,8 @@ serves: M3 · auditor finding 3 · philosophy 4.
 state: 11-24 12:09 (1) d0.75 f4+b4 READ on 3.17.0 (box): **f4 19/20 → PASSES** (7.86 vs 3.2.3's 7.53; only s277 misses, 4.70), b4 0.42; seed-paired vs 3.2.3 Wilcoxon f4 p 0.56, b4 p 0.79. Row beside gate 2's in WORLD_CARD (raw `j20_gate2_d075_mj317.json`).
 state: 11-24 14:40 g4 d0.75 READ: **0/20 → fails as it must; d0.75 row FINAL** (3.06 meals/life; f4 > own g4 seed 20/20). g4 eats more on 3.17.0 than 3.2.3 (2.17; paired 15/5, p 0.014) — margin 5.36 → 4.80, said in WORLD_CARD.
 state: (4) DONE `250942db`: both callers via `fast_sim._multi_ray`; test PASS on both versions.
-state: d = 1 f4+b4 RUNNING on box since 14:37 (`launch_j20_gate2_d100_f4b4.log`, 40 cells, 2 workers, ~2 h).
-state: NEXT: when 40 cells home, `j20_reread score 1.0` → row beside J12 (2′) (3.2.3 f4 3/20 FAILS); then `run 1.0 g4`; then (2) floor rows.
+state: 11-24 16:25 d = 1 f4+b4 READ `7e296cac`: **f4 5/20 → FAILS** (needs 18; 3.2.3 read 3/20), 4.18 meals/life vs 3.92, seed-paired 11/9 p 0.37; b4 0.41. Row beside J12 (2′) d = 1 in WORLD_CARD (raw `j20_gate2_d100_mj317.json`).
+state: g4 d = 1 RUNNING on box since 16:23 (`launch_j20_gate2_d100_g4.log`, 20 cells, ~1.5 h). NEXT: when home, g4 into the raw file + table (must fail), then (2) floor rows.
 
 ### J10 — The walking layer: the row again with enough seeds, life carried across segments
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §21; rulings 45, 72, 82, 95
@@ -173,7 +173,7 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 **done when:** J10-2 is in `KNOWN_ANSWERS.md`, pass or fail, by its frozen rule.
 state: J10-1: 1M median 4,065 IN BAND, control valid; 2M 1 of 3 → FAIL.
 state: 11-22 07:55 `b609b142`: rule frozen before seed 3; `segment_job_body(row="J10-2")` carries + 50-ep eval, `require_carry` refuses a mount lacking life.pkl/physics.pkl (planted PASS). Tests 10/10.
-state: 11-24 10:09 **seg0 LAUNCHED for s3 (`jack-cpu-1795514966`) and s4 (`jack-cpu-1795514981`)**, Kaggle CPU, watchers detached (logs `/data/jack-logs/j10/launch_j10_2_s{3,4}_seg0.log`; records → J10_2_OUT `s<k>_seg0.json`). ~10.5 h a segment. NEXT: when a seg0 record lands, `kernel2 <s> 1`.
+state: 11-24 16:25 seg0 HOME for s3, s4 (500k each, ~3.4 h of 12 h, not 10.5). **seg1 LAUNCHED** s3 `jack-cpu-1795537481`, s4 `jack-cpu-1795537544`; **seg0 LAUNCHED** s5 `jack-cpu-1795537612`, s6 `jack-cpu-1795537677` (4 sessions busy; s7 when ≤ 3). Logs `/data/jack-logs/j10/launch_j10_2_s<k>_seg<n>.log`. NEXT: when a record lands, `kernel2 <s> <next>`.
 
 ### J14 — Brain A and the ear: Colab is open, so the timing cells go now
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `docs/research/prereg/a2_size_s.md`; `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws; rulings 67, 78, 79, 86, 96
