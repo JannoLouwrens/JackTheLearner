@@ -3490,3 +3490,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J19 (2) read, B-6 addendum 11-24: 6c reacher-hard @150k kernel-10 824.9 / fixed-100 886.1 / stream-100 908.3 → reading 1 OUR EVAL by 2.6 pts (bootstrap 888–927) — mostly the eval's size (s4 5/10 zeros → 22–26/100). 6a 541.1 under all three evals → reading 2 (s3 frozen explorer) + reading 3 (s1 772.2 → 407.7). Rows stay named misses; order DONE `7ab52e6c`.
 - J10-2 seg0 launched on Kaggle CPU for s3 (`…514966`) and s4 (`…514981`); 3 sessions left for forge/J17.
 - Philosophy served: 3, 4 (the borrowed learner's miss is located — partly our ruler, partly the learner — not filed); 1 (his walking layer runs again).
+
+## 2026-11-24 10:22–10:45 UTC · JACK · J17 (h0 SimBa GPU timing cell)
+- First act: J17 leads; its h0 waits on a GPU. Built `experiments/j17_h0_gpu.py` (`87e35611`): sighted h0 arm, s923, 5k warmup + 5k learning on cuda, then the sighted+blind pair at once; read pre-written (launch the pair only if 100k fits 8 h). Box smoke 300 decisions OK.
+- Kaggle GPU is shut: meter week W47 at 33.1 h > 30, resets Sat 11-28 (not Mon, as J17's state said → INBOX). Submit fell back to free Colab T4.
+- Try 1 (90 s): Colab's preinstalled flax breaks on JAX 0.11 at actor.init. Pinned the box trio (jax 0.11.2, flax 0.12.12, optax 0.2.9); try 2 RUNNING on Colab T4 since 10:28, past imports.
+- No ledger. Philosophy served: 3 (the last published critic cure gets a machine that can run it before the hunt is closed), 6 (free compute only).
