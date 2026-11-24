@@ -164,6 +164,36 @@ def test_twin_reads_only():
         shutil.rmtree(d, ignore_errors=True)
 
 
+
+
+def test_b6c2_cells_job_and_score_planted():
+    """Row B-6c-2 (J23, rule 07df7d63): lib on FRESH seeds 5-9 + ctrl 0-2, reacher-hard, 150k,
+    every cell saves its models; the verdict reads stream-100 at 150k, band unchanged."""
+    c = D.b6c2_cells()
+    assert c == ([("lib", "reacher-hard", s, 150_000) for s in (5, 6, 7, 8, 9)]
+                 + [("ctrl", "reacher-hard", s, 150_000) for s in (0, 1, 2)])
+    b = D.b6c2_job_body()
+    compile(b, "job", "exec")
+    assert "save=True" in b and "'ours'" not in b and "if False else None" in b
+    m = D.b6c2_models()
+    assert len(m) == 8 * 6 and "twin_ctrl_reacher-hard_s2_150000.msgpack" in m
+    lo, _ = D.band(*D.ROWS["6"]["reacher-hard"])
+
+    def res(lib, ctrl):
+        seeds = {}
+        for arm, xs, ss in (("lib", lib, (5, 6, 7, 8, 9)), ("ctrl", ctrl, (0, 1, 2))):
+            for s, x in zip(ss, xs):
+                seeds[f"{arm}_s{s}"] = {"marks": {"150000": {"stream_mean": x, "fixed_mean": 0.0}}}
+        return seeds
+    assert D.b6c2_verdict(res([910] * 5, [1, 2, 3]))["verdict"] == "lib REPRODUCES"
+    assert D.b6c2_verdict(res([900] * 5, [1, 2, 3]))["verdict"] == "lib MISSES (named, final)"
+    assert D.b6c2_verdict(res([990] * 5, [1, 2, lo]))["verdict"] == "VOID"       # a control that does not fail
+    assert D.b6c2_verdict(res([990] * 4, [1, 2, 3]))["verdict"] == "INCOMPLETE"
+    # the fixed reading is printed beside, never read: a fixed miss does not move a stream pass
+    r = res([910] * 5, [1, 2, 3]); r["lib_s5"]["marks"]["150000"]["fixed_mean"] = 0.0
+    assert D.b6c2_verdict(r)["verdict"] == "lib REPRODUCES"
+
+
 if __name__ == "__main__":
     n = 0
     for k, v in list(globals().items()):

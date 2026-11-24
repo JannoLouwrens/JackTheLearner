@@ -501,7 +501,7 @@ def _episodes(model, env, n: int, reset_seed=None) -> list:
 
 
 def reeval_seed(task: str, seed: int, home, marks=None, episodes: int = REEVAL_EPISODES,
-                kernel_cell: dict | None = None) -> dict:
+                kernel_cell: dict | None = None, arm: str = "lib") -> dict:
     """J19 step (2), one learner seed: every saved model, `episodes` episodes, two ways.
       fixed   OUR eval as the row ran it, longer: a fresh eval env at seed +
               10,000, re-seeded at every mark, so every mark meets the SAME
@@ -515,9 +515,9 @@ def reeval_seed(task: str, seed: int, home, marks=None, episodes: int = REEVAL_E
     home = Path(home)
     marks = list(marks or range(EVAL_EVERY, STEPS["6"] + 1, EVAL_EVERY))
     stream_env = make_env(task, seed)
-    out = {"task": task, "seed": seed, "episodes": episodes, "marks": {}}
+    out = {"task": task, "seed": seed, "arm": arm, "episodes": episodes, "marks": {}}
     for n in marks:
-        m = load_weights("lib", task, seed, home / twin_model_name("lib", task, seed, n))
+        m = load_weights(arm, task, seed, home / twin_model_name(arm, task, seed, n))
         fixed = _episodes(m, make_env(task, seed + EVAL_SEED_OFFSET), episodes,
                           reset_seed=seed + EVAL_SEED_OFFSET)
         stream = _episodes(m, stream_env, episodes)
@@ -573,6 +573,97 @@ def reeval_table(res: dict) -> str:
     return "\n".join(L)
 
 
+# ---- Row B-6c-2 (J23; rule frozen 07df7d63 in KNOWN_ANSWERS before any seed) ----
+B6C2_TASK = "reacher-hard"
+B6C2_SEEDS = (5, 6, 7, 8, 9)          # FRESH: rows 6c and J19 ran 0-4
+B6C2_HOME = OUT / "b6c2"
+
+
+def b6c2_cells() -> list:
+    """lib on the fresh seeds, then ctrl 0-2 as row 6; 150k; no `ours` arm."""
+    return (cells_for("6", B6C2_SEEDS, [B6C2_TASK], arms=("lib",))
+            + cells_for("6", SEEDS, [B6C2_TASK], arms=("ctrl",)))
+
+
+def b6c2_models() -> list:
+    marks = list(range(EVAL_EVERY, STEPS["6"] + 1, EVAL_EVERY))
+    return [twin_model_name(a, t, s, n) for a, t, s, _ in b6c2_cells() for n in marks]
+
+
+def b6c2_job_body() -> str:
+    return (_JOB.replace("__PINS__", repr(KERNEL_PINS)).replace("__NODEPS__", repr(KERNEL_NODEPS))
+            .replace("run_parallel(__CELLS__, os.environ[\"JACK_OUT\"])",
+                     f"run_parallel({b6c2_cells()!r}, os.environ[\"JACK_OUT\"], save=True)")
+            .replace("__ROW__", repr("6")).replace("__TASKS__", repr([B6C2_TASK]))
+            .replace("__JUDGE__", "False"))
+
+
+def b6c2_kernel(est_hours: float = 5.0) -> dict:
+    """One Kaggle CPU kernel; summary + every saved model home to B6C2_HOME.
+    No verdict here: the row reads stream-100 (`b6c2-score`, box)."""
+    import shutil
+    from experiments.gpu import build_job, result_json, submit
+    want = b6c2_models()
+    sub = submit(build_job(b6c2_job_body()), prefer="kaggle-cpu", est_hours=est_hours,
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=["brain_b_dmc.json"])
+    B6C2_HOME.mkdir(parents=True, exist_ok=True)
+    for name, path in sub.artifacts.items():
+        if name.endswith((".msgpack", ".json")):
+            shutil.copy2(path, B6C2_HOME / name)
+    if not sub.ok:
+        raise RuntimeError(f"brain_b_dmc b6c2: {sub.message} (partial files in {B6C2_HOME})")
+    r = result_json(sub, "brain_b_dmc.json")
+    (B6C2_HOME / "kernel.json").write_text(json.dumps(r, indent=1))
+    for c in r["cells"]:
+        print(f"{c.get('arm')} s{c.get('seed')}: {c.get('score', c.get('error'))} marks {c.get('marks')}", flush=True)
+    missing = [m for m in want if not (B6C2_HOME / m).exists()]
+    if missing:
+        raise RuntimeError(f"b6c2: {len(missing)} model files missing, e.g. {missing[:3]}; pull them: "
+                           f"kaggle kernels output <user>/{getattr(sub, 'job_id', '<slug>')} -p {B6C2_HOME}")
+    return r
+
+
+def b6c2_verdict(seeds: dict) -> dict:
+    """The frozen reading. `seeds` = {"<arm>_s<k>": reeval_seed(...)}. Reads ONLY
+    stream_mean at 150k; fixed is printed beside. Pure, so it is testable."""
+    lo, hi = band(*ROWS["6"][B6C2_TASK])
+    last = str(STEPS["6"])
+
+    def per(arm, ss, way):
+        return [seeds[f"{arm}_s{s}"]["marks"][last][f"{way}_mean"] for s in ss if f"{arm}_s{s}" in seeds]
+    lib, ctrl = per("lib", B6C2_SEEDS, "stream"), per("ctrl", SEEDS[:3], "stream")
+    out = {"band": [lo, hi], "lib_stream": [round(x, 1) for x in lib],
+           "lib_fixed_beside": [round(x, 1) for x in per("lib", B6C2_SEEDS, "fixed")],
+           "ctrl_stream": [round(x, 1) for x in ctrl]}
+    if len(lib) < len(B6C2_SEEDS) or len(ctrl) < 3:
+        out["verdict"] = "INCOMPLETE"
+        return out
+    out["lib_mean"] = round(sum(lib) / len(lib), 1)
+    out["verdict"] = ("VOID" if any(x >= lo for x in ctrl) else
+                      "lib REPRODUCES" if lo <= sum(lib) / len(lib) <= hi else "lib MISSES (named, final)")
+    return out
+
+
+def b6c2_score(home=None) -> dict:
+    """Box, jack-std, nice 19: every saved model, 100 episodes fixed + stream
+    (one stream env per seed, marks in order), one file per cell as it lands."""
+    home = Path(home or B6C2_HOME)
+    k = json.loads((home / "kernel.json").read_text())
+    cells = {(c["arm"], c["seed"]): c for c in k["cells"] if "error" not in c}
+    seeds = {}
+    for arm, task, seed, _ in b6c2_cells():
+        f = home / f"score_{arm}_s{seed}.json"
+        r = (json.loads(f.read_text()) if f.exists() else
+             reeval_seed(task, seed, home, kernel_cell=cells.get((arm, seed)), arm=arm))
+        f.write_text(json.dumps(r))
+        seeds[f"{arm}_s{seed}"] = r
+        print(f"b6c2 {arm} s{seed}: stream {r['marks'][str(STEPS['6'])]['stream_mean']:.1f}", flush=True)
+    v = b6c2_verdict(seeds)
+    (home / "verdict.json").write_text(json.dumps(v, indent=1))
+    print(json.dumps(v, indent=1), flush=True)
+    return v
+
+
 def main(argv):
     if len(argv) >= 7 and argv[1] == "cell":     # cell <arm> <task> <seed> <steps> <out>
         rec = run_cell(argv[2], argv[3], int(argv[4]), int(argv[5]),
@@ -581,6 +672,12 @@ def main(argv):
         return 0
     if len(argv) == 3 and argv[1] == "reeval":   # reeval <row-6 task>: J19 step (2), box, jack-std
         reeval(argv[2])
+        return 0
+    if len(argv) == 2 and argv[1] == "b6c2-kernel":   # Row B-6c-2 (J23): one Kaggle CPU kernel
+        b6c2_kernel()
+        return 0
+    if len(argv) == 2 and argv[1] == "b6c2-score":    # Row B-6c-2: box, jack-std, the frozen reading
+        b6c2_score()
         return 0
     if len(argv) == 3 and argv[1] == "twin":     # twin <row-6 task>: J19's cause twin
         twin_kernel(argv[2])
