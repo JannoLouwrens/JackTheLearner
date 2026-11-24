@@ -409,18 +409,21 @@ def project_seed_hours(time_series: dict, total_policy: int, learning_starts: in
             "hours": round((grad / sps_tr + total_policy / sps_en) / 3600, 2)}
 
 
-def timing_cell(out_dir: str, device: str = "cuda", cmd_prefix: tuple = None) -> dict:
-    """Seed 0, TIMING_POLICY_STEPS policy steps, the arm's own settings; reads rates only."""
+def timing_cell(out_dir: str, device: str = "cuda", cmd_prefix: tuple = None, base: list = None,
+                tag: str = V1S_TAG, fname: str = "brain_a_v1s_timing.json", seed: int = 0) -> dict:
+    """TIMING_POLICY_STEPS policy steps, the arm's own settings; reads rates only. Defaults = arm
+    A2-v1S (seed 0); the A2-v1S-enc arm passes base=enc_base(), tag=ENC_TAG, seed 10 (its prereg)."""
+    base = BASE_V1S if base is None else base
     extra = (("algo.total_steps", TIMING_POLICY_STEPS), ("metric.log_every", TIMING_LOG_EVERY),
              ("checkpoint.every", 10 ** 9), ("checkpoint.save_last", "False"),
              ("buffer.checkpoint", "False"))
-    r = run_one(V1S_ROW, 0, False, out_dir, device, None, extra, cmd_prefix, BASE_V1S, V1S_TAG + "_timing")
+    r = run_one(V1S_ROW, seed, False, out_dir, device, None, extra, cmd_prefix, base, tag + "_timing")
     ts = time_scalars(_os.path.join(out_dir, "logs_" + r["name"]))
     total = last_env_step(V1S_ROW) // ACTION_REPEAT
-    res = {"arm": V1S_TAG, "timing_only": True, "rc": r["rc"], "wall_s": r["wall_s"], "unit": r["unit"],
+    res = {"arm": tag, "seed": seed, "timing_only": True, "rc": r["rc"], "wall_s": r["wall_s"], "unit": r["unit"],
            "cmd": r["cmd"], "time_scalars": ts, "projection": project_seed_hours(ts, total),
            "n_episodes_seen_NOT_SCORED": len(r.get("episodes", [])), "log_tail": r.get("log_tail")}
-    _json.dump(res, open(_os.path.join(out_dir, "brain_a_v1s_timing.json"), "w"))
+    _json.dump(res, open(_os.path.join(out_dir, fname), "w"))
     print("TIMING " + _json.dumps({k: res[k] for k in ("rc", "wall_s", "unit", "projection")}), flush=True)
     return res
 
@@ -438,6 +441,27 @@ from experiments.brain_a.rows import timing_cell
 _t = timing_cell(WORK, "cuda")
 print("DONE", flush=True)
 """
+
+
+# ARM A2-v1S-enc (J14 (a)/(b)) — FROZEN 11-24, `docs/research/prereg/a2_size_s_enc.md`: BASE_V1S + the
+# four MATCHED_ENC keys (published dmc_proprio encoder/decoder 5 x 1,024), seeds 10-12. Timing cell
+# first (rulings 86, 96, 99) on Colab T4: seed 10, rates only, no score read.
+ENC_TAG = "A2v1Senc"
+ENC_TIMING_FILE = "brain_a_v1s_enc_timing.json"
+_KERNEL_TAIL_ENC_TIMING = r"""
+from experiments.brain_a.rows import timing_cell, enc_base, ENC_TAG, ENC_TIMING_FILE
+_t = timing_cell(WORK, "cuda", base=enc_base(), tag=ENC_TAG, fname=ENC_TIMING_FILE, seed=10)
+print("DONE", flush=True)
+"""
+
+
+def enc_base() -> list:
+    from experiments.brain_a.v1s_diff import MATCHED_ENC
+    return list(BASE_V1S) + list(MATCHED_ENC)
+
+
+def kernel_body_enc_timing() -> str:
+    return _kernel_head() + _KERNEL_TAIL_ENC_TIMING
 
 
 def _kernel_head() -> str:
@@ -472,6 +496,7 @@ def main(argv) -> int:
     score ROW            (judge every harvested file of the row)
     smoke                (box, CPU: A2 control, 2,100 policy steps, compile off — the unit check)
     v1s-timing           (arm A2-v1S: the timing cell, Kaggle GPU; rates only, no score)
+    enc-timing           (arm A2-v1S-enc: the timing cell, Colab T4, seed 10; rates only, no score)
     v1s-kernel SEED [--control] [--est=H]   (arm A2-v1S: one seed per kernel)
     v1s-score            (judge every harvested A2-v1S file by row A2's rule)"""
     _os.makedirs(OUT, exist_ok=True)
@@ -504,6 +529,17 @@ def main(argv) -> int:
         r = result_json(sub, f"brain_a_rows_{row}.json")
         dst = _os.path.join(OUT, f"rows_{row}{'_ext' if ext else ''}.json")
         open(dst, "w").write(_json.dumps(r))
+        print("WROTE", dst, flush=True)
+        return 0
+    if cmd == "enc-timing":        # A2-v1S-enc timing cell, Colab T4 (ruling 96)
+        from experiments.gpu import build_job, result_json, submit
+        sub = submit(build_job(kernel_body_enc_timing()), prefer="colab", est_hours=0.7,
+                     timeout_s=2 * 3600, fetch=[ENC_TIMING_FILE])
+        print("SUBMIT", sub.backend, sub.ok, sub.job_id, sub.message, flush=True)
+        if not sub.ok:
+            return 1
+        dst = _os.path.join(OUT, "v1s_enc_timing.json")
+        open(dst, "w").write(_json.dumps(result_json(sub, ENC_TIMING_FILE)))
         print("WROTE", dst, flush=True)
         return 0
     if cmd in ("v1s-timing", "v1s-kernel"):

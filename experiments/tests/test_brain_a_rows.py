@@ -179,6 +179,24 @@ def test_timing_projection_arithmetic_and_unknown_is_not_zero(tmp_path):
     assert "scores" not in on_disk and "episodes" not in on_disk
 
 
+def test_enc_timing_cell_carries_the_four_keys_and_seed_10(tmp_path):
+    """A2-v1S-enc (prereg a2_size_s_enc.md): BASE_V1S + exactly MATCHED_ENC, seed 10, own file.
+    Control: the default (A2-v1S) cell carries none of the four keys and runs seed 0."""
+    from experiments.brain_a.v1s_diff import MATCHED_ENC
+    assert R.enc_base() == list(R.BASE_V1S) + list(MATCHED_ENC) and len(MATCHED_ENC) == 4
+    t = R.kernel_body_enc_timing()
+    compile(t, "enc_timing", "exec")
+    assert "seed=10" in t and "fname=ENC_TIMING_FILE" in t and "run_row(" not in t
+    R.timing_cell(str(tmp_path), "cpu", cmd_prefix=_fake_runner(tmp_path, 2000), base=R.enc_base(),
+                  tag=R.ENC_TAG, fname=R.ENC_TIMING_FILE, seed=10)
+    enc = json.load(open(tmp_path / R.ENC_TIMING_FILE))
+    assert enc["arm"] == R.ENC_TAG and enc["seed"] == 10 and "seed=10" in enc["cmd"]
+    assert all(k in enc["cmd"] for k in MATCHED_ENC)
+    base = R.timing_cell(str(tmp_path), "cpu", cmd_prefix=_fake_runner(tmp_path, 2000))
+    assert base["arm"] == R.V1S_TAG and not any(k in base["cmd"] for k in MATCHED_ENC)
+    assert "seed=0" in base["cmd"] and "seed=10" not in base["cmd"]
+
+
 def main():
     ok = True
     for name, fn in list(globals().items()):
