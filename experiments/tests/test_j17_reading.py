@@ -117,3 +117,16 @@ if __name__ == "__main__":       # no venv on the box has pytest (INBOX 11-21 07
                 fails += 1
                 print("FAIL", name, repr(e))
     sys.exit(1 if fails else 0)
+
+
+def test_late_from_beyond_the_run_raises():
+    """A mark the run never reaches is a mis-set reader, not "no late meals": it must raise,
+    not return nan (which reads as NOT EATING / never-helps downstream). Planted: 99k run."""
+    short = {"lives": [_life(5) for _ in range(33)], "rc": 0, "T": 99_000}   # 99,000 decisions
+    for bad in (99_000, 150_000):
+        try:
+            P.j17_late_meals(short, late_from=bad)
+        except ValueError:
+            continue
+        raise AssertionError(f"late_from {bad} past a 99k run returned instead of raising")
+    assert P.j17_late_meals(short, late_from=50_000) == 5.0

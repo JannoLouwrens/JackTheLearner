@@ -1312,6 +1312,9 @@ J17_PAIRS_NEED = 4
 
 def j17_late_meals(rec: dict, late_from: int = J17_LATE_FROM) -> float:
     from experiments import pilot_b_report as R
+    total = sum(life["decisions"] for life in rec["lives"])
+    if late_from >= total:  # no life can start there: a mis-set mark, not "no meals" (nan)
+        raise ValueError(f"late_from {late_from} >= run length {total} decisions")
     t, ms = 0, []
     for life in rec["lives"]:
         if life["cause"] != "unfinished" and t >= late_from:
