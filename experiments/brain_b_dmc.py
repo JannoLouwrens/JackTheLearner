@@ -162,7 +162,15 @@ def band(mean: float, sd: float, k: int = K, n: int = REF_N) -> tuple:
 def make_env(task: str, seed: int):
     """The SimBa env stack, wrapper for wrapper (see the docstring)."""
     import gymnasium as gym
+    import warnings
+
     from dm_control import suite
+    # dm_control/composer/environment.py:29 sets simplefilter('always',
+    # DeprecationWarning) at import, so NumPy 2.5's shape-setter warning in
+    # dm_control/mujoco/index.py prints on EVERY env build: the J19 re-eval logs
+    # reached 1.78 GB each. Silence dm_control's own deprecations only (log size;
+    # no effect on the env or any number).
+    warnings.filterwarnings("ignore", category=DeprecationWarning, module=r"dm_control(\.|$)")
     from gymnasium import spaces
     from gymnasium.wrappers import FlattenObservation, RescaleAction, TimeLimit
     from shimmy import DmControlCompatibilityV0
