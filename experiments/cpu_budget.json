@@ -1921,25 +1921,25 @@
         "VO.01": 147.67,
         "W.1": 22.09,
         "W0.PL": 99.46,
-        "detached:launch_b6c2.log": 23.79,
+        "detached:launch_b6c2.log": 47.28,
         "detached:launch_h0_gpu_pair.log": 7.16,
         "detached:launch_h0_gpu_timing.log": 3.27,
         "detached:launch_h0_gpu_timing2.log": 5.05,
         "detached:launch_j10_2_s3_seg0.log": 758.76,
-        "detached:launch_j10_2_s3_seg1.log": 183.37,
+        "detached:launch_j10_2_s3_seg1.log": 195.13,
         "detached:launch_j10_2_s4_seg0.log": 664.03,
-        "detached:launch_j10_2_s4_seg1.log": 183.6,
-        "detached:launch_j10_2_s5_seg0.log": 184.12,
-        "detached:launch_j10_2_s6_seg0.log": 172.31,
-        "detached:launch_j14_enc_timing.log": 27.18,
-        "detached:launch_j20_floor_mj317.log": 4800.4,
+        "detached:launch_j10_2_s4_seg1.log": 195.01,
+        "detached:launch_j10_2_s5_seg0.log": 195.86,
+        "detached:launch_j10_2_s6_seg0.log": 195.29,
+        "detached:launch_j14_enc_timing.log": 31.07,
+        "detached:launch_j20_floor_mj317.log": 6000.48,
         "detached:launch_j20_gate2_d075_g4.log": 5255.03,
         "detached:launch_j20_gate2_d100_f4b4.log": 5100.02,
         "detached:launch_j20_gate2_d100_g4.log": 3798.12,
         "detached:launch_j22_gpu_timing.log": 5.04,
         "detached:launch_j22_pilot_h4.log": 7.99
       },
-      "used_s": 27255.67
+      "used_s": 28541.02
     }
   },
   "last_child_s": {

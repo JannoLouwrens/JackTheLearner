@@ -89,3 +89,14 @@ The reading is the same whichever side of the band a miss lands on; the directio
 - n = 3 seeds against a band of mean ± 2 SD from 5 file seeds is a coarse instrument (11-21 19:15
   addendum: the 95% one-new-seed interval is wider than the band). The rule is the rows.py rule
   unchanged; the one-seed interval and "above k of 5 file seeds" are printed beside, not read.
+
+## Addendum 11-24 19:30 — timing cell READ (rule 2 above; no score read)
+
+Colab T4, seed 10, 6,000 policy steps, rc 0, wall 1,710 s (`/data/jack-logs/brain_a/rows/v1s_enc_timing.json`;
+torch 2.6.0+cu126 — the `bcfbd0e6` re-pin held on its first Colab run; Colab's mujoco 4.0.1, sheeprl 0.8.5).
+First window dropped (compile). Gradient steps/s 2.76 (4 windows, 2.755–2.770), env steps/s 1,035.
+Projection: (100,000 − 1,024) × 0.5 / 2.76 + 100,000 / 1,035 = 17,930 + 97 s = **5.0 T4-h a seed**
+(A2-v1S's cell: 3.24 g/s, 4.26 h — 2.19× the world model costs only 15% more time).
+**Branch, by rule 2: 3–9 h.** Each seed either resumes across Colab sessions through `bbd54926`
+(which has never crossed a gradient step — it must first be shown bit-continuous mid-training) or
+runs whole in one Kaggle GPU session from Sat 11-28 (5 h of a 12-h session; 3 seeds ≈ 15 of W48's 30 h).
