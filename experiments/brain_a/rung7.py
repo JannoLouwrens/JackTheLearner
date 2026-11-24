@@ -69,6 +69,16 @@ RESETS = {0: [0, 1, 2, 3], 20: [1], 40: [2]}
 GOLDEN = os.path.join(HERE, "rung7_scan_golden_e01491f.npz")
 NOISE = "/data/jack-logs/mlx/rung7_noise.npz"
 NOISE_N = 20_000
+# J21 row 2.3 at size1m: the official `size1m` rssm block (configs.yaml L121 over the defaults'
+# L91) — deter 512, hidden 64, stoch 32, classes 4, blocks 8, act SILU (the toy used gelu; size1m
+# does not override the defaults' silu). Inputs stay the toy's (tokens 12, the toy action space,
+# batch 4) — a listed difference; the RSSM's own widths are the published ones.
+SIZE1M = dict(deter=512, hidden=64, stoch=32, classes=4, act="silu")
+if "--preset" in sys.argv and sys.argv[sys.argv.index("--preset") + 1] == "size1m":
+    TOY.update(SIZE1M)            # same dict object as rung6.TOY: references and port both see it
+    GOLDEN = os.path.join(HERE, "rung7_scan_golden_size1m_e01491f.npz")
+    NOISE = "/data/jack-logs/mlx/rung7_noise_size1m.npz"
+    NOISE_N = 200_000             # 130 calls x 512 uniforms (creation 65 + prerun 1 + real 64)
 
 
 def close7(name, got, ref, tol=TOL7):
@@ -243,7 +253,7 @@ def main_official():
                  **{"in/tokens": I["tokens"], "in/reset": I["reset"]})
         print(f"golden written: {GOLDEN}")
     n = sum(o for o, _ in rows)
-    print(f"VS-OFFICIAL (jax {jax.__version__}, e01491f, toy, T {T}): {n}/{len(rows)} agree -> "
+    print(f"VS-OFFICIAL (jax {jax.__version__}, e01491f, {'size1m' if TOY['deter'] == 512 else 'toy'}, T {T}): {n}/{len(rows)} agree -> "
           f"{'REFERENCES HOLD' if n == len(rows) else 'A REFERENCE OR A TOLERANCE IS WRONG'}")
     return 0 if n == len(rows) else 1
 

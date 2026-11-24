@@ -619,3 +619,18 @@ Kaggle CPU kernel `jack-cpu-1795286363` (`wheel_kernel kernel 367`, verdict fixe
 reference, 0 of 1,024 samples flipped, constant-noise control flips 760), `--planted` **4/4 caught**.
 Tests unchanged from the box's conda-forge run. Same limit as the rung 1/2 line: Linux x86_64 wheel,
 not the Mac's macOS arm64 binary; rungs 6/7 at toy size; no speed read.
+
+## J21 row 2.3 at `size1m` — rung 7 references HOLD; the port FAILS on the activation (11-24 20:35)
+
+`rung7.py --preset size1m` (new; toy path unchanged, re-run 15/15): the official `size1m` rssm block
+(`configs.yaml` L121 over the defaults' L91): deter 512, hidden 64, stoch 32, classes 4, blocks 8,
+**act silu** (the toy passed gelu; size1m keeps the defaults' silu). Inputs stay the toy's (tokens 12,
+toy action space, batch 4) — a listed difference. The NumPy-64 reference now reads `act` (`rung6.ACT`).
+- `--vs-official`: **15/15 REFERENCES HOLD** — deter 1.2e-7, post 5.8e-7, prior 1.2e-6 ×(|ref|+1) over
+  64 steps, **0 flips of 8,192 latents**, 0 near-ties; prerun 512 uniforms; constant-noise control flips
+  4,870; planted 4/4 caught. Golden `rung7_scan_golden_size1m_e01491f.npz` (2.5 MB, sha256 5f34de14…).
+- Known-positive: a gelu reference at size1m FAILS (deter 0.112, 406 flips).
+- **MLX port at size1m: 0/2, FAIL** (406 flips vs golden) — the same 406 as the gelu mutant: `mlx_maths`
+  hardcodes `_gelu` (L377, L390). Tests now fail for the port; NEXT: the port reads `cfg["act"]`.
+- Not yet: the g1v1 golden has no per-step RSSM intermediates, so this golden is the official scan at
+  size1m widths on toy inputs, not the trained agent's own pass.

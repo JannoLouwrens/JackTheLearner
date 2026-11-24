@@ -109,8 +109,15 @@ def blocklin(P, name, x, g):
     return y + P[f"{name}/bias"]
 
 
+def silu(x):
+    return x * sigmoid(x)
+
+
+ACT = {"gelu": gelu, "silu": silu}     # official nets.act: gelu = tanh form, silu = jax.nn.silu
+
+
 def layer(P, name, x):
-    return gelu(rmsnorm(lin(P, name, x), P[f"{name}norm/scale"]))
+    return ACT[TOY["act"]](rmsnorm(lin(P, name, x), P[f"{name}norm/scale"]))
 
 
 def REF_core(P, deter, stoch, action, c=TOY, squash=True):
@@ -124,7 +131,7 @@ def REF_core(P, deter, stoch, action, c=TOY, squash=True):
     dg = deter.reshape(*deter.shape[:-1], g, -1)
     x = np.concatenate([dg, x], -1).reshape(*deter.shape[:-1], -1)
     for i in range(c["dynlayers"]):
-        x = gelu(rmsnorm(blocklin(P, f"dynhid{i}", x, g), P[f"dynhid{i}norm/scale"]))
+        x = ACT[c["act"]](rmsnorm(blocklin(P, f"dynhid{i}", x, g), P[f"dynhid{i}norm/scale"]))
     x = blocklin(P, "dyngru", x, g)
     xg = x.reshape(*x.shape[:-1], g, -1)
     r, cand, u = [a.reshape(*x.shape[:-1], -1) for a in np.split(xg, 3, -1)]
