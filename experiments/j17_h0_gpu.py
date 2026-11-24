@@ -33,10 +33,12 @@ BUDGET_S = 8 * 3600
 _JOB = r"""
 import subprocess as _s, sys as _y, os, json, time
 _s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
-import importlib.metadata as _m
-jv = _m.version("jax")
-inst = _s.run([_y.executable, "-m", "pip", "install", "-q", "jax[cuda12]==" + jv],
-              capture_output=True, text=True)
+# 11-24 10:26 first try (Colab, jax 0.11.1 preinstalled): sbx's actor.init died in
+# flax -- `jax.core.get_opaque_trace_state` removed in JAX 0.11. Pin the trio the
+# box's jack-std venv runs this arm with (jax 0.11.2, flax 0.12.12, optax 0.2.9).
+jv = "0.11.2"
+inst = _s.run([_y.executable, "-m", "pip", "install", "-q", "jax[cuda12]==" + jv,
+               "flax==0.12.12", "optax==0.2.9"], capture_output=True, text=True)
 res = {"jax": jv, "cuda_install_rc": inst.returncode, "cuda_install_err": inst.stderr[-1500:]}
 os.chdir("/tmp/jack")
 CHILD = r'''
