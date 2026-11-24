@@ -3600,3 +3600,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Said in the draft, not hidden: vision is 86 % of A's reconstruction loss on this eye; the twins blind the decoder's target too; `bbd54926`'s resume was only ever tested with no gradient step; `in_world.make` has no `eye=` yet (5 build debts, tests first).
 - 7 `OPEN:` lines with defaults for the sitting (size, 1 vs 4 envs, prefill, keys, 100k vs 300k, two branches).
 - Served: philosophy 3 (brain A gets the same three-cell test B failed, written before any seed) and 4 (the reading and its controls fixed before anything can be seen).
+## 2026-11-24 19:22–19:35 UTC · JACK · J14 (b): brain A's size-S-encoder timing cell READ
+- Kaggle 5/5 busy (J10 ×4, J23), nothing new home; J20 (2) floor 41/60 cells, workers alive; J22 DONE. J14 (b)'s file landed 19:12 → read it.
+- Attempt #5 rc 0 on Colab T4 (torch 2.6.0 re-pin `bcfbd0e6` held; the two earlier deaths were the torch version). 2.76 grad-steps/s, 1,035 env-steps/s, first window dropped → 5.0 T4-h a seed (A2-v1S: 4.26). Arithmetic re-derived by hand.
+- Rule 2 → 3–9 h band. Found: the resume path `bbd54926` is wired only in `in_world.py`; `rows.py` cannot resume. So NEXT = Kaggle GPU Sat 11-28, one seed a session, ≈15 of W48's 30 h. Addendum in the prereg; receipts committed.
+- Served: philosophy 4 (the row's cost read before any seed; a seed is never shortened) and 6 (free compute, the venue chosen by measured fit).
