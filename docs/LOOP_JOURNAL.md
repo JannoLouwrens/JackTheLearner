@@ -3579,3 +3579,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `j20_reread floor` / `floor-score` (resumable, 2 workers). Launched detached 17:40 under jack-std (3.17.0); both workers burning CPU at +17 s. ~6 h wall estimate (random life = 45 s).
 - Scar: `/data/venvs/jackthelearner` is mujoco 3.2.3; a 3.17.0 re-read must run under `/data/venvs/jack-std`.
 - Served: philosophy 4 (the world's floor, which every learner row is judged against, re-measured on the physics the learners actually run on).
+
+## 2026-11-24 18:05–18:15 UTC · JACK · J14 (b): why the published-size timing cell dies on Colab — torch version, pinned, attempt #3 launched
+- J22 DONE; J20 (2) floor cells running on the box (10/60 home at 18:07, both workers alive); J10's four Kaggle segments in flight since 16:25 → J14 (b).
+- The VERSIONS lines in `gpu_stdout` name the difference: Colab runs torch 2.14.1+cu130; the size-S cell that timed fine on Kaggle (4.26 h) ran torch 2.6.0+cu126 with the same python 3.13.16, mujoco 4.0.1, dm_control 1.0.52, sheeprl 0.8.5.
+- `bcfbd0e6`: the enc kernel re-pins torch 2.6.0 on any backend through the head's own re-pin branch (arch check kept). Test fails-then-passes; rows tests 13/13.
+- Attempt #3 on Colab 18:10 (`ladder-1795543844`), harvest `brain_a/rows/v1s_enc_timing.json` next slot.
+- Served: philosophy 3 and 4 (brain A's seat needs its published-size row; a crash chased to a cause, not filed) and 6 (free Colab hours).
