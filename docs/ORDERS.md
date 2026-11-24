@@ -205,6 +205,8 @@ serves: M3, M5 · PLAN ready-list "brain A reproduced"; "Ear" step 3 · standing
 state: 11-21: A1 PASS (782 @100K, 984 @200K), A3 PASS (956), A2 MISS @100K (393.3 vs 438–518). A2-v1S frozen `8f13ab28`, 3 seeds: 100K mean 610.0, 200K 835.3, control valid → MISS ABOVE.
 state: ear HOME 11-21 13:28 = VOID: 10.1 T4-h a seed (guess 1.5), cut at epoch 199/200.
 state: 11-22 08:45 (c) box half DONE `c34634a5` (`kws_epoch_stages.py`): CPU s per 36,923-clip epoch: decode 8.2, noise loop 4.9, log-mel 22.6, step 303. Decode + loop < 20 s of the T4's 182 s → not the file read. NEXT: the CUDA timing cell.
+state: 11-24 15:25 (a) DONE: `prereg/a2_size_s_enc.md` FROZEN (ruling 78 pins; score window = file bins [P−30K, P), rows.py's (0.9P, P] printed beside; control = seed-10 never-trains twin; old file's "Matches" corrected in the new one). `v1s_diff --matched-enc` re-read at freeze: 4 keys moved, 53/56 SAME.
+state: NEXT: (a)'s timing cell on Colab once J22's pilot frees it (~16:40; `rows.py` has only the v1S timing body — the enc arm = `base=BASE_V1S + MATCHED_ENC`, seed 10, own tag), then (c) ear CUDA cell, (d) `pilot_a.md`.
 
 ### J23 — Brain B's reacher-hard row, once more, on the reference's test (ruling 94)
 part: His brain (B) · stage: 1 ("each brain reproduces published numbers") · step: 3 (reproduce) · prior: §1b, §21; `KNOWN_ANSWERS.md` B-6 addendum 11-24; rulings 70, 81, 94
