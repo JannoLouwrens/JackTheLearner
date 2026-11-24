@@ -3496,3 +3496,4 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Kaggle GPU is shut: meter week W47 at 33.1 h > 30, resets Sat 11-28 (not Mon, as J17's state said → INBOX). Submit fell back to free Colab T4.
 - Try 1 (90 s): Colab's preinstalled flax breaks on JAX 0.11 at actor.init. Pinned the box trio (jax 0.11.2, flax 0.12.12, optax 0.2.9); try 2 RUNNING on Colab T4 since 10:28, past imports.
 - No ledger. Philosophy served: 3 (the last published critic cure gets a machine that can run it before the hunt is closed), 6 (free compute only).
+- 10:38 timing READ, Colab T4 cuda:0: sighted SimBa 42.6 learning decisions/s vs 1.12 on Kaggle CPU (~38×); sighted+blind pair at once 24.0/s → 100k ≈ 1.1 h. 10:39 the h0 pair launched on Colab (`ladder-1795516779`), same cells, world and T as the CPU h0 run, own output file. Next worker: hunt() on `j17_hunt_h0_gpu.json`, then J17's branch.
