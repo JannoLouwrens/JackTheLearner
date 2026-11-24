@@ -227,5 +227,21 @@ def main():
     sys.exit(0 if ok else 1)
 
 
+def test_enc_kernel_pins_torch_to_the_kaggle_cells_before_the_head():
+    """A2-v1S-enc timing cells 1-2 (Colab T4, 11-24) died compiling on torch 2.14.1+cu130 (rc 1, then
+    rc -11); the size-S cell that timed fine (Kaggle T4, 4.26 h) ran torch 2.6.0+cu126 under the SAME
+    python 3.13.16, mujoco 4.0.1, dm_control 1.0.52. The enc kernel must re-pin to that torch on any
+    backend: the pin file + PIP_CONSTRAINT are set BEFORE the head's install code reads them, so the
+    head's own re-pin branch (arch check included) fires on Colab too. Control: the A2-v1S kernels
+    carry no such line (their backend's preamble decides)."""
+    t = R.kernel_body_enc_timing()
+    compile(t, "enc_timing", "exec")
+    i, j = t.find(R.ENC_TORCH_PIN_LINES), t.find('if PIP and os.path.exists("/tmp/jack_torch_pin.txt")')
+    assert 0 <= i < j, (i, j)
+    assert "torch==2.6.0" in R.ENC_TORCH_PIN_LINES and "PIP_CONSTRAINT" in R.ENC_TORCH_PIN_LINES
+    assert R.ENC_TORCH_PIN_LINES not in R.kernel_body_timing()
+    assert R.ENC_TORCH_PIN_LINES not in R.kernel_body_v1s((10,), False)
+
+
 if __name__ == "__main__":
     main()

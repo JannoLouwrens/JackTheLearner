@@ -468,8 +468,22 @@ def enc_base() -> list:
     return list(BASE_V1S) + list(MATCHED_ENC)
 
 
+# Timing cell 2 (Colab T4, 11-24 17:22, compile in-process) then SEGFAULTED (rc -11) at the same point.
+# The Colab image's torch is 2.14.1+cu130; the size-S cell that timed fine (Kaggle T4, 4.26 h) ran
+# torch 2.6.0+cu126 under the SAME python 3.13.16, mujoco 4.0.1, dm_control 1.0.52, sheeprl 0.8.5,
+# lightning 2.6.6 (VERSIONS lines in /data/jack-logs/gpu_stdout). So every A2-v1S-enc kernel re-pins
+# torch to Kaggle's pair on ANY backend: the pin file + PIP_CONSTRAINT go in before the head, whose own
+# re-pin branch (with its "no kernels for this GPU" check) then fires on Colab too. Apparatus, not recipe:
+# sheeprl 0.8.5 was released against torch 2.6; the run's settings are unchanged.
+ENC_TORCH_PIN_LINES = r"""
+import os as _pos
+open("/tmp/jack_torch_pin.txt", "w").write("torch==2.6.0\ntorchvision==0.21.0\n")
+_pos.environ["PIP_CONSTRAINT"] = "/tmp/jack_torch_pin.txt"
+"""
+
+
 def kernel_body_enc_timing() -> str:
-    return _kernel_head() + _KERNEL_TAIL_ENC_TIMING
+    return ENC_TORCH_PIN_LINES + _kernel_head() + _KERNEL_TAIL_ENC_TIMING
 
 
 def _kernel_head() -> str:
