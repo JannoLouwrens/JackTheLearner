@@ -148,7 +148,53 @@ def floor_score() -> dict:
                     "lives_ge1": int((m >= 1).sum()), "lives_ge5": int((m >= 5).sum()),
                     "seed_means": [round(v, 2) for v in sm],
                     "apples": int(sum(x["apples"] for x in L)), "causes": causes}
+        out[row].update(floor_vs_old(row, L))
+    if all(r in out and out[r]["lives"] == len(WC.REGISTERED_SEEDS) * WC.LIVES
+           for r in ("a", "b")):
+        out["gate"] = floor_gate(
+            [x for s in WC.REGISTERED_SEEDS for x in _lives(_floor_file("a", s))],
+            [x for s in WC.REGISTERED_SEEDS for x in _lives(_floor_file("b", s))])
     return out
+
+
+OLD_DIR = Path(__file__).resolve().parents[1] / "docs" / "research" / "world_card_data"
+
+
+def floor_vs_old(row: str, new: list, old_dir: Path = OLD_DIR) -> dict:
+    """Seed-paired against the registered 3.2.3-era row (same code, same
+    seeds): per-seed mean floor meals and mean lifetime, new minus old,
+    wins/losses/ties and a two-sided Wilcoxon (nan when all pairs tie)."""
+    import numpy as np
+    from scipy.stats import wilcoxon
+    f = old_dir / f"{row}.jsonl"
+    old = [json.loads(x) for x in f.read_text().splitlines() if x.strip()]
+    res = {}
+    for key in ("floor_meals", "lifetime_s"):
+        def sm(rows, s):
+            v = [r[key] for r in rows if r["seed"] == s]
+            return float(np.mean(v)) if v else float("nan")
+        n = np.array([sm(new, s) for s in WC.REGISTERED_SEEDS])
+        o = np.array([sm(old, s) for s in WC.REGISTERED_SEEDS])
+        d = n - o
+        nz = d[np.abs(d) > 1e-12]
+        p = float(wilcoxon(nz).pvalue) if len(nz) >= 1 else float("nan")
+        res[f"vs_323_{key}"] = {"new": round(float(n.mean()), 3), "old": round(float(o.mean()), 3),
+                                "up": int((d > 1e-12).sum()), "down": int((d < -1e-12).sum()),
+                                "tie": int((np.abs(d) <= 1e-12).sum()), "wilcoxon_p": p}
+    return res
+
+
+def floor_gate(a_rows: list, b_rows: list) -> dict:
+    """§8, unmoved: the floor arms a and b together may total at most one
+    seed meeting (f)'s bar (mean floor meals/life >= 5 AND above row b on
+    the same seed; b against itself can never be 'above b'). The bar's first
+    clause alone is printed beside, so a b that reaches 5 is not hidden."""
+    sa, sb = WC.score(a_rows, b_rows), WC.score(b_rows, b_rows)
+    ge5 = {k: sum(WC.seed_mean(r, s) >= WC.BAR_MEALS for s in WC.REGISTERED_SEEDS)
+           for k, r in (("a", a_rows), ("b", b_rows))}
+    total = sa["seeds_meeting"] + sb["seeds_meeting"]
+    return {"a_seeds": sa["seeds_meeting"], "b_seeds": sb["seeds_meeting"],
+            "total": total, "holds": total <= 1, "seeds_ge5_alone": ge5}
 
 
 def main(argv):
