@@ -116,7 +116,7 @@ frozen. The three machine orders after the lock were not reached.
 - Data disk 15 GB free — at its floor. Cause found: 136 job folders nothing
   deletes, plus caches. The clean-up is the first machine order.
 - Main disk 5.4 GB, level. Pushes level with GitHub.
-- The old review backlog was not looked at today (the sitting was short).
+- The old review backlog has no open rows.
 
 ## FOR THE OWNER
 
