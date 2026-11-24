@@ -3484,3 +3484,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Traces (B-6 addendum 12:30): 6a s3 never scores because α→0 by 40k with no reward seen (critic loss 0, Q≈0) — a frozen explorer, not J17's climb. 6a s1 and 6c s4 reached then lost with Q still rising. First read "Q above ceiling" was wrong (action repeat 2 → ceiling ≈200, max 182), caught before writing.
 - Step (2) `reeval` both tasks launched 12:38 detached after the load gate refused at 6.5 (waited for < 5.6). Next worker pastes the tables + reading.
 - No ledger. Philosophy served: 3, 4 (the borrowed learner is held to its published number, and a miss is dissected, not filed).
+
+## 2026-11-24 10:05–10:40 UTC · JACK · J19 (DONE) + J10 (seg0 launched)
+- First act after the 45 h usage stop: Kaggle list — all 11-22 kernels COMPLETE, 0 running. J17 waits on W48 GPU (h0); J19's box re-eval had finished unread.
+- J19 (2) read, B-6 addendum 11-24: 6c reacher-hard @150k kernel-10 824.9 / fixed-100 886.1 / stream-100 908.3 → reading 1 OUR EVAL by 2.6 pts (bootstrap 888–927) — mostly the eval's size (s4 5/10 zeros → 22–26/100). 6a 541.1 under all three evals → reading 2 (s3 frozen explorer) + reading 3 (s1 772.2 → 407.7). Rows stay named misses; order DONE `7ab52e6c`.
+- J10-2 seg0 launched on Kaggle CPU for s3 (`…514966`) and s4 (`…514981`); 3 sessions left for forge/J17.
+- Philosophy served: 3, 4 (the borrowed learner's miss is located — partly our ruler, partly the learner — not filed); 1 (his walking layer runs again).
