@@ -131,6 +131,37 @@ def test_top_third_and_tie_across_the_cut():
     assert run(spec_of(cands), rows_of(sc)).climbers == ["a", "b"]
 
 
+def test_tiebreak_orders_equal_scores_only_and_never_beats_the_baseline():
+    ids = ["a", "b", "c", "d"]
+    cands = [cand(i) for i in ids] + [cand("ctl", "control")]          # 5 in -> ceil(5/3) = 2
+    sc = {**BASE, "a": 0.9, "b": 0.7, "c": 0.7, "d": 0.2, "ctl": 0.2}
+
+    def rows(tb):
+        out = rows_of(sc)
+        for r in out:
+            r["tiebreak"] = tb.get(r["arm"], 0.0)
+        return out
+    assert run(spec_of(cands), rows({})).climbers == ["a"]              # b, c tied across the cut
+    got = run(spec_of(cands), rows({"b": 1.0, "c": 3.0}))
+    assert got.climbers == ["a", "c"] and "tiebreak" in got.reasons["b"]
+    assert run(spec_of(cands), rows({"b": 3.0, "c": 3.0})).climbers == ["a"]   # tied on both: drops
+    # a lower score with a huge tiebreak is still a lower score
+    assert run(spec_of(cands), rows({"d": 99.0})).climbers == ["a"]
+    # equal to the baseline / twin / plain variation on the score: no tiebreak buys the climb
+    eq = {"base": 0.5, "lr0": 0.05, "win": 0.5, "null": 0.1, "ctl": 0.1}
+    r3 = rows_of(eq)
+    for r in r3:
+        r["tiebreak"] = 9.0 if r["arm"] == "win" else 0.0
+    assert run(spec_of(THREE), r3).climbers == []
+    eq = {**BASE, "win": 0.4, "null": 0.1, "ctl": 0.4}
+    r3 = rows_of(eq)
+    for r in r3:
+        r["tiebreak"] = 9.0 if r["arm"] == "win" else 0.0
+    assert "plain variation" in run(spec_of(THREE), r3).reasons["win"]
+    r3[0]["tiebreak"] = float("nan")                                   # a bad tiebreak is 0, not a crash
+    run(spec_of(THREE), r3)
+
+
 def test_control_candidate_can_climb():
     got = run(spec_of(THREE), rows_of({**BASE, "win": 0.1, "null": 0.1, "ctl": 0.5}))
     assert got.climbers == ["ctl"]

@@ -12,14 +12,19 @@ The spec (`validate_spec` states every clause):
   outcome {metric, requires_eating: true, metric_sha256, ...},
   budget {core_hours, kernel_hours}
 
-A result row: {arm, rung, seed, score, core_hours, kernel_hours, metric_sha256}
+A result row: {arm, rung, seed, score, core_hours, kernel_hours, metric_sha256
+               [, tiebreak]}
   `arm` is a candidate id, the baseline, or a twin. `score` is the frozen
   metric on that run (higher is better; `experiments/forge/metric.py`).
+  `tiebreak` (optional; a round's rule names it) ONLY orders arms whose mean
+  score is equal, inside the top-third cut. It never helps an arm past the
+  baseline, its twin or plain variation: those clauses read the score alone.
 
 The ladder's rule (FORGE.md "LADDER"), ours beside the charter's words:
   "the top third"            k = ceil(entrants / 3); into L at most 2. A tie
                              ACROSS the cut is not a win: everyone tied with
-                             the first arm below the cut is dropped.
+                             the first arm below the cut is dropped (tied =
+                             equal on the score AND on the rule's tiebreak).
   "beat BOTH the baseline    mean score over the rung's seeds STRICTLY above
    and their never-trains    the baseline's mean and above its own twin's
    twin"                     mean. Equal does not climb.
@@ -80,6 +85,7 @@ class Climb:
     reasons: dict                   # candidate -> why it did or did not climb
     spent: dict                     # core_hours, kernel_hours over all rows so far
     control_mean: float = float("nan")
+    tiebreaks: dict = field(default_factory=dict)   # arm -> mean tiebreak (0 if the rule has none)
     entrants: list = field(default_factory=list)
     yardstick: str | None = None    # a control arm run for comparison only
 
@@ -213,6 +219,13 @@ def _score(row) -> float:
     return float(s)
 
 
+def _tiebreak(row) -> float:
+    t = row.get("tiebreak", 0.0)
+    if not isinstance(t, (int, float)) or isinstance(t, bool) or not math.isfinite(t):
+        return 0.0
+    return float(t)
+
+
 def spent(rows) -> dict:
     tot = {"core_hours": 0.0, "kernel_hours": 0.0}
     for r in rows:
@@ -274,9 +287,11 @@ def climb(spec: dict, rows: list, rung: str, *, code_hash: str | None = None) ->
 
     seeds = spec["rungs"][rung]["seeds"]
     by_arm: dict = {}
+    tb_arm: dict = {}
     for r in rows:
         if r["rung"] == rung:
             by_arm.setdefault(r["arm"], {})[r["seed"]] = _score(r)
+            tb_arm.setdefault(r["arm"], {})[r["seed"]] = _tiebreak(r)
 
     def complete(arm):
         return set(by_arm.get(arm, {})) == set(seeds)
@@ -298,6 +313,7 @@ def climb(spec: dict, rows: list, rung: str, *, code_hash: str | None = None) ->
     if not complete(spec["baseline"]):
         raise Refused(f"the baseline's rung-{rung} runs do not balance the rule's seeds")
     out.means = {a: mean(a) for a in by_arm if complete(a)}
+    out.tiebreaks = {a: sum(tb_arm[a].values()) / len(seeds) for a in out.means}
     base = out.means[spec["baseline"]]
     cand = {c["id"]: c for c in spec["candidates"]}
     done = [c for c in ins if complete(c)]
@@ -309,15 +325,19 @@ def climb(spec: dict, rows: list, rung: str, *, code_hash: str | None = None) ->
 
     k = min(MAX_LONG, math.ceil(len(ins) / 3)) if RUNGS[RUNGS.index(rung) + 1] == "L" \
         else math.ceil(len(ins) / 3)
-    ranked = sorted(done, key=lambda c: -out.means[c])
-    cut = out.means[ranked[k]] if len(ranked) > k else -math.inf   # first arm below the cut
+    key = lambda c: (out.means[c], out.tiebreaks[c])  # noqa: E731  score, then the tiebreak
+    ranked = sorted(done, key=key, reverse=True)
+    below = key(ranked[k]) if len(ranked) > k else (-math.inf, -math.inf)  # first arm below the cut
+    cut = below[0]
     for c in ins:
         if c not in done:
             out.reasons[c] = "INCOMPLETE: runs do not balance the rule's seeds"
             continue
         m, tw = out.means[c], cand[c]["twin"]
-        if not m > cut:
-            out.reasons[c] = f"not in the top third (cut {cut:.4g})"
+        if not key(c) > below:
+            out.reasons[c] = (f"not in the top third (cut {cut:.4g})" if m != cut else
+                              f"not in the top third (equal on the score at the cut {cut:.4g}; "
+                              f"tiebreak {out.tiebreaks[c]:.4g} vs {below[1]:.4g})")
         elif not m > base:
             out.reasons[c] = f"does not beat the baseline ({m:.4g} vs {base:.4g})"
         elif not complete(tw):

@@ -53,17 +53,29 @@ def render_round(round_dir: Path, *, require_committed: bool = True) -> list:
         base = got.means.get(spec["baseline"])
         out += [head + f". Baseline {base:.4g}; plain variation (control mean) "
                 f"{got.control_mean:.4g}.", "",
-                "| candidate | source | mean | vs baseline | result |", "|---|---|---|---|---|"]
+                "| arm | source | mean | tiebreak | runs lost | vs baseline | result |",
+                "|---|---|---|---|---|---|---|"]
         src = {c["id"]: c["source"] for c in spec["candidates"]}
-        for c in sorted(got.entrants, key=lambda c: -got.means.get(c, float("-inf"))):
-            m = got.means.get(c)
-            out.append(f"| `{c}` | {src[c]} | {'—' if m is None else f'{m:.4g}'} | "
-                       f"{'—' if m is None else f'{m - base:+.4g}'} | {got.reasons[c]} |")
+        lost = {}
+        for r in rows:
+            if r.get("rung") == rung and r.get("status", "ok") != "ok":
+                lost[r["arm"]] = lost.get(r["arm"], 0) + 1
+
+        def line(c, source, result):
+            m, tb = got.means.get(c), got.tiebreaks.get(c)
+            return (f"| `{c}` | {source} | {'—' if m is None else f'{m:.4g}'} | "
+                    f"{'—' if tb is None else f'{tb:.4g}'} | {lost.get(c, 0)} | "
+                    f"{'—' if m is None else f'{m - base:+.4g}'} | {result} |")
+        out.append(line(spec["baseline"], "baseline", "the thing to beat"))
+        out += [line(t, "never trains", "the twin to beat") for t in spec["twins"]]
+        for c in sorted(got.entrants, key=lambda c: (-got.means.get(c, float("-inf")),
+                                                     -got.tiebreaks.get(c, 0.0))):
+            out.append(line(c, src[c], got.reasons[c]))
         if got.yardstick:
-            m = got.means.get(got.yardstick)
-            out.append(f"| `{got.yardstick}` | control | {'—' if m is None else f'{m:.4g}'} | "
-                       f"{'—' if m is None else f'{m - base:+.4g}'} | yardstick only |")
-        out.append("")
+            out.append(line(got.yardstick, "control", "yardstick only"))
+        tb_name = spec["outcome"].get("tiebreak")
+        out += ["", f"Mean = the outcome over the rung's seeds; a lost run (crash, cut, missing) "
+                    f"counts 0. Tiebreak{': ' + tb_name if tb_name else ' (none in this rule): 0'}.", ""]
     long_path = round_dir / "long.json"
     if long_path.is_file():
         out += ["**Rung L** (through `experiments/harness`):", ""]
