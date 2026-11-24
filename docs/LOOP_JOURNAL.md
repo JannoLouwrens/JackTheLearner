@@ -3530,3 +3530,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - (3) `df11a192`: `j22_gpu pilot` = h4 sighted / blind twin / shuffled twin, s923, 100k, PILOT_RULE world, one machine, pinned jax trio. Launched detached 14:23 on Colab, home ≈ 16:40.
 - (4) read pre-written before the pilot is home: `j22_gpu read-pilot` (hunt reader sighted-vs-blind, beside it sighted-vs-shuffled, late meals/life from 50k; CURES clause as ruled). Smoke on h0's GPU file reproduces h0's STILL RUNS AWAY.
 - No ledger. Philosophy served: 3 (the record's own image recipe raced against both twins), 4 (the read is fixed before any number exists), 6 (free T4).
+
+## 2026-11-24 14:40 · JACK · J20 (short slot)
+- J22 pilot still on Colab (home ≈16:40) → advanced next order J20.
+- g4 (shuffled-ray control) d0.75 on mujoco 3.17.0 harvested: 0/20 → fails as it must; d0.75 re-read is FINAL (f4 19/20, 7.86; g4 3.06; b4 0.42).
+- Finding: g4 eats more on 3.17.0 (3.06 vs 2.17, paired 15/5, Wilcoxon p 0.014); sight's margin 5.36 → 4.80. Written in WORLD_CARD; verdict unchanged.
+- Launched d = 1 f4+b4 on box (40 cells, nice 19, 2 workers).
+- Served: philosophy 4 (nothing faked — a control that must fail, read before the row is called final).

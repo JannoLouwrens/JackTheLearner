@@ -1917,9 +1917,10 @@
         "detached:launch_j10_2_s3_seg0.log": 758.76,
         "detached:launch_j10_2_s4_seg0.log": 664.03,
         "detached:launch_j20_gate2_d075_g4.log": 5255.03,
-        "detached:launch_j22_gpu_timing.log": 5.04
+        "detached:launch_j22_gpu_timing.log": 5.04,
+        "detached:launch_j22_pilot_h4.log": 1.94
       },
-      "used_s": 10248.11
+      "used_s": 10250.05
     }
   },
   "last_child_s": {

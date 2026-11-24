@@ -154,9 +154,10 @@ to report in INBOX.
 serves: M3 · auditor finding 3 · philosophy 4.
 **done when:** the 3.17.0 rows (d0.75 with g4, d = 1 with g4, three floor rows) stand beside the old ones in `WORLD_CARD.md`.
 state: 11-24 12:09 (1) d0.75 f4+b4 READ on 3.17.0 (box): **f4 19/20 → PASSES** (7.86 vs 3.2.3's 7.53; only s277 misses, 4.70), b4 0.42; seed-paired vs 3.2.3 Wilcoxon f4 p 0.56, b4 p 0.79. Row beside gate 2's in WORLD_CARD (raw `j20_gate2_d075_mj317.json`).
-state: g4 (shuffled, must fail) RUNNING since 12:08: `launch_j20_gate2_d075_g4.log`, 20 cells, 2 workers, ~1 h.
+state: 11-24 14:40 g4 d0.75 READ: **0/20 → fails as it must; d0.75 row FINAL** (3.06 meals/life; f4 > own g4 seed 20/20). g4 eats more on 3.17.0 than 3.2.3 (2.17; paired 15/5, p 0.014) — margin 5.36 → 4.80, said in WORLD_CARD.
 state: (4) DONE `250942db`: both callers via `fast_sim._multi_ray`; test PASS on both versions.
-state: NEXT: when g4's 20 cells are home, `j20_reread score 0.75` → fill g4's line (row is not final until g4 fails); then d = 1 (`run 1.0 f4 b4`, then g4), then (2).
+state: d = 1 f4+b4 RUNNING on box since 14:37 (`launch_j20_gate2_d100_f4b4.log`, 40 cells, 2 workers, ~2 h).
+state: NEXT: when 40 cells home, `j20_reread score 1.0` → row beside J12 (2′) (3.2.3 f4 3/20 FAILS); then `run 1.0 g4`; then (2) floor rows.
 
 ### J10 — The walking layer: the row again with enough seeds, life carried across segments
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §21; rulings 45, 72, 82, 95
