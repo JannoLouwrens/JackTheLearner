@@ -1,0 +1,79 @@
+{
+ "seed": 0,
+ "k_save": 1200,
+ "saved": {
+  "decision": 1200,
+  "life": 0,
+  "into_life_s": 239.9999999999949
+ },
+ "mujoco": "3.2.3",
+ "j0": 2.255061,
+ "alpha": 0.0275235,
+ "arms": {
+  "RC": {
+   "rows": 200,
+   "identical": 200,
+   "first_diff": null,
+   "diff_keys": [],
+   "all_identical": true
+  },
+  "no_physics": {
+   "rows": 200,
+   "identical": 0,
+   "first_diff": 0,
+   "diff_keys": [
+    "e",
+    "g",
+    "x",
+    "y",
+    "z"
+   ],
+   "all_identical": false
+  },
+  "no_warm": {
+   "rows": 200,
+   "identical": 0,
+   "first_diff": 0,
+   "diff_keys": [
+    "g"
+   ],
+   "all_identical": false
+  },
+  "no_wrng": {
+   "rows": 200,
+   "identical": 0,
+   "first_diff": 0,
+   "diff_keys": [
+    "e",
+    "g",
+    "x",
+    "y",
+    "z"
+   ],
+   "all_identical": false
+  },
+  "no_lrng": {
+   "rows": 200,
+   "identical": 0,
+   "first_diff": 0,
+   "diff_keys": [
+    "e",
+    "g",
+    "x",
+    "y",
+    "z"
+   ],
+   "all_identical": false
+  },
+  "no_torch": {
+   "rows": 200,
+   "identical": 200,
+   "first_diff": null,
+   "diff_keys": [],
+   "all_identical": true
+  }
+ },
+ "verdict": "RESUMES; drop NOT seen: ['no_torch']",
+ "wall_s": 112.3,
+ "no_torch_explained": "measured 11-24: torch's GLOBAL RNG does not move in 1,500 decisions / 180 opt steps of _Life (batches draw from L.gen, which IS carried and moved); the item is unused, so dropping it cannot differ. Not a fault."
+}
