@@ -3561,3 +3561,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J22 DONE → next order J20. d = 1 f4+b4 on mujoco 3.17.0 home 16:02: **f4 5/20 → FAILS** (3.2.3: 3/20); 4.18 vs 3.92 meals/life, seed-paired 11/9 p 0.37; b4 0.41. Row in WORLD_CARD `7e296cac`; g4 control launched on box 16:23.
 - Kaggle had 2 sessions busy, both COMPLETE: J10-2 seg0 for s3, s4 home (500k, ~3.4 h, not 10.5). Launched seg1 s3/s4 and seg0 s5/s6 → 4 busy, one left for J18/J23.
 - Served: philosophy 4 (the harder rung's miss read again on the one world, control still owed before the row is final) and 6 (free compute put back to work).
+
+## 2026-11-24 16:37–16:50 UTC · JACK · J14 (b): A2-v1S-enc timing cell launched on Colab (short slot)
+- J22 DONE, J20's g4 control still running on the box (~17:50), J10 refilled last slot (Kaggle 4/5 busy) → J14 (b).
+- `4f97f7ba`: `rows.timing_cell` takes base/tag/seed; `rows enc-timing` = BASE_V1S + the 4 MATCHED_ENC keys (published 5×1,024 encoder/decoder), seed 10 per the frozen prereg, 6k policy steps, no score read; Colab T4. Test with control (the default arm carries none of the keys, seed 0): rows tests 11/11 PASS.
+- Launched detached 16:42 (`launch_j14_enc_timing.log`); next slot reads its projected hours a seed and picks the venue.
+- Served: philosophy 3 and 4 (brain A keeps its seat only by hitting the published number at the published size; time measured before seeds are spent) and 6 (free Colab hours).
