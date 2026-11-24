@@ -520,6 +520,25 @@ down, Wilcoxon p 0.014 (48 vs 29 capped lives). The margin sight buys over
 no-sight narrows from 5.36 to 4.80 meals/life; still a control that fails
 by the bar, not a different verdict. Adult-taught ceiling only.
 
+### J20 (1) — gate 2 at d = 1 RE-READ on mujoco 3.17.0 (box, jack-std, 2026-11-24; raw `world_card_data/j20_gate2_d100_mj317.json` sha256 c015c602… (f4 + b4; g4 running since 16:23); runner `experiments.j20_reread` at `5c90a078`; scored by `j20_reread score 1.0`, bar unchanged)
+
+| row (d = 1, seeds 261–280 × 10 lives, **mujoco 3.17.0**) | seeds meeting the bar | mean of seed means, floor meals/life (sd; min–max) | mean life, decisions | capped lives |
+|---|---|---|---|---|
+| **f4** body eye + body motor (the row) | **5 / 20 → FAILS** (needs 18) | 4.18 (1.11; 2.20–6.20) | 3,922 | 0 / 200 |
+| g4 shuffled rays (must fail) | running (box, 16:23) | — | — | — |
+| b4 white random (floor) | — | 0.41 (0.26; 0.10–1.10) | 1,513 | 0 / 200 |
+
+**The d = 1 miss survives the version change: 5/20 on 3.17.0 beside 3/20 on
+3.2.3.** Seeds meeting: 261, 264, 266, 270, 276 (3.2.3: 262, 264, 280 — only
+264 is common). 80 of 200 f4 lives ate ≥ 5 (3.2.3: 70). Seed-paired
+3.17.0 − 3.2.3: f4 11 up / 9 down, Wilcoxon p 0.37; b4 7 / 12 (1 identical),
+p 0.18 — same distribution, a different draw. f4 beat its own b4 seed on
+20/20; every life ended by hunger. So the stage-1 proof on the body-frame eye
+still stands at the entry rung only, on both versions; d = 1 is unproven for
+this frozen ruler (its dead-reckoning was written for world axes — a lower
+bound on the eye, as said above). The row is final when g4 fails by the bar.
+Adult-taught ceiling only.
+
 ### J15 (2) — gate 3's reading at d = 0.75: f5, the ruler a memoryless net could copy (harvested 2026-11-19 12:10; raw `world_card_data/eye_gate3_d075.json` sha256 54c77266…; kernel `jack-cpu-1795073402` at `9882df51`; scored by `eye_forager score3`)
 
 | row (d = 0.75, seeds 281–300 × 10 lives) | seeds meeting the bar | mean of seed means, floor meals/life (sd; min–max) | mean life, decisions | capped lives | reported only: all floor foods, meals/life (seeds ≥ 5 and > b5) |
