@@ -767,6 +767,23 @@ saved model, fixed and stream), scored against the 07:25 readings exactly as wri
   (α → 0 before any reward), one that found it and lost it. Re-registering 6c with a 100-episode stream eval is allowed once
   (ruling 70) and is the Director's to order; 6a's two failure shapes are B's to cure, not the eval's.
 
+## Row B-6c-2 — DMC reacher-hard, 150k, re-registered ONCE (ruling 70, ordered by J23 / ruling 94): RULE frozen 11-24 18:35 before any seed
+
+Rows 5, 6a, 6c stay named MISSES whatever this reads. This is the one re-registration ruling 70 allows, for 6c only.
+- **Arm:** LIBRARY (`lib`, SBX SAC on the SimBa recipe), recipe, pins, env stack and 150k decisions exactly as Row B-6c
+  (`brain_b_dmc.make_model("lib", …)`, `KERNEL_PINS`). No `ours` arm in this row.
+- **Seeds:** FRESH, 5–9 (never run on this task). k = 5. **No extension.**
+- **Score:** per seed, the mean of **100 deterministic episodes on the reference's stream** at the last mark (150k): ONE eval env
+  from the run's own seed, never re-seeded, each 25k mark drawing the next 100 in order (exactly `reeval_seed`'s "stream", the
+  method behind the 11-24 10:30 reading of 908.3). The row's own 10-episode fixed eval and fixed-100 are printed beside, not read.
+- **Band unchanged:** 955.8 ± 30.5 at k = 5 → **905.7–1000**. 5-seed mean in band → **lib REPRODUCES on reacher-hard**; below → a
+  named miss, final for this task (no third registration).
+- **Control as row 6:** `ctrl` (never trains), seeds 0–2, same steps and same stream-100 score; the run is VOID if any ctrl seed
+  scores ≥ 905.7. Models (actor + critic weights) saved at every 25k mark for every cell.
+- **Venue:** one Kaggle CPU kernel (`brain_b_dmc b6c2-kernel`), models home to `/data/jack-logs/brain_b/b6c2/`; scored on the box
+  under jack-std by `brain_b_dmc b6c2-score` (scoring is deterministic given the saved weights: J19's `replay_gap` was 0.0).
+- On reading: one line into `docs/research/prereg/stage2_a_vs_b.md` gate 2b; 6a is not re-run (its two faults → `FORGE_POOL.md`).
+
 ## Row A1 — brain A (sheeprl `dreamer_v3_5`, size 1m) on DMC cartpole_balance: **PASS** at 3 seeds (11-21 02:30, Colab T4)
 
 Rule `experiments/brain_a/rows.py` (frozen `286d6451` before any seed; control corrected to no gradient step before
