@@ -988,6 +988,41 @@ Long form: `/data/jack-research/research_notes/one_voice_part{A,B,C,D}.md` (58 K
 
 ## 26. A sense built from outcome: "what was at my mouth when I ate" as the learner's input (2026-11-24; serves the lab's hindsight eye, rulings 84 and 98, M3; plan part "Learning to eat" + "Eye"; answers INBOX `RESEARCH:` Director 11-22)
 
-**Question.** What is published on a sense built from OUTCOME: features of what was in view when reward arrived, fed back to the learner as input? Sizes, steps, and whether any small agent learned to reach food that way from scratch.
+**Question.** What is published on a sense built from OUTCOME (what was in view when reward arrived) and fed to the learner as input; did a small agent learn to reach food that way from scratch? Long form: `/data/jack-research/reports/sec26_outcome_built_sense_2026-11-24.md`.
 
-*(Skeleton, 2026-11-24 16:15 UTC — research in progress this slot; notes under `/data/jack-research/scratch_sec26{A,B,C}`.)*
+**Already known.**
+- The experiment itself is unpublished: no from-scratch agent on record builds an online table of the stimulus present at reward and reads it as an observation, with a plain-agent control.
+- A reward table beats a net early, loses late. MFEC (2016), 3-D foraging from pixels: the table reached in < 3M frames what A3C needed > 40M for. NEC (2017), 57 Atari, median: 16.7% at 1M frames, 54.6% at 10M (DQN −0.7%, 15.7%), overtaken by 40M. arXiv 1606.04460, arXiv 1703.01988
+- Closest input form: SAC 2×256 with a retrieved high-return past state joined to actor and critic input, 100k steps, 10 seeds: Hopper 1,677 ± 697 (TD3 374), HalfCheetah 2,788 (TD3 1,597), Walker 761 (loses to EMAC 966). Dense reward; input confounded with a reward bonus. arXiv 2401.10516
+- A self-taught object channel, frozen BEFORE the learner starts, works at 100k: Transporter keypoints, Atari, 3 seeds: Pong 10.8 (Rainbow −19.5), Breakout 19.3 (3.3); loses Seaquest. arXiv 1906.11883
+- A handed direction is decisive: PointGoal 99.9% with GPS+compass, 0 SPL at 100M without. Replacing it with an estimate costs 4–19 points at scale (ObjectNav 0.544 vs 0.731 with true segmentation, 10M frames) — those estimators are label-trained or PRETRAINED: not for inside him. arXiv 1911.00357, arXiv 2007.00643
+- One negative for the input form: VizDoom, a detector's output re-fed as input was no better than baseline; as an auxiliary target it helped. arXiv 1609.05521
+- Wrong guidance and replay: SAC "could be problematic" unless the error rate is under 0.2 (guidance as shaping, Point Maze; PPO held to 0.3). Our imprints are 26% wrong. [workshop 2025](https://aair-lab.github.io/genplan25/papers/40.pdf)
+- Early useless data scars a replay learner: SAC over-fitted on its first transitions does not recover in 1M steps; resets lift DMC IQM 501 → 656. arXiv 2205.07802
+- Outcome as reward, not input, costs more: Synthetic Returns 6e7 steps; RCE 200 success examples.
+- Biology: one flavour–nutrient pairing gives 69–71% choice, 86% by the sixth (rats, Ackroff 2009); reward-paired colours pull human attention after 240–1,008 trials, graded by value (+8 / +16 ms), still at 4–21 days (Anderson 2011); extinction suppresses, does not erase (Bouton); giving-up time falls as the capture rate rises (Krebs 1974); pigeons can lock on a cue whose pecking cancels food (in a replication 6 of 8 did not).
+
+**Candidates.**
+1. **Table output as input (E2c with the sense's own direction).** Bearing + distance of the peak ray + a "table has an entry" bit, joined to SAC's input. Proven nowhere in this form. Strength: one variable from E2c's 4/5. Weakness: zero until the first babbled meal (median ~950 decisions), 26% wrong, drifts as the table fills; E2c's later loss (10/10) untouched.  Needs: the table kept across deaths; one reset that keeps the replay buffer. Expect: eats on fewer than 4/5 seeds, later than E2c, and loses it as E2c does.
+2. **Residual on the reflex.** The reflex acts; SAC adds a correction (last layer zero at start, critic burned in). Proven: TD3 on a real robot in 8,000 samples; DDPG+HER lifts a 0.15–0.55 controller by 1M steps where scratch never touches the block (arXiv 1812.03201, 1812.06298). Strength: starts at the reflex's 70 meals, the guide is never removed. Weakness: a hand-written reflex becomes part of him (a ruler only, ruling 84) — END-FIT must rule. Expect: ≥ reflex from step 0, small gain by 100k.
+3. **The table as a teacher of the eye** (the lab's unrun net). VizDoom: auxiliary beats input; UNREAL 54% → 87%, at 10M+ frames. The net form read .434 here. Expect: no gain at 100k.
+
+**Ours beside theirs.**
+
+| Setting | Published / biology | Ours (file:line) | Same or differs |
+|---|---|---|---|
+| Store | graded strength, error-driven; fast + slow stores | count, top texture wins (`hindsight_eye.py:141`) | differs: no value grading |
+| Label | the thing pecked / tasted; delay 10–75 min tolerated | nearest ray at the meal (`hindsight_eye.py:130`) | same |
+| First imprint | 1 pairing → 69–71%; chicks ~3 ingestions | 1 meal (`live_eye.py:39`) | same; 74% on food |
+| Unlearning | suppression, counted in omitted expected rewards | deletion after 400 unfed decisions (`live_eye.py:109`) | differs: forgets what biology keeps |
+| Sense ready first | Transporter: yes, frozen | empty at birth | differs: untested anywhere |
+| Innate bias | chicks peck small 3-D things | none | differs: costs the ~950-decision wait |
+
+**Known-answer check.** Candidate 1: E2c's handed arm must still read 4/5 beside it (the ceiling); the reset by SAC ± resets on DMC (IQM 501 vs 656; ~2 h a seed on a CPU kernel, our estimate). Candidate 2: Fetch curves only, no table number — its floor is the reflex's own 70 meals on worlds 1401–1408. The table: none at our size (NEC's 16.7% is at 1M frames).
+
+**What the record does NOT answer.**
+- Candidate 1 itself: E2c's cell, three arms — the sense's direction / a yoked table's (must fail) / handed (ceiling), 5 seeds, about E2c's cost. Prediction: 2–3 of 5 eat; yoked 0–1.
+- A carried, frozen table (the Transporter form): one more arm. Prediction: 3–4 of 5 — then the loss is the empty start, not the 26%.
+- Suppression against deletion, and a give-up that scales with his meal rate (ours is a fixed 50 decisions): box-minutes in `live_eye.cell`, no learner. Prediction: suppression ends the patience-50 failure and keeps the 2-of-8 repair.
+
+**Not verified.** Williams & Williams (via Lesaint 2014), Rescorla-Wagner (memory); Hogan's "3 ingestions", Bouton (snippets); Krebs 1974, Yasuda 2012 (abstracts); UNREAL's and RCE's step counts; the VizDoom negative is figure-only, no numbers.
