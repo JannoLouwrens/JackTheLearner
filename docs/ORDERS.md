@@ -119,8 +119,7 @@ state: 11-24 13:20 (0) DONE `99bcd86e`: J17 ruler (Q÷SUPPORTED) beside the clim
 state: (1) DONE `35d75d4d`: `experiments/conv_eye.py` (h4, DrQ differences in docstring; full-circle eye → roll ±6), `blind_eye.ShuffledEye` (whole rays permuted per step, own RNG), partial file keeps the trace; arms `H-conv-row128{,-blind,-shuffled}`, group h4. `test_conv_eye` 4/4 PASS.
 state: (2) DONE `df11a192`: Colab T4 timing home — single 54.3 learning dec/s; trio 12.5/s → 100k ≈ 2.15 h, fits 8 h → T4 is the venue.
 state: (3) pilot LAUNCHED 14:23 on Colab at `df11a192` (`j22_gpu pilot`: sighted/blind/shuffled, s923, 100k, one machine; log `/data/jack-logs/j22/launch_j22_pilot_h4.log`, out `j22_pilot_h4.json`), ~2.2 h → home ≈ 16:40.
-state: (4)'s read is pre-written: `python -m experiments.j22_gpu read-pilot` (CURES clause as ruled; smoke on h0's GPU file → STILL RUNS AWAY / NO CURE, matching h0).
-state: NEXT: when home, `read-pilot` → take the printed branch (CURES → 921, 922 on the same job; NO CURE → row + INBOX line, B closed on the wide eye).
+state: NEXT: when home, `python -m experiments.j22_gpu read-pilot` (pre-written, CURES clause as ruled; smoke on h0's file → STILL RUNS AWAY, matches h0) → take the printed branch (CURES → 921, 922; NO CURE → row + INBOX line, B closed on the wide eye).
 
 ### J18 — Forge round 1 is a KEEP round: rung S is HOME since 11-22 12:40 and UNREAD
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19, §21, §22; `docs/FORGE_POOL.md`; rulings 61, 65, 69, 83
