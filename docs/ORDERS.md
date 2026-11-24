@@ -222,7 +222,7 @@ gains one line with the result. 6a is not re-run: its two faults go to
 serves: M3 · PLAN step 3 · philosophy 3, 4.
 **done when:** Row B-6c-2 is in `KNOWN_ANSWERS.md`, in band or a miss, by its frozen rule.
 state: 11-24 18:35 rule FROZEN `07df7d63` (Row B-6c-2 in KNOWN_ANSWERS: lib, fresh s5–9, 150k, stream-100 at 150k, band 905.7–1000, ctrl s0–2, no ext). Kernel + box scorer `0c2b7884` (`brain_b_dmc b6c2-kernel` / `b6c2-score`), planted verdict test PASS.
-state: NEXT: if `/data/jack-logs/brain_b/launch_b6c2.log` shows no `jack-cpu-` push, launch it: `scripts/launch_detached.sh /data/jack-logs/brain_b/launch_b6c2.log nice -n 19 /data/venvs/jackthelearner/bin/python -m experiments.brain_b_dmc b6c2-kernel` (≈ 5 h). When home (models in `brain_b/b6c2/`): detached `nice -n 19 env OMP_NUM_THREADS=1 /data/venvs/jack-std/bin/python -m experiments.brain_b_dmc b6c2-score` (~40 min) → verdict.json → row result in KNOWN_ANSWERS + one line in `stage2_a_vs_b.md` 2b; 6a's two faults → FORGE_POOL (text).
+state: 11-24 18:38 kernel LAUNCHED `jack-cpu-1795545474` (5 Kaggle sessions busy), log `/data/jack-logs/brain_b/launch_b6c2.log`, ≈ 5 h. NEXT when home (models in `brain_b/b6c2/`, kernel.json): detached `nice -n 19 env OMP_NUM_THREADS=1 /data/venvs/jack-std/bin/python -m experiments.brain_b_dmc b6c2-score` (~40 min) → `b6c2/verdict.json` → row result in KNOWN_ANSWERS + one line in `stage2_a_vs_b.md` 2b; 6a's two faults → FORGE_POOL (text).
 
 ### J21 — Brain A on the Mac: the port table's next rows
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` step table; `experiments/brain_a/README.md`
