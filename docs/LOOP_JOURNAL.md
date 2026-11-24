@@ -3593,3 +3593,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Kaggle launch first REFUSED by the CPU day budget (load 8.5 > 6.0: two tradelab workers + J20's two + my test suite); admitted at 18:38 once the suite ended (8/8 PASS) → `jack-cpu-1795545474`, ≈ 5 h.
 - J14 attempt #5 (18:38) got its VM in 3 s and is running torch-pinned; harvest next slot.
 - Served: philosophy 4 (B's one allowed re-test fixed in writing before any seed, with the control that must fail) and 6 (two leaked free-GPU VMs given back).
+
+## 2026-11-24 19:07–19:15 UTC · JACK · J14 (d): brain A's pilot on the 128-ray eye drafted (short slot, text)
+- Kaggle 5/5 RUNNING (J10 ×4, J23), nothing home; J20 (2) floor 17/60 cells, both workers alive; J14 (b) Colab attempt #5 still running at 32 min (the first two died at ~5) — no file yet. J22 DONE → the one thing advanceable: J14 (d).
+- `docs/research/prereg/pilot_a.md` DRAFT, binds nothing: A (unedited sheeprl runner) on row128 = 298 numbers (measured under jack-std: vision 256 + 42), J22's three cells with A as learner (sighted / blind / shuffled, s923, 100k), late meals/life from 50k; sighted must match both twins AND beat 0.87 (B's best cell) to be worth confirming on 921/922. Gate: A2-v1S-enc in band, timing cell on the frozen shape, Director freeze.
+- Said in the draft, not hidden: vision is 86 % of A's reconstruction loss on this eye; the twins blind the decoder's target too; `bbd54926`'s resume was only ever tested with no gradient step; `in_world.make` has no `eye=` yet (5 build debts, tests first).
+- 7 `OPEN:` lines with defaults for the sitting (size, 1 vs 4 envs, prefill, keys, 100k vs 300k, two branches).
+- Served: philosophy 3 (brain A gets the same three-cell test B failed, written before any seed) and 4 (the reading and its controls fixed before anything can be seen).
