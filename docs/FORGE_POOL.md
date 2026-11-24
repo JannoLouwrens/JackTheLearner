@@ -59,6 +59,19 @@ with the want given) is a hand controller, not a setting of brain B.
   record read so far gives no value), weight decay / spectral norm on the critic, DroQ / CrossQ
   on a CPU, a narrow 2×64 net at a high update ratio.
 
+## Faults brain B shows on a published task (J23 / ruling 94; from Row B-6a, `KNOWN_ANSWERS.md` J19 addenda)
+
+Not candidates (no change named yet); each is a wall a candidate must be scored against. Lib arm, DMC
+cartpole-swingup_sparse, 150k, 5 seeds → 541.1 vs band 726.9–826.1; both faults are needed to explain the miss.
+- **Fault 6a-s3, frozen explorer (the `reach` wall's shape on a sparse task)** · prior: §21 (signature 3: it found no
+  published source tying α's movement to a failure — here α FALLS, the opposite sign), §19 (SAC v2 1812.05905 auto-α) · seen: no
+  reward ever found; α 5.0e-2 @10k → 3e-5 @40k → 0 from 60k, critic loss 0, Q ≈ 0, 100/100 fixed episodes 0.0 at
+  every mark — the α loss drives α to zero before any reward, and the actor's gradient vanishes with it. Not a runaway critic (Q climb 0.01 < 1.32).
+- **Fault 6a-s1, win-then-lose (the `keep` wall's shape on a published task)** · prior: §21 (Nikishin 2205.07802
+  resets; Nauman 2403.00514; Kuznetsov 2005.04269 TQC — the K1/K2 bets) · seen: fixed-100 772.2 @125k (in band) →
+  407.7 @150k while Q still climbed 80 → 105 and critic loss sat at its run high (.48) — the J10 1M-s1 and E2c shape,
+  so a keep candidate can be checked on a 150k DMC row before a 300k run in his world.
+
 ## What the forge would run first (a suggestion; the Director ranks)
 
 A **keep** round on E-food, because that is where the baseline already eats and the measured
