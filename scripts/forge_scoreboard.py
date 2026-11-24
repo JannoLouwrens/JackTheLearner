@@ -70,7 +70,12 @@ def render_round(round_dir: Path, *, require_committed: bool = True) -> list:
         out += [line(t, "never trains", "the twin to beat") for t in spec["twins"]]
         for c in sorted(got.entrants, key=lambda c: (-got.means.get(c, float("-inf")),
                                                      -got.tiebreaks.get(c, 0.0))):
-            out.append(line(c, src[c], got.reasons[c]))
+            why = got.reasons[c]
+            pair = (got.means.get(c), got.tiebreaks.get(c))
+            if "equal on the score at the cut" in why and sum(
+                    (got.means.get(x), got.tiebreaks.get(x)) == pair for x in got.entrants) == 1:
+                why = f"not in the top third (first below the cut, {pair[0]:.4g})"  # tied with nobody
+            out.append(line(c, src[c], why))
         if got.yardstick:
             out.append(line(got.yardstick, "control", "yardstick only"))
         tb_name = spec["outcome"].get("tiebreak")

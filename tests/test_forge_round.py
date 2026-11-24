@@ -307,6 +307,26 @@ def test_dry_round_renders():
     assert line["published"].split("|")[2:5] == [" 1 ", " 1 ", " 0 "] and "yes" in line["published"]
     assert "**NO**" in line["inventor"]
     assert "1.50 of 10 core-h" in text and "SYNTHETIC" in text and "No reading yet." in text
+    # baseline and twin are shown beside the candidates; a real tie says so, the arm
+    # that merely IS the first below the cut does not claim one
+    assert "the thing to beat" in line["`base`"] and "the twin to beat" in line["`base-lr0`"]
+    assert "equal on the score" in line["`null`"] and "equal on the score" in line["`ctl`"]
+
+
+def test_scoreboard_names_lost_runs_and_does_not_call_the_cut_arm_a_tie():
+    with tempfile.TemporaryDirectory() as t:
+        root = forge_scoreboard.synthetic_round(Path(t))
+        p = root / "dry" / "results.jsonl"
+        rows = [json.loads(x) for x in p.read_text().splitlines()]
+        for r in rows:
+            if r["arm"] == "null":
+                r["score"] = 0.3                      # alone below the cut: winner 0.6 > null 0.3 > ctl 0.1
+        next(r for r in rows if r["arm"] == "ctl").update(score=0.0, status="cut")   # 1 of ctl's 3 lost
+        p.write_text("".join(json.dumps(r) + "\n" for r in rows))
+        text = forge_scoreboard.render(root, Path(t) / "none.json", require_committed=False)
+    line = {ln.split("|")[1].strip(): ln for ln in text.splitlines() if ln.startswith("| ")}
+    assert "first below the cut, 0.3" in line["`null`"] and "equal on the score" not in text
+    assert line["`ctl`"].split("|")[5].strip() == "1" and line["`null`"].split("|")[5].strip() == "0"
 
 
 def test_refused_round_is_shown_as_refused_not_dropped():

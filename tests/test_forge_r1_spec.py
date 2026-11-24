@@ -98,10 +98,14 @@ def test_budget_covers_its_own_derivation():
     assert s["budget"]["kernel_hours"] >= s["budget"]["core_hours"] / 4
 
 
-def test_no_result_yet_and_the_rung_reads_empty():
-    """Frozen, unrun: there is no results file, and reading rung S refuses for
-    the missing baseline rather than inventing a reading."""
-    assert not (SPEC_PATH.parent / "results.jsonl").exists()
+def test_results_exist_only_under_the_lock_and_an_empty_rung_refuses():
+    """Until 11-24 this asserted there was no results file. Rung S has been read
+    since (under the judge lock), so: a results file may exist ONLY with a lock
+    that holds; and reading a rung with no rows still refuses for the missing
+    baseline rather than inventing a reading."""
+    from experiments.forge import check_lock
+    if (SPEC_PATH.parent / "results.jsonl").exists():
+        check_lock(SPEC_PATH.parent)
     try:
         climb(spec(), [], "S")
     except Refused as e:
