@@ -239,8 +239,9 @@ in the docstring. No training, no speed claims. One wheel re-check kernel
 (< 1 h, rank 0) after every third rung.
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7.
 **done when:** rung 7 at size1m and the world-model loss rungs pass, test names in `experiments/brain_a/README.md`.
-state: 11-24 20:35 rung 7 at size1m, references `0e12d22f`: `rung7.py --vs-official --preset size1m` 15/15 HOLD (deter 1.2e-7, post 5.8e-7, prior 1.2e-6, 0/8,192 flips); size1m's act is SILU (toy passed gelu) → `rung6.ACT`; gelu ref planted FAILS (406 flips). Golden `rung7_scan_golden_size1m_e01491f.npz` (official scan at size1m widths, toy inputs — g1v1 has no per-step RSSM capture; prerun skip not re-checked against g1v1).
-state: MLX port at size1m 0/2 FAIL (406 flips = the gelu mutant): `mlx_maths` hardcodes `_gelu` (L377, L390). NEXT: port reads `cfg["act"]` → `rung7.py --preset size1m` 2/2 eager+compiled, toy still 2/2, `--planted` 4/4; then the world-model loss rungs.
+state: 11-24 20:35 rung 7 at size1m, references `0e12d22f`: vs official e01491f 15/15 (deter 1.2e-7, post 5.8e-7, prior 1.2e-6, 0/8,192 flips); size1m act is SILU (toy ran gelu); gelu ref planted FAILS (406 flips). Golden = official scan at size1m widths on toy inputs (g1v1 has no per-step RSSM capture).
+state: 11-24 20:50 port DONE `b79e04e8`: `mlx_maths` reads `cfg["act"]` (no default) → `rung7.py --preset size1m` **2/2 eager+compiled**, toy 2/2, `--planted` 4/4 both sizes, `rung6.py` 2/2. Rung 7 at size1m DONE.
+state: NEXT: world-model loss rungs in table order — prediction loss, dynamics + representation with free bits (NumPy f64 ref from official e01491f first, tests committed while FAILING); then the wheel re-check kernel (rank 0) if this is the third rung since the last one.
 
 **Lane `forge`** reads `docs/FORGE.md`; its F3 is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;

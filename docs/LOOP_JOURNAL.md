@@ -3623,3 +3623,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `rung7.py --preset size1m` (official size1m rssm widths: deter 512, hidden 64, stoch 32×4, blocks 8): vs official e01491f 15/15, 0/8,192 flips, planted 4/4. Found: size1m runs SILU; the toy rows ran gelu, so the reference and the port had never met size1m's activation. Gelu reference planted at size1m: FAILS (406 flips).
 - MLX port at size1m 0/2 (406 flips, the same as the gelu mutant) → failing tests in place; next slot makes `mlx_maths` read `act`. Commits `0e12d22f` + golden.
 - Served: philosophy 7 (brain A on the Mac at its published size) and 4 (a toy PASS did not carry to size1m; caught by a test that could fail).
+
+## 2026-11-24 20:37–20:52 UTC · JACK · J21: rung 7 at size1m PASSES on the port (short slot)
+- Kaggle 5/5 RUNNING (J10 s3 seg2, s4 seg2, s5 seg1, s6 seg1; J23 b6c2), nothing home; J20 (2) floor 38/60 cells, workers alive; J14 (b) waits Sat 11-28 → J21.
+- `mlx_maths` reads `cfg["act"]` (gelu/silu table, `_layer` act has no default). `rung7.py --preset size1m` 2/2 eager+compiled vs the official size1m golden; toy 2/2; planted 4/4 at both sizes; rung6 2/2. Commit `b79e04e8`.
+- Served: philosophy 7 (brain A at its published size on the Mac's library) and 4 (the failing test written last slot now passes; nothing loosened).
