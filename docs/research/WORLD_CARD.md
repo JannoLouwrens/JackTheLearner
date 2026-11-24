@@ -495,6 +495,26 @@ the eye. What it does say: the stage-1 proof stands at the entry rung only
 (d0 = 0.75, 20/20); any claim at d = 1 on the body-frame eye is unproven.
 Adult-taught ceiling only.
 
+### J20 (1) — gate 2 at d = 0.75 RE-READ on mujoco 3.17.0 (box, jack-std, 2026-11-24; raw `world_card_data/j20_gate2_d075_mj317.json` sha256 39beb361…; runner `experiments.j20_reread` at `5c90a078`; scored by `j20_reread score 0.75` = `world_card.score`, bar unchanged)
+
+Same rows, seeds 261–280 × 10 lives, same ruler and bar as the 3.2.3 row
+above (which is not edited). Only the machine and the MuJoCo version differ.
+
+| row (d = 0.75, seeds 261–280 × 10 lives, **mujoco 3.17.0**) | seeds meeting the bar | mean of seed means, floor meals/life (sd; min–max) | mean life, decisions | capped lives |
+|---|---|---|---|---|
+| **f4** body eye + body motor (the row) | **19 / 20 → PASSES** (needs 18) | 7.86 (1.90; 4.70–11.10) | 7,680 | 94 / 200 |
+| g4 shuffled rays (must fail) | RUNNING 11-24 12:08 (`launch_j20_gate2_d075_g4.log`) | — | — | — |
+| b4 white random (floor) | — | 0.42 (0.17; 0.10–0.70) | 1,621 | 0 / 200 |
+
+**The entry-rung proof survives the version change: 19/20 on 3.17.0 beside
+20/20 on 3.2.3.** The one seed that misses is 277 (4.70 vs its b4 0.50; it
+read 7.70 on 3.2.3). Same seeds give different lives (seed 261 life 0: 0
+meals in 2,996 decisions on 3.2.3, 9 meals capped at 9,000 on 3.17.0), but
+not a different distribution: seed-paired 3.17.0 − 3.2.3, f4 10 up / 9 down
+(1 identical), Wilcoxon p 0.56; b4 9 / 9 (2 identical), p 0.79. The
+learner rows (all 3.17.0) and this ruler's 20/20 may now share a table at
+d = 0.75 — once g4 has read and failed as it must. Adult-taught ceiling only.
+
 ### J15 (2) — gate 3's reading at d = 0.75: f5, the ruler a memoryless net could copy (harvested 2026-11-19 12:10; raw `world_card_data/eye_gate3_d075.json` sha256 54c77266…; kernel `jack-cpu-1795073402` at `9882df51`; scored by `eye_forager score3`)
 
 | row (d = 0.75, seeds 281–300 × 10 lives) | seeds meeting the bar | mean of seed means, floor meals/life (sd; min–max) | mean life, decisions | capped lives | reported only: all floor foods, meals/life (seeds ≥ 5 and > b5) |
