@@ -10,6 +10,15 @@ h4 (reported only in gate 2) is not re-read unless asked for by name.
 
     python -m experiments.j20_reread run <d> <row> [row ...]   # box, detached
     python -m experiments.j20_reread score <d>                 # collect + bar
+    python -m experiments.j20_reread floor                     # box, detached
+    python -m experiments.j20_reread floor-score               # the three rows
+
+J20 (2), the floor card: WORLD_CARD.md's three learner-free rows a
+(do-nothing), b (white random), d8 (held-8 random) re-run with the SAME code
+and seeds as the registered 3.2.3-era rows (`world_card cell`, seeds 201-220
+x 10 lives = 200 lives a row, d = 1 default world, cap 9,000 decisions) on
+mujoco 3.17.0. Same resumable rule: a complete cell file is skipped, a
+partial one removed and re-run from its seed.
 """
 import json
 import sys
@@ -69,7 +78,85 @@ def score(d: float) -> dict:
     return out
 
 
+FLOOR_ROWS = ("a", "d8", "b")              # longest lives first
+
+
+def _floor_file(row: str, seed: int) -> Path:
+    return OUT / "floor" / f"{row}_s{seed}.jsonl"
+
+
+def floor_todo() -> list:
+    out = []
+    for row in FLOOR_ROWS:
+        for s in WC.REGISTERED_SEEDS:
+            f = _floor_file(row, s)
+            if len(_lives(f)) >= WC.LIVES:
+                continue
+            if f.exists():
+                f.unlink()
+            out.append((row, s))
+    return out
+
+
+def floor_run(workers: int = WORKERS) -> int:
+    import subprocess
+    import time
+    import mujoco
+    cells = floor_todo()
+    (OUT / "floor").mkdir(parents=True, exist_ok=True)
+    print(f"mujoco {mujoco.__version__}; {len(cells)} floor cells to run", flush=True)
+    live, bad = [], 0
+    while cells or live:
+        while cells and len(live) < workers:
+            row, s = cells.pop(0)
+            f = _floor_file(row, s)
+            err = open(str(f) + ".err", "w")
+            live.append((row, s, f, err, subprocess.Popen(
+                [sys.executable, "-m", "experiments.world_card", "cell", row,
+                 str(s), str(f)], cwd=str(Path(__file__).resolve().parents[1]),
+                stdout=subprocess.DEVNULL, stderr=err)))
+        time.sleep(2)
+        for item in list(live):
+            row, s, f, err, p = item
+            if p.poll() is None:
+                continue
+            live.remove(item)
+            err.close()
+            bad += p.returncode != 0
+            print(f"{row} s{s}: rc {p.returncode}, {len(_lives(f))} lives", flush=True)
+    return bad
+
+
+def floor_score() -> dict:
+    import numpy as np
+    out = {}
+    for row in FLOOR_ROWS:
+        L = [x for s in WC.REGISTERED_SEEDS for x in _lives(_floor_file(row, s))]
+        if not L:
+            continue
+        m = np.array([x["floor_meals"] for x in L], float)
+        t = np.array([x["lifetime_s"] for x in L], float)
+        causes = {}
+        for x in L:
+            causes[x["cause"]] = causes.get(x["cause"], 0) + 1
+        sm = [WC.seed_mean(L, s) for s in WC.REGISTERED_SEEDS]
+        out[row] = {"lives": len(L),
+                    "lifetime_s": [round(t.mean(), 1), round(t.std(ddof=1), 1) if len(t) > 1 else 0,
+                                   float(t.min()), float(t.max())],
+                    "floor_meals": [round(m.mean(), 2), round(m.std(ddof=1), 2) if len(m) > 1 else 0,
+                                    int(m.max())],
+                    "lives_ge1": int((m >= 1).sum()), "lives_ge5": int((m >= 5).sum()),
+                    "seed_means": [round(v, 2) for v in sm],
+                    "apples": int(sum(x["apples"] for x in L)), "causes": causes}
+    return out
+
+
 def main(argv):
+    if len(argv) >= 2 and argv[1] == "floor":
+        return 1 if floor_run() else 0
+    if len(argv) >= 2 and argv[1] == "floor-score":
+        print(json.dumps(floor_score(), indent=1))
+        return 0
     if len(argv) >= 4 and argv[1] == "run":
         r = run(float(argv[2]), argv[3:])
         print(json.dumps({k: len(v["lives"]) for k, v in r.items()}), flush=True)
