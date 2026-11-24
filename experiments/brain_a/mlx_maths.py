@@ -307,11 +307,11 @@ def rssm_step(P, carry, tokens, action, reset, cfg, act_spec):
     deter2 = _core(P, deter, stoch, actemb, cfg)
     x = mx.concatenate([deter2, tokens.astype(f32)], -1)
     for i in range(cfg["obslayers"]):
-        x = _layer(P, f"obs{i}", x)
+        x = _layer(P, f"obs{i}", x, cfg["act"])
     post = _lin(P, "obslogit", x).reshape(x.shape[0], cfg["stoch"], cfg["classes"])
     x = deter2                                     # rssm.py L164-169 _prior
     for i in range(cfg["imglayers"]):
-        x = _layer(P, f"prior{i}", x)
+        x = _layer(P, f"prior{i}", x, cfg["act"])
     prior = _lin(P, "priorlogit", x).reshape(x.shape[0], cfg["stoch"], cfg["classes"])
     return dict(masked_deter=deter, actemb=actemb, deter=deter2, post=post, prior=prior)
 
@@ -357,6 +357,16 @@ def _gelu(x):                                      # jax.nn.gelu default approxi
     return 0.5 * x * (1.0 + mx.tanh(_GELU_C * (x + 0.044715 * x * x * x)))
 
 
+def _silu(x):                                      # jax.nn.silu = x * sigmoid(x)
+    return x * mx.sigmoid(x)
+
+
+# nets.act by name. Ours beside theirs: official nets.Linear/BlockLinear read `act` from
+# the config (defaults' silu; the toy rungs set gelu); the port used to hardcode gelu, which
+# failed rung 7 at size1m with 406 flips (11-24) — it now reads cfg["act"] like rung6.ACT.
+_ACT = {"gelu": _gelu, "silu": _silu}
+
+
 def _rms(x, scale):                                # nets.Norm 'rms', eps 1e-4, in f32
     return x * mx.rsqrt(mx.mean(x * x, -1, keepdims=True) + 1e-4) * scale
 
@@ -373,8 +383,8 @@ def _blocklin(P, name, x, g):                      # nets.BlockLinear: kernel [g
     return y + P[f"{name}/bias"]
 
 
-def _layer(P, name, x):
-    return _gelu(_rms(_lin(P, name, x), P[f"{name}norm/scale"]))
+def _layer(P, name, x, act):
+    return _ACT[act](_rms(_lin(P, name, x), P[f"{name}norm/scale"]))
 
 
 def _core(P, deter, stoch, action, cfg):          # rssm.py L139-162
@@ -382,12 +392,13 @@ def _core(P, deter, stoch, action, cfg):          # rssm.py L139-162
     lead = deter.shape[:-1]
     stoch = stoch.reshape(stoch.shape[0], -1)
     action = action / mx.maximum(1.0, mx.abs(action))
-    x = mx.concatenate([_layer(P, "dynin0", deter), _layer(P, "dynin1", stoch),
-                        _layer(P, "dynin2", action)], -1)
+    a = cfg["act"]
+    x = mx.concatenate([_layer(P, "dynin0", deter, a), _layer(P, "dynin1", stoch, a),
+                        _layer(P, "dynin2", action, a)], -1)
     x = mx.repeat(mx.expand_dims(x, -2), g, -2)
     x = mx.concatenate([deter.reshape(*lead, g, -1), x], -1).reshape(*lead, -1)
     for i in range(cfg["dynlayers"]):
-        x = _gelu(_rms(_blocklin(P, f"dynhid{i}", x, g), P[f"dynhid{i}norm/scale"]))
+        x = _ACT[a](_rms(_blocklin(P, f"dynhid{i}", x, g), P[f"dynhid{i}norm/scale"]))
     x = _blocklin(P, "dyngru", x, g)
     xg = x.reshape(*lead, g, -1)
     n = xg.shape[-1] // 3                           # gates split PER GROUP

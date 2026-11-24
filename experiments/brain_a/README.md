@@ -634,3 +634,8 @@ toy action space, batch 4) — a listed difference. The NumPy-64 reference now r
   hardcodes `_gelu` (L377, L390). Tests now fail for the port; NEXT: the port reads `cfg["act"]`.
 - Not yet: the g1v1 golden has no per-step RSSM intermediates, so this golden is the official scan at
   size1m widths on toy inputs, not the trained agent's own pass.
+- **11-24 20:50 MLX port at size1m: 2/2 PASS eager AND compiled** — `mlx_maths` now reads `cfg["act"]`
+  (`_ACT = {gelu, silu}`, `_layer(..., act)` with no default, so a missing act raises instead of
+  silently running gelu). Same commit, all green: `rung7.py --preset size1m` 2/2 (constant-noise
+  control 4,870/8,192 flips), `rung7.py` toy 2/2, `--planted` 4/4 at both sizes, `rung6.py` 2/2.
+  Rung 7 at size1m is DONE; next rows are the world-model loss rungs.
