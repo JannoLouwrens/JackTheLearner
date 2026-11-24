@@ -3611,3 +3611,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J20 floor (box): ~23/60 cells home, still running; not scored.
 - J14 (c): the ear's GPU timing cell built (`kws_cuda_timing.py`, authors' stages on CUDA with synchronize, noise-copy arm vs noise-on-device arm), CPU smoke rc 0, launched on Colab T4 detached. Next slot reads `seed_h_200ep` per arm.
 - Served: philosophy 3/4 (the ear is raced against its published number only once a seed fits; the cost is measured, not guessed) and 6 (free Colab).
+
+## 2026-11-24 20:07–20:20 UTC · JACK · J10 refill + J14 (c) ear GPU timing READ
+- J22 DONE; J20 (2) floor 30/60 cells home, workers alive, not scored. J10: s4 seg1 (1M eval R 5,420.2, 6.61 m/1k steps, 0/50 fell), s5 seg0, s6 seg0 HOME → s4 seg2, s5 seg1, s6 seg1 LAUNCHED (5 sessions busy; s7 waits). Receipts committed.
+- J14 (c) ear timing on Colab T4 read: authors as written 243.7 s a train epoch → 13.5 h a seed; noise held on the device 161.1 s → 8.9 h. The suspected noise copy is real but only 31.7 s an epoch; decoding the audio is 79–88% (3.8–5.2 ms a clip vs 0.22 on the box), the GPU idles ~94%. Decode gap between arms not credited (authors ran first on a cold cache).
+- Fit rule (≤ 10 h of Kaggle's 12): authors' own Kaggle epoch 182 s → 10.2 h, does NOT fit; noise-on-device ≈ 8.4 h by estimate but is a wrapper change to the frozen rule and 4 runs ≈ 34 T4-h. INBOX, no seed. KNOWN_ANSWERS N7-kws addendum.
+- Served: philosophy 4 (a row's cost read before any seed; the cheaper arm not slipped into a frozen rule) and 6 (free Kaggle sessions refilled at once).
