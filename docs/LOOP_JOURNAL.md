@@ -3646,3 +3646,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J21's next rung (dyn/rep with free bits) does not fit 27 min with its official check; found it can reuse `rung7_scan_golden_size1m` params+inputs and official `rssm.loss` (rssm.py L120-133). Not started, no dirt left.
 - Took Next-up #2: `j17_late_meals` now raises ValueError when late_from >= run length (a mark the run never reaches was nan = "not eating"). Planted 99k-run test; test_j17_reading 11/11. Next-up #1 (ruling 91 twin) still open.
 - Served: philosophy 4 (a reader that could silently report "no meals" for a mis-set window now fails loudly).
+
+## 2026-11-24 22:07–22:35 UTC · JACK · J23 harvest + Next-up #1 (ruling 91 twin)
+- Kaggle: J10 ×4 RUNNING; J23 b6c2 COMPLETE → 48/48 models home (kernel's own 10-ep @150k lib 965.5/960.2/861.0/978.3/950.7, ctrl ≤ 1.7). Frozen scorer launched detached; lib s5 stream-100 = 956.1, 7 cells to go (~10 min each).
+- Scorer log grew 24 MB in 35 s: dm_control sets simplefilter('always') at import, so NumPy's shape warning printed on every env build. Fixed in `make_env` (`1db139a1`, log 568 B). J19 re-eval logs (1.78 GB each, same flood) filtered to their 18 real lines: /data 21 → 25 GB free.
+- Next-up #1 (ruling 91, `e9b26b44`): LF.03's own capture/apply, s0, mid-life save @1,200: resumed = unbroken on 200/200 decisions; planted drops of physics, warmstart, world RNG, learner RNG each differ from decision 0. The torch-global-RNG drop does not show because that RNG never moves (1,500 decisions, 180 opt steps). Planted compare tests 4/4.
+- Served: philosophy 4 (a resume claim now has a control that could fail, and did on every item that is used) and 6 (the box's disk, which customers share, got 4 GB back).

@@ -219,7 +219,9 @@ gains one line with the result. 6a is not re-run: its two faults go to
 serves: M3 · PLAN step 3 · philosophy 3, 4.
 **done when:** Row B-6c-2 is in `KNOWN_ANSWERS.md`, in band or a miss, by its frozen rule.
 state: 11-24 18:35 rule FROZEN `07df7d63` (Row B-6c-2 in KNOWN_ANSWERS: lib, fresh s5–9, 150k, stream-100 at 150k, band 905.7–1000, ctrl s0–2, no ext). Kernel + box scorer `0c2b7884` (`brain_b_dmc b6c2-kernel` / `b6c2-score`), planted verdict test PASS.
-state: 11-24 18:38 kernel LAUNCHED `jack-cpu-1795545474` (5 Kaggle sessions busy), log `/data/jack-logs/brain_b/launch_b6c2.log`, ≈ 5 h. NEXT when home (models in `brain_b/b6c2/`, kernel.json): detached `nice -n 19 env OMP_NUM_THREADS=1 /data/venvs/jack-std/bin/python -m experiments.brain_b_dmc b6c2-score` (~40 min) → `b6c2/verdict.json` → row result in KNOWN_ANSWERS + one line in `stage2_a_vs_b.md` 2b; 6a's two faults → FORGE_POOL (text).
+state: 11-24 22:05 kernel HOME, 48/48 models in `/data/jack-logs/brain_b/b6c2/`. Kernel's own 10-ep @150k: lib s5–9 965.5 / 960.2 / 861.0 / 978.3 / 950.7, ctrl 1.5 / 0.2 / 1.7 (NOT the row's reading).
+state: 11-24 22:10 scorer DETACHED (pid 2189624, log `/data/jack-logs/brain_b/score_b6c2.log`, ~10 min a cell, 8 cells; per-cell files `score_*.json` resume). lib s5 stream-100 = 956.1. `1db139a1` silenced dm_control's per-env DeprecationWarning (log was 24 MB/35 s; J19 logs had 1.78 GB each → filtered, /data +4 GB).
+state: NEXT: when `b6c2/verdict.json` exists → row result in KNOWN_ANSWERS B-6c-2 + one line in `stage2_a_vs_b.md` 2b; 6a's two faults → FORGE_POOL (text). Dead scorer → relaunch same command (it skips scored cells).
 
 ### J21 — Brain A on the Mac: the port table's next rows
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` step table; `experiments/brain_a/README.md`
@@ -348,6 +350,7 @@ dead clauses, `verify` VENUE 266 vs 256.
 - J22 11-24 15:45 (JACK): h4 pilot NO CURE — conv eye + random shift (DrQ) still climbs 1.818 by the hunt ruler and the SHUFFLED twin ate more late (0.87 vs 0.56; blind 0.31); the J17 ruler calls the sighted critic held (0.50, lowest of three). Branch taken: B closed on the wide eye for stage 1, no h5. For the Director: J22 is DONE — retire/replace it in the ranking; the rulers' standing disagreement (climb vs Q÷SUP on small-base arms, h0 and h4) may want a ruling before any future eye row is read.
 - JACK 11-24 18:35 (J14 b, machine): 3 of today's 5 Colab submits died on `colab run`'s assign POST ReadTimeout (120 s, CLI 0.6.0; 0.8.0 is out) AND the server assigned the VM anyway — an orphan `[?]` T4 session nobody stops; the next submit is then refused "session busy". `gpu.run_on_colab` should unassign listed assignments with no local session after a failed run (done by hand twice today via `state.client.unassign`).
 - 11-24 20:15 JACK J14 (c): the ear does not fit one Kaggle GPU session with 20% spare as written (10.2 h a seed vs ≤ 10.0); holding the noise on the device (a launcher wrapper, same arithmetic) saves 31.7 s an epoch → ≈ 8.4 h, fits by estimate — rule whether that wrapper may join N7-kws's frozen rule, and the GPU-weeks for 3 seeds + twin (≈ 34 T4-h). The real cost is audio decoding (80%+, num_workers 0 in main.py).
+- JACK 11-24 22:30 (for S11 + Next-up): two J19 re-eval logs held 1.78 GB each of one repeated dm_control warning → filtered to their 18 real lines, cause fixed in `make_env` (`1db139a1`), /data 21 → 25 GB; no other log > 200 MB. Next-up #1 (ruling 91) DONE `e9b26b44`: the survival stack resumes identical 200/200, four planted drops caught, torch's global RNG is never drawn — retire the item.
 
 ## DONE (kept one day)
 
