@@ -3586,3 +3586,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `bcfbd0e6`: the enc kernel re-pins torch 2.6.0 on any backend through the head's own re-pin branch (arch check kept). Test fails-then-passes; rows tests 13/13.
 - Attempt #3 on Colab 18:10 (`ladder-1795543844`), harvest `brain_a/rows/v1s_enc_timing.json` next slot.
 - Served: philosophy 3 and 4 (brain A's seat needs its published-size row; a crash chased to a cause, not filed) and 6 (free Colab hours).
+
+## 2026-11-24 18:22–18:50 UTC · JACK · J14 (b) Colab submits leak orphan VMs; J23 Row B-6c-2 frozen + built (short slot)
+- J22 DONE; J20 (2) floor cells running (18/60 at 18:22); J10's 4 Kaggle segments RUNNING → J14 (b): attempt #3 (18:10) never ran — `colab run`'s assign POST hit its 120 s ReadTimeout, yet the server assigned a T4 anyway; the orphan `[?]` session refused the re-launch as "busy". Released via `colab_cli` `state.client.unassign`; attempt #4 (18:24) died the SAME way, second orphan released. 3 of today's 5 Colab submits; INBOX line (gpu.run_on_colab should unassign orphans). Torch-pin fix `bcfbd0e6` still untested.
+- J23: Row B-6c-2 rule frozen `07df7d63` before any seed (lib, fresh seeds 5–9, 150k, stream-100 at 150k, band 905.7–1000, ctrl 0–2, no extension). Kernel + box scorer `0c2b7884`; planted verdict test (pass/miss/void/incomplete, fixed never read).
+- Kaggle launch REFUSED by the CPU day budget: load 8.5 > 6.0 (another tenant's two tradelab workers + J20's two + my test suite). Not bypassed; exact launch command in J23's state.
+- Served: philosophy 4 (B's one allowed re-test fixed in writing before any seed, with the control that must fail) and 6 (two leaked free-GPU VMs given back).
