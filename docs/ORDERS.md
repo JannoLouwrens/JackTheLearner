@@ -156,7 +156,8 @@ state: 11-24 12:09 (1) d0.75 f4+b4 READ on 3.17.0 (box): **f4 19/20 → PASSES**
 state: 11-24 14:40 g4 d0.75 READ: **0/20 → fails as it must; d0.75 row FINAL** (3.06 meals/life; f4 > own g4 seed 20/20). g4 eats more on 3.17.0 than 3.2.3 (2.17; paired 15/5, p 0.014) — margin 5.36 → 4.80, said in WORLD_CARD.
 state: (4) DONE `250942db`: both callers via `fast_sim._multi_ray`; test PASS on both versions.
 state: 11-24 16:25 d = 1 f4+b4 READ `7e296cac`: **f4 5/20 → FAILS** (needs 18; 3.2.3 read 3/20), 4.18 meals/life vs 3.92, seed-paired 11/9 p 0.37; b4 0.41. Row beside J12 (2′) d = 1 in WORLD_CARD (raw `j20_gate2_d100_mj317.json`).
-state: g4 d = 1 RUNNING on box since 16:23 (`launch_j20_gate2_d100_g4.log`, 20 cells, ~1.5 h). NEXT: when home, g4 into the raw file + table (must fail), then (2) floor rows.
+state: 11-24 17:31 g4 d = 1 READ `40f6573e`: **0/20 → fails as it must; d = 1 row FINAL** (1.27 meals/life vs 1.24 on 3.2.3, paired 11/8 p 0.94; f4 > own g4 20/20, margin 2.91). (1) DONE.
+state: NEXT (2): the floor card's three rows on the J17 world, 200 lives each — runner candidate `pilot_b.run_floor` (arms noop / held8 / random); find the original rows' seeds first.
 
 ### J10 — The walking layer: the row again with enough seeds, life carried across segments
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §21; rulings 45, 72, 82, 95
@@ -205,7 +206,8 @@ state: 11-21: A1 PASS (782 @100K, 984 @200K), A3 PASS (956), A2 MISS @100K (393.
 state: ear HOME 11-21 13:28 = VOID: 10.1 T4-h a seed (guess 1.5), cut at epoch 199/200.
 state: 11-22 08:45 (c) box half DONE `c34634a5` (`kws_epoch_stages.py`): CPU s per 36,923-clip epoch: decode 8.2, noise loop 4.9, log-mel 22.6, step 303. Decode + loop < 20 s of the T4's 182 s → not the file read. NEXT: the CUDA timing cell.
 state: 11-24 15:25 (a) DONE: `prereg/a2_size_s_enc.md` FROZEN (ruling 78 pins; score window = file bins [P−30K, P), rows.py's (0.9P, P] printed beside; control = seed-10 never-trains twin; old file's "Matches" corrected in the new one). `v1s_diff --matched-enc` re-read at freeze: 4 keys moved, 53/56 SAME.
-state: 11-24 16:42 (b) timing cell LAUNCHED on Colab T4 (`4f97f7ba`: `rows enc-timing` = BASE_V1S + 4 MATCHED_ENC keys, seed 10, 6k policy steps, rates only; log `/data/jack-logs/launch_j14_enc_timing.log`, home ~17:30 → `/data/jack-logs/brain_a/rows/v1s_enc_timing.json`). NEXT: read its `projection.hours` — ≤ 3 h → seed 10 + control on Colab; longer → resume via `bbd54926` or Sat on Kaggle; then (c) ear CUDA cell, (d) `pilot_a.md`.
+state: 11-24 17:35 (b) timing cell DIED twice on Colab T4, before any rate: #1 rc 1 torch inductor "compilation subprocess exited" (114k-line module, the 5×1,024 MLPs); #2 with compile in-process (`a8ee47db`, TORCHINDUCTOR_COMPILE_THREADS=1) rc −11 SEGFAULT at the same point. Size-S 2×512 timed fine on Kaggle (4.26 h). Files `/data/jack-logs/brain_a/rows/v1s_enc_timing*.json`.
+state: NEXT (b): record the Colab image's torch/python (log lacks VERSIONS) and pin torch to the Kaggle cell's version in the enc kernel's pip; compile stays on (pinned) — compile-off would be a re-registration. Kaggle GPU 0.0 h left this week.
 
 ### J23 — Brain B's reacher-hard row, once more, on the reference's test (ruling 94)
 part: His brain (B) · stage: 1 ("each brain reproduces published numbers") · step: 3 (reproduce) · prior: §1b, §21; `KNOWN_ANSWERS.md` B-6 addendum 11-24; rulings 70, 81, 94

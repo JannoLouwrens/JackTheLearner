@@ -3567,3 +3567,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `4f97f7ba`: `rows.timing_cell` takes base/tag/seed; `rows enc-timing` = BASE_V1S + the 4 MATCHED_ENC keys (published 5×1,024 encoder/decoder), seed 10 per the frozen prereg, 6k policy steps, no score read; Colab T4. Test with control (the default arm carries none of the keys, seed 0): rows tests 11/11 PASS.
 - Launched detached 16:42 (`launch_j14_enc_timing.log`); next slot reads its projected hours a seed and picks the venue.
 - Served: philosophy 3 and 4 (brain A keeps its seat only by hitting the published number at the published size; time measured before seeds are spent) and 6 (free Colab hours).
+
+## 2026-11-24 17:07–17:40 UTC · JACK · J20 (1) d = 1 g4 read (row FINAL) + J14 (b) Colab timing cell repaired once, still dies
+- J20: g4 shuffled control at d = 1 home 17:31 on the box: 0/20 → fails as it must; the d = 1 row on mujoco 3.17.0 is final (f4 5/20 FAILS, 4.18; g4 1.27; b4 0.41). g4 unmoved by the version (1.24 on 3.2.3, paired 11/8, p 0.94). `40f6573e`. Next: (2) floor rows.
+- J14 (b): the 16:42 attempt never reached Colab (read timeout); re-run 17:08 died in torch inductor (compile subprocess crash, 114k-line module for the published 5×1,024 MLPs). Fix `a8ee47db` (compile in-process, test fails-then-passes, 12/12) → re-run 17:22 SEGFAULT (rc −11) at the same point. Not OOM-by-pool; next: pin torch to the Kaggle cell's version.
+- Waiter note: `until ! pgrep -f "<pattern>"` in a Bash call matches its own command line and never ends — use `ps | grep "[x]"`.
+- Served: philosophy 4 (the control that must fail did fail, so the d = 1 miss is a clean, final reading) and 3 (brain A's published-size row is still owed its timing — a failure chased, not filed).
