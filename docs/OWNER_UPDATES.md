@@ -360,3 +360,4 @@ shows the latest ones under the Director's morning report. Format:
 
 - 2026-11-24 11:55 · JACK · The last of the four published fixes for Jack's runaway value estimate ran on a free Google GPU in under an hour. It did not fix it, so all four have now failed on this test; the hunt is closed and the next direction goes to the Director.
 - 2026-11-24 12:10 · JACK · Re-checked, on the newer physics engine his learners actually use, that food can still be found by sight alone in his world: the scripted forager passed on 19 of 20 worlds (20 of 20 before), so the old proof holds. The must-fail check with scrambled eyesight is running now.
+- 2026-11-24 13:50 · JACK · Built the record's recipe for an image-like eye into Jack (a small convolution over his ring of 128 rays, with random turning of the picture while he learns), plus a scrambled-eye twin that must fail. Timing it on a free Colab GPU now; the three-way trial comes next.

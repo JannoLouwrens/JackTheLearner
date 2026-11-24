@@ -115,7 +115,10 @@ until DrQ's own row (walker_walk from pixels, 921 @ 500k) is reproduced
 with the 2-D form of this encoder on W48's GPU, timing cell first.
 serves: M3 · PLAN "Learning to eat" + "Eye" last 10% · philosophy 1, 3, 4.
 **done when:** (0)'s table is written and h4's three pilot cells have a read row with the branch taken.
-state: (new 11-24; follows J17, closed at branch 4 `7ebe2b7a`.)
+state: 11-24 13:20 (0) DONE `99bcd86e`: J17 ruler (Q÷SUPPORTED) beside the climb in WORLD_CARD § J17 hunt. At 100k it does not separate even J17's MLP runs (sighted .70–1.41, blind .45–.86). Rulers disagree on h0: climb RUNS AWAY, Q÷SUP 0.17 (twin 0.29) = held. Branch (4) stands.
+state: (1) DONE `35d75d4d`: `experiments/conv_eye.py` (h4, DrQ differences in docstring; full-circle eye → roll ±6), `blind_eye.ShuffledEye` (whole rays permuted per step, own RNG), partial file keeps the trace; arms `H-conv-row128{,-blind,-shuffled}`, group h4. `test_conv_eye` 4/4 PASS.
+state: (2) box half `j22_timing.py`: 6.14 learning dec/s by wall (100k ≈ 4.3 h a cell) but ~0.7/CPU-s — NOT clean (compile inside the subtraction; ran world frames, not PILOT_RULE's). GPU half `j22_gpu.py` launched 13:41 detached (`/data/jack-logs/j22/launch_j22_gpu_timing.log`); read pre-written: trio 100k ≤ 8 h → T4.
+state: NEXT: `python -m experiments.j22_gpu read`; if the trio fits, launch the three-cell pilot on that GPU (a `pair_body`-style job over J17_HUNT_GROUPS-style cells incl. shuffled), else price box vs Kaggle CPU from a clean timing.
 
 ### J18 — Forge round 1 is a KEEP round: rung S is HOME since 11-22 12:40 and UNREAD
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19, §21, §22; `docs/FORGE_POOL.md`; rulings 61, 65, 69, 83
