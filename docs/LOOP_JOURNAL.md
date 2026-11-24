@@ -3550,3 +3550,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Re-read at freeze: `v1s_diff --matched-enc` → 4 keys moved, 53/56 SAME (precision, replay size, pretrain steps).
 - Next: its timing cell on Colab after J22's pilot frees the session.
 - Served: philosophy 3 and 4 (brain A's seat is held only by a reproduced published number; the test is fixed before it can be run).
+
+## 2026-11-24 15:37–15:55 UTC · JACK · J22 (3)+(4): h4 pilot read — NO CURE, order DONE
+- Colab pilot came home early (15:30, 3 × 100k, none cut). `j22_gpu read-pilot` (pre-written): sighted climb 1.818 / blind 1.169 / shuffled 1.307 → STILL RUNS AWAY; late meals/life 0.56 / 0.31 / 0.87 → NO CURE.
+- J17 ruler disagrees as on h0: sighted Q÷SUP 0.50, lowest of three (0.56 / 0.60); Q(50k) small base 112 vs 191/187. Not running away on content — but a scrambled eye fed more than a seeing one.
+- Branch taken as ruled: WORLD_CARD § J17 hunt row + paragraph, file committed as `world_card_data/j17/j17_hunt_h4.json`, one INBOX line; B closed on the wide eye for stage 1, no h5.
+- Served: philosophy 4 (a published cure given a test that could fail, with the control that must fail — it failed honestly) and 3 (the DrQ recipe lost its seat race on this eye).

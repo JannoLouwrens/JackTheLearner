@@ -115,11 +115,10 @@ until DrQ's own row (walker_walk from pixels, 921 @ 500k) is reproduced
 with the 2-D form of this encoder on W48's GPU, timing cell first.
 serves: M3 · PLAN "Learning to eat" + "Eye" last 10% · philosophy 1, 3, 4.
 **done when:** (0)'s table is written and h4's three pilot cells have a read row with the branch taken.
-state: 11-24 13:20 (0) DONE `99bcd86e`: J17 ruler (Q÷SUPPORTED) beside the climb in WORLD_CARD § J17 hunt. At 100k it does not separate even J17's MLP runs (sighted .70–1.41, blind .45–.86). Rulers disagree on h0: climb RUNS AWAY, Q÷SUP 0.17 (twin 0.29) = held. Branch (4) stands.
-state: (1) DONE `35d75d4d`: `experiments/conv_eye.py` (h4, DrQ differences in docstring; full-circle eye → roll ±6), `blind_eye.ShuffledEye` (whole rays permuted per step, own RNG), partial file keeps the trace; arms `H-conv-row128{,-blind,-shuffled}`, group h4. `test_conv_eye` 4/4 PASS.
-state: (2) DONE `df11a192`: Colab T4 timing home — single 54.3 learning dec/s; trio 12.5/s → 100k ≈ 2.15 h, fits 8 h → T4 is the venue.
-state: (3) pilot LAUNCHED 14:23 on Colab at `df11a192` (`j22_gpu pilot`: sighted/blind/shuffled, s923, 100k, one machine; log `/data/jack-logs/j22/launch_j22_pilot_h4.log`, out `j22_pilot_h4.json`), ~2.2 h → home ≈ 16:40.
-state: NEXT: when home, `python -m experiments.j22_gpu read-pilot` (pre-written, CURES clause as ruled; smoke on h0's file → STILL RUNS AWAY, matches h0) → take the printed branch (CURES → 921, 922; NO CURE → row + INBOX line, B closed on the wide eye).
+state: DONE 11-24 15:45 — (0) `99bcd86e`, (1) `35d75d4d`, (2) `df11a192`, (3)+(4) read in WORLD_CARD § J17 hunt (h4 row + paragraph), file `world_card_data/j17/j17_hunt_h4.json`.
+state: pilot home 15:30, 3 cells × 100k, none cut. Reader: sighted climb 1.818 (blind 1.169, shuffled 1.307) → STILL RUNS AWAY; late meals/life sighted 0.56, blind 0.31, shuffled 0.87 → **NO CURE** (shuffled eye eats most).
+state: J17 ruler disagrees as on h0: sighted Q÷SUP 0.50 is the LOWEST of the three (.56/.60) — held, small Q(50k) base (112 vs 191/187). Conv eye does not run away on content, but does not use sight to eat.
+state: branch taken as ruled: B closed on the wide eye for stage 1, no h5, INBOX line written; the eye waits for J14 (d) and the hindsight eye. Debt (5) not owed (no PASS).
 
 ### J18 — Forge round 1 is a KEEP round: rung S is HOME since 11-22 12:40 and UNREAD
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19, §21, §22; `docs/FORGE_POOL.md`; rulings 61, 65, 69, 83
@@ -344,6 +343,7 @@ dead clauses, `verify` VENUE 266 vs 256.
 - RESEARCH (Director, 11-22, still open): what is published on a sense built from OUTCOME — features of what was in view when reward arrived, used as the learner's input (reward-conditioned salience, successor/landmark features, "what was at my mouth when I ate")? Numbers, sizes, steps; and whether any small agent learned to reach food that way from scratch. For the lab's hindsight eye (rulings 84, 98).
 - FORGE 11-24 14:15 (J18 steps 1–3 done, `2eb2c0f4` lock): rung S read under the lock, 30/30 whole — N3 0.85, K1 0.81, K2 0.51 climb; baseline 0.035, control mean 0.10; 71.2/270 core-h. Three readings of mine to rule: tiebreak orders equal scores inside the cut only (never past baseline/twin/control); cost = one core per run for its kernel's duration; a kernel with no finished run is refused, a single lost run scores 0. Note: the ladder's printed reason for the first arm below the cut says "equal on the score" of itself (wording only; the file is locked, the scoreboard corrects it). Next forge slot: save_life in the kernel, then rung M (6 arms × 5 seeds).
 - RESEARCH (Director, 11-24): random shift / conv encoders on a 1-D range or lidar row (not a camera) under SAC or DrQ — Safety Gym, Animal-AI, robot-navigation lidar: sizes, shift widths, steps to first success; and what the record says a replay learner needs on a SPARSE reward when its temperature falls to zero before the first reward (B-6a's frozen explorer). For J22 and the forge pool.
+- J22 11-24 15:45 (JACK): h4 pilot NO CURE — conv eye + random shift (DrQ) still climbs 1.818 by the hunt ruler and the SHUFFLED twin ate more late (0.87 vs 0.56; blind 0.31); the J17 ruler calls the sighted critic held (0.50, lowest of three). Branch taken: B closed on the wide eye for stage 1, no h5. For the Director: J22 is DONE — retire/replace it in the ranking; the rulers' standing disagreement (climb vs Q÷SUP on small-base arms, h0 and h4) may want a ruling before any future eye row is read.
 
 ## DONE (kept one day)
 
