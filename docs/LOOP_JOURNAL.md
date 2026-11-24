@@ -3605,3 +3605,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Attempt #5 rc 0 on Colab T4 (torch 2.6.0 re-pin `bcfbd0e6` held; the two earlier deaths were the torch version). 2.76 grad-steps/s, 1,035 env-steps/s, first window dropped → 5.0 T4-h a seed (A2-v1S: 4.26). Arithmetic re-derived by hand.
 - Rule 2 → 3–9 h band. Found: the resume path `bbd54926` is wired only in `in_world.py`; `rows.py` cannot resume. So NEXT = Kaggle GPU Sat 11-28, one seed a session, ≈15 of W48's 30 h. Addendum in the prereg; receipts committed.
 - Served: philosophy 4 (the row's cost read before any seed; a seed is never shortened) and 6 (free compute, the venue chosen by measured fit).
+
+## 2026-11-24 19:36 · JACK · J10 + J14 (c) (short slot)
+- J10-2: s3 seg1 HOME (1M eval R 4,500.9, 5.34 m/1k steps, 10/50 fell); s3 seg2 launched `jack-cpu-1795549106`; 5 Kaggle sessions busy. Receipts committed.
+- J20 floor (box): ~23/60 cells home, still running; not scored.
+- J14 (c): the ear's GPU timing cell built (`kws_cuda_timing.py`, authors' stages on CUDA with synchronize, noise-copy arm vs noise-on-device arm), CPU smoke rc 0, launched on Colab T4 detached. Next slot reads `seed_h_200ep` per arm.
+- Served: philosophy 3/4 (the ear is raced against its published number only once a seed fits; the cost is measured, not guessed) and 6 (free Colab).
