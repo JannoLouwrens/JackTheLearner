@@ -999,6 +999,18 @@
       "hours": 0.0371,
       "ok": false,
       "week": "2026-W47"
+    },
+    "ladder-1795540088": {
+      "backend": "colab",
+      "hours": 0.1004,
+      "ok": true,
+      "week": "2026-W47"
+    },
+    "ladder-1795540900": {
+      "backend": "colab",
+      "hours": 0.0898,
+      "ok": true,
+      "week": "2026-W47"
     }
   },
   "opening_balances": {
@@ -1394,7 +1406,7 @@
       "kaggle-tpu_failed": 0.0
     },
     "2026-W47": {
-      "colab": 6.626,
+      "colab": 6.8162,
       "colab_failed": 0.0461,
       "kaggle": 33.1461,
       "kaggle_failed": 0.1687
