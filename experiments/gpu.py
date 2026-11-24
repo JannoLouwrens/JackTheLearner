@@ -32,6 +32,8 @@ from typing import Optional
 
 from .protocol import is_code_dirt, porcelain_path
 
+JOB_ROOT = "/data/tmp/gpu"
+
 COLAB = "/data/venvs/colab/bin/colab"
 KAGGLE = "/data/venvs/kaggle/bin/kaggle"
 BUDGET_FILE = Path(__file__).parent / "gpu_budget.json"
@@ -429,6 +431,15 @@ def assert_ref_is_current(ref: str = "main") -> None:
         )
 
 
+def _jobdir() -> str:
+    """One scratch folder per job, under /data/tmp/gpu (S11): the folders used
+    to land loose in /data with nothing removing them (136 by 11-24).
+    `scripts/reap_gpu_tmp.py`, run by regate.sh, removes one a day after its
+    last write once every output has a byte-identical copy in /data/jack-logs."""
+    os.makedirs(JOB_ROOT, exist_ok=True)
+    return tempfile.mkdtemp(dir=JOB_ROOT)
+
+
 def build_job(body: str, ref: str = "main", verify: bool = True) -> Path:
     """Wrap a script body into a runnable job file: clone the repo, then run it.
 
@@ -455,7 +466,7 @@ def build_job(body: str, ref: str = "main", verify: bool = True) -> Path:
                                capture_output=True, text=True)
             if p.returncode == 0 and p.stdout.strip():
                 ref = p.stdout.strip()
-    f = Path(tempfile.mkdtemp(dir="/data")) / "job.py"
+    f = Path(_jobdir()) / "job.py"
     f.write_text(repo_preamble(ref) + "\n" + body)
     return f
 
@@ -797,7 +808,7 @@ def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
     artifacts = {}
     fetch_errors: list[str] = []
     if keep:
-        tmp = Path(tempfile.mkdtemp(dir="/data"))
+        tmp = Path(_jobdir())
         for remote in fetch or []:
             # Absolute paths only. `colab download` resolves nothing relative:
             # "marker.json" returns "File or directory not found" while
@@ -1169,7 +1180,7 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
     refusal = _claim_reuse(os.environ.get("JACK_REUSE_KERNEL", "").strip())
     if refusal:
         return JobResult(backend, False, billable_s=0.0, message=refusal)
-    work = Path(tempfile.mkdtemp(dir="/data"))
+    work = Path(_jobdir())
 
     # `kaggle config view` prints text, not JSON; read the username from it.
     cfg = subprocess.run([KAGGLE, "config", "view"], capture_output=True, text=True).stdout

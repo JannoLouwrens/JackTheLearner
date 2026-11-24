@@ -62,6 +62,10 @@ awk -v l="$LOAD" 'BEGIN{exit !(l>6.0)}' && { say "load $LOAD too high — skippi
 FREE_GB=$(df -BG --output=avail / | tail -1 | tr -dc '0-9')
 [ "${FREE_GB:-0}" -lt 3 ] && { say "only ${FREE_GB}GB free on / — skipping"; exit 0; }
 
+# S11: GPU job folders whose outputs already sit in /data/jack-logs are removed
+# here, a day after their last write (scripts/reap_gpu_tmp.py). Touches no repo file.
+say "gpu tmp: $(nice -n 19 "$PY" scripts/reap_gpu_tmp.py --apply 2>&1 | tail -1)"
+
 # STREAM, DO NOT BUFFER. The first version did `OUT=$(...)` and wrote the log
 # only after the sweep returned, so a sweep killed partway logged NOTHING while
 # having really re-bought five certificates (2026-09-28 10:25: ME.11.B, ME.11.C,
