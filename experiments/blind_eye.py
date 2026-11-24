@@ -61,3 +61,34 @@ class BlindEye(_Wrapper):
     def step(self, action):
         o, r, term, trunc, info = self.env.step(action)
         return self._blind(o), r, term, trunc, info
+
+
+class ShuffledEye(BlindEye):
+    """J22's width-matched must-fail twin (ORDERS J22 (3); J17-2's
+    `K-row128-shuffled`, frozen 11-22: "each step's ray values permuted:
+    width and statistics kept, content destroyed"). Every observation's
+    vision block is re-ordered by a fresh permutation of its RAYS -- whole
+    [distance, material] pairs move together, so each channel keeps its
+    values and the per-step multiset of rays is kept; WHERE each ray points
+    is destroyed. Disclosed: what survives is non-directional ("food is
+    visible somewhere, this near") -- the control asks whether the eye's
+    ARRANGEMENT is what he learns from, not whether any vision helps.
+    The permutation stream is the wrapper's own (seeded from the cell seed,
+    offset), never the world's: the world underneath is the sighted arm's."""
+
+    SEED_OFFSET = 7_919
+    N_CH = 2
+
+    def __init__(self, env, seed: int):
+        super().__init__(env)
+        self.rng = np.random.default_rng(int(seed) + self.SEED_OFFSET)
+
+    def _blind(self, o):
+        if self.n_vision is None:
+            self.n_vision = int(np.asarray(self.env.w.observe_pure()["vision"]).size)
+            if not 0 < self.n_vision < o.shape[0] or self.n_vision % self.N_CH:
+                raise RuntimeError(f"ShuffledEye: vision width {self.n_vision} vs obs {o.shape[0]}")
+        o = np.array(o, dtype=np.float32, copy=True)
+        rays = o[:self.n_vision].reshape(-1, self.N_CH)
+        o[:self.n_vision] = rays[self.rng.permutation(rays.shape[0])].reshape(-1)
+        return o

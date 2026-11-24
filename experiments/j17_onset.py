@@ -161,7 +161,8 @@ HUNT_ARMS = ("H-simba-row128", "H-simba-row128-blind")
 # from the file's name, j17_hunt_<group>.json.
 HUNT_GROUPS = {"h0": HUNT_ARMS, "h1": ("H-wd-row128", "H-wd-row128-blind"),
                "h2": ("H-ofn-row128", "H-ofn-row128-blind"),   # h2 = OFN critic (11-22)
-               "h3": ("H-split-row128", "H-split-row128-blind")}   # h3 = split first layer (11-22)
+               "h3": ("H-split-row128", "H-split-row128-blind"),   # h3 = split first layer (11-22)
+               "h4": ("H-conv-row128", "H-conv-row128-blind")}   # h4 = J22 conv + shift (11-24)
 GAP_LO, GAP_HI = 1.20, 1.32
 
 

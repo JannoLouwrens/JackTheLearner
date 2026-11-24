@@ -533,10 +533,23 @@ J17_HUNT_ARMS.update({
     "H-split-row128": dict(J17_ARMS["K-row128"], critic="split"),
     "H-split-row128-blind": dict(J17_ARMS["K-row128-blind"], critic="split"),
 })
+# ---- J22 h4 (11-24, built before any h4 run; ORDERS J22 (1), PUBLISHED_PRIORS
+# §12/§24, DrQ): J17's OWN K-row128 pair with ONE key, critic="conv" = the
+# ray row as a 1-D image -> 4 x Conv1d(32, k3) -> 50 -> LN -> tanh, shared by
+# both Q heads and read DETACHED by the actor, random roll +-6 rays drawn
+# separately for obs and next-obs (experiments/conv_eye.py lists every
+# difference from DrQ). Third cell: the SHUFFLED twin (blind_eye.ShuffledEye,
+# each step's rays permuted), the width-matched control J17 never had.
+J17_HUNT_ARMS.update({
+    "H-conv-row128": dict(J17_ARMS["K-row128"], critic="conv"),
+    "H-conv-row128-blind": dict(J17_ARMS["K-row128-blind"], critic="conv"),
+    "H-conv-row128-shuffled": dict(J17_ARMS["K-row128"], critic="conv", shuffled=True),
+})
 J17_HUNT_GROUPS = {"h0": ("H-simba-row128", "H-simba-row128-blind"),
                    "h1": ("H-wd-row128", "H-wd-row128-blind"),
                    "h2": ("H-ofn-row128", "H-ofn-row128-blind"),
-                   "h3": ("H-split-row128", "H-split-row128-blind")}
+                   "h3": ("H-split-row128", "H-split-row128-blind"),
+                   "h4": ("H-conv-row128", "H-conv-row128-blind")}
 J17_HUNT_SEED = 923          # the box twin's seed (j17_onset TWIN_SEED)
 J17_HUNT_T = 100_000         # sighted/blind separate first at 100k (ac684c09)
 J17_T = 300_000
@@ -564,6 +577,9 @@ def pilot_world(arm: str, food_floor_only: bool, eye_frame: str = "world",
                          reward=c["reward"], eye_frame=eye_frame,
                          motor_frame=motor_frame,
                          native_substep=native_substep, eye=c.get("eye"))
+        if c.get("shuffled"):
+            from experiments.blind_eye import ShuffledEye    # J22's width-matched twin
+            return ShuffledEye(env, seed)
         if c.get("blind"):
             from experiments.blind_eye import BlindEye       # J17's must-fail arm only
             return BlindEye(env)
@@ -601,6 +617,8 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
     rec["eye_frame"], rec["motor_frame"] = eye_frame, motor_frame
     if "eye" in c:                       # J17 arms only; older records carry no key
         rec["eye"], rec["blind"] = c["eye"], bool(c.get("blind"))
+        if c.get("shuffled"):            # J22 only; other records unchanged
+            rec["shuffled"] = True
     return rec
 
 

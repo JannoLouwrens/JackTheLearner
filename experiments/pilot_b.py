@@ -208,6 +208,10 @@ class PilotLives(_Wrapper):
         self.total_decisions = 0
         self._capped = False
         self._started = False
+        # J22 (11-24): run_b points this at its live trace list when trace is
+        # on, so a cut cell's partial file keeps Q / critic loss / alpha too
+        # (h0's fault: its partial kept lives only). None = no key, unchanged.
+        self.trace_ref = None
         self._new_life_counters()
 
     def _new_life_counters(self):
@@ -278,7 +282,9 @@ class PilotLives(_Wrapper):
         tmp = self.partial_path.with_name(self.partial_path.name + ".tmp")
         tmp.write_text(json.dumps({"partial": True,
                                    "decisions": int(self.total_decisions),
-                                   "lives": self.lives}) + "\n")
+                                   "lives": self.lives,
+                                   **({} if self.trace_ref is None
+                                      else {"trace": list(self.trace_ref)})}) + "\n")
         os.replace(tmp, self.partial_path)
 
     def unfinished(self, info) -> dict:
@@ -303,17 +309,22 @@ def make_b(venv, seed: int, T: int, lr: float = 3e-4, use_sde: bool = True,
     default hyperparameters (adamw: weight_decay 1e-4 = what SimbaPolicy runs).
     critic (11-22, J17 hunt h2): None = sbx's own VectorCritic, unchanged; "ofn"
     = experiments.ofn_critic's unit-ball output feature normalisation (Hussing
-    2024), handed as policy_kwargs["vector_critic_class"]."""
+    2024), handed as policy_kwargs["vector_critic_class"]. "conv" (11-24, J22
+    h4) = experiments.conv_eye: actor + critic classes AND its SAC subclass."""
     from sbx import SAC
     if policy_kwargs is None:
         policy_kwargs = dict(layer_norm=True, net_arch=[256, 256])
     if optimizer is not None:
         import optax
         policy_kwargs = dict(policy_kwargs, optimizer_class=getattr(optax, optimizer))
-    if critic is not None:
+    algo = SAC
+    if critic == "conv":      # J22 h4: conv encoder + random shift (experiments/conv_eye.py)
+        from experiments.conv_eye import POLICY_KWARGS, ConvEyeSAC
+        policy_kwargs, algo = dict(policy_kwargs, **POLICY_KWARGS), ConvEyeSAC
+    elif critic is not None:
         from experiments.ofn_critic import CRITICS
         policy_kwargs = dict(policy_kwargs, vector_critic_class=CRITICS[critic])
-    return SAC(policy, venv, learning_rate=lr, buffer_size=max(int(T), 50_000),
+    return algo(policy, venv, learning_rate=lr, buffer_size=max(int(T), 50_000),
                batch_size=256, tau=0.005, gamma=GAMMA if gamma is None else float(gamma),
                learning_starts=WARMUP,
                train_freq=TRAIN_FREQ, gradient_steps=TRAIN_FREQ, ent_coef=ent_coef,
@@ -468,6 +479,8 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
         _pink_selection(model, seed)
     t_wall, t_cpu = time.time(), time.process_time()
     tr = []
+    if trace:
+        holder["w"].trace_ref = tr
     model.learn(total_timesteps=int(T), progress_bar=False,
                 **({"callback": _trace_callback(tr, TRACE_EVERY)} if trace else {}))
     wall, cpu = time.time() - t_wall, time.process_time() - t_cpu
@@ -630,7 +643,8 @@ def from_partial(arm: str, seed: int, pf: Path) -> dict:
     if pf.exists():
         part = json.loads(pf.read_text())
         return {"arm": arm, "seed": seed, "lives": part["lives"], "cut": True,
-                "decisions_reached": part["decisions"], "from_partial": True}
+                "decisions_reached": part["decisions"], "from_partial": True,
+                **({"trace": part["trace"]} if "trace" in part else {})}
     return {"arm": arm, "seed": seed, "lives": [], "not_found": True}
 
 
