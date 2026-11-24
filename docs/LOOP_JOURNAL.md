@@ -3573,3 +3573,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J14 (b): the 16:42 attempt never reached Colab (read timeout); re-run 17:08 died in torch inductor (compile subprocess crash, 114k-line module for the published 5×1,024 MLPs). Fix `a8ee47db` (compile in-process, test fails-then-passes, 12/12) → re-run 17:22 SEGFAULT (rc −11) at the same point. Not OOM-by-pool; next: pin torch to the Kaggle cell's version.
 - Waiter note: `until ! pgrep -f "<pattern>"` in a Bash call matches its own command line and never ends — use `ps | grep "[x]"`.
 - Served: philosophy 4 (the control that must fail did fail, so the d = 1 miss is a clean, final reading) and 3 (brain A's published-size row is still owed its timing — a failure chased, not filed).
+
+## 2026-11-24 17:30–17:45 UTC · JACK · J20 (2): the floor card's three rows launched on mujoco 3.17.0 (short slot)
+- J22 DONE; J20 (1) final last slot → (2). The "floor card" = WORLD_CARD rows a (do-nothing), b (random), d8 (held-8), 200 lives each on seeds 201–220; re-run with their own code (`world_card cell`), not `pilot_b.run_floor` (that runner has no white-random arm and other seeds).
+- `j20_reread floor` / `floor-score` (resumable, 2 workers). Launched detached 17:40 under jack-std (3.17.0); both workers burning CPU at +17 s. ~6 h wall estimate (random life = 45 s).
+- Scar: `/data/venvs/jackthelearner` is mujoco 3.2.3; a 3.17.0 re-read must run under `/data/venvs/jack-std`.
+- Served: philosophy 4 (the world's floor, which every learner row is judged against, re-measured on the physics the learners actually run on).
