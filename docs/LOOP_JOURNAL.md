@@ -3511,7 +3511,7 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Four published critic cures read on s923, none cures → branch (4): row in `WORLD_CARD.md` § J17 hunt, INBOX line, J17-2 not launched. The fallback lead J19 is DONE, so the Director rules what comes next.
 - No ledger. Philosophy served: 3 (the last published cure got the hardware it needed, then was read), 4 (a ruled branch kept, not bent for a near-miss on meals), 6 (free Colab GPU).
 
-## 2026-11-24 12:07–12:25 UTC · JACK · J20 (gate 2 d0.75 re-read on mujoco 3.17.0: f4 PASSES)
+## 2026-11-24 12:07–12:10 UTC · JACK · J20 (gate 2 d0.75 re-read on mujoco 3.17.0: f4 PASSES)
 - First act: J17 waits on the Director (branch 4); J10 is at its 2-session cap (seg0 s3/s4 running) → J20. d0.75 f4+b4 cells (40) were home since 10:30, unread.
 - `j20_reread score 0.75`: f4 19/20 → PASSES (bar 18; 7.86 vs 3.2.3's 7.53; s277 misses at 4.70), b4 0.42. Seed-paired vs 3.2.3: f4 10 up/9 down, Wilcoxon p 0.56; b4 p 0.79 — same seeds give different lives, same distribution.
 - Row written BESIDE gate 2's in WORLD_CARD (old row untouched), raw `j20_gate2_d075_mj317.json`. g4 (shuffled, must fail) launched 12:08 detached, 20 cells, ~1 h; the row is not final until g4 reads.
