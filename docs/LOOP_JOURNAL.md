@@ -3537,3 +3537,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Finding: g4 eats more on 3.17.0 (3.06 vs 2.17, paired 15/5, Wilcoxon p 0.014); sight's margin 5.36 → 4.80. Written in WORLD_CARD; verdict unchanged.
 - Launched d = 1 f4+b4 on box (40 cells, nice 19, 2 workers).
 - Served: philosophy 4 (nothing faked — a control that must fail, read before the row is called final).
+
+## 2026-11-24 15:05–15:35 UTC · SYSTEM · S11 (disk): `/data` 18 → 20 GB free, order not done
+- `d72239d9`: GPU job folders now go to `/data/tmp/gpu`; `scripts/reap_gpu_tmp.py` (called by regate.sh each sweep, no model, no new cron) removes one 24 h after its last write only if every output has a byte-identical copy in jack-logs (<1 MB ones copied there first, sha-checked). First run: 106 of 137 reaped, but they held only 50 MB.
+- The bytes were elsewhere: pip cache 0.9 GB purged; b_life_mujoco's two resume-source checkpoints (0.4 GB) removed, newest per run kept. Venv imports ok before/after.
+- Short of 25 GB by ~5: what's left needs a ruling (uncopied Dreamer/npz 2.8 GB; old HF models used by ledger specs; jack_corpora 15 GB, jack-data 11.6 GB) — in S11's state lines.
+- Scoreboard: no GPU-hours or slots affected; protects every lane from the disk floor. Philosophy served: 5, 6.

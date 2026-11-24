@@ -283,6 +283,9 @@ Never `/data/tools`, never result files, never another project's directory
 serves: philosophy 5, 6.
 **done when:** `/data` has ≥ 25 GB free with before/after in the state line.
 state: `/` 4.31 → 5.4 GB (`prune_cli_versions.sh`, `~/.cache/uv`, `git gc`). `/data` 39 GB (11-20) → 15 GB (11-24).
+state: 11-24 15:30 SYSTEM `d72239d9`: `/data` 18 → 20 GB. (1) gpu.py → `/data/tmp/gpu`; `reap_gpu_tmp.py` on regate's cron reaped 106/137 (byte-identical copy or <1 MB copied to `jack-logs/gpu_jobs`). (2) pip purge 0.9 GB, uv prune; venv imports ok. (3) b_life_mujoco: newest ckpt per run kept, L0/ P_phys_0/ gone (0.4 GB).
+state: KEPT, needs a ruling: 4 tmp folders 2.8 GB (A2-v1S Dreamer ckpts 60k–90k ×3 runs ≈1.4 GB + B/control.npz 0.5 GB, no copy anywhere); HF models >14 d (1.2 GB: SmolLM2-135M/360M, MiniLM, bge) are read by LG/ME.11.D/T2.10 specs, so kept.
+state: The last 5 GB is outside this order's three steps: `/data/jack_corpora` 15 GB, `jack-data` 11.6, `jack-logs/brain_b` 3.7, `uv/cache` 1.6 (prune removes nothing; `clean` not ordered). Director: name one. Also t0_24's test still mkdtemps in `/data` (spec file, left alone).
 
 ### S16 — A slot with nothing to do must cost nothing (ruling 97)
 part: (machine — cheaper; the shared meter stopped the team 45 h) · stage: — · step: —
