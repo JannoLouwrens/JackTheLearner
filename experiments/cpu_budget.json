@@ -1932,14 +1932,14 @@
         "detached:launch_j10_2_s5_seg0.log": 219.17,
         "detached:launch_j10_2_s6_seg0.log": 219.09,
         "detached:launch_j14_enc_timing.log": 31.07,
-        "detached:launch_j20_floor_mj317.log": 6600.51,
+        "detached:launch_j20_floor_mj317.log": 7200.54,
         "detached:launch_j20_gate2_d075_g4.log": 5255.03,
         "detached:launch_j20_gate2_d100_f4b4.log": 5100.02,
         "detached:launch_j20_gate2_d100_g4.log": 3798.12,
         "detached:launch_j22_gpu_timing.log": 5.04,
         "detached:launch_j22_pilot_h4.log": 7.99
       },
-      "used_s": 29312.9
+      "used_s": 29912.93
     }
   },
   "last_child_s": {
