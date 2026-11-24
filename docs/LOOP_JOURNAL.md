@@ -3543,3 +3543,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The bytes were elsewhere: pip cache 0.9 GB purged; b_life_mujoco's two resume-source checkpoints (0.4 GB) removed, newest per run kept. Venv imports ok before/after.
 - Short of 25 GB by ~5: what's left needs a ruling (uncopied Dreamer/npz 2.8 GB; old HF models used by ledger specs; jack_corpora 15 GB, jack-data 11.6 GB) — in S11's state lines.
 - Scoreboard: no GPU-hours or slots affected; protects every lane from the disk floor. Philosophy served: 5, 6.
+
+## 2026-11-24 15:15–15:30 UTC · JACK · J14 (a): row A2-v1S-enc frozen (`877faac4`)
+- J22 pilot (Colab) and J20 d = 1 (box, pids alive) both still running, home ~16:40; per the Order-of-work line the slot advanced J14.
+- `prereg/a2_size_s_enc.md` FROZEN on ruling 78's pins: v1S + the 4 MATCHED_ENC keys, seeds 10–12 (+13–14), bands unchanged, score on the file's own bins [P−30K, P) with (0.9P, P] printed beside, control = seed-10 never-trains twin. Reading written before any seed; the old file's "Matches" error corrected in the new one.
+- Re-read at freeze: `v1s_diff --matched-enc` → 4 keys moved, 53/56 SAME (precision, replay size, pretrain steps).
+- Next: its timing cell on Colab after J22's pilot frees the session.
+- Served: philosophy 3 and 4 (brain A's seat is held only by a reproduced published number; the test is fixed before it can be run).
