@@ -197,6 +197,18 @@ def test_enc_timing_cell_carries_the_four_keys_and_seed_10(tmp_path):
     assert "seed=0" in base["cmd"] and "seed=10" not in base["cmd"]
 
 
+def test_enc_kernel_compiles_in_one_process_before_the_runner():
+    """Timing cell 1 of A2-v1S-enc (Colab T4, 11-24 17:08) died in inductor: "A compilation
+    subprocess exited unexpectedly" (a 114k-line generated module for the 5 x 1,024 MLPs). The
+    kernel sets TORCHINDUCTOR_COMPILE_THREADS=1 BEFORE the runner starts (the child inherits it);
+    compile itself stays on (pinned). The plain A2-v1S kernels are not touched."""
+    t = R.kernel_body_enc_timing()
+    i, j = t.find(R.ENC_COMPILE_ENV_LINE), t.find("_t = timing_cell(")
+    assert R.ENC_COMPILE_ENV_LINE == 'os.environ["TORCHINDUCTOR_COMPILE_THREADS"] = "1"'
+    assert 0 <= i < j, (i, j)
+    assert "algo.compile.enabled=True" in R.enc_base()
+    assert R.ENC_COMPILE_ENV_LINE not in R.kernel_body_timing()
+
 def main():
     ok = True
     for name, fn in list(globals().items()):

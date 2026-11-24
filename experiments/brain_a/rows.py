@@ -448,7 +448,15 @@ print("DONE", flush=True)
 # first (rulings 86, 96, 99) on Colab T4: seed 10, rates only, no score read.
 ENC_TAG = "A2v1Senc"
 ENC_TIMING_FILE = "brain_a_v1s_enc_timing.json"
+# Timing cell 1 (Colab T4, 11-24 17:08, 280 s) died in torch inductor before step 2,000: "A compilation
+# subprocess exited unexpectedly" while compiling a 114,516-line generated module (the 5 x 1,024 MLPs).
+# Remedy = PyTorch's own: compile in the main process (TORCHINDUCTOR_COMPILE_THREADS=1, inherited by
+# the runner). Apparatus, not recipe — compile stays on as pinned; the first logged window (which
+# carries the compile) is already dropped by project_seed_hours. Every A2-v1S-enc kernel carries it.
+ENC_COMPILE_ENV_LINE = 'os.environ["TORCHINDUCTOR_COMPILE_THREADS"] = "1"'
 _KERNEL_TAIL_ENC_TIMING = r"""
+import os
+""" + ENC_COMPILE_ENV_LINE + r"""
 from experiments.brain_a.rows import timing_cell, enc_base, ENC_TAG, ENC_TIMING_FILE
 _t = timing_cell(WORK, "cuda", base=enc_base(), tag=ENC_TAG, fname=ENC_TIMING_FILE, seed=10)
 print("DONE", flush=True)
