@@ -3634,3 +3634,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `scripts/idle_skip.py` (no model): skip only if 5/5 Kaggle CPU sessions are ours and RUNNING by Kaggle's own status, no detached job from the last real slot has died, ORDERS.md unchanged; unreadable → run; 4th skip runs. Planted 8/8; live reading now = skip.
 - `ladder_loop.sh` calls it after the pace gate (lane jack), marks start/end of real slots; `usage_attribution` counts SKIPPED-IDLE apart from dark (P6c). Commit `bd43f84b`; −352 lines of August probes, −54 lines of launcher narration.
 - Served: philosophy 5, 6 (a slot that can start nothing stops costing the shared meter).
+
+## 2026-11-24 21:22–21:42 UTC · JACK · J20 (2): the floor card re-read on mujoco 3.17.0 — J20 DONE (short slot)
+- Kaggle 5/5 RUNNING by Kaggle's own status (J10 s3 seg2, s4 seg2, s5 seg1, s6 seg1; J23 b6c2), nothing home. J20 floor 55/60 cells at start → waited out the last 5 (all rc 0, 10 lives each).
+- `floor-score` now pairs each row with its 3.2.3 jsonl and reads the §8 gate (`d87ea756`, planted 4/4). a: bit-identical life for life (200/200). d8 1.04 vs 1.16 meals/life (7 up/10 down, p 0.42); b 0.46 vs 0.52 (6/12, p 0.29). Gate HOLDS: a + b = 0 seeds at f's bar.
+- WORLD_CARD § J20 (2) + raw `j20_floor_mj317.json` (`f197015d`). Every world-card ruler the learner rows lean on now has a 3.17.0 reading; the version did not make the floor easier.
+- Served: philosophy 4 (a control-row reading the learner rows rest on, re-measured on the version they run, bars unmoved) and 1 (his world is measured, not assumed).

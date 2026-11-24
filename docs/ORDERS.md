@@ -152,13 +152,9 @@ a "3.17.0" row BESIDE the old one in `WORLD_CARD.md`. Bars are unmoved
 to report in INBOX.
 serves: M3 · auditor finding 3 · philosophy 4.
 **done when:** the 3.17.0 rows (d0.75 with g4, d = 1 with g4, three floor rows) stand beside the old ones in `WORLD_CARD.md`.
-state: 11-24 12:09 (1) d0.75 f4+b4 READ on 3.17.0 (box): **f4 19/20 → PASSES** (7.86 vs 3.2.3's 7.53; only s277 misses, 4.70), b4 0.42; seed-paired vs 3.2.3 Wilcoxon f4 p 0.56, b4 p 0.79. Row beside gate 2's in WORLD_CARD (raw `j20_gate2_d075_mj317.json`).
-state: 11-24 14:40 g4 d0.75 READ: **0/20 → fails as it must; d0.75 row FINAL** (3.06 meals/life; f4 > own g4 seed 20/20). g4 eats more on 3.17.0 than 3.2.3 (2.17; paired 15/5, p 0.014) — margin 5.36 → 4.80, said in WORLD_CARD.
-state: (4) DONE `250942db`: both callers via `fast_sim._multi_ray`; test PASS on both versions.
-state: 11-24 16:25 d = 1 f4+b4 READ `7e296cac`: **f4 5/20 → FAILS** (needs 18; 3.2.3 read 3/20), 4.18 meals/life vs 3.92, seed-paired 11/9 p 0.37; b4 0.41. Row beside J12 (2′) d = 1 in WORLD_CARD (raw `j20_gate2_d100_mj317.json`).
-state: 11-24 17:31 g4 d = 1 READ `40f6573e`: **0/20 → fails as it must; d = 1 row FINAL** (1.27 meals/life vs 1.24 on 3.2.3, paired 11/8 p 0.94; f4 > own g4 20/20, margin 2.91). (1) DONE.
-state: 11-24 17:40 (2) LAUNCHED detached on the box (jack-std, mujoco 3.17.0, 2 workers): WORLD_CARD rows a / d8 / b with their own code + seeds (`world_card cell`, 201–220 × 10 lives, d = 1) via `j20_reread floor` (`HEAD~` of this state). 60 cells → `/data/jack-logs/j20/floor/`, log `launch_j20_floor_mj317.log`; est. ~6 h wall (one random life 45 s).
-state: NEXT: `jack-std/bin/python -m experiments.j20_reread floor-score` once 60 cells are home (re-launch the same command if it died; it resumes), write a "3.17.0" row beside a / b / d8 in WORLD_CARD with a seed-paired test vs the old jsonl; floor gate = a + b ≤ 1 seed at the f bar. NB: the `jackthelearner` venv is mujoco 3.2.3 — use jack-std.
+state: DONE 11-24 21:40 `f197015d` — (1) d0.75 + d = 1 rows FINAL (f4 19/20 PASS at d0.75, 5/20 FAIL at d = 1, g4 0/20 both); (4) `250942db`.
+state: (2) floor READ on 3.17.0 (60/60 cells, scorer `d87ea756`, planted 4/4): a bit-identical to 3.2.3 (200/200 lives); d8 1.04 vs 1.16 meals/life (Wilcoxon p 0.42), b 0.46 vs 0.52 (p 0.29) — same distribution, slightly lower.
+state: §8 floor gate HOLDS: a + b = 0 seeds at f's bar (neither reaches 5 on any seed). (3) all rows beside the old ones in WORLD_CARD (§ J20 (1) ×2, § J20 (2)); raw `world_card_data/j20_floor_mj317.json`.
 
 ### J10 — The walking layer: the row again with enough seeds, life carried across segments
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §21; rulings 45, 72, 82, 95
