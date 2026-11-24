@@ -3497,3 +3497,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Try 1 (90 s): Colab's preinstalled flax breaks on JAX 0.11 at actor.init. Pinned the box trio (jax 0.11.2, flax 0.12.12, optax 0.2.9); try 2 RUNNING on Colab T4 since 10:28, past imports.
 - No ledger. Philosophy served: 3 (the last published critic cure gets a machine that can run it before the hunt is closed), 6 (free compute only).
 - 10:38 timing READ, Colab T4 cuda:0: sighted SimBa 42.6 learning decisions/s vs 1.12 on Kaggle CPU (~38×); sighted+blind pair at once 24.0/s → 100k ≈ 1.1 h. 10:39 the h0 pair launched on Colab (`ladder-1795516779`), same cells, world and T as the CPU h0 run, own output file. Next worker: hunt() on `j17_hunt_h0_gpu.json`, then J17's branch.
+
+## 2026-11-24 10:55–11:35 UTC · LAB · Curriculum (VACANT): fed once, then weaned
+- Bet: a parent sets the newborn beside each food once (the hindsight table gets its names), then sets him down anywhere; first own meal in half a born-anywhere newborn's decisions. `experiments/fed_once.py`, hand reflex as ruler (not a learner), box, ~25 CPU-min.
+- DEAD at the pilot, dev worlds 1101–1106 (judge worlds 1501–1508 not lived): first own meal median 1,038 vs born 1,712, ahead 1 of 6 (bar 5); meals 35 vs 32; deaths 1 vs 3; misnamed twin 3,000.
+- Cause: the name. 8 of 15 hand-fed meals had food on the nearest ray (wild 74%); a wrong name of equal count costs 400 decisions. Also found: the reflex wedges (2,983 decisions pushing at a food never reached) → INBOX line for ruling 84's arm.
+- No ledger. Philosophy served: 1 (his first meal), 3 (a vacant seat's challenger raced and lost), 4 (a kill bar kept, control behaved), 5 (his curriculum).
+

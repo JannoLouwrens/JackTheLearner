@@ -351,6 +351,7 @@ vs 256; `coverage` baseline entries DP.02, DP.03, LC.04 live again.
 - SYSTEM 11-22 09:30: `coverage` exits 2 on FAIL-UNOWNED = 1 (SO.01, not T0.34 as S15 says) — bookkeeping, not acted on.
 - JACK 11-22 09:50: `KNOWN_ANSWERS.md` has TWO "Row J10-2" headings — the 11-16 Yu, Turk & Liu PPO pre-flight (cited by `yu2018_walk.py`) and ruling 82's carried SAC row (stub added this slot, marked). One needs a new id.
 - 11-24 10:35 JACK J17: J17's state said Kaggle W48 GPU hours open Mon 11-23; the meter resets SATURDAY (`gpu.week_key`, ruling 9) and W47 shows 33.1 h > 30, so Kaggle GPU is shut until Sat 11-28 00:00 — h0's GPU timing went to free Colab T4 instead. J14 (b) already had the right date.
+- LAB 11-24 11:30 (for ruling 84's arm; `experiments/fed_once.py`, dev worlds only, no judge spent): (1) the hindsight reflex can WEDGE — one life steered 2,983 decisions straight at a real, tabled food it never reached; unlearning never fired because he was never "near". Any arm built on `live_eye.cell` needs a give-up (the file has one: target ray no shorter in 50 decisions → babble 16). (2) The imprint "nearest ray at the bite" depends on how he arrived: food on 74% of wild meals, 8 of 15 when a parent sets him beside the food — so feeding a newborn near food (the dial's d = 0 too: 1 of 4) mis-names it. Fed-then-weaned read DEAD at the pilot (ahead of born 1 of 6).
 
 ## DONE (kept one day)
 

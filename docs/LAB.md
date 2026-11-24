@@ -40,62 +40,17 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   want from the CHANGE in each sense before a meal; the critic's value as the
   want. Not entered (a given want is advice, not his). Philosophy 1, 3, 4.
 
-- 11-15 · **Ear — taught by his own prediction of sound** (ASR, VACANT;
-  `ear_predict.py`; 70k weights, 5.5 h unlabelled speech, 25 hearings a word) ·
-  **DEAD:** +1.8 / +2.3 points (bar +5.0; shuffled −0.5 / +0.3); CPC +0.5.
-  Published gains start at 100 h. Unrun: the narrator's label as the loss.
-
-- 11-16 · **Eye — a streak, not a grid** (Vision encoder; `eye_streak.py`, rule
-  first `bddffac4`; long form `78902da4`) · **ALIVE, ENTERED (now order J12):**
-  on a taught table's ruler (worlds 400–419) 128 azimuths × 2 rows .900 vs
-  16×16 grid .517 vs today's 16 rays .528 (ahead 20/20); blind .19, shuffled
-  .21 fail as they must. The 16×16 grid does NOT beat 16 rays (§12 answered).
-  One level row: 16/32/64/128/256 = .540/.696/.856/.909/.925 — knee at 128.
-  Cannot say whether a BRAIN learns to use it. Not tried: a fovea at 64 rays.
-  END-FIT 1, 5. Philosophy 1, 3, 4.
-
-- 11-17 · **Finding himself after rebirth — one look, with and without the
-  compass** (Death & persistence, VACANT; `find_himself.py`, rule first
-  `fe459803`; long form `78902da4`) · **ALIVE, ENTERED (became ruling 38 /
-  J12):** recall of a look from within 1 m (worlds 700–719, chance .021): no
-  compass 128 rays .933 vs 16 rays .795 (ahead 20/20); with compass .957 /
-  .889; shuffled tags .02. Half the bet was wrong — 16 rays DO find him. The
-  compass costs .09 / .02 only if he may turn the look; ray-for-ray 128 falls
-  to .54. Coverage limits him: 15/60/360 remembered lives = .31/.65/.93.
-  Turn-free key (amplitude spectrum, `2a6ffa69`): hit .845 but **VOID** — the
-  scrambled-eye control read .157 > .121; re-register with mean distance and
-  material dropped from the control before believing it.
-  END-FIT 1, 2, 4. Philosophy 1, 3, 4.
-
-- 11-18/20 · **A place key he learns from the passing of time, carried across
-  death** (Death & persistence, VACANT; `place_key.py` rule `de328d98`,
-  `place_key_carried.py` rule `f1841fc1`; long form `8cc61917`) · **ALIVE
-  twice, ENTERED as an INBOX proposal (ruling 63: stage-3 candidate):** a
-  10,000-weight ring trained only to give looks a moment apart close keys,
-  compared ONCE: **.934 vs the 128-turn search .933** (worlds 730–749;
-  untrained .443, time-shuffled .273, tags .026, chance .021; a plain MLP
-  .447 — the ring anatomy is needed). Trained once on worlds 720–724 and
-  carried to unseen worlds at 15 / 60 / 360 remembered lives: **.294 / .680 /
-  .945** vs turn search .266 / .628 / .933 vs home-grown .202 / .542 / .934.
-  What survives death is the KEY (carried) and the LOOKS (per world;
-  coverage is the limit). Disclosed: judged worlds not fresh for the second
-  bet. Cannot say: inside a brain learning to eat; another kind of world;
-  online under a real policy. Not tried: the key as the brain's place input.
-  END-FIT 2, 4. Philosophy 1, 2, 3, 4.
-
-- 11-20/21 · **Taste teaches the eye where food is** (Vision encoder, BY
-  DEFAULT; `taste_eye.py`, rule `a84e08d7`; long form `3c17e958`) · **DEAD:**
-  a ring over 128 rays trained only on "I eat within 2 s" points at in-sight
-  food on **.080** of 33,402 judge looks vs untrained .082, shuffled .024,
-  nearest .032; handed the food's ray (told) .829 — so the miss is the LABEL.
-  Found: food wears one of 4 colour sets by world; only .43 is always food.
-
-- 11-21 · **One parent's voice, heard as bigger and smaller people** (ASR,
-  VACANT; `ear_one_voice.py`, rule `8cc61917`; long form `3c17e958`) ·
-  **DEAD:** at 5 hearings a word, one voice .257 on strangers, pitch-warped
-  **.279 (+2.2 points, bar +5.0, ahead 8/12)**, matched noise .260, 50 voices
-  .287. Which parent matters more than how many (spread .055 vs .030).
-  PRIORS §23 since: the record says voices, not hearings. Unrun: VCTK.
+- Folded 11-24 (long forms in git at `aceba2e7`): 11-15 **ear taught by
+  his own prediction of sound** DEAD (+1.8 / +2.3 points, bar +5.0);
+  11-16 **eye as a streak** ALIVE → J12 (128 azimuths .900 vs 16 rays .528,
+  knee at 128); 11-17 **finding himself, one look** ALIVE → ruling 38 (128
+  rays .933 vs 16 rays .795, no compass; the turn-free key VOID on its
+  control); 11-18/20 **place key learned from the passing of time, carried
+  across death** ALIVE ×2 → ruling 63 (.934 vs turn search .933; carried
+  to unseen worlds .294 / .680 / .945 at 15 / 60 / 360 lives; `place_key.py`,
+  `place_key_carried.py`); 11-20 **taste teaches the eye** DEAD (.080 vs
+  untrained .082 — the label; food wears one of 4 colour sets by world);
+  11-21 **one parent's voice, pitch-warped** DEAD (+2.2 points, bar +5.0).
 
 - 11-21 · **The mouth names it, the eye remembers backwards** (Vision
   encoder, BY DEFAULT; PLAN "Learning to eat" right column; `hindsight_eye.py`,
@@ -143,3 +98,26 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   Cannot say: a learner uses it (J17); a camera eye; carrying the table
   between worlds. Unrun: patience learned from his own regrow waits.
   END-FIT 1, 2, 5. Philosophy 1, 2, 3, 4.
+
+- 11-24 · **Fed once, then weaned — a parent's hand names food for the
+  newborn** (Curriculum, VACANT; PLAN "His world" right column, PRIORS §3
+  "provisioning that fades"; `fed_once.py`). Bet: `live_eye`'s first meal
+  waits on babble (decision 176–6,424); the old weaning died because a
+  learner learns eating-WHERE-born, and the table learns WHAT — so set him
+  beside each food once, then set him down anywhere: first own meal in half
+  born's decisions, feeding time charged. Kill: not ahead on ¾ of worlds, or
+  a misnamed twin does as well. Prior: Avalon's dial .716 vs .001 at 5×10^7
+  steps, Ecological RL 0 → 70% — learners, 10^5+ steps; one provisioned
+  meal: silent. **DEAD AT THE PILOT** (dev worlds 1101–1106, 3,000
+  decisions; judge worlds 1501–1508 not lived): first own meal median
+  **1,038 vs born 1,712, ahead on 1 of 6 (bar 5)**; meals 35 vs 32; deaths
+  1 vs 3; misnamed twin median 3,000. **It died on the NAME, not the
+  weaning:** only 8 of 15 hand-fed meals had food on the nearest ray (wild:
+  74%) — set down beside it he bumps it side-on — and one wrong name of
+  equal count wins whenever it is nearer and costs 400 decisions. The
+  dial's own nursery (d = 0): first imprint on food 1 of 4, ahead 3 of 6.
+  Found for ruling 84's arm: the reflex can wedge — one life steered 2,983
+  decisions at a real food it never reached, never "near", so never
+  unlearned. Unrun: imprint the texture that LOOMED over the last second,
+  not the nearest ray at the bite; a hand that walks him INTO the food.
+  END-FIT 2, 5. Philosophy 1, 3, 4, 5.
