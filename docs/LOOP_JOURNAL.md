@@ -3652,3 +3652,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Scorer log grew 24 MB in 35 s: dm_control sets simplefilter('always') at import, so NumPy's shape warning printed on every env build. Fixed in `make_env` (`1db139a1`, log 568 B). J19 re-eval logs (1.78 GB each, same flood) filtered to their 18 real lines: /data 21 → 25 GB free.
 - Next-up #1 (ruling 91, `e9b26b44`): LF.03's own capture/apply, s0, mid-life save @1,200: resumed = unbroken on 200/200 decisions; planted drops of physics, warmstart, world RNG, learner RNG each differ from decision 0. The torch-global-RNG drop does not show because that RNG never moves (1,500 decisions, 180 opt steps). Planted compare tests 4/4.
 - Served: philosophy 4 (a resume claim now has a control that could fail, and did on every item that is used) and 6 (the box's disk, which customers share, got 4 GB back).
+
+## 2026-11-24 22:20–22:40 UTC · JACK · J10 refill + J23 (scorer 3/8, 6a faults → FORGE_POOL) (short slot)
+- Kaggle: J10 s3 seg2, s4 seg2, s5 seg1, s6 seg1 RUNNING; J23's session free → launched J10-2 s7 seg0 (`jack-cpu-1795559019`), 5/5 busy. The order said "s7 when ≤ 3 busy"; I read rule (1) (no free session while a ready kernel exists) as overriding it. Committed the J23 result receipt first.
+- J23 box scorer alive (26 CPU-min): stream-100 @150k lib s5 956.1, s6 952.8, s7 845.9. Band 905.7–1000 needs s8 + s9 mean ≥ 886.9. ~40 min left, so it does not land in this slot.
+- J23 text debt: Row B-6a's two faults (s3 frozen explorer, α → 0 before any reward; s1 win-then-lose 772.2 → 407.7) go into `FORGE_POOL.md` as walls, not candidates, prior §21/§19. Pool check still 15 ok.
+- Served: philosophy 6 (no free GPU/CPU hour left idle) and 3/4 (a published-row reading on its frozen rule; B's failures are named as walls the forge must beat).

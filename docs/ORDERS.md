@@ -171,7 +171,7 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 **done when:** J10-2 is in `KNOWN_ANSWERS.md`, pass or fail, by its frozen rule.
 state: J10-1: 1M median 4,065 IN BAND, control valid; 2M 1 of 3 → FAIL.
 state: 11-22 07:55 `b609b142`: rule frozen before seed 3; `segment_job_body(row="J10-2")` carries + 50-ep eval, `require_carry` refuses a mount lacking life.pkl/physics.pkl (planted PASS). Tests 10/10.
-state: 11-24 20:12 HOME: s4 seg1 (1M eval R 5,420.2, 6.61 m/1k, 0/50 fell), s5 seg0, s6 seg0 (500k each). LAUNCHED s4 seg2 `…550975`, s5 seg1 `…551040`, s6 seg1 `…551106`; s3 seg2 `…549106` running (s3 @1M: R 4,500.9). 5 sessions busy (J10 ×4, J23); s7 seg0 when ≤ 3 busy. Logs `/data/jack-logs/j10/launch_j10_2_s<k>_seg<n>.log`. NEXT: when a record lands, `kernel2 <s> <next>`.
+state: 11-24 20:12 HOME: s4 seg1 (1M eval R 5,420.2, 6.61 m/1k, 0/50 fell), s5 seg0, s6 seg0 (500k each). LAUNCHED s4 seg2 `…550975`, s5 seg1 `…551040`, s6 seg1 `…551106`; s3 seg2 `…549106` running (s3 @1M: R 4,500.9). 22:23 s7 seg0 LAUNCHED `…559019` into the session J23 freed (rule (1): no free session while a ready kernel exists) → 5/5 = J10 ×5. Logs `/data/jack-logs/j10/launch_j10_2_s<k>_seg<n>.log`. NEXT: when a record lands, `kernel2 <s> <next>`.
 
 ### J14 — Brain A and the ear: Colab is open, so the timing cells go now
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `docs/research/prereg/a2_size_s.md`; `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws; rulings 67, 78, 79, 86, 96
@@ -220,8 +220,9 @@ serves: M3 · PLAN step 3 · philosophy 3, 4.
 **done when:** Row B-6c-2 is in `KNOWN_ANSWERS.md`, in band or a miss, by its frozen rule.
 state: 11-24 18:35 rule FROZEN `07df7d63` (Row B-6c-2 in KNOWN_ANSWERS: lib, fresh s5–9, 150k, stream-100 at 150k, band 905.7–1000, ctrl s0–2, no ext). Kernel + box scorer `0c2b7884` (`brain_b_dmc b6c2-kernel` / `b6c2-score`), planted verdict test PASS.
 state: 11-24 22:05 kernel HOME, 48/48 models in `/data/jack-logs/brain_b/b6c2/`. Kernel's own 10-ep @150k: lib s5–9 965.5 / 960.2 / 861.0 / 978.3 / 950.7, ctrl 1.5 / 0.2 / 1.7 (NOT the row's reading).
-state: 11-24 22:10 scorer DETACHED (pid 2189624, log `/data/jack-logs/brain_b/score_b6c2.log`, ~10 min a cell, 8 cells; per-cell files `score_*.json` resume). lib s5 stream-100 = 956.1. `1db139a1` silenced dm_control's per-env DeprecationWarning (log was 24 MB/35 s; J19 logs had 1.78 GB each → filtered, /data +4 GB).
-state: NEXT: when `b6c2/verdict.json` exists → row result in KNOWN_ANSWERS B-6c-2 + one line in `stage2_a_vs_b.md` 2b; 6a's two faults → FORGE_POOL (text). Dead scorer → relaunch same command (it skips scored cells).
+state: 11-24 22:37 scorer ALIVE (pid 2189633, 26 CPU-min, ~8 min a cell; log `/data/jack-logs/brain_b/score_b6c2.log`; per-cell `score_*.json` resume). Stream-100 @150k: lib s5 956.1, s6 952.8, s7 845.9 (kernel's 10-ep s7 861.0). In band needs s8 + s9 mean ≥ 886.9. 5 cells left (s8, s9, ctrl s0–2).
+state: 6a's two faults → `FORGE_POOL.md` § Faults DONE (text, not candidates; pool check 15 ok). `1db139a1` silenced dm_control's DeprecationWarning flood.
+state: NEXT: when `b6c2/verdict.json` exists → row result in KNOWN_ANSWERS B-6c-2 + one line in `stage2_a_vs_b.md` 2b (after "6b reacher-easy REPRODUCES"). Dead scorer → relaunch same command (it skips scored cells).
 
 ### J21 — Brain A on the Mac: the port table's next rows
 part: His brain (A on the Mac) · stage: 1 (ready-list "first-day speed test for the Mac") · step: 2 (combine) · prior: `docs/research/PUBLISHED_EVIDENCE_2026-11-15_PORT.md` step table; `experiments/brain_a/README.md`
