@@ -542,6 +542,25 @@ meals/life (3.2.3: 2.68). Unlike d0.75, the shuffled twin did not move with the
 version: 1.27 vs 1.24, seed-paired 11 up / 8 down, Wilcoxon p 0.94; every g4
 life ended by hunger. Adult-taught ceiling only.
 
+### J20 (2) — the floor card's three learner-free rows RE-READ on mujoco 3.17.0 (box, jack-std, 2026-11-24 17:40–21:35; raw `world_card_data/j20_floor_mj317.json` sha256 4be52e00…; runner `experiments.j20_reread floor` = `world_card cell`, same code and seeds 201–220 × 10 lives, d = 1; scored by `j20_reread floor-score` at `d87ea756`)
+
+| row (**mujoco 3.17.0**) | lifetime s (mean ± sd; min–max) | floor meals / life (± sd; max) | lives ≥1 / ≥5 | per-seed means | vs 3.2.3, seed-paired (meals) | vs 3.2.3, seed-paired (lifetime) |
+|---|---|---|---|---|---|---|
+| a do-nothing | 599.9 ± 0.2 (599.4–600.0) | 0 | 0 / 0 | 0.0 (all) | **identical, life for life (200/200)** | identical |
+| d8 action held 8 | 534.6 ± 43.8 (492–744) | 1.04 ± 1.24 (max 7) | 114 / 3 | 0.5–1.8 | 1.04 vs 1.16: 7 up / 10 down / 3 tie, Wilcoxon p 0.42 | 535 vs 539 s: 7 / 13, p 0.28 |
+| b white random | 302.9 ± 19.3 (278–416) | 0.46 ± 0.79 (max 4) | 62 / 0 | 0.1–1.1 | 0.46 vs 0.52: 6 / 12 / 2, p 0.29 | 303 vs 302 s: 13 / 7, p 0.15 |
+
+**The floor card survives the version change; the §8 floor-arm gate holds:
+a + b = 0 seeds meet (f)'s bar** (needs ≤ 1; neither reaches 5 meals/life on
+any seed even without the "above b" clause). Every life of all three rows
+ended by hunger, no apples. The do-nothing row is bit-identical to 3.2.3 (a
+body that never moves never touches the contact code that changed). The two
+moving rows are a different draw from the same distribution — nothing paired
+reaches p < 0.15 — and both read slightly LOWER on 3.17.0, so the
+version did not make the floor easier: d8 stays the best random row and the
+per-seed floor the f bar is set above. With J20 (1)'s d0.75 and d = 1 rows,
+every world-card ruler the learner rows lean on now has a 3.17.0 reading.
+
 ### J15 (2) — gate 3's reading at d = 0.75: f5, the ruler a memoryless net could copy (harvested 2026-11-19 12:10; raw `world_card_data/eye_gate3_d075.json` sha256 54c77266…; kernel `jack-cpu-1795073402` at `9882df51`; scored by `eye_forager score3`)
 
 | row (d = 0.75, seeds 281–300 × 10 lives) | seeds meeting the bar | mean of seed means, floor meals/life (sd; min–max) | mean life, decisions | capped lives | reported only: all floor foods, meals/life (seeds ≥ 5 and > b5) |
