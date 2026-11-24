@@ -985,3 +985,9 @@ Long form: `/data/jack-research/research_notes/one_voice_part{A,B,C,D}.md` (58 K
 - False belief in a reward-only acting agent; a diary as the only inheritance; an anchored-against-unanchored told fact with a stripped control: no test found, pass or fail. `LG.11` would be new; the confound to shut out is the word statistics alone (BERT 0.77).
 
 **Not verified.** XLand / AdA scale; Taylor & Stone's transfer measures; Ndousse's and CTG's step counts; Cook's and Dynalang's curve heights; BIB / AGENT (abstracts).
+
+## 26. A sense built from outcome: "what was at my mouth when I ate" as the learner's input (2026-11-24; serves the lab's hindsight eye, rulings 84 and 98, M3; plan part "Learning to eat" + "Eye"; answers INBOX `RESEARCH:` Director 11-22)
+
+**Question.** What is published on a sense built from OUTCOME: features of what was in view when reward arrived, fed back to the learner as input? Sizes, steps, and whether any small agent learned to reach food that way from scratch.
+
+*(Skeleton, 2026-11-24 16:15 UTC — research in progress this slot; notes under `/data/jack-research/scratch_sec26{A,B,C}`.)*
