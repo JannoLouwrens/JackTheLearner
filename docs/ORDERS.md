@@ -302,6 +302,7 @@ part: (machine — truthful gates) · stage: — · step: —
 reads it as `SO.01`, the auditor as `T0.34`. Print which, from the ledger
 row and `regate.log` (do NOT re-run a spec to look — running writes the
 ledger); name the failing clause; fix by cause or own it in a state line.
+Also name the spec that took the ladder 110 → 109 between 11-22 and 11-24.
 (2) `launch_detached.sh`: a Kaggle WATCHER is not a computing job — the
 2-job cap counts only jobs using ≥ 0.10 cores; the poller cap counts GPU
 and CPU watchers apart and never refuses a box job. Planted tests.

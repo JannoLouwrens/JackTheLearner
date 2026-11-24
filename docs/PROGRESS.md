@@ -1,139 +1,133 @@
-> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
-> NO WORKER HAS FINISHED A RUN FOR 8 HOURS (checked 2026-11-22 20:43 UTC by the clerk, which needs no model). The worker log's last line: 2026-11-22T20:37:27+00:00 STOPPED at 100% weekly usage — all agents paused until the owner resumes — meter read: 'week:all models        [####################] 100%  resets Nov 26, 9am (UTC)'
-> So everything below is the PREVIOUS run of the machine and is a RECORD,
-> not current state: its counts, its "current state" framing and any
-> claim about what has or has not moved describe an older world.
-> Stamped 2026-11-22T20:43:01+00:00 by scripts/lib_seal.sh. It disappears the next time the
-> machine completes a run and rewrites this file.
-
-# PROGRESS — for the owner (written by the Director, Sunday 22 Nov 2026, 06:50 UTC)
+# PROGRESS — for the owner (written by the Director, Tuesday 24 Nov 2026, 12:35 UTC)
 
 Glossary: *brain A* = the Dreamer-style world model; *brain B* = the simple
 replay learner (SAC, from a public library); *a decision* = one action, 0.2 s
 of his life; *a known-answer row* = our build re-running a published
 experiment to see if it gets the published number; *the critic* = the part
 of brain B that estimates how good a situation is; *the forge* = your
-science lab; *a blind twin* = the same run with the sense switched off.
+science lab; *a blind twin* = the same run with the eye switched off;
+*a shuffled twin* = the same run with the eye's numbers scrambled.
 
 ## The short version
 
-**The eye race is read, and the eye is not the wall — the learner is.**
-128 rays against 16 under brain B, 20 of 20 runs: neither eats. The wide
-eye helps a little by being wide, not by seeing: its blind twin eats more.
-A learner that trains on real sight eats 3–8 times LESS than one that never
-trains. In 10 of 10 sighted runs brain B's critic runs away (it believes in
-far more food than he gets); in 0 of 10 blind runs. That is a located
-fault, and four published cures for it are being tried now.
+**The team was stopped for 45 hours.** The shared weekly usage allowance
+hit 100% on Sunday afternoon; 136 worker runs and two of my sittings were
+refused. Work resumed at 09:51 today when you signed the box in again. The
+free machines kept computing through the stop, and most of what they
+finished has been read this morning.
 
-**Neither brain is cleared against the published record yet.** The library
-version of brain B missed its last three published checks on our machines
-(one more reproduced). Brain A's larger-size check missed above the
-published band and turned out not to be the published size. Both have a
-named next test. I will not let either into the big race until they pass.
+**No learner eats from his own eye yet, and the cure hunt is closed.** Four
+published cures for brain B's runaway critic were each tried on one run
+beside a blind twin. None stops it, and none eats: 0.2 to 1.1 meals a life,
+where a hand-written rule using the same eye eats 7.9. I closed the hunt by
+the rule written before the runs.
 
-**His first learner that ate (Friday) still stands** — told where food is,
-brain B fed itself on 4 of 5 runs, then lost it. Your lab's first round, on
-keeping that skill, is running: 30 runs.
+**What comes next is not a fifth cure but a different door.** The published
+record says a replay learner fails on raw images and that one recipe alone
+repairs it: a small pattern-finding (convolution) layer plus randomly
+shifting the image during learning. His eye is a row of 128 rays, an image
+one pixel tall, and we have been feeding it in as 256 loose numbers. That
+recipe is being built for his eye today, with a blind and a shuffled twin
+and the pass/fail rule written first. If it fails too, brain B is finished
+on this eye for this stage and the question passes to brain A.
 
-## The honest paragraph (Sunday)
-
-Closer to a creature, by one real step and several walls with names; not
-by test points. The week's biggest step: a learner ate in his world for
-the first time, with a control that failed as it must. The worst drift:
-the free GPU week was spent in its first day and a third of it bought
-nothing (an ear run estimated at 1.5 hours took 10 and was cut one step
-from its end), and last night every worker lane finished its orders by
-evening and waited for me with free machines idle. Both are corrected in
-today's orders: no GPU launch without a timing run, and every "if this,
-then that" is written in advance so nobody waits for a sitting.
+**His world is confirmed learnable by sight** on the one physics version:
+the hand-written forager passes its bar again, 19 of 20 worlds (the control
+that must fail is running now).
 
 ## What Jack can do today
 
 He lives, senses, hungers, dies, is reborn, and keeps a diary. A learner
-eats when handed the direction to food, for a while. Nothing learns to
-find food from his own eye, and nothing keeps the skill. Test ladder: 110
-of 270, unchanged.
+eats when handed the direction to food, for a while. Nothing learns to find
+food from his own eye, and nothing keeps the skill. Test ladder: 109 of 270
+(110 on Sunday: one passing test went stale and has not been re-run; I
+have ordered it named).
 
 ## Each part of the plan: the step it is on (0–5)
 
-- **His brain — 3 (reproduce), not cleared.** B: five rows stand, three
-  missed (most runs match the paper, one in five fails). A: two rows in
-  band, one miss; the size check must be re-run at the true size (next
-  week's GPU). Mac port: three more maths rungs passed.
-- **Learning to eat — 4.** Moved: the eye race read; the fault placed in
-  the critic; cures on trial; the full race that follows a cure is frozen.
-- **His world — 2.** Found: the box and the free machines ran two versions
-  of the physics library and the same seed gave different meals. Ruled one
-  version; the box's rows are being re-read on it.
-- **Eye — 2.** Not the wall. The lab found a second route (a table of what
-  was at his mouth when he ate, filled by his own meals); entered, not run.
+- **His brain — 3 (reproduce), not cleared.** Moved: B's three misses were
+  dissected. One (reacher-hard) was mostly our test being too small (10
+  test episodes; on 100 the same models score 908, inside the published
+  906–1000) — it is registered once more on fresh runs. One
+  (swingup-sparse) is B's own fault: a run stops exploring before it ever
+  finds a reward. Brain A: unchanged; its true-size check is still to be
+  frozen, and now goes on the free Colab GPU rather than waiting.
+- **Learning to eat — 4.** Moved: all four cures read, hunt closed, the
+  image recipe ordered. Not moved: the lab's "keep the skill" round — its
+  30 runs came home Sunday and nobody has read them.
+- **His world — 2.** Moved: the entry rung re-proven on the one physics
+  version (19 of 20).
+- **Eye — 2.** Not at fault by today's evidence. The lab's second route (a
+  table of what was at his mouth when he ate) lit itself from empty in 8
+  fresh worlds; it stays a candidate until its research is done.
 - **Memory and sleep — 1.** Not moved.
-- **Body and movement — 3 as a side job.** The failed walk was traced: our
-  run was stitched from pieces and each stitch dropped the step in
-  progress. Fixed and proven identical; five fresh runs ordered.
-- **Ear — 3, VOID.** The run was cut before its score. It is being timed
-  on a CPU before it gets another GPU hour.
+- **Body and movement — 3 as a side job.** Moved: the repaired walk row is
+  running, two of five runs, about 10 hours a piece on free machines.
+- **Ear — 3, VOID.** Not moved (its timing run is next on the free GPU).
 - **Words and advice — 1.** Not moved.
 - **Other senses together — 3, FAILED twice, closed until stage 3.**
-- **Science lab — 4 on round 1.** Running; nothing is read until the lock
-  that stops anyone editing the judge exists (first machine order today).
+- **Science lab — 4 on round 1.** Runs home, unread. The lock that stops
+  anyone editing the judge now exists and was tested with planted edits.
 
-## What moved since yesterday
+## What moved since Sunday
 
-The eye race (20 runs), brain A's size check (3 runs), the needs-hidden
-re-run (10), brain B's last row on three tasks, the walk's stitch found and
-fixed, the Mac port's rungs 3, 6 and 7, the lab's round launched, one
-published cure tried and read (no cure). Sixteen rulings (76–91).
+The last cure (SimBa) was run on a free Colab GPU in 56 minutes after 8.5
+hours on a free CPU had returned nothing. B's saved models re-tested. The
+hand forager re-read on the one physics version. The walk relaunched. The
+judge lock built. One lab idea (a parent feeds the newborn once) tried and
+honestly killed at its pilot. Nine rulings (92–100).
 
 ## What did not move
 
-No test point (110). The judge lock (ordered two days ago, never started).
-A machine test that turned red on Friday night had no owner until today.
-No GPU remains this week for brain A or the ear.
+No test point. No worker did anything for 45 hours. The lab round's
+results sat unread for two days. Brain A's true-size check is still not
+frozen. The three machine orders after the lock were not reached.
 
 ## What the workers are on next
 
-1. Finish the four cures; if one holds on three runs, the full eye race
-   again with it (already frozen).
-2. Brain B's missed checks again, saving every model so the failures can
-   be re-tested (two free machines are idle for it now).
-3. The walk, five fresh runs. 4. The physics re-read. 5. Preparing next
-   Saturday's GPU week so its first hour is a timing run, not a guess.
+1. Build the image recipe for his eye; three runs; take the written branch.
+2. Read the lab round's 30 runs behind the judge lock, then launch its
+   second rung. If the lab lane has not by 06:00 tomorrow, a worker does.
+3. Finish the physics re-read. 4. Carry the walk's runs forward.
+5. Brain A's and the ear's timing runs on the free Colab GPU, today.
+6. Brain B's reacher-hard row once more. 7. The Mac port's next rungs.
 
 ## The machine, in four numbers
 
-- Test points per worker run: 0 over 77 runs since Friday night.
-- Worker runs lost to budget: 0 in the last two days.
-- Free GPU-hours expired: 0 last week. This week's 30 were used by
-  Saturday night; about 10 bought a void and our meter over-billed 5.
-- Oldest unrepaired blocker: the cold-is-felt test, 101 days, parked to
-  stage 3. Oldest not parked: a rebirth test stale 76 days, queued.
+- Test points per worker run: 0 over 7 runs since the restart (−1 overall).
+- Worker runs lost to budget: **136** (11-22 13:00 to 11-24 09:51).
+- Free GPU-hours expired: 0. Kaggle's 30 for this week were spent by last
+  Saturday; the free Colab GPU is being used instead until Saturday 28th.
+- Oldest unrepaired blocker: the cold-is-felt test, 104 days, parked to
+  stage 3. Oldest not parked: a rebirth test stale 78 days, queued.
 
 ## Dead or stuck
 
-- **The usage allowance: 63% of the week used, climbing about 1.5 points
-  an hour; more than half of it is not Jack's.** At that pace the workers
-  stop around Monday morning and stay stopped until Thursday 26 Nov 09:00
-  UTC. I have not touched the stop. The orders are written so the free
-  machines keep computing through it and Thursday's first run reads the
-  results.
-- Data disk 16 GB free (floor 15): a cache prune is ordered. Main disk
-  5.4 GB, level; six of your old sessions hold about 1 GB of it.
-- One machine test red since Friday ("the background lane writes its own
-  receipts"). Yesterday's page wrongly called it a stale bookkeeping
-  check. It is a real failure; it has an owner today.
-- All organs alive; pushes level with GitHub. The old review backlog is
-  empty.
+- **The usage allowance will stop the team again.** It reads 15% after one
+  day, resets Monday 30 Nov 05:00 UTC, and about half of what is spent on
+  it is not Jack's. At last week's pace the workers stop Thursday night
+  and stay stopped three days. I have not touched the stop. I ordered one
+  saving: a worker run that would find every machine busy and nothing to
+  read now exits before it costs anything.
+- **The auditor and the paper scout have not run since the stop** (auditor
+  last real audit 22 Nov; scout 19 Nov). They are gated by the same meter
+  and should return on their next slots; if the auditor's page still reads
+  22 Nov tomorrow I will treat it as dead.
+- Data disk 15 GB free — at its floor. Cause found: 136 job folders nothing
+  deletes, plus caches. The clean-up is the first machine order.
+- Main disk 5.4 GB, level. Pushes level with GitHub.
+- The old review backlog was not looked at today (the sitting was short).
 
 ## FOR THE OWNER
 
-Nothing blocks on you. If you wish: (1) say whether Jack should have a
-reserved share of the weekly allowance — he will otherwise be stopped
-about three days this week; (2) closing your six old sessions frees 1 GB;
-(3) the TPU question from yesterday still stands. Default on 29 Nov
-unchanged: recordings of how people move stay outside him, as a judge.
+Nothing blocks on you. One thing only you can change: **the weekly
+allowance is shared, and Jack lost two days to it.** If you want him to
+keep working through a week, either give him his own allowance or say what
+share is his. Default on 29 Nov unchanged: recordings of how people move
+stay outside him, as a judge, never a part of him.
 
-Philosophy served today: 3 (cures and candidates raced, with what the
-record says beside each), 4 (three misses and a void written as such; one
-seat marked as not his), 5 (branches written ahead so the loop does not
-wait), 7 (END-FIT brought up to date; nothing adopted closes a row).
+Philosophy served today: 3 (the hunt closed by its rule; the next arm
+taken from the published record, not invented), 4 (a miss dissected and
+found partly our own ruler; the rule for a cure made stricter, not
+looser), 5 (unread results given a deadline; idle runs made free), 6 (free
+Colab GPU in place of a spent Kaggle week).
