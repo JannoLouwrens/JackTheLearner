@@ -147,5 +147,49 @@ if __name__ == "__main__":
         launch()
     elif sys.argv[1:] == ["read"]:
         print(json.dumps(read(json.loads(OUT.read_text())), indent=1))
-    else:
-        print("usage: python -m experiments.j17_h0_gpu launch|read")
+    elif sys.argv[1:] != ["pair"]:
+        print("usage: python -m experiments.j17_h0_gpu launch|read|pair")
+
+
+# ---- the h0 pair itself (11-24 10:40, after the timing read: cuda single
+# 42.6 learning decisions/s, pair 24.0/s -> 100k ~ 1.1 h, fits 8 h). The SAME
+# j17_hunt_kernel cells and world (PILOT_RULE, T = J17_HUNT_T, seed 923, both
+# arms in one job = one machine), only the platform differs: JAX on cuda, the
+# timing cell's pinned trio, no XLA preallocation (two processes share one GPU).
+# Written to its OWN file, so the CPU VOID file j17_hunt_h0.json is kept.
+PAIR_OUT = Path("/data/jack-logs/pilot_b2/j17_hunt_h0_gpu.json")
+_GPU_ENV = (
+    'import os as _o; _o.environ["JAX_PLATFORMS"] = "cuda"; '
+    '_o.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"\n')
+_TRIO = ('_s.run([_y.executable, "-m", "pip", "install", "-q", "jax[cuda12]==0.11.2", '
+         '"flax==0.12.12", "optax==0.2.9"], check=True)\n')
+
+
+def pair_body() -> str:
+    from experiments.pilot_b2 import (J17_HUNT_GROUPS, J17_HUNT_SEED, J17_HUNT_T,
+                                      PILOT_RULE, pilot_job_body)
+    cells = [(a, J17_HUNT_SEED) for a in J17_HUNT_GROUPS["h0"]]
+    rule = ("J17 critic hunt PILOT h0 on GPU 11-24 (CPU run VOID 11-22), SimBa "
+            "(PUBLISHED_PRIORS §24), 1 seed, no verdict; world = " + PILOT_RULE["rule"])
+    body = pilot_job_body(cells, PILOT_RULE["food_floor_only"], J17_HUNT_T, rule,
+                          PILOT_RULE["eye_frame"], PILOT_RULE["motor_frame"],
+                          PILOT_RULE["native_substep"])
+    first = body.index("\n", body.index("check=True)")) + 1   # after the pins install
+    return _GPU_ENV + body[:first] + _TRIO + body[first:]
+
+
+def launch_pair() -> dict:
+    from experiments.gpu import build_job, result_json, submit
+    sub = submit(build_job(pair_body()), prefer="kaggle", est_hours=2.0,
+                 timeout_s=int(3.9 * 3600), fetch=["pilot_b2_cells.json"])
+    if not (sub.ok and "pilot_b2_cells.json" in sub.artifacts):
+        raise RuntimeError(f"j17 h0 GPU pair: {sub.message}")
+    r = result_json(sub, "pilot_b2_cells.json")
+    PAIR_OUT.write_text(json.dumps(r, indent=1) + "\n")
+    for k, rec in r["cells"].items():
+        print(f"{k}: {len(rec['lives'])} lives" + (" (cut)" if rec.get("cut") else ""), flush=True)
+    return r
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["pair"]:
+    launch_pair()
