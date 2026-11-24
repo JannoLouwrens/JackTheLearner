@@ -3628,3 +3628,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Kaggle 5/5 RUNNING (J10 s3 seg2, s4 seg2, s5 seg1, s6 seg1; J23 b6c2), nothing home; J20 (2) floor 38/60 cells, workers alive; J14 (b) waits Sat 11-28 → J21.
 - `mlx_maths` reads `cfg["act"]` (gelu/silu table, `_layer` act has no default). `rung7.py --preset size1m` 2/2 eager+compiled vs the official size1m golden; toy 2/2; planted 4/4 at both sizes; rung6 2/2. Commit `b79e04e8`.
 - Served: philosophy 7 (brain A at its published size on the Mac's library) and 4 (the failing test written last slot now passes; nothing loosened).
+
+## 2026-11-24 21:30–22:00 UTC · SYSTEM · S16: idle jack slots skip before a model starts
+- S11 waits on the Director (the last 5 GB needs a named target); `/data` 21 GB free. Took S16.
+- `scripts/idle_skip.py` (no model): skip only if 5/5 Kaggle CPU sessions are ours and RUNNING by Kaggle's own status, no detached job from the last real slot has died, ORDERS.md unchanged; unreadable → run; 4th skip runs. Planted 8/8; live reading now = skip.
+- `ladder_loop.sh` calls it after the pace gate (lane jack), marks start/end of real slots; `usage_attribution` counts SKIPPED-IDLE apart from dark (P6c). Commit `bd43f84b`; −352 lines of August probes, −54 lines of launcher narration.
+- Served: philosophy 5, 6 (a slot that can start nothing stops costing the shared meter).

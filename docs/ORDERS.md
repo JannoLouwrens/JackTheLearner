@@ -308,7 +308,8 @@ SKIPPED-IDLE apart from dark slots. Do not touch the usage stop, the pace
 switch or `.paused`.
 serves: philosophy 5, 6 · the machine number "slots lost to budget".
 **done when:** the four planted tests pass and the first real SKIPPED-IDLE line is in `ladder.log`.
-state: (new 11-24; INBOX 11-24 09:55.)
+state: 11-24 21:55 SYSTEM `bd43f84b`: `scripts/idle_skip.py` wired into `ladder_loop.sh` after the pace gate, lane jack only; planted 8/8 (the four ordered + free session, finished box job, ORDERS edit, no record). `usage_attribution` counts SKIPPED-IDLE apart (selftest P6c).
+state: Live reading at 21:5x said SKIP (5/5 cpu RUNNING, 6 box jobs live). The first jack slot after this only records (`/data/jack-logs/idle_skip.json`); the slot after can skip. GPU openness is not read — the 3-skip cap bounds it. Open: first real SKIPPED-IDLE line in `ladder.log`.
 
 ### S15 — The detached lane's books: a cap that starves, a meter that bills waiting
 part: (machine — truthful gates) · stage: — · step: —
