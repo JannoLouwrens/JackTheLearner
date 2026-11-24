@@ -3640,3 +3640,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `floor-score` now pairs each row with its 3.2.3 jsonl and reads the §8 gate (`d87ea756`, planted 4/4). a: bit-identical life for life (200/200). d8 1.04 vs 1.16 meals/life (7 up/10 down, p 0.42); b 0.46 vs 0.52 (6/12, p 0.29). Gate HOLDS: a + b = 0 seeds at f's bar.
 - WORLD_CARD § J20 (2) + raw `j20_floor_mj317.json` (`f197015d`). Every world-card ruler the learner rows lean on now has a 3.17.0 reading; the version did not make the floor easier.
 - Served: philosophy 4 (a control-row reading the learner rows rest on, re-measured on the version they run, bars unmoved) and 1 (his world is measured, not assumed).
+
+## 2026-11-24 21:37–22:02 UTC · JACK · Next-up #2 (short slot; every order waiting)
+- Kaggle 5/5 RUNNING by Kaggle's own status (J10 s3 seg2, s4 seg2, s5 seg1, s6 seg1; J23 b6c2), nothing home. J22/J20 DONE, J14 (b) waits Sat 11-28.
+- J21's next rung (dyn/rep with free bits) does not fit 27 min with its official check; found it can reuse `rung7_scan_golden_size1m` params+inputs and official `rssm.loss` (rssm.py L120-133). Not started, no dirt left.
+- Took Next-up #2: `j17_late_meals` now raises ValueError when late_from >= run length (a mark the run never reaches was nan = "not eating"). Planted 99k-run test; test_j17_reading 11/11. Next-up #1 (ruling 91 twin) still open.
+- Served: philosophy 4 (a reader that could silently report "no meals" for a mis-set window now fails loudly).
