@@ -1,0 +1,18 @@
+{
+ "locked_at": "e49bfd366d656a05fe8ff4a86b957c14da2c22d5",
+ "files": {
+  "experiments/forge/__init__.py": "959ad4631105788b322f21b245780d2c5fb6c05df427d5ed2930e5d0ed2bb601",
+  "experiments/forge/metric.py": "097ef7ee95f4da950740104e2865f2331b9ced5f56459a93b2fc5f445939f208",
+  "experiments/forge/r1_read.py": "a749464f5142227be6edcc8fd5f8143b93c70b816374121e52ddfa547ab372ef",
+  "experiments/forge/rounds/r1/spec.json": "d7e69abbc379b05b0db6cae70420878fdc6d81cd2855f50d967a40c2ce8244cf",
+  "experiments/harness/__init__.py": "382cf304951df29bf6f8a9c9bbcbfaa0748eec96f6a2cf9b7bc90faec9710627",
+  "experiments/harness/calibration.py": "ee0f9507177fd7031a737c3b28c3bebb58262abd8336d19dc1c2f7aa3679dbeb",
+  "experiments/harness/check5_pilot_b.py": "a0fd6605b20c6717ef3357477b160d60e851e30641dc25958e029624d3d63694",
+  "experiments/harness/check8_fixed_point.py": "6208b868da893d0574fa26a259d205a7893ccadd2b458baf7f80aa94fad66f45",
+  "experiments/harness/check8_pilot_b.py": "6d5b79cc1da2a5a8766eeebb2417ce6dcf7ca071771293cfbeb6c0edeb45a0b0",
+  "experiments/harness/prereg.py": "5298d456cd83e18a93ce9db9255378dca16f14a0269b6719d3f6a18dc18e060f",
+  "experiments/harness/same_vs_same.py": "e1ff5c6ab8b6ecb3aac774b2b6d83278eba303b118764565d7ba445f07691dc4",
+  "experiments/harness/single_thread_probe.py": "10406e8de8f29fbf17db9695ee011bab96f5c23b699f7670064338fd133a7db9",
+  "experiments/registry.py": "cb2e25e2d8a85037e3a0851d8312bcbd280bb60b3655ae4b30a76228f5f857f4"
+ }
+}
