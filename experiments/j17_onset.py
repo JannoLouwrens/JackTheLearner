@@ -235,11 +235,63 @@ def mlp_q_climbs(cells: dict | None = None) -> dict:
             for arm in ("K-row128", "K-rays16", BLIND)}
 
 
+# ---- J22 (0), 11-24: the J17 ROW's own ruler beside the hunt's (ruling 93) --
+# The hunt read Q(100k)/Q(50k) (a climb). The J17 row's addendum read
+# Q ÷ SUPPORTED (pilot_b2.e2c_q_row: SUPPORTED = 100·r/(1−γ) + 100·d_max +
+# α_max·8ln2/(1−γ), r = meals per decision over the lives that end inside the
+# run's last 50k, as pilot_b_report.run_stats counts them). Same formula here
+# with the run's own T instead of the module-level 300k, so a 100k hunt has
+# a reading; at T = 300k it reproduces the J17 table (tested). DESCRIPTIVE:
+# no verdict changes (ruling 93).
+def q_over_supported(rec: dict, T: int, gamma: float | None = None) -> dict:
+    import math
+    from experiments import pilot_b_report as R
+    from experiments.drives import drive
+    if gamma is None:
+        from experiments.pilot_b import GAMMA as gamma
+    d_max = max(drive(e, i, w) for e in (0.0, 1.0) for i in (0.0, 1.0) for w in (0.0, 1.0))
+    trace = [w for w in rec.get("trace", []) if "actor_loss" in w and w["t"] <= T]
+    q = -trace[-1]["actor_loss"]
+    alpha = max(w["ent_coef"] for w in trace if "ent_coef" in w)
+    cum, m, d = 0, 0, 0
+    for life in rec["lives"]:
+        cum += life["decisions"]
+        if cum > T - 50_000:
+            m += R._meals(life)
+            d += life["decisions"]
+    rate = m / d if d else float("nan")
+    sup = 100.0 * rate / (1 - gamma) + 100.0 * d_max + alpha * 8 * math.log(2) / (1 - gamma)
+    return {"Q": q, "rate_per_1k": 1000 * rate, "alpha_max": alpha,
+            "supported": sup, "ratio": q / sup}
+
+
+def hunt_rulers(path: Path) -> dict:
+    """Both rulers, per arm of one hunt file: climb Q(100k)/Q(50k) and
+    Q(100k) ÷ SUPPORTED (+ late meals/life, the CURES clause's own read)."""
+    from experiments.pilot_b2 import j17_late_meals
+    g = path.stem.split("j17_hunt_", 1)[-1]
+    arms = HUNT_GROUPS[g.split("_")[0]]
+    recs = {k.rsplit("_s", 1)[0]: c for k, c in json.loads(path.read_text())["cells"].items()}
+    out = {}
+    for a in arms:
+        c = recs[a]
+        tr = {w["t"]: w for w in c["trace"] if "critic_loss" in w}
+        out[a] = {"climb": q_climb(tr), **q_over_supported(c, 100_000),
+                  "late_meals_per_life": j17_late_meals(c, 50_000)}
+    return out
+
+
 def main(argv) -> int:
     if argv[1:2] == ["hunt"]:
         print("MLP Q climb 50k->100k:", mlp_q_climbs())
         for k, v in hunt(Path(argv[2]) if len(argv) > 2 else HUNT).items():
             print(f"{k}: {v}")
+        return 0
+    if argv[1:2] == ["rulers"]:            # rulers <hunt file>...
+        for f in argv[2:]:
+            for a, r in hunt_rulers(Path(f)).items():
+                print(f"{Path(f).stem:18s} {a:24s} " + " ".join(
+                    f"{k} {v:.3f}" for k, v in r.items()))
         return 0
     if argv[1:2] == ["wrap-box"]:          # wrap-box <group> <box dir> [seed]
         r = wrap_box(argv[2], Path(argv[3]), int(argv[4]) if len(argv) > 4 else 923)
