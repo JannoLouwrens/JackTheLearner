@@ -704,6 +704,40 @@ Files `/data/jack-logs/brain_b/j19_twin_<task>/twin.json` + 30 msgpack models ea
 - Trace gap: the order asked for "mean Q"; the twin logged actor_loss, not the critic's mean on a batch. −actor_loss is the actor's
   min-of-two Q on its own actions — a usable proxy, named as one.
 
+**Addendum 11-24 10:30 — step (2) READ: the box re-evaluation (`brain_b_dmc reeval`, jack-std, 100 deterministic episodes per
+saved model, fixed and stream), scored against the 07:25 readings exactly as written.** Files
+`/data/jack-logs/brain_b/j19_twin_<task>/reeval.json` (+ `reeval_s<k>.json`). Rows 5, 6a, 6c stay named MISSES (ruling 81).
+`replay_gap` = 0.0 at 150k on all 10 seeds (fixed's first 10 = the kernel's 10): the box replays Kaggle's evaluation exactly.
+
+| task @150k | band | eval | s0 | s1 | s2 | s3 | s4 | mean | episodes < 100 (of 500) |
+|---|---|---|---|---|---|---|---|---|---|
+| 6a swingup_sparse | 726.9–826.1 | kernel 10 | 777.4 | 407.6 | 766.5 | 0.0 | 754.1 | 541.1 | — |
+| | | fixed 100 | 777.1 | 407.7 | 766.7 | 0.0 | 754.0 | **541.1** | 100 (all s3) |
+| | | stream 100 | 777.1 | 407.8 | 766.6 | 0.0 | 754.0 | **541.1** | 100 (all s3) |
+| 6c reacher-hard | 905.7–1000 | kernel 10 | 869.3 | 960.8 | 956.9 | 852.7 | 485.0 | 824.9 | — |
+| | | fixed 100 | 904.0 | 938.4 | 919.8 | 949.1 | 719.0 | **886.1** | 42 (26 in s4) |
+| | | stream 100 | 927.9 | 946.8 | 958.8 | 957.4 | 750.6 | **908.3** | 30 (22 in s4) |
+
+5-seed means by mark (fixed / stream): 6a 2.0/2.2, 143.0/143.0, 391.5/392.0, 554.1/554.1, 610.1/610.0, 541.1/541.1 (25k…150k);
+6c 34.1/33.9, 122.9/125.0, 374.7/365.3, 680.4/666.7, 864.0/877.1, 886.1/908.3.
+
+- **6c reacher-hard → reading 1, OUR EVAL, as the rule is written** (stream 908.3 in band, fixed 886.1 out). Said with its size:
+  the margin is 2.6 points; an episode bootstrap of the stream mean gives 888.0–927.1 (95%), the seed SE is 39.8, and fixed vs
+  stream zeros (42 vs 30 of 500) is not a separable difference at this n. Most of the row's miss was the EVAL'S SIZE, not its
+  target set: the same fixed targets read 824.9 on 10 episodes and 886.1 on 100 (s4 485.0 → 719.0; its 5/10 zeros are 26/100).
+  s4 is a real partial failure under every eval (22–26% of episodes < 100): a bimodal policy, the "reached then lost" seed
+  of the 12:30 addendum (763.0 @100k on the kernel's 10; fixed-100 816.5 @100k → 719.0 @150k). Note the published band is itself
+  built from 10-episode evals, so stream-100 is the reference's stream at a lower variance, not its exact protocol.
+- **6a swingup_sparse → reading 2, AN EXPLORATION DRAW, and reading 3 beside it** (stream = fixed = 541.1, out; the eval is not
+  the cause — every seed's three readings agree within 0.3). s3 is flat from the start (fixed-100 = 0.0 at every mark, 100/100
+  episodes zero): the frozen explorer of the 12:30 addendum, Q climb 50k→100k 0.01 < 1.32 → **not J17's sighted climb**. s1 is
+  WIN-THEN-LOSE: fixed-100 772.2 @125k (≥ 726.9) → 407.7 @150k — the J10 / E2c shape on a published task (§21). Neither alone
+  carries the miss: s3 at its 4 peers' mean leaves 676.5; s1 held at 772.2 leaves 614.0. Both are needed to explain 541.1.
+- **One line:** on reacher-hard the library's miss is mostly how few episodes we scored (10) — under 100 reference-style episodes
+  it sits on the band's edge; on swingup_sparse it is the learner, two ways: one seed that never found the sparse reward
+  (α → 0 before any reward), one that found it and lost it. Re-registering 6c with a 100-episode stream eval is allowed once
+  (ruling 70) and is the Director's to order; 6a's two failure shapes are B's to cure, not the eval's.
+
 ## Row A1 — brain A (sheeprl `dreamer_v3_5`, size 1m) on DMC cartpole_balance: **PASS** at 3 seeds (11-21 02:30, Colab T4)
 
 Rule `experiments/brain_a/rows.py` (frozen `286d6451` before any seed; control corrected to no gradient step before
