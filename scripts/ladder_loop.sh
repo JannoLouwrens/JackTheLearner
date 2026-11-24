@@ -161,29 +161,9 @@ fi
 # open is not a limit.
 usage_gate say builder || exit 0
 # A PACE SKIP DEFERS CLAUDE SPEND — IT MUST NOT DEFER WORK THAT COSTS NONE.
-# A detached run (dispatch.sh / launch_detached.sh) can finish during a gated
-# hour and write its row into experiments/ledger.json; committing that row
-# spends no meter, and leaving it uncommitted is exactly what stalled DP.05's
-# finished FAIL overnight on 2026-08-24 (27th audit, B3) — and what an
-# owner-side `git add -A` swept into an unrelated commit the same day. Stage
-# ONLY the RUNNER_OUTPUTS a harvest legitimately writes — the ledger row
-# plus its receipts (29th audit B4: the row was committed at 05:07
-# while gpu_budget.json and gpu_submissions.jsonl, the receipts accounting for
-# that exact row, sat uncommitted for hours; cpu_budget.json joined 2026-09-04
-# — T0.34's wrap bills it from every detached child, so a row harvested here
-# without it orphans the CPU receipt the same way). Every other path in this
-# tree may be the owner's or a live session's (the add -A ban, one level
-# down). The full harvest write-up (docstring FAIL RECORD, journal, amend)
-# still belongs to the next unskipped iteration — this commits the evidence,
-# not the interpretation.
-# docs/DECISIONS_RESOLVED.md joined 2026-09-28: it has been protocol.RUNNER_OUTPUTS
-# since 09-26 (bakeoff.py appends the winner record DURING a registered run), so a
-# detached bakeoff spec finishing in a gated hour orphans its record exactly as the
-# GPU receipts were orphaned before the 29th audit B4 — regate's sweep did it the
-# same morning this line landed (SO.10's record sat uncommitted behind a pushed
-# commit). Dual-writer caveat, weighed: the desk also writes that file, but it
-# commits in-sitting, the lanes are cron-staggered, and the measured cost of NOT
-# staging is a dirty tree that dirty-stamps every run for the rest of a blackout.
+# A detached run finishing in a gated hour leaves its ledger row and receipts
+# uncommitted; commit ONLY those RUNNER_OUTPUTS paths, never anything else in a
+# shared tree (27th audit B3, 29th B4; history in git log of this file).
 HARVEST_PATHS="experiments/ledger.json experiments/gpu_budget.json experiments/gpu_submissions.jsonl experiments/cpu_budget.json docs/DECISIONS_RESOLVED.md"
 harvest_bookkeeping() {
   cd "$REPO" || return 0
@@ -234,12 +214,7 @@ PY
   fi
 }
 
-# notice_exited_dispatches lives in scripts/lib_procwatch.sh (moved 2026-09-19
-# 11:0x): it is the READ side of the B3 EXITED-stamp lifecycle and belongs
-# beside the prune that writes and sweeps those stamps, where
-# test_lib_procwatch.sh can exercise the two of them IN SEQUENCE — the defect
-# it had here was pure call-site ordering, which no fixture of the function
-# alone could catch.
+# notice_exited_dispatches lives in scripts/lib_procwatch.sh beside its prune.
 
 # ...and spread what is left across the week, so the loop is still awake on the
 # Sunday that Kaggle's free quota expires. Builder ONLY: it is ~82% of all organ
@@ -247,6 +222,17 @@ PY
 # pacing it captures nearly all the benefit while the oversight organs — the
 # machinery that catches drift — keep the plain 90% gate at full strength.
 pace_gate say builder || { harvest_bookkeeping; notice_exited_dispatches; exit 0; }
+# S16 / ruling 97: a jack slot with nothing to do exits before a model starts.
+# scripts/idle_skip.py reads Kaggle, the detached jobs and ORDERS.md; anything
+# unreadable RUNS the slot, and never more than 3 skips in a row.
+if [ "$LANE" = jack ]; then
+  IDLE_WHY=$(cd "$REPO" && /data/venvs/jackthelearner/bin/python scripts/idle_skip.py check 2>&1)
+  if [ $? = 10 ]; then
+    say "SKIPPED-IDLE: ${IDLE_WHY}"; harvest_bookkeeping; notice_exited_dispatches; exit 0
+  fi
+  say "idle pre-check: slot runs — ${IDLE_WHY}"
+  ( cd "$REPO" && /data/venvs/jackthelearner/bin/python scripts/idle_skip.py mark start )
+fi
 cd "$REPO" || exit 0
 BEFORE=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)
@@ -289,23 +275,7 @@ trap on_exit EXIT
 # check that scans for one known pid provably cannot see an unknown one.
 # scripts/lib_procwatch.sh holds the scar; scripts/test_lib_procwatch.sh proves
 # the detector still works.
-notice_exited_dispatches LIVE   # live path too, before the iteration's work is
-                                # chosen (Review 1^9 item 2): an EXITED
-                                # run_spec/dispatch row is said loudly whether
-                                # or not the slot is paced. Noticing only.
-                                # ANNOUNCE BEFORE PRUNE (103rd-day repair,
-                                # 2026-09-19 11:0x): the prune below DROPS
-                                # dead+stamped rows, and the slot-END prune has
-                                # already stamped anything that died with the
-                                # last session — so a notice called after it
-                                # reads a swept file and is structurally blind
-                                # to every prior-slot death, the exact class it
-                                # was wired to announce. Measured, not argued:
-                                # the 09:5x and 10:1x PS.06 losses (both
-                                # declared, both stamped at their slots' exits)
-                                # produced no notice at the 10:07 or 11:07
-                                # starts. A control must run before its own
-                                # janitor.
+notice_exited_dispatches LIVE   # announce BEFORE the prune drops stamped rows (2026-09-19)
 proc_prune_declarations
 PROC_BEFORE=$(proc_snapshot)
 # Trim BEFORE the mark, never after: a trim moves byte offsets and the mark
@@ -453,6 +423,7 @@ fi
 AFTER=$(/data/venvs/jackthelearner/bin/python -c \
   "import json;d=json.load(open('experiments/ledger.json'))['results'];print(sum(1 for v in d.values() if v['status']=='PASS'))" 2>/dev/null || echo 0)
 
+[ "$LANE" = jack ] && /data/venvs/jackthelearner/bin/python "$REPO/scripts/idle_skip.py" mark end
 ITER_ENDED=1
 usage_ledger "$LEDGER_ORGAN" end "$MODEL"    # D15 (d): one line whatever RC says (KILLED path
                                # excepted — a dying shell cannot spawn the CLI).
@@ -475,12 +446,5 @@ if [ "$RC" = 0 ] && [ -s "$LOST" ] && ! limit_hit; then
   : > "$LOST"
 fi
 
-# REMOVED 2026-11-11: an auto-pause "when all specs are demonstrated". TOTAL falls
-# back to a constant (105) when the registry import fails for any reason — a
-# half-edited registry at :07, an OOM-killed python — and the ladder now has 108
-# passes, so ONE failed import would have logged LADDER COMPLETE and written an
-# empty .loop-paused: a manual pause that never self-expires and stops all three
-# worker lanes while the managers keep writing orders nobody executes. A ladder
-# that is really complete is something the Director reports, not something a
-# launcher decides from a fallback.
+# (auto-pause on "ladder complete" removed 2026-11-11 — see git log.)
 exit 0

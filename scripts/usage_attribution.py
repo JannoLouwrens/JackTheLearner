@@ -86,7 +86,12 @@ _SLOT_RE = re.compile(r"^(\S+)\s+iteration (start|end)\b(?:\s+rc=(\d+))?")
 #: of dark; teaching it DECLINED is a desk call, not a builder default).
 _SKIP_RE = re.compile(r"^\S+\s+(?:PACING:|STOPPED at |ABORT: )")
 
-RAN, DECLINED, NOT_A_SLOT = "RAN", "DECLINED", "NOT-A-SLOT"
+#: S16 / ruling 97: a jack slot the launcher skipped because nothing could
+#: start. NOT dark (no budget refused it) and not RAN: its own kind, counted
+#: apart (`idle_slots`, last 24 h) and transparent to the dark streak.
+_IDLE_RE = re.compile(r"^(\S+)\s+SKIPPED-IDLE:")
+
+RAN, DECLINED, IDLE, NOT_A_SLOT = "RAN", "DECLINED", "IDLE", "NOT-A-SLOT"
 
 
 def classify(raw: str) -> tuple[str, str | None, int | None]:
@@ -120,6 +125,9 @@ def classify(raw: str) -> tuple[str, str | None, int | None]:
         return RAN, m.group(1), rc
     if _SKIP_RE.match(s):
         return DECLINED, None, None
+    m = _IDLE_RE.match(s)
+    if m:
+        return IDLE, m.group(1), None
     return NOT_A_SLOT, None, None
 
 #: The organs that are NOT the builder. `pace_gate` applies to the builder
@@ -315,6 +323,22 @@ def dark_slot_streak(log_text: str) -> int:
     return streak
 
 
+def idle_slots_24h(log_text: str, now: str | None = None) -> int:
+    """SKIPPED-IDLE slots in the 24 h before `now` (S16) — slots that cost nothing."""
+    import datetime as _dt
+    end = _dt.datetime.fromisoformat(now) if now else _dt.datetime.now(_dt.timezone.utc)
+    n = 0
+    for raw in log_text.splitlines():
+        kind, ts, _ = classify(raw)
+        if kind == IDLE:
+            try:
+                if (end - _dt.datetime.fromisoformat(ts)).total_seconds() < 86400:
+                    n += 1
+            except (TypeError, ValueError):
+                pass
+    return n
+
+
 def failed_streak(outcomes: list[tuple[str, int]]) -> int:
     """Consecutive slot ENDINGS with `rc != 0`, newest backwards.
 
@@ -387,6 +411,7 @@ def attribution(text: str | None = None, log_text: str | None = None,
         # `line[:4].isdigit()` and read a 26-slot blackout as 0.
         out["dark_slots"] = dark_slot_streak(log_text)
         out["dark_known"] = True
+        out["idle_slots"] = idle_slots_24h(log_text, now=now)
         # THE SECOND READING, and it is a SEPARATE quantity (107th audit,
         # RANK 2 / FOR THE BUILDER 3). `dark_slots` counts slots that were
         # SKIPPED, which is a real thing and is left alone. It cannot see a
@@ -457,6 +482,8 @@ def line(a: dict) -> str:
     else:
         dark = "dark slots unknown"
     dark += "; " + _failed_phrase(a)
+    if a.get("idle_slots"):
+        dark += f"; {a['idle_slots']} slot(s) skipped idle in 24 h (not dark: nothing could start)"
     mnm = a.get("meter_non_monotone")
     if mnm:
         last = mnm[-1]
@@ -581,6 +608,16 @@ def _selftest() -> int:
     a = attribution("", log_text=None) if not LADDER_LOG.exists() else {"dark_known": True}
     if not a["dark_known"]:
         pass  # no log on this box is a legitimate unknown, not a failure
+
+    # P6c — S16: SKIPPED-IDLE is counted apart and never as a dark slot.
+    log = ("2026-09-08T08:23:00+00:00 iteration end rc=0\n"
+           "2026-09-08T09:07:00+00:00 SKIPPED-IDLE: kaggle 5 in flight\n"
+           "2026-09-08T10:07:00+00:00 PACING: skipping\n"
+           "2026-09-08T11:07:00+00:00 SKIPPED-IDLE: kaggle 5 in flight\n")
+    a = attribution("", log_text=log, now="2026-09-08T11:23:00+00:00")
+    if a["dark_slots"] != 1 or a.get("idle_slots") != 2 or "2 slot(s) skipped idle" not in line(a):
+        fails.append(f"idle: expected 1 dark + 2 idle, got dark={a['dark_slots']} "
+                     f"idle={a.get('idle_slots')}")
 
     # P6b — THE OUTAGE, REPLAYED. This is the real 2026-09-20/21 shape: dead
     # slots with paced skips interleaved. `dark_slots` reads 1 — TRUE, and
