@@ -26,7 +26,7 @@ result `wheel_367.json`; same verdict rule (PASS iff all six exit 0 with their
 line, n == m, and mlx 0.32.4 printed by each rung line). Default `kernel` is
 byte-identical to the rung 1/2 run above.
 
-Usage:  python -m experiments.brain_a.wheel_kernel kernel [367|s1m]  (submits; writes OUT/wheel[_367|_s1m].json)
+Usage:  python -m experiments.brain_a.wheel_kernel kernel [367|s1m|9]  (submits; writes OUT/wheel[_367|_s1m].json)
         python -m experiments.brain_a.wheel_kernel verdict FILE [367]
 """
 import json
@@ -61,8 +61,14 @@ EXPECT["rung7s1m_planted"] = _PL
 EXPECT.update({f"rung{k}": rf"RUNG {k}: (\d+)/(\d+) tests pass eager AND compiled \(mlx ([\w.]+)\) -> PASS"
                for k in ("8a", "8b", "8c")})
 EXPECT.update({f"rung{k}_planted": _PL for k in ("8a", "8b", "8c")})
+# J21 (11-25): rung 9 — the FULL world-model loss (L240 sum(mean x scale)) + its gradient-routing
+# test, and --planted (5 bugs incl. the forward-blind dyn<->rep swap). Same pin, same check shape.
+# Box timing 11-25 (conda-forge mlx 0.32.4): both runs a few s each.
+RUNS_9 = [("rung9", "rung9.py", [], 1200), ("rung9_planted", "rung9.py", ["--planted"], 1200)]
+EXPECT["rung9"] = r"RUNG 9: (\d+)/(\d+) tests pass eager AND compiled \(mlx ([\w.]+)\) -> PASS"
+EXPECT["rung9_planted"] = _PL
 SETS = {"12": (RUNS, "wheel.json"), "367": (RUNS_367, "wheel_367.json"),
-        "s1m": (RUNS_S1M, "wheel_s1m.json")}
+        "s1m": (RUNS_S1M, "wheel_s1m.json"), "9": (RUNS_9, "wheel_9.json")}
 
 _JOB = r'''
 import subprocess as _s, sys as _y, json, os, platform, time
