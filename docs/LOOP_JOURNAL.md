@@ -3826,3 +3826,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 8 fresh worlds 1601–1608, 7 ignited: own 65 = handed-class 65, 128-ray table 55, yoked 17, babble 10. DEAD: ahead of yoked on 5 of 7 (bar 6) — one wrong first imprint (0 vs handed 9), one lucky yoked twin (10 vs 9).
 - Found: 16 bins cost nothing against 128 rays; suppression (§26 (3)) changed no meal. Unexplained: own 18 vs handed 9 in world 1603. My first bins were offset by one bin; a unit check caught it before any world was lived.
 - Served philosophy 2 (nothing handed inside him), 3 (raced against the handed class), 4 (a rule that could fail, and did).
+
+## 2026-11-25 12:07–12:09 UTC · JACK · harvest round + Next-up 1–2 (text)
+- J24 waits on its ruling; J18 chains A/B alive (M_g0, M_g1 home); J10 s7 seg3 on its kernel; J14 ear: **s0 home, test 97.137** against the published 96.9 ± 0.30 (one seed; judged only when all four are home); s1 running.
+- J25 not worked: the owner's no-Mac line (INBOX 11:58) asks the Director to park the MLX port; I did not spend a slot on a part the owner has said he will not run.
+- Next-up 1: ruling 101 written into WORLD_CARD's h4 paragraph and conv_eye's docstring — NOT SHOWN, never "closed"/"does not learn"; DrQ's encoder tau 0.05 and walker 2e-4 removed (§27). Next-up 2: FORGE_POOL R5, pink noise vs the frozen-explorer fault (377 → 730, 20 seeds), pool check ok. Item 3 was already done. No certificate depends on the touched code. `893d8be9`.
+- Served philosophy 4 (a one-seed pilot no longer reads as a verdict) and 3 (a published exploration recipe enters the race with its prior).
