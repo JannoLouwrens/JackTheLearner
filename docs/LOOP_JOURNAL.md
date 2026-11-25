@@ -3700,3 +3700,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Finding: swapping dyn's and rep's scales cannot be seen in any forward check (same value; only the stop-gradients differ). Printed as BLIND, not counted; the port tests owe a gradient check.
 - Limit, said: the total is L240's arithmetic over 8a/8b/8c's official goldens, not a fresh official Agent.loss call (encoder + imagination unported).
 - Served: philosophy 4 (a planted bug the test could not see was named, not counted) and 7 (the Mac port).
+
+## 2026-11-25 03:07–03:20 UTC · SYSTEM · S16 idle pre-check could never skip
+- Six jack slots 00:22–01:37 ran a model on "unreadable: kernels.get denied": the pre-check built the slug from `int(receipt ts)`, gpu.py's `t0` lands a moment later (jack-cpu-…428 is really …429).
+- `a426fe45`: slugs resolved from `kaggle kernels list --mine` with reattach_code_check's 0–600 s window; no match stays Unreadable → RUN. Planted 10/10 (+2 cases); live 4/4 resolve RUNNING.
+- S11 done-when met: `/data` 25.8 GB free (24,650 MiB); marked for the Director to retire.
+- Served: philosophy 6 (a slot with nothing to do stops billing the shared meter).

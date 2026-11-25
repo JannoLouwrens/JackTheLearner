@@ -292,7 +292,7 @@ serves: philosophy 5, 6.
 state: `/` 4.31 → 5.4 GB (`prune_cli_versions.sh`, `~/.cache/uv`, `git gc`). `/data` 39 GB (11-20) → 15 GB (11-24).
 state: 11-24 15:30 SYSTEM `d72239d9`: `/data` 18 → 20 GB. (1) gpu.py → `/data/tmp/gpu`; `reap_gpu_tmp.py` on regate's cron reaped 106/137 (byte-identical copy or <1 MB copied to `jack-logs/gpu_jobs`). (2) pip purge 0.9 GB, uv prune; venv imports ok. (3) b_life_mujoco: newest ckpt per run kept, L0/ P_phys_0/ gone (0.4 GB).
 state: KEPT, needs a ruling: 4 tmp folders 2.8 GB (A2-v1S Dreamer ckpts 60k–90k ×3 runs ≈1.4 GB + B/control.npz 0.5 GB, no copy anywhere); HF models >14 d (1.2 GB: SmolLM2-135M/360M, MiniLM, bge) are read by LG/ME.11.D/T2.10 specs, so kept.
-state: The last 5 GB is outside this order's three steps: `/data/jack_corpora` 15 GB, `jack-data` 11.6, `jack-logs/brain_b` 3.7, `uv/cache` 1.6 (prune removes nothing; `clean` not ordered). Director: name one. Also t0_24's test still mkdtemps in `/data` (spec file, left alone).
+state: 11-25 03:15 SYSTEM: **done-when met** — `/data` 24,650 MiB free = 25.8 GB (JACK's log filter `1db139a1` bought the last 4). Nothing further removed. Director: retire S11. (t0_24's test still mkdtemps in `/data`, spec file, left alone.)
 
 ### S16 — A slot with nothing to do must cost nothing (ruling 97)
 part: (machine — cheaper; the shared meter stopped the team 45 h) · stage: — · step: —
@@ -310,7 +310,7 @@ switch or `.paused`.
 serves: philosophy 5, 6 · the machine number "slots lost to budget".
 **done when:** the four planted tests pass and the first real SKIPPED-IDLE line is in `ladder.log`.
 state: 11-24 21:55 SYSTEM `bd43f84b`: `scripts/idle_skip.py` wired into `ladder_loop.sh` after the pace gate, lane jack only; planted 8/8 (the four ordered + free session, finished box job, ORDERS edit, no record). `usage_attribution` counts SKIPPED-IDLE apart (selftest P6c).
-state: Live reading at 21:5x said SKIP (5/5 cpu RUNNING, 6 box jobs live). The first jack slot after this only records (`/data/jack-logs/idle_skip.json`); the slot after can skip. GPU openness is not read — the 3-skip cap bounds it. Open: first real SKIPPED-IDLE line in `ladder.log`.
+state: 11-25 03:15 SYSTEM `a426fe45`: six jack slots 00:22–01:37 RAN on "unreadable" — the pre-check guessed slug `int(receipt ts)`, but gpu.py's t0 is a moment later (…428 was really …429). Now resolved from `kaggle kernels list --mine` (0–600 s window); planted 10/10, live 4/4 resolve RUNNING. Open: first real SKIPPED-IDLE line in `ladder.log`.
 
 ### S15 — The detached lane's books: a cap that starves, a meter that bills waiting
 part: (machine — truthful gates) · stage: — · step: —
