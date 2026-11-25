@@ -1004,7 +1004,7 @@ def main_imagloss_sym(qline=False, ruled=False):
                 return M.imag_return(rew, con, val, contdisc, 333, 0.95)["ret"]
             return g
         for c in CALLS:
-            P = {k[len(f"c{c}/pre/val/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/val/")}
+            P = {k[len(f"c{c}/pre/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/val/")}
             gp = f"c{c}/imag/"
             d = np.concatenate([G[gp + "start/deter"][:, None], G[gp + "feat/deter"]], 1)
             s = np.concatenate([G[gp + "start/stoch"][:, None], G[gp + "feat/stoch"]], 1)
