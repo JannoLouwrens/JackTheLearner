@@ -531,36 +531,7 @@ def main_wm():
         hits, live = live_hits(kw, ks)
         caught += bool(live) and all(hits)
         print(f"P  planted {name:20s}: caught on {sum(hits)}/{len(live)} calls where it changes the function")
-    plants_needed = len(plants)
-    if ruled:
-        def dpath(contdisc):
-            def g(Pv, d, s, rew, con):
-                x = M.feat2tensor(d, s)
-                val = M.twohot_decode(M._mlp_head_n(Pv, "val", x, "logits", 3), b)
-                return M.imag_return(rew, con, val, contdisc, 333, 0.95)["ret"]
-            return g
-        for c in CALLS:
-            P = {k[len(f"c{c}/pre/val/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/val/")}
-            gp = f"c{c}/imag/"
-            d = np.concatenate([G[gp + "start/deter"][:, None], G[gp + "feat/deter"]], 1)
-            s = np.concatenate([G[gp + "start/stoch"][:, None], G[gp + "feat/stoch"]], 1)
-            args = (P, mx.array(d), mx.array(s), mx.array(G[f"c{c}/imagloss/in_rew"]),
-                    mx.array(G[f"c{c}/imagloss/in_con"]))
-            for mode in ("eager", "compiled"):
-                g1 = dpath(True)
-                g1 = mx.compile(g1) if mode == "compiled" else g1
-                truth = run(c, make(), mode == "compiled")[2]
-                eq = bool(np.array_equal(np.array(g1(*args)), truth))
-                print(f"D  call {c} {mode:8s}: imag_return(contdisc) ret bit-equal to this path: {eq}")
-                ok &= eq
-            r0 = np.array(dpath(False)(*args))
-            live = bool(np.any(true[c][2] != 0))
-            dif = not np.array_equal(r0, true[c][2])
-            print(f"DC call {c}: contdisc False {'differs' if dif else 'BIT-EQUAL - control dead'}{'' if live else ' (ret all 0, exempt)'}")
-            ok &= dif or not live
-        caught -= int(disc_hit)
-        plants_needed -= 1
-    good = ok and caught == plants_needed
+    good = ok and caught == len(plants)
     print(f"RUNG 13b-wm: port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
     return 0 if good else 1
 
@@ -1024,7 +995,36 @@ def main_imagloss_sym(qline=False, ruled=False):
         print("   " + name + ": " + "  ".join(f"c{c} n_port {r[1]} n_off {r[2]}" for c, r in zip(CALLS, rs)))
         caught += all(hits)
         print(f"P  planted {name:18s}: breaks (S) on {sum(hits)}/{len(CALLS)} calls")
-    good = ok and caught == len(plants)
+    plants_needed = len(plants)
+    if ruled:
+        def dpath(contdisc):
+            def g(Pv, d, s, rew, con):
+                x = M.feat2tensor(d, s)
+                val = M.twohot_decode(M._mlp_head_n(Pv, "val", x, "logits", 3), b)
+                return M.imag_return(rew, con, val, contdisc, 333, 0.95)["ret"]
+            return g
+        for c in CALLS:
+            P = {k[len(f"c{c}/pre/val/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/val/")}
+            gp = f"c{c}/imag/"
+            d = np.concatenate([G[gp + "start/deter"][:, None], G[gp + "feat/deter"]], 1)
+            s = np.concatenate([G[gp + "start/stoch"][:, None], G[gp + "feat/stoch"]], 1)
+            args = (P, mx.array(d), mx.array(s), mx.array(G[f"c{c}/imagloss/in_rew"]),
+                    mx.array(G[f"c{c}/imagloss/in_con"]))
+            for mode in ("eager", "compiled"):
+                g1 = dpath(True)
+                g1 = mx.compile(g1) if mode == "compiled" else g1
+                truth = run(c, make(), mode == "compiled")[2]
+                eq = bool(np.array_equal(np.array(g1(*args)), truth))
+                print(f"D  call {c} {mode:8s}: imag_return(contdisc) ret bit-equal to this path: {eq}")
+                ok &= eq
+            r0 = np.array(dpath(False)(*args))
+            live = bool(np.any(true[c][2] != 0))
+            dif = not np.array_equal(r0, true[c][2])
+            print(f"DC call {c}: contdisc False {'differs' if dif else 'BIT-EQUAL - control dead'}{'' if live else ' (ret all 0, exempt)'}")
+            ok &= dif or not live
+        caught -= int(disc_hit)
+        plants_needed -= 1
+    good = ok and caught == plants_needed
     print(f"RUNG 13b-imagloss-{('q2' if ruled else 'q') if qline else 'sym'} (H rew, H con, R): port {'PASS' if good else 'FAIL'} (planted caught {caught}/{plants_needed})")
     return 0 if good else 1
 
