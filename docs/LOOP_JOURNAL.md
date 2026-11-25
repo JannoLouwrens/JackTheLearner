@@ -3685,3 +3685,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `mlx_maths.rewcon_loss` (`f37d8afd`): 2/2 eager+compiled, worst 2.35e-6 ×(|ref|+1) vs official golden; published init's zero reward logits / log 255 reproduced; planted 6/6 caught; rungs 1 (9/9) and 8a (2/2) still pass.
 - Owed next: the wheel re-check kernel (third rung since 11-21) when a Kaggle session frees; then 8c decoder.
 - Served: philosophy 4 (each port check has a planted bug it must catch) and 7 (the Mac port, so he can run on people's own machines).
+
+## 2026-11-25 01:22–01:30 UTC · JACK · J21 rung 8c (decoder vector reconstruction losses, size1m) PASS
+- Kaggle 5/5 RUNNING (J10-2 s3/s4 seg3, s5/s6 seg2, s7 seg0) by Kaggle's own status; nothing home. J22/J20/J23 DONE, J14 waits Sat, J18 rung S already read (`6b29c527`), Next-ups 1–3 all discharged → J21; wheel kernel still has no session.
+- Refs (`971816b9`): official `rssm.Decoder` vector branch on walker proprio keys (14,)/()/(9,) vs NumPy f64: 24/24 hold, worst 2.7e-6, at published init + noised params; planted 8/8.
+- Scar found: the decoder concatenates STOCH first, then deter — the reverse of the heads' feat2tensor. Reusing that helper would be a silent bug; it is a planted case at both stages.
+- Tests failing (`963d32f1`) → `mlx_maths.dec_vec_loss` (`3c5b0b63`): 2/2 eager+compiled, worst 5.0e-6, planted 6/6, rungs 1/8a/8b still pass. Not ported: categorical keys, image branch.
+- Owed: wheel re-check kernel (covers 4 rungs now); then the full world-model loss on one golden batch.
+- Served: philosophy 4 (each port check catches planted bugs) and 7 (the Mac port, so he can run on people's own machines).

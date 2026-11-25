@@ -238,10 +238,10 @@ in the docstring. No training, no speed claims. One wheel re-check kernel
 (< 1 h, rank 0) after every third rung.
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7.
 **done when:** rung 7 at size1m and the world-model loss rungs pass, test names in `experiments/brain_a/README.md`.
-state: 11-24 rung 7 at size1m DONE `b79e04e8` (2/2 eager+compiled vs official e01491f, planted 4/4).
-state: 11-25 00:30 rung 8a (dyn + rep with free bits) DONE `80b603bd`: refs vs official `rssm.loss` 16/16 `a3fd3c60`; tests failing `b8aafa5f`; `mlx_maths.rssm_loss` 2/2 eager+compiled (6.4e-7 vs golden), planted 4/4. Finding: at size1m init raw KL is 2.45–11.63 — the 1.0 floor never binds, so a free 7.5 official pass (55.5% split) tests the max().
-state: 11-25 00:41 rung 8b REFERENCES `ac9a3074`: rew twohot + con binary heads over rung 7's size1m feat vs official MLPHead 15/15 HOLD (worst 1.6e-6), planted 6/6. Finding: official rewhead outscale 0.0 → reward logits all ZERO at init, loss log 255 whatever the MLP; so the compare runs on seeded N(0,0.3) params (`rung8b.noised_params`, regenerated from shapes, not stored).
-state: 11-25 01:30 rung 8b DONE `f37d8afd`: tests failing `9db7bb98`; `mlx_maths.rewcon_loss` 2/2 eager+compiled (worst 2.35e-6 vs golden, both param sets), planted 6/6, rungs 1/8a still pass. NEXT: wheel re-check kernel (rank 0, third rung since 11-21 — Kaggle was 5/5 J10 at 01:30); then 8c vector decoder (refs first).
+state: rung 7 size1m DONE `b79e04e8`; rung 8a (dyn + rep, free bits) DONE `80b603bd` (refs 16/16 `a3fd3c60`; size1m init KL 2.45–11.63 never meets the 1.0 floor, so a free 7.5 pass tests the max()).
+state: 11-25 rung 8b DONE `f37d8afd` (refs `ac9a3074` 15/15; official rewhead outscale 0 → zero logits at init, so compares run on seeded noised params too).
+state: 11-25 01:27 rung 8c (decoder VECTOR losses, walker proprio keys) DONE `3c5b0b63`: refs vs official Decoder 24/24 `971816b9`, tests failing `963d32f1`, `mlx_maths.dec_vec_loss` 2/2 eager+compiled (5.0e-6), planted 6/6. Scar: decoder joins STOCH first (feat2tensor is deter first). Categorical + image branches not ported.
+state: NEXT: wheel re-check kernel (rank 0, now covers 7 size1m/8a/8b/8c — Kaggle 5/5 J10 at 01:22); then the full world-model loss on one golden batch (last row of this order).
 
 **Lane `forge`** reads `docs/FORGE.md`; its F3 is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
