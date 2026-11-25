@@ -457,6 +457,35 @@ def rewcon_loss(P, deter, stoch, reward, term, horizon):
 
 
 # ---------------------------------------------------------------- rung 8c (step 2.4, row 8)
-# Decoder vector branch (rssm.py L253-306). STUB: `rung8c.py` tests committed failing first.
+# Decoder VECTOR branch and its losses (rssm.py L253-306; heads.py symlog_mse + Agg; outs.py MSE;
+# agent.py L178-181). Filled 11-25 after `rung8c.py` was committed failing (963d32f1).
+# Ours beside theirs:
+#   compute dtype f32 (published bf16), as rungs 6-8b.
+#   continuous keys only ('symlog_mse'); the 'categorical' branch for discrete vector keys and
+#     the whole image branch (BlockLinear + conv) are not ported — no row needs them yet.
+#   the sg() on the target is a no-op here (no gradient is taken in this rung).
+
+# rssm.py L293-295: the decoder concatenates STOCH first, then deter (feat2tensor is the reverse)
+def dec_inp(deter, stoch):
+    return mx.concatenate([stoch.reshape(*stoch.shape[:-2], -1), deter], -1)
+
+
+# heads.py L89 Agg(output, len(space.shape), sum); a () space has no Agg
+def _vec_agg(x, axes):
+    return mx.sum(x, axes) if axes else x
+
+
 def dec_vec_loss(P, deter, stoch, targets, spaces, layers):
-    raise NotImplementedError("rung 8c: dec_vec_loss not yet ported")
+    """Per key: square(Linear_k(MLP(dec_inp)) - symlog(target)), summed over the key's dims ->
+    [B,T]; also "pred/<key>" [B,T,*shape]. MLP = layers x (linear -> rms -> silu), act silu."""
+    x = dec_inp(deter.astype(f32), stoch.astype(f32))
+    for i in range(layers):
+        x = _ACT["silu"](_rms(_lin(P, f"dec/mlp/linear{i}", x), P[f"dec/mlp/norm{i}/scale"]))
+    out = {}
+    for k, shp in spaces.items():
+        W, b = P[f"dec/vec/{k}/pred/kernel"], P[f"dec/vec/{k}/pred/bias"]
+        pred = (x @ W.reshape(W.shape[0], -1) + b.reshape(-1)).reshape(*x.shape[:-1], *shp)
+        sq = mx.square(pred - symlog(targets[k].astype(f32)))
+        out[k] = _vec_agg(sq, list(range(2, sq.ndim)))
+        out[f"pred/{k}"] = pred
+    return out

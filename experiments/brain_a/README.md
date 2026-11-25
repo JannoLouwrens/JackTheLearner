@@ -673,3 +673,21 @@ size1m deter/stoch (feat 640), reward/term drawn from a fixed seed.
 - Ours beside theirs: f32 compute (published bf16); heads of exactly one MLP layer (the published
   rew/con heads); outscale is init-only, the port reads the kernel it is given.
   Wheel re-check: rung 7 size1m, 8a, 8b = the third rung since 11-21 → wheel kernel owed next.
+
+## J21 — rung 8c: decoder VECTOR reconstruction losses, size1m (11-25): **PASS**
+`experiments/brain_a/rung8c.py`, official `rssm.Decoder` (L253-306, vector branch) + `heads.symlog_mse` +
+`outs.Agg`/`MSE` at e01491f, over rung 7's size1m deter/stoch; obs = walker proprio as dm_control
+publishes it: orientations (14,), height () (a scalar key, no Agg), velocity (9,); targets from a fixed
+seed spanning |x| 0.01–300 (both symlog regions).
+- `--vs-official`: **24/24 REFERENCES HOLD** (`971816b9`; worst 2.68e-6 ×(|ref|+1)), published init and
+  seeded N(0, 0.3) params; planted refs 8/8 (incl. layers 2 for 3, symexp of pred vs raw target).
+  **Scar:** the decoder concatenates STOCH first, then deter — the reverse of `feat2tensor`. Reusing the
+  heads' input function would be a silent bug; planted and caught at both stages.
+- Port tests `dec_ref`, `dec_golden` committed FAILING (`963d32f1`, stub); then `mlx_maths.dec_vec_loss`
+  (`dec_inp` → 3 × linear/rms/silu → per-key Linear → square(pred − symlog(target)) → `_vec_agg` sum)
+  → **RUNG 8c: 2/2 PASS eager AND compiled** (worst 5.03e-6 ×(|ref|+1), noised velocity pred);
+  sign-flipped-target control differs by 184. `--planted` 6/6 caught; rungs 1 (9/9), 8a, 8b (2/2) still
+  pass. Logs `/data/jack-logs/mlx/rung8c_{vs_official,stub,pass,planted}.log`.
+- Ours beside theirs: f32 compute (published bf16); continuous keys only — the `categorical` branch
+  (discrete vector keys; none in DMC proprio) and the image branch (BlockLinear + conv) are not ported.
+  Wheel re-check now covers rungs 7 size1m, 8a, 8b, 8c (owed since 8b; Kaggle was 5/5 J10 at 01:22).
