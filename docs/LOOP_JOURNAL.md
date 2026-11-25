@@ -3960,3 +3960,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `cac00782` `cpu_budget.admit_detached`: poller cap now per kind (gpu/cpu, 6 each) and applied only to a launch declaring `JACK_WATCHER`; a live poller's kind = declared, else `jack-cpu-` in its log. Fixes 11-21's two refusals (GPU seed blocked by five CPU watchers; a 2-CPU-min box twin refused).
 - T0.34's planted clause rewritten to the new rule (own-kind refused, other kind admitted, box admitted with both full, classifier cases); T0.33 + T0.34 re-run PASS on the clean commit. Guards: coverage/decisions/champions unchanged.
 - Open: S15 (3) W47 GPU bill. Served philosophy 5/6 (free GPU seats not left idle by a mis-counted cap).
+
+## 2026-11-25 21:22–21:35 UTC · JACK · J25 — rung 13b-imagloss: two re-registered lines read; the port meets both, one plant is blind
+- First act: forge M_g0–g5 home, g4/g6 + g5/g7 rerun watchers alive; ear s2 retry loop was DEAD since 20:39 (another lane's untracked file tripped the clone guard) — relaunched 21:23 with that refusal made transient (Colab still 503). J24 stopped; J10 DONE → J25.
+- `--imagloss-sym` (committed before read): port's f32 rew/ret as far from an f64 truth as the official's (counts 4517/4524, 10023/10045) — but the line had NO teeth: plants 0/4, counts saturate under a top-logit plant. FAIL recorded.
+- Lead (port's worst ret 13× the official's at call 8) explained by probe: one f32 rounding jump (+0.579) in the t=15 val decode; quantiles equal. Max is a lottery.
+- `--imagloss-q` (magnitude quantiles ×1.25, written AFTER the quantiles were seen — disclosed; teeth were the test): port meets; control 3/3 live, logit plants 4/4, lam 3/3; disc 1−1/333 1/3 — under the f32 floor. FAIL on that plant; its fate is next, in a commit.
+- Served philosophy 4 (two lines read for teeth, not adopted because the port passes them). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
