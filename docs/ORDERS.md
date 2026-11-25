@@ -137,11 +137,10 @@ between rungs. (5) Launch rung M's kernels by the frozen rule (rank 1).
 slot after that does (1)–(3) itself, same lock procedure (ruling 100).**
 serves: M3, M7 ("he keeps learning") · philosophy 1, 3, 4.
 **done when:** rung S is on the scoreboard — one reading per candidate beside baseline, twin and controls — and rung M's kernels are launched by the frozen rule.
-state: 11-22 02:25 forge: kernel built + tested `bf1f5f7d` (baseline = E2c's E-food bit for bit); rung S launched in two chains.
-state: 11-24 Director: all 8 kernels COMPLETE, raw files home 11-22 04:20–12:40; no lock, no reader, nothing read. The tripwire exists (`e3e573e5`).
 state: 11-24 14:14 forge: (1)–(3) DONE — lock `2eb2c0f4`, rung S READ `6b29c527` (N3 0.85, K1 0.81, K2 0.51 climb to M).
-state: 11-25 05:40 JACK inherited the forge's uncommitted step-4 core → `41cc5d64`: `run_arm(carry_dir=…)` in whole 20k chunks through `save_life`; carry tests 13/13 (identity for all 6 M arms + a death after a load; planted 4/4 differ; cut = lost run to the locked reader), rung-S tests 18/18.
-state: NEXT (step 4 still open): wire the kernel side — `run_parallel`/`_JOB` pass `carry_dir` + `deadline=t0+SEG_WALL_S`, carry dirs fetched home and mounted into the next kernel (J10's `require_carry` shape), `MAX_SEGMENTS` enforced; test, then (5) launch rung M by the frozen rule.
+state: 11-25 05:40 step-4 core `41cc5d64` (run_arm carries in 20k chunks via `save_life`; carry 13/13). 06:10 kernel side `b9914a75`: job deadline t0+7.5 h, carries in the kernel output, seg n mounts seg n−1 and runs only its carried runs (one whole carry or refused), ≤ 3 segs, seg files in `raw/segments/`, `M_gN.json` assembled once (cost = Σ seg durations), fetch_only. r1_run 26/26 (jack-std), read 13/13, spec 8/8, lock holds.
+state: **J18 DONE 11-25 06:16 (done-when met): rung M LAUNCHED by the frozen rule, pin `b9914a75`**, `rung_arms` = E-food, E-food-lr0, K1, K2, N3 + yardstick C2 × s1411–1415 = 30 runs / 8 kernels, 2 chains from `/data/wt/jack-clean`: A g0 g2 g4 g6 (first `jack-cpu-1795587333`), B g1 g3 g5 g7 (`…587347`). Logs `/data/wt/jack-clean/launch_M_chain{A,B}.log`. S took ≤ 3.2 h at 150k → M ≈ 6–6.5 h a kernel, a chain ≈ 26 h.
+state: NEXT: harvest only — chains self-advance (and self-carry); when all 8 `raw/M_g*.json` are home: `python -m experiments.forge.r1_read --rung M`. Receipts land in the worktree's `gpu_submissions.jsonl` — copy into main's on harvest. A refused/failed group in `CHAIN DONE` is re-run from the SAME pin.
 
 ### J20 — One world: re-read the box's rows about his world on mujoco 3.17.0
 part: His world + Eye · stage: 1 ("proof the task can be learned with his senses") · step: 4 (re-read) · prior: §12; `WORLD_CARD.md` (hand forager d0 / d = 1; the floor card); rulings 51, 76
@@ -175,7 +174,8 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 state: J10-1: 1M median 4,065 IN BAND, control valid; 2M 1 of 3 → FAIL.
 state: 11-22 07:55 `b609b142`: rule frozen before seed 3; `segment_job_body(row="J10-2")` carries + 50-ep eval, `require_carry` refuses a mount lacking life.pkl/physics.pkl (planted PASS). Tests 10/10.
 state: 11-25 03:40 @2M: **s4 R 6,254.3 / 17.16 m/1k / 0 fell → meets the bar**. s6 seg3 `…577986` + s7 seg1 `…577077` launched from clean worktree `/data/wt/jack-clean` (`JACK_REPO=` needed: the main tree's forge dirt trips the submit guard).
-state: 11-25 04:24 **s3 seg3 HOME @2M: R 5,649.4 (< 5,950), 12.08 m/1k → s3 MISSES the bar.** Tally 1 meets / 1 misses / 3 open → PASS now needs s5, s6, s7 ALL to meet. s5 seg2 HOME (1.5M, hit target) → LAUNCHED s5 seg3 `…580623` (worktree at 84517738). Running 3: s5 seg3, s6 seg3, s7 seg1. NEXT: s7 seg1 → `kernel2 7 2`; s5/s6 seg3 → read their 2M evals. Row read when all five are home.
+state: 11-25 04:24 **s3 seg3 HOME @2M: R 5,649.4 (< 5,950), 12.08 m/1k → s3 MISSES the bar.** Tally 1 meets / 1 misses / 3 open → PASS now needs s5, s6, s7 ALL to meet. s5 seg2 HOME (1.5M, hit target) → LAUNCHED s5 seg3 `…580623` (worktree at 84517738). Running 3: s5 seg3, s6 seg3, s7 seg1.
+state: 11-25 06:16 s7 seg1 HOME (1M: R 5,282.7 / 6.34 m/1k, hit target) → LAUNCHED s7 seg2 `…587392` (clean worktree, ff'd to b9914a75). Running: s5 seg3, s6 seg3, s7 seg2. NEXT: s5/s6 seg3 → read their 2M evals; s7 seg2 → `kernel2 7 3`. Row read when all five are home.
 
 ### J14 — Brain A and the ear: Colab is open, so the timing cells go now
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `docs/research/prereg/a2_size_s.md`; `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws; rulings 67, 78, 79, 86, 96

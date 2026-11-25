@@ -1962,14 +1962,15 @@
         "detached:launch_j10_2_s3_seg3.log": 489.98,
         "detached:launch_j10_2_s4_seg3.log": 675.4,
         "detached:launch_j10_2_s5_seg2.log": 313.29,
-        "detached:launch_j10_2_s5_seg3.log": 11.35,
+        "detached:launch_j10_2_s5_seg3.log": 130.91,
         "detached:launch_j10_2_s6_seg2.log": 792.87,
-        "detached:launch_j10_2_s6_seg3.log": 65.01,
+        "detached:launch_j10_2_s6_seg3.log": 173.34,
         "detached:launch_j10_2_s7_seg0.log": 649.87,
-        "detached:launch_j10_2_s7_seg1.log": 75.25,
+        "detached:launch_j10_2_s7_seg1.log": 734.77,
+        "detached:launch_wheel_9.log": 2.46,
         "detached:launch_wheel_s1m.log": 2.75
       },
-      "used_s": 3224.75
+      "used_s": 4114.62
     }
   },
   "last_child_s": {
