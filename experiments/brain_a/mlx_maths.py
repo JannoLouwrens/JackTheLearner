@@ -92,10 +92,25 @@ def twohot_target(target, b):
 
 
 # outs.py L327–330
+def _lse_pairwise(x, leaf=16):
+    """logsumexp over the last axis with a TWO-LEVEL (blocked) sum. Ours beside theirs: same function as
+    jax.scipy.special.logsumexp; MLX's CPU `mx.sum`/`mx.logsumexp` add the 255 bins one after another (rel err
+    1.7e-6 at 255 bins, measured 11-25, `rung13b_vq_probe.py`) where XLA reduces as a tree (~1.5e-7); blocks of
+    16 bring ours to the tree's order. Gradient = softmax, as logsumexp's."""
+    m = mx.stop_gradient(mx.max(x, axis=-1, keepdims=True))
+    e = mx.exp(x - m)
+    n = e.shape[-1]
+    pad = (-n) % leaf
+    if pad:
+        e = mx.concatenate([e, mx.zeros(e.shape[:-1] + (pad,), e.dtype)], -1)
+    S = e.reshape(e.shape[:-1] + ((n + pad) // leaf, leaf)).sum(-1).sum(-1, keepdims=True)
+    return m + mx.log(S)
+
+
 def twohot_loss(logits, target, b):
     logits = logits.astype(f32)
     w = twohot_target(target, b)
-    log_pred = logits - mx.logsumexp(logits, axis=-1, keepdims=True)
+    log_pred = logits - _lse_pairwise(logits)
     return -(w * log_pred).sum(-1)
 
 

@@ -931,3 +931,17 @@ search over the regenerated noise file (uniforms `default_rng(0).random(64M, f32
   (call 1 ret all 0, exempt). Two placement bugs in the clause's first commit crashed two reads before any
   verdict line (fixed in the next two commits; no line text changed).
 - Not yet: V and Q (teacher-forced vs f64), retnorm limit-0 plant, repval, then the 81 grads via `port_gate`.
+
+
+### Rung 13b-imagloss-vq — V and Q vs an f64 truth: two reads, both FAILED, one port fix (11-25 22:20–22:45)
+`rung13b.py --imagloss-vq` (jack-mlx, box, ~30 s; logs `/data/jack-logs/mlx/rung13b_imagloss_vq{,_read2}.log`).
+Line `a2e36ed4`, committed before its read: (Q-S) as q2 on the value and policy loss terms, teacher-forced on the
+golden's feats/actions/in_rew/in_con, truth = the variant's f64 function of the port's own logits; control rew
+zeroed; plants slowreg 0, weight without cumprod, actent 0, retnorm LIMIT 0 (the old retnorm plant was NO-OP).
+- Read 1: Q meets everywhere; V misses at calls 2/6/8 (port q99 2.9e-6 vs official 6.8e-7 at call 2). Cause:
+  MLX CPU's 255-bin `mx.sum` is sequential (1.7e-6 vs XLA's ~1.5e-7). Fix: `mlx_maths._lse_pairwise` in
+  `twohot_loss`; rungs 1, 8b, 9, 11, 13b-wm, 13b-imagloss-q2 still PASS.
+- Read 2: port meets V and Q at every call eager+compiled, plants 4/4 — but the control fails to break V at call
+  2 (in_rew ~0 there; zeroing it is under the f32 floor). FAIL on that clause, recorded. Next: rule it, then
+  repval and the 81 grads via `port_gate`.
+

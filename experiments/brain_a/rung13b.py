@@ -1047,6 +1047,18 @@ def main_imagloss_sym(qline=False, ruled=False):
 # actent 0 (Q); retnorm LIMIT 0 (Q) — replaces retnorm_not_updated, which was NO-OP everywhere (|ret|~5e-3 keeps
 # hi'-lo' under the limit 1.0, so update or not, sc = 1; with limit 0, sc = hi'-lo' and adv is rescaled).
 # PASS iff the port meets (Q-S) on V and Q at every call/mode, C holds, plants 4/4. Thresholds as q2's; none moved.
+# FIRST READ (11-25 22:27, at `a2e36ed4`) FAILED on V, recorded as is: Q meets every call/mode; C breaks V and Q on
+#   3/3 live calls; plants 4/4. V misses (Q-S) at calls 2/6/8: port q90/q99 8.8e-7/2.9e-6 vs official 2.3e-7/6.8e-7
+#   (call 2). Cause MEASURED (`rung13b_vq_probe.py`): MLX CPU's `mx.sum` over the 255 bins is sequential (rel err
+#   1.7e-6 on exp-inputs that are exact to 3e-8; numpy/XLA ~1.5e-7); exp and log are not the cause. PORT FIX, not a
+#   line change: `mlx_maths._lse_pairwise` (blocked 16x16 sum) inside `twohot_loss`. Rungs 1, 8b, 9, 11, 13b-wm,
+#   13b-imagloss-q2 re-run after the fix: all PASS.
+# SECOND READ (11-25 22:40, port fixed, line unchanged) FAILED on ONE control clause, recorded as is: port meets (Q-S)
+#   on V and Q at every call eager+compiled (call 2 V 2.5e-7/7.5e-7 vs 2.3e-7/6.8e-7; call 8 1.6e-6/1.3e-5 vs
+#   1.7e-6/1.2e-5); plants 4/4; C breaks Q 3/3 live and V at calls 6/8 — but at call 2 rew zeroed MEETS V's line
+#   (official q 1.0e-7/2.4e-7/7.0e-7 vs the zeroed truth, = its unzeroed figures): in_rew ~0 at call 2, so zeroing it
+#   moves V's target under the f32 floor. In the first read C broke there only because the port was imprecise. Next:
+#   rule that clause (measured NO-OP-at-precision at call 2, or a control that moves V there), committed before a read.
 def main_imagloss_vq():
     gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
     if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
