@@ -206,7 +206,8 @@ One wheel kernel (< 1 h, rank 0) after rung 12 and after 13. No training,
 no speed claims.
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7.
 **done when:** rungs 10–13 pass here and on the wheel, test names in `experiments/brain_a/README.md`.
-state: (new 11-25; continues J21, DONE `e0a2860c` + wheel `5e98aa3b`.)
+state: 11-25 10:40 **rung 10 PASS** (imagination rollout + λ-returns, size1m): refs 36/36 vs official `c0dd858f`, tests failing `bfefdd8b`, port `79634fb5` 4/4 eager+compiled (returns EQUAL to the official dump; imagination 2.3e-6, 0 flips); planted 6/6; rungs 1–9 still pass.
+state: NEXT rung 11 the critic loss (two-hot value, slow target, slowreg, valnorm) — reuse rung 10's golden returns as its targets; then 12 → wheel kernel.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;

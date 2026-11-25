@@ -3800,3 +3800,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The 09:24 chain had died at its first submit: Colab's assign POST read-timed out (120 s) → CHAIN_STOP. It left an orphan T4 `[?]` session on the server — S17's bug, 4th time; `colab stop -s` says "not found" (no local record), and by 09:38 the server listed no assignments.
 - Relaunched `kws_row colab s0 s1 s2 twin` 09:39 — from the main tree, not `/data/wt/jack-kws2` (launch_detached needs JACK_REPO; I did not set it). experiments/ + scripts/ at HEAD are byte-equal to the pin `be507986`, so the run is the same; left it rather than kill mid-assign. s0 on a T4 since 09:39. A later run's submit can trip on another lane's main-tree dirt → a CHAIN_STOP is re-launched (it skips runs home).
 - Served philosophy 4 (the ear's re-registered row gets its seeds instead of sitting stopped) and 6 (free Colab, orphan not left holding a GPU).
+
+## 2026-11-25 10:08–10:42 UTC · JACK · J25 rung 10 — imagination + λ-returns ported and proven equal
+- Nothing to harvest: J24 waits on its ruling; J18 chains running; J10 s7 seg3 kernel `…600347` launched by its watcher at 09:52; J14 ear chain alive (pid 2744743) → J25 (box only).
+- References vs official e01491f: 36/36 HOLD (`c0dd858f`) — both imagine paths, 15 steps from 32 size1m starts, 0 sample flips; returns through the official imag_loss/repl_loss with stubbed heads, plus λ=1 / λ=0 closed forms; 13/13 planted wrong references caught.
+- Tests committed failing (`bfefdd8b`), then the MLX port (`79634fb5`): 4/4 eager AND compiled; returns bit-equal to the official dump; planted 6/6 caught; rungs 1–9 still pass. No gradient test here by reading (every output sits under a stop-gradient in the agent) — owed at rung 13.
+- Served philosophy 3/7 (brain A's road to the Mac, where he is handed to people, one proven-equal piece at a time) and 4 (each piece shown able to fail on planted bugs).
