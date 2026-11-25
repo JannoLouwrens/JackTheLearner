@@ -639,3 +639,21 @@ toy action space, batch 4) — a listed difference. The NumPy-64 reference now r
   silently running gelu). Same commit, all green: `rung7.py --preset size1m` 2/2 (constant-noise
   control 4,870/8,192 flips), `rung7.py` toy 2/2, `--planted` 4/4 at both sizes, `rung6.py` 2/2.
   Rung 7 at size1m is DONE; next rows are the world-model loss rungs.
+
+## J21 — rung 8a: dynamics + representation losses with free bits, size1m (11-25): **PASS**
+`experiments/brain_a/rung8a.py`, official `rssm.py` `RSSM.loss` L120-133 + `_dist` L173-176 at e01491f,
+run end to end (its own observe scan) on rung 7's size1m params, inputs and file noise.
+- `--vs-official`: **16/16 REFERENCES HOLD** (`a3fd3c60`) — official loss pass post/prior/stoch equal the
+  rung 7 size1m golden bit for bit; dyn and rep (free 1) mean 1.1e-8, element 1.9e-7 ×(|ref|+1).
+- **The published floor never binds here:** at size1m init the raw KL is 2.45–11.63 nats (median 7.62),
+  so `max(kl, 1)` is the identity on every element and free 1 alone cannot test the floor. A second
+  official pass at `free_nats=7.5` (same params, noise cursor rewound) splits 55.5% of elements and
+  matches (4.7e-9 mean). Planted references 5/5 caught. Golden `rung8a_dynrep_golden_size1m_e01491f.npz`.
+- Port tests `dynrep_ref`, `dynrep_golden` committed FAILING (`b8aafa5f`, stub); then
+  `mlx_maths.rssm_loss` (observe → `kl_dyn_rep`) → **RUNG 8a: 2/2 PASS eager AND compiled** (worst
+  6.4e-7 ×(|ref|+1) vs golden, both floors; free-0 control differs by 5.05). `--planted` 4/4 caught
+  (no unimix, free bits ignored, KL swapped, free bits on the T-mean); rung 7 size1m still 2/2.
+  Logs `/data/jack-logs/mlx/rung8a_{pass,planted}.log`.
+- Ours beside theirs: `dyn_ent`/`rep_ent` metrics not ported (metrics, not losses). Inputs the toy's
+  (rung 7's listed difference). Wheel re-check: rung 7 size1m + 8a since the 11-21 wheel line — the
+  next rung is the third → wheel kernel after it.

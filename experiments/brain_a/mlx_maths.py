@@ -338,8 +338,14 @@ def rssm_observe(P, carry, tokens, action, reset, uniforms, cfg, act_spec):
 
 
 def rssm_loss(P, carry, tokens, action, reset, uniforms, cfg, act_spec, free):
-    """rssm.py L120-133: STUB (rung 8a tests committed failing first)."""
-    raise NotImplementedError("rung 8a port not written")
+    """rssm.py L120-133: observe scan, prior = `_prior(feat['deter'])` over the pass (the scan's
+    per-step prior is rssm_step's `_prior` on the step's new deter — reused, not recomputed), then
+    dyn = KL(sg(post) || prior), rep = KL(post || sg(prior)), each max(., free) per [B,T]
+    element. Ours beside theirs: `free=0` skips nothing (max(kl, 0) == kl since KL >= 0); the
+    official `if self.free_nats:` skips the max — same values. dyn_ent/rep_ent metrics not ported."""
+    out = rssm_observe(P, carry, tokens, action, reset, uniforms, cfg, act_spec)
+    dyn, rep = kl_dyn_rep(out["post"], out["prior"], cfg["unimix"], free)
+    return dict(dyn=dyn, rep=rep, **out)
 
 
 def sample_onehot(logit, u, mix):
