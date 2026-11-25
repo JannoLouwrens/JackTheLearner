@@ -843,6 +843,13 @@ def main_imagloss():
 #   deviation from the f64 truth exceeds the official's (call 8: 0.382 vs 0.0287; call 6: 0.358 vs 0.225) while
 #   rew's is smaller (0.58 vs 0.75) — a magnitude line must explain that before it is written. Next: diagnose the
 #   call-8 worst ret element (which t, which val decodes), THEN register a magnitude (not count) line.
+# LEAD EXPLAINED (11-25 21:31, `rung13b_retworst_probe.py`): the port's worst ret element at calls 6 AND 8 is
+#   t=14, whose bootstrap val decode at t=15 takes ONE f32 top-bin rounding jump (+0.579, the same quantum as
+#   rew's); the recursion adds 2e-9. The official golden did not jump at that element (its own max 0.225 at call 6
+#   is the same kind of event). The error DISTRIBUTIONS match: |port-truth| p50 2.45e-5 / p99 1.46e-3 vs official
+#   2.47e-5 / 1.50e-3 (call 6); 2.40e-5 / 2.73e-3 vs 2.42e-5 / 2.70e-3 (call 8). A max line is a lottery of
+#   single rounding events; not a port bug. These quantiles are now SEEN — any quantile line registered next must
+#   say so and earn its teeth from the plants (and the NO-OP exemption), not from these figures.
 def main_imagloss_sym():
     gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
     if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
