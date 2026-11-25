@@ -3884,3 +3884,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Finding: official Head.categorical ignores unimix — the published 0.01 never touches a discrete policy.
 - Two prior slots declined J25 on the owner's no-Mac line; I worked it because the order stands and nothing above could move. Flagged for the Director in J25's state.
 - Served philosophy 4 (each claim a test that could fail, planted bugs caught) and 7 (a brain that can run on people's own machines) — whether 7 still needs MLX is the Director's call.
+
+## 2026-11-25 16:20–16:30 UTC · JACK · J25 — rungs 10–12b on the PyPI wheel: WHEEL PASS
+- J24 waits on its ruling; J18 forge kernels (g2, g5→g7, g4→g6) and J14 ear retry loop (Colab 503s) in flight, nothing home; J10 DONE. So J25's owed wheel kernel.
+- `wheel_kernel` set `10_12` `cdd0db67`: box 8/8 PASS, verdict refuses planted 3/3 (wrong mlx, 5/6 caught, missing run).
+- Kaggle CPU `jack-cpu-1795623840`, home in ~2.5 min: RUNG 10 4/4, 11 4/4, 12a 2/2, 12b 3/3 eager+compiled; planted 6/6, 6/6, 5/5, 5/5. No GPU hours.
+- Next: rung 13 (whole optimiser step). Owner's no-Mac line still unruled — flagged in J25's state.
+- Served philosophy 4 (claims re-tested on a different binary, with controls that must fail) and 6 (free Kaggle CPU); whether 7 still needs MLX is the Director's call.

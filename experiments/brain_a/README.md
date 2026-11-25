@@ -789,3 +789,10 @@ discrete policy. Tests committed failing `2a749221`; port `mlx_maths.policy_loss
 `policy_golden`, `policy_grad` eager+compiled (fwd 4.53e-7; grads 4.68e-6 vs official, 3.8e-7 vs f64);
 `--planted` 5/5 incl. logpi under sg (forward-identical, caught only by the grad test). Rung 12 whole;
 wheel kernel then rung 13 owed.
+
+## J25 — the PyPI wheel line for rungs 10 / 11 / 12a / 12b (11-25): **WHEEL PASS**
+Kaggle CPU kernel `jack-cpu-1795623840` (`wheel_kernel kernel 10_12`, `cdd0db67`, verdict fixed before the
+run, planted 3/3 refused on box outputs). PyPI mlx 0.32.4, x86_64, py 3.13.18, glibc 2.39. All eight runs
+rc 0: RUNG 10 4/4, RUNG 11 4/4, RUNG 12a 2/2, RUNG 12b 3/3, each eager AND compiled; planted 6/6, 6/6, 5/5,
+5/5 caught, unpatched port passes. Verdict file `/data/jack-logs/mlx/wheel_10_12.json`. Same limit as
+before: Linux x86_64 wheel of the same version, not the Mac's macOS arm64 binary. Next: rung 13.
