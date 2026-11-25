@@ -919,3 +919,15 @@ search over the regenerated noise file (uniforms `default_rng(0).random(64M, f32
   its first read. The 16th policy call (action at the last feat) is fed normals but not compared.
 - Not yet: policy/value/repval loss terms on this pass vs `outs/losses`, then the 81 gradients via `port_gate`.
 
+
+### Rung 13b-imagloss-q2 — PASS (11-25 21:45, ruling `67bb1f23`, read at `f62072ba`)
+`rung13b.py --imagloss-q2` (jack-mlx, box, ~20 s; log `/data/jack-logs/mlx/rung13b_imagloss_q2.log`).
+- Ruling, committed before the read: the disc 1-1/333 plant is NO-OP-at-precision on this golden (|ret|~5e-3;
+  the official's quantiles vs the planted truth equal the unplanted ones), still printed, not counted; it is
+  caught at rung 10 where ret is large. Replaced by (D): the port's certified `imag_return(contdisc=True)`
+  gives ret bit-equal to this rung's path, and (D-control): contdisc False must differ on live calls.
+- Read: port meets (Q-S) on rew and ret at calls 1/2/6/8 eager+compiled; con 0 miss; control fails 3/3 live
+  (call 1 NO-OP); plants rew/val top-logit 4/4, lam 1.0 3/3 live; D bit-equal 8/8; D-control differs 3/3 live
+  (call 1 ret all 0, exempt). Two placement bugs in the clause's first commit crashed two reads before any
+  verdict line (fixed in the next two commits; no line text changed).
+- Not yet: V and Q (teacher-forced vs f64), retnorm limit-0 plant, repval, then the 81 grads via `port_gate`.

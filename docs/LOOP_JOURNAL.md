@@ -3967,3 +3967,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Lead (port's worst ret 13× the official's at call 8) explained by probe: one f32 rounding jump (+0.579) in the t=15 val decode; quantiles equal. Max is a lottery.
 - `--imagloss-q` (magnitude quantiles ×1.25, written AFTER the quantiles were seen — disclosed; teeth were the test): port meets; control 3/3 live, logit plants 4/4, lam 3/3; disc 1−1/333 1/3 — under the f32 floor. FAIL on that plant; its fate is next, in a commit.
 - Served philosophy 4 (two lines read for teeth, not adopted because the port passes them). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
+
+## 2026-11-25 21:37–21:50 UTC · JACK · J25 — rung 13b-imagloss-q2: the blind disc plant ruled, the line PASSES
+- First act: forge M_g0–g5 home, g6/g7 not yet; ear s2 retry loop alive (Colab 503, Kaggle 0 h) — nothing to harvest. J24 stopped on its ruling; J10 DONE → J25 (box).
+- Ruling `67bb1f23`, committed before the read: disc 1−1/333 plant → NO-OP-at-precision (measured under the f32 floor on this golden; caught at rung 10), replaced by clause D (port's certified `imag_return(contdisc)` bit-equal to this path) + D-control (contdisc False must differ).
+- My first commit put the clause's two pieces into main_wm and main_imag (string-match landed on earlier functions); two reads crashed before any verdict; fixed in two commits, those functions restored.
+- Read: port PASS — (Q-S) every call eager+compiled, con 0 miss, control 3/3 live, plants 3/3, D 8/8, D-control 3/3 live.
+- Served philosophy 4 (a blind plant replaced by a clause that could fail, not dropped). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
