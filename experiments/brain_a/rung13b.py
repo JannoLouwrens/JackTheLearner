@@ -693,10 +693,6 @@ def main_imag():
             n, w, fl, _ = score(c, fn(c))
             hits.append(n > 0 or fl > 0)
         caught += all(hits)
-        if name == "disc_horizon":
-            disc_hit = all(hits)
-            if ruled:
-                print("   (disc_horizon: NO-OP-AT-PRECISION by the 21:45 ruling - printed, not counted; certified at rung 10)")
         print(f"P  planted {name:22s}: caught on {sum(hits)}/{len(CALLS)} calls")
     good = ok and caught == len(plants)
     print(f"RUNG 13b-imag: port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
@@ -994,6 +990,10 @@ def main_imagloss_sym(qline=False, ruled=False):
         hits = hits if any(lv) else [False]
         print("   " + name + ": " + "  ".join(f"c{c} n_port {r[1]} n_off {r[2]}" for c, r in zip(CALLS, rs)))
         caught += all(hits)
+        if name == "disc_horizon":
+            disc_hit = all(hits)
+            if ruled:
+                print("   (disc_horizon: NO-OP-AT-PRECISION by the 21:45 ruling - printed, not counted; certified at rung 10)")
         print(f"P  planted {name:18s}: breaks (S) on {sum(hits)}/{len(CALLS)} calls")
     plants_needed = len(plants)
     if ruled:
