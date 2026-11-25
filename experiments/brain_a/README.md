@@ -820,3 +820,13 @@ before/after calls 1, 2, 6, 8), `/data/jack-logs/mlx/rung13/R13.npz` (75 MB, /da
   retnorm's update not checked here (rung 12a's; its inputs are not dumped). Next: the port's test —
   `mlx_maths.opt_update` + `slow_update` over this tree from `pre` + grads → `post`, eager and compiled;
   then rung 13b (the port's own whole-loss gradients vs these 81).
+
+### Rung 13a — the PORT's whole step over the same tree: PASS (11-25, `709fa34e`)
+`rung13.py --port` (jack-mlx, box, seconds): `mlx_maths.opt_update` + `slow_update` from each call's `pre`
++ official grads → official `post`, by THE LINE's (S)/(W) clauses. **Calls 1/2/6/8: 0 miss on 81 grads +
+11 slow tensors, eager AND compiled (mlx 0.32.4); worst weight 0.997 of the line.** First read FAILED —
+the AGC norms were f32 sums (~1e-5 off on size1m tensors; nu ∝ clip²): now summed in f64 on the CPU
+stream, then cast; `(1-b2)*(u*u)` as opt.py. The test injects the golden's EAGER bias correction
+(`bias=`, test-only); the port's own `mx.power` equals the correctly rounded (jitted) f32 power for
+t 1..39 and, read against this eager golden, misses only at calls 6/8 (39/33 tensors) — as predicted.
+Rung 3 still 2/2 + planted 5/5; rung 11 4/4. Next: rung 13b, then the wheel kernel.

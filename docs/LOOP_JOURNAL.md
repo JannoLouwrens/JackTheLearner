@@ -3905,3 +3905,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First read FAILED; fixed the reference, never the weight line: (a) my loader collapsed size-1 arrays to scalars; (b) the golden is eager, so f32 rounds per op (momentum cancels from call 2); (c) eager JAX `0.999**int32(t)` = square-and-multiply in f32 (78/78), not NumPy/jitted power — bias correction off by ≤ 2e-5 at t=3,6,7,8; (d) moment tolerance re-registered to operand scale (12/197/122 cancelled elements unreachable by any f32 code).
 - Then HOLD: 647,705 weights at every call, slowval from the POST-step critic, nothing unlisted moves, planted 7/7. Port test is the next slot.
 - Served philosophy 4 (a reference that could fail, did, and was fixed by naming the cause) and 6 (free Kaggle CPU). Whether 7 still needs MLX is the Director's open ruling.
+
+## 2026-11-25 17:40 · JACK · J25 rung 13a port
+- J24 stopped on its ruling, J18 reruns + J14 ear retry loop alive and self-carrying, J10 DONE → J25 (box only).
+- `rung13.py --port`: the port's opt_update + slow_update over the official size1m tree. First read FAILED (6 moment tensors at call 1; 21–48/81 weights later): AGC norms summed in f32. Fixed in the port (f64 norm sums, opt.py op order) → calls 1–2 bit-exact.
+- Calls 6/8 then missed only on the eager golden's square-and-multiply bias correction; injected test-only → 0 miss on 81 + 11 tensors at all 4 calls, eager AND compiled. Port's own mx.power = jitted f32 power t 1..39. Rungs 3 (2/2, planted 5/5) and 11 (4/4) still pass. `709fa34e`.
+- Served philosophy 4 (a test that failed, fixed by its cause, nothing loosened). Philosophy 7's question — whether MLX is still wanted after the owner's no-Mac line — remains the Director's.
