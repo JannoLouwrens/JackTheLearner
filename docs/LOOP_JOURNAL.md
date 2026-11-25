@@ -3918,3 +3918,6 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `mlx_maths.encoder` `f8a18c22`: 0 miss eager+compiled. Planted 5/5 — no_bias caught 3/4 on first read because encoder biases are exactly 0 at call 1 (identical function); clause re-registered to "every call where the plant changes the function", said in the file.
 - Next: the composed whole loss with file noise at the golden cursor, losses first, then 81 grads through `port_gate`.
 - Served philosophy 4 (each piece checked against the official output, plants that must be caught). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
+- 2026-11-25 18:35 · JACK · J25 · first act: forge M_g2 now home (g0–g3), chains rerunning g4–g7; ear retry loop alive (Colab 503, Kaggle 0 h) — nothing to harvest. J24 blocked by its own stop; J10 done.
+  Rung 13b-losses `e4341385`: the golden's 8 dumped loss terms composed by L240 equal the total the 81 gradients were taken of (rel ≤ 1.1e-7, 4 calls); policy/value terms are the horizon-mean of the imagination losses. Planted 5/5. Short slot — the composition itself is next.
+  Served philosophy 4 (the port's whole-loss test now has a target that could fail) and 5/6 (the Mac path).
