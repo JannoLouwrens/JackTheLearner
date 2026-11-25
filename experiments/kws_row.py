@@ -435,8 +435,10 @@ import importlib.metadata as md, platform, torch
 print("VERSIONS", json.dumps({"python": platform.python_version(), "torch": torch.__version__,
       "torchaudio": md.version("torchaudio"), "cuda": torch.cuda.is_available(),
       "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None}), flush=True)
-from experiments.kws_row import plan_from_args, run_kernel
-_r = run_kernel(plan_from_args(__PLAN__), JACK_OUT, tag=__TAG__)
+if __PLUMB__:
+    os.environ["KWS_PLUMB"] = "1"   # N7-kws-2 (ruling 106): run_one copies os.environ into each main.py
+from experiments.kws_row import plan_from_args, run_kernel, RUN_DEADLINE_S
+_r = run_kernel(plan_from_args(__PLAN__), JACK_OUT, tag=__TAG__, deadline_s=__DEADLINE__ or RUN_DEADLINE_S)
 print("RESULT " + json.dumps({"stopped": _r["stopped"], "source_ok": _r.get("source_ok"),
       "prepare": _r.get("prepare"), "runs": [(x["name"], x.get("rc"), x.get("test"), x.get("cut"))
       for x in _r["runs"]]}), flush=True)
@@ -444,9 +446,66 @@ print("DONE", flush=True)
 '''
 
 
-def kernel_body(args, tag: str) -> str:
+def kernel_body(args, tag: str, plumb: bool = False, deadline_s: float = None) -> str:
     plan_from_args(args)  # refuse a bad plan on the box, not on the GPU
-    return _KERNEL_BODY.replace("__PLAN__", repr(list(args))).replace("__TAG__", repr(tag))
+    return (_KERNEL_BODY.replace("__PLAN__", repr(list(args))).replace("__TAG__", repr(tag))
+            .replace("__PLUMB__", repr(bool(plumb))).replace("__DEADLINE__", repr(deadline_s)))
+
+
+# Row N7-kws-2 on Colab (ruling 106; fit rule frozen in KNOWN_ANSWERS: a seed fits Colab with 20% spare,
+# <= 2.4 h). One run per Colab job — `kws_row` has no resume — and the runs in sequence, so this command,
+# launched detached, IS the chain. The in-kernel run deadline is the fit rule's 2.4 h: a run over it is
+# cut, and a cut run is NOT JUDGED (THE RULE), never a zero.
+COLAB_RUN_DEADLINE_S = 2.4 * 3600
+COLAB_TIMEOUT_S = int(3.0 * 3600)
+OUT2 = "/data/jack-logs/kws_row2"
+
+
+def colab_tag(run: str) -> str:
+    return "kws2_" + run
+
+
+def colab_chain(args, submit_fn=None, out_dir: str = OUT2) -> int:
+    """Submit each run in `args` as its own Colab job, in order. A run whose json is home and
+    `complete` is skipped (the chain can be relaunched); a run that comes home stopped/cut/failed
+    stops the chain (a person reads why before another session is spent)."""
+    plan_from_args(args)
+    if submit_fn is None:
+        from experiments.gpu import build_job, result_json, submit
+
+        def submit_fn(body, tag):
+            sub = submit(build_job(body), prefer="colab", est_hours=1.7, timeout_s=COLAB_TIMEOUT_S,
+                         fetch=[tag + ".json"])
+            print("SUBMIT", tag, sub.backend, sub.ok, sub.job_id, sub.message, flush=True)
+            if not sub.ok:
+                return None
+            try:
+                return result_json(sub, tag + ".json")
+            except RuntimeError as e:   # no file and no RESULT line: stop, say why
+                print("NO_RESULT", tag, e, flush=True)
+                return None
+    os.makedirs(out_dir, exist_ok=True)
+    for run in args:
+        tag = colab_tag(run)
+        dst = os.path.join(out_dir, tag + ".json")
+        if os.path.exists(dst):
+            old = json.load(open(dst))
+            if old.get("runs") and all(complete(r) for r in old["runs"]):
+                print("SKIP", tag, "home and complete", flush=True)
+                continue
+        res = submit_fn(kernel_body([run], tag, plumb=True, deadline_s=COLAB_RUN_DEADLINE_S), tag)
+        if res is None:
+            print("CHAIN_STOP", tag, "submit failed", flush=True)
+            return 1
+        open(dst, "w").write(json.dumps(res))
+        print("WROTE", dst, flush=True)
+        runs = res.get("runs") or []
+        if res.get("stopped") or not runs or not all(complete(r) for r in runs):
+            print("CHAIN_STOP", tag, "not complete:", res.get("stopped"),
+                  [(r.get("name"), r.get("rc"), r.get("cut"), r.get("test")) for r in runs], flush=True)
+            return 1
+    print("CHAIN_DONE", list(args), flush=True)
+    return 0
 
 
 def main(argv) -> int:
@@ -460,6 +519,8 @@ def main(argv) -> int:
             runs += json.load(open(p)).get("runs", [])
         print(json.dumps(judge(runs), indent=1))
         return 0
+    if cmd == "colab" and len(argv) > 2:
+        return colab_chain(argv[2:])
     if cmd == "kernel" and len(argv) > 2:
         from experiments.gpu import build_job, result_json, submit
         args = argv[2:]
