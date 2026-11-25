@@ -421,15 +421,36 @@ def _core(P, deter, stoch, action, cfg):          # rssm.py L139-162
 
 
 # ---------------------------------------------------------------- rung 8b (step 2.4, row 8)
-# Reward + continue heads and their losses (agent.py L51-58, L172-177). STUB until the
-# tests in `rung8b.py` are committed failing.
+# Reward + continue heads and their losses (agent.py L51-58, L172-177; heads.py MLPHead;
+# outs.py TwoHot / Binary). Filled 11-25 after `rung8b.py` was committed failing (9db7bb98).
+# Ours beside theirs:
+#   compute dtype f32 (published bf16), as rungs 6-8a.
+#   one MLP layer read by name `{prefix}/mlp/linear0`, `{prefix}/mlp/norm0` — the published
+#     rewhead/conhead have layers 1; deeper heads are not ported (no row needs them yet).
+#   outscale is an init setting, not a forward one: the port reads whatever kernel it is
+#     given (published init's zero reward kernel gives the zero logits / log 255 the test asserts).
+
+# agent.py L172-173: feat2tensor = concat(deter, stoch flattened)
 def feat2tensor(deter, stoch):
-    raise NotImplementedError("rung 8b stub")
+    return mx.concatenate([deter, stoch.reshape(*stoch.shape[:-2], -1)], -1)
 
 
+# agent.py L57: con = f32(~is_terminal) * (1 - 1/horizon)
 def con_target(term, horizon):
-    raise NotImplementedError("rung 8b stub")
+    return (1.0 - term.astype(f32)) * (1.0 - 1.0 / horizon)
+
+
+def _mlp_head(P, prefix, x, out):
+    x = _ACT["silu"](_rms(_lin(P, f"{prefix}/mlp/linear0", x), P[f"{prefix}/mlp/norm0/scale"]))
+    W, b = P[f"{prefix}/head/{out}/kernel"], P[f"{prefix}/head/{out}/bias"]
+    return x @ W.reshape(W.shape[0], -1) + b.reshape(-1)
 
 
 def rewcon_loss(P, deter, stoch, reward, term, horizon):
-    raise NotImplementedError("rung 8b stub")
+    """agent.py L51-58: rew = -TwoHot(rewhead(feat), symexp bins 255).logp(reward);
+    con = -Binary(conhead(feat)).logp(con_target). Returns per-[B,T] losses and the logits."""
+    feat = feat2tensor(deter.astype(f32), stoch.astype(f32))
+    rl = _mlp_head(P, "rew", feat, "logits")
+    cl = _mlp_head(P, "con", feat, "logit")[..., 0]
+    return dict(rew=twohot_loss(rl, reward.astype(f32), bins(255)),
+                con=-binary_logp(cl, con_target(term, horizon)), rew_logits=rl, con_logit=cl)

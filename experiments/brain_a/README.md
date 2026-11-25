@@ -657,3 +657,19 @@ run end to end (its own observe scan) on rung 7's size1m params, inputs and file
 - Ours beside theirs: `dyn_ent`/`rep_ent` metrics not ported (metrics, not losses). Inputs the toy's
   (rung 7's listed difference). Wheel re-check: rung 7 size1m + 8a since the 11-21 wheel line — the
   next rung is the third → wheel kernel after it.
+
+## J21 — rung 8b: reward (TwoHot) + continue (Binary) head losses, size1m (11-25): **PASS**
+`experiments/brain_a/rung8b.py`, official `agent.py` L51-58/L172-177 + `MLPHead` at e01491f, over rung 7's
+size1m deter/stoch (feat 640), reward/term drawn from a fixed seed.
+- `--vs-official`: **15/15 REFERENCES HOLD** (`ac9a3074`). Published rewhead outscale 0.0 makes the reward
+  logits all zero at init (loss log 255 whatever the MLP), so a second official pass runs every head
+  parameter replaced by seeded N(0, 0.3) (`noised_params`, regenerated from shapes). Planted refs 6/6.
+- Port tests `rewcon_ref`, `rewcon_golden` committed FAILING (`9db7bb98`, stub); then
+  `mlx_maths.rewcon_loss` (`feat2tensor` → `_mlp_head` ×2 → `twohot_loss` / `binary_logp`, `con_target`)
+  → **RUNG 8b: 2/2 PASS eager AND compiled** (worst 2.35e-6 ×(|ref|+1) vs golden, noised rew; published
+  init zero logits / log 255 reproduced; con-discount control differs by 0.011). `--planted` 6/6 caught
+  (no rms, relu for silu, eps 1.0, con without horizon discount, linear bins, stoch before deter);
+  rungs 1 (9/9) and 8a (2/2) still pass. Logs `/data/jack-logs/mlx/rung8b_{pass,planted}.log`.
+- Ours beside theirs: f32 compute (published bf16); heads of exactly one MLP layer (the published
+  rew/con heads); outscale is init-only, the port reads the kernel it is given.
+  Wheel re-check: rung 7 size1m, 8a, 8b = the third rung since 11-21 → wheel kernel owed next.
