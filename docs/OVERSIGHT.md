@@ -85,14 +85,12 @@ nobody cheated. But what was ruled is a card-line-4 problem: a
 stage-closing verdict from one run ("B is closed on the wide eye for
 stage 1: no h5"), at a fifth of the length of the published number the
 recipe is known by (DrQ: 921 at 500k). PLAN names exactly this — "a run
-below the published need read as a verdict." The four earlier cures were
-closed the same way, one seed each.
+below the published need read as a verdict."
 
-Two downstream uses make it matter. `PROGRESS.md` tells the owner "B with
-a flat eye does not learn it" as a finding. And `prereg/pilot_a.md` l. 114
+`PROGRESS.md` tells the owner "B with a flat eye does not learn it". And `prereg/pilot_a.md` l. 114
 sets brain A's bar at **0.87** — "the best any B cell read" — which is the
 shuffled twin: a number produced by an eye with its content destroyed.
-That file is a draft and binds nothing yet; it should not be frozen as is.
+That file is a draft; it should not be frozen as is.
 The pilot cost 1.1 h of a free Colab T4. Card lines 3, 4.
 
 ## 3 — The usage stop is about fourteen hours away, and this time it lasts until Monday
@@ -189,11 +187,9 @@ felt (104 d) — each parked by a recorded ruling — and the rebirth test
 stale (79 d), which is not. Earliest unfinished milestone, M3 first half:
 moving (B's row in band, hand forager re-proven), not passing.
 
-**Free compute.** Kaggle GPU W47 33.1 of 30 h, spent in its first day
-(reported 11-22); none expired. Colab T4 was used in its place: 3.5 h
-yesterday on three timing cells and two pilots. W48 opens Saturday with
-A's three seeds (15 h) named for it — and no worker awake to launch them
-if finding 3 holds.
+**Free compute.** Kaggle GPU W47 33.1 of 30 h (reported 11-22); none
+expired. Colab T4 used in its place, 3.5 h yesterday. W48 opens Saturday
+with A's three seeds named for it.
 
 **Machine.** Ladder alive (00:37, rc=0 on 30 of 33 ended slots; STOPPED
 all of 11-23 and until 09:51 on 11-24 — 136 slots). Director stamp 11-24
