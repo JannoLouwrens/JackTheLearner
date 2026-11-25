@@ -75,7 +75,7 @@ the reference's test (B-6c-2, 11-25); three named misses on DMC stay (B-5, B-6a,
 eval's size and 6a is the learner. **A in one line:** 2 of 3
 size-1m rows in band (A1, A3); A2 misses early at 1m and overshoots at size S, so "build right at the published size"
 is still unshown (A2-v1S-enc). Not listed, because they are not brain A or B: the PPO library rows (2/2b, 4–4d), the
-walking layer (J10-1 FAIL, J10-2 running), the in-house learners (J3-4…J3-6, set aside), Dulberg's grid (NH-1/NH-2),
+walking layer (J10-1 FAIL, J10-2 PASS 4/5 at 2M, 11-25), the in-house learners (J3-4…J3-6, set aside), Dulberg's grid (NH-1/NH-2),
 the ear (N7-kws VOID) and the learner-free task checks (N1, N6, N7).
 
 ## Row 1 — the miss, and what it is not (11-16)
@@ -227,7 +227,7 @@ pass**. Not re-registered at 100 per arm (~3 Kaggle CPU-h for a row no seat
 rests on). Nothing more is run on row 4; Brain B's seat rests on rows 1b
 and 3b.
 
-## Row J10-2 — Yu, Turk & Liu 2018 (arXiv:1801.08093): PIN and pre-flight, not yet run (11-16 17:55)
+## Row J10-PPO-pre (was J10-2 until 11-24) — Yu, Turk & Liu 2018 (arXiv:1801.08093): PIN and pre-flight, not yet run (11-16 17:55)
 
 Published code, code only (no weights in it): `github.com/VincentYu68/SymmetryCurriculumLocomotion`
 at `b50478f8eca673730e3ce1a5441b1948b31a5187` (2019-01-31, last commit; repo
@@ -580,10 +580,10 @@ so the weights load exactly, and the gap is late-episode MuJoCo chaos between x8
   the Kaggle segment kernel (`segment_job_body`) still calls the default, and nothing checks that the mounted previous kernel carries
   `life.pkl` + `physics.pkl` (~0.7 MB). Wiring that in is J10-2's rule text, once the Director rules carry vs disclose.
 
-## Row J10-2 (SAC, carried) — the RL Zoo's Humanoid entry again, life carried across segments: **NOT YET RUN** (stub 11-22 09:50)
+## Row J10-2 (SAC, carried) — the RL Zoo's Humanoid entry again, life carried across segments: **PASS** (4 of 5 seeds at 2M; 1M IN BAND) (11-25 14:30, Kaggle CPU)
 
-**Name clash:** the 11-16 heading "Row J10-2 — Yu, Turk & Liu 2018" above is a DIFFERENT, earlier row (PPO, symmetry
-curriculum; `yu2018_walk.py` cites it as "§Row J10-2"). This row is ruling 82's J10-2. Neither heading is renamed here (INBOX).
+**Name clash resolved (ruling 95, 11-25):** the 11-16 PPO pre-flight above is now "Row J10-PPO-pre (was J10-2 until
+11-24)"; `yu2018_walk.py`'s "§Row J10-2" means that one. This row is ruling 82's J10-2 and keeps the id.
 
 - Rule: `RULE_J10_2` in `experiments/humanoid_sac_row.py`, frozen at `b609b142` before seed 3 ran. J10-1's recipe exactly,
   no cures; ONLY changes: `carry_life=True` (a segment > 0 without `life.pkl` + `physics.pkl` REFUSES), fresh seeds 3–7,
@@ -597,6 +597,22 @@ curriculum; `yu2018_walk.py` cites it as "§Row J10-2"). This row is ruling 82's
   s5 5,219.8, s6 4,541.3, s7 5,282.8). 2M so far: s3 5,649.4 / 12.08 MISS; s4 6,254.3 / 17.16, s5 6,107.9 / 17.26,
   s6 5,993.5 / 17.92 MEET; s7 seg3 on `jack-cpu-1795600347`. Read with `python -m experiments.j10_2_read` (the frozen
   `verdict_j10_2` over the files; control = J10-1's 68.0, as the rule says); it prints PROVISIONAL until s7's 2M is home.
+- **VERDICT (11-25 14:30, all five seeds home, read by the frozen `verdict_j10_2` via `python -m experiments.j10_2_read`):
+  PASS.** s7 seg3 (`jack-cpu-1795600347`, 12,971 s train, hit 2,000,000) R 6,419.2 / 20.81 m/1k → meets.
+
+  | seed | 1M R | 1M m/1k | 2M R | 2M m/1k | 2M bar (R ≥ 5,950 AND ≥ 12) |
+  |---|---|---|---|---|---|
+  | 3 | 4,500.9 | 5.34 | 5,649.4 | 12.08 | MISS (R) |
+  | 4 | 5,420.2 | 6.61 | 6,254.3 | 17.16 | meets |
+  | 5 | 5,219.8 | 5.94 | 6,107.9 | 17.26 | meets |
+  | 6 | 4,541.3 | 4.70 | 5,993.5 | 17.92 | meets |
+  | 7 | 5,282.8 | 6.34 | 6,419.2 | 20.81 | meets |
+
+  4 of 5 meet (bar ≥ 4) → **REPRODUCES** the Zoo's SAC Humanoid at 2M; 2M mean 6,084.9 against published 6,232 ± 280.
+  1M median 5,219.8 IN BAND [3,784, 5,866]. Row J10-1 (unbroken-but-uncarried segments, 1 of 3) stays FAIL; the
+  difference between the rows is the carried life, which is what this row was registered to test. World: Gymnasium
+  Humanoid-v4, not his body — a reproduced learner for the walking layer, not a claim that Jack walks.
+  Raw: `/data/jack-logs/j10/sac_row2/s{3..7}_seg{1,3}.json`.
 
 ## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:12, Kaggle CPU)
 

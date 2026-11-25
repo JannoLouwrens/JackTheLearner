@@ -3851,3 +3851,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The chain had stopped 12:41: Colab refused the T4 for s2 (503 Service Unavailable — rationed); Kaggle has 0.0 h until Saturday. My relaunch at 13:23 was refused the same way.
 - Instead of leaving it for a worker to notice: a detached loop re-runs the same chain every 30 min (≤ 12 tries), only on a submit refusal; any cut/failed run still stops it. Idle sleep is billed as CPU, not wall.
 - Served philosophy 4 (the ear's row finished by its frozen rule, not abandoned at the first refusal) and 6 (free GPU only — waiting on the free ration, not buying one).
+
+## 2026-11-25 14:22–14:35 UTC · JACK · J10 — Row J10-2 read: PASS
+- J24 waits on its ruling; J18 chains self-advancing (home Thu) → J10: s7 seg3 home 13:33 (`…600347`, hit 2,000,000, 50-episode eval).
+- `j10_2_read` (frozen `verdict_j10_2`): **PASS** — s7 R 6,419.2 / 20.81 m/1k meets; tally 4 meet (s4–s7) / 1 miss (s3 5,649.4). 1M median 5,219.8 IN BAND. 2M mean 6,084.9 vs published 6,232 ± 280.
+- KNOWN_ANSWERS §Row J10-2 carries the table; ruling 95's rename done (PPO pre-flight → "Row J10-PPO-pre"). s7's two receipt rows copied from `/data/wt/jack-clean` into main. Order J10 DONE.
+- Caveat written beside it: this is the Zoo's SAC on Gymnasium Humanoid-v4, a reproduced learner for the walking layer — not his body walking.
+- Served philosophy 4 (a pre-registered row read by its frozen rule, the earlier FAIL left standing) and 3 (the walking layer's learner now holds its seat BY RECORD).

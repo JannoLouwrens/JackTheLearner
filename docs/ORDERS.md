@@ -156,10 +156,8 @@ done, in the same commit. (4) A FAIL is not re-registered here: the next
 sitting rules what the walking layer's stage-3 entry needs.
 serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked in parallel from now" · philosophy 1, 4.
 **done when:** J10-2 is in `KNOWN_ANSWERS.md`, pass or fail, by its frozen rule.
-state: 11-25 03:40 @2M: **s4 R 6,254.3 / 17.16 m/1k / 0 fell → meets the bar**. s6 seg3 `…577986` + s7 seg1 `…577077` launched from clean worktree `/data/wt/jack-clean` (`JACK_REPO=` needed: the main tree's forge dirt trips the submit guard).
-state: @2M so far: s4 R 6,254.3 / 17.16 m/1k MEETS; s3 R 5,649.4 / 12.08 MISSES; **s6 (06:37) R 5,993.5 / 17.92 m/1k, 3/50 fell → MEETS** (`…577986`). Tally 2 meets / 1 miss / 2 open → PASS needs s5 AND s7 to meet.
-state: 11-25 09:25 **s5 @2M: R 6,107.9 / 17.26 m/1k, 2/50 fell → MEETS** (`…580623`, raw `/data/jack-logs/j10/sac_row2/s5_seg3.json`). Tally **3 meet (s4 s5 s6) / 1 miss (s3) / 1 open (s7)** → the row PASSES iff s7 meets, FAILS if it misses. Worktree receipt rows (3) copied into main.
-state: 11-25 12:25 **1M check IN BAND: median 5,219.8** (all 5 home). s7 seg3 `…600347` RUNNING (seg3 trains ≈ 4 h → home ≈ 14:00); its watcher pid 2752680 fetches `s7_seg3.json` itself. NEXT: `$PY -m experiments.j10_2_read` (new: frozen `verdict_j10_2` over the files, tests 5/5; prints PROVISIONAL until s7 is home; s7 R ≥ 5,950 + M ≥ 12 → PASS, R ≥ 5,950 only → STANDS, else FAIL) → write the 2M verdict into KNOWN_ANSWERS J10-2 (+ ruling 95's rename).
+state: **DONE 11-25 14:30 — J10-2 PASS by its frozen rule** (`j10_2_read` → verdict_j10_2): 2M meets on 4/5 (s4 6,254.3/17.16, s5 6,107.9/17.26, s6 5,993.5/17.92, **s7 6,419.2/20.81** `…600347`); s3 5,649.4 misses. 1M median 5,219.8 IN BAND. 2M mean 6,084.9 vs published 6,232 ± 280.
+state: Written into KNOWN_ANSWERS §Row J10-2 (+ ruling 95 rename: the PPO pre-flight is "Row J10-PPO-pre"); s7 receipts copied from the worktree into main. Per (4) the next sitting rules the walking layer's stage-3 entry (Humanoid-v4, not his body).
 
 ### J14 — Brain A at the published size, and the ear with its plumbing fixed
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `prereg/a2_size_s_enc.md` (FROZEN + timing addendum `381b83b9`); `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws (+ addendum 11-24); rulings 67, 78, 79, 86, 96, 103, 106
