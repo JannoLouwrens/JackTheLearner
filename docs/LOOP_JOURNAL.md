@@ -3955,3 +3955,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `rung13b_cond_probe.py` `8b2ed8e7`: the ret misses come from the VAL head's decode (ret is fed the golden rew), the same 255-bin ill-conditioning. Every rew/ret miss at calls 6/8 lies inside tol + 4κ, κ = Σ ulp(p_i)|bin_i|; none on well-conditioned elements.
 - But κ is large on every element at every call (call 1's uniform head already 0.23) and the worst miss is 0.06 of the bound — a κ line could not fail on a real bug of that size. Rejected before it became the line; next is a symmetric f64 line with a logit plant that must break it.
 - Served philosophy 4 (a candidate threshold measured for its teeth and rejected rather than adopted because it passes). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
+
+## 2026-11-25 21:10 UTC · SYSTEM · S15 (2) — watchers counted apart, box jobs never refused by the poller cap
+- `cac00782` `cpu_budget.admit_detached`: poller cap now per kind (gpu/cpu, 6 each) and applied only to a launch declaring `JACK_WATCHER`; a live poller's kind = declared, else `jack-cpu-` in its log. Fixes 11-21's two refusals (GPU seed blocked by five CPU watchers; a 2-CPU-min box twin refused).
+- T0.34's planted clause rewritten to the new rule (own-kind refused, other kind admitted, box admitted with both full, classifier cases); T0.33 + T0.34 re-run PASS on the clean commit. Guards: coverage/decisions/champions unchanged.
+- Open: S15 (3) W47 GPU bill. Served philosophy 5/6 (free GPU seats not left idle by a mis-counted cap).

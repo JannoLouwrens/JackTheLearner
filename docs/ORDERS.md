@@ -275,7 +275,8 @@ correct W47's line with the arithmetic shown. No ceiling is raised.
 serves: philosophy 4, 5 · END-FIT row 5 · auditor finding 1 (twice).
 **done when:** both FAILs are named with their clause and cause, each is PASS by repair or owned in a state line, `coverage` no longer exits 2 on the dead dependency, the planted tests pass, and W47's GPU line shows run time.
 state: 11-25 09:15 SYSTEM `bb8c9106`: (1) DONE. SO.01 (watch stream: delivered 4.69 < 5 fps, code unchanged since PASS) — cause: software shadow + reflection passes were 2/3 of a frame, box load doubled it; spectator drops both (94→31 ms, control diff 0.035 ≥ 0.005), now ~20–24 fps. T0.34 (`detached_receipts_ok 0`, launcher_ok false) — launcher refused in ~1.5 s, reason discarded by the test; now recorded, a live seat/load refusal is VOID. SO.01, T0.34, SO.04 PASS; `coverage` exits 0.
-state: open: (2) watcher vs computing-job caps in `launch_detached.sh`, (3) W47 GPU bill by run time.
+state: 11-25 21:10 SYSTEM `cac00782`: (2) DONE. The 0.10-core busy/poller split already stood; now pollers count per kind (gpu/cpu, 6 each — ruling 5's 6 kept per kind, Director may set others) and bind only a launch with `JACK_WATCHER=gpu|cpu`; a box job is never refused by it. Live kind = declared, else `jack-cpu-` in its log (both forge chains read cpu). T0.33, T0.34 PASS (planted: own-kind refused, other kind + box admitted).
+state: open: (3) W47 GPU bill by run time. Watcher launchers should export `JACK_WATCHER` (undeclared watchers escape the cap, they never block).
 
 ### S17 — A failed Colab submit must not leave an orphan session
 part: (machine — the free GPU; standing objective 3) · stage: — · step: —
