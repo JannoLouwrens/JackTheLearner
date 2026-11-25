@@ -251,29 +251,41 @@ def _ramp(lr, warmup, count):
     return mx.where(count < warmup, lr_t, mx.array(lr, f32))
 
 
+def _norm64(x):
+    x64 = x.astype(mx.float64, stream=mx.cpu)
+    return mx.sqrt(mx.sum(x64 * x64, stream=mx.cpu), stream=mx.cpu).astype(f32, stream=mx.cpu)
+
+
 def opt_init(params):
     z = {k: mx.zeros(v.shape, f32) for k, v in params.items()}
     return (mx.array(0, mx.int32), z, {k: mx.zeros(v.shape, f32) for k, v in params.items()})
 
 
-def opt_update(params, grads, state, lr, warmup, agc, eps, beta1, beta2):
-    """-> (params', state', updates); updates = the lr-scaled step, pre-store."""
+def opt_update(params, grads, state, lr, warmup, agc, eps, beta1, beta2, bias=None):
+    """-> (params', state', updates); updates = the lr-scaled step, pre-store. `bias` = (b1**t, b2**t)
+    as f32 arrays, for a TEST against an EAGER golden only (rung 13a: eager JAX's integer power is
+    square-and-multiply, the jitted one — what the agent trains with — is mx.power's); None = mx.power."""
     count, nu, mu = state
     step = count + 1
     lr_t = _ramp(lr, warmup, count)
     # opt.py casts (1 - decay) from Python float64 to f32; bias correction in f32
     b1, b2 = mx.array(beta1, f32), mx.array(beta2, f32)
     a1, a2 = mx.array(1 - beta1, f32), mx.array(1 - beta2, f32)
-    bc1 = 1 - mx.power(b1, step.astype(f32))
-    bc2 = 1 - mx.power(b2, step.astype(f32))
+    if bias is None:
+        bc1 = 1 - mx.power(b1, step.astype(f32))
+        bc2 = 1 - mx.power(b2, step.astype(f32))
+    else:
+        bc1, bc2 = 1 - bias[0], 1 - bias[1]
     newp, nnu, nmu, upd = {}, {}, {}, {}
     for k in params:
         p, u = params[k], grads[k]
         # clip_by_agc: u * 1/max(1, |u| / (clip * max(pmin, |p|)))
-        un = mx.sqrt(mx.sum(u * u))
-        pn = mx.sqrt(mx.sum(p * p))
+        # norms summed in float64 then cast (rung 13a, 11-25: an f32 sum over a size1m tensor is
+        # ~1e-5 off XLA's, and nu goes as the clip factor squared -> 2.7e-5 at call 1)
+        un = _norm64(u)
+        pn = _norm64(p)
         u = u * (1 / mx.maximum(1, un / (agc * mx.maximum(_PMIN, pn))))
-        nnu[k] = b2 * nu[k] + a2 * u * u
+        nnu[k] = b2 * nu[k] + a2 * (u * u)        # opt.py: (1 - b2) * (u * u)
         u = u / (mx.sqrt(nnu[k] / bc2) + eps)
         nmu[k] = b1 * mu[k] + a1 * u
         u = nmu[k] / bc1

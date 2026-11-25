@@ -329,10 +329,106 @@ def main_official() -> int:
     return 0 if ok else 1
 
 
+# ---------------------------------------------------------------- the PORT vs the golden (13a, port side)
+
+def port_check(M, mx, compiled, calls, eager_pow=True):
+    """The port's `opt_update` + `slow_update` (mlx_maths, rung 3's functions, unchanged) from each dumped
+    call's PRE tree + the official grads -> compared with the official POST by THE LINE's (S)/(W) clauses
+    (weights 1 ulp32 + 1e-5 |delta|, moments on the operands, slow 1 ulp32 + 1e-6 |ref|). Ours beside
+    theirs: the port's bias correction is mx.power (= the JITTED optax value the agent trains with), the
+    golden ran EAGER (square-and-multiply, `_pow_eager`) — the difference is named, not hidden: rows
+    report it per call. -> {call: dict(fails, worst)}."""
+    f32 = np.float32
+    out = {}
+    for c in CALLS:
+        pre, post, grad = calls[c]
+        gn = sorted(grad)
+        on = _opt_names(pre, gn)
+        cnt = sorted(k for k in pre if k.startswith("opt/state/") and pre[k].shape == ())
+        count = int(pre[cnt[0]])
+        P = {k: mx.array(pre[k].astype(f32)) for k in gn}
+        G = {k: mx.array(np.asarray(grad[k], f32)) for k in gn}
+        NU = {k: mx.array(pre[sorted(on[k])[0]].astype(f32)) for k in gn}
+        MU = {k: mx.array(pre[sorted(on[k])[1]].astype(f32)) for k in gn}
+        st = (mx.array(count, mx.int32), NU, MU)
+        bias = ((mx.array(_pow_eager(B1, count + 1)), mx.array(_pow_eager(B2, count + 1)))
+                if eager_pow else None)
+        fn = lambda p, g, s: M.opt_update(p, g, s, lr=LR, warmup=0, agc=AGC, eps=EPS,  # noqa: E731
+                                          beta1=B1, beta2=B2, bias=bias)
+        if compiled:
+            fn = mx.compile(fn)
+        newp, (step, nnu, nmu), _ = fn(P, G, st)
+        mx.eval(newp, nnu, nmu)
+        fails, worst = {}, 0.0
+        if int(step) != count + 1:
+            fails["step"] = f"{count} -> {int(step)}"
+        for k in gn:
+            got = np.asarray(newp[k], np.float64)
+            d = np.abs(got - post[k])
+            lim = _ulp(post[k]) + 1e-5 * np.abs(post[k] - pre[k])
+            r = float(np.max(d / (lim + 1e-30)))
+            worst = max(worst, r)
+            if not np.all(d <= lim):
+                fails[k] = r
+            kn, km = sorted(on[k])
+            for nm, g2, s0, b in ((kn, nnu[k], pre[kn], B2), (km, nmu[k], pre[km], B1)):
+                want = post[nm]
+                scale = b * np.abs(s0) + np.abs(want - b * s0)
+                if not np.all(np.abs(np.asarray(g2, np.float64) - want) <= 1e-5 * scale + 1e-30):
+                    fails[nm] = "moment"
+        sv = sorted(k for k in pre if k.startswith("slowval/"))
+        sc = [k for k in pre if k.startswith("slowval_count")]
+        scount = mx.array(int(pre[sc[0]]), mx.int32) if sc else mx.array(0, mx.int32)
+        for k in sv:
+            vk = "val/" + k[len("slowval/"):]
+            src = newp[vk] if vk in newp else mx.array(post[vk].astype(f32))
+            new, _ = M.slow_update(src, mx.array(pre[k].astype(f32)), scount, RATE, 1)
+            got = np.asarray(new, np.float64)
+            want = post[k]
+            if not np.all(np.abs(got - want) <= _ulp(want) + 1e-6 * np.abs(want)):
+                fails[k] = float(np.max(np.abs(got - want)))
+        out[c] = dict(fails=fails, worst=worst, n=len(gn), n_slow=len(sv))
+    return out
+
+
+def main_port() -> int:
+    if not NPZ.exists():
+        print("NO-READING: missing", NPZ)
+        return 2
+    sys.path.insert(0, HERE)
+    from rung3 import _mlx
+    mx = _mlx()
+    import mlx_maths as M
+    calls = load()
+    ok = True
+    for mode in (False, True):
+        res = port_check(M, mx, mode, calls)
+        for c, r in res.items():
+            print(f"{'compiled' if mode else 'eager   '} call {c}: {len(r['fails'])} fail / {r['n']} grads "
+                  f"+ {r['n_slow']} slow; worst weight d/line {r['worst']:.3g}"
+                  + (f"  e.g. {list(r['fails'].items())[:3]}" if r['fails'] else ""))
+            ok &= not r["fails"]
+    # the port's OWN bias correction (mx.power) must equal the JITTED official = NumPy's f32 power
+    # (rung 3's golden is jitted and holds); here it is shown against NumPy and, for the record, the
+    # eager golden read with it (expected to miss only where eager != jitted: t = 3, 6, 7, 8)
+    pw = [(b, t) for b in (B1, B2) for t in range(1, 40)
+          if float(mx.power(mx.array(b, mx.float32), mx.array(float(t), mx.float32)))
+          != float(np.float32(np.float64(np.float32(b)) ** t))]   # correctly rounded f32 power
+    print(f"port mx.power == NumPy/jitted f32 power for t 1..39: {'yes' if not pw else 'NO ' + str(pw[:4])}")
+    ok &= not pw
+    res = port_check(M, mx, False, calls, eager_pow=False)
+    print("record, port's own (jitted) bias correction vs the eager golden: "
+          + ", ".join(f"call {c} {len(r['fails'])} miss" for c, r in res.items()))
+    print(f"RUNG 13a PORT (mlx {mx.__version__})", "PASS" if ok else "FAIL")
+    return 0 if ok else 1
+
+
 if __name__ == "__main__":
     if sys.argv[1:2] == ["kernel"]:
         kernel()
     elif "--vs-official" in sys.argv:
         sys.exit(main_official())
+    elif "--port" in sys.argv:
+        sys.exit(main_port())
     else:
         raise SystemExit(__doc__)
