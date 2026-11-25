@@ -3665,3 +3665,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Launched s3 seg3, s4 seg3, s5 seg2, s6 seg2 (all push rc 0) → 5/5 J10. s3/s4 seg3 are the 2M finals.
 - J23: scorer had finished 23:05 → **lib REPRODUCES reacher-hard**: stream-100 @150k 933.8 (s5–9 956.1/952.8/845.9/962.6/951.7) in 905.7–1000, ctrl ≤ 7.6, replay_gap 0 at 150k on 8/8 (earlier marks up to 24 on s9, disclosed). KNOWN_ANSWERS B-6c-2 READ + gate 2b line. J23 DONE.
 - Served: philosophy 3/4 (a published row reproduced on fresh seeds by its frozen rule, the old misses kept named) and 6 (four idle free sessions put back to work).
+
+## 2026-11-25 00:22–00:35 UTC · JACK · J21 rung 8a (dyn/rep free-bits loss, size1m) PASS
+- Kaggle 5/5 RUNNING (J10-2 s3/s4 seg3, s5/s6 seg2, s7 seg0) by Kaggle's own status; nothing home. J22/J20/J23 DONE, J14 waits Sat → J21.
+- Rung 8a: official `rssm.loss` end to end on rung 7's size1m golden: 16/16 refs hold (`a3fd3c60`); port tests committed failing (`b8aafa5f`); `mlx_maths.rssm_loss` 2/2 eager+compiled, worst 6.4e-7 vs golden, planted 4/4 (`80b603bd`).
+- Finding: at size1m init the raw KL is 2.45–11.63 nats, so the published 1.0 free-bits floor never binds — a free-1 test alone is blind to the max(). Added an official free 7.5 pass (55.5% split). My first run also read later noise on its third pass (cursor not rewound) — fixed before any verdict.
+- Served: philosophy 4 (a test that could fail — and the floor clause would not have, until the split pass) and 7 (the Mac port, so people can run him on their own machines).

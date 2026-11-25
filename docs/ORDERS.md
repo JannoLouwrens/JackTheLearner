@@ -238,9 +238,9 @@ in the docstring. No training, no speed claims. One wheel re-check kernel
 (< 1 h, rank 0) after every third rung.
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7.
 **done when:** rung 7 at size1m and the world-model loss rungs pass, test names in `experiments/brain_a/README.md`.
-state: 11-24 20:35 rung 7 at size1m, references `0e12d22f`: vs official e01491f 15/15 (deter 1.2e-7, post 5.8e-7, prior 1.2e-6, 0/8,192 flips); size1m act is SILU (toy ran gelu); gelu ref planted FAILS (406 flips). Golden = official scan at size1m widths on toy inputs (g1v1 has no per-step RSSM capture).
-state: 11-24 20:50 port DONE `b79e04e8`: `mlx_maths` reads `cfg["act"]` (no default) → `rung7.py --preset size1m` **2/2 eager+compiled**, toy 2/2, `--planted` 4/4 both sizes, `rung6.py` 2/2. Rung 7 at size1m DONE.
-state: NEXT: world-model loss rungs in table order — prediction loss, dynamics + representation with free bits (NumPy f64 ref from official e01491f first, tests committed while FAILING); then the wheel re-check kernel (rank 0) if this is the third rung since the last one.
+state: 11-24 rung 7 at size1m DONE `b79e04e8` (2/2 eager+compiled vs official e01491f, planted 4/4).
+state: 11-25 00:30 rung 8a (dyn + rep with free bits) DONE `80b603bd`: refs vs official `rssm.loss` 16/16 `a3fd3c60`; tests failing `b8aafa5f`; `mlx_maths.rssm_loss` 2/2 eager+compiled (6.4e-7 vs golden), planted 4/4. Finding: at size1m init raw KL is 2.45–11.63 — the 1.0 floor never binds, so a free 7.5 official pass (55.5% split) tests the max().
+state: NEXT: prediction-loss rung (rew twohot, con binary, vector decoder — needs the heads; NumPy f64 ref from official agent.py L170-182 first, tests committed while FAILING); it is the third rung since the 11-21 wheel line → wheel re-check kernel (rank 0) after it.
 
 **Lane `forge`** reads `docs/FORGE.md`; its F3 is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
