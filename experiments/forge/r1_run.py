@@ -41,6 +41,24 @@ REMOTE_TIMEOUT_S = int(9.5 * 3600)
 EST_HOURS = {"S": 4.0, "M": 7.5}
 GUARD_RETRIES, GUARD_WAIT_S = 18, 600   # another lane's dirt: wait, never bypass
 
+# ---- J18 step 4: a run that can be cut and carried on ------------------------
+# The ONLY change between rungs S and M. A run given a `carry_dir` learns in
+# whole CHUNKs; when the next chunk would not fit before `deadline` it saves
+# itself through `brain_b.save_life` and returns a `cut` + `resumable` record
+# (the locked reader scores `cut` as 0 — a carry nobody finishes is a lost run,
+# by the rule). The next kernel loads the life and goes on; the finished record
+# is the unbroken run's, life for life (tests/test_forge_r1_carry.py).
+# Why chunks and not a stop callback: SB3 drops the transition on which a
+# callback returns False (collect_rollouts returns BEFORE _store_transition),
+# so a callback stop is not a clean cut. A chunk ends where the unbroken run
+# also ends a collection round AND a trace window, so nothing is split.
+CHUNK = 20_000                     # = lcm(train_freq 32, pilot_b.TRACE_EVERY 5,000)
+SEG_WALL_S = int(7.5 * 3600)       # a kernel's cells save themselves by here
+CHUNK_MARGIN = 1.3                 # the next chunk must fit 1.3x the slowest so far
+MAX_SEGMENTS = 3                   # kernels one run may take; then it is a lost run
+CARRY_NEEDS = ("model.zip", "replay.pkl", "life.pkl", "key.npy", "carry.pkl",
+               "carry.json")       # carry.json is written LAST: its presence = whole
+
 
 class Refused(RuntimeError):
     pass
@@ -139,11 +157,212 @@ def _scaled(env, scale: float):
     return LearnerRewardScale(env)
 
 
+# His world does not pickle as it stands: it holds module references
+# (`w.mujoco`, `w.pg`), jack_env's move-cost closure and the native sub-step's
+# cffi handles. `brain_b.save_life`
+# pickles the env with plain `pickle.dumps`, so the carried path hands it a
+# PilotLives whose `__reduce__` writes the SAME object graph with two extra
+# reducers — a module by its name, a bound method by its function and its
+# object, a nested function by its code (found again
+# in its defining function's constants) plus the values it closed over. No
+# world file is edited and nothing is rebuilt from a seed: the loaded life is
+# the saved objects.
+def _find_code(code, name: str, line: int):
+    for c in code.co_consts:
+        if hasattr(c, "co_code"):
+            if c.co_name == name and c.co_firstlineno == line:
+                return c
+            got = _find_code(c, name, line)
+            if got is not None:
+                return got
+    return None
+
+
+def _nested_function(module: str, qualname: str, line: int, cells: tuple, defaults,
+                     kwdefaults):
+    import importlib
+    import types
+    mod = importlib.import_module(module)
+    parts = qualname.split(".<locals>.")
+    owner = mod
+    for a in parts[0].split("."):
+        owner = getattr(owner, a)
+    code = _find_code(owner.__code__, parts[-1], line)
+    if code is None or len(code.co_freevars) != len(cells):
+        raise Refused(f"r1: the saved life's function {qualname} is not in this code")
+    f = types.FunctionType(code, mod.__dict__, parts[-1], defaults,
+                           tuple(types.CellType(v) for v in cells))
+    f.__qualname__, f.__kwdefaults__ = qualname, kwdefaults
+    return f
+
+
+def _bound(func, obj):
+    import types
+    return types.MethodType(func, obj)
+
+
+def _life_dumps(obj) -> bytes:
+    import importlib
+    import io
+    import pickle
+    import types
+
+    class P(pickle.Pickler):
+        def reducer_override(self, o):
+            if isinstance(o, types.ModuleType):
+                return importlib.import_module, (o.__name__,)
+            if isinstance(o, types.MethodType):
+                # plain pickle looks a bound method up by its function's NAME on
+                # the object; the world's patched-in methods (`synth.step` is
+                # `_lazy_step`, `w.decide` is `_native_decide`) are not there
+                return _bound, (o.__func__, o.__self__)
+            if isinstance(o, types.FunctionType) and "<locals>" in o.__qualname__:
+                return _nested_function, (
+                    o.__module__, o.__qualname__, o.__code__.co_firstlineno,
+                    tuple(c.cell_contents for c in (o.__closure__ or ())),
+                    o.__defaults__, o.__kwdefaults__)
+            return NotImplemented
+    buf = io.BytesIO()
+    P(buf, protocol=pickle.HIGHEST_PROTOCOL).dump(obj)
+    return buf.getvalue()
+
+
+def _life_loads(blob: bytes, native: bool):
+    import pickle
+    w = carried_lives_cls().__new__(carried_lives_cls())
+    w.__dict__.update(pickle.loads(blob))
+    if native:                      # the C twins, rebuilt on the LOADED world
+        from experiments.native_substep import apply_native_substep
+        apply_native_substep(w.unwrapped.w)
+    return w
+
+
+_CARRIED_CLS = None
+
+
+def carried_lives_cls():
+    """pilot_b.PilotLives, picklable. Same methods, same attributes."""
+    global _CARRIED_CLS
+    if _CARRIED_CLS is None:
+        from experiments import pilot_b as pb
+
+        class CarriedLives(pb.PilotLives):
+            def __reduce__(self):
+                # The native sub-step's C twins (cffi handles) cannot cross a
+                # save and need not: `_native_decide` loads them from the
+                # Python objects at the top of every decision and writes them
+                # back at the bottom, so between decisions they hold nothing.
+                world = self.unwrapped.w
+                native = world.__dict__.pop("_native", None)
+                try:
+                    blob = _life_dumps(dict(self.__dict__))
+                finally:
+                    if native is not None:
+                        world._native = native
+                return _life_loads, (blob, native is not None)
+        CarriedLives.__qualname__ = "CarriedLives"
+        _CARRIED_CLS = CarriedLives
+    return _CARRIED_CLS
+
+
+def carry_name(arm: str, seed: int) -> str:
+    return f"carry_{arm}_s{seed}"
+
+
+def carry_whole(d) -> bool:
+    return d is not None and all((Path(d) / n).is_file() for n in CARRY_NEEDS)
+
+
+def chunk_rule(T: int, chunk: int, train_freq: int, trace_every: int) -> None:
+    """A carried run may only be cut where the unbroken run is whole."""
+    if chunk <= 0 or chunk % train_freq or chunk % trace_every or T % chunk:
+        raise Refused(f"r1: a carried run is cut on whole chunks only: chunk {chunk} must "
+                      f"be a multiple of train_freq {train_freq} and of the trace window "
+                      f"{trace_every}, and divide T {T}")
+
+
+def _carry_save(d, model, venv, tr, meta: dict, plant=()) -> None:
+    """save_life + what it does not hold (the policy's exploration-noise keys,
+    the observation normaliser, the trace so far, the clocks). Written beside `d` and renamed, carry.json last."""
+    import pickle
+    import shutil
+    from experiments.brain_b import save_life
+    d = Path(d)
+    tmp = d.with_name(d.name + ".tmp")
+    shutil.rmtree(tmp, ignore_errors=True)
+    save_life(model, str(tmp))
+    import numpy as np
+    from experiments.brain_b import _key_data
+    pol = model.policy
+    with open(tmp / "carry.pkl", "wb") as f:
+        pickle.dump({"policy_keys": (None if "no_sde_key" in plant else
+                                     {k: np.asarray(_key_data(getattr(pol, k)))
+                                      for k in ("key", "noise_key")}),
+                     "obs_rms": None if "no_norm" in plant else venv.obs_rms,
+                     "ret_rms": venv.ret_rms, "returns": venv.returns,
+                     "trace": None if "no_trace" in plant else list(tr)}, f)
+    (tmp / "carry.json").write_text(json.dumps(meta) + "\n")
+    shutil.rmtree(d, ignore_errors=True)
+    tmp.rename(d)
+
+
+def _carry_load(d, venv, algo_cls, want: dict, plant=()):
+    """-> (model, trace so far, meta). Refuses a carry that is not whole or is
+    another run's (arm, seed, T, rung, the rule, the settings)."""
+    import pickle
+    from experiments.brain_b import resume_life
+    d = Path(d)
+    if not carry_whole(d):
+        raise Refused(f"r1: {d} is not a whole carry {CARRY_NEEDS}")
+    meta = json.loads((d / "carry.json").read_text())
+    bad = [k for k, v in want.items() if meta.get(k) != v]
+    if bad:
+        raise Refused(f"r1: the carry at {d} is another run's: {bad} differ")
+    model = resume_life(str(d), venv, algo=algo_cls)
+    with open(d / "carry.pkl", "rb") as f:
+        c = pickle.load(f)
+    # sbx pickles `policy` AND the alias `actor` as separate copies, so after a
+    # load `model.actor.reset_noise` belongs to a policy nobody acts with: with
+    # use_sde the exploration noise would never be drawn again (SB3 resets it
+    # through `self.actor` at each collection round). A fresh model has
+    # `actor is policy.actor`; put that back.
+    if "no_rewire" not in plant:
+        model.actor, model.qf = model.policy.actor, model.policy.qf
+        if getattr(model.actor.reset_noise, "__self__", None) is not model.policy:
+            raise Refused("r1: the loaded learner's noise reset is not its policy's")
+    # SB3's load() ends with `policy.reset_noise()` when use_sde is on: one
+    # extra split of the policy's key, so the loaded run would draw the NEXT
+    # round's noise. The keys as they were at the save replace it.
+    if c["policy_keys"] is not None:
+        import jax.numpy as jnp
+        for k, v in c["policy_keys"].items():
+            setattr(model.policy, k, jnp.asarray(v))
+    # resume_life's env.reset() fed one observation to the FRESH normaliser;
+    # the carried statistics replace it whole.
+    if c["obs_rms"] is not None:
+        venv.obs_rms = c["obs_rms"]
+    venv.ret_rms, venv.returns = c["ret_rms"], c["returns"]
+    return model, list(c["trace"] or []), meta
+
+
 def run_arm(arm: str, seed: int, T: int, rung: str | None = None, *,
-            partial_path=None, spec: dict | None = None, keep: dict | None = None) -> dict:
+            partial_path=None, spec: dict | None = None, keep: dict | None = None,
+            carry_dir=None, resume_from=None, deadline: float | None = None,
+            chunk: int = CHUNK, max_chunks: int | None = None, plant=()) -> dict:
     """One run of `arm` for T decisions on E-food's world. `rung` names which
     of the rule's rungs this is (None = a smoke/test run, stamped as such).
-    `keep` (tests): receives the model and the env."""
+    `keep` (tests): receives the model and the env.
+
+    `carry_dir` None (rung S, every test before J18 step 4): ONE learn call,
+    the code rung S ran. Given: `_run_carried` — the same learner in whole
+    chunks, loaded from `resume_from` (or `carry_dir`) if a whole carry is
+    there, saved to `carry_dir` when `deadline` (epoch seconds) is near.
+    `max_chunks` / `plant` exist for the tests only."""
+    if carry_dir is not None:
+        return _run_carried(arm, seed, T, rung, partial_path=partial_path, spec=spec,
+                            keep=keep, carry_dir=carry_dir, resume_from=resume_from,
+                            deadline=deadline, chunk=chunk, max_chunks=max_chunks,
+                            plant=plant)
     from experiments import pilot_b as pb
     from experiments.pilot_b2 import E2C_ENCODING, PILOT_RULE, arm_cfg, pilot_world
     spec_given = spec is not None
@@ -180,6 +399,15 @@ def run_arm(arm: str, seed: int, T: int, rung: str | None = None, *,
     if w.n > 0:
         lives.append(w._life_row({"ate_total": dict(w.env.w.drives.ate_total)},
                                  "unfinished"))
+    return _record(arm, seed, T, rung, spec, spec_given, st, algo, kw, scale, model, w,
+                   lives, tr, wall, cpu)
+
+
+def _record(arm, seed, T, rung, spec, spec_given, st, algo, kw, scale, model, w, lives,
+            tr, wall, cpu) -> dict:
+    """The raw record of a finished run — one writer for both paths."""
+    from experiments import pilot_b as pb
+    from experiments.pilot_b2 import E2C_ENCODING, PILOT_RULE, arm_cfg
     resets = getattr(model, "reset_idx", 0)
     return {"arm": arm, "seed": int(seed), "T": int(T), "lr": kw["learning_rate"],
             "decisions": int(model.num_timesteps), "wall_s": round(wall, 1),
@@ -200,6 +428,89 @@ def run_arm(arm: str, seed: int, T: int, rung: str | None = None, *,
                       "learner_reward_scale": scale, "param_resets_done": int(resets),
                       "code_head": _code_head()},
             "lives": lives}
+
+
+def _run_carried(arm, seed, T, rung, *, partial_path, spec, keep, carry_dir, resume_from,
+                 deadline, chunk, max_chunks, plant) -> dict:
+    """run_arm's body, learning in whole chunks so it can be cut and carried."""
+    from experiments import pilot_b as pb
+    from experiments.pilot_b2 import PILOT_RULE, pilot_world
+    spec_given = spec is not None
+    spec = load_spec() if spec is None else spec
+    st = arm_settings(spec, arm)
+    algo, kw = learner_call(st, seed, T, rung)
+    scale = float(st.get("learner_reward_scale", 1.0))
+    if scale != 1.0:
+        raise Refused("r1: a learner-side reward wrapper is not carried (K6 did not climb)")
+    chunk_rule(int(T), int(chunk), kw["train_freq"], pb.TRACE_EVERY)
+    pb._single_thread()
+    from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+    import sbx
+    world = pilot_world(WORLD_ARM, PILOT_RULE["food_floor_only"], PILOT_RULE["eye_frame"],
+                        PILOT_RULE["motor_frame"], PILOT_RULE["native_substep"])
+    src = next((d for d in (resume_from, carry_dir) if carry_whole(d)), None)
+    venv = VecNormalize(DummyVecEnv([lambda: carried_lives_cls()(
+                            world(seed), partial_path=partial_path)]),
+                        norm_obs=True, norm_reward=False, clip_obs=10.0)
+    want = {"arm": arm, "seed": int(seed), "T": int(T), "rung": rung, "settings": st,
+            "spec_sha256": None if spec_given else spec_sha256(), "chunk": int(chunk)}
+    if src is None:
+        venv.seed(seed)
+        model = getattr(sbx, algo)("MlpPolicy", venv, **kw)
+        tr, meta = [], dict(want, wall_s=0.0, cpu_s=0.0, segments=[])
+    else:
+        model, tr, meta = _carry_load(src, venv, getattr(sbx, algo), want, plant=plant)
+        if int(model.num_timesteps) != meta["decisions"] or meta["decisions"] % chunk:
+            raise Refused(f"r1: the carry at {src} does not sit on a chunk boundary")
+    # sbx adds to policy_kwargs in place when it builds; a loaded learner was
+    # not built here, so the record takes the learner's own (the same dict
+    # object in an unbroken run).
+    kw = dict(kw, policy_kwargs=dict(model.policy_kwargs))
+    w = model.env.envs[0]                       # the carried life, or the fresh one
+    w.partial_path = None if partial_path is None else Path(partial_path)
+    if keep is not None:
+        keep.update(model=model, env=w, venv=venv)
+        keep.get("hook", lambda m: None)(model)
+    start, slowest, n_chunks = int(model.num_timesteps), 0.0, 0
+    t_wall, t_cpu = time.time(), time.process_time()
+    while model.num_timesteps < T:
+        if max_chunks is not None and n_chunks >= max_chunks:
+            break
+        if (deadline is not None and n_chunks > 0
+                and time.time() + CHUNK_MARGIN * slowest > deadline):
+            break
+        if deadline is not None and n_chunks == 0 and time.time() >= deadline:
+            break
+        t0 = time.time()
+        # SB3 reads total_timesteps as an increment when reset_num_timesteps=False
+        model.learn(total_timesteps=int(chunk), progress_bar=False,
+                    reset_num_timesteps=model.num_timesteps == 0,
+                    callback=pb._trace_callback(tr, pb.TRACE_EVERY))
+        slowest, n_chunks = max(slowest, time.time() - t0), n_chunks + 1
+        if model.num_timesteps % chunk:
+            raise RuntimeError(f"r1: a chunk ended off its boundary at {model.num_timesteps}")
+    wall = meta["wall_s"] + time.time() - t_wall
+    cpu = meta["cpu_s"] + time.process_time() - t_cpu
+    segs = meta["segments"] + [{"start": start, "end": int(model.num_timesteps),
+                                "code_head": _code_head(), "resumed_from": src and str(src)}]
+    lives = list(w.lives)
+    if model.num_timesteps < T:                 # cut: save the life, return what the
+        _carry_save(carry_dir, model, venv, tr,  # reader will count as a lost run
+                    dict(want, decisions=int(model.num_timesteps), wall_s=wall, cpu_s=cpu,
+                         segments=segs), plant=plant)
+        return {"arm": arm, "seed": int(seed), "T": int(T), "cut": True, "resumable": True,
+                "decisions": int(model.num_timesteps),
+                "decisions_reached": int(model.num_timesteps), "lives": lives,
+                "carry": carry_name(arm, seed), "wall_s": round(wall, 1),
+                "forge": {"round": spec["round"], "arm": arm, "rung": rung,
+                          "segments": segs, "code_head": _code_head()}}
+    if w.n > 0:
+        lives.append(w._life_row({"ate_total": dict(w.env.w.drives.ate_total)},
+                                 "unfinished"))
+    rec = _record(arm, seed, T, rung, spec, spec_given, st, algo, kw, scale, model, w,
+                  lives, tr, wall, cpu)
+    rec["forge"]["segments"] = segs
+    return rec
 
 
 def _code_head() -> str:
