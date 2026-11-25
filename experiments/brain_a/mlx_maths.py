@@ -627,13 +627,33 @@ def critic_loss(P, fi, rew, con, fr, last, term, rrew, rboot, horizon, lam, slow
 
 
 # ---------------------------------------------------------------- rung 12a (retnorm + advantage)
+# embodied/jax/utils.py Normalize (impl 'perc', the published retnorm: rate 0.01, limit 1.0,
+# perclo 5, perchi 95, debias False) and agent.py imag_loss L407-411. Filled 11-25 after
+# `rung12a.py` was committed failing (d6e7aeae). Ours beside theirs:
+#   state passed in and returned (lo, hi) instead of ninjax Variables; debias False only (the
+#     published config — no corr variable exists); one device (no all_gather before the percentile).
+#   percentile: jnp.percentile's default 'linear' written out (sort, then interpolate between the
+#     floor and ceil ranks q/100 * (n-1)); MLX has no percentile.
+#   advnorm 'none' (published): adv_normed = adv, so no advnorm function is ported.
 def _percentile(x, q):
-    raise NotImplementedError("rung 12a: committed failing first")
+    v = mx.sort(x.reshape(-1).astype(f32))
+    pos = q / 100.0 * (v.size - 1)
+    i0 = int(math.floor(pos))
+    i1 = min(i0 + 1, v.size - 1)
+    frac = pos - i0
+    return v[i0] * (1.0 - frac) + v[i1] * frac
 
 
 def retnorm_perc(lo, hi, ret, rate, limit, perclo, perchi):
-    raise NotImplementedError("rung 12a: committed failing first")
+    """Normalize('perc').__call__(ret, update=True): update FIRST, then stats.
+    -> (lo', hi', offset = lo', scale = max(limit, hi' - lo')), all under stop-gradient."""
+    sg = mx.stop_gradient
+    x = sg(ret.astype(f32))
+    lo = (1 - rate) * lo + rate * _percentile(x, perclo)
+    hi = (1 - rate) * hi + rate * _percentile(x, perchi)
+    return lo, hi, sg(lo), sg(mx.maximum(mx.array(limit, f32), hi - lo))
 
 
 def advantage(ret, tarval, scale):
-    raise NotImplementedError("rung 12a: committed failing first")
+    """imag_loss L408: adv = (ret - tarval[:, :-1]) / rscale; advnorm 'none' leaves it as is."""
+    return (ret - tarval[:, :-1]) / scale

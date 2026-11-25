@@ -770,3 +770,12 @@ value 1.0 / repval 0.3, `utils.py` SlowModel.update, at e01491f.
   config; 'perc'/'meanstd' valnorm not ported); contdisc True only; the slow update is rung 3's function
   applied per param (the agent calls it once after each optimiser step — its place in the step is
   rung 13's); boot for repval is a fixed array here (in the agent, the imagined return at each start).
+
+### Rung 12a — return normaliser (perc) + advantage: PASS (11-25)
+`experiments/brain_a/rung12a.py`, official `embodied/jax/utils.py` Normalize (perc, rate 0.01, limit 1,
+5/95, debias False) + `agent.py imag_loss` L407-411. References vs official 9/9 (`ba33d5e5`): 6 carried
+updates, spreads 1..1000..5, limit branch both ways, worst 2.6e-7; planted refs 6/6 caught.
+Tests committed failing `d6e7aeae`; port `mlx_maths.retnorm_perc` / `advantage`: tests
+`retnorm_ref`, `retnorm_golden` eager+compiled (worst 1.95e-7 / 1.35e-7); `--planted` 5/5.
+No gradient test: every output is under stop-gradient (the officials' sg). Rung 12b (actor heads'
+logp + entropy, the policy loss) still owed.
