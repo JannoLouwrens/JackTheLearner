@@ -1027,8 +1027,47 @@ Long form: `/data/jack-research/research_notes/one_voice_part{A,B,C,D}.md` (58 K
 
 **Not verified.** Williams & Williams (via Lesaint 2014), Rescorla-Wagner (memory); Hogan's "3 ingestions", Bouton (snippets); Krebs 1974, Yasuda 2012 (abstracts); UNREAL's and RCE's step counts; the VizDoom negative is figure-only, no numbers.
 
-## 27. A ring of range rays under a replay learner, and a sparse reward whose explorer freezes (2026-11-25; serves J22's closed branch, the next eye row, J23 / Row B-6a, the forge pool; answers INBOX `RESEARCH` Director 11-24)
+## 27. A ring of range rays under a replay learner, and a sparse reward whose explorer freezes (2026-11-25; serves J22's closed branch, the next eye row, Row B-6a / J23, the forge pool; answers INBOX `RESEARCH` Director 11-24)
 
-**Question.** (a) How has the record fed a 1-D range / lidar row (not a camera) to a learner — encoding, encoder, augmentation, steps to first success — and is our ±6-ray roll a valid DrQ augmentation? (b) What does a SAC-family learner need on a sparse reward when its temperature reaches zero before the first reward (B-6a seed 3)?
+Long form, every link and quote: `/data/jack-research/reports/sec27_lidar_eye_and_frozen_explorer_2026-11-25.md`.
 
-*Skeleton committed 04:12 UTC; three sub-agents are reading (notes: `/data/jack-research/scratch_sec27{A,B,C}/`). Findings land below in this slot.*
+**Question.** (a) How did the record feed a range row to a learner, and is h4's ±6-ray roll a valid DrQ augmentation? (b) What does SAC need when α reaches 0 before the first sparse reward (B-6a s3)?
+
+**Already known**
+- **No published goal-reacher reads a raw ray row.** Safety Gym: one 16-bin array PER OBJECT CLASS of closeness `max(0, 3 m − d)/3 m`, 0 = nothing, nearest wins; MLP 2×256, no conv (`safety_gym/envs/engine.py:993–1038`; Ray 2019 §4.1.4). ML-Agents FoodCollector: 7 rays × (one-hot tag + miss + fraction) = 49, MLP 2×128, 2M steps.
+- **Replay learners on that encoding work, slowly.** OmniSafe PointGoal1: SAC 27.0 ± 1.5, TD3 27.3 at **3e6** steps (PPO 25.4 at 1e7). TD3 lidar navigator, MLP: 13 ± 7 % at 100k, 58 at 500k, 65 at 2M; 1-D CNN 55 (2210.04839).
+- **Replay navigators pool hard, then MLP:** 10 beams (Tai 2017, 0.8M), 21 min-pooled sectors (Cimurs 2021, ≤ 400k), 1080 → 36 min-pool (Zhang 2020, SAC, 500k, ~90 %). Raw 1080 beams "fails completely" off its training map (NavRep).
+- **DrQ's own rule:** an augmentation must be "optimality invariant", `Q(s,a) = Q(f(s,ν),a)` (2004.13649 §3.2). Rotation symmetry on record moves the ACTION too: `Q*(s,a) = Q*(gs,ga)` (2203.04439). RAD, walker 500k frames: crop 920, rotate 268, flip 223.
+- **Critic-only conv encoder + sparse reward is the documented failure:** the "visual deadly triad" (2207.00986); "DrQ-v2 struggles to consistently solve Cartpole Swingup Sparse".
+- **Shuffled never beats ordered on record:** Ant 2700 → 232 (2109.02869).
+- **α → 0 on zero reward is SAC's dual, not a bug.** SBX `auto`: α₀ = 1.0, Adam on log α at 3e-4 (`sbx/sac/sac.py` L145–171). At the fastest possible fall α(10k) = e⁻³ = 0.0498; B-6a s3 measured 5.0e-2 — entropy stayed ABOVE target the whole time: he froze random, not still (inf). DrQ-v2 §4.4 dropped auto-α for "premature entropy collapse".
+- **A zero seed on swingup-sparse is ordinary.** SB3 SAC, 20 seeds, 1e6 steps: white noise **377**, OU 608, **pink 730**; MountainCarContinuous 0 / 90 / 94 (Eberhard 2023, T.H.1); TD7 573 [333, 806] (MR.Q T.5). RL-Zoo's own sparse row: `ent_coef: 0.1` fixed + `use_sde` — the setting our row 3b passed with.
+
+**Candidates**
+- **A. Per-class closeness bins → the MLP he has.** 128 rays min-pooled to 16 bins per material class, `1 − d/8 m`, 0 = nothing; no running mean/std (already 0–1). Proven: Safety Gym, PPO 1e7, SAC 3e6. Weak: every published budget is 5–30× our pilot. Expect: little at 100k (13 % on record); apart from blind by 500k (inf).
+- **B. Conv eye, roll removed** (or left–right mirror WITH the turn action mirrored), 3-step returns, τ 0.01. Proven on pixels only (DrQ Cup Catch 913 at 25k decisions). Weak: the triad; navigators found conv ≤ MLP. Expect: no better than A.
+- **C. For the frozen explorer: correlated action noise.** Pink noise (drawn as one sequence per episode) or gSDE + fixed α 0.1. Proven: 377 → 730 on B-6a's own task. Needs an SBX port (the package targets SB3). An α floor alone keeps the same white noise (inf).
+
+**Ours beside theirs**
+
+| setting | published | ours | same / cost |
+|---|---|---|---|
+| ray encoding | closeness per class, 0 = nothing | `[d/8, scalar texture]` interleaved, miss = (1, 0) (`fast_sim.py:165–172`) | differs; no published success on ours |
+| inputs | 16–49 per class | 256 flat, or 128×2 conv | 5–16× wider |
+| augmentation | pixel shift, camera locked to body | roll ±6 rays = ±16.9° yaw, action unmoved (`conv_eye.py:122`) | NOT optimality-invariant (inf): it teaches that a turn does not matter |
+| encoder signal | TD + shift; sparse → add aux loss | TD only | the triad's regime |
+| n-step, τ | 3, 0.01 (v2) | 1, 0.005 | v2: 3-step "critical" |
+| budget | 5e5–3e6 (DrQ-v2 sparse: 1.5M) | 1e5, one seed | under every published row |
+| α | init 0.1 (DrQ); none (v2); fixed 0.1 (Zoo sparse) | auto from 1.0 (`brain_b.py:40`) | fine with reward; freezes without |
+
+**Read from our own files this slot.** (1) h4's α stays 0.012–0.053 in all three cells (`j17_hunt_h4.json`): the forager is NOT a frozen explorer; that fault is B-6a's alone. (2) Whole-run meals/life: sighted 0.37 ± 0.13, blind 0.58 ± 0.14, shuffled 0.88 ± 0.29 (32–35 lives; one shuffled life ate 8): the "shuffled ate most" is inside two standard errors — no arm eats, none is ranked. (3) A rolled shuffled ring is still shuffled: the one arm the roll cannot hurt (inf).
+
+**Known-answer check.** C: SB3 SAC + pink noise, MountainCarContinuous 0 → 94 (box-minutes, as row 3b), then swingup-sparse 730 at 1e6 (20 seeds; ≈ 1.5 core-h per 150k cell). A: SafetyPointGoal1 SAC 27.0 ± 1.5 at 3e6 — about a session a seed (inf).
+
+**What the record does NOT answer**
+- Does a ±6 roll flip the hand forager's turn? Box-minutes, no learner: his rule on rolled rows. Prediction: yes whenever food is inside ±17°, i.e. on every approach.
+- Binned eye vs raw vs blind under B, same seed: 3 cells × 100k ≈ 1.8 core-h. Prediction: nothing eats at 100k; 500k is the first honest read. A new EYE, not an h5 — needs a ruling (B is closed on the wide eye).
+- Pink noise on B-6a, 5 seeds × 150k ≈ 8 core-h. Prediction: zero seeds 1 → 0 of 5, mean in band; silent on win-then-lose (s1).
+- Scalar id vs one-hot class, raw vs pooled beams under SAC: no published ablation.
+
+**Not verified.** RAD's per-augmentation scores (heatmap text); steps-to-first-success anywhere (curves); the pink-noise paper's α and action repeat; DrQ-v2's entropy ablation (figure); SPR, DBC unread. `conv_eye.py`'s docstring cites two DrQ settings the config does not have (long form).
