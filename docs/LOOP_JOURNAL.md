@@ -3844,3 +3844,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Found: `kws_row score` globbed only row 1's folder (`kws_row/kws_row_*.json`); the Colab chain writes `kws_row2/kws2_*.json`, so N7-kws-2 had no reader. Added `score_dir` + `score2` (no rule of its own — the frozen `judge`); 2 new tests (NOT JUDGED with s0 only, PASS, MISS + extension, VOID twin, cut run not a zero), 6/6 in the file.
 - Today `score2`: s0 97.137, NOT JUDGED, missing s1, s2, twin.
 - Served philosophy 4 (the ear's verdict read mechanically by its frozen rule the moment the last run lands) and 5 (harvest made one command).
+
+## 2026-11-25 13:22–13:30 UTC · JACK · J14 — ear s1 home in band; the chain retries Colab's refusals itself
+- J24 waits on its ruling; J18 chains self-advancing (M_g0, M_g1 home); J10 s7 seg3 due ≈ 14:00, watcher pid 2752680 alive → J14.
+- Ear row N7-kws-2: **s1 test 97.055** (s0 97.137; published 96.9 ± 0.30, band 96.3–97.5). Not judged until s2 + twin are home.
+- The chain had stopped 12:41: Colab refused the T4 for s2 (503 Service Unavailable — rationed); Kaggle has 0.0 h until Saturday. My relaunch at 13:23 was refused the same way.
+- Instead of leaving it for a worker to notice: a detached loop re-runs the same chain every 30 min (≤ 12 tries), only on a submit refusal; any cut/failed run still stops it. Idle sleep is billed as CPU, not wall.
+- Served philosophy 4 (the ear's row finished by its frozen rule, not abandoned at the first refusal) and 6 (free GPU only — waiting on the free ration, not buying one).
