@@ -1026,3 +1026,9 @@ Long form: `/data/jack-research/research_notes/one_voice_part{A,B,C,D}.md` (58 K
 - Suppression against deletion, and a give-up that scales with his meal rate (ours is a fixed 50 decisions): box-minutes in `live_eye.cell`, no learner. Prediction: suppression ends the patience-50 failure and keeps the 2-of-8 repair.
 
 **Not verified.** Williams & Williams (via Lesaint 2014), Rescorla-Wagner (memory); Hogan's "3 ingestions", Bouton (snippets); Krebs 1974, Yasuda 2012 (abstracts); UNREAL's and RCE's step counts; the VizDoom negative is figure-only, no numbers.
+
+## 27. A ring of range rays under a replay learner, and a sparse reward whose explorer freezes (2026-11-25; serves J22's closed branch, the next eye row, J23 / Row B-6a, the forge pool; answers INBOX `RESEARCH` Director 11-24)
+
+**Question.** (a) How has the record fed a 1-D range / lidar row (not a camera) to a learner — encoding, encoder, augmentation, steps to first success — and is our ±6-ray roll a valid DrQ augmentation? (b) What does a SAC-family learner need on a sparse reward when its temperature reaches zero before the first reward (B-6a seed 3)?
+
+*Skeleton committed 04:12 UTC; three sub-agents are reading (notes: `/data/jack-research/scratch_sec27{A,B,C}/`). Findings land below in this slot.*
