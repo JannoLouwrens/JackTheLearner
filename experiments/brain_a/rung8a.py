@@ -159,8 +159,111 @@ def main_official():
     return 0 if n == len(rows) else 1
 
 
+# ---------------------------------------------------------------- port tests (MLX)
+# `mlx_maths.rssm_loss(P, carry, tokens, action, reset, uniforms, cfg, act_spec, free)` ->
+# dict(dyn, rep [B,T], post, prior, stoch) — rung 7's scan, the prior over it, then the KL.
+# Each test eager AND under mx.compile, on rung 7's size1m golden params/inputs/uniforms:
+#   dynrep_ref     port vs REF_dynrep (float64) on the port's own post/prior, free 1 and FSPLIT
+#   dynrep_golden  port vs the official f32 dump, free 1 and FSPLIT
+# plus: FSPLIT splits the port's elements (5-95%), and a port pass with free 0 must differ
+# from the FSPLIT pass (the floor is read, not ignored).
+ACT_SPEC = rung7.ACT_SPEC
+
+
+def _port_loss(M, mx, free, compiled):
+    P, I, U, _ = rung7._load_golden()
+    MP = {k: mx.array(v) for k, v in P.items()}
+    c0 = dict(deter=mx.zeros((B, TOY["deter"])), stoch=mx.zeros((B, TOY["stoch"], TOY["classes"])))
+    args = (c0, mx.array(I["tokens"]), {k: mx.array(v) for k, v in I["action"].items()},
+            mx.array(I["reset"]), mx.array(U.astype(np.float32)))
+    f = lambda p, c, t, a, r, u: M.rssm_loss(p, c, t, a, r, u, TOY, ACT_SPEC, free)  # noqa: E731
+    if compiled:
+        f = mx.compile(f)
+    return {k: np.asarray(v) for k, v in f(MP, *args).items()}
+
+
+def t_loss(M, mx, compiled, against):
+    rows = []
+    G = np.load(GOLDEN8)
+    for free, key in ((FREE, ""), (FSPLIT, "_split")):
+        got = _port_loss(M, mx, free, compiled)
+        if against == "ref":
+            tgt = REF_dynrep(got["post"], got["prior"], free)
+        else:
+            tgt = dict(dyn=G["dyn" + key], rep=G["rep" + key])
+        for k in ("dyn", "rep"):
+            rows.append(close(f"{k} free {free} vs {against.upper()}", got[k], tgt[k]))
+        if free == FSPLIT:
+            raw = REF_dynrep(got["post"], got["prior"], 0.0)["raw"]
+            sh = float((raw > FSPLIT).mean())
+            rows.append((0.05 < sh < 0.95, f"free {FSPLIT} splits the port's elements ({sh:.1%})"))
+            z = _port_loss(M, mx, 0.0, compiled)
+            d = float(np.abs(z["dyn"] - got["dyn"]).max())
+            rows.append((d > 1e-2, f"control: free 0 pass differs from free {FSPLIT} ({d:.3g} > 1e-2)"))
+    return rows
+
+
+TESTS = [("dynrep_ref", lambda M, mx, c: t_loss(M, mx, c, "ref")),
+         ("dynrep_golden", lambda M, mx, c: t_loss(M, mx, c, "golden"))]
+
+
+def main_mlx():
+    mx = rung7.rung6._mlx()
+    import mlx_maths as M
+    n = 0
+    for name, t in TESTS:
+        r = {}
+        for mode, c in (("eager", False), ("compiled", True)):
+            try:
+                rows = t(M, mx, c)
+                r[mode] = all(o for o, _ in rows)
+                det = [d for o, d in rows if not o][:4] if not r[mode] else [d for _, d in rows]
+            except Exception as e:  # noqa: BLE001 — a stub or crash is a FAIL, reported
+                r[mode], det = False, [f"{type(e).__name__}: {e}"[:200]]
+            if mode == "eager" or not r[mode]:
+                for d in det:
+                    print(f"    {mode[0]}:", d)
+        n += r["eager"] and r["compiled"]
+        print(f"{name:14s} eager {'PASS' if r['eager'] else 'FAIL'}  compiled {'PASS' if r['compiled'] else 'FAIL'}")
+    print(f"RUNG 8a: {n}/{len(TESTS)} tests pass eager AND compiled (mlx {mx.__version__}) -> "
+          f"{'PASS' if n == len(TESTS) else 'FAIL'}")
+    return 0 if n == len(TESTS) else 1
+
+
+def main_planted():
+    """Each planted bug is patched into the real port; both tests must FAIL eager."""
+    mx = rung7.rung6._mlx()
+    import mlx_maths as M
+    keep = dict(kl_dyn_rep=M.kl_dyn_rep, rssm_loss=M.rssm_loss)
+    kl, rl = keep["kl_dyn_rep"], keep["rssm_loss"]
+    bugs = {
+        "no unimix in the KL": dict(kl_dyn_rep=lambda p, q, mix, free: kl(p, q, 0.0, free)),
+        "free bits ignored": dict(kl_dyn_rep=lambda p, q, mix, free: kl(p, q, mix, 0.0)),
+        "KL direction swapped": dict(kl_dyn_rep=lambda p, q, mix, free: kl(q, p, mix, free)),
+        "free bits on the T-mean": dict(kl_dyn_rep=lambda p, q, mix, free: tuple(
+            mx.broadcast_to(mx.maximum(x.mean(1, keepdims=True), free), x.shape)
+            for x in kl(p, q, mix, 0.0))),
+    }
+    caught = 0
+    for name, patch in bugs.items():
+        for k, v in patch.items():
+            setattr(M, k, v)
+        try:
+            bad = [d for _, t in TESTS for o, d in t(M, mx, False) if not o]
+        finally:
+            for k, v in keep.items():
+                setattr(M, k, v)
+        caught += bool(bad)
+        print(f"planted [{name}] -> {'CAUGHT' if bad else 'MISSED'}" + (f"  ({bad[0][:80]})" if bad else ""))
+    ctl = all(o for _, t in TESTS for o, _ in t(M, mx, False))
+    print(f"PLANTED: {caught}/{len(bugs)} caught, unpatched port {'passes' if ctl else 'FAILS'} -> "
+          f"{'OK' if caught == len(bugs) and ctl else 'HARNESS BLIND'}")
+    return 0 if caught == len(bugs) and ctl else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv[1:]:
         sys.exit(main_official())
-    print("port tests: not yet written (next commit)")
-    sys.exit(1)
+    if "--planted" in sys.argv[1:]:
+        sys.exit(main_planted())
+    sys.exit(main_mlx())

@@ -337,6 +337,11 @@ def rssm_observe(P, carry, tokens, action, reset, uniforms, cfg, act_spec):
     return {k: mx.stack(v, 1) for k, v in out.items()}
 
 
+def rssm_loss(P, carry, tokens, action, reset, uniforms, cfg, act_spec, free):
+    """rssm.py L120-133: STUB (rung 8a tests committed failing first)."""
+    raise NotImplementedError("rung 8a port not written")
+
+
 def sample_onehot(logit, u, mix):
     """outs.OneHot(logit, unimix).sample with file noise: argmax(log((1-mix)softmax + mix/C)
     + Gumbel(u)), u clipped to [1e-7, 1-1e-7] as file_noise.py. Ours beside theirs: the
