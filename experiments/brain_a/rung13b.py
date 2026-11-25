@@ -850,7 +850,14 @@ def main_imagloss():
 #   2.47e-5 / 1.50e-3 (call 6); 2.40e-5 / 2.73e-3 vs 2.42e-5 / 2.70e-3 (call 8). A max line is a lottery of
 #   single rounding events; not a port bug. These quantiles are now SEEN — any quantile line registered next must
 #   say so and earn its teeth from the plants (and the NO-OP exemption), not from these figures.
-def main_imagloss_sym():
+# NINTH PIECE (11-25 21:35, `--imagloss-q`): the (S) line RE-REGISTERED as a MAGNITUDE line, written AFTER the
+# quantiles above were SEEN (ratios 0.98-1.01) — so its pass by the true port is expected and proves little; its
+# worth is its TEETH, which are not seen: the same control and four plants must now break it. (Q-S) for rew and
+# ret, with e = |x - truth| and q_k = the k-th percentile + 1e-7: for k in 50, 90, 99, q_k(port) and q_k(official)
+# within a factor 1.25 of each other, both ways. Max is not used (a lottery of single rounding jumps). NO-OP
+# EXEMPTION, as in 13b-enc/wm/imag: a control or plant is judged only on calls where its port output is not
+# bit-equal to the true port's; NO-OP on every call fails. H-con element-wise 1e-5 unchanged.
+def main_imagloss_sym(qline=False):
     gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
     if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
         os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
@@ -914,13 +921,22 @@ def main_imagloss_sym():
         e = np.abs(a - t)
         return int((e > TOL * (np.abs(t) + 1)).sum()), float(e.max())
 
+    def qs(a, t):
+        e = np.abs(np.asarray(a, np.float64) - t)
+        return [float(np.percentile(e, k)) + 1e-7 for k in (50, 90, 99)]
+
     def sym(c, out):
         hr, hc, ret, rew64, ret64 = out
         g = f"c{c}/imagloss/"
         res = {}
         for k, port, off, t in (("rew", hr, G[g + "in_rew"], rew64), ("ret", ret, G[g + "outs/ret"], ret64)):
             (npo, wp), (nof, wo) = far(port, t), far(off, t)
-            res[k] = (abs(npo - nof) <= 0.05 * max(npo, nof), npo, nof, wp, wo)
+            if qline:
+                qp, qo = qs(port, t), qs(off, t)
+                good = all(max(a / b, b / a) <= 1.25 for a, b in zip(qp, qo))
+                res[k] = (good, "/".join(f"{x:.1e}" for x in qp), "/".join(f"{x:.1e}" for x in qo), wp, wo)
+            else:
+                res[k] = (abs(npo - nof) <= 0.05 * max(npo, nof), npo, nof, wp, wo)
         return res
 
     ok = True
@@ -933,25 +949,36 @@ def main_imagloss_sym():
                 f"{k} {'ok' if v[0] else 'FAIL'} n_port {v[1]} n_off {v[2]} (worst {v[3]:.2e} / {v[4]:.2e})"
                 for k, v in r.items()) + f"  con miss {nc} worst {wc:.2e}")
             ok &= all(v[0] for v in r.values()) and nc == 0
+    true = {c: run(c, make()) for c in CALLS}
+    live_of = lambda c, out, term: not np.array_equal(out[0 if term == "rew" else 2], true[c][0 if term == "rew" else 2])  # noqa: E731
     for c in CALLS:
-        r = sym(c, run(c, make(zero_rew=True)))["ret"]
+        out = run(c, make(zero_rew=True))
+        r = sym(c, out)["ret"]
+        if qline and not live_of(c, out, "ret"):
+            print(f"C  call {c}: rew zeroed: NO-OP (port ret bit-equal), exempt")
+            continue
         print(f"C  call {c}: rew zeroed: ret {'fails (S)' if not r[0] else 'PASSES (S) — control dead'} n_port {r[1]} n_off {r[2]}")
         ok &= not r[0]
     plants = {"rew_toplogit_1e-3": (dict(rew_plant=1e-3), "rew"), "val_toplogit_1e-3": (dict(val_plant=1e-3), "ret"),
               "lam_1": (dict(lam=1.0), "ret"), "disc_horizon": (dict(disc=1 - 1 / 333), "ret")}
     caught = 0
     for name, (kw, term) in plants.items():
-        rs = [sym(c, run(c, make(**kw)))[term] for c in CALLS]
-        hits = [not r[0] for r in rs]
+        outs = [run(c, make(**kw)) for c in CALLS]
+        lv = [live_of(c, o, term) if qline else True for c, o in zip(CALLS, outs)]
+        rs = [sym(c, o)[term] for c, o in zip(CALLS, outs)]
+        hits = [not r[0] for r, l in zip(rs, lv) if l]
+        hits = hits if any(lv) else [False]
         print("   " + name + ": " + "  ".join(f"c{c} n_port {r[1]} n_off {r[2]}" for c, r in zip(CALLS, rs)))
         caught += all(hits)
         print(f"P  planted {name:18s}: breaks (S) on {sum(hits)}/{len(CALLS)} calls")
     good = ok and caught == len(plants)
-    print(f"RUNG 13b-imagloss-sym (H rew, H con, R): port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
+    print(f"RUNG 13b-imagloss-{'q' if qline else 'sym'} (H rew, H con, R): port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
     return 0 if good else 1
 
 
 def main():
+    if "--imagloss-q" in sys.argv:
+        return main_imagloss_sym(qline=True)
     if "--imagloss-sym" in sys.argv:
         return main_imagloss_sym()
     if "--imagloss" in sys.argv:
