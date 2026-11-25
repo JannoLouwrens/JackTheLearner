@@ -745,3 +745,28 @@ seed spanning |x| 0.01–300 (both symlog regions).
   logit slot is 0 (official: the replay posterior's logit, which the heads never read — `feat2tensor`
   uses deter + stoch only); normalisers / value denormalisation not ported (rungs 11-12). No wheel kernel
   owed until rung 12 (ORDERS J25).
+
+## J25 — rung 11: the critic loss (value + repval, slow target, slowreg, valnorm), size1m (11-25): **PASS**
+`experiments/brain_a/rung11.py`, official `agent.py` L65-68 (val / slowval MLPHeads, SlowModel rate 0.02
+every 1, valnorm impl 'none'), `imag_loss` value part L396-422, `repl_loss` L460-474, loss scales
+value 1.0 / repval 0.3, `utils.py` SlowModel.update, at e01491f.
+- `--vs-official`: **25/25 REFERENCES HOLD** (`22067e03`). The official imag_loss / repl_loss run for real
+  with REAL value and slowvalue heads (3 layers, units 64, symexp two-hot 255) and the real Normalize;
+  only the policy and the ret/adv normalisers are stubbed (rung 12). Published init: logits 0, pred 0.
+  Noised heads (N(0, 0.3), output kernel 0.03 — at 0.3 values reached std 6.7e6): val 1.5e-5, ret 2.9e-5,
+  value 1.8e-6, repval 2.8e-7 ×(|ref|+1). **Gradient** of the critic total on 33 val elements vs f64
+  central differences WITH THE TARGETS HELD (sg(tar_padded), sg(slowvalue.pred())): worst 2.4e-5; the
+  same reference without the stop-gradient is 2.6× off and is caught (the first draft had that bug).
+  slowval grads exactly 0. SlowModel.update to 5.3e-8. Planted references 6/6 caught.
+  Golden `rung11_critic_golden_size1m_e01491f.npz` (1.4 MB, holds the official grads).
+- Port tests `critic_ref`, `critic_golden`, `critic_grad`, `slow_update` committed (`4b78ebcd`) at 1/4 —
+  `slow_update` passed already (it tests rung 3's `slow_update`, not new code); then
+  `mlx_maths.critic_loss` → **RUNG 11: 4/4 PASS eager AND compiled**: total 1.2e-7 vs golden, grads
+  3.3e-6 × max|g| vs the official jax.grad on all 11 val params, slowval grads 0. `--planted` 6/6
+  caught (no stop-gradient → caught only by the grad test, 1.93×; λ on the bootstrap; 2 layers;
+  slowreg dropped; repval scale 1.0; relu for silu); rungs 1, 8b, 9, 10 still pass.
+  Logs `/data/jack-logs/mlx/rung11_{vs_official,pass,planted}.log`.
+- Ours beside theirs: f32 (published bf16); valnorm 'none' only and slowtar False only (the published
+  config; 'perc'/'meanstd' valnorm not ported); contdisc True only; the slow update is rung 3's function
+  applied per param (the agent calls it once after each optimiser step — its place in the step is
+  rung 13's); boot for repval is a fixed array here (in the agent, the imagined return at each start).

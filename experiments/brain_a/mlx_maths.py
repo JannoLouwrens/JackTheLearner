@@ -584,5 +584,43 @@ def repl_return(last, term, rew, val, boot, horizon, lam):
 
 
 # ---------------------------------------------------------------- rung 11 (step 2.5, critic)
-def critic_loss(P, fi, rew, con, fr, last, term, rrew, rboot, horizon, lam, slowreg, repval):
-    raise NotImplementedError("rung 11 critic_loss: tests committed first")
+# agent.py L65-68 (val / slowval MLPHeads), imag_loss L396-422 (value part), repl_loss L460-474,
+# agent.loss L241 (scales value 1.0, repval 0.3). Filled 11-25 after `rung11.py` was committed
+# failing (4b78ebcd). Ours beside theirs:
+#   compute dtype f32 (published bf16), as rungs 6-10.
+#   valnorm: the published config's impl 'none' only (stats -> offset 0, scale 1, so value.pred()
+#     is used raw and the target is the raw return); 'meanstd' / 'perc' are not ported here.
+#   slowtar False only (the published config): tarval = the value's own pred, its gradient stopped
+#     where the official code stops it (sg(tar_padded)) — the target never carries a gradient.
+#   the policy / retnorm / advnorm terms of imag_loss are rung 12's; contdisc True only (disc 1).
+#   loss mean: official losses['value'].mean(1) per start then .mean(); rows are equal length, so
+#     one .mean() is the same number.
+def _mlp_head_n(P, prefix, x, out, layers):
+    for i in range(layers):
+        x = _ACT["silu"](_rms(_lin(P, f"{prefix}/mlp/linear{i}", x), P[f"{prefix}/mlp/norm{i}/scale"]))
+    W, b = P[f"{prefix}/head/{out}/kernel"], P[f"{prefix}/head/{out}/bias"]
+    return x @ W.reshape(W.shape[0], -1) + b.reshape(-1)
+
+
+def critic_loss(P, fi, rew, con, fr, last, term, rrew, rboot, horizon, lam, slowreg, repval, layers=3):
+    """-> dict(value [N,H], repval [B,K-1], total, val [N,H+1], slow [N,H+1], ret [N,H], rret [B,K-1])."""
+    b = bins(255)
+    sg = mx.stop_gradient
+    fi, fr = fi.astype(f32), fr.astype(f32)
+    lv_i, lv_r = _mlp_head_n(P, "val", fi, "logits", layers), _mlp_head_n(P, "val", fr, "logits", layers)
+    val_i, val_r = twohot_decode(lv_i, b), twohot_decode(lv_r, b)
+    slow_i = sg(twohot_decode(_mlp_head_n(P, "slowval", fi, "logits", layers), b))
+    slow_r = sg(twohot_decode(_mlp_head_n(P, "slowval", fr, "logits", layers), b))
+    # imag_loss: contdisc -> disc 1, weight = cumprod(con, 1); last 0, term 1 - con, boot = tarval
+    con = con.astype(f32)
+    weight = sg(mx.cumprod(con, 1))
+    ret = lambda_return(mx.zeros_like(con), 1.0 - con, rew, val_i, val_i, 1.0, lam)
+    tar = sg(mx.concatenate([ret, 0 * ret[:, -1:]], 1))
+    value = (weight * (twohot_loss(lv_i, tar, b) + slowreg * twohot_loss(lv_i, slow_i, b)))[:, :-1]
+    # repl_loss: disc 1 - 1/horizon, weight ~last, boot = the given imagined returns
+    rret = lambda_return(last, term, rrew, val_r, rboot, 1.0 - 1.0 / horizon, lam)
+    rtar = sg(mx.concatenate([rret, 0 * rret[:, -1:]], 1))
+    w = mx.logical_not(last).astype(f32)
+    rep = (w * (twohot_loss(lv_r, rtar, b) + slowreg * twohot_loss(lv_r, slow_r, b)))[:, :-1]
+    total = value.mean() * 1.0 + rep.mean() * repval
+    return dict(value=value, repval=rep, total=total, val=val_i, slow=slow_i, ret=ret, rret=rret)

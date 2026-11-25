@@ -427,7 +427,68 @@ def main_mlx():
     return 0 if n == len(TESTS) else 1
 
 
+def main_planted():
+    """Each planted bug is patched into the real port; the tests must FAIL eager."""
+    import rung6
+    mx = rung6._mlx()
+    import mlx_maths as M
+    names = ("twohot_target", "lambda_return", "_mlp_head_n", "critic_loss", "_ACT")
+    keep = {k: getattr(M, k) for k in names}
+
+    SG = mx.stop_gradient
+
+    def tt_nosg(target, b):                 # rung 1's twohot_target, the WEIGHTS left carrying grads
+        n = b.shape[-1]
+        t = target.astype(mx.float32)[..., None]
+        ti = SG(t)                          # bin indices are integers: MLX cannot VJP a gather index
+        below = mx.clip((b <= ti).astype(mx.int32).sum(-1) - 1, 0, n - 1)
+        above = mx.clip(n - (b > ti).astype(mx.int32).sum(-1), 0, n - 1)
+        eq = below == above
+        one = mx.array(1.0, mx.float32)
+        db = mx.where(eq, one, mx.abs(b[below] - t[..., 0]))
+        da = mx.where(eq, one, mx.abs(b[above] - t[..., 0]))
+        return (M._onehot(below, n) * (da / (db + da))[..., None] + M._onehot(above, n) * (db / (db + da))[..., None])
+
+    def nosg_critic(P, fi, rew, con, fr, last, term, rrew, rboot, horizon, lam, slowreg, repval):
+        try:
+            mx.stop_gradient = lambda x: x
+            M.twohot_target = tt_nosg
+            return keep["critic_loss"](P, fi, rew, con, fr, last, term, rrew, rboot, horizon, lam, slowreg, repval)
+        finally:
+            mx.stop_gradient = SG
+            M.twohot_target = keep["twohot_target"]
+
+    bugs = {
+        "no stop-gradient anywhere in the critic (targets carry grads)": dict(critic_loss=nosg_critic),
+        "lam on the bootstrap, not the continuation": dict(
+            lambda_return=lambda la, te, r, v, b, d, lam: keep["lambda_return"](la, te, r, v, b, d, 1 - lam)),
+        "two hidden layers, not three": dict(_mlp_head_n=lambda P, pre, x, out, n: keep["_mlp_head_n"](P, pre, x, out, n - 1)),
+        "slowreg term dropped": dict(critic_loss=lambda P, *a: keep["critic_loss"](P, *a[:10], 0.0, a[11])),
+        "repval scale 1.0, not 0.3": dict(critic_loss=lambda P, *a: keep["critic_loss"](P, *a[:11], 1.0)),
+        "relu for silu": dict(_ACT={**keep["_ACT"], "silu": lambda x: mx.maximum(x, 0)}),
+    }
+    caught = 0
+    for name, patch in bugs.items():
+        for k, v in patch.items():
+            setattr(M, k, v)
+        try:
+            bad = [d for _, t in TESTS for o, d in t(M, mx, False) if not o]
+        except Exception as e:  # noqa: BLE001
+            bad = [f"crash {type(e).__name__}: {e}"]
+        finally:
+            for k, v in keep.items():
+                setattr(M, k, v)
+        caught += bool(bad)
+        print(f"planted [{name}] -> {'CAUGHT' if bad else 'MISSED'}" + (f"  ({bad[0][:90]})" if bad else ""))
+    ctl = all(o for _, t in TESTS for o, _ in t(M, mx, False))
+    print(f"PLANTED: {caught}/{len(bugs)} caught, unpatched port {'passes' if ctl else 'FAILS'} -> "
+          f"{'OK' if caught == len(bugs) and ctl else 'HARNESS BLIND'}")
+    return 0 if caught == len(bugs) and ctl else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv:
         sys.exit(main_official())
+    if "--planted" in sys.argv[1:]:
+        sys.exit(main_planted())
     sys.exit(main_mlx())
