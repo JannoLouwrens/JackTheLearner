@@ -3937,3 +3937,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `rung13b.py --wm` `55ad7b93`: port's encoder → sampled RSSM pass → dyn/rep/vector/rew/con vs the golden's dumped terms: 0 miss on 5×[16,64] at calls 1/2/6/8, eager+compiled (worst 1.2e-6 of 1e-5).
 - First read FAILED its control/plant clauses (C 3/4, P 3/5), not W: call-1 reward head is zero-init (rew = log 255 for any target), and the KL never reaches the 1.0 free-bits floor (min 2.15) so that plant was identical everywhere. Re-registered to live calls (as 13b-enc), free_bits_0 → 3; said in file + commit. Free-bits max is certified by 8a, not by this golden.
 - Served philosophy 4 (each term checked against official output; a no-op plant named as such, not counted). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
+
+## 2026-11-25 20:07–20:35 UTC · JACK · J25 — rung 13b-imag: the imagination's noise found, the port imagines as the official code does
+- First act: forge M_g0/1/2/3/5 home, g4/g6/g7 reruns live on Kaggle (nothing to read); ear s2 loop alive (Colab 503); J24 stopped on its ruling; J10 DONE → J25 (box).
+- Searched the regenerated noise file (64M uniforms, then normals): prior uniforms at cur(N,0) + (2+k)·131,072 (one unidentified 131,072 block after the posterior — not a repfeat resample); policy normals at 182,272 + (N−1)·278,528 + 8,192k. NumPy reference 0 flips / worst 1.3e-7.
+- `rung13b.py --imag` `1355f733`: port free-running 15-step imagination with its own policy vs golden feat + actions: 0 miss, 0 flips, calls 1/2/6/8, eager+compiled (worst 2.9e-6 of 1e-5); zero-normals control misses ~122,879/call; planted 5/5. Passed on first read; line written after the search, before the port read.
+- Served philosophy 4 (a sampled imagination that could have flipped, plants that must be caught). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
