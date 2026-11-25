@@ -818,7 +818,122 @@ def main_imagloss():
     return 0 if good else 1
 
 
+# EIGHTH PIECE (11-25 21:30, `--imagloss-sym`): H rew and R RE-REGISTERED after the FIRST READ above failed and
+# a kappa line was measured and rejected (`rung13b_cond_probe.py`, `8b2ed8e7`: bound 16x too loose). The 255-bin
+# twohot decode is ill-conditioned (one f32 ulp of the top bin's p moves it 0.23), so no f32 decode is the truth
+# and the official f32 golden is not either. THE LINE, fixed before its read, at calls 1/2/6/8, eager AND
+# compiled. TRUTH = the variant's own function in float64 (numpy) from the port's own f32 logits: rew64 =
+# decode64(rew logits); val64 = decode64(val logits); ret64 = lambda_return64(0, 1-con, in_rew, val64, val64,
+# disc, lam) with the golden's in_rew/in_con. For each of rew and ret: n_port = #elems |port_f32 - truth| >
+# 1e-5(|truth|+1), n_off = the same for the official golden (in_rew / outs/ret). (S) PASS iff |n_port - n_off|
+# <= 0.05 * max(n_port, n_off) — the port is as far from the f64 truth as the official f32 code is, both ways
+# (a port bug moves the truth away from the golden, so n_off grows; a port decode bug moves n_port).
+# (H-con) con sigmoid stays element-wise 1e-5 vs in_con. (C) control: rew zeroed must fail (S) on ret every call.
+# (P) planted, each must fail its (S) on every call: rew top-bin logit +1e-3 (H rew); val top-bin logit +1e-3
+# (R); lam 1.0 (R); disc 1 - 1/333 (R). V and Q are NOT re-registered here (no golden val/slowval to teacher-
+# force them) — the next piece; the NO-OP plant retnorm_not_updated is replaced there by retnorm limit 0.
+def main_imagloss_sym():
+    gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
+    if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
+        os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("TMPDIR", "/data/tmp")
+    sys.path.insert(0, HERE)
+    import mlx.core as mx
+    import mlx_maths as M
+    G, R = np.load(GOLDEN_A), np.load(R13)
+    b = M.bins(255)
+    b64 = np.array(b).astype(np.float64)
+
+    def dec64(L):
+        L = np.asarray(L, np.float64)
+        p = np.exp(L - L.max(-1, keepdims=True))
+        p /= p.sum(-1, keepdims=True)
+        m = 127
+        return p[..., m] * b64[m] + ((p[..., m + 1:] - p[..., :m][..., ::-1]) * b64[m + 1:]).sum(-1)
+
+    def lret64(con, rew, val, disc, lam):
+        live = con[:, 1:] * disc
+        interm = rew[:, 1:] + (1 - lam) * live * val[:, 1:]
+        rets = [val[:, -1]]
+        for t in reversed(range(live.shape[1])):
+            rets.append(interm[:, t] + live[:, t] * lam * rets[-1])
+        return np.stack(list(reversed(rets))[:-1], 1)
+
+    def make(lam=0.95, disc=1.0, rew_plant=0.0, val_plant=0.0, zero_rew=False):
+        def f(Pr, Pc, Pv, d, s, rew, con):
+            x = M.feat2tensor(d, s)
+            Lr = M._mlp_head(Pr, "rew", x, "logits")
+            Lr = Lr + mx.concatenate([mx.zeros(Lr.shape[:-1] + (254,), mx.float32),
+                                      mx.full(Lr.shape[:-1] + (1,), rew_plant, mx.float32)], -1)
+            Lv = M._mlp_head_n(Pv, "val", x, "logits", 3)
+            Lv = Lv + mx.concatenate([mx.zeros(Lv.shape[:-1] + (254,), mx.float32),
+                                      mx.full(Lv.shape[:-1] + (1,), val_plant, mx.float32)], -1)
+            hr = M.twohot_decode(Lr, b)
+            hc = mx.sigmoid(M._mlp_head(Pc, "con", x, "logit")[..., 0])
+            val = M.twohot_decode(Lv, b)
+            r = mx.zeros_like(rew) if zero_rew else rew
+            ret = M.lambda_return(mx.zeros_like(con), 1.0 - con, r, val, val, disc, lam)
+            return Lr, Lv, hr, hc, ret
+        return f, dict(lam=lam, disc=disc, zero_rew=zero_rew)
+
+    def run(c, fk, compiled=False):
+        f, kw = fk
+        P = lambda h: {k[len(f"c{c}/pre/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/{h}/")}  # noqa: E731
+        g = f"c{c}/imag/"
+        d = np.concatenate([G[g + "start/deter"][:, None], G[g + "feat/deter"]], 1)
+        s = np.concatenate([G[g + "start/stoch"][:, None], G[g + "feat/stoch"]], 1)
+        gr, gc = G[f"c{c}/imagloss/in_rew"], G[f"c{c}/imagloss/in_con"]
+        f = mx.compile(f) if compiled else f
+        Lr, Lv, hr, hc, ret = [np.array(x) for x in f(P("rew"), P("con"), P("val"), mx.array(d), mx.array(s),
+                                                       mx.array(gr), mx.array(gc))]
+        rew64 = dec64(Lr)
+        r64in = np.zeros_like(gr, np.float64) if kw["zero_rew"] else gr.astype(np.float64)
+        ret64 = lret64(gc.astype(np.float64), r64in, dec64(Lv), kw["disc"], kw["lam"])
+        return hr, hc, ret, rew64, ret64
+
+    def far(a, t):
+        a = np.asarray(a, np.float64)
+        e = np.abs(a - t)
+        return int((e > TOL * (np.abs(t) + 1)).sum()), float(e.max())
+
+    def sym(c, out):
+        hr, hc, ret, rew64, ret64 = out
+        g = f"c{c}/imagloss/"
+        res = {}
+        for k, port, off, t in (("rew", hr, G[g + "in_rew"], rew64), ("ret", ret, G[g + "outs/ret"], ret64)):
+            (npo, wp), (nof, wo) = far(port, t), far(off, t)
+            res[k] = (abs(npo - nof) <= 0.05 * max(npo, nof), npo, nof, wp, wo)
+        return res
+
+    ok = True
+    for c in CALLS:
+        for mode in ("eager", "compiled"):
+            out = run(c, make(), mode == "compiled")
+            r = sym(c, out)
+            nc, wc = miss(out[1], G[f"c{c}/imagloss/in_con"])
+            print(f"   call {c} {mode:8s}: " + "  ".join(
+                f"{k} {'ok' if v[0] else 'FAIL'} n_port {v[1]} n_off {v[2]} (worst {v[3]:.2e} / {v[4]:.2e})"
+                for k, v in r.items()) + f"  con miss {nc} worst {wc:.2e}")
+            ok &= all(v[0] for v in r.values()) and nc == 0
+    for c in CALLS:
+        r = sym(c, run(c, make(zero_rew=True)))["ret"]
+        print(f"C  call {c}: rew zeroed: ret {'fails (S)' if not r[0] else 'PASSES (S) — control dead'} n_port {r[1]} n_off {r[2]}")
+        ok &= not r[0]
+    plants = {"rew_toplogit_1e-3": (dict(rew_plant=1e-3), "rew"), "val_toplogit_1e-3": (dict(val_plant=1e-3), "ret"),
+              "lam_1": (dict(lam=1.0), "ret"), "disc_horizon": (dict(disc=1 - 1 / 333), "ret")}
+    caught = 0
+    for name, (kw, term) in plants.items():
+        hits = [not sym(c, run(c, make(**kw)))[term][0] for c in CALLS]
+        caught += all(hits)
+        print(f"P  planted {name:18s}: breaks (S) on {sum(hits)}/{len(CALLS)} calls")
+    good = ok and caught == len(plants)
+    print(f"RUNG 13b-imagloss-sym (H rew, H con, R): port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
+    return 0 if good else 1
+
+
 def main():
+    if "--imagloss-sym" in sys.argv:
+        return main_imagloss_sym()
     if "--imagloss" in sys.argv:
         return main_imagloss()
     if "--imag" in sys.argv:
