@@ -531,7 +531,36 @@ def main_wm():
         hits, live = live_hits(kw, ks)
         caught += bool(live) and all(hits)
         print(f"P  planted {name:20s}: caught on {sum(hits)}/{len(live)} calls where it changes the function")
-    good = ok and caught == len(plants)
+    plants_needed = len(plants)
+    if ruled:
+        def dpath(contdisc):
+            def g(Pv, d, s, rew, con):
+                x = M.feat2tensor(d, s)
+                val = M.twohot_decode(M._mlp_head_n(Pv, "val", x, "logits", 3), b)
+                return M.imag_return(rew, con, val, contdisc, 333, 0.95)["ret"]
+            return g
+        for c in CALLS:
+            P = {k[len(f"c{c}/pre/val/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/val/")}
+            gp = f"c{c}/imag/"
+            d = np.concatenate([G[gp + "start/deter"][:, None], G[gp + "feat/deter"]], 1)
+            s = np.concatenate([G[gp + "start/stoch"][:, None], G[gp + "feat/stoch"]], 1)
+            args = (P, mx.array(d), mx.array(s), mx.array(G[f"c{c}/imagloss/in_rew"]),
+                    mx.array(G[f"c{c}/imagloss/in_con"]))
+            for mode in ("eager", "compiled"):
+                g1 = dpath(True)
+                g1 = mx.compile(g1) if mode == "compiled" else g1
+                truth = run(c, make(), mode == "compiled")[2]
+                eq = bool(np.array_equal(np.array(g1(*args)), truth))
+                print(f"D  call {c} {mode:8s}: imag_return(contdisc) ret bit-equal to this path: {eq}")
+                ok &= eq
+            r0 = np.array(dpath(False)(*args))
+            live = bool(np.any(true[c][2] != 0))
+            dif = not np.array_equal(r0, true[c][2])
+            print(f"DC call {c}: contdisc False {'differs' if dif else 'BIT-EQUAL - control dead'}{'' if live else ' (ret all 0, exempt)'}")
+            ok &= dif or not live
+        caught -= int(disc_hit)
+        plants_needed -= 1
+    good = ok and caught == plants_needed
     print(f"RUNG 13b-wm: port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
     return 0 if good else 1
 
@@ -693,6 +722,10 @@ def main_imag():
             n, w, fl, _ = score(c, fn(c))
             hits.append(n > 0 or fl > 0)
         caught += all(hits)
+        if name == "disc_horizon":
+            disc_hit = all(hits)
+            if ruled:
+                print("   (disc_horizon: NO-OP-AT-PRECISION by the 21:45 ruling - printed, not counted; certified at rung 10)")
         print(f"P  planted {name:22s}: caught on {sum(hits)}/{len(CALLS)} calls")
     good = ok and caught == len(plants)
     print(f"RUNG 13b-imag: port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
@@ -865,7 +898,19 @@ def main_imagloss():
 #   floor. The plant cannot be seen at this precision on this golden by ANY ret line; it is not a port finding
 #   (the official disc is exactly 1.0, contdisc True). Next: rule that plant's fate (a NO-OP-at-precision class
 #   like retnorm's, or a disc certified where ret is large), then V and Q.
-def main_imagloss_sym(qline=False):
+# RULING (11-25 21:45, `--imagloss-q2`), written BEFORE its read; the (Q-S) line, control, H-con and the three
+# seeing plants are UNCHANGED. The disc 1-1/333 plant is moved to the NO-OP-AT-PRECISION class (as retnorm's
+# was), on two measured grounds: (i) at calls 6/8 the official golden's quantiles against the PLANTED truth are
+# identical to those against the unplanted one (2.4e-5/1.3e-4/1.5e-3) — |ret|~5e-3 here, so a 1/333 discount is
+# under the f32 decode floor for ANY ret line on this golden, port-independent; (ii) the same plant is CAUGHT at
+# rung 10 ("disc 1-1/333 under contdisc", PASS 11-25, wheel `cdd0db67`), where ret is large. It is still run and
+# printed, not counted. In its place a clause that CAN fail is added, so the disc is not left unchecked here:
+# (D) the port's certified module `M.imag_return(rew, con, val, contdisc=True, horizon=333, lam=0.95)` on the
+# golden's in_rew/in_con and the port's own val gives ret BIT-EQUAL to this rung's true path at every call, eager
+# AND compiled (so the path read above is the one rung 10 certified, with disc exactly 1.0 as the official config);
+# (D-control) contdisc=False through the same module must NOT be bit-equal on every live call (calls where ret is
+# 0 are exempt). Plants needed: 3/3 seeing plants + D + D-control.
+def main_imagloss_sym(qline=False, ruled=False):
     gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
     if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
         os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
@@ -980,11 +1025,13 @@ def main_imagloss_sym(qline=False):
         caught += all(hits)
         print(f"P  planted {name:18s}: breaks (S) on {sum(hits)}/{len(CALLS)} calls")
     good = ok and caught == len(plants)
-    print(f"RUNG 13b-imagloss-{'q' if qline else 'sym'} (H rew, H con, R): port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
+    print(f"RUNG 13b-imagloss-{('q2' if ruled else 'q') if qline else 'sym'} (H rew, H con, R): port {'PASS' if good else 'FAIL'} (planted caught {caught}/{plants_needed})")
     return 0 if good else 1
 
 
 def main():
+    if "--imagloss-q2" in sys.argv:
+        return main_imagloss_sym(qline=True, ruled=True)
     if "--imagloss-q" in sys.argv:
         return main_imagloss_sym(qline=True)
     if "--imagloss-sym" in sys.argv:
