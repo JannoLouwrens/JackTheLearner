@@ -26,7 +26,7 @@ result `wheel_367.json`; same verdict rule (PASS iff all six exit 0 with their
 line, n == m, and mlx 0.32.4 printed by each rung line). Default `kernel` is
 byte-identical to the rung 1/2 run above.
 
-Usage:  python -m experiments.brain_a.wheel_kernel kernel [367]  (submits; writes OUT/wheel[_367].json)
+Usage:  python -m experiments.brain_a.wheel_kernel kernel [367|s1m]  (submits; writes OUT/wheel[_367|_s1m].json)
         python -m experiments.brain_a.wheel_kernel verdict FILE [367]
 """
 import json
@@ -49,7 +49,20 @@ _PL = r"PLANTED: (\d+)/(\d+) caught, (?:control|unpatched port) passes -> OK"
 EXPECT.update({f"rung{k}": rf"RUNG {k}: (\d+)/(\d+) tests pass eager AND compiled \(mlx ([\w.]+)\) -> PASS"
                for k in (3, 6, 7)})
 EXPECT.update({f"rung{k}_planted": _PL for k in (3, 6, 7)})
-SETS = {"12": (RUNS, "wheel.json"), "367": (RUNS_367, "wheel_367.json")}
+# J21 (11-25): the size1m rungs since 367 — rung 7 at --preset size1m, then the world-model loss
+# rungs 8a (dyn/rep free bits), 8b (reward/continue), 8c (decoder vector). Same pin, same shape of
+# check (rc 0, n == m, mlx 0.32.4 on each rung line). Box timing 11-25: all 8 runs <= 4 s each.
+RUNS_S1M = ([("rung7s1m", "rung7.py", ["--preset", "size1m"], 1200),
+             ("rung7s1m_planted", "rung7.py", ["--preset", "size1m", "--planted"], 1200)]
+            + [(f"rung{k}{t}", f"rung{k}.py", a, 1200) for k in ("8a", "8b", "8c")
+               for t, a in (("", []), ("_planted", ["--planted"]))])
+EXPECT["rung7s1m"] = EXPECT["rung7"]
+EXPECT["rung7s1m_planted"] = _PL
+EXPECT.update({f"rung{k}": rf"RUNG {k}: (\d+)/(\d+) tests pass eager AND compiled \(mlx ([\w.]+)\) -> PASS"
+               for k in ("8a", "8b", "8c")})
+EXPECT.update({f"rung{k}_planted": _PL for k in ("8a", "8b", "8c")})
+SETS = {"12": (RUNS, "wheel.json"), "367": (RUNS_367, "wheel_367.json"),
+        "s1m": (RUNS_S1M, "wheel_s1m.json")}
 
 _JOB = r'''
 import subprocess as _s, sys as _y, json, os, platform, time
