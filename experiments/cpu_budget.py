@@ -411,9 +411,16 @@ def detached_used_s(path: Path | None = None) -> float:
 
 # Ruling 5 (2026-11-15): a job whose session has averaged under
 # IDLE_CORES_BILL cores since launch is a POLLER (a Kaggle watcher) — it does
-# not hold one of the DETACHED_MAX_ALIVE seats, but at most this many may
-# wait at once. Younger than POLLER_MIN_AGE_S it counts busy (safe side).
-DETACHED_MAX_POLLERS = 6
+# not hold one of the DETACHED_MAX_ALIVE seats. Younger than POLLER_MIN_AGE_S
+# it counts busy (safe side). S15 (2): pollers are counted per KIND, GPU and
+# CPU apart (11-21: five CPU watchers refused a GPU seed), and the cap binds
+# only a launch that declares itself a watcher (`JACK_WATCHER=gpu|cpu`) — a
+# box job is never refused by it (11-21: a 2-CPU-min twin was). A live
+# poller's kind is its declared JACK_WATCHER, else `cpu` when its log names a
+# `jack-cpu-` kernel, else `gpu`.
+DETACHED_MAX_POLLERS = 6          # per kind
+POLLER_KINDS = ("gpu", "cpu")
+ENV_WATCHER = "JACK_WATCHER"
 POLLER_MIN_AGE_S = 60.0
 
 
@@ -421,10 +428,33 @@ def is_poller(cpu_s: float, age_s: float) -> bool:
     return age_s >= POLLER_MIN_AGE_S and cpu_s < IDLE_CORES_BILL * age_s
 
 
+def poller_kind(environ: bytes, log_tail: bytes) -> str:
+    for kv in environ.split(b"\0"):
+        if kv.startswith(ENV_WATCHER.encode() + b"="):
+            k = kv.split(b"=", 1)[1].decode(errors="replace")
+            if k in POLLER_KINDS:
+                return k
+    return "cpu" if b"jack-cpu-" in log_tail else "gpu"
+
+
+def _poller_kind_of(pid: int) -> str:
+    env = tail = b""
+    try:
+        env = open(f"/proc/{pid}/environ", "rb").read()
+    except OSError:
+        pass
+    try:
+        with open(f"/proc/{pid}/fd/1", "rb") as f:
+            tail = f.read(1 << 20)
+    except OSError:
+        pass
+    return poller_kind(env, tail)
+
+
 def detached_jobs() -> tuple:
-    """(busy, pollers, young) over live `cpu_budget wrap` processes, one per
-    detached job; each is classed by its setsid session's lifetime CPU.
-    `young` = busy only because younger than POLLER_MIN_AGE_S."""
+    """(busy, {kind: pollers}, young) over live `cpu_budget wrap` processes,
+    one per detached job; each is classed by its setsid session's lifetime
+    CPU. `young` = busy only because younger than POLLER_MIN_AGE_S."""
     tick = os.sysconf("SC_CLK_TCK")
     uptime = float(open("/proc/uptime").read().split()[0])
     wraps, sess = {}, {}
@@ -441,34 +471,44 @@ def detached_jobs() -> tuple:
                 wraps[int(d)] = (sid, uptime - int(f[19]) / tick)
         except (OSError, ValueError, IndexError):
             continue
-    pollers = sum(is_poller(sess.get(sid, 0) / tick, age)
-                  for sid, age in wraps.values())
+    pollers = {k: 0 for k in POLLER_KINDS}
+    for pid, (sid, age) in wraps.items():
+        if is_poller(sess.get(sid, 0) / tick, age):
+            pollers[_poller_kind_of(pid)] += 1
     young = sum(age < POLLER_MIN_AGE_S for _, age in wraps.values())
-    return len(wraps) - pollers, pollers, young
+    return len(wraps) - sum(pollers.values()), pollers, young
 
 
 def admit_detached(label: str, *, path: Path | None = None,
                    loadavg: float | None = None, est_s: float = 0.0,
                    alive: int | None = None,
-                   pollers: int | None = None,
+                   pollers: dict | None = None,
+                   watcher: str | None = None,
                    seat: bool = True) -> CpuDecision:
     """Admit or refuse a detached launch BEFORE setsid. The gate asks whether
     TODAY has headroom, the detached share (`DETACHED_DAY_CAP_S`, plus the
     caller's optional estimate) and the concurrency cap have room, and the
     box is calm; the ceiling binds a running child through `charge`'s
     overrun marks, never through a kill. `seat=False` (the sub-second
-    read-only `run lane` probe only, S7(4)) skips the concurrency cap."""
+    read-only `run lane` probe only, S7(4)) skips the concurrency cap.
+    `watcher` (default: $JACK_WATCHER) is the new job's poller kind; None
+    means a box job, which the poller cap never refuses."""
     load = _loadavg() if loadavg is None else loadavg
+    if watcher is None:
+        watcher = os.environ.get(ENV_WATCHER) or None
     if alive is None:
         alive, live_pollers, _ = detached_jobs()
         pollers = live_pollers if pollers is None else pollers
-    pollers = pollers or 0
-    if seat and (alive >= DETACHED_MAX_ALIVE
-                 or pollers >= DETACHED_MAX_POLLERS):
+    pollers = pollers or {}
+    if seat and alive >= DETACHED_MAX_ALIVE:
         return CpuDecision(False, est_s, 0.0, load,
                            f"detached cap: {alive} busy detached jobs alive "
-                           f"(max {DETACHED_MAX_ALIVE}, ruling 3), {pollers} "
-                           f"pollers (max {DETACHED_MAX_POLLERS}, ruling 5)")
+                           f"(max {DETACHED_MAX_ALIVE}, ruling 3)")
+    if seat and watcher and pollers.get(watcher, 0) >= DETACHED_MAX_POLLERS:
+        return CpuDecision(False, est_s, 0.0, load,
+                           f"detached cap: {pollers.get(watcher, 0)} "
+                           f"{watcher} pollers waiting (max "
+                           f"{DETACHED_MAX_POLLERS} per kind, ruling 5)")
     det = detached_used_s(path)
     if label.startswith("detached:") and det + est_s > DETACHED_DAY_CAP_S:
         return CpuDecision(False, est_s, 0.0, load,

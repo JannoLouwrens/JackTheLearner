@@ -101,7 +101,7 @@ from ..cpu_budget import (CPU_DAY_CEILING_S, DETACHED_DAY_CAP_S,
                           ENV_HEARTBEAT, ENV_OVERRIDE,
                           ENV_WRAPPED, HEARTBEAT_S, LOAD_CEILING, CpuBudget,
                           _loadavg, admit_detached, bill_interval,
-                          is_poller)
+                          is_poller, poller_kind)
 from ..protocol import Ledger, Status, run_spec
 from ..registry import BY_ID
 
@@ -186,15 +186,28 @@ def _experiment(seed: int) -> dict:
                        and "detached cap" in over.reason
                        and not crowd.admitted and "alive" in crowd.reason)
 
-        # ruling 5: pollers hold no busy seat, but a planted 7th is refused;
-        # a fresh or busy session is never classed a poller
+        # ruling 5 + S15 (2): pollers hold no busy seat; a watcher at its
+        # OWN kind's cap is refused while the other kind is admitted, a box
+        # job ("" = undeclared) is admitted with both kinds full, and a
+        # fresh or busy session is never classed a poller
+        full = DETACHED_MAX_POLLERS
         waiting = admit_detached("detached:p", path=fresh, loadavg=0.0,
-                                 alive=DETACHED_MAX_ALIVE - 1,
-                                 pollers=DETACHED_MAX_POLLERS - 1).admitted
+                                 alive=DETACHED_MAX_ALIVE - 1, watcher="gpu",
+                                 pollers={"gpu": full - 1, "cpu": full}
+                                 ).admitted
         seventh = admit_detached("detached:p", path=fresh, loadavg=0.0,
-                                 alive=0, pollers=DETACHED_MAX_POLLERS)
+                                 alive=0, watcher="cpu",
+                                 pollers={"gpu": 0, "cpu": full})
+        box = admit_detached("detached:p", path=fresh, loadavg=0.0,
+                             alive=0, watcher="",
+                             pollers={"gpu": full, "cpu": full}).admitted
+        kinds_ok = (poller_kind(b"A=1\0JACK_WATCHER=cpu\0", b"") == "cpu"
+                    and poller_kind(b"", b"pushed jack-cpu-1795620207") == "cpu"
+                    and poller_kind(b"", b"pushed jack-ladder-17") == "gpu"
+                    and poller_kind(b"JACK_WATCHER=gpu", b"jack-cpu-1") == "gpu")
         poller_cap_ok = (waiting and not seventh.admitted
-                         and "pollers" in seventh.reason
+                         and "cpu pollers" in seventh.reason
+                         and box and kinds_ok
                          and is_poller(5.0, 6600.0)
                          and not is_poller(5.0, 30.0)
                          and not is_poller(700.0, 6600.0))
