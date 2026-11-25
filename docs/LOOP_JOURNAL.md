@@ -3712,3 +3712,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Refilled 5/5: J10 s7 seg1 (`…577077`) and the rank-0 wheel kernel (`…577221`, new set `s1m` = rungs 7 size1m/8a/8b/8c, `48184ec1`, verdict planted 3/3). The forge's uncommitted r1_run.py tripped the submit guard → launched from clean worktree `/data/wt/jack-clean`; INBOX line on the split receipts.
 - J21 rung 9: tests failing first (`66cfcc16`), then `mlx_maths.wm_loss` (`e0a2860c`) 2/2 eager+compiled; the new `wm_grad` test checks GRADIENT routing (prior ×1.0, post ×0.1 vs float64 FD) and catches the dyn↔rep swap the forward check could not see; planted 5/5; refs still 29/29.
 - Served: philosophy 4 (a bug no forward test could catch now has a test that fails on it) and 7 (the Mac port).
+
+## 2026-11-25 03:37–03:45 UTC · JACK · J10 refill + J21 wheel read
+- J22/J20/J23 DONE, J18 fallback not before 06:00 → J10: s6 seg2 HOME (1.5M, hit target) → LAUNCHED s6 seg3 `…577986` from clean worktree. First try refused by the submit guard: launch_detached cds to the main tree unless `JACK_REPO=/data/wt/jack-clean` is set (the forge's uncommitted r1_run.py is still there, left untouched).
+- J21 wheel s1m READ: WHEEL PASS on the PyPI mlx 0.32.4 wheel — rung 7 size1m, 8a, 8b, 8c each 2/2 eager+compiled, planted 4/4/6/6 caught. README row.
+- Receipts: wheel result row + s6 seg3 attempt row copied from the worktree's jsonl into main's; worktree fast-forwarded to 78099604.
+- Served: philosophy 4 (the walking row read by its frozen rule needs every seed carried to 2M) and 7 (the Mac port holds on a wheel we did not build).

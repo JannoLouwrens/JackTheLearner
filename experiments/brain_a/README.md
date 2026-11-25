@@ -711,3 +711,6 @@ seed spanning |x| 0.01–300 (both symlog regions).
   repval are not in this rung. Port envs read the scales from the golden (no yaml there).
   Wheel re-check: kernel `wheel_kernel kernel s1m` (rungs 7 size1m, 8a, 8b, 8c) launched 11-25 03:27
   (`jack-cpu-1795577221`); rung 9 rides the next wheel set.
+  Wheel READ 11-25 03:40: **WHEEL PASS** on PyPI mlx 0.32.4 (Kaggle CPU, x86_64, py 3.13.18, glibc 2.39):
+  rung 7 size1m / 8a / 8b / 8c each 2/2 eager AND compiled; planted 4/4, 4/4, 6/6, 6/6 caught, unpatched
+  port passes. Verdict file `/data/jack-logs/mlx/wheel_s1m.json`. Rung 9 not yet on the wheel.

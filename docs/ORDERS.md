@@ -172,6 +172,7 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 state: J10-1: 1M median 4,065 IN BAND, control valid; 2M 1 of 3 → FAIL.
 state: 11-22 07:55 `b609b142`: rule frozen before seed 3; `segment_job_body(row="J10-2")` carries + 50-ep eval, `require_carry` refuses a mount lacking life.pkl/physics.pkl (planted PASS). Tests 10/10.
 state: 11-25 03:23 HOME: **s4 seg3 @2M: R 6,254.3, 17.16 m/1k, 0/50 fell → s4 meets the frozen bar** (1 of 5; record `/data/jack-logs/j10/sac_row2/s4_seg3.json`); s7 seg0 HOME (500k, no eval). LAUNCHED s7 seg1 `…577077` from clean worktree `/data/wt/jack-clean` (main tree's forge dirt trips the submit guard). Running: s3 seg3 `…565331`, s5 seg2 `…565514`, s6 seg2 `…565599`, s7 seg1. NEXT: s3 seg3 → its 2M eval; s5/s6 → `kernel2 <s> 3`; s7 → seg2. Row read when all five 2M evals are home.
+state: 11-25 03:40 s6 seg2 HOME (1.5M, hit target); LAUNCHED s6 seg3 `…577986` from `/data/wt/jack-clean` (`JACK_REPO=` needed, else launch_detached cds to the dirty main tree and the guard refuses). Running 4/5 (wheel finished): s3 seg3, s5 seg2, s6 seg3, s7 seg1. NEXT: s3 seg3 → 2M eval; s5 → `kernel2 5 3`; s7 → seg2.
 
 ### J14 — Brain A and the ear: Colab is open, so the timing cells go now
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `docs/research/prereg/a2_size_s.md`; `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws; rulings 67, 78, 79, 86, 96
@@ -243,6 +244,7 @@ state: 11-25 rung 8b DONE `f37d8afd` (refs `ac9a3074` 15/15; official rewhead ou
 state: 11-25 01:27 rung 8c (decoder VECTOR losses, walker proprio keys) DONE `3c5b0b63`: refs vs official Decoder 24/24 `971816b9`, tests failing `963d32f1`, `mlx_maths.dec_vec_loss` 2/2 eager+compiled (5.0e-6), planted 6/6. Scar: decoder joins STOCH first (feat2tensor is deter first). Categorical + image branches not ported.
 state: 11-25 01:40 rung 9 (FULL world-model loss, L240 sum(mean×scale), scales read from pinned configs.yaml) REFERENCES 29/29 HOLD `eb440755`: total 179.2374 init / 231.3479 noised vs official-composed (rel 7.5e-9); planted 4/4 ×2. Forward-BLIND: dyn↔rep scale swap (same value) → port tests owe a GRADIENT check.
 state: DONE 11-25 03:30 `e0a2860c` — rung 9 PASS: `mlx_maths.wm_loss` 2/2 eager+compiled (tests failing first `66cfcc16`): total rel 3.4e-7 vs golden; GRADIENT routing d/d prior = 1.0×FD, d/d post = 0.1×FD (el 3e-8); planted 5/5 incl. the forward-blind dyn↔rep swap. README row. Wheel kernel `wheel_kernel kernel s1m` (7 size1m/8a/8b/8c) RUNNING `jack-cpu-1795577221` (`48184ec1`), log `/data/jack-logs/mlx/launch_wheel_s1m.log`; verdict lands in `/data/jack-logs/mlx/wheel_s1m.json` — next JACK slot reads it. Rung 9 not yet on the wheel.
+state: 11-25 03:40 wheel s1m READ: **WHEEL PASS** (mlx 0.32.4 wheel, Kaggle CPU x86_64): rung 7 size1m/8a/8b/8c 2/2 eager+compiled each, planted 4/4/6/6 caught; README row. Rung 9 rides the next wheel set.
 
 **Lane `forge`** reads `docs/FORGE.md`; its F3 is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
