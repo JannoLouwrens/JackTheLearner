@@ -127,6 +127,13 @@ def _camera() -> mujoco.MjvCamera:
 
 def _renderer(model) -> mujoco.Renderer:
     r = mujoco.Renderer(model, height=RES_H, width=RES_W)
+    # S15 repair (2026-11-25): the shadow and floor-reflection passes were
+    # ~2/3 of a software frame (measured 93.6 ms default, 42.6 no shadow,
+    # 31.5 neither; humanoid diff 0.045 -> 0.035, gate 0.005), so a loaded
+    # box (199 ms/frame, 11-22) pushed a 2x-margin stream under 5 fps. The
+    # spectator drops both; scene.flags persist across update_scene.
+    r.scene.flags[mujoco.mjtRndFlag.mjRND_SHADOW] = 0
+    r.scene.flags[mujoco.mjtRndFlag.mjRND_REFLECTION] = 0
     _RENDERERS.append(r)
     return r
 

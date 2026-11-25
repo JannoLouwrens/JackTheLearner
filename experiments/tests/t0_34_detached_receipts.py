@@ -281,6 +281,14 @@ def _experiment(seed: int) -> dict:
             cwd=REPO, env=env_for(e2e_file),
             capture_output=True, text=True, timeout=90)
         launcher_ok = r.returncode == 0 and "ALIVE" in r.stdout
+        # S15: the 11-21 FAIL returned in ~1.5 s (a pre-setsid refusal) and
+        # its reason was thrown away. Keep it; a refusal by the LIVE box
+        # (seats/pollers/load — not the temp ledger) is co-tenant, VOID.
+        launcher_rc = r.returncode
+        launcher_msg = (r.stderr.strip().splitlines() or [""])[-1][:300]
+        launcher_cotenant = (r.returncode == 3 and (
+            "busy detached" in launcher_msg or "pollers" in launcher_msg
+            or "leaving the box to the tenants" in launcher_msg))
         label = "detached:probe.log"
         deadline = time.time() + 40.0
         e2e_total = 0.0
@@ -350,6 +358,9 @@ def _experiment(seed: int) -> dict:
         "cap_refused": cap_refused,
         "poller_cap_ok": poller_cap_ok,
         "launcher_ok": launcher_ok,
+        "launcher_rc": launcher_rc,
+        "launcher_msg": launcher_msg,
+        "launcher_cotenant": launcher_cotenant,
         "e2e_total_s": round(e2e_total, 3),
         "live_receipt": live_receipt,
         "dj_wall_s": round(dj_wall, 3),
@@ -412,7 +423,7 @@ def _control(seed: int) -> dict:
 
 
 def _check(m: dict, c: dict):
-    if m["live_load"] > LOAD_CEILING:
+    if m["live_load"] > LOAD_CEILING or m.get("launcher_cotenant"):
         return Status.VOID   # co-tenant condition; timing asserts unownable
     return (m["straddle_ok"] is True
             and m["multi_day_ok"] is True
