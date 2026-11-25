@@ -1029,7 +1029,187 @@ def main_imagloss_sym(qline=False, ruled=False):
     return 0 if good else 1
 
 
+# TENTH PIECE (11-25 22:20, `--imagloss-vq`): V (value loss) and Q (policy loss) RE-REGISTERED against an f64 truth,
+# the way rew/ret were in `--imagloss-q2`; WRITTEN BEFORE ITS READ (V/Q quantiles vs an f64 truth never computed
+# before this commit; only the first read's element-wise misses are seen: calls 1/2 0 miss, calls 6/8 V 31/82,
+# Q 376/438 — downstream of the val-decode rounding jumps). TEACHER-FORCED: the golden's imagined feats, actions,
+# in_rew and in_con; the port's own f32 head logits (val, slowval, pol mean/std pre-activations). TRUTH = the
+# variant's own function in float64 (numpy) from those logits: val64/slow64 = decode64; ret64 = lambda_return64
+# (disc 1.0, lam 0.95); w64 = cumprod(in_con); value64[t] = w64[t]·(twohot_nll64(Lv[t], ret64[t]) + slowreg·
+# twohot_nll64(Lv[t], slow64[t])), t < 15; retnorm64: lo'/hi' = 0.99·pre + 0.01·percentile_linear(ret64, 5/95),
+# sc = max(limit, hi'-lo'); adv64 = (ret64 - val64[:, :-1])/sc; mean = tanh, std = 0.9·sigmoid(s+2)+0.1, Normal
+# logp/entropy summed over 8 dims; policy64 = w64[:, :-1]·-(logp·adv64 + actent·ent). THE LINE, for V and Q at calls
+# 1/2/6/8, eager AND compiled — the unchanged (Q-S): e = |x - truth|, q_k = k-th percentile + 1e-7, k = 50/90/99,
+# q_k(port) and q_k(official golden loss/value, loss/policy) within a factor 1.25 both ways. A port bug moves the
+# port off the truth; a reference that is not the official function moves the official off it. (C) control: rew
+# zeroed must break (Q-S) on V AND Q on every live call (NO-OP exemption as in q2). (P) planted, each must break
+# its term on every live call; NO-OP on every call fails the plant: slowreg 0 (V); weight without cumprod (V);
+# actent 0 (Q); retnorm LIMIT 0 (Q) — replaces retnorm_not_updated, which was NO-OP everywhere (|ret|~5e-3 keeps
+# hi'-lo' under the limit 1.0, so update or not, sc = 1; with limit 0, sc = hi'-lo' and adv is rescaled).
+# PASS iff the port meets (Q-S) on V and Q at every call/mode, C holds, plants 4/4. Thresholds as q2's; none moved.
+def main_imagloss_vq():
+    gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
+    if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
+        os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("TMPDIR", "/data/tmp")
+    sys.path.insert(0, HERE)
+    import mlx.core as mx
+    import mlx_maths as M
+    G, R = np.load(GOLDEN_A), np.load(R13)
+    b = M.bins(255)
+    b64 = np.array(b).astype(np.float64)
+    n = b64.size
+
+    def lsm64(L):
+        L = np.asarray(L, np.float64)
+        mx_ = L.max(-1, keepdims=True)
+        return L - mx_ - np.log(np.exp(L - mx_).sum(-1, keepdims=True))
+
+    def dec64(L):
+        p = np.exp(lsm64(L))
+        m = 127
+        return p[..., m] * b64[m] + ((p[..., m + 1:] - p[..., :m][..., ::-1]) * b64[m + 1:]).sum(-1)
+
+    def nll64(L, tgt):
+        t = np.asarray(tgt, np.float64)[..., None]
+        below = np.clip((b64 <= t).sum(-1) - 1, 0, n - 1)
+        above = np.clip(n - (b64 > t).sum(-1), 0, n - 1)
+        eq = below == above
+        tt = t[..., 0]
+        db = np.where(eq, 1.0, np.abs(b64[below] - tt))
+        da = np.where(eq, 1.0, np.abs(b64[above] - tt))
+        wb, wa = da / (db + da), db / (db + da)
+        lp = lsm64(L)
+        return -(wb * np.take_along_axis(lp, below[..., None], -1)[..., 0]
+                 + wa * np.take_along_axis(lp, above[..., None], -1)[..., 0])
+
+    def lret64(con, rew, val, lam=0.95):
+        live = con[:, 1:]
+        interm = rew[:, 1:] + (1 - lam) * live * val[:, 1:]
+        rets = [val[:, -1]]
+        for t in reversed(range(live.shape[1])):
+            rets.append(interm[:, t] + live[:, t] * lam * rets[-1])
+        return np.stack(list(reversed(rets))[:-1], 1)
+
+    def perc64(x, q):
+        v = np.sort(x.reshape(-1))
+        pos = q / 100.0 * (v.size - 1)
+        i0 = int(np.floor(pos))
+        i1 = min(i0 + 1, v.size - 1)
+        fr = pos - i0
+        return v[i0] * (1 - fr) + v[i1] * fr
+
+    def make(slowreg=1.0, actent=3e-4, cum=True, limit=1.0, zero_rew=False):
+        def f(Pv, Ps, Pp, d, s, act, rew, con, lo, hi):
+            x = M.feat2tensor(d, s)
+            lv = M._mlp_head_n(Pv, "val", x, "logits", 3)
+            ls = M._mlp_head_n(Ps, "slowval", x, "logits", 3)
+            val = M.twohot_decode(lv, b)
+            slow = mx.stop_gradient(M.twohot_decode(ls, b))
+            r = mx.zeros_like(rew) if zero_rew else rew
+            ret = M.lambda_return(mx.zeros_like(con), 1.0 - con, r, val, val, 1.0, 0.95)
+            w = mx.stop_gradient(mx.cumprod(con, 1) if cum else con)
+            tar = mx.stop_gradient(mx.concatenate([ret, 0 * ret[:, -1:]], 1))
+            value = (w * (M.twohot_loss(lv, tar, b) + slowreg * M.twohot_loss(lv, slow, b)))[:, :-1]
+            _, _, _, sc = M.retnorm_perc(lo, hi, ret, 0.01, limit, 5.0, 95.0)
+            adv = M.advantage(ret, val, sc)
+            m = M._mlp_head_n(Pp, "pol", x, "action/mean", 3)
+            sd = M._mlp_head_n(Pp, "pol", x, "action/stddev", 3)
+            z = mx.zeros((*m.shape[:-1], 1), mx.float32)
+            pol, _ = M.policy_loss(m, sd, z, act, mx.zeros(m.shape[:-1], mx.int32), adv, w, 0.1, 1.0, actent)
+            return lv, ls, m, sd, value, pol
+        return f, dict(slowreg=slowreg, actent=actent, cum=cum, limit=limit, zero_rew=zero_rew)
+
+    def truth(c, kw, lv, ls, m, sd, act, rew, con):
+        lo0 = float(R[f"c{c}/pre/retnorm/lo/value"]); hi0 = float(R[f"c{c}/pre/retnorm/hi/value"])
+        con, act = con.astype(np.float64), act.astype(np.float64)
+        rew = np.zeros_like(con) if kw["zero_rew"] else rew.astype(np.float64)
+        val, slow = dec64(lv), dec64(ls)
+        ret = lret64(con, rew, val)
+        w = np.cumprod(con, 1) if kw["cum"] else con
+        value = (w[:, :-1] * (nll64(lv[:, :-1], ret) + kw["slowreg"] * nll64(lv[:, :-1], slow[:, :-1])))
+        lo = 0.99 * lo0 + 0.01 * perc64(ret, 5.0)
+        hi = 0.99 * hi0 + 0.01 * perc64(ret, 95.0)
+        adv = (ret - val[:, :-1]) / max(kw["limit"], hi - lo)
+        mean = np.tanh(np.asarray(m, np.float64))
+        std = 0.9 / (1 + np.exp(-(np.asarray(sd, np.float64) + 2.0))) + 0.1
+        lp = (-0.5 * ((act - mean) / std) ** 2 - np.log(std) - 0.5 * np.log(2 * np.pi)).sum(-1)
+        ent = (0.5 * np.log(2 * np.pi * std ** 2) + 0.5).sum(-1)
+        pol = w[:, :-1] * -(lp[:, :-1] * adv + kw["actent"] * ent[:, :-1])
+        return value, pol
+
+    def run(c, fk, compiled=False):
+        f, kw = fk
+        P = lambda h: {k[len(f"c{c}/pre/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/{h}/")}  # noqa: E731
+        g = f"c{c}/imag/"
+        d = np.concatenate([G[g + "start/deter"][:, None], G[g + "feat/deter"]], 1)
+        s = np.concatenate([G[g + "start/stoch"][:, None], G[g + "feat/stoch"]], 1)
+        a = np.concatenate([G[g + "act/action"], np.zeros_like(G[g + "act/action"][:, :1])], 1)
+        gr, gc = G[f"c{c}/imagloss/in_rew"], G[f"c{c}/imagloss/in_con"]
+        A = mx.array
+        lo = A(R[f"c{c}/pre/retnorm/lo/value"]).astype(mx.float32)
+        hi = A(R[f"c{c}/pre/retnorm/hi/value"]).astype(mx.float32)
+        f = mx.compile(f) if compiled else f
+        lv, ls, m, sd, value, pol = [np.array(x) for x in f(P("val"), P("slowval"), P("pol"), A(d), A(s), A(a),
+                                                             A(gr), A(gc), lo, hi)]
+        v64, p64 = truth(c, kw, lv, ls, m, sd, a, gr, gc)
+        return value, pol, v64, p64
+
+    def qs(x, t):
+        e = np.abs(np.asarray(x, np.float64) - t)
+        return [float(np.percentile(e, k)) + 1e-7 for k in (50, 90, 99)]
+
+    def line(c, out):
+        value, pol, v64, p64 = out
+        g = f"c{c}/imagloss/"
+        res = {}
+        for k, port, off, t in (("V", value, G[g + "loss/value"], v64), ("Q", pol, G[g + "loss/policy"], p64)):
+            qp, qo = qs(port, t), qs(off, t)
+            good = bool(np.all(np.isfinite(qp + qo))) and all(max(x / y, y / x) <= 1.25 for x, y in zip(qp, qo))
+            res[k] = (good, "/".join(f"{x:.1e}" for x in qp), "/".join(f"{x:.1e}" for x in qo))
+        return res
+
+    ok = True
+    for c in CALLS:
+        for mode in ("eager", "compiled"):
+            r = line(c, run(c, make(), mode == "compiled"))
+            print(f"   call {c} {mode:8s}: " + "  ".join(
+                f"{k} {'ok' if v[0] else 'FAIL'} q port {v[1]} off {v[2]}" for k, v in r.items()))
+            ok &= all(v[0] for v in r.values())
+    true = {c: run(c, make()) for c in CALLS}
+    idx = {"V": 0, "Q": 1}
+    live_of = lambda c, out, term: not np.array_equal(out[idx[term]], true[c][idx[term]])  # noqa: E731
+    for c in CALLS:
+        out = run(c, make(zero_rew=True))
+        r = line(c, out)
+        for term in ("V", "Q"):
+            if not live_of(c, out, term):
+                print(f"C  call {c}: rew zeroed: {term} NO-OP, exempt")
+                continue
+            print(f"C  call {c}: rew zeroed: {term} {'breaks (Q-S)' if not r[term][0] else 'MEETS (Q-S) - control dead'}"
+                  f" q port {r[term][1]} off {r[term][2]}")
+            ok &= not r[term][0]
+    plants = {"slowreg_0": (dict(slowreg=0.0), "V"), "weight_no_cumprod": (dict(cum=False), "V"),
+              "actent_0": (dict(actent=0.0), "Q"), "retnorm_limit_0": (dict(limit=0.0), "Q")}
+    caught = 0
+    for name, (kw, term) in plants.items():
+        outs = [run(c, make(**kw)) for c in CALLS]
+        lv = [live_of(c, o, term) for c, o in zip(CALLS, outs)]
+        rs = [line(c, o)[term] for c, o in zip(CALLS, outs)]
+        hits = [not r[0] for r, l in zip(rs, lv) if l]
+        hits = hits if any(lv) else [False]
+        print("   " + name + ": " + "  ".join(f"c{c}{'' if l else '(no-op)'} port {r[1]} off {r[2]}"
+                                             for c, r, l in zip(CALLS, rs, lv)))
+        caught += all(hits)
+        print(f"P  planted {name:18s}: live on {sum(lv)}/{len(CALLS)}, breaks (Q-S) on {sum(hits)}/{sum(lv)} live calls")
+    good = ok and caught == len(plants)
+    print(f"RUNG 13b-imagloss-vq (V, Q): port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
+    return 0 if good else 1
+
+
 def main():
+    if "--imagloss-vq" in sys.argv:
+        return main_imagloss_vq()
     if "--imagloss-q2" in sys.argv:
         return main_imagloss_sym(qline=True, ruled=True)
     if "--imagloss-q" in sys.argv:
