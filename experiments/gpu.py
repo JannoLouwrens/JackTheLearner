@@ -275,7 +275,11 @@ def repo_preamble(ref: str = "main") -> str:
     return f"""
 import subprocess as _sp, sys as _sys, os as _os
 _sp.run(["git", "clone", "--depth", "50", "-q", "{REPO_URL}", "/tmp/jack"], check=True)
-_sp.run(["git", "-C", "/tmp/jack", "checkout", "-q", "{ref}"], check=True)
+# A pin more than 50 commits behind main is not in the shallow clone (J18,
+# 11-25: forge g5/g7 died here in 5 s). Fetch that one commit and retry.
+if _sp.run(["git", "-C", "/tmp/jack", "checkout", "-q", "{ref}"]).returncode:
+    _sp.run(["git", "-C", "/tmp/jack", "fetch", "-q", "--depth", "1", "origin", "{ref}"], check=True)
+    _sp.run(["git", "-C", "/tmp/jack", "checkout", "-q", "FETCH_HEAD"], check=True)
 _sys.path.insert(0, "/tmp/jack")
 _os.environ["MUJOCO_GL"] = "disabled"
 # Backend-neutral output directory. Colab VMs start in /content; Kaggle kernels
