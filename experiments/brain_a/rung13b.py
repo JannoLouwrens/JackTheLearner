@@ -699,7 +699,118 @@ def main_imag():
     return 0 if good else 1
 
 
+# SEVENTH PIECE (11-25, `--imagloss`): imag_loss's heads, returns, value and policy terms on the golden's
+# imagined trajectory. agent.py L196-206 + imag_loss L396-416 (published: contdisc True -> disc 1, slowtar
+# False -> tarval = val.pred(), lam 0.95, slowreg 1.0, actent 3e-4, retnorm perc 5/95 rate 0.01 limit 1,
+# valnorm/advnorm 'none'). feat16 = [imag/start ; imag/feat] (TEACHER-FORCED on the golden's own feats; the
+# port's free-running imagination already matches them to 2.9e-6, `--imag`). Params = R13 `c<N>/pre/`.
+# THE LINE, fixed before the first read — at calls 1/2/6/8, eager AND compiled, |d| <= 1e-5 (|ref|+1):
+#   (H) port rew head twohot pred and con head sigmoid on feat16 vs imagloss/in_rew, in_con.
+#   (R) ret = lambda_return(0, 1 - con, rew, val, val, 1, 0.95), rew/con = the golden's in_rew/in_con, val =
+#       the port's val head pred on feat16, vs imagloss/outs/ret.
+#   (V) value = (cumprod(con) * (twohot(val logits, sg[ret; 0]) + 1.0 * twohot(val logits, slowval pred)))[:, :-1]
+#       vs imagloss/loss/value.
+#   (Q) policy = `mlx_maths.policy_loss` (continuous key; a 1-class discrete key adds exactly 0) with adv =
+#       (ret - val[:, :-1]) / scale, scale from `retnorm_perc` on PRE lo/hi updated by this ret, actions =
+#       imag/act/action (the 16th, sliced off by the loss, zero) vs imagloss/loss/policy.
+#   (C) control: rew zeroed misses ret on every call.
+#   (P) planted, each must miss its term on every call where it changes the function (bit-unequal to the
+#       true port's term; NO-OP on every call fails): lam 1.0 (ret); disc 1 - 1/333 (ret); slowreg 0 (value);
+#       actent 0 (policy); retnorm not updated (policy); weight without the cumprod (value).
+def main_imagloss():
+    gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
+    if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
+        os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("TMPDIR", "/data/tmp")
+    sys.path.insert(0, HERE)
+    import mlx.core as mx
+    import mlx_maths as M
+    G, R = np.load(GOLDEN_A), np.load(R13)
+    b = M.bins(255)
+
+    def make(lam=0.95, disc=1.0, slowreg=1.0, actent=3e-4, update=True, cum=True, zero_rew=False):
+        def f(Pr, Pc, Pv, Ps, Pp, d, s, act, rew, con, lo, hi):
+            x = M.feat2tensor(d, s)
+            hr = M.twohot_decode(M._mlp_head(Pr, "rew", x, "logits"), b)
+            hc = mx.sigmoid(M._mlp_head(Pc, "con", x, "logit")[..., 0])
+            lv = M._mlp_head_n(Pv, "val", x, "logits", 3)
+            val = M.twohot_decode(lv, b)
+            slow = mx.stop_gradient(M.twohot_decode(M._mlp_head_n(Ps, "slowval", x, "logits", 3), b))
+            r = mx.zeros_like(rew) if zero_rew else rew
+            ret = M.lambda_return(mx.zeros_like(con), 1.0 - con, r, val, val, disc, lam)
+            w = mx.cumprod(disc * con, 1) / disc if cum else con
+            w = mx.stop_gradient(w)
+            tar = mx.stop_gradient(mx.concatenate([ret, 0 * ret[:, -1:]], 1))
+            value = (w * (M.twohot_loss(lv, tar, b) + slowreg * M.twohot_loss(lv, slow, b)))[:, :-1]
+            if update:
+                _, _, off, sc = M.retnorm_perc(lo, hi, ret, 0.01, 1.0, 5.0, 95.0)
+            else:
+                sc = mx.stop_gradient(mx.maximum(mx.array(1.0, mx.float32), hi - lo))
+            adv = M.advantage(ret, val, sc)
+            m = M._mlp_head_n(Pp, "pol", x, "action/mean", 3)
+            sd = M._mlp_head_n(Pp, "pol", x, "action/stddev", 3)
+            z = mx.zeros((*m.shape[:-1], 1), mx.float32)
+            pol, _ = M.policy_loss(m, sd, z, act, mx.zeros(m.shape[:-1], mx.int32), adv, w, 0.1, 1.0, actent)
+            return hr, hc, ret, value, pol
+        return f
+
+    def run(c, f, compiled=False):
+        P = lambda h: {k[len(f"c{c}/pre/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/{h}/")}  # noqa: E731
+        g = f"c{c}/imag/"
+        d = np.concatenate([G[g + "start/deter"][:, None], G[g + "feat/deter"]], 1)
+        s = np.concatenate([G[g + "start/stoch"][:, None], G[g + "feat/stoch"]], 1)
+        a = np.concatenate([G[g + "act/action"], np.zeros_like(G[g + "act/action"][:, :1])], 1)
+        A = mx.array
+        lo, hi = A(R[f"c{c}/pre/retnorm/lo/value"]).astype(mx.float32), A(R[f"c{c}/pre/retnorm/hi/value"]).astype(mx.float32)
+        f = mx.compile(f) if compiled else f
+        o = f(P("rew"), P("con"), P("val"), P("slowval"), P("pol"), A(d), A(s), A(a),
+              A(G[f"c{c}/imagloss/in_rew"]), A(G[f"c{c}/imagloss/in_con"]), lo, hi)
+        return [np.array(x) for x in o]
+
+    def score(c, out):
+        g = f"c{c}/imagloss/"
+        hr, hc, ret, value, pol = out
+        r = dict(H=[miss(hr, G[g + "in_rew"]), miss(hc, G[g + "in_con"])], R=[miss(ret, G[g + "outs/ret"])],
+                 V=[miss(value, G[g + "loss/value"])], Q=[miss(pol, G[g + "loss/policy"])])
+        return {k: (sum(n for n, _ in v), max(w for _, w in v)) for k, v in r.items()}
+
+    ok = True
+    base = make()
+    true = {}
+    for c in CALLS:
+        for mode in ("eager", "compiled"):
+            out = run(c, base, mode == "compiled")
+            true.setdefault(c, out)
+            sc = score(c, out)
+            print(f"   call {c} {mode:8s}: " + "  ".join(f"{k} miss {n} worst {w:.2e}" for k, (n, w) in sc.items()))
+            ok &= all(n == 0 for n, _ in sc.values())
+    for c in CALLS:
+        n, _ = score(c, run(c, make(zero_rew=True)))["R"]
+        print(f"C  call {c}: rew zeroed: ret miss {n}")
+        ok &= n > 0
+    plants = {"lam_1": (dict(lam=1.0), "R", 2), "disc_horizon": (dict(disc=1 - 1 / 333), "R", 2),
+              "slowreg_0": (dict(slowreg=0.0), "V", 3), "actent_0": (dict(actent=0.0), "Q", 4),
+              "retnorm_not_updated": (dict(update=False), "Q", 4), "weight_no_cumprod": (dict(cum=False), "V", 3)}
+    caught = 0
+    for name, (kw, term, idx) in plants.items():
+        hits, live = [], []
+        for c in CALLS:
+            out = run(c, make(**kw))
+            changed = not np.array_equal(out[idx], true[c][idx])
+            live.append(changed)
+            if changed:
+                hits.append(score(c, out)[term][0] > 0)
+        good = any(live) and all(hits)
+        caught += good
+        print(f"P  planted {name:20s}: live on {sum(live)}/{len(CALLS)}, caught on {sum(hits)}/{sum(live)} live calls")
+    good = ok and caught == len(plants)
+    print(f"RUNG 13b-imagloss: port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
+    return 0 if good else 1
+
+
 def main():
+    if "--imagloss" in sys.argv:
+        return main_imagloss()
     if "--imag" in sys.argv:
         return main_imag()
     if "--wm" in sys.argv:
