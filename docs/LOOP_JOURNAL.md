@@ -3871,3 +3871,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Planted `tests/test_gpu_preamble_deep_pin.py` runs the preamble's own text on a local 60-commit repo: deep and shallow pins check out, a bogus sha fails; HEAD's preamble fails the deep pin (exit 128).
 - Chain A's live process still holds the old preamble (imported from its pinned worktree): g4/g6 need the hand re-run once more. S15 (2)/(3) not reached.
 - Served philosophy 5 (the loop loses no more GPU sessions or worker slots to a clone wall).
+
+## 2026-11-25 15:20–15:30 UTC · JACK · J18 — forge rung M: g4/g6 re-run started ~1 h early
+- J24 waits on its ruling; J10 DONE; J14 ear retry loop alive (Colab 503s, Kaggle 0 h till Sat). J25 not worked: owner's no-Mac INBOX line still awaits the Director.
+- J18: chain A (g2 on Kaggle, home ≈ 16:30) still holds the OLD preamble and would kill g4, g6 at the clone; instead of waiting for that, launched g4+g6 now from the same pin `b9914a75` (box code = pin's but for the preamble fix), kernel `…620207` RUNNING past the clone. Kaggle CPU — no GPU hours.
+- Chain A's later g4/g6 attempts write nothing (clone failure) or are Refused once home; its CHAIN DONE will say `failed` for them — expected.
+- Served philosophy 4 (the round finishes by its frozen rule, sooner) and 6 (free Kaggle CPU used instead of idle hours).

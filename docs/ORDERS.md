@@ -141,7 +141,7 @@ serves: M3, M7 ("he keeps learning") · philosophy 1, 3, 4.
 state: 11-24 14:14 rung S READ `6b29c527` under lock `2eb2c0f4`. 11-25 06:16 rung M LAUNCHED (`41cc5d64` carry 13/13, `b9914a75` kernel side 26/26). Home: g0, g1, g3.
 state: 11-25 14:38 chain B DONE with **g5, g7 FAILED in 5 s**: `gpu.repo_preamble` clones `--depth 50` and checks out the box HEAD; `/data/wt/jack-clean` sits AT the pin, now 51 commits behind main → `reference is not a tree` (kernel log `…617284`). Not the round's code.
 state: g5+g7 RE-RUN from the SAME pin via a clean worktree at main `76422e0a` (`/data/wt/jack-forge-rerun`; forge/gpu/brain_b/env byte-identical to the pin; the job's own fetch-the-pin fallback takes over), log `launch_M_chainB_rerun.log` there, first kernel `…617532`.
-state: Chain A (g2 running) will hit the SAME wall at g4, g6 → when its CHAIN DONE shows them failed, re-run them the same way (`--names g4 g6`, `JACK_REPO=/data/wt/jack-forge-rerun`). Repair of the preamble is INBOX (system lane).
+state: 11-25 15:23 g4+g6 RE-RUN NOW (not waiting for chain A to fail them ~16:30): same pin, launched from main (HEAD's box code = pin's except the preamble fix `a1893299`), log `/data/wt/jack-forge-rerun/launch_M_chainA_rerun.log`, kernel `…620207` RUNNING past the clone. Chain A's own g4/g6 later: fail at clone (writes nothing) or Refused once home — expect `failed` in its CHAIN DONE, harmless. Home: g0 g1 g3; running g2 (A), g5→g7, g4→g6. Read rung M when all 8 home (≈ Thu).
 
 ### J10 — The walking layer: the row with enough seeds, life carried across segments
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §21; rulings 45, 72, 82, 95, 108
