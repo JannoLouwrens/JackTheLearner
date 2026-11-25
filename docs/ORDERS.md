@@ -171,7 +171,7 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 **done when:** J10-2 is in `KNOWN_ANSWERS.md`, pass or fail, by its frozen rule.
 state: J10-1: 1M median 4,065 IN BAND, control valid; 2M 1 of 3 → FAIL.
 state: 11-22 07:55 `b609b142`: rule frozen before seed 3; `segment_job_body(row="J10-2")` carries + 50-ep eval, `require_carry` refuses a mount lacking life.pkl/physics.pkl (planted PASS). Tests 10/10.
-state: 11-25 00:10 HOME: s3 seg2 + s4 seg2 (1.5M, no eval by design), s5 seg1 (1M eval R 5,219.8, 5.94 m/1k, 5/50 fell), s6 seg1 (1M R 4,541.3, 4.70 m/1k, 12/50 fell). LAUNCHED s3 seg3 `…565331`, s4 seg3 `…565429`, s5 seg2 `…565514`, s6 seg2 `…565599`; s7 seg0 `…559019` running → 5/5 = J10 ×5. Logs `/data/jack-logs/j10/launch_j10_2_s<k>_seg<n>.log`. NEXT: s3/s4 seg3 records carry the 2M 50-ep eval → read by the frozen rule; others `kernel2 <s> <next>`.
+state: 11-25 03:23 HOME: **s4 seg3 @2M: R 6,254.3, 17.16 m/1k, 0/50 fell → s4 meets the frozen bar** (1 of 5; record `/data/jack-logs/j10/sac_row2/s4_seg3.json`); s7 seg0 HOME (500k, no eval). LAUNCHED s7 seg1 `…577077` from clean worktree `/data/wt/jack-clean` (main tree's forge dirt trips the submit guard). Running: s3 seg3 `…565331`, s5 seg2 `…565514`, s6 seg2 `…565599`, s7 seg1. NEXT: s3 seg3 → its 2M eval; s5/s6 → `kernel2 <s> 3`; s7 → seg2. Row read when all five 2M evals are home.
 
 ### J14 — Brain A and the ear: Colab is open, so the timing cells go now
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `docs/research/prereg/a2_size_s.md`; `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws; rulings 67, 78, 79, 86, 96
@@ -242,7 +242,7 @@ state: rung 7 size1m DONE `b79e04e8`; rung 8a (dyn + rep, free bits) DONE `80b60
 state: 11-25 rung 8b DONE `f37d8afd` (refs `ac9a3074` 15/15; official rewhead outscale 0 → zero logits at init, so compares run on seeded noised params too).
 state: 11-25 01:27 rung 8c (decoder VECTOR losses, walker proprio keys) DONE `3c5b0b63`: refs vs official Decoder 24/24 `971816b9`, tests failing `963d32f1`, `mlx_maths.dec_vec_loss` 2/2 eager+compiled (5.0e-6), planted 6/6. Scar: decoder joins STOCH first (feat2tensor is deter first). Categorical + image branches not ported.
 state: 11-25 01:40 rung 9 (FULL world-model loss, L240 sum(mean×scale), scales read from pinned configs.yaml) REFERENCES 29/29 HOLD `eb440755`: total 179.2374 init / 231.3479 noised vs official-composed (rel 7.5e-9); planted 4/4 ×2. Forward-BLIND: dyn↔rep scale swap (same value) → port tests owe a GRADIENT check.
-state: NEXT: rung 9 port tests committed failing (`mlx_maths.wm_loss` + grad routing: prior side ×1.0, posterior ×0.1), then the module; wheel re-check kernel (rank 0, covers 7 size1m/8a/8b/8c/9) when a Kaggle session frees (5/5 J10 at 01:37). policy/value/repval not in this order.
+state: DONE 11-25 03:30 `e0a2860c` — rung 9 PASS: `mlx_maths.wm_loss` 2/2 eager+compiled (tests failing first `66cfcc16`): total rel 3.4e-7 vs golden; GRADIENT routing d/d prior = 1.0×FD, d/d post = 0.1×FD (el 3e-8); planted 5/5 incl. the forward-blind dyn↔rep swap. README row. Wheel kernel `wheel_kernel kernel s1m` (7 size1m/8a/8b/8c) RUNNING `jack-cpu-1795577221` (`48184ec1`), log `/data/jack-logs/mlx/launch_wheel_s1m.log`; verdict lands in `/data/jack-logs/mlx/wheel_s1m.json` — next JACK slot reads it. Rung 9 not yet on the wheel.
 
 **Lane `forge`** reads `docs/FORGE.md`; its F3 is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
@@ -354,6 +354,8 @@ dead clauses, `verify` VENUE 266 vs 256.
 - JACK 11-24 18:35 (J14 b, machine): 3 of today's 5 Colab submits died on `colab run`'s assign POST ReadTimeout (120 s, CLI 0.6.0; 0.8.0 is out) AND the server assigned the VM anyway — an orphan `[?]` T4 session nobody stops; the next submit is then refused "session busy". `gpu.run_on_colab` should unassign listed assignments with no local session after a failed run (done by hand twice today via `state.client.unassign`).
 - 11-24 20:15 JACK J14 (c): the ear does not fit one Kaggle GPU session with 20% spare as written (10.2 h a seed vs ≤ 10.0); holding the noise on the device (a launcher wrapper, same arithmetic) saves 31.7 s an epoch → ≈ 8.4 h, fits by estimate — rule whether that wrapper may join N7-kws's frozen rule, and the GPU-weeks for 3 seeds + twin (≈ 34 T4-h). The real cost is audio decoding (80%+, num_workers 0 in main.py).
 - JACK 11-24 22:30 (for S11 + Next-up): two J19 re-eval logs held 1.78 GB each of one repeated dm_control warning → filtered to their 18 real lines, cause fixed in `make_env` (`1db139a1`), /data 21 → 25 GB; no other log > 200 MB. Next-up #1 (ruling 91) DONE `e9b26b44`: the survival stack resumes identical 200/200, four planted drops caught, torch's global RNG is never drawn — retire the item.
+
+- JACK 11-25 03:30 (machine): forge's uncommitted `experiments/forge/r1_run.py` + `tests/test_forge_r1_carry.py` (02:38–02:53, no commit) trip every lane's Kaggle submit guard; I launched J10 s7 seg1 + the wheel kernel from a clean worktree `/data/wt/jack-clean` via `JACK_REPO`. Their completion receipts will land in THAT tree's `experiments/gpu_submissions.jsonl`, not main's — merge them back on harvest; do not remove the worktree while the two watchers live.
 
 ## DONE (kept one day)
 

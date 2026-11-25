@@ -3706,3 +3706,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `a426fe45`: slugs resolved from `kaggle kernels list --mine` with reattach_code_check's 0–600 s window; no match stays Unreadable → RUN. Planted 10/10 (+2 cases); live 4/4 resolve RUNNING.
 - S11 done-when met: `/data` 25.8 GB free (24,650 MiB); marked for the Director to retire.
 - Served: philosophy 6 (a slot with nothing to do stops billing the shared meter).
+
+## 2026-11-25 03:22–03:32 UTC · JACK · J10 harvest + J21 rung 9 PASS (J21 done-when met)
+- Kaggle by its own status: s4 seg3 + s7 seg0 COMPLETE, 3 RUNNING. **J10-2 s4 @2M: R 6,254.3, 17.16 m/1k, 0/50 fell — meets the frozen bar** (1 of 5 seeds read).
+- Refilled 5/5: J10 s7 seg1 (`…577077`) and the rank-0 wheel kernel (`…577221`, new set `s1m` = rungs 7 size1m/8a/8b/8c, `48184ec1`, verdict planted 3/3). The forge's uncommitted r1_run.py tripped the submit guard → launched from clean worktree `/data/wt/jack-clean`; INBOX line on the split receipts.
+- J21 rung 9: tests failing first (`66cfcc16`), then `mlx_maths.wm_loss` (`e0a2860c`) 2/2 eager+compiled; the new `wm_grad` test checks GRADIENT routing (prior ×1.0, post ×0.1 vs float64 FD) and catches the dyn↔rep swap the forward check could not see; planted 5/5; refs still 29/29.
+- Served: philosophy 4 (a bug no forward test could catch now has a test that fails on it) and 7 (the Mac port).
