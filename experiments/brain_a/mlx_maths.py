@@ -418,3 +418,18 @@ def _core(P, deter, stoch, action, cfg):          # rssm.py L139-162
     cand = mx.tanh(r * cand)
     u = mx.sigmoid(u - 1.0)
     return u * cand + (1.0 - u) * deter
+
+
+# ---------------------------------------------------------------- rung 8b (step 2.4, row 8)
+# Reward + continue heads and their losses (agent.py L51-58, L172-177). STUB until the
+# tests in `rung8b.py` are committed failing.
+def feat2tensor(deter, stoch):
+    raise NotImplementedError("rung 8b stub")
+
+
+def con_target(term, horizon):
+    raise NotImplementedError("rung 8b stub")
+
+
+def rewcon_loss(P, deter, stoch, reward, term, horizon):
+    raise NotImplementedError("rung 8b stub")
