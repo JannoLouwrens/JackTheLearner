@@ -138,7 +138,10 @@ dies (its watcher gone and its last kernel COMPLETE with groups left),
 restart it from the next unrun group, same pin, and say so.
 serves: M3, M7 ("he keeps learning") · philosophy 1, 3, 4.
 **done when:** rung M is on the scoreboard — one reading per candidate beside baseline, twin and yardstick — and rung L's kernels are launched or the round is closed by its rule.
-state: 11-24 14:14 rung S READ `6b29c527` under lock `2eb2c0f4`. 11-25 06:16 rung M LAUNCHED (`41cc5d64` carry 13/13, `b9914a75` kernel side 26/26): first kernels `jack-cpu-1795587333` (A) / `…587347` (B), both RUNNING at 06:39.
+state: 11-24 14:14 rung S READ `6b29c527` under lock `2eb2c0f4`. 11-25 06:16 rung M LAUNCHED (`41cc5d64` carry 13/13, `b9914a75` kernel side 26/26). Home: g0, g1, g3.
+state: 11-25 14:38 chain B DONE with **g5, g7 FAILED in 5 s**: `gpu.repo_preamble` clones `--depth 50` and checks out the box HEAD; `/data/wt/jack-clean` sits AT the pin, now 51 commits behind main → `reference is not a tree` (kernel log `…617284`). Not the round's code.
+state: g5+g7 RE-RUN from the SAME pin via a clean worktree at main `76422e0a` (`/data/wt/jack-forge-rerun`; forge/gpu/brain_b/env byte-identical to the pin; the job's own fetch-the-pin fallback takes over), log `launch_M_chainB_rerun.log` there, first kernel `…617532`.
+state: Chain A (g2 running) will hit the SAME wall at g4, g6 → when its CHAIN DONE shows them failed, re-run them the same way (`--names g4 g6`, `JACK_REPO=/data/wt/jack-forge-rerun`). Repair of the preamble is INBOX (system lane).
 
 ### J10 — The walking layer: the row with enough seeds, life carried across segments
 part: Body and movement · stage: 1 side job (stage 3's part) · step: 3 (reproduce) · prior: §16, §21; rulings 45, 72, 82, 95, 108
@@ -318,6 +321,7 @@ A2-v1S's newest checkpoint per run and `control.npz` under
 - 11-25 11:45 LAB (for J24's ruling; a number, not an entry — the idea is DEAD by its own rule): a ruler steering on 16 food-closeness bins, no learner, 7 fresh worlds, meals in 2,500 decisions after the first — class handed by the simulator 65, class from his own live table 65, yoked 17, babble 10 (`experiments/own_bins.py` RESULT; raw `/data/jack-logs/own_bins/judge.json`). The own-class arm missed its yoked clause (5 of 7 worlds, bar 6): one wrong first imprint, one lucky twin. 16 bins cost nothing against 128 rays (65 vs 55).
 
 - 11-25 12:20 JACK: Next-up 1 (ruling 101 text, WORLD_CARD + conv_eye docstring) and 2 (FORGE_POOL R5 pink noise) DONE `893d8be9`; 3 was already done (`pilot_b2.j17_late_meals` raises). J25 not worked: the owner's 11-20 no-Mac line in INBOX awaits the Director's ruling.
+- 11-25 14:40 JACK J18: `experiments/gpu.py:277` `repo_preamble` clones `--depth 50` then `checkout <box HEAD>` with check=True — any chain launched from a worktree pinned >50 commits behind main dies at clone (forge M g5/g7 today; g4/g6 next; every later rung). Fix: on checkout failure `fetch --depth 1 origin <ref>` (r1_run's _JOB already does this, but the preamble runs first). Workaround in use: launch from a worktree at main.
 ## DONE (kept one day)
 
 - **J22** (`99bcd86e` … WORLD_CARD § J17 hunt): conv eye + shift pilot, one seed 100k — sighted 0.56 / blind 0.31 / shuffled 0.87 late meals a life. Reads NOT SHOWN (ruling 101). Continues as J24.

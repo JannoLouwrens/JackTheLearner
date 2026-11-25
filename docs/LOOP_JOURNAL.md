@@ -3858,3 +3858,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - KNOWN_ANSWERS §Row J10-2 carries the table; ruling 95's rename done (PPO pre-flight → "Row J10-PPO-pre"). s7's two receipt rows copied from `/data/wt/jack-clean` into main. Order J10 DONE.
 - Caveat written beside it: this is the Zoo's SAC on Gymnasium Humanoid-v4, a reproduced learner for the walking layer — not his body walking.
 - Served philosophy 4 (a pre-registered row read by its frozen rule, the earlier FAIL left standing) and 3 (the walking layer's learner now holds its seat BY RECORD).
+
+## 2026-11-25 14:37–14:50 UTC · JACK · J18 — forge rung M: two groups lost to the clone depth, re-run
+- J24 waits on its ruling; J10 DONE; J14's ear retry loop alive (try 3/12, Colab 503) → J18 harvest: chain B ended g1, g3 home, **g5, g7 failed in 5 s**.
+- Kernel log: `reference is not a tree: b9914a75` — the launcher clones the last 50 commits and checks out the box HEAD; the chain's worktree sits at the pin, 51 behind main. The round's code never ran.
+- Re-run g5+g7 from the SAME pin through a clean worktree at main (forge/gpu/brain_b/env byte-identical to the pin; the job fetches the pin itself): kernel `…617532` RUNNING past the clone.
+- Chain A (g2 running) will meet the same wall at g4, g6: re-run them the same way when its CHAIN DONE says so. Preamble repair → INBOX.
+- Served philosophy 4 (a failure fixed, not filed — the round finishes by its frozen rule) and 6 (free Kaggle CPU, no session wasted on a doomed clone).
