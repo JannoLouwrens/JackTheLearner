@@ -832,6 +832,17 @@ def main_imagloss():
 # (P) planted, each must fail its (S) on every call: rew top-bin logit +1e-3 (H rew); val top-bin logit +1e-3
 # (R); lam 1.0 (R); disc 1 - 1/333 (R). V and Q are NOT re-registered here (no golden val/slowval to teacher-
 # force them) — the next piece; the NO-OP plant retnorm_not_updated is replaced there by retnorm limit 0.
+# FIRST READ (11-25 21:25) FAILED, recorded as is — the PORT meets (S) on every call eager+compiled (rew
+#   n_port/n_off 0/0, 737/737, 4517/4524, 5180/5191; ret 0/0, 708/708, 10023/10045, 9155/9188; con 0 miss), but
+#   the LINE has no teeth: C 3/4 (call 1 NO-OP — rew head zero-init, in_rew all 0; the old "where it changes the
+#   function" exemption was not written into this line), plants 0/4. Causes, measured: (i) COUNT SATURATION — under
+#   the top-logit plants the port's own f32 decode is > 1e-5 from its own f64 truth on ~all elements (rew plant:
+#   n_port 16384/16384/13417/14057 vs n_off 16384 every call), so a count of "far" elements cannot tell a 0.23
+#   rounding from a 1,900 shift; (ii) disc 1-1/333 moves ret below the f32 floor on most elements (n_port 700 vs
+#   n_off 718 at call 2; 10002 vs 10000 at call 6). Also SEEN (a lead, not a verdict): the port's WORST ret
+#   deviation from the f64 truth exceeds the official's (call 8: 0.382 vs 0.0287; call 6: 0.358 vs 0.225) while
+#   rew's is smaller (0.58 vs 0.75) — a magnitude line must explain that before it is written. Next: diagnose the
+#   call-8 worst ret element (which t, which val decodes), THEN register a magnitude (not count) line.
 def main_imagloss_sym():
     gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
     if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
@@ -923,7 +934,9 @@ def main_imagloss_sym():
               "lam_1": (dict(lam=1.0), "ret"), "disc_horizon": (dict(disc=1 - 1 / 333), "ret")}
     caught = 0
     for name, (kw, term) in plants.items():
-        hits = [not sym(c, run(c, make(**kw)))[term][0] for c in CALLS]
+        rs = [sym(c, run(c, make(**kw)))[term] for c in CALLS]
+        hits = [not r[0] for r in rs]
+        print("   " + name + ": " + "  ".join(f"c{c} n_port {r[1]} n_off {r[2]}" for c, r in zip(CALLS, rs)))
         caught += all(hits)
         print(f"P  planted {name:18s}: breaks (S) on {sum(hits)}/{len(CALLS)} calls")
     good = ok and caught == len(plants)
