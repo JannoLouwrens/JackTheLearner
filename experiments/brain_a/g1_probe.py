@@ -17,6 +17,7 @@ the metrics each call returns. Run twice in separate processes and compare the J
 `ZERO_GRAD_CHECK FAIL`) if any gradient is exactly zero in EVERY dumped call unless named in `--allow-zero`
 — 0.4d found the `dyn/prior*` grads all-zero at call 20 (free-nats floor), a hole a golden file
 must not carry silently.
+J25 rung 13: `--dump-params` adds every agent variable before/after each dumped call (no effect otherwise).
 0.4d iii: `--set agent.opt.warmup=0` passes an official config flag through (listed difference).
 0.4c: `--jit False` = compiler off; needs `PYTHONPATH=/data/tools/ninjax362` (ninjax 3.6.2) + the AOT skip below.
 
@@ -59,6 +60,9 @@ def main(argv=None):
     ap.add_argument("--allow-zero", default="",
                     help="0.4d ii: comma list of grad names allowed to be all-zero in every dumped call")
     ap.add_argument("--dump", help="0.4d: .npz path for the intermediates")
+    ap.add_argument("--dump-params", action="store_true",
+                    help="J25 rung 13: also store EVERY agent variable (weights, optimiser state, slow "
+                         "critic, counters) before and after each dumped call (`c<N>/pre/`, `c<N>/post/`)")
     ap.add_argument("--compare-npz", nargs=2, metavar=("A", "B"))
     ap.add_argument("--preset", choices=["debug", "size1m"], default="debug",
                     help="2.1: `debug` (G1, unchanged) or `defaults size1m` (+ debug's jax cpu/prealloc only)")
@@ -162,11 +166,17 @@ def main(argv=None):
             cap["on"] = (i + 1) in dump_steps
             cap["t"] = 0
             cap["prefix"] = f"c{i + 1}/" if len(dump_steps) > 1 else ""
+        def snap(tag):
+            if cap is not None and cap["on"] and a.dump_params:
+                for k, v in agent.params.items():
+                    cap["arrays"][f"{cap['prefix']}{tag}/{k}"] = np.array(jax.device_get(v))
+        snap("pre")
         if a.disable_jit:
             with jax.disable_jit():
                 carry, _, mets = agent.train(carry, data)
         else:
             carry, _, mets = agent.train(carry, data)
+        snap("post")
         mets_all.append({k: float(np.asarray(v).mean()) for k, v in mets.items()
                          if np.asarray(v).dtype.kind == "f"})
         trace.append(traced())
