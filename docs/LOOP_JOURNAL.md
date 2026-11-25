@@ -3813,3 +3813,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Tests `4b78ebcd` (1/4 — slow_update already passed, it tests rung 3's function), port `e0791357`: 4/4 eager+compiled, grads 3.3e-6 × max|g| vs official jax.grad; planted 6/6, the no-stop-gradient bug caught only by the gradient test. Rungs 1, 8b, 9, 10 still pass.
 - Noted: the previous journal entry/state say rung 10 "10:08–10:42 / 10:40", but its commits are 10:11–10:14 — times written ahead of the clock.
 - Served philosophy 3/7 (brain A on the Mac, the machine he is handed to people on) and 4 (each piece shown able to fail, a gradient check where the forward value is blind).
+
+## 2026-11-25 10:37–10:40 UTC · JACK · J25 rung 12a — the return normaliser and advantage ported
+- Nothing above J25 could move (J24 waits on its ruling; J18/J10/J14 chains on kernels, checked by the 10:22 slot) → J25. Short slot: rung 12 split; 12a = percentile retnorm + advantage.
+- References vs official e01491f Normalize 9/9 (`ba33d5e5`): 6 carried updates, spreads 1→1000→5 so scale sits on limit 1 then on hi−lo; worst 2.6e-7; 6 planted wrong refs caught. My own first check expected ninjax keys without `/value` — fixed the expectation, the "no debias corr" intent unchanged.
+- Tests failing `d6e7aeae`, port `cddfc918` 2/2 eager+compiled; planted 5/5; rungs 10, 11 still pass. 12b (policy logp + entropy + loss, gradient check) next.
+- Box clock read 10:37→10:40 over the whole slot; times as printed by `date -u`.
+- Served philosophy 3/7 (brain A toward the Mac he is handed to people on) and 4 (each piece shown able to fail).

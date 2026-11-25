@@ -207,7 +207,8 @@ no speed claims.
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7.
 **done when:** rungs 10–13 pass here and on the wheel, test names in `experiments/brain_a/README.md`.
 state: 11-25 10:14 rung 10 PASS (imagination + λ-returns, refs 36/36 `c0dd858f`, port `79634fb5` 4/4). 11-25 10:29 **rung 11 PASS** (critic: value + repval, slow target, slowreg, valnorm none): refs 25/25 vs official `22067e03` incl. grads vs f64 differences with targets held (2.4e-5); tests `4b78ebcd` (1/4 — slow_update was rung 3's); port `e0791357` 4/4 eager+compiled, grads 3.3e-6×max|g| vs official jax.grad; planted 6/6 (no-sg caught only by the grad test).
-state: NEXT rung 12 the actor loss (percentile retnorm, advantage, logp + entropy of the toy policy heads) — reuse rung 11's heads/returns; then the wheel kernel (rank 0, < 1 h), then rung 13.
+state: 11-25 10:39 **rung 12a PASS** (retnorm perc + advantage): refs 9/9 vs official Normalize `ba33d5e5` (6 carried updates, limit branch both ways, 2.6e-7; planted refs 6/6); tests `d6e7aeae` (0/2); port `cddfc918` 2/2 eager+compiled (1.95e-7 / 1.35e-7); planted 5/5; rungs 10, 11 still pass.
+state: NEXT rung 12b: the policy heads' logp + entropy (published policy MLPHead: minstd 0.1, maxstd 1, unimix 0.01, outscale 0.01) and the policy loss term `-(logpi*sg(adv) + 3e-4*ent)*sg(weight)`, WITH a gradient check (logpi carries it); reuse `rung12a.retnorm` for adv; then the wheel kernel, then rung 13.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
