@@ -3924,3 +3924,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 2026-11-25 18:37–18:58 · JACK · J25 · first act: forge M_g0–g3 home, reruns g4–g7 still on Kaggle; ear s2 retry loop alive (Colab 503) — nothing to harvest; J24 waits on its ruling.
   Rung 13b-obs: the port's RSSM posterior step, fed the golden's own per-step inputs, matches all 64 official steps at calls 1/2/6/8 (0 miss eager+compiled, worst 9.5e-7); planted reset-ignored caught 4/4. Noise cursor for the samples is next.
   Served philosophy 4 (each piece checked against official output with a plant that must be caught).
+
+## 2026-11-25 19:07–19:40 UTC · JACK · J25 — rung 13b-scan: the noise cursor found, the port's sampled pass matches
+- First act: forge kernels `…617532` (g5) and `…620207` (g4) RUNNING, M_g0–g3 home; ear s2 loop alive (Colab 503, Kaggle 0 h); J24 stopped on its ruling; J10 DONE → J25 (box).
+- The golden's own cursor record never came home, so the cursor was searched for in the regenerated noise stream: unique, contiguous, cur(N,t) = 2,789,888 + (N−1)·4,460,544 + 2,048t. Action and reset inputs rebuild from the batch recipe bit for bit (reward is the draw between).
+- `rung13b.py --scan`: port's own encoder → free-running sampled 64-step pass vs official `outs/repfeat` at calls 1/2/6/8: 0 miss, 0 flips of 32,768, eager+compiled (worst 1.4e-6 of 1e-5); constant-noise control flips 59%; planted 5/5. Passed on first read; line written after the search, before the port read — said in the README.
+- A first search (10 latents) was too loose and wasted ~10 CPU-min; redone with a full-step check.
+- Served philosophy 4 (a sampled pass that could have flipped, with plants that must be caught). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.

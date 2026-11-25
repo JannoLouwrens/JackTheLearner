@@ -280,7 +280,154 @@ def main_obs():
     return 0 if ok and allp else 1
 
 
+# FOURTH PIECE (11-25, `--scan`, jack-mlx): the posterior NOISE CURSOR, and the port's free-running
+# sampled pass from its OWN encoder. Found by search over the regenerated stream (file_noise seed 0:
+# `default_rng(0).random(n, float32)`, a prefix of the kernel's 64M draw): the step-t posterior sampler of
+# train call N reads uniforms [cur, cur + 2048) with
+#     cur(N, t) = 2,789,888 + (N - 1) * 4,460,544 + 2,048 * t      (2,048 = B 16 x stoch 32 x classes 4)
+# i.e. contiguous over the 64 real steps, the ninjax prerun's 2,048 already behind it, and the SAME stride
+# of 4,460,544 uniforms a train call (observe 65 x 2,048 incl. prerun + the imagination's draws).
+# The rest of the batch rebuilds too: after `vector` the recipe draws ONE [B, T] float (reward,
+# uniform(0, 1)), then `action` uniform(-1, 1) [16, 65, 8]; the step-t input action is action[:, t]
+# (t 0..63, the PREVIOUS action) and reset = is_first[:, 1:] (rows 0::2 at t 32).
+# THE LINE, fixed before the port's read — at calls 1/2/6/8:
+#   (N) NumPy sampler (log(0.99 softmax + 0.01/4) + Gumbel(u), f32) on the golden's `out/logit` with the
+#       uniforms at cur(N, t) == golden `out/stoch`: 0 flips of 32,768 latents a call.
+#   (A) rebuilt action[:, :-1] and is_first[:, 1:] == the golden's 64 dumped `in_action` / `in_reset`, bit for bit.
+#   (S) port, FREE-RUNNING: tokens = `mlx_maths.encoder`(R13 pre enc, rebuilt obs); carry = golden t000 in_*;
+#       `mlx_maths.rssm_observe` with those uniforms vs golden `outs/repfeat`: deter and logit
+#       |d| <= 1e-5 (|ref|+1), stoch 0 flips; eager AND compiled.
+#   (C) control: the same port pass on constant noise (u = 0.5) flips > 10% of the latents.
+#   (P) planted, each must miss (S) on every call where it changes the function: noise one step late
+#       (+2,048); prerun not skipped (-2,048); call 1's cursor at every call (NO-OP at call 1 by
+#       construction); action drawn where the reward is (reward draw skipped); resets ignored.
+# Not yet: gradients — the composed loss.
+CUR0, CUR_CALL, CUR_STEP = 2_789_888, 4_460_544, 2_048
+ACT_DIM = 8
+
+
+def cursor(c, t=0):
+    return CUR0 + (c - 1) * CUR_CALL + CUR_STEP * t
+
+
+def rebuild_batch(skip_reward=False):
+    rng = np.random.default_rng(BATCH_SEED)
+    vec = rng.uniform(-1.0, 1.0, (B, T, F)).astype(np.float32)
+    rew = None if skip_reward else rng.uniform(0.0, 1.0, (B, T)).astype(np.float32)
+    act = rng.uniform(-1.0, 1.0, (B, T, ACT_DIM)).astype(np.float32)
+    first = np.zeros((B, T), bool)
+    first[:, 0] = True
+    first[0::2, EPISODE_START] = True
+    return dict(vector=vec, reward=rew, action=act, is_first=first)
+
+
+def uniforms(stream, c, shift=0):
+    """[T=64, B, S, C]: the uniforms the 64 real posterior sampler calls of train call c read."""
+    a = cursor(c) + shift
+    return stream[a:a + 64 * CUR_STEP].reshape(64, B, 32, 4)
+
+
+def _np_sample(lg, u, mix=0.01):
+    lg = lg.astype(np.float32)
+    p = np.exp(lg - lg.max(-1, keepdims=True))
+    p = p / p.sum(-1, keepdims=True)
+    p = ((1.0 - mix) * p + mix / lg.shape[-1]).astype(np.float32)
+    g = -np.log(-np.log(np.clip(u, 1e-7, 1 - 1e-7))).astype(np.float32)
+    return (np.log(p) + g).argmax(-1)
+
+
+def main_scan():
+    gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
+    if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
+        os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("TMPDIR", "/data/tmp")
+    sys.path.insert(0, HERE)
+    import mlx.core as mx
+    import mlx_maths as M
+    import rung10  # noqa: F401  (TOY <- SIZE1M)
+    from rung6 import TOY
+    G, R = np.load(GOLDEN_A), np.load(R13)
+    stream = np.random.default_rng(0).random(cursor(CALLS[-1], 64) + 2 * CUR_STEP, dtype=np.float32)
+    bt = rebuild_batch()
+    spec = {"action": 0}
+    ok = True
+    # (A)
+    for c in CALLS:
+        ia = np.stack([G[f"c{c}/rssm/t{t:03d}/in_action/action"] for t in range(64)], 1)
+        ir = np.stack([G[f"c{c}/rssm/t{t:03d}/in_reset"] for t in range(64)], 1)
+        na, nr = int((ia != bt["action"][:, :-1]).sum()), int((ir != bt["is_first"][:, 1:]).sum())
+        print(f"A  call {c}: rebuilt action / reset vs the 64 dumped inputs: {na} / {nr} unequal")
+        ok &= na == 0 and nr == 0
+    # (N)
+    for c in CALLS:
+        U = uniforms(stream, c)
+        fl = sum(int((_np_sample(G[f"c{c}/rssm/t{t:03d}/out/logit"], U[t])
+                      != G[f"c{c}/rssm/t{t:03d}/out/stoch"].argmax(-1)).sum()) for t in range(64))
+        print(f"N  call {c}: cursor {cursor(c):,}: sampler on golden logits vs golden stoch: {fl} flips of {64 * B * 32}")
+        ok &= fl == 0
+
+    def run(c, U, batch=bt, reset=True, f=None):
+        Pe = {k[len(f"c{c}/pre/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/enc/")}
+        Pd = {k[len(f"c{c}/pre/dyn/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/dyn/")}
+        q = f"c{c}/rssm/t000/"
+        rs = batch["is_first"][:, 1:] if reset else np.zeros((B, 64), bool)
+        args = (Pe, Pd, mx.array(G[q + "in_deter"]), mx.array(G[q + "in_stoch"]), mx.array(obs_slice(batch["vector"])),
+                mx.array(batch["action"][:, :-1]), mx.array(rs), mx.array(U))
+        o = (f or scan)(*args)
+        return [np.array(x) for x in o]
+
+    def scan(Pe, Pd, d, s, obs, act, rs, U):
+        tok = M.encoder(Pe, obs, LAYERS, ACT)
+        o = M.rssm_observe(Pd, dict(deter=d, stoch=s), tok, {"action": act}, rs, U, TOY, spec)
+        return o["deter"], o["post"], o["stoch"]
+
+    def score(c, out):
+        d, lg, st = out
+        q = f"c{c}/outs/repfeat/"
+        n1, w1 = miss(d, G[q + "deter"])
+        n2, w2 = miss(lg, G[q + "logit"])
+        fl = int((st.argmax(-1) != G[q + "stoch"].argmax(-1)).sum())
+        return n1 + n2, max(w1, w2), fl
+
+    # (S)
+    for c in CALLS:
+        for mode in ("eager", "compiled"):
+            n, w, fl = score(c, run(c, uniforms(stream, c), f=mx.compile(scan) if mode == "compiled" else None))
+            print(f"S  call {c} {mode:8s}: port enc -> 64-step sampled pass vs official repfeat: "
+                  f"miss {n}, worst {w:.2e} of {TOL:g}, flips {fl}")
+            ok &= n == 0 and fl == 0
+    # (C)
+    n, w, fl = score(1, run(1, np.full((64, B, 32, 4), 0.5, np.float32)))
+    tot = 64 * B * 32
+    print(f"C  call 1 constant noise: flips {fl}/{tot} (must be > 10%)")
+    ok &= fl > tot // 10
+    # (P)
+    plants = {
+        "noise_one_step_late": lambda c: run(c, uniforms(stream, c, CUR_STEP)),
+        "prerun_not_skipped": lambda c: run(c, uniforms(stream, c, -CUR_STEP)),
+        "call1_cursor_always": lambda c: run(c, uniforms(stream, 1)),
+        "reward_draw_skipped": lambda c: run(c, uniforms(stream, c), batch=rebuild_batch(skip_reward=True)),
+        "resets_ignored": lambda c: run(c, uniforms(stream, c), reset=False),
+    }
+    caught = 0
+    for name, fn in plants.items():
+        hits, live = [], []
+        for c in CALLS:
+            if name == "call1_cursor_always" and c == 1:
+                continue                                     # identical function at call 1
+            n, w, fl = score(c, fn(c))
+            live.append(c)
+            hits.append(n > 0 or fl > 0)
+        caught += bool(live) and all(hits)
+        print(f"P  planted {name:20s}: caught on {sum(hits)}/{len(live)} calls where it changes the function")
+    print(f"RUNG 13b-scan: port {'PASS' if ok and caught == len(plants) else 'FAIL'} "
+          f"(planted caught {caught}/{len(plants)})")
+    return 0 if ok and caught == len(plants) else 1
+
+
 def main():
+    if "--scan" in sys.argv:
+        return main_scan()
     if "--obs" in sys.argv:
         return main_obs()
     if "--losses" in sys.argv:

@@ -864,3 +864,24 @@ step's dumped inputs `c<N>/rssm/t<t>/in_*` (dyn params from R13 `c<N>/pre/dyn/`)
 0 miss at all 64 steps × calls 1/2/6/8, eager AND compiled, worst 9.5e-7 of 1e-5. The golden chains
 out[t] → in[t+1] exactly (0 unequal); control call 2 ≠ call 1 (8,192 differ); planted reset-ignored caught 4/4
 (1,024 misses each). Not yet: the posterior SAMPLES (need the noise cursor) and gradients — in the composed loss.
+
+### Rung 13b, fourth piece — the posterior noise cursor, and the port's free-running sampled pass: PASS (11-25)
+`rung13b.py --scan` (jack-mlx, box, ~2 min; log `/data/jack-logs/mlx/rung13b_scan.log`). The golden's `A.json`
+(`noise_draws`) never came home, so the cursor was FOUND by search over the regenerated stream
+(`default_rng(0).random(n, float32)`; full 2,048-uniform match, unique): the step-t posterior sampler of
+train call N reads **cur(N, t) = 2,789,888 + (N−1) × 4,460,544 + 2,048 t** — contiguous over the 64 real
+steps, prerun already behind it, the same stride every call. The batch's other inputs rebuild too: after
+`vector` ONE [B, T] float draw (reward, uniform(0, 1)), then `action`; input action at step t = action[:, t],
+reset = is_first[:, 1:] — 0 unequal vs the 64 dumped inputs at all 4 calls (A).
+- (N) NumPy sampler on the golden's logits with the uniforms at the cursor: 0 flips of 32,768 at calls 1/2/6/8.
+- (S) **port FREE-RUNNING — its own encoder on the rebuilt obs → `rssm_observe` with file noise from the
+  golden's t0 carry → vs `outs/repfeat`: 0 miss on deter + logit, 0 sample flips, eager AND compiled, all 4
+  calls (worst 1.4e-6 of 1e-5).** (C) constant noise flips 19,484/32,768.
+- (P) planted 5/5: noise one step late, prerun not skipped, call 1's cursor at every call (no-op at call 1
+  by construction, 3/3), reward draw skipped, resets ignored.
+- Said plainly: the line was written after the cursor search (which had already matched 4 of 64 steps a
+  call) and before the port's first read; the port passed on the first read.
+- Not yet: the imagination's cursor (the other 33 × 131,072 + 2,048 uniforms of the stride, and the policy's
+  normals), the loss terms on this pass, and the 81 gradients. Next: WM terms (dyn, rep, vector, rew, con)
+  from this pass vs `c<N>/outs/losses/*` — reward = the second draw, [:, 1:].
+
