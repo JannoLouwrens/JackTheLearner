@@ -593,6 +593,10 @@ curriculum; `yu2018_walk.py` cites it as "§Row J10-2"). This row is ruling 82's
 - Published: 4,825 [3,784–5,866] at 1M (10 seeds), 6,232 ± 280 at 2M, each ONE unbroken run (§16).
 - Outputs → `/data/jack-logs/j10/sac_row2`. Launch: `humanoid_sac_row kernel2 <seed> [segment]`, ≤ 2 Kaggle sessions.
 - Status: not launched — Kaggle 5/5 sessions busy at 07:40 and again at 09:40 (J17 h0, J19 6a/6c, forge chains A/B).
+- **1M check (11-25 12:25, all five seeds home): IN BAND** — median 5,219.8 in [3,784, 5,866] (s3 4,500.9, s4 5,420.2,
+  s5 5,219.8, s6 4,541.3, s7 5,282.8). 2M so far: s3 5,649.4 / 12.08 MISS; s4 6,254.3 / 17.16, s5 6,107.9 / 17.26,
+  s6 5,993.5 / 17.92 MEET; s7 seg3 on `jack-cpu-1795600347`. Read with `python -m experiments.j10_2_read` (the frozen
+  `verdict_j10_2` over the files; control = J10-1's 68.0, as the rule says); it prints PROVISIONAL until s7's 2M is home.
 
 ## Row B-5 — DMC cartpole-swingup, 50k decisions: **lib MISSES** at 5 seeds; ours in band but not counted; the one extension is due (11-21 00:12, Kaggle CPU)
 

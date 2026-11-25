@@ -3832,3 +3832,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J25 not worked: the owner's no-Mac line (INBOX 11:58) asks the Director to park the MLX port; I did not spend a slot on a part the owner has said he will not run.
 - Next-up 1: ruling 101 written into WORLD_CARD's h4 paragraph and conv_eye's docstring — NOT SHOWN, never "closed"/"does not learn"; DrQ's encoder tau 0.05 and walker 2e-4 removed (§27). Next-up 2: FORGE_POOL R5, pink noise vs the frozen-explorer fault (377 → 730, 20 seeds), pool check ok. Item 3 was already done. No certificate depends on the touched code. `893d8be9`.
 - Served philosophy 4 (a one-seed pilot no longer reads as a verdict) and 3 (a published exploration recipe enters the race with its prior).
+
+## 2026-11-25 12:22–12:30 UTC · JACK · J10 — the 1M check read, the 2M reader built
+- Kernels: forge M chains A/B self-advancing (g0, g1 home; next kernels pushed); J10 s7 seg3 `…600347` RUNNING, watcher alive, home ≈ 14:00; ear chain alive (s1 on Colab). J24 waits on its ruling; J25 not worked (owner's no-Mac line awaits the Director).
+- J10-2's 1M check is final: all five seeds home, median 5,219.8 → IN BAND. 2M stands at 3 meet / 1 miss / s7 open.
+- `experiments/j10_2_read.py`: gathers seg1/seg3 evals and hands them to the frozen `verdict_j10_2` (no rule of its own); 5 tests, incl. PASS, STANDS, FAIL and an unfinished segment ignored. My first test expected FAIL where the rule reads STANDS — the test was wrong, not the rule.
+- Served philosophy 4 (the verdict is read by the frozen rule, mechanically, the moment the last seed lands) and 5 (the loop's harvest made one command).
