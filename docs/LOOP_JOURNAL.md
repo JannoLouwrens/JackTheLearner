@@ -3794,3 +3794,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J24 waits on its ruling; J18 chains advancing (B's 2nd kernel submitted 09:18). J10: **s5 @2M R 6,107.9 / 17.26 m/1k, 2/50 fell → meets**. Tally 3 meet / 1 miss / 1 open: the row now passes or fails on s7 alone (seg2 RUNNING, chain watcher 2641579 alive). 3 worktree receipt rows copied into main (`621220e9`).
 - J14 (b): `kws_row colab` — one run per Colab job, plumbing on, run deadline = the frozen 2.4 h fit rule, stops the chain on any cut/failed run (tests 4/4, planted cut caught). Launched s0 s1 s2 twin from `/data/wt/jack-kws2` at `be507986`; s0 on Colab since 09:24.
 - Served philosophy 4 (the walking row read seed by seed by its frozen rule; the ear runs the authors' recipe so it can fail against a published number) and 6 (the ear's seeds go on free Colab, not a Kaggle week).
+
+## 2026-11-25 09:37–09:42 UTC · JACK · J14 (b) the ear's Colab chain found stopped, relaunched
+- J24 waits on its ruling; J18 (M_g1 home, B's next kernel pushed) and J10 (s7 seg2, watcher 2641579 alive) harvest-only → J14 (b).
+- The 09:24 chain had died at its first submit: Colab's assign POST read-timed out (120 s) → CHAIN_STOP. It left an orphan T4 `[?]` session on the server — S17's bug, 4th time; `colab stop -s` says "not found" (no local record), and by 09:38 the server listed no assignments.
+- Relaunched `kws_row colab s0 s1 s2 twin` 09:39 — from the main tree, not `/data/wt/jack-kws2` (launch_detached needs JACK_REPO; I did not set it). experiments/ + scripts/ at HEAD are byte-equal to the pin `be507986`, so the run is the same; left it rather than kill mid-assign. s0 on a T4 since 09:39. A later run's submit can trip on another lane's main-tree dirt → a CHAIN_STOP is re-launched (it skips runs home).
+- Served philosophy 4 (the ear's re-registered row gets its seeds instead of sitting stopped) and 6 (free Colab, orphan not left holding a GPU).
