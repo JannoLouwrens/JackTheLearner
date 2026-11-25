@@ -144,6 +144,10 @@ def main_ref(data, vec):
 
 
 def main_port(data, vec):
+    gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"   # mx.compile needs it (rung1.main_mlx, mlx_smoke)
+    if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
+        os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("TMPDIR", "/data/tmp")
     sys.path.insert(0, HERE)
     import mlx.core as mx
     import mlx_maths as M

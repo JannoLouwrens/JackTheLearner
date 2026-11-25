@@ -830,3 +830,18 @@ stream, then cast; `(1-b2)*(u*u)` as opt.py. The test injects the golden's EAGER
 (`bias=`, test-only); the port's own `mx.power` equals the correctly rounded (jitted) f32 power for
 t 1..39 and, read against this eager golden, misses only at calls 6/8 (39/33 tensors) — as predicted.
 Rung 3 still 2/2 + planted 5/5; rung 11 4/4. Next: rung 13b, then the wheel kernel.
+
+### Rung 13b, first piece — the golden's input batch rebuilt, and the ENCODER: PASS (11-25)
+`rung13b.py` (jack-mlx, box, < 1 s; references `126eb117` committed while the port test FAILED). The whole
+loss starts at `obs -> enc` and both were missing: the encoder was unported and the golden stores its
+OUTPUT (`outs/tokens`) but not its input. **The batch rebuilds exactly from `g1_probe`'s recipe** (rng 1234,
+`vector` the first key drawn, uniform(-1, 1) [16, 65, 74]; obs = data[:, 1:] by `_apply_replay_context`):
+REF_enc (float64) vs the official tokens at calls 1/2/6/8, worst 8.8e-7 of the 1e-5 (|ref|+1) bound.
+Control: call-2 tokens differ from call 1's (62,396 elements). Planted 5/5 (no symlog, gelu for the
+config's silu, the context step kept, rms eps 1e-6, no bias) — the clause was re-registered after the
+first read: no_bias is a NO-OP at call 1 (every encoder bias is exactly 0 at init) and is caught on the
+3 calls where it changes the function. **Port `mlx_maths.encoder` 0 miss eager AND compiled at all 4
+calls (worst 8.2e-7).** Ours beside theirs: f32 (published bf16); one vector key, so DictConcat's sorted
+concat is the identity after symlog. Not yet: the encoder's GRADIENT — it is read inside 13b's whole
+loss (the 9 `enc/` grads among R13's 81). Next piece: the composed whole loss on this batch with the
+file noise at the golden's cursor, its 81 gradients through `port_gate` at calls 1/2/6/8.

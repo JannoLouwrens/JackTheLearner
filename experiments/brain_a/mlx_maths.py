@@ -478,6 +478,17 @@ def rewcon_loss(P, deter, stoch, reward, term, horizon):
 #   the sg() on the target is a no-op here (no gradient is taken in this rung).
 
 # rssm.py L293-295: the decoder concatenates STOCH first, then deter (feat2tensor is the reverse)
+# rssm.py L215-224 Encoder, vector branch (rung 13b-enc). One vector key (`vector`), so DictConcat's
+# sorted concat is the identity after symlog; `layers` x Linear -> rms -> act (config's silu, not the
+# class default gelu). Input [B, T, F] = data[:, 1:] (agent.py L331); output [B, T, units].
+def encoder(P, vector, layers, act):
+    lead = vector.shape[:-1]
+    x = symlog(vector).reshape(-1, vector.shape[-1])
+    for i in range(layers):
+        x = _layer(P, f"enc/mlp{i}", x, act)
+    return x.reshape(*lead, -1)
+
+
 def dec_inp(deter, stoch):
     return mx.concatenate([stoch.reshape(*stoch.shape[:-2], -1), deter], -1)
 
