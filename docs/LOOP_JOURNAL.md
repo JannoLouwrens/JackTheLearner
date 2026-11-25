@@ -3735,3 +3735,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `wheel_kernel` set `9` (`5e98aa3b`): rung 9 + `--planted`; box first (jack-mlx venv): verdict PASS on real outputs, planted 3/3 refused. Launched from clean worktree `…583306`; home in ~1 min.
 - **WHEEL PASS**: RUNG 9 2/2 eager+compiled on PyPI mlx 0.32.4 (x86_64), planted 5/5 caught (incl. the forward-blind dyn↔rep swap). Kaggle status COMPLETE checked, file read on disk. J21 marked DONE.
 - Served philosophy 7 (the Mac port: every rung through the full world-model loss holds on the wheel the Mac will run) and 4 (planted bugs must be caught on that wheel too).
+
+## 2026-11-25 05:22–05:45 UTC · JACK · J18 step 4 core (inherited)
+- Kaggle: J10 s5/s6 seg3 + s7 seg1 all RUNNING, nothing home. J22/J20/J23/J21 DONE, J14 waits for W48 GPU, Next-up 1–3 already done → J18: rung M was blocked on the forge's step-4 code, uncommitted since 02:53 and tripping every lane's submit guard.
+- Read the diff, ran its tests on the box (jack-std, nice 19): carry 13/13 — a run cut twice and resumed in new processes is the unbroken run life for life, weight for weight, for all 6 rung-M arms and through a death after a load; 4 planted broken carries all differ; a cut run scores 0 under the locked reader. Rung-S tests 18/18 (baseline still E2c). Committed `41cc5d64`.
+- Not done: the kernel side (carry passed, fetched home, mounted into the next kernel). `docs/LAB.md` and `cpu_budget.json` dirt left alone (other lanes / meter).
+- Served philosophy 1 and 4: a 300k life that can be carried across kernels without becoming a different life ("he must never stop learning"), shown by a test that fails when any one piece is dropped.

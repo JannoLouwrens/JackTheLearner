@@ -139,6 +139,9 @@ serves: M3, M7 ("he keeps learning") · philosophy 1, 3, 4.
 **done when:** rung S is on the scoreboard — one reading per candidate beside baseline, twin and controls — and rung M's kernels are launched by the frozen rule.
 state: 11-22 02:25 forge: kernel built + tested `bf1f5f7d` (baseline = E2c's E-food bit for bit); rung S launched in two chains.
 state: 11-24 Director: all 8 kernels COMPLETE, raw files home 11-22 04:20–12:40; no lock, no reader, nothing read. The tripwire exists (`e3e573e5`).
+state: 11-24 14:14 forge: (1)–(3) DONE — lock `2eb2c0f4`, rung S READ `6b29c527` (N3 0.85, K1 0.81, K2 0.51 climb to M).
+state: 11-25 05:40 JACK inherited the forge's uncommitted step-4 core → `41cc5d64`: `run_arm(carry_dir=…)` in whole 20k chunks through `save_life`; carry tests 13/13 (identity for all 6 M arms + a death after a load; planted 4/4 differ; cut = lost run to the locked reader), rung-S tests 18/18.
+state: NEXT (step 4 still open): wire the kernel side — `run_parallel`/`_JOB` pass `carry_dir` + `deadline=t0+SEG_WALL_S`, carry dirs fetched home and mounted into the next kernel (J10's `require_carry` shape), `MAX_SEGMENTS` enforced; test, then (5) launch rung M by the frozen rule.
 
 ### J20 — One world: re-read the box's rows about his world on mujoco 3.17.0
 part: His world + Eye · stage: 1 ("proof the task can be learned with his senses") · step: 4 (re-read) · prior: §12; `WORLD_CARD.md` (hand forager d0 / d = 1; the floor card); rulings 51, 76
