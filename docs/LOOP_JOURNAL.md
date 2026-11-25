@@ -3898,3 +3898,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - INBOX line: the guard treats a doc edit as code dirt (machine fix belongs to SYSTEM).
 - J25 rung 13 not started: a reference + failing tests + port does not fit a 27-min slot.
 - Served philosophy 4 (the ear's row gets its third seed instead of stalling unjudged) and 6 (free Colab hours taken when they come).
+
+## 2026-11-25 17:07–17:28 UTC · JACK · J25 — rung 13a: the official whole optimiser step reproduced over the real tree
+- First act: forge g2 home 16:49; g4/g5 RUNNING on Kaggle (rerun chains alive); ear s2 still Colab 503; J24 waits on its ruling. Kaggle CPU 3/5 free → one rank-0 kernel for J25.
+- `g1_probe --dump-params` + `rung13.py` (line fixed `6ad44c87`, box self-test on a synthetic dump first). Kernel `jack-cpu-1795626717`, 418 s: grads 81/81 bit-equal to the frozen row-2.1 golden at calls 1/2/6/8.
+- First read FAILED; fixed the reference, never the weight line: (a) my loader collapsed size-1 arrays to scalars; (b) the golden is eager, so f32 rounds per op (momentum cancels from call 2); (c) eager JAX `0.999**int32(t)` = square-and-multiply in f32 (78/78), not NumPy/jitted power — bias correction off by ≤ 2e-5 at t=3,6,7,8; (d) moment tolerance re-registered to operand scale (12/197/122 cancelled elements unreachable by any f32 code).
+- Then HOLD: 647,705 weights at every call, slowval from the POST-step critic, nothing unlisted moves, planted 7/7. Port test is the next slot.
+- Served philosophy 4 (a reference that could fail, did, and was fixed by naming the cause) and 6 (free Kaggle CPU). Whether 7 still needs MLX is the Director's open ruling.

@@ -796,3 +796,27 @@ run, planted 3/3 refused on box outputs). PyPI mlx 0.32.4, x86_64, py 3.13.18, g
 rc 0: RUNG 10 4/4, RUNG 11 4/4, RUNG 12a 2/2, RUNG 12b 3/3, each eager AND compiled; planted 6/6, 6/6, 5/5,
 5/5 caught, unpatched port passes. Verdict file `/data/jack-logs/mlx/wheel_10_12.json`. Same limit as
 before: Linux x86_64 wheel of the same version, not the Mac's macOS arm64 binary. Next: rung 13.
+
+### Rung 13a — the whole optimiser + slow-critic step over the official size1m tree: REFERENCES HOLD (11-25)
+`experiments/brain_a/rung13.py` (line fixed `6ad44c87` before the run). Golden: one Kaggle CPU kernel
+`jack-cpu-1795626717` (418 s), row 2.1's run A exactly + `g1_probe --dump-params` (every agent variable
+before/after calls 1, 2, 6, 8), `/data/jack-logs/mlx/rung13/R13.npz` (75 MB, /data only). Read on the box
+(NumPy only), log `/data/jack-logs/mlx/rung13_vs_official.log`:
+- (R) all 81 gradients at all 4 calls BIT-EQUAL to the frozen row-2.1 golden — the same step, re-made.
+- (S) all 647,705 weights (81 tensors, 7 modules, ONE optimiser) at every call; counts +1; ≥ 86% moved.
+- (W) slowval (11 tensors) = 0.02 × the POST-step critic + 0.98 × slowval: the slow update follows the
+  optimiser step (agent.py L139-142). (U) nothing else moves except opt/step, opt counts, retnorm.
+- (P) planted 7/7 caught: global-norm clip, slow from the pre-step critic, no bias correction,
+  momentum before rms, state not carried (calls 2+), slow mix swapped, lr × 10.
+- Three things named on the way (the reference fixed, never the weight line): (1) the golden is EAGER
+  (jit off, to capture grads), so every op rounds in f32 — momentum cancels from call 2 on and a
+  float64 reference misses; `REF_step32` rounds as theirs. (2) **Eager JAX computes `0.999 ** int32(t)`
+  by square-and-multiply in f32 (78/78), not NumPy's correctly-rounded power; jitted optax equals
+  NumPy.** The bias correction moves up to 2e-5 at t = 3, 6, 7, 8 (β₁: t = 7). The port trains jitted:
+  it must follow the JITTED value, and a port test against THIS golden must use the eager one.
+  (3) moment tolerance re-registered to the operand scale (a cancelled f32 sum carries 1–2 ulp of its
+  terms; 12 / 197 / 122 elements otherwise unreachable by any f32 implementation).
+- Ours beside theirs: f32 (published bf16); warmup 0 (row 2.1's listed difference; the ramp is rung 3's);
+  retnorm's update not checked here (rung 12a's; its inputs are not dumped). Next: the port's test —
+  `mlx_maths.opt_update` + `slow_update` over this tree from `pre` + grads → `post`, eager and compiled;
+  then rung 13b (the port's own whole-loss gradients vs these 81).
