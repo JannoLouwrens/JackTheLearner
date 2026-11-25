@@ -63,3 +63,32 @@ if __name__ == "__main__":   # no pytest in the project venv
             bad += 1
             print("FAIL", n, repr(e), flush=True)
     sys.exit(1 if bad else 0)
+
+
+def _home(tmp_path, run, rec):
+    (tmp_path / ("kws2_%s.json" % run)).write_text(json.dumps({"stopped": None, "runs": [rec]}))
+
+
+def test_score_dir_reads_row2_files_through_the_frozen_judge(tmp_path):
+    _home(tmp_path, "s0", dict(_full("s0", 0), test=97.137))
+    out = K.score_dir(str(tmp_path), "kws2_*.json")
+    assert out["verdict"] == "NOT JUDGED" and out["missing"] == [1, 2, "twin"] and out["seeds"] == {0: 97.137}
+    for s, t in ((1, 96.8), (2, 96.9)):
+        _home(tmp_path, "s%d" % s, dict(_full("s%d" % s, s), test=t))
+    _home(tmp_path, "twin", dict(_full("s0_twin", 0, twin=True), test=3.0))
+    out = K.score_dir(str(tmp_path), "kws2_*.json")
+    assert out["verdict"] == "PASS (in band)" and out["n"] == 3
+
+
+def test_score_dir_miss_void_and_cut(tmp_path):
+    for s in (0, 1, 2):
+        _home(tmp_path, "s%d" % s, dict(_full("s%d" % s, s), test=95.0))
+    _home(tmp_path, "twin", dict(_full("s0_twin", 0, twin=True), test=3.0))
+    out = K.score_dir(str(tmp_path), "kws2_*.json")
+    assert out["verdict"] == "MISS" and out["extension_due"] is True
+    _home(tmp_path, "twin", dict(_full("s0_twin", 0, twin=True), test=40.0))   # control that learns -> VOID
+    assert K.score_dir(str(tmp_path), "kws2_*.json")["verdict"].startswith("VOID")
+    r = dict(_full("s2", 2), test=96.9); r["cut"] = True                        # a cut run is not a zero
+    _home(tmp_path, "s2", r)
+    out = K.score_dir(str(tmp_path), "kws2_*.json")
+    assert out["verdict"] == "NOT JUDGED" and 2 in out["missing"]

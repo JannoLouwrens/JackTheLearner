@@ -461,6 +461,15 @@ COLAB_TIMEOUT_S = int(3.0 * 3600)
 OUT2 = "/data/jack-logs/kws_row2"
 
 
+def score_dir(out_dir: str, pattern: str) -> dict:
+    """Merge every harvested file's runs under `out_dir` and hand them to THE RULE (`judge`) — no rule
+    of its own. Until all of seeds 0-2 and the twin are home and complete it reads NOT JUDGED."""
+    runs = []
+    for p in sorted(glob.glob(os.path.join(out_dir, pattern))):
+        runs += json.load(open(p)).get("runs", [])
+    return judge(runs)
+
+
 def colab_tag(run: str) -> str:
     return "kws2_" + run
 
@@ -514,10 +523,10 @@ def main(argv) -> int:
     if cmd == "smoke":
         return smoke()
     if cmd == "score":
-        runs = []
-        for p in sorted(glob.glob(os.path.join(OUT, "kws_row_*.json"))):
-            runs += json.load(open(p)).get("runs", [])
-        print(json.dumps(judge(runs), indent=1))
+        print(json.dumps(score_dir(OUT, "kws_row_*.json"), indent=1))
+        return 0
+    if cmd == "score2":   # Row N7-kws-2 (ruling 106): the Colab chain's files, the same frozen judge
+        print(json.dumps(score_dir(OUT2, "kws2_*.json"), indent=1))
         return 0
     if cmd == "colab" and len(argv) > 2:
         return colab_chain(argv[2:])

@@ -3838,3 +3838,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J10-2's 1M check is final: all five seeds home, median 5,219.8 → IN BAND. 2M stands at 3 meet / 1 miss / s7 open.
 - `experiments/j10_2_read.py`: gathers seg1/seg3 evals and hands them to the frozen `verdict_j10_2` (no rule of its own); 5 tests, incl. PASS, STANDS, FAIL and an unfinished segment ignored. My first test expected FAIL where the rule reads STANDS — the test was wrong, not the rule.
 - Served philosophy 4 (the verdict is read by the frozen rule, mechanically, the moment the last seed lands) and 5 (the loop's harvest made one command).
+
+## 2026-11-25 12:37–12:50 UTC · JACK · J14 — the ear's row 2 given its scorer
+- Kernels (checked on Kaggle itself): forge M `…606070` (A) / `…598300` (B) RUNNING, J10 s7 seg3 `…600347` RUNNING; all three watchers alive; ear s1 still on Colab. Nothing home to harvest. J24 waits on its ruling.
+- Found: `kws_row score` globbed only row 1's folder (`kws_row/kws_row_*.json`); the Colab chain writes `kws_row2/kws2_*.json`, so N7-kws-2 had no reader. Added `score_dir` + `score2` (no rule of its own — the frozen `judge`); 2 new tests (NOT JUDGED with s0 only, PASS, MISS + extension, VOID twin, cut run not a zero), 6/6 in the file.
+- Today `score2`: s0 97.137, NOT JUDGED, missing s1, s2, twin.
+- Served philosophy 4 (the ear's verdict read mechanically by its frozen rule the moment the last run lands) and 5 (harvest made one command).
