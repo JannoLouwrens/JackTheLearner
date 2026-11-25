@@ -1240,7 +1240,158 @@ def main_imagloss_vq():
     return 0 if good else 1
 
 
+# ELEVENTH PIECE (11-25 22:45, `--repval`): the replay value loss (agent.py L219-233, repl_loss L449-479) against an
+# f64 truth, the same (Q-S) line as `--imagloss-vq`; WRITTEN BEFORE ITS READ (no repval number from the port was
+# computed before this commit). TEACHER-FORCED: the golden's repfeat [16,64] (outs/repfeat), boot = the golden's
+# imagloss/outs/ret[:, 0] reshaped (B, K) = (16, 64), rew = the rebuilt batch's reward[:, 1:] (replay_context 1, as
+# `--wm`), is_last / is_terminal all False (the rebuilt batch has neither). Port: val/slowval heads on the feats,
+# ret = M.lambda_return(last, term, rew, val, boot, 1 - 1/333, 0.95), weight ~last, repval = w·(nll(ret_padded) +
+# slowreg·nll(slow))[:, :-1]; valnorm 'none' (offset 0 scale 1). TRUTH = the same function in float64 from the
+# port's own f32 logits. THE LINE: (Q-S) as `--imagloss-vq` (q50/90/99 of |x - truth| + 1e-7, port vs official
+# golden outs/losses/repval within 1.25 both ways), calls 1/2/6/8, eager AND compiled. (C) control: rew zeroed must
+# break (Q-S) on >= 1 call and on every non-exempt live call (NO-OP-AT-PRECISION exemption, ruling d93487c9).
+# (P) planted, each must break on every live call: slowreg 0; disc 1.0 (horizon inf, not 1 - 1/333); boot = the
+# port's own val (not the imagined return); lam 1.0. PASS iff the port meets (Q-S) everywhere, C holds, plants 4/4.
+def main_repval():
+    gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
+    if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
+        os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("TMPDIR", "/data/tmp")
+    sys.path.insert(0, HERE)
+    import mlx.core as mx
+    import mlx_maths as M
+    G, R = np.load(GOLDEN_A), np.load(R13)
+    bt = rebuild_batch()
+    b = M.bins(255)
+    b64 = np.array(b).astype(np.float64)
+    n = b64.size
+
+    def lsm64(L):
+        L = np.asarray(L, np.float64)
+        mx_ = L.max(-1, keepdims=True)
+        return L - mx_ - np.log(np.exp(L - mx_).sum(-1, keepdims=True))
+
+    def dec64(L):
+        p = np.exp(lsm64(L))
+        m = 127
+        return p[..., m] * b64[m] + ((p[..., m + 1:] - p[..., :m][..., ::-1]) * b64[m + 1:]).sum(-1)
+
+    def nll64(L, tgt):
+        t = np.asarray(tgt, np.float64)[..., None]
+        below = np.clip((b64 <= t).sum(-1) - 1, 0, n - 1)
+        above = np.clip(n - (b64 > t).sum(-1), 0, n - 1)
+        eq = below == above
+        tt = t[..., 0]
+        db = np.where(eq, 1.0, np.abs(b64[below] - tt))
+        da = np.where(eq, 1.0, np.abs(b64[above] - tt))
+        wb, wa = da / (db + da), db / (db + da)
+        lp = lsm64(L)
+        return -(wb * np.take_along_axis(lp, below[..., None], -1)[..., 0]
+                 + wa * np.take_along_axis(lp, above[..., None], -1)[..., 0])
+
+    def lret64(last, term, rew, boot, disc, lam):
+        live = (1 - term)[:, 1:] * disc
+        cont = (1 - last)[:, 1:] * lam
+        interm = rew[:, 1:] + (1 - cont) * live * boot[:, 1:]
+        rets = [boot[:, -1]]
+        for t in reversed(range(live.shape[1])):
+            rets.append(interm[:, t] + live[:, t] * cont[:, t] * rets[-1])
+        return np.stack(list(reversed(rets))[:-1], 1)
+
+    def make(slowreg=1.0, disc=1.0 - 1.0 / 333, boot_val=False, lam=0.95, zero_rew=False):
+        def f(Pv, Ps, d, s, rew, last, term, boot):
+            x = M.feat2tensor(d, s)
+            lv = M._mlp_head_n(Pv, "val", x, "logits", 3)
+            ls = M._mlp_head_n(Ps, "slowval", x, "logits", 3)
+            val = M.twohot_decode(lv, b)
+            slow = mx.stop_gradient(M.twohot_decode(ls, b))
+            r = mx.zeros_like(rew) if zero_rew else rew
+            ret = M.lambda_return(last, term, r, val, val if boot_val else boot, disc, lam)
+            tar = mx.stop_gradient(mx.concatenate([ret, 0 * ret[:, -1:]], 1))
+            w = mx.logical_not(last).astype(mx.float32)
+            rep = (w * (M.twohot_loss(lv, tar, b) + slowreg * M.twohot_loss(lv, slow, b)))[:, :-1]
+            return lv, ls, rep
+        return f, dict(slowreg=slowreg, disc=disc, boot_val=boot_val, lam=lam, zero_rew=zero_rew)
+
+    def run(c, fk, compiled=False):
+        f, kw = fk
+        P = lambda h: {k[len(f"c{c}/pre/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/{h}/")}  # noqa: E731
+        d, s = G[f"c{c}/outs/repfeat/deter"], G[f"c{c}/outs/repfeat/stoch"]
+        Bq, K = d.shape[:2]
+        boot = G[f"c{c}/imagloss/outs/ret"][:, 0].reshape(Bq, K)
+        rew = bt["reward"][:, 1:]
+        last = np.zeros((Bq, K), bool)
+        term = np.zeros((Bq, K), bool)
+        A = mx.array
+        f = mx.compile(f) if compiled else f
+        lv, ls, rep = [np.array(x) for x in f(P("val"), P("slowval"), A(d), A(s), A(rew), A(last), A(term), A(boot))]
+        val, slow = dec64(lv), dec64(ls)
+        r64 = np.zeros_like(rew, np.float64) if kw["zero_rew"] else rew.astype(np.float64)
+        ret = lret64(last.astype(np.float64), term.astype(np.float64), r64,
+                     val if kw["boot_val"] else boot.astype(np.float64), kw["disc"], kw["lam"])
+        w = 1.0 - last.astype(np.float64)
+        t64 = w[:, :-1] * (nll64(lv[:, :-1], ret) + kw["slowreg"] * nll64(lv[:, :-1], slow[:, :-1]))
+        return rep, t64
+
+    def qs(x, t):
+        e = np.abs(np.asarray(x, np.float64) - t)
+        return [float(np.percentile(e, k)) + 1e-7 for k in (50, 90, 99)]
+
+    meet = lambda a, b_: all(max(x / y, y / x) <= 1.25 for x, y in zip(a, b_))  # noqa: E731
+    fmt = lambda q: "/".join(f"{x:.1e}" for x in q)  # noqa: E731
+
+    def line(c, out):
+        rep, t64 = out
+        qp, qo = qs(rep, t64), qs(G[f"c{c}/outs/losses/repval"], t64)
+        return bool(np.all(np.isfinite(qp + qo))) and meet(qp, qo), fmt(qp), fmt(qo)
+
+    ok = True
+    for c in CALLS:
+        for mode in ("eager", "compiled"):
+            r = line(c, run(c, make(), mode == "compiled"))
+            print(f"   call {c} {mode:8s}: R {'ok' if r[0] else 'FAIL'} q port {r[1]} off {r[2]}")
+            ok &= r[0]
+    true = {c: run(c, make()) for c in CALLS}
+    live_of = lambda c, out: not np.array_equal(out[0], true[c][0])  # noqa: E731
+    cb = 0
+    for c in CALLS:
+        out = run(c, make(zero_rew=True))
+        r = line(c, out)
+        if not live_of(c, out):
+            print(f"C  call {c}: rew zeroed NO-OP, exempt")
+            continue
+        off = G[f"c{c}/outs/losses/repval"]
+        qa, qb = qs(off, out[1]), qs(off, true[c][1])
+        if meet(qa, qb):
+            print(f"C  call {c}: rew zeroed NO-OP-AT-PRECISION, exempt (official q {fmt(qa)} vs {fmt(qb)}; "
+                  f"|dtruth| q {fmt(qs(out[1], true[c][1]))})")
+            continue
+        print(f"C  call {c}: rew zeroed {'breaks (Q-S)' if not r[0] else 'MEETS (Q-S) - control dead'} q port {r[1]} off {r[2]}")
+        ok &= not r[0]
+        cb += not r[0]
+    print(f"C  rew zeroed breaks R on {cb} call(s)" + ("" if cb else " - NONE: control dead"))
+    ok &= cb >= 1
+    plants = {"slowreg_0": dict(slowreg=0.0), "disc_1": dict(disc=1.0), "boot_is_val": dict(boot_val=True),
+              "lam_1": dict(lam=1.0)}
+    caught = 0
+    for name, kw in plants.items():
+        outs = [run(c, make(**kw)) for c in CALLS]
+        lv = [live_of(c, o) for c, o in zip(CALLS, outs)]
+        rs = [line(c, o) for c, o in zip(CALLS, outs)]
+        hits = [not r[0] for r, l in zip(rs, lv) if l]
+        hits = hits if any(lv) else [False]
+        print("   " + name + ": " + "  ".join(f"c{c}{'' if l else '(no-op)'} port {r[1]} off {r[2]}"
+                                             for c, r, l in zip(CALLS, rs, lv)))
+        caught += all(hits)
+        print(f"P  planted {name:12s}: live on {sum(lv)}/{len(CALLS)}, breaks (Q-S) on {sum(hits)}/{sum(lv)} live calls")
+    good = ok and caught == len(plants)
+    print(f"RUNG 13b-repval: port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
+    return 0 if good else 1
+
+
 def main():
+    if "--repval" in sys.argv:
+        return main_repval()
     if "--imagloss-vq" in sys.argv:
         return main_imagloss_vq()
     if "--imagloss-q2" in sys.argv:
