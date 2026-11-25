@@ -454,3 +454,9 @@ def rewcon_loss(P, deter, stoch, reward, term, horizon):
     cl = _mlp_head(P, "con", feat, "logit")[..., 0]
     return dict(rew=twohot_loss(rl, reward.astype(f32), bins(255)),
                 con=-binary_logp(cl, con_target(term, horizon)), rew_logits=rl, con_logit=cl)
+
+
+# ---------------------------------------------------------------- rung 8c (step 2.4, row 8)
+# Decoder vector branch (rssm.py L253-306). STUB: `rung8c.py` tests committed failing first.
+def dec_vec_loss(P, deter, stoch, targets, spaces, layers):
+    raise NotImplementedError("rung 8c: dec_vec_loss not yet ported")

@@ -1,6 +1,7 @@
 """MLX port of DreamerV3 — rung 8c (PORT report step 2.4, third world-model loss row):
-the decoder's VECTOR reconstruction losses, over rung 7's size1m feature pass. REFERENCES ONLY
-in this commit (NumPy float64 vs the official code); the port tests follow, committed failing.
+the decoder's VECTOR reconstruction losses, over rung 7's size1m feature pass. References
+(NumPy float64 vs the official code) `971816b9`; port tests below (`mlx_maths.dec_vec_loss`),
+committed failing before the module.
 
 Source: PORT report ladder row 8 "World-model losses — relative 1e-5 on means — golden: yes".
 Official code `danijar/dreamerv3` at e01491f:
@@ -176,8 +177,129 @@ def main_official():
     return 0 if n == len(rows) else 1
 
 
+# ---------------------------------------------------------------- port tests (MLX)
+# `mlx_maths.dec_vec_loss(P, deter, stoch, targets, spaces, layers)` -> dict(<key>: loss [B,T],
+# "pred/<key>": [B,T,*shape]) — the decoder's vector branch: dec_inp (stoch FIRST), MLP
+# (linear/rms/silu x layers), one Linear per key, MSE vs symlog(target), summed over the key's dims.
+# P keys are the official state's ("dec/mlp/linear0/kernel", "dec/vec/height/pred/bias", ...).
+# Each test eager AND under mx.compile, on rung 7's size1m deter/stoch and this rung's targets,
+# at BOTH param sets:
+#   dec_ref     port vs REF_dec (float64) at the same params, losses and preds
+#   dec_golden  port vs the official f32 dump (loss0 published init; lossN noised)
+# plus: the noised velocity loss varies (not blind); a control with every target's sign flipped
+# must differ (the target is read, and read through an odd squash).
+# Patch points the planted harness uses: dec_inp, symlog, _rms, _ACT, _vec_agg.
+
+def _golden():
+    G = np.load(GOLDEN8C)
+    P0 = {k[len("param0/"):]: G[k] for k in G.files if k.startswith("param0/")}
+    PN = noised_params({k: v.shape for k, v in P0.items()})
+    return G, P0, PN
+
+
+def _port(M, mx, P, compiled, tgt):
+    deter, stoch = feats()
+    MP = {k: mx.array(v) for k, v in P.items()}
+    T = {k: mx.array(v) for k, v in tgt.items()}
+    f = lambda p, d, s, t: M.dec_vec_loss(p, d, s, t, VEC, LAYERS)  # noqa: E731
+    if compiled:
+        f = mx.compile(f)
+    return {k: np.asarray(v) for k, v in f(MP, mx.array(deter), mx.array(stoch), T).items()}
+
+
+def t_dec(M, mx, compiled, against):
+    G, P0, PN = _golden()
+    deter, stoch = feats()
+    tgt = targets(*deter.shape[:2])
+    rows = [(all(np.array_equal(tgt[k], G[f"tgt/{k}"]) for k in VEC),
+             "targets() reproduce the golden's targets bit for bit")]
+    for tag, P, gk in (("published init", P0, "loss0"), ("noised", PN, "lossN")):
+        got = _port(M, mx, P, compiled, tgt)
+        if against == "ref":
+            ref = REF_dec(P, deter, stoch, tgt)
+            for k in VEC:
+                rows.append(close(f"{tag} {k} loss vs REF", got[k], ref[k]))
+                rows.append(close(f"{tag} {k} pred vs REF", got[f"pred/{k}"], ref[f"pred/{k}"]))
+        else:
+            for k in VEC:
+                rows.append(close(f"{tag} {k} loss vs GOLDEN", got[k], G[f"{gk}/{k}"]))
+        if gk == "lossN":
+            sd = float(np.std(got["velocity"]))
+            rows.append((sd > 0.1, f"noised velocity loss varies (std {sd:.3g} > 0.1)"))
+            c = _port(M, mx, P, compiled, {k: -v for k, v in tgt.items()})
+            d = float(max(np.abs(c[k] - got[k]).max() for k in VEC))
+            rows.append((d > 1e-3, f"control: sign-flipped targets differ ({d:.3g} > 1e-3)"))
+    return rows
+
+
+TESTS = [("dec_ref", lambda M, mx, c: t_dec(M, mx, c, "ref")),
+         ("dec_golden", lambda M, mx, c: t_dec(M, mx, c, "golden"))]
+
+
+def _mlx():
+    import rung6
+    return rung6._mlx()
+
+
+def main_mlx():
+    mx = _mlx()
+    import mlx_maths as M
+    n = 0
+    for name, t in TESTS:
+        r = {}
+        for mode, c in (("eager", False), ("compiled", True)):
+            try:
+                rows = t(M, mx, c)
+                r[mode] = all(o for o, _ in rows)
+                det = [d for o, d in rows if not o][:4] if not r[mode] else [d for _, d in rows]
+            except Exception as e:  # noqa: BLE001 — a stub or crash is a FAIL, reported
+                r[mode], det = False, [f"{type(e).__name__}: {e}"[:200]]
+            if mode == "eager" or not r[mode]:
+                for d in det:
+                    print(f"    {mode[0]}:", d)
+        n += r["eager"] and r["compiled"]
+        print(f"{name:14s} eager {'PASS' if r['eager'] else 'FAIL'}  compiled {'PASS' if r['compiled'] else 'FAIL'}")
+    print(f"RUNG 8c: {n}/{len(TESTS)} tests pass eager AND compiled (mlx {mx.__version__}) -> "
+          f"{'PASS' if n == len(TESTS) else 'FAIL'}")
+    return 0 if n == len(TESTS) else 1
+
+
+def main_planted():
+    """Each planted bug is patched into the real port; the tests must FAIL eager."""
+    mx = _mlx()
+    import mlx_maths as M
+    names = ("dec_inp", "symlog", "_rms", "_ACT", "_vec_agg")
+    keep = {k: getattr(M, k) for k in names}
+    bugs = {
+        "deter before stoch (feat2tensor's order)": dict(dec_inp=lambda d, s: M.feat2tensor(d, s)),
+        "no symlog on the target": dict(symlog=lambda x: x),
+        "mean over dims, not sum": dict(_vec_agg=lambda x, axes: mx.mean(x, axes) if axes else x),
+        "relu for silu": dict(_ACT={**keep["_ACT"], "silu": lambda x: mx.maximum(x, 0.0)}),
+        "no rms norm": dict(_rms=lambda x, s: x * s),
+        "norm eps 1.0 for 1e-4": dict(_rms=lambda x, s: x * mx.rsqrt(mx.mean(x * x, -1, keepdims=True) + 1.0) * s),
+    }
+    caught = 0
+    for name, patch in bugs.items():
+        for k, v in patch.items():
+            setattr(M, k, v)
+        try:
+            bad = [d for _, t in TESTS for o, d in t(M, mx, False) if not o]
+        except Exception as e:  # noqa: BLE001
+            bad = [f"crash {type(e).__name__}: {e}"]
+        finally:
+            for k, v in keep.items():
+                setattr(M, k, v)
+        caught += bool(bad)
+        print(f"planted [{name}] -> {'CAUGHT' if bad else 'MISSED'}" + (f"  ({bad[0][:80]})" if bad else ""))
+    ctl = all(o for _, t in TESTS for o, _ in t(M, mx, False))
+    print(f"PLANTED: {caught}/{len(bugs)} caught, unpatched port {'passes' if ctl else 'FAILS'} -> "
+          f"{'OK' if caught == len(bugs) and ctl else 'HARNESS BLIND'}")
+    return 0 if caught == len(bugs) and ctl else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv:
         sys.exit(main_official())
-    print("rung 8c: references only so far; port tests not yet written (run --vs-official)")
-    sys.exit(2)
+    if "--planted" in sys.argv[1:]:
+        sys.exit(main_planted())
+    sys.exit(main_mlx())
