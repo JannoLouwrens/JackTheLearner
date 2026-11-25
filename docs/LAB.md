@@ -92,22 +92,30 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   a food never reached). Philosophy 1, 3, 4, 5.
 
 - 11-25 · **The class is his own: closeness bins fed by his mouth** (Vision
-  encoder, BY DEFAULT; PLAN "Learning to eat" / "Eye" right columns;
-  `own_bins.py`, rule first `4628b97a`). J24 stopped because his rays carry
-  a per-object id, no class. Bet: the record's 16 closeness bins with the
-  FOOD class filled by his live table (empty at birth), read by a ruler
-  that sees only the bins, eats several times babble and a yoked table and
-  at least half of the same bins with the class handed by the simulator.
-  Kill: not above babble and yoked on 3/4 of worlds, or under half of
-  handed. Prior: bins per class under SAC 27.0 at 3e6, class always handed
-  (PRIORS §27); a sense built online from outcome is unpublished (§26); a
-  table and tens of trials is our size. **DEAD BY ITS RULE** (ahead of
-  yoked on 5 of 7 worlds, bar 6). 8 fresh worlds 1601-1608, 7 ignited,
-  meals in 2,500 decisions after the first: **own 65 = handed 65**, 128-ray
-  table 55, yoked 17, babble 10. Lost on: one world whose FIRST imprint was
-  not food (own 0, handed 9 — babble had no time to find a second meal),
-  and one where the yoked twin got lucky (10 vs 9). Found: 16 bins cost
-  nothing against 128 rays; suppression changed no meal. Unexplained: own
-  18 vs handed 9 in world 1603. Not entered. A new reason to return would
-  be a first imprint that cannot be wrong (e.g. touch at the mouth names
-  it, not the nearest ray). Philosophy 2, 3, 4.
+  encoder; `own_bins.py`; long form in git at `d02afb31`) · the record's 16
+  food bins with the class filled by his live table. **DEAD BY ITS RULE**
+  (ahead of yoked on 5 of 7 worlds, bar 6): own 65 = handed class 65, yoked
+  17, babble 10. Lost on one wrong FIRST imprint (own 0, handed 9) and one
+  lucky twin. 16 bins cost nothing against 128 rays. Philosophy 2, 3, 4.
+
+- 11-25 · **A first imprint that cannot be wrong: name everything in
+  reach, let going unfed cross names off** (Vision encoder, BY DEFAULT; PLAN
+  "Learning to eat" / "Eye" right columns; `first_imprint.py`, rule first
+  `aa9ea10d`). New reason: a probe of 12 lived worlds — the food he ate is
+  always among the 2-3 nearest things at the bite, not always THE nearest.
+  Bet: imprint every texture within 0.20 of range in his last two looks;
+  it eats as much as the one-name table and eats where that locked out.
+  Kill: not above babble and a yoked twin on 3/4 of worlds, or under 0.9 of
+  the one-name table, or under half the handed class where the nearest ray
+  was wrong. Prior: candidate elimination (Mitchell 1982), cue competition
+  (Rescorla-Wagner 1972) — tens of trials and a table, our size (from
+  memory); §26, §28. **DEAD BY ITS RULE** (the last clause: 6 vs handed 19
+  in the one such world, bar 9.5). 12 fresh worlds 1701-1712, 10 ignited:
+  **set 74, one-name 79, handed 102, yoked 12, babble 19**; over yoked 9/10.
+  The lock-out is repaired (one-name 0 -> set 6; lived 1607: 0 -> 9) and the
+  first set held the food 10/10, but each extra name costs a 400-decision
+  wait: 14 deletions vs 4, two worlds lost meals (2 vs 9, 6 vs 10). Not
+  entered. Return only with a faster strike (a name fed 7 times in sight
+  outvotes one fed once), or in a kind-coloured world where a wrong name
+  costs one wait in a lifetime. Unexplained, twice now: the handed class
+  eating 18-19 where the regrow clock allows ~9. Philosophy 3, 4, 5.

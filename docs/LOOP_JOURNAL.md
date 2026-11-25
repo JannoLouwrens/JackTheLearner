@@ -3995,3 +3995,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Read 1 FAIL: the OFFICIAL was off our truth (q99 up to 9.8e-3). Measured: official repval = 0 at [0::2,31] — the golden batch has is_last there; our input said none. Apparatus fix, nothing else moved.
 - Read 2 `80f5151d`: port meets every call eager+compiled; control breaks 3/3; plants 3/4 — boot=val meets at call 2 (early values ≈ imagined returns). FAIL, recorded; next slot rules or replaces that plant before read 3.
 - Served philosophy 4 (a plant that could not fail is a hole in the test, named rather than waved through) and 5 (the Mac port of his brain).
+
+## 2026-11-25 23:07–23:40 UTC · LAB · a first imprint that cannot be wrong — DEAD by its rule, with the lock-out repaired
+- Seat: Vision encoder (BY DEFAULT). New reason from a probe of 12 lived worlds: the food he ate is always among the 2–3 nearest things at the bite, not always the nearest.
+- `experiments/first_imprint.py`, rule frozen `aa9ea10d` before worlds 1701–1712: imprint the near SET, unfed deletion prunes it.
+- Read: set 74, one-name table 79, handed class 102, yoked 12, babble 19 (10 ignited). DEAD on clause (c): 6 vs 19 in the one wrong-nearest world (bar 9.5). Lock-out repaired (0 → 6; lived 1607 0 → 9); price 14 deletions vs 4.
+- Not entered. Served philosophy 3 (the holder's own weakness raced), 4 (a miss is a miss; the yoked twin failed 12 vs 74), 5.

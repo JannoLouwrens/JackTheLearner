@@ -69,7 +69,32 @@ decisions after the first meal; a world ignites as in `live_eye`.
   whether it held the food; deletions and how many struck true food; worlds
   where own ate <= 1.
 
-RESULT — not yet run (rule frozen in this commit).
+RESULT (2026-11-25, box, jack-std, 2,895 CPU-s, rule frozen at `aa9ea10d`) —
+**DEAD BY ITS RULE: clause (c). In the one judged world whose nearest ray at
+the first meal was not food (1708) set ate 6, the handed class 19 — bar 9.5.**
+Worlds 1701-1712, 10 ignited (1710, 1711 never ate). Meals in the 2,500
+decisions after the first meal: set 74 (2/6/9/9/9/9/9/6/9/6), own 79
+(9/10/9/9/10/9/9/0/9/5), oracle 102, yoked-set 12, babble 19. Clauses (a)
+and (b) held: over babble 8/10 and over the yoked twin 9/10 (bar 8), 2x
+each in total, 74 >= 0.9 x 79.
+ What it did: the lock-out is gone — own ate <= 1 in one world (1708: 0),
+ set in none (6 there); the first set held the food in 10 of 10 worlds
+ (size 1-4, median 2) where the nearest ray alone was food in 9 of 10. Dev,
+ lived world 1607: own 0 -> set 9 = oracle 9.
+ What it cost: extra names are paid for in waiting. 14 deletions against
+ own's 4 (none of true food) at 400 decisions each: 1701 set 2 vs own 9
+ (5 deletions), 1702 6 vs 10 (4). And names that sit beside the food are
+ never struck (1704: .18 counted 10 of 10 meals) — harmless there, since
+ pushing at them feeds him.
+ The yoked twin failed as it must this time (12; ahead in no world, level
+ in one) — the bigger stale set is not a lucky guess.
+ Not explained: oracle 19 in 1708 (two foods in one push?) — the same
+ above-the-regrow-ceiling surplus `own_bins` left open in 1603.
+ Cannot say: that a learner uses it; anything about a kind-coloured world
+ (INBOX 11-25 16:20), where one name per KIND would make a wrong first
+ name cost one deletion in a lifetime, not one per world.
+ A new reason to return: strike a name faster than 400 decisions when a
+ better-fed name is in sight (counts 7 vs 1 already say which is food).
 
     python -m experiments.first_imprint dev [workers]
     python -m experiments.first_imprint judge [workers]
