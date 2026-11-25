@@ -1,0 +1,101 @@
+{
+ "planted": true,
+ "paths": {
+  "U_total": "/data/jack-logs/j14/grad_resume/logs_gu/dreamer_v3_5/experiments.brain_a.in_world:JackWorld-v0/2026-11-25_07-39-15_dreamer_v3_5_experiments.brain_a.in_world:JackWorld-v0_0/version_0/checkpoint_buffers/ckpt_480_buffer_rank_0.pt",
+  "R_total": "/data/jack-logs/j14/grad_resume/logs_gu2/dreamer_v3_5/experiments.brain_a.in_world:JackWorld-v0/2026-11-25_07-46-37_dreamer_v3_5_experiments.brain_a.in_world:JackWorld-v0_0/version_0/checkpoint_buffers/ckpt_480_buffer_rank_0.pt",
+  "U_save": "/data/jack-logs/j14/grad_resume/logs_gu/dreamer_v3_5/experiments.brain_a.in_world:JackWorld-v0/2026-11-25_07-39-15_dreamer_v3_5_experiments.brain_a.in_world:JackWorld-v0_0/version_0/checkpoint_buffers/ckpt_400_buffer_rank_0.pt"
+ },
+ "per_env": [
+  {
+   "rows_U": 120,
+   "rows_R": 120,
+   "rows_saved": 100,
+   "first_diff_by_key": {
+    "actions": 100,
+    "deter": 1,
+    "is_first": 100,
+    "rewards": 100,
+    "state": 100,
+    "stepid": 100,
+    "stoch": 1,
+    "terminated": null,
+    "truncated": 99
+   },
+   "saved_last_truncated": 1.0,
+   "U_truncated_at_that_row": 0.0,
+   "R_truncated_at_that_row": 1.0,
+   "R_is_first_at_resume_row": 1.0,
+   "U_is_first_at_resume_row": 0.0
+  },
+  {
+   "rows_U": 120,
+   "rows_R": 120,
+   "rows_saved": 100,
+   "first_diff_by_key": {
+    "actions": 100,
+    "deter": 1,
+    "is_first": 100,
+    "rewards": 100,
+    "state": 100,
+    "stepid": 100,
+    "stoch": 1,
+    "terminated": null,
+    "truncated": 99
+   },
+   "saved_last_truncated": 1.0,
+   "U_truncated_at_that_row": 0.0,
+   "R_truncated_at_that_row": 1.0,
+   "R_is_first_at_resume_row": 1.0,
+   "U_is_first_at_resume_row": 0.0
+  },
+  {
+   "rows_U": 120,
+   "rows_R": 120,
+   "rows_saved": 100,
+   "first_diff_by_key": {
+    "actions": 100,
+    "deter": 1,
+    "is_first": 100,
+    "rewards": 100,
+    "state": 100,
+    "stepid": 100,
+    "stoch": 1,
+    "terminated": null,
+    "truncated": 99
+   },
+   "saved_last_truncated": 1.0,
+   "U_truncated_at_that_row": 0.0,
+   "R_truncated_at_that_row": 1.0,
+   "R_is_first_at_resume_row": 1.0,
+   "U_is_first_at_resume_row": 0.0
+  },
+  {
+   "rows_U": 120,
+   "rows_R": 120,
+   "rows_saved": 100,
+   "first_diff_by_key": {
+    "actions": 100,
+    "deter": 1,
+    "is_first": 100,
+    "rewards": 100,
+    "state": 100,
+    "stepid": 100,
+    "stoch": 1,
+    "terminated": null,
+    "truncated": 99
+   },
+   "saved_last_truncated": 1.0,
+   "U_truncated_at_that_row": 0.0,
+   "R_truncated_at_that_row": 1.0,
+   "R_is_first_at_resume_row": 1.0,
+   "U_is_first_at_resume_row": 0.0
+  }
+ ],
+ "earliest_diff_row": 1,
+ "saved_rows": [
+  100,
+  100,
+  100,
+  100
+ ]
+}
