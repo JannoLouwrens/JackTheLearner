@@ -1074,8 +1074,42 @@ Long form, every link and quote: `/data/jack-research/reports/sec27_lidar_eye_an
 
 ## 28. What a ray should say about WHAT it hit: a handed class, a stable look, or a code that moves between worlds (2026-11-25; serves J24's stop at (1), the INBOX lines JACK 07:10 + OUTSIDER 11-25, M3; plan parts "Eye" + "Learning to eat")
 
-Long form: `/data/jack-research/reports/sec28_what_a_ray_says_2026-11-25.md` (being written this slot).
+Long form, every link, table and the sub-agents' notes: `/data/jack-research/reports/sec28_what_a_ray_says_2026-11-25.md`.
 
-**Question.** His eye codes each thing as a hash of its geom id (`w0.py:225`): three foods = three codes, 0.01 from a wall's, different in every world. (a) What did the identity channel of every published forager's sensor return? (b) What does the record say a learner needs when a thing's look→meaning map changes each world? (c) Can a plain MLP carve a 0.01-wide slot out of one scalar, and what does biology hand an animal about food?
+**Question.** His eye codes each thing as a hash of its geom id (`w0.py:225`): three foods = three codes, each 0.01 from a wall's, re-dealt in every world. (a) What did published foragers' sensors return about identity? (b) What does a learner need when look→meaning is re-drawn each world? (c) Can an MLP carve a 0.01 slot from one scalar?
 
-*Skeleton — research running (three sub-agents); findings land in this slot.*
+**Already known**
+- **No published forager's ray returns a per-object code — 0 of 12 worlds read.** rllab Gather: two arrays, `apple_readings[10]`, `bomb_readings[10]`, `1 − d/range` ([gather_env.py](https://raw.githubusercontent.com/rll/rllab/master/rllab/envs/mujoco/gather/gather_env.py) L288–334). ML-Agents FoodCollector: per ray a one-hot over tags + miss + distance, 7 rays × 7 = 49 (`RayPerceptionSensor.cs` L214–233). Safety Gym: one geom GROUP per class, one cast per class; it never reads `geomid` (`engine.py` L973–991). Animal-AI 3: a tag per ray. No published success or failure exists for our sensor.
+- **The same kind looks the same in every episode, everywhere.** Pixels too (ViZDoom, DMLab); Avalon switches food-appearance variation OFF (2210.13417). Integer ids are embedded, never read as a size (NetHack: 5,991 glyphs → 32-d each, 2006.13760 App. F).
+- **Class in hand was still not enough for flat learners.** SwimmerGather **0.0 ± 0.0 for every algorithm at 25M steps**, AntGather −5.8…−0.1 of 8 (Duan 2016, T.1); HIRO AntGather 3.02 ± 1.49 at 10M (1805.08296 T.1). FoodCollector (PPO 1×256): 2M for reward 10.
+- **Look→reward re-drawn per episode has only ever been solved with in-episode memory.** Harlow task (two random images, one pays): conv + LSTM, ~1e5 episodes × 32 threads, at ceiling in 43% of seeds (26% single LSTM) (Wang 2016, 1611.05763); 14 of 50 nets (Wang 2018). Same paper, goal re-drawn each episode: feed-forward A3C "unable to solve the task". Smallest: recurrent TD3/SAC, 64 units, 0.75–1.5M on toys (Ni 2021, 2110.05038).
+- **Big agents fail at it too.** Alchemy: 156.2 against 145.7 for a random heuristic, ideal observer 284.4, > 5e8 steps — "a failure of meta-learning" (2102.02926).
+- **A network learns smooth functions first.** Raw coordinate vs Fourier features on a text image (thin strokes): PSNR 18.40 → 30.47 (Tancik 2020, T.1); a value MLP needs 5× the epochs of a Fourier net (Yang 2022, 2206.04672).
+- **Biology:** cone signals, no label; a kind keeps its signature from place to place; taste labels the look (bees: 1–3 rewarded visits). When looks are re-dealt: Harlow's monkeys, 344 problems.
+
+**Candidates**
+- **A. One stable look per KIND, a few 0/1 channels per ray** (floor food · water · rock · wall · panel), same in every world; nothing says which look feeds him. This IS ML-Agents' input: a one-hot tag is a colour with orthogonal channels (inf). Proven: FoodCollector 2M; pixels 1M–50M. Weak: 128 × (1 + K) inputs; no budget under 2M. Expect: apart from blind by 500k (§27).
+- **B. The same looks pooled to 16 closeness bins per kind** (Safety Gym / rllab; J24 as written). Proven: SAC 3e6 (§27), HIRO 10M. Our lab's ruler: 16 bins 65 meals, 128 rays 55. Weak: fixes the pooling for him. Expect: as A, cheaper per update.
+- **C. Keep today's code, add memory** (recurrent B, or the lab's live table as a sense). Unreliable with an LSTM at 1e5+ episodes; failed in Alchemy. Expect at 5e5 with memoryless B: an indiscriminate toucher at best (inf). Stage 3's question, not the instrument's.
+
+**Ours beside theirs**
+
+| setting | published | ours | same / cost |
+|---|---|---|---|
+| identity per ray | class array or one-hot; fixed table | one scalar, `(geom_id·0.37 mod 0.8)+0.1` (`w0.py:225`; `fast_sim.py:165–172`) | differs; no published case at all |
+| same kind, same look | always | 3 foods = 3 codes; 23/23 worlds re-deal (`j24_class_probe.py`) | a Harlow problem per world |
+| nearest non-food look | another channel | 0.01 = ~1/25 sd after `VecNormalize` (`pilot_b.py:462`) | a high-frequency slot, × 128 unshared rays |
+| memory | LSTM/GRU wherever looks are re-drawn | none (MLP 2×256) | published feed-forward: fails |
+| budget | 2M–25M | 1e5–5e5 | 4–250× under |
+
+**Our own toy (one seed, supervised, clean labels — a pointer, not a row):** 37 codes from our formula, 4 foods, MLP 2×256: one-hot class 100% recall by step 250; scalar code 25–36% at 20,000 (`/data/jack-research/scratch_sec28C/code/toy.py`).
+
+**Known-answer check.** None published for a scalar-coded ray. Nearest: FoodCollector 10 at 2M (Unity); AntGather 3.02 at 10M. Ours: the toy with 5 seeds, the real food ids of worlds 941–943, 200k steps and a third arm (kind look, K channels) — box-minutes. Pass line stated first: kind-look ≥ 99% recall within 10× one-hot's steps; scalar < 50%.
+
+**What the record does NOT answer**
+- One-hot kind vs a 3-number colour vs a scalar hue per kind: no ablation anywhere. The toy's third arm; prediction: both multi-channel forms pass, a scalar hue passes only if kinds are ≥ 0.2 apart.
+- Does B's MLP read food's bearing from today's row at all? OUTSIDER E1 (~2 CPU-h). Prediction: < 10% explained in new worlds, > 80% with a kind look.
+- A learner on a kind-look eye at our budget: J24 (2)–(6) unchanged. Prediction: sighted above blind; EATS at 500k unlikely (record: 2M+).
+- Memory that finds food's look inside one life: unpublished under 0.75M, toys only. Stage 3.
+
+**Not verified.** Tancik / Yang numbers: summarising fetch, not the tables. Menzel 1967, Harlow 1949, Cherkin 1969, Regan 2001: secondary sources. IMPALA's frames on DMLab-30; total steps for Harlow and Alchemy; AAI-3 foraging scores (plot only); PettingZoo Waterworld's sensor (404); any RL agent trained on AAI raycasts. More in the long form.
