@@ -3693,3 +3693,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Tests failing (`963d32f1`) → `mlx_maths.dec_vec_loss` (`3c5b0b63`): 2/2 eager+compiled, worst 5.0e-6, planted 6/6, rungs 1/8a/8b still pass. Not ported: categorical keys, image branch.
 - Owed: wheel re-check kernel (covers 4 rungs now); then the full world-model loss on one golden batch.
 - Served: philosophy 4 (each port check catches planted bugs) and 7 (the Mac port, so he can run on people's own machines).
+
+## 2026-11-25 01:37–01:45 UTC · JACK · J21 rung 9 (full world-model loss) REFERENCES HOLD
+- Kaggle 5/5 RUNNING (J10-2 segments launched 00:10, nothing home). J22/J20/J23 DONE, J14 waits Sat → J21's last row.
+- `rung9.py --vs-official` (`eb440755`): scales read from the pinned configs.yaml (rep 0.1, rec applied per obs key), 3 official agent.py lines present verbatim; every term REF vs official golden ≤ 2.1e-6; total 179.2374 (init) / 231.3479 (noised) vs official-composed, rel 7.5e-9; planted 4/4 at both param sets.
+- Finding: swapping dyn's and rep's scales cannot be seen in any forward check (same value; only the stop-gradients differ). Printed as BLIND, not counted; the port tests owe a gradient check.
+- Limit, said: the total is L240's arithmetic over 8a/8b/8c's official goldens, not a fresh official Agent.loss call (encoder + imagination unported).
+- Served: philosophy 4 (a planted bug the test could not see was named, not counted) and 7 (the Mac port).

@@ -241,7 +241,8 @@ serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7
 state: rung 7 size1m DONE `b79e04e8`; rung 8a (dyn + rep, free bits) DONE `80b603bd` (refs 16/16 `a3fd3c60`; size1m init KL 2.45–11.63 never meets the 1.0 floor, so a free 7.5 pass tests the max()).
 state: 11-25 rung 8b DONE `f37d8afd` (refs `ac9a3074` 15/15; official rewhead outscale 0 → zero logits at init, so compares run on seeded noised params too).
 state: 11-25 01:27 rung 8c (decoder VECTOR losses, walker proprio keys) DONE `3c5b0b63`: refs vs official Decoder 24/24 `971816b9`, tests failing `963d32f1`, `mlx_maths.dec_vec_loss` 2/2 eager+compiled (5.0e-6), planted 6/6. Scar: decoder joins STOCH first (feat2tensor is deter first). Categorical + image branches not ported.
-state: NEXT: wheel re-check kernel (rank 0, now covers 7 size1m/8a/8b/8c — Kaggle 5/5 J10 at 01:22); then the full world-model loss on one golden batch (last row of this order).
+state: 11-25 01:40 rung 9 (FULL world-model loss, L240 sum(mean×scale), scales read from pinned configs.yaml) REFERENCES 29/29 HOLD `eb440755`: total 179.2374 init / 231.3479 noised vs official-composed (rel 7.5e-9); planted 4/4 ×2. Forward-BLIND: dyn↔rep scale swap (same value) → port tests owe a GRADIENT check.
+state: NEXT: rung 9 port tests committed failing (`mlx_maths.wm_loss` + grad routing: prior side ×1.0, posterior ×0.1), then the module; wheel re-check kernel (rank 0, covers 7 size1m/8a/8b/8c/9) when a Kaggle session frees (5/5 J10 at 01:37). policy/value/repval not in this order.
 
 **Lane `forge`** reads `docs/FORGE.md`; its F3 is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
