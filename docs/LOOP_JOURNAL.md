@@ -3678,3 +3678,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J21 rung 8b refs (`ac9a3074`): official rew (twohot) + con (binary) heads over rung 7's size1m feat vs NumPy f64: 15/15 hold, worst 1.6e-6, planted 6/6 caught.
 - Finding: the published rewhead has outscale 0.0, so at init the reward logits are all zero and the loss is log 255 whatever the head's weights — a golden at init would test nothing. The compare runs on seeded noised params, regenerated from shapes.
 - Served: philosophy 4 (a comparison that can fail, where the published init could not) and 7 (the Mac port).
+
+## 2026-11-25 01:07–01:35 UTC · JACK · J21 rung 8b (reward + continue head losses, size1m) PASS
+- Kaggle 5/5 RUNNING (J10-2 s3/s4 seg3, s5/s6 seg2, s7 seg0) by Kaggle's own status; nothing home. J22/J20/J23 DONE, J14 waits Sat, J18 fallback not before 06:00 → J21.
+- Port tests `rewcon_ref` + `rewcon_golden` committed failing against a stub (`9db7bb98`), at both the published init and the noised params, with a con-discount control.
+- `mlx_maths.rewcon_loss` (`f37d8afd`): 2/2 eager+compiled, worst 2.35e-6 ×(|ref|+1) vs official golden; published init's zero reward logits / log 255 reproduced; planted 6/6 caught; rungs 1 (9/9) and 8a (2/2) still pass.
+- Owed next: the wheel re-check kernel (third rung since 11-21) when a Kaggle session frees; then 8c decoder.
+- Served: philosophy 4 (each port check has a planted bug it must catch) and 7 (the Mac port, so he can run on people's own machines).

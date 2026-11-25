@@ -241,7 +241,7 @@ serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7
 state: 11-24 rung 7 at size1m DONE `b79e04e8` (2/2 eager+compiled vs official e01491f, planted 4/4).
 state: 11-25 00:30 rung 8a (dyn + rep with free bits) DONE `80b603bd`: refs vs official `rssm.loss` 16/16 `a3fd3c60`; tests failing `b8aafa5f`; `mlx_maths.rssm_loss` 2/2 eager+compiled (6.4e-7 vs golden), planted 4/4. Finding: at size1m init raw KL is 2.45–11.63 — the 1.0 floor never binds, so a free 7.5 official pass (55.5% split) tests the max().
 state: 11-25 00:41 rung 8b REFERENCES `ac9a3074`: rew twohot + con binary heads over rung 7's size1m feat vs official MLPHead 15/15 HOLD (worst 1.6e-6), planted 6/6. Finding: official rewhead outscale 0.0 → reward logits all ZERO at init, loss log 255 whatever the MLP; so the compare runs on seeded N(0,0.3) params (`rung8b.noised_params`, regenerated from shapes, not stored).
-state: NEXT: 8b port tests committed FAILING (rewcon_ref + rewcon_golden, eager+compiled, both the published-init and noised passes), then `mlx_maths` heads until they pass; then wheel re-check kernel (rank 0, third rung since 11-21); then 8c vector decoder.
+state: 11-25 01:30 rung 8b DONE `f37d8afd`: tests failing `9db7bb98`; `mlx_maths.rewcon_loss` 2/2 eager+compiled (worst 2.35e-6 vs golden, both param sets), planted 6/6, rungs 1/8a still pass. NEXT: wheel re-check kernel (rank 0, third rung since 11-21 — Kaggle was 5/5 J10 at 01:30); then 8c vector decoder (refs first).
 
 **Lane `forge`** reads `docs/FORGE.md`; its F3 is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
