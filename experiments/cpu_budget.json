@@ -1968,21 +1968,23 @@
         "T1.13": 3.86,
         "T2.12": 41.25,
         "detached:grad_resume_probe.log": 547.65,
-        "detached:launch_M_chainA.log": 142.48,
-        "detached:launch_M_chainB.log": 142.29,
+        "detached:launch_M_chainA.log": 153.07,
+        "detached:launch_M_chainB.log": 152.91,
         "detached:launch_j10_2_s3_seg3.log": 489.98,
         "detached:launch_j10_2_s4_seg3.log": 675.4,
         "detached:launch_j10_2_s5_seg2.log": 313.29,
-        "detached:launch_j10_2_s5_seg3.log": 260.59,
+        "detached:launch_j10_2_s5_seg3.log": 826.15,
         "detached:launch_j10_2_s6_seg2.log": 792.87,
         "detached:launch_j10_2_s6_seg3.log": 662.52,
         "detached:launch_j10_2_s7_seg0.log": 649.87,
         "detached:launch_j10_2_s7_seg1.log": 734.77,
-        "detached:launch_j10_2_s7_seg2.log": 140.6,
+        "detached:launch_j10_2_s7_seg2.log": 151.12,
+        "detached:launch_kws2_timing.log": 3.49,
         "detached:launch_wheel_9.log": 2.46,
-        "detached:launch_wheel_s1m.log": 2.75
+        "detached:launch_wheel_s1m.log": 2.75,
+        "detached:smoke_plumb.log": 341.85
       },
-      "used_s": 6141.24
+      "used_s": 7083.87
     }
   },
   "last_child_s": {

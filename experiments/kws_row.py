@@ -110,6 +110,11 @@ if os.environ.get("KWS_SHUFFLE") == "1":
             n = sum(a != b for a, b in zip(old, self.labels))
             print("KWS_SHUFFLED %d/%d" % (n, len(old)), flush=True)
     utils.SpeechCommand.__init__ = _init
+if os.environ.get("KWS_PLUMB") == "1":   # N7-kws-2 (ruling 106): decode once + noise on device, wrappers only
+    import atexit, kws_plumbing
+    _st = kws_plumbing.install(utils)
+    print("KWS_PLUMB installed", flush=True)
+    atexit.register(lambda: print("KWS_PLUMB hits %d misses %d" % (_st["hits"], _st["misses"]), flush=True))
 sys.argv = [os.path.join(here, "main.py")] + sys.argv[1:]
 runpy.run_path(os.path.join(here, "main.py"), run_name="__main__")
 '''
@@ -134,6 +139,9 @@ def fetch_source(dst: str) -> str:
         subprocess.run(["git", "clone", "-q", REPO, dst], check=True)
     subprocess.run(["git", "-C", dst, "checkout", "-q", COMMIT], check=True)
     open(os.path.join(dst, "kws_launch.py"), "w").write(_LAUNCHER)
+    import shutil   # N7-kws-2's plumbing beside the launcher (imported only when KWS_PLUMB=1)
+    shutil.copy(os.path.join(os.path.dirname(os.path.abspath(__file__)), "kws_plumbing.py"),
+                os.path.join(dst, "kws_plumbing.py"))
     return dst
 
 
@@ -352,11 +360,21 @@ def smoke() -> int:
     # the counts guard must fire on a wrong expectation (known-positive), within seconds
     r = run_one(src, work, 1, False, time.time() + 300, expect_counts=EXPECT_COUNTS, threads=2, env_extra=ta)
     out["guard"] = {"stopped": r["stopped"], "wall_s": r["wall_s"]}
+    # N7-kws-2: the plumbed s0 must be the SAME run end to end (every valid acc and the test acc equal)
+    plain0 = run_one(src, work, 0, False, time.time() + 900, expect_counts=counts, threads=2, env_extra=ta)
+    pl = run_one(src, work, 0, False, time.time() + 900, expect_counts=counts, threads=2,
+                 env_extra=dict(ta, KWS_PLUMB="1"))
+    ptxt = open(os.path.join(work, "s0.log"), errors="replace").read()
+    out["plumb"] = {"installed": "KWS_PLUMB installed" in ptxt, "rc": pl["rc"], "test": pl["test"],
+                    "test_plain": plain0["test"], "valid_equal": pl["valid"] == plain0["valid"],
+                    "n_valid": len(pl["valid"]), "hits_line": re.findall(r"KWS_PLUMB hits \d+ misses \d+", ptxt)}
+    plumb_ok = (out["plumb"]["installed"] and pl["rc"] == 0 and pl["test"] is not None
+                and pl["test"] == plain0["test"] and out["plumb"]["valid_equal"] and len(pl["valid"]) == EPOCHS)
     ok = (not bad and all(x["rc"] == 0 and x["test"] is not None and x["n_valid"] == EPOCHS
                           and tuple(x["counts"]) == counts for x in out["runs"])
           and out["runs"][1]["shuffled"] and out["runs"][1]["shuffled"][0] > 0
           and out["runs"][0]["shuffled"] is None
-          and (r["stopped"] or "").startswith("DATA_MISMATCH"))
+          and (r["stopped"] or "").startswith("DATA_MISMATCH") and plumb_ok)
     out["ok"] = bool(ok)
     json.dump(out, open(os.path.join(work, "smoke.json"), "w"), indent=1, default=str)
     print(json.dumps(out, default=str)[:3000])
