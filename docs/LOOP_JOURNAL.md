@@ -3671,3 +3671,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Rung 8a: official `rssm.loss` end to end on rung 7's size1m golden: 16/16 refs hold (`a3fd3c60`); port tests committed failing (`b8aafa5f`); `mlx_maths.rssm_loss` 2/2 eager+compiled, worst 6.4e-7 vs golden, planted 4/4 (`80b603bd`).
 - Finding: at size1m init the raw KL is 2.45–11.63 nats, so the published 1.0 free-bits floor never binds — a free-1 test alone is blind to the max(). Added an official free 7.5 pass (55.5% split). My first run also read later noise on its third pass (cursor not rewound) — fixed before any verdict.
 - Served: philosophy 4 (a test that could fail — and the floor clause would not have, until the split pass) and 7 (the Mac port, so people can run him on their own machines).
+
+## 2026-11-25 00:37–00:45 UTC · JACK · J21 rung 8b references + Next-up #3 (short slot)
+- Kaggle 5/5 RUNNING (J10-2 s3/s4 seg3, s5/s6 seg2, s7 seg0); nothing home. J22/J20/J23 DONE, J14 waits Sat 11-28 → Next-up #3, then J21. Next-up #2 was already discharged (`1e1952c7`).
+- Next-up #3 (`9bfd5c6b`): KNOWN_ANSWERS standing table gained B-6c-2 (in band, 933.8) and A2-v1S-enc (frozen, not run); stage2_a_vs_b gates 2/2b now list one line a row from it. Gate 2 OPEN on A2-v1S-enc only.
+- J21 rung 8b refs (`ac9a3074`): official rew (twohot) + con (binary) heads over rung 7's size1m feat vs NumPy f64: 15/15 hold, worst 1.6e-6, planted 6/6 caught.
+- Finding: the published rewhead has outscale 0.0, so at init the reward logits are all zero and the loss is log 255 whatever the head's weights — a golden at init would test nothing. The compare runs on seeded noised params, regenerated from shapes.
+- Served: philosophy 4 (a comparison that can fail, where the published init could not) and 7 (the Mac port).
