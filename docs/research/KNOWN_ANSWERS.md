@@ -46,7 +46,7 @@ Rules are in that file's docstring, committed before each run.
 | J3-4 | MountainCarContinuous-v0 | in-house `ppo-needs`, same rule | 150,000 (3× 50,000) | deterministic eval > 90 at 50k/100k/150k on ≥ 3 of 5 | best checkpoints −0.016 −0.004 −0.001 −0.016 −0.008 — 0 of 5; **0 goals in 750 training episodes** | 0–4 | **FAIL** (set aside) |
 | J3-4 | MountainCarContinuous-v0 | control, optimiser never stepped | 150,000 | reaches on ≤ 1 of 5 | −0.0004 −0.0012 −0.0001 −0.0009 −0.0006 — 0 of 5 | 0–4 | holds |
 
-## Where each brain stands against the record (ORDERS Next-up 2; written 2026-11-24, from the rows below — no verdict changed here)
+## Where each brain stands against the record (ORDERS Next-up 2; written 2026-11-24, B-6c-2 + A2-v1S-enc lines added 11-25; from the rows below — no verdict changed here)
 
 One line per row of brain A and brain B. **In band** = the row's frozen rule reads REPRODUCES/PASS; **named miss** =
 the rule ran to its end (extension included where it had one) and missed; **void** = the run could not test the claim.
@@ -61,15 +61,18 @@ For B, a row counts for `ours` (SBX SAC + LayerNorm) only when `lib` (the unmodi
 | B | B-5 | DMC cartpole-swingup, 50k, 15 seeds | 853.0 (band 841.7–864.3 at k 15) | lib 833.8; ours 862.6 not counted | **named miss** (lib; one outlier seed 643.6, without it 847.4 — stated, not used) |
 | B | B-6a | DMC cartpole-swingup_sparse, 150k | 776.5 (726.9–826.1) | lib 541.1; ours 172.4 not counted | **named miss** — the learner, not the eval (J19: frozen explorer s3 + win-then-lose s1) |
 | B | B-6b | DMC reacher-easy, 150k | 929.9–1000 | lib 953.7; ours 958.1 | **in band** (lib and ours) |
-| B | B-6c | DMC reacher-hard, 150k | 955.8 (905.7–1000) | lib 824.9 (10-ep eval); ours 888.7 not counted | **named miss**; under a 100-ep reference-style eval lib reads 908.3, in band by 2.6 — re-registration allowed once (ruling 70), not ordered |
+| B | B-6c | DMC reacher-hard, 150k | 955.8 (905.7–1000) | lib 824.9 (10-ep eval); ours 888.7 not counted | **named miss**; under a 100-ep reference-style eval lib reads 908.3, in band by 2.6 — re-registration allowed once (ruling 70) → B-6c-2 |
+| B | B-6c-2 | DMC reacher-hard, 150k, fresh seeds 5–9, mean of 100 re-seeded episodes (ruling 70's one re-registration) | 905.7–1000 | lib 933.8 (956.1/952.8/845.9/962.6/951.7), ctrl ≤ 7.6 | **in band** (lib); 6c stays a named miss beside it |
 | A | A1 | DMC cartpole_balance, size 1m, 3 seeds | 100K 690–898 / 200K 932–1000 | 782.3 / 984.1 | **in band** |
 | A | A2 | DMC cartpole_swingup, size 1m, 5 seeds | 100K 438–518 / 200K 740–816 | 393.3 / 788.2 | **named miss** at 100K (in band at 200K) |
-| A | A2-v1S | DMC cartpole_swingup, size S (enc+dec 2×512, not the published 5×1,024), 3 seeds | same bands | 610.0 / 835.3 | **named miss — ABOVE** both bands; extension not run (ruling 78); matched arm A2-v1S-enc to be frozen (J14 a) |
+| A | A2-v1S | DMC cartpole_swingup, size S (enc+dec 2×512, not the published 5×1,024), 3 seeds | same bands | 610.0 / 835.3 | **named miss — ABOVE** both bands; extension not run (ruling 78); matched arm A2-v1S-enc → next line |
+| A | A2-v1S-enc | DMC cartpole_swingup, size S with the matched encoder (4 keys, 53/56 settings same), seeds 10–12 | same bands | — (frozen `877faac4`; timing 5.0 T4-h a seed `381b83b9`; no seed yet) | **not run** — seeds on Kaggle GPU from 11-28 |
 | A | A3 | DMC ball_in_cup_catch, size 1m, 3 seeds | 200K 931–967 | 956.1 | **in band** |
 | A | smoke | his world, 20k, 1 seed | — (no published number) | (1)–(4) hold | not a record row — a smoke |
 
-**B in one line:** reproduces on Pendulum (1b), MountainCarContinuous (3/3b) and reacher-easy (B-6b); three named
-misses on DMC (B-5, B-6a, B-6c), of which 6c is partly our eval's size and 6a is the learner. **A in one line:** 2 of 3
+**B in one line:** reproduces on Pendulum (1b), MountainCarContinuous (3/3b), reacher-easy (B-6b) and reacher-hard on
+the reference's test (B-6c-2, 11-25); three named misses on DMC stay (B-5, B-6a, B-6c), of which 6c was mostly our
+eval's size and 6a is the learner. **A in one line:** 2 of 3
 size-1m rows in band (A1, A3); A2 misses early at 1m and overshoots at size S, so "build right at the published size"
 is still unshown (A2-v1S-enc). Not listed, because they are not brain A or B: the PPO library rows (2/2b, 4–4d), the
 walking layer (J10-1 FAIL, J10-2 running), the in-house learners (J3-4…J3-6, set aside), Dulberg's grid (NH-1/NH-2),

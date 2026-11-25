@@ -58,6 +58,23 @@ ruling 59); none has today.
    not enter stage 2 until J19's reading is written** (`KNOWN_ANSWERS.md`
    B-6, addendum 11-22 07:25: OUR EVAL / AN EXPLORATION DRAW / WIN-THEN-LOSE
    / UNCLASSIFIED, per task, from the cause twin's saved models).
+   **Gates 2 and 2b, one line a row (11-25, from `KNOWN_ANSWERS.md` § "Where
+   each brain stands"; that table is the source — this block copies it, rules nothing):**
+   - A1 cartpole_balance 1m — in band (782.3 / 984.1) → holds
+   - A2 cartpole_swingup 1m — named miss at 100K (393.3 vs 438–518) → OPEN
+   - A2-v1S size S — named miss ABOVE (610.0 / 835.3) → does not close A2
+   - A2-v1S-enc matched size S — frozen, not run (5.0 T4-h a seed; Kaggle GPU from 11-28) → gate 2's open line
+   - A3 ball_in_cup_catch 1m — in band (956.1) → holds
+   - A smoke in his world — (1)–(4) hold → holds (not a record row)
+   - B 1b Pendulum — in band (lib −309.3, ours −302.0) → holds
+   - B 3 / 3b MountainCarContinuous — in band (lib 5/5, ours 5/5) → holds
+   - B B-5 cartpole-swingup — named miss (lib 833.8) → listed, not blocking (ruling 68)
+   - B B-6a swingup_sparse — named miss, the learner's (lib 541.1) → listed, not blocking
+   - B B-6b reacher-easy — in band (lib 953.7, ours 958.1) → holds
+   - B B-6c reacher-hard 10-ep — named miss (824.9) → listed beside B-6c-2
+   - B B-6c-2 reacher-hard, re-registered — in band (lib 933.8) → holds
+   **Gate 2 today: OPEN on A2 at the published size (A2-v1S-enc). Gate 2b: the reproduction rows
+   hold; B's stage-2 entry still waits on gate 1 (J22 closed B on the wide eye for stage 1, 11-24).**
 3. **The harness's thirteen self-checks** (PRIORS §8 "Reproduce first"
    #1–#13) pass through the real pipeline, each with its named test.
 4. **The 20-run pilot** (PLAN: "the number is set by a 20-run pilot") is home

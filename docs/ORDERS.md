@@ -241,6 +241,7 @@ serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7
 state: 11-24 rung 7 at size1m DONE `b79e04e8` (2/2 eager+compiled vs official e01491f, planted 4/4).
 state: 11-25 00:30 rung 8a (dyn + rep with free bits) DONE `80b603bd`: refs vs official `rssm.loss` 16/16 `a3fd3c60`; tests failing `b8aafa5f`; `mlx_maths.rssm_loss` 2/2 eager+compiled (6.4e-7 vs golden), planted 4/4. Finding: at size1m init raw KL is 2.45–11.63 — the 1.0 floor never binds, so a free 7.5 official pass (55.5% split) tests the max().
 state: NEXT: prediction-loss rung (rew twohot, con binary, vector decoder — needs the heads; NumPy f64 ref from official agent.py L170-182 first, tests committed while FAILING); it is the third rung since the 11-21 wheel line → wheel re-check kernel (rank 0) after it.
+state: 11-25 00:40 read for 8b (no code): official `rewhead` has outscale 0.0 (configs.yaml L98; `nets.Linear` init × outscale, bias zeros) → at init the reward logits are all ZERO and the rew loss is log 255 whatever the MLP or input — a golden at init is blind to the head like free 1 was to the floor. 8b must add a second official pass with rew outscale 1.0 on the same params (8a's FSPLIT pattern) and say so; con (outscale 1.0) is fine at init. Scope 8b = rew + con; vector decoder = 8c.
 
 **Lane `forge`** reads `docs/FORGE.md`; its F3 is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
