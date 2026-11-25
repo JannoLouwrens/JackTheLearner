@@ -60,7 +60,33 @@ def detached_keys() -> set[str]:
     return out
 
 
-def kaggle_in_flight() -> list[tuple[str, str]]:
+def our_slugs() -> list[str]:
+    """Our newest kernels' slugs, from Kaggle itself."""
+    try:
+        p = subprocess.run([KAGGLE, "kernels", "list", "--mine", "--sort-by", "dateRun",
+                            "--page-size", "40", "--csv"],
+                           capture_output=True, text=True, timeout=90)
+    except Exception as e:
+        raise Unreadable(f"kaggle kernels list: {e}")
+    refs = [l.split(",", 1)[0] for l in p.stdout.splitlines() if l.count("/") and "," in l]
+    if p.returncode or not refs:
+        raise Unreadable(f"kaggle kernels list: rc {p.returncode}")
+    return [r.split("/", 1)[1] for r in refs]
+
+
+def resolve(backend: str, ts: float, slugs: list[str]) -> str:
+    """The receipt's `ts` is taken BEFORE gpu.py's `t0`, so the slug's epoch can
+    be a second or more later (jack-cpu-1795565428 was really ...429): match the
+    window gpu.reattach_code_check uses, never a guessed int(ts)."""
+    pre = f"jack-{SLUG[backend]}-"
+    hits = [s for s in slugs if s.startswith(pre) and s[len(pre):].isdigit()
+            and 0 <= int(s[len(pre):]) - int(ts) <= 600]
+    if not hits:
+        raise Unreadable(f"no kaggle kernel for the {backend} attempt at {int(ts)}")
+    return min(hits, key=lambda s: int(s[len(pre):]))
+
+
+def kaggle_in_flight(slugs=our_slugs) -> list[tuple[str, str]]:
     """[(backend, slug)] for kaggle attempts with no result row, last 13 h."""
     try:
         rows = [json.loads(l) for l in SUBS.read_text().splitlines() if l.strip()]
@@ -68,10 +94,13 @@ def kaggle_in_flight() -> list[tuple[str, str]]:
         raise Unreadable(f"gpu_submissions unreadable: {e}")
     done = {r.get("attempt_id") for r in rows if r.get("phase") != "attempt"}
     now = time.time()
-    return [(r["backend"], f"jack-{SLUG[r['backend']]}-{int(r['ts'])}")
-            for r in rows
-            if r.get("phase") == "attempt" and r.get("backend") in SLUG
-            and r.get("attempt_id") not in done and now - r.get("ts", 0) < 13 * 3600]
+    flight = [r for r in rows
+              if r.get("phase") == "attempt" and r.get("backend") in SLUG
+              and r.get("attempt_id") not in done and now - r.get("ts", 0) < 13 * 3600]
+    if not flight:
+        return []
+    have = slugs()
+    return [(r["backend"], resolve(r["backend"], r["ts"], have)) for r in flight]
 
 
 def kaggle_status(slug: str) -> str:
@@ -179,6 +208,13 @@ def test() -> int:
         ("finished box job runs", dict(st, keys=["1:2", "9:9"]), busy, running, same, False),
         ("director edit runs", st, busy, running, lambda ts: "ORDERS.md changed", False),
         ("no record runs", {}, busy, running, same, False),
+        ("receipt a second before its slug resolves", st,
+         lambda: [("kaggle-cpu", resolve("kaggle-cpu", 1795565428.997,
+                                         ["jack-cpu-1795565429", "jack-cpu-1795565331"]))] * 5,
+         lambda s: "RUNNING" if s == "jack-cpu-1795565429" else "?", same, True),
+        ("receipt with no kernel runs", st,
+         lambda: [("kaggle-cpu", resolve("kaggle-cpu", 1795560000.0, ["jack-cpu-1795565429"]))] * 5,
+         running, same, False),
     ]
     bad = 0
     for name, s, fl, stt, od, want in cases:
