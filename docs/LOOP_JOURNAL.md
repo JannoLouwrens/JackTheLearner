@@ -3753,3 +3753,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - s6 @2M (50-ep eval): **R 5,993.5 / 17.92 m/1k, 3/50 fell → MEETS the frozen bar** (R ≥ 5,950, ≥ 12 m/1k). Tally 2 meets (s4, s6) / 1 miss (s3) / 2 open: PASS needs s5 and s7 both to meet.
 - Result receipt copied from the clean worktree's jsonl into main's. The free 5th session left empty: no other order has a ready kernel (forge chains are sequential by the frozen rule; J10's other seeds are already running).
 - Served philosophy 4 (a frozen bar read seed by seed as it falls, no extension) and 1 (his walking body).
+
+## 2026-11-25 07:07–07:20 UTC · JACK · J24 stopped at (1) by measurement + J10 (2) chain
+- Kaggle first: 4/5 RUNNING (J10 s5 seg3, s7 seg2; forge chains A/B), nothing home. J24 is first in the lane → read §27 and the eye before writing code.
+- J24 (1) asks for closeness bins per object CLASS "from the row128 rays and nothing else". Measured (`experiments/j24_class_probe.py`, 23 pilot worlds incl. seeds 941–943, jack-std): the ray's second number is a hash of the geom ID, not a class — the 3 floor foods read 3 different values in every world, 4 different value-sets across 23 worlds (941/942/943 all differ), and in 23/23 worlds another world's food value is a non-food thing here. The order's stop clause applies: no bins16 eye, no learner seed, one INBOX line with the ruling it needs (a class-returning ray, as the record's lidar has).
+- J10 (2): `scripts/j10_chain.sh` (planted 5/5: no record / short segment / wrong segment refuse, good launches, already-home refuses) started detached, pid 2641573 — s7 seg3 goes by itself when seg2's watcher exits on target. Nothing needs a worker awake through the usage stop.
+- Served philosophy 4 (nothing faked: a "food bin" would have had to read the simulator's food list — said before any seed was spent) and 3 (the record's encoding is only the record's if the ray returns what theirs returns).

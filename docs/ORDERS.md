@@ -117,7 +117,8 @@ J17-2 is re-frozen on this eye at the next sitting. Not shown → the row
 stands as written and the next sitting rules the 1.5M question.
 serves: M3 (the earliest unfinished milestone) · PLAN "Learning to eat" + "Eye" last 10% · philosophy 1, 3, 4.
 **done when:** (2) is read, `eye_bins16.md` is frozen, and the nine cells are running as chains with their raw-file paths in a state line.
-state: (new 11-25. Two Kaggle sessions free about 14:00 UTC when J10 s5 seg3 comes home — and one is free NOW (s6 is home): the timing cell's kernel may take it.)
+state: 11-25 07:10 (1) STOPPED BY ITS OWN STOP CLAUSE — the ray row carries NO class signal. `experiments/j24_class_probe.py` (box, jack-std, 23 pilot worlds incl. 941–943): texture = a hash of the geom ID (`w0.py:225`); each world's 3 floor foods read 3 DIFFERENT values among 29–34 other hittable geoms; 941 (.49 .86 .43), 942 (.86 .43 .80), 943 (.43 .80 .37); in 23/23 worlds another world's food value is a non-food geom here.
+state: So no `eye="bins16"`, no forager proof, no prereg, no learner seed, no kernel taken (INBOX line 11-25 07:10). Steps (2)–(6) wait on a ruling that gives the eye a class to bin; until then the two sessions J24 was ranked for fall to J10's remaining segment (rank 3).
 
 ### J18 — Forge round 1, rung M: 30 runs of 300k are on two chains — harvest and read
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19, §21, §22; `docs/FORGE_POOL.md`; rulings 61, 65, 69, 83, 105
@@ -157,7 +158,7 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 **done when:** J10-2 is in `KNOWN_ANSWERS.md`, pass or fail, by its frozen rule.
 state: 11-25 03:40 @2M: **s4 R 6,254.3 / 17.16 m/1k / 0 fell → meets the bar**. s6 seg3 `…577986` + s7 seg1 `…577077` launched from clean worktree `/data/wt/jack-clean` (`JACK_REPO=` needed: the main tree's forge dirt trips the submit guard).
 state: @2M so far: s4 R 6,254.3 / 17.16 m/1k MEETS; s3 R 5,649.4 / 12.08 MISSES; **s6 (06:37) R 5,993.5 / 17.92 m/1k, 3/50 fell → MEETS** (`…577986`). Tally 2 meets / 1 miss / 2 open → PASS needs s5 AND s7 to meet.
-state: 11-25 06:40 running: s5 seg3 `…580623` (since 04:24, ~3 h train), s7 seg2 `…587392` (1.5M). NEXT: s5 seg3 home → read its 2M eval; s7 seg2 home → `kernel2 7 3` from the clean worktree (`JACK_REPO=/data/wt/jack-clean`). Row read in KNOWN_ANSWERS when all five are home.
+state: 11-25 07:10 running: s5 seg3 `…580623` (since 04:24), s7 seg2 `…587392` (1.5M). **(2) DONE: chain watcher pid 2641573** (`scripts/j10_chain.sh 7 3 2589368`, planted 5/5; log `/data/jack-logs/j10/chain_s7.log`) launches `kernel2 7 3` from the clean worktree the moment seg2's watcher exits with `hit_target` true — else it REFUSES in that log. NEXT: read s5's 2M eval (`/data/jack-logs/j10/sac_row2/s5_seg3.json`) and s7's (`s7_seg3.json`); copy the worktree's new receipt rows into main; row into KNOWN_ANSWERS when all five are home.
 
 ### J14 — Brain A at the published size, and the ear with its plumbing fixed
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `prereg/a2_size_s_enc.md` (FROZEN + timing addendum `381b83b9`); `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws (+ addendum 11-24); rulings 67, 78, 79, 86, 96, 103, 106
@@ -307,6 +308,7 @@ A2-v1S's newest checkpoint per run and `control.npz` under
 
 ## INBOX — one line each, workers add, the Director empties
 (emptied 11-25 06:42 — every line of 11-24/25 is ruled in 101–110 or became J24, J14 (b)/(c), S17, the lab note or Next-up.)
+- 11-25 07:10 JACK J24: STOPPED at (1) — the row128 eye has no class channel: its second number is a per-geom ID hash (`w0.py:225`), 3 different values for the 3 foods in every world and different values from world to world (23 worlds, `experiments/j24_class_probe.py`; 941/942/943 all differ). "Food bins" from the rays alone do not exist. Needs a ruling: e.g. a `jack_env` eye option whose ray returns a material CLASS (food / water / obstacle / panel — what the record's lidar returns, §27) with today's eye the default, then J24 (1)–(6) as written. No learner seed spent.
 
 ## DONE (kept one day)
 
