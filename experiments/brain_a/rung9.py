@@ -1,5 +1,5 @@
 """MLX port of DreamerV3 — rung 9 (PORT report step 2.4, last world-model loss row): the FULL
-world-model loss on one golden batch — REFERENCES ONLY in this commit (port tests + module next).
+world-model loss on one golden batch. References `eb440755`; port tests below (module next).
 
 Official code `danijar/dreamerv3` at e01491f:
   agent.py L80-83   scales = config.loss_scales.copy(); rec = scales.pop('rec');
@@ -138,8 +138,116 @@ def main_official():
     return 0 if n == len(rows) else 1
 
 
+# ---------------------------------------------------------------- port tests (MLX)
+# `mlx_maths.wm_loss(losses, scales)` -> scalar: L240, sum over scales' keys of mean(losses[k]) *
+# scales[k] (a key in scales but not in losses is an error, not a zero). Each test eager AND under
+# mx.compile:
+#   wm_total   port on the official f32 [B,T] terms (8a/8b/8c goldens) vs rung 9's golden total,
+#              both param sets, rel 1e-5 (the --vs-official tolerance)
+#   wm_grad    GRADIENT ROUTING, the check the forward is blind to (dyn and rep carry one value):
+#              total = wm_loss(kl_dyn_rep(post, prior) + the other golden terms) on a [1,2] slice of
+#              rung 7's size1m post/prior logits (256 per side); mx.grad wrt prior must equal
+#              scale_dyn (1.0) x d mean(KL)/d prior, wrt post scale_rep (0.1) x d mean(KL)/d post,
+#              both from rung1.REF_kl_grads (float64 central differences). The FD gradients are
+#              non-zero (not blind) and the two expected sides differ by 10x, so a swap cannot pass.
+# Patch points the planted harness uses: wm_loss's _wm_mean, and kl_dyn_rep itself.
+SLICE = (slice(0, 1), slice(0, 2))
+
+
+def _kl_inputs():
+    _, _, _, g7 = rung7_golden()
+    return np.float32(g7["post"][SLICE]), np.float32(g7["prior"][SLICE])
+
+
+def golden_scales():
+    """The scales --vs-official read from configs.yaml and wrote into the golden (the port side has
+    no yaml / official checkout — on the box's jack-mlx env nor on the Kaggle wheel)."""
+    G = np.load(GOLDEN9)
+    return dict(zip([str(k) for k in G["scale_keys"]], [float(v) for v in G["scale_vals"]]))
+
+
+def t_total(M, mx, compiled):
+    G = np.load(GOLDEN9)
+    S = golden_scales()
+    pub = {"dyn": 1.0, "rep": 0.1, "rew": 1.0, "con": 1.0, **{k: 1.0 for k in rung8c.VEC}}
+    rows = [(set(S) == set(pub) and all(np.float32(S[k]) == np.float32(pub[k]) for k in pub),
+             f"golden's scales are the published ones (f32): {S}")]
+    f = (lambda t: M.wm_loss(t, S))
+    if compiled:
+        f = mx.compile(f)
+    for pset, gk in (("init", "total_init"), ("noised", "total_noised")):
+        g = golden_terms(pset)
+        got = float(np.asarray(f({k: mx.array(v) for k, v in g.items()})))
+        rows.append((rel(got, G[gk]) <= 1e-5, f"{pset}: port total {got:.7g} vs golden {float(G[gk]):.7g} "
+                                                f"(rel {rel(got, G[gk]):.3g} <= 1e-5)"))
+    nc = float(np.asarray(M.wm_loss({k: mx.array(v) for k, v in golden_terms("init").items()},
+                                    {k: v for k, v in S.items() if k != "con"})))
+    rows.append((rel(nc, G["total_init"]) > 1e-5, f"control: con's scale dropped moves the total ({nc:.6g})"))
+    return rows   # dyn vs rep cannot be told apart here (one value): wm_grad is that check
+
+
+def t_grad(M, mx, compiled):
+    import rung1
+    post, prior = _kl_inputs()
+    mix, free = rung8a.TOY["unimix"], rung8a.FREE
+    S = golden_scales()
+    g = golden_terms("noised")
+    rest = {k: mx.array(v) for k, v in g.items() if k not in ("dyn", "rep")}
+    n = float(np.prod(post.shape[:2]))
+
+    def total(p, q):
+        dyn, rep = M.kl_dyn_rep(p, q, mix, free)
+        return M.wm_loss({**rest, "dyn": dyn, "rep": rep}, S)
+
+    gf = mx.grad(total, argnums=(0, 1))
+    if compiled:
+        gf = mx.compile(gf)
+    gp, gq = (np.asarray(x) for x in gf(mx.array(post), mx.array(prior)))
+    d_prior, d_post = rung1.REF_kl_grads(np.float64(post), np.float64(prior), mix, free)
+    d_prior, d_post = d_prior / n, d_post / n                       # mean over [B,T], not sum
+    rows = [(float(np.abs(d_prior).max()) > 1e-4 and float(np.abs(d_post).max()) > 1e-4,
+             f"FD gradients non-zero (|d prior| {np.abs(d_prior).max():.3g}, |d post| {np.abs(d_post).max():.3g})"),
+            (float(np.abs(rung1.REF_kl(np.float64(post), np.float64(prior), mix, 0.0)[1]).min()) > free,
+             "the free-bits floor does not bind on the slice (else the gradient is zero by design)")]
+    rows.append(rung8a.close(f"d total/d prior == scale_dyn {S['dyn']} x FD", gq, S["dyn"] * d_prior))
+    rows.append(rung8a.close(f"d total/d post == scale_rep {S['rep']} x FD", gp, S["rep"] * d_post))
+    sw = float(np.abs(gp - S["dyn"] * d_post).max())
+    rows.append((sw > 1e-4, f"control: the swapped routing (post x {S['dyn']}) differs ({sw:.3g} > 1e-4)"))
+    return rows
+
+
+TESTS = [("wm_total", t_total), ("wm_grad", t_grad)]
+
+
+def _mlx():
+    import rung6
+    return rung6._mlx()
+
+
+def main_mlx():
+    mx = _mlx()
+    import mlx_maths as M
+    n = 0
+    for name, t in TESTS:
+        r = {}
+        for mode, c in (("eager", False), ("compiled", True)):
+            try:
+                rows = t(M, mx, c)
+                r[mode] = all(o for o, _ in rows)
+                det = [d for o, d in rows if not o][:4] if not r[mode] else [d for _, d in rows]
+            except Exception as e:  # noqa: BLE001 — a stub or crash is a FAIL, reported
+                r[mode], det = False, [f"{type(e).__name__}: {e}"[:200]]
+            if mode == "eager" or not r[mode]:
+                for d in det:
+                    print(f"    {mode[0]}:", d)
+        n += r["eager"] and r["compiled"]
+        print(f"{name:14s} eager {'PASS' if r['eager'] else 'FAIL'}  compiled {'PASS' if r['compiled'] else 'FAIL'}")
+    print(f"RUNG 9: {n}/{len(TESTS)} tests pass eager AND compiled (mlx {mx.__version__}) -> "
+          f"{'PASS' if n == len(TESTS) else 'FAIL'}")
+    return 0 if n == len(TESTS) else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv:
         sys.exit(main_official())
-    print("rung 9: port tests not written yet (next commit); run --vs-official")
-    sys.exit(2)
+    sys.exit(main_mlx())

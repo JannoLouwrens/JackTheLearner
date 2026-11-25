@@ -489,3 +489,8 @@ def dec_vec_loss(P, deter, stoch, targets, spaces, layers):
         out[k] = _vec_agg(sq, list(range(2, sq.ndim)))
         out[f"pred/{k}"] = pred
     return out
+
+
+# agent.py L240 (rung 9): loss = sum([v.mean() * scales[k] for k, v in losses.items()])
+def wm_loss(losses, scales):
+    raise NotImplementedError("rung 9: wm_loss not ported yet (tests committed first)")
