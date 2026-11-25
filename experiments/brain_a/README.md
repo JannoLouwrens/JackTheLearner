@@ -691,3 +691,23 @@ seed spanning |x| 0.01–300 (both symlog regions).
 - Ours beside theirs: f32 compute (published bf16); continuous keys only — the `categorical` branch
   (discrete vector keys; none in DMC proprio) and the image branch (BlockLinear + conv) are not ported.
   Wheel re-check now covers rungs 7 size1m, 8a, 8b, 8c (owed since 8b; Kaggle was 5/5 J10 at 01:22).
+
+## J21 — rung 9: the FULL world-model loss on one golden batch, size1m (11-25): **PASS**
+`experiments/brain_a/rung9.py`, official `agent.py` L80-83 (rec is per obs key) + L240
+`sum([v.mean() * scales[k] ...])` + `configs.yaml` loss_scales at e01491f, over 8a/8b/8c's [4,64] batch.
+- `--vs-official`: **29/29 REFERENCES HOLD** (`eb440755`; scales read from the pinned configs.yaml, rep 0.1;
+  total 179.2374 init / 231.3479 noised, rel 7.5e-9). Limit: the total is L240's arithmetic over the
+  three official goldens, not a fresh official `Agent.loss` call (encoder + imagination unported).
+- Port tests `wm_total` (L240 on the official f32 terms vs the golden total, both param sets, con-dropped
+  control) and `wm_grad` (**gradient routing** through `kl_dyn_rep` on a [1,2] slice of rung 7's size1m
+  post/prior: d/d prior == 1.0 × FD, d/d post == 0.1 × FD, float64 central differences from
+  `rung1.REF_kl_grads`; swapped-routing control) committed FAILING (`66cfcc16`, stub); then
+  `mlx_maths.wm_loss` → **RUNG 9: 2/2 PASS eager AND compiled**. `--planted` 5/5 caught: sum not mean,
+  mean-over-T then sum-over-B, **dyn↔rep swapped (the forward-blind bug — caught only by wm_grad)**, no
+  stop-gradients, rep's 0.1 ignored. Rungs 1 (9/9), 7 size1m, 8a, 8b, 8c (2/2) still pass.
+  Logs `/data/jack-logs/mlx/rung9_{pass,planted}.log`.
+- Ours beside theirs: f32 (published bf16); `wm_loss` iterates the SCALES dict (a scaled key with no loss
+  raises), official iterates the losses dict — equal key sets for the world-model part. policy / value /
+  repval are not in this rung. Port envs read the scales from the golden (no yaml there).
+  Wheel re-check: kernel `wheel_kernel kernel s1m` (rungs 7 size1m, 8a, 8b, 8c) launched 11-25 03:27
+  (`jack-cpu-1795577221`); rung 9 rides the next wheel set.

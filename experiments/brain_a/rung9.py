@@ -247,7 +247,49 @@ def main_mlx():
     return 0 if n == len(TESTS) else 1
 
 
+def main_planted():
+    """Each planted bug is patched into the real port; the tests must FAIL eager."""
+    mx = _mlx()
+    import mlx_maths as M
+    keep = {k: getattr(M, k) for k in ("_wm_mean", "kl_dyn_rep", "wm_loss")}
+
+    def swapped(p, q, mix, free):                   # dyn <-> rep: same values, routing swapped
+        d, r = keep["kl_dyn_rep"](p, q, mix, free)
+        return r, d
+
+    def no_sg(p, q, mix, free):                     # both sides get gradient from both terms
+        d = mx.maximum(M._cat_kl(M.unimix_logits(p, mix), M.unimix_logits(q, mix)).sum(-1), free)
+        return d, d
+
+    bugs = {
+        "sum over [B,T], not mean": dict(_wm_mean=lambda x: mx.sum(x)),
+        "mean over time only, then sum over batch": dict(_wm_mean=lambda x: mx.sum(mx.mean(x, 1))),
+        "dyn and rep swapped (forward-blind)": dict(kl_dyn_rep=swapped),
+        "no stop-gradients in the KL": dict(kl_dyn_rep=no_sg),
+        "rep's 0.1 ignored (every scale 1)": dict(wm_loss=lambda L, S: keep["wm_loss"](L, {k: 1.0 for k in S})),
+    }
+    caught = 0
+    for name, patch in bugs.items():
+        for k, v in patch.items():
+            setattr(M, k, v)
+        try:
+            bad = [d for _, t in TESTS for o, d in t(M, mx, False) if not o]
+        except Exception as e:  # noqa: BLE001
+            bad = [f"crash {type(e).__name__}: {e}"]
+        finally:
+            for k, v in keep.items():
+                setattr(M, k, v)
+        caught += bool(bad)
+        print(f"planted [{name}] -> {'CAUGHT' if bad else 'MISSED'}" + (f"  ({bad[0][:80]})" if bad else ""))
+    ctl = all(o for _, t in TESTS for o, _ in t(M, mx, False))
+    print(f"PLANTED: {caught}/{len(bugs)} caught, unpatched port {'passes' if ctl else 'FAILS'} -> "
+          f"{'OK' if caught == len(bugs) and ctl else 'HARNESS BLIND'}")
+    return 0 if caught == len(bugs) and ctl else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv:
         sys.exit(main_official())
+    if "--planted" in sys.argv[1:]:
+        sys.exit(main_planted())
     sys.exit(main_mlx())

@@ -491,6 +491,18 @@ def dec_vec_loss(P, deter, stoch, targets, spaces, layers):
     return out
 
 
-# agent.py L240 (rung 9): loss = sum([v.mean() * scales[k] for k, v in losses.items()])
+def _wm_mean(x):
+    return mx.mean(x)
+
+
+# agent.py L240 (rung 9): loss = sum([v.mean() * self.scales[k] for k, v in losses.items()]).
+# Ours beside theirs: official iterates the LOSSES dict (every key must have a scale); ours iterates
+# SCALES (every scaled key must have a loss — a missing one raises KeyError, never adds 0). For the
+# world-model part the two sets are equal; policy/value/repval are not in this rung. f32 (pub bf16).
+# The dyn/rep stop-gradients live in kl_dyn_rep; this sum only weights them (dyn 1.0, rep 0.1).
 def wm_loss(losses, scales):
-    raise NotImplementedError("rung 9: wm_loss not ported yet (tests committed first)")
+    total = None
+    for k, s in scales.items():
+        term = _wm_mean(losses[k]) * s
+        total = term if total is None else total + term
+    return total
