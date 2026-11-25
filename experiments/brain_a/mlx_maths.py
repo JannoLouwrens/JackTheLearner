@@ -512,13 +512,72 @@ def wm_loss(losses, scales):
 # Contract: `rung10.py` REF_imagine / REF_imag / REF_repl (NumPy float64), checked 36/36 against
 # the official RSSM.imagine + agent.py L194-198 and imag_loss / repl_loss at e01491f by
 # `rung10.py --vs-official` (c0dd858f). Done-test: `rung10.py` exits 0, eager AND compiled.
+def _actemb(action, act_spec):
+    """nets.DictConcat: sorted keys; continuous as is; discrete -> one-hot (as rssm_step)."""
+    parts = []
+    for k in sorted(act_spec):
+        a = action[k]
+        if act_spec[k]:
+            a = (mx.arange(act_spec[k])[None, :] == a[:, None]).astype(f32)
+        parts.append(a.astype(f32))
+    return mx.concatenate(parts, -1)
+
+
+def _prior(P, deter, cfg):                         # rssm.py L164-169
+    x = deter
+    for i in range(cfg["imglayers"]):
+        x = _layer(P, f"prior{i}", x, cfg["act"])
+    return _lin(P, "priorlogit", x).reshape(x.shape[0], cfg["stoch"], cfg["classes"])
+
+
 def imag_rollout(P, start, policy, uniforms, cfg, act_spec, length):
-    raise NotImplementedError("rung 10 port not written yet")
+    """rssm.py L94-118 `imagine` + agent.py L194-198. start: dict(deter [N,D], stoch [N,S,C]);
+    policy: callable(carry) -> action dict, or an action dict {key: [N, H, ...]}; uniforms
+    [H,N,S,C] = the H real prior-sampler calls' uniforms (ninjax's prerun draw already skipped).
+    Per step: a = policy(sg(carry)); deter = _core(deter, stoch, DictConcat(a)); logit =
+    _prior(deter); stoch = OneHot(logit, unimix).sample. -> feat {deter, stoch, logit} [N,H+1,..]
+    with the start first (logit 0 there: agent's `first` is the replay feat, whose logit is the
+    POSTERIOR's — not this rung's input; ours puts 0), act {key: [N,H(+1)]}: act[:, t] is taken at
+    feat[:, t]; the callable path appends policy(feat[:, H]) as agent.py L196-198."""
+    deter, stoch = start["deter"], start["stoch"]
+    F = {k: [] for k in ("deter", "stoch", "logit")}
+    A = {k: [] for k in act_spec}
+    call = callable(policy)
+    for h in range(length):
+        if call:
+            a = policy(dict(deter=mx.stop_gradient(deter), stoch=mx.stop_gradient(stoch)))
+        else:
+            a = {k: v[:, h] for k, v in policy.items()}
+        for k in A:
+            A[k].append(a[k])
+        deter = _core(P, deter, stoch, _actemb(a, act_spec), cfg)
+        logit = _prior(P, deter, cfg)
+        stoch = sample_onehot(logit, uniforms[h], cfg["unimix"])
+        for k, v in (("deter", deter), ("stoch", stoch), ("logit", logit)):
+            F[k].append(v)
+    first = dict(deter=start["deter"], stoch=start["stoch"], logit=mx.zeros_like(F["logit"][0]))
+    feat = {k: mx.stack([first[k]] + v, 1) for k, v in F.items()}
+    if call:
+        last = policy(dict(deter=deter, stoch=stoch))
+        for k in A:
+            A[k].append(last[k])
+    return dict(feat=feat, act={k: mx.stack(v, 1) for k, v in A.items()})
 
 
 def imag_return(rew, con, val, contdisc, horizon, lam):
-    raise NotImplementedError("rung 10 port not written yet")
+    """agent.py imag_loss L396-401 with slowtar False (tarval = the value, already denormalised):
+    disc = 1 if contdisc else 1 - 1/horizon; weight = cumprod(disc*con, 1)/disc; last = 0,
+    term = 1 - con, ret = lambda_return(last, term, rew, val, val, disc, lam).
+    -> dict(ret [N,H], weight [N,H+1]). The value's valnorm denormalisation is rung 11's."""
+    disc = 1.0 if contdisc else 1.0 - 1.0 / horizon
+    con = con.astype(f32)
+    weight = mx.cumprod(disc * con, 1) / disc
+    ret = lambda_return(mx.zeros_like(con), 1.0 - con, rew, val, val, disc, lam)
+    return dict(ret=ret, weight=weight)
 
 
 def repl_return(last, term, rew, val, boot, horizon, lam):
-    raise NotImplementedError("rung 10 port not written yet")
+    """agent.py repl_loss L462-466 with slowtar False: disc = 1 - 1/horizon, weight = f32(~last),
+    ret = lambda_return(last, term, rew, val, boot, disc, lam). -> dict(ret [B,K-1], weight [B,K])."""
+    ret = lambda_return(last, term, rew, val, boot, 1.0 - 1.0 / horizon, lam)
+    return dict(ret=ret, weight=mx.logical_not(last).astype(f32))

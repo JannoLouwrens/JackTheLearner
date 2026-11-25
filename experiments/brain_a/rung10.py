@@ -512,7 +512,58 @@ def main_mlx():
     return 0 if n == len(TESTS) else 1
 
 
+def main_planted():
+    """Each planted bug is patched into the real port; the tests must FAIL eager."""
+    mx = rung6._mlx()
+    import mlx_maths as M
+    names = ("sample_onehot", "_actemb", "lambda_return", "_core", "imag_rollout")
+    keep = {k: getattr(M, k) for k in names}
+
+    def lagged(p, s, pol, u, cfg, spec, n):
+        if not callable(pol):
+            return keep["imag_rollout"](p, s, pol, u, cfg, spec, n)
+        prev = []
+
+        def late(c):                       # the action taken at step h is the one for step h-1's carry
+            a = pol(c)
+            out = prev[-1] if prev else a
+            prev.append(a)
+            return out
+        return keep["imag_rollout"](p, s, late, u, cfg, spec, n)
+
+    bugs = {
+        "no unimix in the prior sampler": dict(sample_onehot=lambda l, u, m: keep["sample_onehot"](l, u, 0.0)),
+        "actions halved before the core": dict(_actemb=lambda a, spec: 0.5 * keep["_actemb"](a, spec)),
+        "lam on the bootstrap, not the continuation": dict(
+            lambda_return=lambda la, te, r, v, b, d, lam: keep["lambda_return"](la, te, r, v, b, d, 1 - lam)),
+        "disc 1-1/333 under contdisc": dict(
+            lambda_return=lambda la, te, r, v, b, d, lam: keep["lambda_return"](
+                la, te, r, v, b, (1 - 1 / HORIZON) if d == 1.0 else d, lam)),
+        "core skipped (prior on the old deter)": dict(_core=lambda P, d, s, a, cfg: d),
+        "policy reads the carry one step late": dict(imag_rollout=lagged),
+    }
+    caught = 0
+    for name, patch in bugs.items():
+        for k, v in patch.items():
+            setattr(M, k, v)
+        try:
+            bad = [d for _, t in TESTS for o, d in t(M, mx, False) if not o]
+        except Exception as e:  # noqa: BLE001
+            bad = [f"crash {type(e).__name__}: {e}"]
+        finally:
+            for k, v in keep.items():
+                setattr(M, k, v)
+        caught += bool(bad)
+        print(f"planted [{name}] -> {'CAUGHT' if bad else 'MISSED'}" + (f"  ({bad[0][:80]})" if bad else ""))
+    ctl = all(o for _, t in TESTS for o, _ in t(M, mx, False))
+    print(f"PLANTED: {caught}/{len(bugs)} caught, unpatched port {'passes' if ctl else 'FAILS'} -> "
+          f"{'OK' if caught == len(bugs) and ctl else 'HARNESS BLIND'}")
+    return 0 if caught == len(bugs) and ctl else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv:
         sys.exit(main_official())
+    if "--planted" in sys.argv[1:]:
+        sys.exit(main_planted())
     sys.exit(main_mlx())

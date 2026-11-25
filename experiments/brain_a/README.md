@@ -719,3 +719,29 @@ seed spanning |x| 0.01–300 (both symlog regions).
   1.0 × FD el 2.95e-8, d/d post 0.1 × FD el 4.68e-9, swapped-routing control differs 0.235); planted 5/5
   caught, unpatched port passes. Verdict file `/data/jack-logs/mlx/wheel_9.json`. Every rung through the
   full world-model loss now passes on the wheel the Mac will run.
+
+## J25 — rung 10: imagination rollout + lambda-returns, size1m (11-25): **PASS**
+`experiments/brain_a/rung10.py`, official `rssm.py` `RSSM.imagine` L94-118 + `agent.py` L190-198 (the
+[N, H+1] assembly), `imag_loss` L382-405 / `repl_loss` L448-480 / `lambda_return` L482-490 at e01491f.
+- `--vs-official`: **36/36 REFERENCES HOLD** (`c0dd858f`). Imagination on rung 7's size1m params from
+  N = 32 starts (its golden's last K = 8 steps), H = 15, file noise, BOTH imagine paths (action array;
+  callable policy on the carry, the last action appended): deter 1.0e-7, logit 1.1e-6 ×(|ref|+1) over 15
+  steps, 0 flips of 15,360 latents (1 near-tie fed golden); squash binds on 26% of policy actions.
+  Returns through the official `imag_loss`/`repl_loss` run for real, with the value heads, policy and
+  normalisers stubbed (rungs 11-12): ret 1.4e-5 (contdisc and 1-1/333), repl 2.3e-7; λ 1 == Monte
+  Carlo + bootstrap and λ 0 == one-step TD (closed forms). Planted references 13/13 caught.
+  Golden `rung10_imag_golden_size1m_e01491f.npz` (2.9 MB, sha256 86c42040…).
+- Port tests `imag_ref`, `imag_golden`, `ret_ref`, `ret_golden` committed FAILING (`bfefdd8b`, stub); then
+  `mlx_maths.imag_rollout` / `imag_return` / `repl_return` → **RUNG 10: 4/4 PASS eager AND compiled**
+  (imagination worst 2.3e-6 ×(|ref|+1) vs golden, 0 flips; returns and weights EQUAL to the official f32
+  dump, element 0). `--planted` 6/6 caught (no unimix, actions halved, λ on the bootstrap, disc under
+  contdisc, core skipped, policy one step late); rungs 1, 6, 7 size1m, 8a, 8b, 8c, 9 still pass.
+  Logs `/data/jack-logs/mlx/rung10_{vs_official,pass,planted}.log`.
+- No gradient check at this rung, by reading: every rung 10 output is consumed under a stop-gradient in
+  the agent (L195 `sg(imgfeat)` with `ac_grads False`; `sg(weight)`, `sg(adv)`, `sg(target)`), so no
+  forward-blind routing lives here; the routing claim is rung 13's whole step.
+- Ours beside theirs: f32 (published bf16); N 32 starts (published imag_last 0 → B·T); the toy action
+  space; the callable path's actor is a fixed function of the carry (the actor is rung 12); the start's
+  logit slot is 0 (official: the replay posterior's logit, which the heads never read — `feat2tensor`
+  uses deter + stoch only); normalisers / value denormalisation not ported (rungs 11-12). No wheel kernel
+  owed until rung 12 (ORDERS J25).
