@@ -3988,3 +3988,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Read 3: port meets V+Q at 1/2/6/8 eager+compiled; call 2 V exempt (official 1.0e-7/2.4e-7/7.0e-7 vs 1.0e-7/2.3e-7/6.8e-7, |Δtruth| q99 2.5e-7); C breaks V 2/2, Q 3/3; plants 4/4. PASS.
 - Said plainly: the ruling was written after read 2 showed the call-2 figures (as q2's disc ruling was); retnorm_limit_0 at call 1 is nan both sides and counts via the finiteness clause.
 - Served philosophy 4 (a dead control ruled by a measurement the independent reference makes, with a guard against a control dead everywhere — no threshold moved). Philosophy 7's MLX question after the owner's no-Mac line is still the Director's.
+
+## 2026-11-25 22:37–22:45 UTC · JACK · J25 — rung 13b-repval: the replay value loss, two reads, still FAIL on one plant
+- First act: forge M_g0–g5 home, both rerun watchers + ear retry loop alive (Colab 503); J24 waits on its ruling, J10 DONE → J25.
+- Line `29367744` before read: repval vs f64 truth, teacher-forced (repfeat, boot = imagined ret[:,0], reward[:,1:]), (Q-S) unchanged; control rew zeroed; plants slowreg 0 / disc 1 / boot=val / lam 1.
+- Read 1 FAIL: the OFFICIAL was off our truth (q99 up to 9.8e-3). Measured: official repval = 0 at [0::2,31] — the golden batch has is_last there; our input said none. Apparatus fix, nothing else moved.
+- Read 2 `80f5151d`: port meets every call eager+compiled; control breaks 3/3; plants 3/4 — boot=val meets at call 2 (early values ≈ imagined returns). FAIL, recorded; next slot rules or replaces that plant before read 3.
+- Served philosophy 4 (a plant that could not fail is a hole in the test, named rather than waved through) and 5 (the Mac port of his brain).
