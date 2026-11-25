@@ -302,7 +302,132 @@ def main_official():
     return 0 if n == len(rows) else 1
 
 
+# ---------------------------------------------------------------- port tests (MLX)
+# `mlx_maths.critic_loss(P, fi, rew, con, fr, last, term, rrew, rboot, horizon, lam, slowreg, repval)`
+#   -> dict(value [N,H], repval [B,K-1], total (scalar), val [N,H+1], slow [N,H+1], ret [N,H],
+#   rret [B,K-1]) — val/slowval MLPHeads (3 layers) on feat2tensor'd inputs, imag_loss's and
+#   repl_loss's value terms with valnorm 'none', total = mean(value) + repval * mean(repval).
+#   P keys are the official state's ("val/mlp/linear0/kernel", "slowval/...").
+# Each test eager AND under mx.compile:
+#   critic_ref     port vs REF_critic (float64) at the noised params
+#   critic_golden  port vs the official f32 dump at published init (out0) and noised (outN)
+#   critic_grad    mx.grad of total w.r.t. every val param vs the official jax.grad dump (per param
+#                  max |d| <= 1e-3 x max |g_official|), every slowval grad exactly 0; control: the
+#                  grad with the slowreg term dropped differs
+#   slow_update    mlx_maths.slow_update (rung 3's) on the val params vs the official SlowModel dump
+TOL_GP = 1e-3
+
+
+def _golden():
+    G = np.load(GOLDEN11)
+    P0 = {k[len("param0/"):]: G[k] for k in G.files if k.startswith("param0/")}
+    shapes = {k: v.shape for k, v in P0.items()}
+    Pn = {**noised({k: s for k, s in shapes.items() if k.startswith("val/")}, 7),
+          **noised({k: s for k, s in shapes.items() if k.startswith("slowval/")}, 8)}
+    return G, P0, Pn
+
+
+def _port(M, mx, P, compiled, slowreg=SLOWREG):
+    fi, fr, R = inputs()
+    A = mx.array
+    MP = {k: A(v) for k, v in P.items()}
+    args = (A(fi), A(R["rew"]), A(R["con"]), A(fr), A(R["last"]), A(R["term"]), A(R["rrew"]), A(R["rboot"]))
+    f = lambda P_, *a: M.critic_loss(P_, *a, HORIZON, LAM, slowreg, REPVAL)  # noqa: E731
+    out = (mx.compile(f) if compiled else f)(MP, *args)
+    return {k: np.asarray(v) for k, v in out.items()}, MP, args, f
+
+
+def t_critic(M, mx, compiled, against):
+    G, P0, Pn = _golden()
+    fi, fr, R = inputs()
+    rows = []
+    o, *_ = _port(M, mx, Pn, compiled)
+    if against == "ref":
+        r = REF_critic(Pn, fi, fr, R)
+        for k in ("val", "slow", "ret", "rret", "value", "repval", "total"):
+            rows.append(close(f"noised {k} vs REF", o[k], r[k]))
+    else:
+        o0, *_ = _port(M, mx, P0, compiled)
+        for k in ("value", "repval", "total", "val"):
+            rows.append(close(f"published init {k} vs GOLDEN", o0[k], G[f"out0/{k}"]))
+        for k in ("val", "slow", "ret", "rret", "value", "repval", "total"):
+            rows.append(close(f"noised {k} vs GOLDEN", o[k], G[f"outN/{k}"]))
+    return rows
+
+
+def t_grad(M, mx, compiled):
+    G, _, Pn = _golden()
+    rows = []
+
+    def grads(slowreg):
+        _, MP, args, f = _port(M, mx, Pn, False, slowreg)
+        g = mx.grad(lambda P_: f(P_, *args)["total"])
+        g = mx.compile(g) if compiled else g
+        return {k: np.asarray(v) for k, v in g(MP).items()}
+    g = grads(SLOWREG)
+    worst, keyw = 0.0, ""
+    for k in sorted(k for k in G.files if k.startswith("grad/val/")):
+        name = k[len("grad/"):]
+        ref = np.float64(G[k])
+        d = float(np.abs(np.float64(g[name]) - ref).max() / (np.abs(ref).max() + 1e-12))
+        if d > worst:
+            worst, keyw = d, name
+    rows.append((np.isfinite(worst) and worst <= TOL_GP,
+                 f"grad of total, 11 val params vs GOLDEN jax.grad: worst {worst:.3g} x max|g| ({keyw})"))
+    sz = max(float(np.abs(v).max()) for k, v in g.items() if k.startswith("slowval/"))
+    rows.append((sz == 0.0, f"slowval grads exactly 0 (max |g| {sz:.3g})"))
+    g0 = grads(0.0)
+    d = max(float(np.abs(g0[k] - g[k]).max()) for k in g if k.startswith("val/"))
+    rows.append((d > 1e-5, f"control: slowreg 0 changes the val grads ({d:.3g} > 1e-5)"))
+    return rows
+
+
+def t_slow(M, mx, compiled):
+    G, _, _ = _golden()
+    shapes = {k[len("param0/val/"):]: G[k].shape for k in G.files if k.startswith("param0/val/")}
+    Ps = noised({"src/" + k: s for k, s in shapes.items()}, 9)
+    Pd = noised({"dst/" + k: s for k, s in shapes.items()}, 10)
+    f = lambda s, d, c: M.slow_update(s, d, c, RATE, EVERY)  # noqa: E731
+    f = mx.compile(f) if compiled else f
+    rows = []
+    for k in sorted(Pd):
+        new, cnt = f(mx.array(Ps["src/" + k[4:]]), mx.array(Pd[k]), mx.array(np.int32(0)))
+        rows.append(close(f"slow {k} vs GOLDEN", np.asarray(new), G[f"slowupd/{k}"], 1e-6, 1e-6))
+    rows.append((int(np.asarray(cnt)) == 1, "count -> 1"))
+    return rows
+
+
+TESTS = [("critic_ref", lambda M, mx, c: t_critic(M, mx, c, "ref")),
+         ("critic_golden", lambda M, mx, c: t_critic(M, mx, c, "golden")),
+         ("critic_grad", t_grad),
+         ("slow_update", t_slow)]
+
+
+def main_mlx():
+    import rung6
+    mx = rung6._mlx()
+    import mlx_maths as M
+    n = 0
+    for name, t in TESTS:
+        r = {}
+        for mode, c in (("eager", False), ("compiled", True)):
+            try:
+                rows = t(M, mx, c)
+                r[mode] = all(o for o, _ in rows)
+                det = [d for o, d in rows if not o][:4] if not r[mode] else [d for _, d in rows]
+            except Exception as e:  # noqa: BLE001 — a stub or crash is a FAIL, reported
+                r[mode], det = False, [f"{type(e).__name__}: {e}"[:200]]
+            if mode == "eager" or not r[mode]:
+                for d in det:
+                    print(f"    {mode[0]}:", d)
+        n += r["eager"] and r["compiled"]
+        print(f"{name:14s} eager {'PASS' if r['eager'] else 'FAIL'}  compiled {'PASS' if r['compiled'] else 'FAIL'}")
+    print(f"RUNG 11: {n}/{len(TESTS)} tests pass eager AND compiled (mlx {mx.__version__}) -> "
+          f"{'PASS' if n == len(TESTS) else 'FAIL'}")
+    return 0 if n == len(TESTS) else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv:
         sys.exit(main_official())
-    print(__doc__)
+    sys.exit(main_mlx())

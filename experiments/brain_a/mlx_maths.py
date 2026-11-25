@@ -581,3 +581,8 @@ def repl_return(last, term, rew, val, boot, horizon, lam):
     ret = lambda_return(last, term, rew, val, boot, disc, lam). -> dict(ret [B,K-1], weight [B,K])."""
     ret = lambda_return(last, term, rew, val, boot, 1.0 - 1.0 / horizon, lam)
     return dict(ret=ret, weight=mx.logical_not(last).astype(f32))
+
+
+# ---------------------------------------------------------------- rung 11 (step 2.5, critic)
+def critic_loss(P, fi, rew, con, fr, last, term, rrew, rboot, horizon, lam, slowreg, repval):
+    raise NotImplementedError("rung 11 critic_loss: tests committed first")
