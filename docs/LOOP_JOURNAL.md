@@ -3718,3 +3718,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J21 wheel s1m READ: WHEEL PASS on the PyPI mlx 0.32.4 wheel — rung 7 size1m, 8a, 8b, 8c each 2/2 eager+compiled, planted 4/4/6/6 caught. README row.
 - Receipts: wheel result row + s6 seg3 attempt row copied from the worktree's jsonl into main's; worktree fast-forwarded to 78099604.
 - Served: philosophy 4 (the walking row read by its frozen rule needs every seed carried to 2M) and 7 (the Mac port holds on a wheel we did not build).
+
+## 2026-11-25 04:25 UTC · JACK · J10
+- J22/J20 DONE; J18's rung S was read by the forge 11-24 (`6b29c527`) and the forge's step-4 dirt (r1_run.py + test_forge_r1_carry.py) is left untouched → J10.
+- s3 seg3 HOME @2M: R 5,649.4 / 12.08 m/1k → MISSES the frozen bar (R ≥ 5,950). Tally 1 meets (s4) / 1 misses (s3) / 3 open: ≥ 4/5 now needs s5, s6, s7 all to meet.
+- s5 seg2 HOME (1.5M) → LAUNCHED s5 seg3 `…580623` from clean worktree (ff'd to 84517738); receipts (s3 seg3 + s5 seg2 results, s5 seg3 attempt) copied into main's jsonl.
+- Served philosophy 4 (nothing faked: a frozen bar read as it falls, a miss said as plainly as a pass) and 1 (his walking body).

@@ -171,8 +171,8 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 **done when:** J10-2 is in `KNOWN_ANSWERS.md`, pass or fail, by its frozen rule.
 state: J10-1: 1M median 4,065 IN BAND, control valid; 2M 1 of 3 → FAIL.
 state: 11-22 07:55 `b609b142`: rule frozen before seed 3; `segment_job_body(row="J10-2")` carries + 50-ep eval, `require_carry` refuses a mount lacking life.pkl/physics.pkl (planted PASS). Tests 10/10.
-state: 11-25 03:23 HOME: **s4 seg3 @2M: R 6,254.3, 17.16 m/1k, 0/50 fell → s4 meets the frozen bar** (1 of 5; record `/data/jack-logs/j10/sac_row2/s4_seg3.json`); s7 seg0 HOME (500k, no eval). LAUNCHED s7 seg1 `…577077` from clean worktree `/data/wt/jack-clean` (main tree's forge dirt trips the submit guard). Running: s3 seg3 `…565331`, s5 seg2 `…565514`, s6 seg2 `…565599`, s7 seg1. NEXT: s3 seg3 → its 2M eval; s5/s6 → `kernel2 <s> 3`; s7 → seg2. Row read when all five 2M evals are home.
-state: 11-25 03:40 s6 seg2 HOME (1.5M, hit target); LAUNCHED s6 seg3 `…577986` from `/data/wt/jack-clean` (`JACK_REPO=` needed, else launch_detached cds to the dirty main tree and the guard refuses). Running 4/5 (wheel finished): s3 seg3, s5 seg2, s6 seg3, s7 seg1. NEXT: s3 seg3 → 2M eval; s5 → `kernel2 5 3`; s7 → seg2.
+state: 11-25 03:40 @2M: **s4 R 6,254.3 / 17.16 m/1k / 0 fell → meets the bar**. s6 seg3 `…577986` + s7 seg1 `…577077` launched from clean worktree `/data/wt/jack-clean` (`JACK_REPO=` needed: the main tree's forge dirt trips the submit guard).
+state: 11-25 04:24 **s3 seg3 HOME @2M: R 5,649.4 (< 5,950), 12.08 m/1k → s3 MISSES the bar.** Tally 1 meets / 1 misses / 3 open → PASS now needs s5, s6, s7 ALL to meet. s5 seg2 HOME (1.5M, hit target) → LAUNCHED s5 seg3 `…580623` (worktree at 84517738). Running 3: s5 seg3, s6 seg3, s7 seg1. NEXT: s7 seg1 → `kernel2 7 2`; s5/s6 seg3 → read their 2M evals. Row read when all five are home.
 
 ### J14 — Brain A and the ear: Colab is open, so the timing cells go now
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `docs/research/prereg/a2_size_s.md`; `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws; rulings 67, 78, 79, 86, 96
