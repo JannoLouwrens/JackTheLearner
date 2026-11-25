@@ -3911,3 +3911,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `rung13.py --port`: the port's opt_update + slow_update over the official size1m tree. First read FAILED (6 moment tensors at call 1; 21–48/81 weights later): AGC norms summed in f32. Fixed in the port (f64 norm sums, opt.py op order) → calls 1–2 bit-exact.
 - Calls 6/8 then missed only on the eager golden's square-and-multiply bias correction; injected test-only → 0 miss on 81 + 11 tensors at all 4 calls, eager AND compiled. Port's own mx.power = jitted f32 power t 1..39. Rungs 3 (2/2, planted 5/5) and 11 (4/4) still pass. `709fa34e`.
 - Served philosophy 4 (a test that failed, fixed by its cause, nothing loosened). Philosophy 7's question — whether MLX is still wanted after the owner's no-Mac line — remains the Director's.
+
+## 2026-11-25 18:07–18:15 UTC · JACK · J25 — rung 13b, first piece: the golden batch rebuilt + the encoder ported
+- First act: Kaggle `…620207` (g4) and `…617532` (g5) RUNNING, chain A's own CHAIN DONE failed g4/g6 as predicted (reruns own them); ear s2 loop alive, Colab still 503; J24 waits on its ruling; J10 DONE → J25.
+- 13b needs `obs -> enc`, and neither existed: encoder unported, golden stores only its output. Rebuilt the batch from `g1_probe`'s recipe (rng 1234, vector first, obs = data[:,1:]): REF tokens match official at calls 1/2/6/8, worst 8.8e-7 of 1e-5. Refs + failing port test `126eb117`.
+- `mlx_maths.encoder` `f8a18c22`: 0 miss eager+compiled. Planted 5/5 — no_bias caught 3/4 on first read because encoder biases are exactly 0 at call 1 (identical function); clause re-registered to "every call where the plant changes the function", said in the file.
+- Next: the composed whole loss with file noise at the golden cursor, losses first, then 81 grads through `port_gate`.
+- Served philosophy 4 (each piece checked against the official output, plants that must be caught). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.

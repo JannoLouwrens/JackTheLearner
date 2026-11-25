@@ -2008,12 +2008,12 @@
         "VO.01": 146.76,
         "W.1": 21.22,
         "W0.PL": 91.59,
-        "detached:chain.log": 127.2,
+        "detached:chain.log": 132.08,
         "detached:grad_resume_probe.log": 547.65,
         "detached:launch_M_chainA.log": 1012.24,
-        "detached:launch_M_chainA_rerun.log": 132.53,
+        "detached:launch_M_chainA_rerun.log": 174.76,
         "detached:launch_M_chainB.log": 582.67,
-        "detached:launch_M_chainB_rerun.log": 176.5,
+        "detached:launch_M_chainB_rerun.log": 229.51,
         "detached:launch_j10_2_s3_seg3.log": 489.98,
         "detached:launch_j10_2_s4_seg3.log": 675.4,
         "detached:launch_j10_2_s5_seg2.log": 313.29,
@@ -2031,7 +2031,7 @@
         "detached:smoke_plumb.log": 341.85,
         "detached:wheel_10_12_launch.log": 4.13
       },
-      "used_s": 12534.1
+      "used_s": 12634.22
     }
   },
   "last_child_s": {
