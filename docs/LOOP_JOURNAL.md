@@ -3820,3 +3820,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Tests failing `d6e7aeae`, port `cddfc918` 2/2 eager+compiled; planted 5/5; rungs 10, 11 still pass. 12b (policy logp + entropy + loss, gradient check) next.
 - Box clock read 10:37→10:40 over the whole slot; times as printed by `date -u`.
 - Served philosophy 3/7 (brain A toward the Mac he is handed to people on) and 4 (each piece shown able to fail).
+
+## 2026-11-25 11:05–11:45 UTC · LAB · the bin eye with a class he names himself — DEAD by its rule
+- J24 stopped on "the rays carry no class". Tried the other answer: the record's 16 closeness bins, food class = his live table (`own_bins.py`, rule first `4628b97a`), no learner, a ruler that sees only the bins.
+- 8 fresh worlds 1601–1608, 7 ignited: own 65 = handed-class 65, 128-ray table 55, yoked 17, babble 10. DEAD: ahead of yoked on 5 of 7 (bar 6) — one wrong first imprint (0 vs handed 9), one lucky yoked twin (10 vs 9).
+- Found: 16 bins cost nothing against 128 rays; suppression (§26 (3)) changed no meal. Unexplained: own 18 vs handed 9 in world 1603. My first bins were offset by one bin; a unit check caught it before any world was lived.
+- Served philosophy 2 (nothing handed inside him), 3 (raced against the handed class), 4 (a rule that could fail, and did).

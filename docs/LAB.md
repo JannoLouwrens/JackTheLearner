@@ -90,3 +90,24 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   dev worlds (bar 5). Died on the NAME: only 8 of 15 hand-fed meals had
   food on the nearest ray. Found: the reflex can wedge (2,983 decisions at
   a food never reached). Philosophy 1, 3, 4, 5.
+
+- 11-25 · **The class is his own: closeness bins fed by his mouth** (Vision
+  encoder, BY DEFAULT; PLAN "Learning to eat" / "Eye" right columns;
+  `own_bins.py`, rule first `4628b97a`). J24 stopped because his rays carry
+  a per-object id, no class. Bet: the record's 16 closeness bins with the
+  FOOD class filled by his live table (empty at birth), read by a ruler
+  that sees only the bins, eats several times babble and a yoked table and
+  at least half of the same bins with the class handed by the simulator.
+  Kill: not above babble and yoked on 3/4 of worlds, or under half of
+  handed. Prior: bins per class under SAC 27.0 at 3e6, class always handed
+  (PRIORS §27); a sense built online from outcome is unpublished (§26); a
+  table and tens of trials is our size. **DEAD BY ITS RULE** (ahead of
+  yoked on 5 of 7 worlds, bar 6). 8 fresh worlds 1601-1608, 7 ignited,
+  meals in 2,500 decisions after the first: **own 65 = handed 65**, 128-ray
+  table 55, yoked 17, babble 10. Lost on: one world whose FIRST imprint was
+  not food (own 0, handed 9 — babble had no time to find a second meal),
+  and one where the yoked twin got lucky (10 vs 9). Found: 16 bins cost
+  nothing against 128 rays; suppression changed no meal. Unexplained: own
+  18 vs handed 9 in world 1603. Not entered. A new reason to return would
+  be a first imprint that cannot be wrong (e.g. touch at the mouth names
+  it, not the nearest ray). Philosophy 2, 3, 4.

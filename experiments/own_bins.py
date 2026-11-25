@@ -68,6 +68,27 @@ NEAR, PATIENCE, AFTER, CAP are `live_eye`'s; MUTE = 1,000 is set blind).
   Reported beside, gating nothing: own / live128 (the price of 16 bins);
   own / oracle; mutes, deletions and how many struck true food.
 
+RESULT (2026-11-25, box, jack-std, 2,365 CPU-s, rule frozen at `4628b97a`) —
+**DEAD BY ITS RULE: ahead of the yoked twin on 5 of 7 ignited worlds, bar 6.**
+Meals in the 2,500 decisions after the first meal, worlds 1601-1604, 1606-1608
+(1605 never ignited): own 65 (10/10/18/9/9/0/9) = oracle 65 (10/10/9/9/9/9/9);
+live128 55; yoked 17 (4/0/1/1/1/0/10); babble 10. Every other clause held
+(over babble 6/7, 2x babble, 2x yoked, >= half of oracle; not VOID).
+ The two worlds that decided it: 1607 — his FIRST imprint was not food (first
+ meal at decision 5,523), it was unlearned after 400 decisions, and babble did
+ not find a second meal in the time left: own 0, live128 0, oracle 9. 1608 —
+ the yoked twin's stale looks landed on food 7 times of 11 and it ate 10 to
+ own's 9 (the disclosed weakness of `live_eye`'s twin, again).
+ What the numbers do say, gating nothing: pooling 128 rays to 16 bins cost
+ nothing (65 vs 55); where his first imprint was food (6 of 7) his own class
+ ate as much as a handed class or more; the whole loss against a handed
+ class is the one wrong first imprint. Suppression: not read (rule), and it
+ changed no meal count (65 = 65; 2 mutes, both of non-food).
+ Not explained: own ate 18 in world 1603 where oracle ate 9 (one tabled
+ texture, 19 imprints on food) — above the one-food regrow ceiling; not
+ examined. Without that world's surplus own would read 56 to oracle's 65.
+ Cannot say: that a learner uses these bins; anything at 500k.
+
     python -m experiments.own_bins dev [workers]
     python -m experiments.own_bins judge [workers]
 """

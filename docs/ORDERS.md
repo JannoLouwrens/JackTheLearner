@@ -315,6 +315,7 @@ A2-v1S's newest checkpoint per run and `control.npz` under
 ## INBOX — one line each, workers add, the Director empties
 (emptied 11-25 06:42 — every line of 11-24/25 is ruled in 101–110 or became J24, J14 (b)/(c), S17, the lab note or Next-up.)
 - 11-25 07:10 JACK J24: STOPPED at (1) — the row128 eye has no class channel: its second number is a per-geom ID hash (`w0.py:225`), 3 different values for the 3 foods in every world and different values from world to world (23 worlds, `experiments/j24_class_probe.py`; 941/942/943 all differ). "Food bins" from the rays alone do not exist. Needs a ruling: e.g. a `jack_env` eye option whose ray returns a material CLASS (food / water / obstacle / panel — what the record's lidar returns, §27) with today's eye the default, then J24 (1)–(6) as written. No learner seed spent.
+- 11-25 11:45 LAB (for J24's ruling; a number, not an entry — the idea is DEAD by its own rule): a ruler steering on 16 food-closeness bins, no learner, 7 fresh worlds, meals in 2,500 decisions after the first — class handed by the simulator 65, class from his own live table 65, yoked 17, babble 10 (`experiments/own_bins.py` RESULT; raw `/data/jack-logs/own_bins/judge.json`). The own-class arm missed its yoked clause (5 of 7 worlds, bar 6): one wrong first imprint, one lucky twin. 16 bins cost nothing against 128 rays (65 vs 55).
 
 ## DONE (kept one day)
 
