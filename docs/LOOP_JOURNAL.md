@@ -3931,3 +3931,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `rung13b.py --scan`: port's own encoder → free-running sampled 64-step pass vs official `outs/repfeat` at calls 1/2/6/8: 0 miss, 0 flips of 32,768, eager+compiled (worst 1.4e-6 of 1e-5); constant-noise control flips 59%; planted 5/5. Passed on first read; line written after the search, before the port read — said in the README.
 - A first search (10 latents) was too loose and wasted ~10 CPU-min; redone with a full-step check.
 - Served philosophy 4 (a sampled pass that could have flipped, with plants that must be caught). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
+
+## 2026-11-25 19:36–19:45 UTC · JACK · J25 — rung 13b-wm: the world-model loss terms on the port's own pass
+- First act: forge M_g0–g3 home, g4–g7 reruns alive on Kaggle; ear s2 loop alive (Colab 503); J24 stopped on its ruling; J10 DONE → J25.
+- `rung13b.py --wm` `55ad7b93`: port's encoder → sampled RSSM pass → dyn/rep/vector/rew/con vs the golden's dumped terms: 0 miss on 5×[16,64] at calls 1/2/6/8, eager+compiled (worst 1.2e-6 of 1e-5).
+- First read FAILED its control/plant clauses (C 3/4, P 3/5), not W: call-1 reward head is zero-init (rew = log 255 for any target), and the KL never reaches the 1.0 free-bits floor (min 2.15) so that plant was identical everywhere. Re-registered to live calls (as 13b-enc), free_bits_0 → 3; said in file + commit. Free-bits max is certified by 8a, not by this golden.
+- Served philosophy 4 (each term checked against official output; a no-op plant named as such, not counted). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
