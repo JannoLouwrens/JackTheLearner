@@ -174,8 +174,8 @@ serves: M4 · PLAN stage 3 "a separate, fast walking layer is built and checked 
 state: J10-1: 1M median 4,065 IN BAND, control valid; 2M 1 of 3 → FAIL.
 state: 11-22 07:55 `b609b142`: rule frozen before seed 3; `segment_job_body(row="J10-2")` carries + 50-ep eval, `require_carry` refuses a mount lacking life.pkl/physics.pkl (planted PASS). Tests 10/10.
 state: 11-25 03:40 @2M: **s4 R 6,254.3 / 17.16 m/1k / 0 fell → meets the bar**. s6 seg3 `…577986` + s7 seg1 `…577077` launched from clean worktree `/data/wt/jack-clean` (`JACK_REPO=` needed: the main tree's forge dirt trips the submit guard).
-state: 11-25 04:24 **s3 seg3 HOME @2M: R 5,649.4 (< 5,950), 12.08 m/1k → s3 MISSES the bar.** Tally 1 meets / 1 misses / 3 open → PASS now needs s5, s6, s7 ALL to meet. s5 seg2 HOME (1.5M, hit target) → LAUNCHED s5 seg3 `…580623` (worktree at 84517738). Running 3: s5 seg3, s6 seg3, s7 seg1.
-state: 11-25 06:16 s7 seg1 HOME (1M: R 5,282.7 / 6.34 m/1k, hit target) → LAUNCHED s7 seg2 `…587392` (clean worktree, ff'd to b9914a75). Running: s5 seg3, s6 seg3, s7 seg2. NEXT: s5/s6 seg3 → read their 2M evals; s7 seg2 → `kernel2 7 3`. Row read when all five are home.
+state: @2M so far: s4 R 6,254.3 / 17.16 m/1k MEETS; s3 R 5,649.4 / 12.08 MISSES; **s6 (06:37) R 5,993.5 / 17.92 m/1k, 3/50 fell → MEETS** (`…577986`). Tally 2 meets / 1 miss / 2 open → PASS needs s5 AND s7 to meet.
+state: 11-25 06:40 running: s5 seg3 `…580623` (since 04:24, ~3 h train), s7 seg2 `…587392` (1.5M). NEXT: s5 seg3 home → read its 2M eval; s7 seg2 home → `kernel2 7 3` from the clean worktree (`JACK_REPO=/data/wt/jack-clean`). Row read in KNOWN_ANSWERS when all five are home.
 
 ### J14 — Brain A and the ear: Colab is open, so the timing cells go now
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `docs/research/prereg/a2_size_s.md`; `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws; rulings 67, 78, 79, 86, 96

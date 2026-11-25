@@ -3747,3 +3747,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `b9914a75`: rung M's kernel carries. Deadline t0 + 7.5 h, carries kept in the kernel's output, segment n mounts n−1 and runs only the runs it carried (one whole carry or the kernel refuses), ≤ 3 segments, `M_gN.json` assembled once so the LOCKED reader sees each run once (segment files sit outside its glob). Tests: r1_run 26/26 under jack-std (11 new, planted refusals incl.), read 13/13, spec 8/8; judge lock holds (r1_run.py is not in it).
 - LAUNCHED rung M by the frozen rule from the clean worktree, pin `b9914a75`: 30 runs (E-food, lr0 twin, K1, K2, N3, yardstick C2 × s1411–1415), 8 kernels, chains A `…587333` / B `…587347`; + J10 s7 seg2 `…587392`. Kaggle 5/5. Receipts copied into main.
 - Served philosophy 3 (the cook-off's next rung actually runs, at the size its rule froze) and 1 (300k-decision lives that survive being cut across machines — "he must never stop learning").
+
+## 2026-11-25 06:37–06:45 UTC · JACK · J10 harvest (s6 @2M)
+- Kaggle: 4/5 RUNNING (J10 s5 seg3, s7 seg2; forge rung M chains A/B), J10 s6 seg3 `…577986` COMPLETE 06:37. J22/J20/J23/J21/J18 DONE, J14 waits for W48 GPU → J10.
+- s6 @2M (50-ep eval): **R 5,993.5 / 17.92 m/1k, 3/50 fell → MEETS the frozen bar** (R ≥ 5,950, ≥ 12 m/1k). Tally 2 meets (s4, s6) / 1 miss (s3) / 2 open: PASS needs s5 and s7 both to meet.
+- Result receipt copied from the clean worktree's jsonl into main's. The free 5th session left empty: no other order has a ready kernel (forge chains are sequential by the frozen rule; J10's other seeds are already running).
+- Served philosophy 4 (a frozen bar read seed by seed as it falls, no extension) and 1 (his walking body).
