@@ -857,6 +857,14 @@ def main_imagloss():
 # within a factor 1.25 of each other, both ways. Max is not used (a lottery of single rounding jumps). NO-OP
 # EXEMPTION, as in 13b-enc/wm/imag: a control or plant is judged only on calls where its port output is not
 # bit-equal to the true port's; NO-OP on every call fails. H-con element-wise 1e-5 unchanged.
+# FIRST READ (11-25 21:28) FAILED on ONE plant, recorded as is: port meets (Q-S) on every call eager+compiled
+#   (ret q50/q90/q99 2.4e-5/1.7e-4/2.7e-3 both, call 8); con 0 miss; C fails it on 3/3 live calls (call 1 NO-OP);
+#   rew top-logit 4/4 (official q50 1.9e3 vs port 7e-2), val top-logit 4/4, lam 1.0 3/3 live — but disc 1-1/333
+#   breaks it on 1/3 live calls: at calls 6/8 official q's vs the planted truth are IDENTICAL to the unplanted
+#   (2.4e-5/1.3e-4/1.5e-3) — |ret| here is ~5e-3, so a 1/333-per-step discount moves it under the f32 decode
+#   floor. The plant cannot be seen at this precision on this golden by ANY ret line; it is not a port finding
+#   (the official disc is exactly 1.0, contdisc True). Next: rule that plant's fate (a NO-OP-at-precision class
+#   like retnorm's, or a disc certified where ret is large), then V and Q.
 def main_imagloss_sym(qline=False):
     gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
     if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
