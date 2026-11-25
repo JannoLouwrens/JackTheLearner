@@ -1,0 +1,121 @@
+{
+ "save": 400,
+ "total": 480,
+ "learning_starts": 256,
+ "U": {
+  "rc": 0,
+  "wall_s": 224.8,
+  "ckpt_save": "/data/jack-logs/j14/grad_resume/logs_gu/dreamer_v3_5/experiments.brain_a.in_world:JackWorld-v0/2026-11-25_07-39-15_dreamer_v3_5_experiments.brain_a.in_world:JackWorld-v0_0/version_0/checkpoint/ckpt_400_0.ckpt",
+  "ckpt_total": "/data/jack-logs/j14/grad_resume/logs_gu/dreamer_v3_5/experiments.brain_a.in_world:JackWorld-v0/2026-11-25_07-39-15_dreamer_v3_5_experiments.brain_a.in_world:JackWorld-v0_0/version_0/checkpoint/ckpt_480_0.ckpt",
+  "wm_loss_steps": [
+   480
+  ]
+ },
+ "U2": {
+  "rc": 0,
+  "wall_s": 217.3,
+  "ckpt_total": "/data/jack-logs/j14/grad_resume/logs_gu2/dreamer_v3_5/experiments.brain_a.in_world:JackWorld-v0/2026-11-25_07-42-55_dreamer_v3_5_experiments.brain_a.in_world:JackWorld-v0_0/version_0/checkpoint/ckpt_480_0.ckpt"
+ },
+ "moved_save_to_total": {
+  "compared": 57,
+  "differ": 57,
+  "max_abs": 0.00048150328984775115,
+  "first": [
+   "world_model.continue_model.0.bias",
+   "world_model.continue_model.0.weight",
+   "world_model.continue_model.1.weight",
+   "world_model.continue_model.3.bias",
+   "world_model.continue_model.3.weight"
+  ],
+  "only_in_one": []
+ },
+ "determinism_U_vs_U2": {
+  "compared": 345,
+  "differ": 0,
+  "max_abs": 0.0,
+  "first": [],
+  "only_in_one": []
+ },
+ "determinism_save_U_vs_U2": {
+  "compared": 345,
+  "differ": 0,
+  "max_abs": 0.0,
+  "first": [],
+  "only_in_one": []
+ },
+ "R": {
+  "rc": 0,
+  "wall_s": 100.0,
+  "resumed_from": "/data/jack-logs/j14/grad_resume/logs_gu2/dreamer_v3_5/experiments.brain_a.in_world:JackWorld-v0/2026-11-25_07-42-55_dreamer_v3_5_experiments.brain_a.in_world:JackWorld-v0_0/version_0/checkpoint/ckpt_400_0.ckpt",
+  "ckpt_total": "/data/jack-logs/j14/grad_resume/logs_gu2/dreamer_v3_5/experiments.brain_a.in_world:JackWorld-v0/2026-11-25_07-46-37_dreamer_v3_5_experiments.brain_a.in_world:JackWorld-v0_0/version_0/checkpoint/ckpt_480_0.ckpt",
+  "log_tail": null
+ },
+ "resume_R_vs_U": {
+  "compared": 345,
+  "differ": 247,
+  "max_abs": 5.318982362747192,
+  "first": [
+   "actor.mlp_heads.0.bias",
+   "actor.mlp_heads.0.weight",
+   "actor.model.0.bias",
+   "actor.model.0.weight",
+   "actor.model.1.weight"
+  ],
+  "only_in_one": []
+ },
+ "resume_R_vs_U_model_only": {
+  "world_model": {
+   "compared": 57,
+   "differ": 56,
+   "max_abs": 0.0005525673623196781,
+   "first": [
+    "world_model.continue_model.0.bias",
+    "world_model.continue_model.0.weight",
+    "world_model.continue_model.1.weight",
+    "world_model.continue_model.3.weight",
+    "world_model.encoder.mlp_encoder.model.0.bias"
+   ],
+   "only_in_one": []
+  },
+  "actor": {
+   "compared": 11,
+   "differ": 11,
+   "max_abs": 6.122514605522156e-05,
+   "first": [
+    "actor.mlp_heads.0.bias",
+    "actor.mlp_heads.0.weight",
+    "actor.model.0.bias",
+    "actor.model.0.weight",
+    "actor.model.1.weight"
+   ],
+   "only_in_one": []
+  },
+  "critic": {
+   "compared": 11,
+   "differ": 11,
+   "max_abs": 0.0002969227352878079,
+   "first": [
+    "critic.0.bias",
+    "critic.0.weight",
+    "critic.1.weight",
+    "critic.3.bias",
+    "critic.3.weight"
+   ],
+   "only_in_one": []
+  },
+  "target_critic": {
+   "compared": 11,
+   "differ": 11,
+   "max_abs": 6.290430610533804e-05,
+   "first": [
+    "target_critic.0.bias",
+    "target_critic.0.weight",
+    "target_critic.1.weight",
+    "target_critic.3.bias",
+    "target_critic.3.weight"
+   ],
+   "only_in_one": []
+  }
+ },
+ "verdict": "FAIL"
+}
