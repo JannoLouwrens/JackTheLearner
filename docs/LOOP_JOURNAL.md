@@ -3724,3 +3724,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - s3 seg3 HOME @2M: R 5,649.4 / 12.08 m/1k → MISSES the frozen bar (R ≥ 5,950). Tally 1 meets (s4) / 1 misses (s3) / 3 open: ≥ 4/5 now needs s5, s6, s7 all to meet.
 - s5 seg2 HOME (1.5M) → LAUNCHED s5 seg3 `…580623` from clean worktree (ff'd to 84517738); receipts (s3 seg3 + s5 seg2 results, s5 seg3 attempt) copied into main's jsonl.
 - Served philosophy 4 (nothing faked: a frozen bar read as it falls, a miss said as plainly as a pass) and 1 (his walking body).
+
+## 2026-11-25 04:37–04:45 UTC · JACK · no unit (nothing advanceable)
+- Kaggle: 3/5 RUNNING (J10 s5 seg3 `…580623`, s6 seg3 `…577986`, s7 seg1 `…577077`); the 00:08–00:13 four are COMPLETE with result rows already in the jsonl. No ready kernel for the 2 free sessions: J22/J20/J23/J21 DONE, J14's seeds wait for W48 GPU (Sat 11-28), J18 rung M waits on the forge's uncommitted step-4 (r1_run.py carry + test, left untouched).
+- Exited per ORDERS rule (4) without building speculative arms. Next JACK slot: harvest J10 seg3s (~10.5 h est from 03:40/04:24).
+- Served: none directly — a waiting slot; said so rather than inventing work.
