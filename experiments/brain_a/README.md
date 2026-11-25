@@ -900,3 +900,22 @@ target (1 − 0)·(1 − 1/333)) + `dec_vec_loss` (obs[:, 1:]) vs golden `c<N>/o
   the free-bits max**; rung 8a's split RSSM does.
 - Not yet: the imagination's cursor, policy/value/repval on the port, and the 81 gradients via `port_gate`.
 
+### Rung 13b, sixth piece — the imagination's two noise cursors, and the port's free-running imagination: PASS (11-25)
+`rung13b.py --imag` (jack-mlx, box, ~1 min; log `/data/jack-logs/mlx/rung13b_imag.log`). Both cursors FOUND by
+search over the regenerated noise file (uniforms `default_rng(0).random(64M, f32)`, normals = the same rng's
+`standard_normal` after them), before the line was written:
+- **prior uniforms, step k of call N: icur = cur(N, 0) + (2 + k) × 131,072** — after the posterior's 131,072
+  sits ONE unidentified 131,072 block (not a resample of repfeat: ~22,600 flips); the stride's other
+  2,232,320 lie after the imagination. **policy normals: ncur = 182,272 + (N − 1) × 278,528 + 8,192 k.**
+- (K) imag/start == repfeat flattened exactly. (U) NumPy sampler on golden imag logits: 0 flips of 491,520 a
+  call. (N) NumPy f64 policy (bounded_normal: tanh mean, 0.9·σ(s+2)+0.1) + normals vs imag/act: 0 miss
+  (worst 1.3e-7).
+- (I) **port FREE-RUNNING — golden start → `imag_rollout` with the port's own 3-layer policy sampling the
+  file normals → feat deter/logit, stoch and the 15 actions vs golden: 0 miss, 0 flips, calls 1/2/6/8,
+  eager AND compiled (worst 2.9e-6 of 1e-5).** (C) zero normals miss ~122,879 actions a call.
+- (P) planted 5/5 on 4/4 calls: block not skipped, normals one step late, std without the +2 shift, prior
+  without unimix, the posterior's cursor for the prior.
+- Said plainly: the cursors were searched for and the reference read before the line; the port passed on
+  its first read. The 16th policy call (action at the last feat) is fed normals but not compared.
+- Not yet: policy/value/repval loss terms on this pass vs `outs/losses`, then the 81 gradients via `port_gate`.
+

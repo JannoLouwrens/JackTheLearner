@@ -535,8 +535,173 @@ def main_wm():
     print(f"RUNG 13b-wm: port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
     return 0 if good else 1
 
+# SIXTH PIECE (11-25, `--imag`): the IMAGINATION's two noise cursors, and the port's free-running
+# 15-step imagination with its own policy. agent.py L194-198 + rssm.py `imagine`: per step the policy
+# (bounded_normal: mean tanh(m), std 0.9 sigmoid(s + 2) + 0.1) SAMPLES `normal * std + mean` (file
+# normals), then img_step samples the prior stoch (file uniforms, OneHot unimix 0.01).
+# The cursors were FOUND by search over the regenerated noise file (uniforms = default_rng(0).random(64M,
+# f32), normals = the same rng's standard_normal after them, golden_kernel NOISE_N 64M), BEFORE this line:
+#   uniforms, prior step k of call N:  icur(N, k) = cur(N, 0) + (2 + k) * 131,072     (= 1024 x 32 x 4)
+#     i.e. the posterior's 64 x 2,048 = 131,072, then ONE unidentified block of 131,072 (not a resample of
+#     repfeat: 22,6xx flips), then 15 x 131,072; the stride's other 2,232,320 lie after the imagination.
+#   normals, policy step k of call N: ncur(N, k) = 182,272 + (N - 1) * 278,528 + 8,192 k   (= 1024 x 8)
+# The NumPy f64 reference already read 0 flips (15 steps x 4 calls) and |a - golden| <= 4.7e-7 with them.
+# THE LINE, fixed before the port's first read: at calls 1/2/6/8 (dyn + pol params = R13 `c<N>/pre/`):
+#   (K) golden imag/start == outs/repfeat flattened [B*T] (deter, stoch) exactly.
+#   (U) NumPy sampler on golden imag logits at icur: 0 flips of 15 x 32,768.
+#   (N) NumPy f64 policy on the golden carry + normals at ncur vs imag/act/action: |d| <= 1e-5 (|ref|+1).
+#   (I) port FREE-RUNNING: golden start -> `imag_rollout` with the port's own policy (`_mlp_head_n` pol,
+#       3 layers) sampling the file normals -> feat deter/logit [:, 1:] and action [:, :15] vs golden
+#       imag/feat + imag/act: 0 miss (1e-5), stoch 0 flips, eager AND compiled.
+#   (C) control: zero normals (the policy's mean action) misses action on every call.
+#   (P) planted, each must miss (I) on every call where it changes the function: the unidentified block
+#       not skipped (icur - 131,072); normals one step late (+8,192); std without the +2 shift; prior
+#       sampled without unimix; the posterior's own cursor (call N's cur(N, 0)) for the prior.
+# Ours beside theirs: f32 (published bf16 compute); the 16th policy call (agent.py L196-198, the action at
+# the last feat) is fed the next 8,192 normals and not compared — the golden dumps 15 actions.
+IMAG_H, ICUR_BLOCK, NCUR0, NCUR_CALL, NCUR_STEP, NOISE_N = 15, 131_072, 182_272, 278_528, 8_192, 64_000_000
+
+
+def icur(c, k=0):
+    return cursor(c) + (2 + k) * ICUR_BLOCK
+
+
+def ncur(c, k=0):
+    return NCUR0 + (c - 1) * NCUR_CALL + NCUR_STEP * k
+
+
+def normal_stream(n):
+    rng = np.random.default_rng(0)
+    for _ in range(NOISE_N // 1_000_000):
+        rng.random(1_000_000, dtype=np.float32)
+    return rng.standard_normal(n, dtype=np.float32)
+
+
+def _np_policy(R, c, deter, stoch, shift=2.0):
+    P = lambda k: R[f"c{c}/pre/pol/{k}"].astype(np.float64)  # noqa: E731
+    x = np.concatenate([deter, stoch.reshape(len(stoch), -1)], -1).astype(np.float64)
+    for i in range(3):
+        x = x @ P(f"mlp/linear{i}/kernel") + P(f"mlp/linear{i}/bias")
+        x = x / np.sqrt((x * x).mean(-1, keepdims=True) + 1e-4) * P(f"mlp/norm{i}/scale")
+        x = x / (1 + np.exp(-x))
+    m = x @ P("head/action/mean/kernel") + P("head/action/mean/bias")
+    s = x @ P("head/action/stddev/kernel") + P("head/action/stddev/bias")
+    return np.tanh(m), 0.9 / (1 + np.exp(-(s + shift))) + 0.1
+
+
+def main_imag():
+    gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
+    if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
+        os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("TMPDIR", "/data/tmp")
+    sys.path.insert(0, HERE)
+    import mlx.core as mx
+    import mlx_maths as M
+    import rung10  # noqa: F401  (TOY <- SIZE1M)
+    from rung6 import TOY
+    G, R = np.load(GOLDEN_A), np.load(R13)
+    U_all = np.random.default_rng(0).random(icur(CALLS[-1], IMAG_H) + ICUR_BLOCK, dtype=np.float32)
+    N_all = normal_stream(ncur(CALLS[-1], IMAG_H + 2))
+    N1 = B * 64
+    ok = True
+
+    def U(c, base=None):
+        a = icur(c) if base is None else base
+        return U_all[a:a + IMAG_H * ICUR_BLOCK].reshape(IMAG_H, N1, 32, 4)
+
+    def NZ(c, shift=0):
+        a = ncur(c) + shift
+        return N_all[a:a + (IMAG_H + 1) * NCUR_STEP].reshape(IMAG_H + 1, N1, 8)
+
+    for c in CALLS:
+        g = f"c{c}/imag/"
+        nk = int((G[g + "start/deter"] != G[f"c{c}/outs/repfeat/deter"].reshape(N1, -1)).sum()
+                 + (G[g + "start/stoch"] != G[f"c{c}/outs/repfeat/stoch"].reshape(N1, 32, 4)).sum())
+        uu = U(c)
+        fl = sum(int((_np_sample(G[g + "feat/logit"][:, k], uu[k]) != G[g + "feat/stoch"][:, k].argmax(-1)).sum())
+                 for k in range(IMAG_H))
+        D = np.concatenate([G[g + "start/deter"][:, None], G[g + "feat/deter"][:, :-1]], 1)
+        S = np.concatenate([G[g + "start/stoch"][:, None], G[g + "feat/stoch"][:, :-1]], 1)
+        nz, wn = 0, 0.0
+        for k in range(IMAG_H):
+            mean, std = _np_policy(R, c, D[:, k], S[:, k])
+            n, w = miss(mean + std * NZ(c)[k], G[g + "act/action"][:, k])
+            nz, wn = nz + n, max(wn, w)
+        print(f"K  call {c}: imag/start vs repfeat flattened: {nk} unequal")
+        print(f"U  call {c}: icur {icur(c):,}: NumPy sampler on golden imag logits: {fl} flips of {IMAG_H * N1 * 32}")
+        print(f"N  call {c}: ncur {ncur(c):,}: NumPy policy + normals vs imag/act: miss {nz}, worst {wn:.2e} of {TOL:g}")
+        ok &= nk == 0 and fl == 0 and nz == 0
+    spec = {"action": 0}
+
+    def make(shift=2.0, mix=0.01):
+        cfg = dict(TOY, unimix=mix)
+
+        def f(Pd, Pp, d, s, u, nz):
+            i = [0]
+
+            def pol(carry):
+                x = M.feat2tensor(carry["deter"], carry["stoch"])
+                m = M._mlp_head_n(Pp, "pol", x, "action/mean", 3)
+                sd = M._mlp_head_n(Pp, "pol", x, "action/stddev", 3)
+                std = 0.9 * mx.sigmoid(sd + shift) + 0.1
+                a = mx.tanh(m) + std * nz[i[0]]
+                i[0] += 1
+                return {"action": a}
+            o = M.imag_rollout(Pd, dict(deter=d, stoch=s), pol, u, cfg, spec, IMAG_H)
+            return o["feat"]["deter"], o["feat"]["logit"], o["feat"]["stoch"], o["act"]["action"]
+        return f
+
+    def run(c, f, u, nz, compiled=False):
+        Pd = {k[len(f"c{c}/pre/dyn/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/dyn/")}
+        Pp = {k[len(f"c{c}/pre/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/pol/")}
+        g = f"c{c}/imag/"
+        f = mx.compile(f) if compiled else f
+        o = f(Pd, Pp, mx.array(G[g + "start/deter"]), mx.array(G[g + "start/stoch"]), mx.array(u), mx.array(nz))
+        return [np.array(x) for x in o]
+
+    def score(c, out):
+        d, lg, st, a = out
+        g = f"c{c}/imag/"
+        n1, w1 = miss(d[:, 1:], G[g + "feat/deter"])
+        n2, w2 = miss(lg[:, 1:], G[g + "feat/logit"])
+        n3, w3 = miss(a[:, :IMAG_H], G[g + "act/action"])
+        fl = int((st[:, 1:].argmax(-1) != G[g + "feat/stoch"].argmax(-1)).sum())
+        return n1 + n2 + n3, max(w1, w2, w3), fl, n3
+
+    base = make()
+    for c in CALLS:
+        for mode in ("eager", "compiled"):
+            n, w, fl, _ = score(c, run(c, base, U(c), NZ(c), mode == "compiled"))
+            print(f"I  call {c} {mode:8s}: port free-running imagination vs golden imag: miss {n}, "
+                  f"worst {w:.2e} of {TOL:g}, flips {fl}")
+            ok &= n == 0 and fl == 0
+    for c in CALLS:
+        _, _, _, na = score(c, run(c, base, U(c), np.zeros_like(NZ(c))))
+        print(f"C  call {c}: zero normals: action miss {na}")
+        ok &= na > 0
+    plants = {
+        "block_not_skipped": lambda c: run(c, base, U(c, icur(c) - ICUR_BLOCK), NZ(c)),
+        "normals_one_step_late": lambda c: run(c, base, U(c), NZ(c, NCUR_STEP)),
+        "std_no_shift": lambda c: run(c, make(shift=0.0), U(c), NZ(c)),
+        "prior_no_unimix": lambda c: run(c, make(mix=0.0), U(c), NZ(c)),
+        "posterior_cursor": lambda c: run(c, base, U(c, cursor(c)), NZ(c)),
+    }
+    caught = 0
+    for name, fn in plants.items():
+        hits = []
+        for c in CALLS:
+            n, w, fl, _ = score(c, fn(c))
+            hits.append(n > 0 or fl > 0)
+        caught += all(hits)
+        print(f"P  planted {name:22s}: caught on {sum(hits)}/{len(CALLS)} calls")
+    good = ok and caught == len(plants)
+    print(f"RUNG 13b-imag: port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
+    return 0 if good else 1
+
 
 def main():
+    if "--imag" in sys.argv:
+        return main_imag()
     if "--wm" in sys.argv:
         return main_wm()
     if "--scan" in sys.argv:
