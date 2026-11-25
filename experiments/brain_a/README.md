@@ -954,11 +954,16 @@ zeroed; plants slowreg 0, weight without cumprod, actent 0, retnorm LIMIT 0 (the
 - Not yet: repval, then the 81 gradients via `port_gate`.
 
 
-### Rung 13b-repval — the replay value loss vs an f64 truth: FAIL at read 2 (one plant dead at call 2; 11-25)
+### Rung 13b-repval — the replay value loss vs an f64 truth: **PASS at read 3** (11-25)
 `rung13b.py --repval` (jack-mlx, box, ~3 s; logs `/data/jack-logs/mlx/rung13b_repval{,_read2}.log`). Line `29367744`
 committed before read 1: teacher-forced on the golden's repfeat, boot = imagloss ret[:, 0] (B, K), batch reward[:, 1:];
 the unchanged (Q-S) line vs `outs/losses/repval`, calls 1/2/6/8, eager+compiled; control rew zeroed; plants slowreg 0,
 disc 1.0, boot = val, lam 1.0. Read 1 FAIL: the official sat off the truth — the input omitted the golden's
 is_last[0::2, 31] (`rung13b_repval_probe.py --where`). Apparatus fix; read 2 `80f5151d`: port meets every call/mode,
-control breaks 3/3 live, plants 3/4 — boot = val meets at call 2 (q99 2.0e-6 vs 2.2e-6). Open: rule or replace that plant
-before read 3.
+control breaks 3/3 live, plants 3/4 — boot = val meets at call 2 (q99 2.0e-6 vs 2.2e-6). Ruling `96a5f745` before read 3
+(written after read 2's figures, said plainly): plants get d93487c9's NO-OP-AT-PRECISION class (official vs planted truth
+meets official vs true truth) and must still break >= 1 call and every non-exempt live call; boot = val KEPT, boot zeroed
+ADDED. Read 3 (`/data/jack-logs/mlx/rung13b_repval_read3.log`): port meets every call eager+compiled (call 8 q99 2.6e-5 =
+official), control 3/3, **plants 5/5**. Said plainly: BOTH boot plants are exempt at call 2 (boot zeroed |Δtruth| q99
+3.5e-7) — this golden cannot test the bootstrap at call 2; it is certified at calls 6/8 only (boot zeroed off q99 1.4e-5 /
+4.5e-5 vs 9.5e-6 / 2.6e-5). Test: `rung13b.py --repval`. Next: the 81 gradients via `port_gate`, then the rung 13 wheel.

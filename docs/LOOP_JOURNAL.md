@@ -4001,3 +4001,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `experiments/first_imprint.py`, rule frozen `aa9ea10d` before worlds 1701–1712: imprint the near SET, unfed deletion prunes it.
 - Read: set 74, one-name table 79, handed class 102, yoked 12, babble 19 (10 ignited). DEAD on clause (c): 6 vs 19 in the one wrong-nearest world (bar 9.5). Lock-out repaired (0 → 6; lived 1607 0 → 9); price 14 deletions vs 4.
 - Not entered. Served philosophy 3 (the holder's own weakness raced), 4 (a miss is a miss; the yoked twin failed 12 vs 74), 5.
+
+## 2026-11-25 23:38–23:55 UTC · JACK · J25 — rung 13b-repval: ruled, strengthened, read 3 PASS
+- First act: J24 waits on its ruling, J18/J14 on kernels/Colab, J10 DONE → J25 (box only).
+- Ruling `96a5f745` committed BEFORE read 3 (written after read 2's figures, as d93487c9): a plant meeting (Q-S) on a live call is exempt there only if the official golden cannot tell the planted truth from the true truth; it must still break >= 1 call and every non-exempt live call. boot=val KEPT; boot ZEROED ADDED (5/5 needed).
+- Read 3: port meets every call eager+compiled; control 3/3; plants 5/5. Both boot plants exempt at call 2 — the bootstrap is invisible at call 2 in this golden (|Δtruth| q99 3.5e-7); certified at calls 6/8 only, said in README.
+- Next: the 81 gradients via `port_gate`, then the rung-13 wheel kernel.
+- Served philosophy 4 (an exemption only where a measurement shows the reference itself cannot tell, plus a stronger plant added, nothing loosened) and 5/7 (his brain on the machine he is handed on).
