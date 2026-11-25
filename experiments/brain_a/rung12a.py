@@ -37,6 +37,7 @@ RATE, LIMIT, LO, HI = 0.01, 1.0, 5.0, 95.0
 SCALES = (1.0, 50.0, 300.0, 300.0, 1000.0, 5.0)
 N, T = 32, 15
 TOL = 1e-4
+GOLDEN12A = os.path.join(HERE, "rung12a_retnorm_golden_e01491f.npz")
 
 
 def inputs(seed=12):
@@ -126,12 +127,118 @@ def main_official():
     for name, kw in PLANTED.items():
         c = not match(got, REF_retnorm(rets, tars, **kw))[0]
         put(c, f"planted '{name}': {'CAUGHT' if c else 'MISSED'}")
+    if "--dump-golden" in sys.argv:
+        np.savez_compressed(GOLDEN12A, rets=np.stack(rets), tars=np.stack(tars),
+                            **{f"step{i}/{k}": np.asarray(v) for i, o in enumerate(got)
+                               for k, v in zip(("offset", "scale", "adv"), o)})
+        print("        dumped", GOLDEN12A)
     n = len(rows); p = sum(rows)
     print(f"rung12a references vs official e01491f: {p}/{n} {'HOLD' if p == n else 'BROKEN'}")
     return 0 if p == n else 1
 
 
+# ---------------------------------------------------------------- port tests (MLX)
+# `mlx_maths.retnorm_perc(lo, hi, ret, rate, limit, perclo, perchi)` -> (lo', hi', offset, scale):
+#   one Normalize('perc', debias False).__call__(ret, update=True) — update first, then stats.
+# `mlx_maths.advantage(ret, tarval, scale)` -> (ret - tarval[:, :-1]) / scale (advnorm 'none').
+# Each test eager AND under mx.compile, over the 6 steps carried from lo = hi = 0:
+#   retnorm_ref     port vs REF_retnorm (float64)
+#   retnorm_golden  port vs the official f32 dump
+
+
+def _port(M, mx, compiled, rets, tars):
+    f = lambda lo, hi, r, t: (*M.retnorm_perc(lo, hi, r, RATE, LIMIT, LO, HI), )  # noqa: E731
+    f = mx.compile(f) if compiled else f
+    a = mx.compile(M.advantage) if compiled else M.advantage
+    lo = hi = mx.array(np.float32(0))
+    out = []
+    for r, t in zip(rets, tars):
+        lo, hi, off, sc = f(lo, hi, mx.array(r), mx.array(t))
+        out.append((np.asarray(off), np.asarray(sc), np.asarray(a(mx.array(r), mx.array(t), sc))))
+    return out
+
+
+def t_ref(M, mx, compiled):
+    rets, tars = inputs()
+    ok, w = match(_port(M, mx, compiled, rets, tars), REF_retnorm(rets, tars))
+    return [(ok, f"6 steps offset/scale/adv vs REF: worst {w:.3g} x(|ref|+1)")]
+
+
+def t_golden(M, mx, compiled):
+    G = np.load(GOLDEN12A)
+    rets, tars = list(G["rets"]), list(G["tars"])
+    gold = [tuple(G[f"step{i}/{k}"] for k in ("offset", "scale", "adv")) for i in range(len(rets))]
+    ok, w = match(_port(M, mx, compiled, rets, tars), gold)
+    return [(ok, f"6 steps offset/scale/adv vs GOLDEN: worst {w:.3g} x(|ref|+1)")]
+
+
+TESTS = [("retnorm_ref", t_ref), ("retnorm_golden", t_golden)]
+
+
+def run_tests(M, mx, tests=TESTS, quiet=False):
+    n = 0
+    for name, t in tests:
+        r = {}
+        for mode, c in (("eager", False), ("compiled", True)):
+            try:
+                rows = t(M, mx, c)
+                r[mode] = all(o for o, _ in rows)
+                det = [d for _, d in rows]
+            except Exception as e:  # noqa: BLE001 — a stub or crash is a FAIL, reported
+                r[mode], det = False, [f"{type(e).__name__}: {e}"[:200]]
+            if not quiet and (mode == "eager" or not r[mode]):
+                for d in det:
+                    print(f"    {mode[0]}:", d)
+        n += r["eager"] and r["compiled"]
+        if not quiet:
+            print(f"{name:15s} eager {'PASS' if r['eager'] else 'FAIL'}  compiled {'PASS' if r['compiled'] else 'FAIL'}")
+    return n
+
+
+def main_mlx():
+    import rung6
+    mx = rung6._mlx()
+    import mlx_maths as M
+    n = run_tests(M, mx)
+    print(f"RUNG 12a: {n}/{len(TESTS)} tests pass eager AND compiled (mlx {mx.__version__}) -> "
+          f"{'PASS' if n == len(TESTS) else 'FAIL'}")
+    return 0 if n == len(TESTS) else 1
+
+
+def main_planted():
+    """Each planted bug is patched into the real port; the tests must FAIL."""
+    import rung6
+    mx = rung6._mlx()
+    import mlx_maths as M
+    keep = {k: getattr(M, k) for k in ("retnorm_perc", "advantage", "_percentile")}
+    rp, adv, pc = keep["retnorm_perc"], keep["advantage"], keep["_percentile"]
+    bugs = {
+        "nearest percentile": dict(_percentile=lambda x, q: mx.sort(x.reshape(-1))[round(q / 100 * (x.size - 1))]),
+        "rate 0.1": dict(retnorm_perc=lambda lo, hi, r, rate, *a: rp(lo, hi, r, 0.1, *a)),
+        "limit dropped": dict(retnorm_perc=lambda lo, hi, r, rate, limit, *a: rp(lo, hi, r, rate, 0.0, *a)),
+        "10/90 percentiles": dict(retnorm_perc=lambda lo, hi, r, rate, limit, a, b: rp(lo, hi, r, rate, limit, 10.0, 90.0)),
+        "adv against tarval[:, 1:]": dict(advantage=lambda r, t, s: (r - t[:, 1:]) / s),
+    }
+    caught = 0
+    for name, patch in bugs.items():
+        for k, v in patch.items():
+            setattr(M, k, v)
+        try:
+            bad = run_tests(M, mx, quiet=True) < len(TESTS)
+        finally:
+            for k, v in keep.items():
+                setattr(M, k, v)
+        caught += bad
+        print(f"planted [{name}] -> {'CAUGHT' if bad else 'MISSED'}")
+    ctl = run_tests(M, mx, quiet=True) == len(TESTS)
+    print(f"PLANTED: {caught}/{len(bugs)} caught, unpatched port {'passes' if ctl else 'FAILS'} -> "
+          f"{'OK' if caught == len(bugs) and ctl else 'HARNESS BLIND'}")
+    return 0 if caught == len(bugs) and ctl else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv:
         sys.exit(main_official())
-    print(__doc__)
+    if "--planted" in sys.argv:
+        sys.exit(main_planted())
+    sys.exit(main_mlx())

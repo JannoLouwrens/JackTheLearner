@@ -624,3 +624,16 @@ def critic_loss(P, fi, rew, con, fr, last, term, rrew, rboot, horizon, lam, slow
     rep = (w * (twohot_loss(lv_r, rtar, b) + slowreg * twohot_loss(lv_r, slow_r, b)))[:, :-1]
     total = value.mean() * 1.0 + rep.mean() * repval
     return dict(value=value, repval=rep, total=total, val=val_i, slow=slow_i, ret=ret, rret=rret)
+
+
+# ---------------------------------------------------------------- rung 12a (retnorm + advantage)
+def _percentile(x, q):
+    raise NotImplementedError("rung 12a: committed failing first")
+
+
+def retnorm_perc(lo, hi, ret, rate, limit, perclo, perchi):
+    raise NotImplementedError("rung 12a: committed failing first")
+
+
+def advantage(ret, tarval, scale):
+    raise NotImplementedError("rung 12a: committed failing first")
