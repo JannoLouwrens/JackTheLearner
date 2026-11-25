@@ -717,6 +717,16 @@ def main_imag():
 #   (P) planted, each must miss its term on every call where it changes the function (bit-unequal to the
 #       true port's term; NO-OP on every call fails): lam 1.0 (ret); disc 1 - 1/333 (ret); slowreg 0 (value);
 #       actent 0 (policy); retnorm not updated (policy); weight without the cumprod (value).
+# FIRST READ (11-25 20:33) FAILED, recorded as is: calls 1/2 0 miss on H/R/V/Q (worst 6.3e-7), eager+compiled;
+#   calls 6/8 miss H rew 24/46 of 16,384 (con 0), and R/V/Q downstream; C 3/4 (call 1 NO-OP: rew head zero-init);
+#   plants 4/6 (retnorm_not_updated NO-OP on every call — scale sits at the limit 1 both ways; disc_horizon 2/3).
+#   CAUSE, measured (`rung13b_decode_probe.py`): from call 6 the rew head's top bin holds p ~ 0.0039 at bin
+#   symexp(20) = 4.85e8, so one f32 ulp of p moves the twohot decode by 0.226; the misses are +-0.58 / 0.375 /
+#   0.625 jumps on EITHER side. Against an f64 decode of the same logits, port and official f32 are equally far
+#   (> 1e-5 on 4,517 vs 4,524 elements at call 6; 5,180 vs 5,191 at call 8). The element-wise 1e-5 line vs an f32
+#   golden cannot be met by any f32 decode not summing in the official order. The port is not shown wrong; the
+#   line is not met. Next: re-register H/R/Q against the f64 truth (port no farther than the official f32 is),
+#   and replace the NO-OP plant (retnorm limit 0).
 def main_imagloss():
     gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
     if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
