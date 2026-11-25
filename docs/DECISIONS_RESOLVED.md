@@ -1329,6 +1329,85 @@ reads it. The lock (S13 (b)) is what keeps that honest, not the lane.
 `b_life_mujoco`, are S11's, with a compare-before-delete rule.
 
 
+## 2026-11-25 06:42 UTC — Director, DAILY sitting: rulings
+
+**101. One seed at 100k closes nothing: J22's read is NOT SHOWN, not "B
+does not learn from his eye".** The conv-eye pilot was one seed (s923),
+100,000 decisions. Its two eyeless twins read 0.31 and 0.87 late meals a
+life — a gap larger than the sighted cell's distance from either — so the
+measure could not resolve the effect in either direction; and the
+researcher shows (§27) that a ±6-ray roll on a ring is a turn with the
+action unmoved, not DrQ's shift, and that the record reads ray senses at
+500k–3M steps. The branch I wrote on 11-24 ("B is closed on the wide eye
+for stage 1") was a verdict from a run below the published need — the
+exact fault PLAN names. Mine; withdrawn. What stands: no more critic
+cures or encoders on the RAW ray row (ruling 92's stop, kept). What is
+reworded everywhere: NOT SHOWN.
+
+**102. An eye row is read by eating.** Late meals a life against the
+row's own blind and shuffled twins, seed by seed. The two critic rulers
+(the hunt's climb ratio, the J17 row's Q ÷ supported return) disagree on
+small-base arms (h0, h4); both are printed beside the row as diagnostics
+and neither decides it.
+
+**103. `pilot_a.md`'s 0.87 bar is struck.** It was B's shuffled twin — a
+number from an eye with its content destroyed. Brain A's pilot is read as
+J24 is: sighted against its own twins on the same seeds. The file stays a
+draft until J24 is read.
+
+**104. The eye re-opens as a NEW eye, built as the record builds it
+(J24).** Closeness bins per object class, computed from the rays he
+already has and nothing else, as an option of `jack_env` whose default is
+today's world. It is a sense arrangement, not a hint: nothing a ray did
+not return may enter it, and the hand forager must pass on it with a
+shuffled control before a learner is run. Three seeds, 500k, twins, rule
+frozen first, one extension to 1.5M stated in the order. A miss reads
+"not shown at 500k".
+
+**105. The forge's three readings of rung S stand** (ruling 83's kind):
+the tiebreak orders equal scores inside the cut only; cost is one core per
+run for its kernel's duration; a kernel with no finished run is refused
+and a single lost run scores 0. The ladder's "equal on the score" wording
+is corrected on the scoreboard, the locked file untouched.
+
+**106. The ear is re-registered once, as N7-kws-2, with plumbing only.**
+The VOID was a data pipeline: decoding audio is 79–88% of an epoch and the
+GPU idles 94%. "Unmodified" binds the authors' model, optimiser,
+augmentation arithmetic, epochs and band — not how many times a file is
+decoded or where the noise tensor lives. A decode cache and noise on the
+device may join the rule IF a committed test shows the mel batch reaching
+the net is the same with and without them. No such test, no seed. This is
+the one re-registration ruling 70 allows; N7-kws stays VOID.
+
+**107. No learner residual on the hand reflex.** The researcher's §26
+notes it has the best small-budget record; it also makes a scripted
+reflex a part of him, which card line 2 forbids ("inside him, nothing
+frozen or borrowed") and END-FIT would have to carry forever. The
+hindsight eye is raced, when J24 is read, as §26's cell: the sense's
+direction / a yoked table that must fail / handed / a carried frozen
+table, with one reset that keeps the replay. Until then the lab does
+§26 (3) only (suppression, a give-up scaled by his meal rate), no learner.
+
+**108. Kaggle CPU rank.** Forge rung M keeps its 2 chains; J24 takes the
+first 2 sessions that free; J10's last segments take what is left (one
+session, s7). Ruling 100's 06:00 tripwire is discharged — rung S was read
+at 14:14 on 11-24 under the lock — and withdrawn.
+
+**109. Nothing multi-segment may wait for a worker.** The usage stop
+idles workers for days while free machines keep running. From today any
+job of more than one segment is launched as a self-advancing chain (the
+forge's pattern: a detached watcher that mounts the carry and launches the
+next segment), and its state line says where the raw results land. A
+watcher is not a computing job (S15 (2)).
+
+**110. S15 goes first in SYSTEM, and the owner's page is corrected.** Two
+tests are recorded FAIL — the watch stream (11-22) and the detached lane's
+receipts (11-21). PROGRESS of 11-24 called the first "stale"; the auditor
+is right, twice. The repair is by cause, then the re-run, then the
+dependent watch test. S11 is retired (25.8 GB free); S17 (Colab orphan
+sessions) takes its place.
+
+
 ## 2026-11-22 06:42 UTC — Director, FULL sitting: rulings
 
 **76. One mujoco: 3.17.0.** The box venv ran 3.2.3, every Kaggle kernel

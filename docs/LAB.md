@@ -53,27 +53,12 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   11-21 **one parent's voice, pitch-warped** DEAD (+2.2 points, bar +5.0).
 
 - 11-21 · **The mouth names it, the eye remembers backwards** (Vision
-  encoder, BY DEFAULT; PLAN "Learning to eat" right column; `hindsight_eye.py`,
-  rules first `3a8495b6`, `4463800b`). Bet: taste_eye died on its label, so
-  make the label at the meal — imprint the texture of the NEAREST ray when he
-  eats, walk back 8 s marking that texture. Kill: taste_eye's bars (hit
-  < .50, or < .25 over a yoked twin imprinted at random moments / untrained
-  / nearest). Prior: hindsight relabelling and track-back labels are
-  published at 10^4–10^6 clips (Andrychowicz 2017, Pathak 2017, from
-  memory); at ~200 meals: silent. **ALIVE, ENTERED (INBOX proposal).**
-  215 meals, 20 judge worlds, 33,402 looks: as a plain MEMORY (a count of
-  eaten colours, no net) **.890** — above the simulator-taught net's .829 —
-  yoked .000, ahead 20/20; as a ring NET on the same marks **.434, DEAD**
-  (yoked .201, untrained .082). The imprint is 74% on food. By colour set
-  .97 / .99 / .74 / .61. **Stage 2** (reflex along the peak ray, carried
-  table, worlds 1301–1305, 2,400 decisions): **50 meals vs held8 2, yoked
-  0 — ALIVE-2**; read it as "reaches a food by ~18 s and camps on it": 10
-  meals a world is the 50 s regrow clock, 5/5 worlds. Disclosed: judge worlds
-  were read once by taste_eye; told not refitted. Cannot say: a learner uses
-  it; the table filled from empty as he lives; a camera eye (W0's colour is
-  one clean number per object — there the net form is needed, and it is
-  the dead one). Unrun: the net with the table's output as its teacher.
-  END-FIT 1, 2, 5. Philosophy 1, 2, 3, 4.
+  encoder; `hindsight_eye.py`; long form in git at `a04f095d`) · imprint the
+  colour of the NEAREST ray at each meal. As a plain count table **.890**
+  of looks point at food (simulator-taught net .829, yoked .000, 20/20
+  worlds); as a ring NET on the same marks .434 DEAD. Reflex on the carried
+  table: 50 meals vs babble 2, yoked 0. **ALIVE, ENTERED** (ruling 84).
+  Unrun: the net with the table as its teacher. Philosophy 1–4.
 
 - 11-22 · **The hindsight eye lit from EMPTY, and unlearning a wrong
   imprint** (Vision encoder, BY DEFAULT; PLAN "Learning to eat" / "His world"
@@ -99,25 +84,9 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   between worlds. Unrun: patience learned from his own regrow waits.
   END-FIT 1, 2, 5. Philosophy 1, 2, 3, 4.
 
-- 11-24 · **Fed once, then weaned — a parent's hand names food for the
-  newborn** (Curriculum, VACANT; PLAN "His world" right column, PRIORS §3
-  "provisioning that fades"; `fed_once.py`). Bet: `live_eye`'s first meal
-  waits on babble (decision 176–6,424); the old weaning died because a
-  learner learns eating-WHERE-born, and the table learns WHAT — so set him
-  beside each food once, then set him down anywhere: first own meal in half
-  born's decisions, feeding time charged. Kill: not ahead on ¾ of worlds, or
-  a misnamed twin does as well. Prior: Avalon's dial .716 vs .001 at 5×10^7
-  steps, Ecological RL 0 → 70% — learners, 10^5+ steps; one provisioned
-  meal: silent. **DEAD AT THE PILOT** (dev worlds 1101–1106, 3,000
-  decisions; judge worlds 1501–1508 not lived): first own meal median
-  **1,038 vs born 1,712, ahead on 1 of 6 (bar 5)**; meals 35 vs 32; deaths
-  1 vs 3; misnamed twin median 3,000. **It died on the NAME, not the
-  weaning:** only 8 of 15 hand-fed meals had food on the nearest ray (wild:
-  74%) — set down beside it he bumps it side-on — and one wrong name of
-  equal count wins whenever it is nearer and costs 400 decisions. The
-  dial's own nursery (d = 0): first imprint on food 1 of 4, ahead 3 of 6.
-  Found for ruling 84's arm: the reflex can wedge — one life steered 2,983
-  decisions at a real food it never reached, never "near", so never
-  unlearned. Unrun: imprint the texture that LOOMED over the last second,
-  not the nearest ray at the bite; a hand that walks him INTO the food.
-  END-FIT 2, 5. Philosophy 1, 3, 4, 5.
+- 11-24 · **Fed once, then weaned** (Curriculum, VACANT; `fed_once.py`;
+  long form at `a04f095d`) · a parent's hand names food once. **DEAD AT
+  THE PILOT**: first own meal median 1,038 vs born 1,712, ahead on 1 of 6
+  dev worlds (bar 5). Died on the NAME: only 8 of 15 hand-fed meals had
+  food on the nearest ray. Found: the reflex can wedge (2,983 decisions at
+  a food never reached). Philosophy 1, 3, 4, 5.
