@@ -1071,3 +1071,11 @@ Long form, every link and quote: `/data/jack-research/reports/sec27_lidar_eye_an
 - Scalar id vs one-hot class, raw vs pooled beams under SAC: no published ablation.
 
 **Not verified.** RAD's per-augmentation scores (heatmap text); steps-to-first-success anywhere (curves); the pink-noise paper's α and action repeat; DrQ-v2's entropy ablation (figure); SPR, DBC unread. `conv_eye.py`'s docstring cites two DrQ settings the config does not have (long form).
+
+## 28. What a ray should say about WHAT it hit: a handed class, a stable look, or a code that moves between worlds (2026-11-25; serves J24's stop at (1), the INBOX lines JACK 07:10 + OUTSIDER 11-25, M3; plan parts "Eye" + "Learning to eat")
+
+Long form: `/data/jack-research/reports/sec28_what_a_ray_says_2026-11-25.md` (being written this slot).
+
+**Question.** His eye codes each thing as a hash of its geom id (`w0.py:225`): three foods = three codes, 0.01 from a wall's, different in every world. (a) What did the identity channel of every published forager's sensor return? (b) What does the record say a learner needs when a thing's look→meaning map changes each world? (c) Can a plain MLP carve a 0.01-wide slot out of one scalar, and what does biology hand an animal about food?
+
+*Skeleton — research running (three sub-agents); findings land in this slot.*
