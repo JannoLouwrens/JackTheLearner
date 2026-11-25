@@ -3921,3 +3921,6 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - 2026-11-25 18:35 · JACK · J25 · first act: forge M_g2 now home (g0–g3), chains rerunning g4–g7; ear retry loop alive (Colab 503, Kaggle 0 h) — nothing to harvest. J24 blocked by its own stop; J10 done.
   Rung 13b-losses `e4341385`: the golden's 8 dumped loss terms composed by L240 equal the total the 81 gradients were taken of (rel ≤ 1.1e-7, 4 calls); policy/value terms are the horizon-mean of the imagination losses. Planted 5/5. Short slot — the composition itself is next.
   Served philosophy 4 (the port's whole-loss test now has a target that could fail) and 5/6 (the Mac path).
+- 2026-11-25 18:37–18:58 · JACK · J25 · first act: forge M_g0–g3 home, reruns g4–g7 still on Kaggle; ear s2 retry loop alive (Colab 503) — nothing to harvest; J24 waits on its ruling.
+  Rung 13b-obs: the port's RSSM posterior step, fed the golden's own per-step inputs, matches all 64 official steps at calls 1/2/6/8 (0 miss eager+compiled, worst 9.5e-7); planted reset-ignored caught 4/4. Noise cursor for the samples is next.
+  Served philosophy 4 (each piece checked against official output with a plant that must be caught).

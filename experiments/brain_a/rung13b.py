@@ -226,7 +226,63 @@ def main_losses():
     return 0 if ok and allp else 1
 
 
+# THIRD PIECE (11-25, `--obs`, jack-mlx): the RSSM posterior step on the golden's own per-step inputs,
+# teacher-forced (no noise needed). THE LINE, fixed before the read: at calls 1/2/6/8 and every t of 64,
+# port `rssm_step` on `c<N>/rssm/t<t>/in_*` (dyn params = R13 `c<N>/pre/dyn/`) vs `out/deter` and
+# `out/logit` (the posterior), |d| <= 1e-5 (|ref|+1), eager AND compiled. (K) the golden chains:
+# out/{deter,stoch}[t] == in_{deter,stoch}[t+1] exactly. (C) control: call 2's out/deter differs from
+# call 1's. (P) planted reset-ignored must miss on every call (rows 0::2 start an episode at t 32).
+# Not yet: the SAMPLES (needs the noise cursor) and the gradient — both in the composed loss.
+def main_obs():
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import mlx.core as mx
+    import mlx_maths as M
+    import rung10  # noqa: F401  (TOY <- SIZE1M)
+    from rung6 import TOY
+    G, R = np.load(GOLDEN_A), np.load(R13)
+    spec = {"action": 0}
+    ok, caught, prev = True, 0, None
+    for c in CALLS:
+        P = {k[len(f"c{c}/pre/dyn/"):]: mx.array(R[k]) for k in R.files if k.startswith(f"c{c}/pre/dyn/")}
+        def step(P, d, s, tok, a, r):
+            o = M.rssm_step(P, dict(deter=d, stoch=s), tok, {"action": a}, r, TOY, spec)
+            return o["deter"], o["post"]
+        for mode in ("eager", "compiled"):
+            f = mx.compile(step) if mode == "compiled" else step
+            n = w = 0
+            for t in range(64):
+                q = f"c{c}/rssm/t{t:03d}/"
+                d, lg = f(P, mx.array(G[q + "in_deter"]), mx.array(G[q + "in_stoch"]), mx.array(G[q + "in_tokens"]),
+                          mx.array(G[q + "in_action/action"]), mx.array(G[q + "in_reset"]))
+                for got, k in ((d, "out/deter"), (lg, "out/logit")):
+                    a, b = miss(np.array(got), G[q + k]); n += a; w = max(w, b)
+            print(f"O  call {c} {mode:8s}: 64 steps deter+post vs official: miss {n}, worst {w:.2e} of {TOL:g}")
+            ok &= n == 0
+        kn = sum(int((G[f"c{c}/rssm/t{t:03d}/out/{k}"] != G[f"c{c}/rssm/t{t + 1:03d}/in_{k}"]).sum())
+                 for t in range(63) for k in ("deter", "stoch"))
+        print(f"K  call {c}: golden chains out[t] -> in[t+1]: {kn} unequal elements")
+        ok &= kn == 0
+        pm = 0
+        for t in range(64):
+            q = f"c{c}/rssm/t{t:03d}/"
+            r = mx.zeros((16,), dtype=mx.bool_)
+            d, lg = step(P, mx.array(G[q + "in_deter"]), mx.array(G[q + "in_stoch"]), mx.array(G[q + "in_tokens"]),
+                         mx.array(G[q + "in_action/action"]), r)
+            pm += miss(np.array(lg), G[q + "out/logit"])[0]
+        print(f"P  call {c}: planted reset-ignored: miss {pm}")
+        caught += pm > 0
+        cur = G[f"c{c}/rssm/t010/out/deter"]
+        if prev is not None and c == 2:
+            diff = int((cur != prev).sum()); print(f"C  call 2 vs 1 out/deter t010: {diff} differ"); ok &= diff > 0
+        prev = cur if c == 1 else prev
+    allp = caught == len(CALLS)
+    print(f"RUNG 13b-obs: port {'PASS' if ok and allp else 'FAIL'} (planted caught {caught}/{len(CALLS)})")
+    return 0 if ok and allp else 1
+
+
 def main():
+    if "--obs" in sys.argv:
+        return main_obs()
     if "--losses" in sys.argv:
         return main_losses()
     vec = rebuild_vector()

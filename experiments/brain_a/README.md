@@ -857,3 +857,10 @@ b·64+t (rel ≤ 1.3e-7): rungs 10–12's imagination losses are the ones the to
 (rep scale 1, repval dropped, repval scale 1, horizon SUM for policy / value). Note: dyn and rep means are
 equal (same KL value, different stop-gradient routing) — the rep plant is caught by its scale only;
 the routing is rung 8a's and is read again by the whole-loss gradients. Next piece: the composed loss.
+
+### Rung 13b, third piece — the RSSM posterior step over the golden's 64 steps, teacher-forced: PASS (11-25)
+`rung13b.py --obs` (jack-mlx, box, < 1 min; log `/data/jack-logs/mlx/rung13b_obs.log`). Port `rssm_step` on each
+step's dumped inputs `c<N>/rssm/t<t>/in_*` (dyn params from R13 `c<N>/pre/dyn/`) vs `out/deter` + `out/logit`:
+0 miss at all 64 steps × calls 1/2/6/8, eager AND compiled, worst 9.5e-7 of 1e-5. The golden chains
+out[t] → in[t+1] exactly (0 unequal); control call 2 ≠ call 1 (8,192 differ); planted reset-ignored caught 4/4
+(1,024 misses each). Not yet: the posterior SAMPLES (need the noise cursor) and gradients — in the composed loss.
