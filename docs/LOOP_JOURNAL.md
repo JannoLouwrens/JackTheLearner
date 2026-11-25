@@ -3658,3 +3658,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J23 box scorer alive (26 CPU-min): stream-100 @150k lib s5 956.1, s6 952.8, s7 845.9. Band 905.7–1000 needs s8 + s9 mean ≥ 886.9. ~40 min left, so it does not land in this slot.
 - J23 text debt: Row B-6a's two faults (s3 frozen explorer, α → 0 before any reward; s1 win-then-lose 772.2 → 407.7) go into `FORGE_POOL.md` as walls, not candidates, prior §21/§19. Pool check still 15 ok.
 - Served: philosophy 6 (no free GPU/CPU hour left idle) and 3/4 (a published-row reading on its frozen rule; B's failures are named as walls the forge must beat).
+
+## 2026-11-25 00:07–00:25 UTC · JACK · J10 refill ×4 + J23 DONE (Row B-6c-2 reproduces)
+- Kaggle had 1/5 busy: J10-2 s3 seg2, s4 seg2, s5 seg1, s6 seg1 all HOME 22:30–23:48 with nothing relaunched. 1M evals: s5 R 5,219.8 (5.94 m/1k, 5/50 fell), s6 R 4,541.3 (4.70 m/1k, 12/50 fell).
+- The GPU guard's code dirt was the lab slot's untracked `tour_eye.py` (lab 23:07 slot ended rc 124). Nothing imports it; committed as-is, labeled UNRUN, with the receipts (`bfcda7ee`). LAB.md prose left to its lane.
+- Launched s3 seg3, s4 seg3, s5 seg2, s6 seg2 (all push rc 0) → 5/5 J10. s3/s4 seg3 are the 2M finals.
+- J23: scorer had finished 23:05 → **lib REPRODUCES reacher-hard**: stream-100 @150k 933.8 (s5–9 956.1/952.8/845.9/962.6/951.7) in 905.7–1000, ctrl ≤ 7.6, replay_gap 0 at 150k on 8/8 (earlier marks up to 24 on s9, disclosed). KNOWN_ANSWERS B-6c-2 READ + gate 2b line. J23 DONE.
+- Served: philosophy 3/4 (a published row reproduced on fresh seeds by its frozen rule, the old misses kept named) and 6 (four idle free sessions put back to work).

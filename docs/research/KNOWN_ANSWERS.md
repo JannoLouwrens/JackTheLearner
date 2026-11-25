@@ -784,6 +784,24 @@ Rows 5, 6a, 6c stay named MISSES whatever this reads. This is the one re-registr
   under jack-std by `brain_b_dmc b6c2-score` (scoring is deterministic given the saved weights: J19's `replay_gap` was 0.0).
 - On reading: one line into `docs/research/prereg/stage2_a_vs_b.md` gate 2b; 6a is not re-run (its two faults → `FORGE_POOL.md`).
 
+### Row B-6c-2 READ — **lib REPRODUCES on reacher-hard** (11-24 23:05 box scorer; written 11-25 00:20)
+
+Kernel `jack-cpu-1795545474` HOME 22:05 (48/48 models); scored by the frozen `brain_b_dmc b6c2-score` (`0c2b7884`;
+`1db139a1` only silenced a warning flood) under jack-std, `verdict.json` + 8 `score_*.json` in `/data/jack-logs/brain_b/b6c2/`.
+
+| @150k | s5 | s6 | s7 | s8 | s9 | **mean** | band | ctrl s0 / s1 / s2 |
+|---|---|---|---|---|---|---|---|---|
+| **stream-100 (the row's score)** | 956.1 | 952.8 | 845.9 | 962.6 | 951.7 | **933.8** | 905.7–1000 | 5.8 / 1.3 / 7.6 |
+| fixed-100 (beside, not read) | 948.6 | 955.2 | 869.0 | 959.4 | 960.6 | 938.6 | | |
+| kernel's own 10 (beside) | 965.5 | 960.2 | 861.0 | 978.3 | 950.7 | 943.1 | | 1.5 / 0.2 / 1.7 |
+
+- **In band; control VALID** (every ctrl seed far under 905.7). The library recipe reproduces the published reacher-hard row
+  on fresh seeds once the test is the reference's size. Rows 5, 6a, 6c stay named misses (rule above).
+- Replay check: `replay_gap` = 0.0 at 150k on all 8 cells (the box's replay of the kernel's first 10 fixed episodes is exact).
+  Disclosed, not read: some EARLIER marks differ (s7 up to 5.0 at 50k, s9 24.0, s8 1.0), so the box/kernel bit-identity holds at
+  the scored mark, not at every mark.
+- One seed (s7, 845.9) sits under the band alone; the rule judges the 5-seed mean. s7 was still climbing (785.0 @125k).
+
 ## Row A1 — brain A (sheeprl `dreamer_v3_5`, size 1m) on DMC cartpole_balance: **PASS** at 3 seeds (11-21 02:30, Colab T4)
 
 Rule `experiments/brain_a/rows.py` (frozen `286d6451` before any seed; control corrected to no gradient step before

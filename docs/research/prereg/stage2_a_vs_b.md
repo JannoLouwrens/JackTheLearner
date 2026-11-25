@@ -49,7 +49,10 @@ ruling 59); none has today.
    it is printed beside B's rows in every stage-2 report. **Row 6 has read
    (11-22): 6a swingup_sparse a named MISS (library 541.1 vs 726.9–826.1),
    6c reacher-hard a named MISS (824.9 vs 905.7–1000), 6b reacher-easy
-   REPRODUCES (library 953.7, ours 958.1).** Rows 5, 6a, 6c are listed here
+   REPRODUCES (library 953.7, ours 958.1).** **Row B-6c-2 (11-25, ruling 70's
+   one re-registration, fresh s5–9, stream-100): lib REPRODUCES reacher-hard,
+   933.8 in 905.7–1000, ctrl ≤ 7.6** — 6c stays a named miss beside it.
+   Rows 5, 6a, 6c are listed here
    as named misses and their extensions are not run (ruling 81). With three
    of the library recipe's last four rows missing on our apparatus, **B does
    not enter stage 2 until J19's reading is written** (`KNOWN_ANSWERS.md`
