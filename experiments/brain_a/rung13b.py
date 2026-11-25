@@ -1059,7 +1059,7 @@ def main_imagloss_sym(qline=False, ruled=False):
 #   (official q 1.0e-7/2.4e-7/7.0e-7 vs the zeroed truth, = its unzeroed figures): in_rew ~0 at call 2, so zeroing it
 #   moves V's target under the f32 floor. In the first read C broke there only because the port was imprecise. Next:
 #   rule that clause (measured NO-OP-at-precision at call 2, or a control that moves V there), committed before a read.
-# RULING (11-25 22:55, committed BEFORE the third read; said plainly: written after read 2 showed the call-2 V figures,
+# RULING (11-25 22:23, committed BEFORE the third read; said plainly: written after read 2 showed the call-2 V figures,
 #   as q2's disc ruling was): a control is NO-OP-AT-PRECISION on a call/term when the OFFICIAL golden's (Q-S) quantiles
 #   against the control truth meet (Q-S) against its own quantiles vs the true truth — the independent reference
 #   itself cannot tell the two truths apart, so the line has no resolution there. Such a call is exempt, printed with
@@ -1206,7 +1206,7 @@ def main_imagloss_vq():
             if not live_of(c, out, term):
                 print(f"C  call {c}: rew zeroed: {term} NO-OP, exempt")
                 continue
-            # 22:55 ruling: NO-OP-AT-PRECISION when the OFFICIAL cannot tell the control truth from the true truth
+            # 22:23 ruling: NO-OP-AT-PRECISION when the OFFICIAL cannot tell the control truth from the true truth
             off = G[f"c{c}/imagloss/loss/" + ("value" if term == "V" else "policy")]
             qa, qb = qs(off, out[2 + idx[term]]), qs(off, true[c][2 + idx[term]])
             dt = qs(out[2 + idx[term]], true[c][2 + idx[term]])

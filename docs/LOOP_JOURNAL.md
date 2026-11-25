@@ -3981,3 +3981,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Read 1: Q meets; V FAILED at calls 2/6/8 (port q99 2.9e-6 vs official 6.8e-7). Cause measured step by step (`rung13b_vq_probe.py`): MLX CPU's `mx.sum` over 255 bins is sequential (1.7e-6); exp/log not the cause.
 - Port fix `_lse_pairwise` in `twohot_loss`; rungs 1, 8b, 9, 11, 13b-wm, 13b-imagloss-q2 all re-PASS. Read 2 `9346c748`: port meets V+Q everywhere, plants 4/4, but control rew-zeroed no longer breaks V at call 2 (it did only because the port was imprecise) → FAIL on that clause; ruling next.
 - Served philosophy 4 (a failed line fixed in the port, not loosened; a control that went dead recorded, not dropped). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
+
+## 2026-11-25 22:22–22:30 UTC · JACK · J25 — rung 13b-imagloss-vq: the dead call-2 control ruled, read 3 PASSES
+- First act: forge M_g0–g5 home, g4/g6 + g5/g7 rerun watchers alive; ear s2 retry loop alive (Colab 503, Kaggle 0 h) — nothing to harvest. J24 stopped on its ruling; J10 DONE → J25 (box).
+- Ruling `d93487c9`, committed before read 3: a control call/term is NO-OP-AT-PRECISION when the official's own (Q-S) quantiles vs the control truth meet (Q-S) vs its quantiles vs the true truth; exempt, printed. New guard: control must still break V and Q on ≥ 1 call (plus every non-exempt live call, unchanged).
+- Read 3: port meets V+Q at 1/2/6/8 eager+compiled; call 2 V exempt (official 1.0e-7/2.4e-7/7.0e-7 vs 1.0e-7/2.3e-7/6.8e-7, |Δtruth| q99 2.5e-7); C breaks V 2/2, Q 3/3; plants 4/4. PASS.
+- Said plainly: the ruling was written after read 2 showed the call-2 figures (as q2's disc ruling was); retnorm_limit_0 at call 1 is nan both sides and counts via the finiteness clause.
+- Served philosophy 4 (a dead control ruled by a measurement the independent reference makes, with a guard against a control dead everywhere — no threshold moved). Philosophy 7's MLX question after the owner's no-Mac line is still the Director's.

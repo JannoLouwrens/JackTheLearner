@@ -933,7 +933,7 @@ search over the regenerated noise file (uniforms `default_rng(0).random(64M, f32
 - Not yet: V and Q (teacher-forced vs f64), retnorm limit-0 plant, repval, then the 81 grads via `port_gate`.
 
 
-### Rung 13b-imagloss-vq — V and Q vs an f64 truth: two reads, both FAILED, one port fix (11-25 22:20–22:45)
+### Rung 13b-imagloss-vq — V and Q vs an f64 truth: PASS at read 3 (reads 1–2 FAILED, one port fix, one control ruling; 11-25)
 `rung13b.py --imagloss-vq` (jack-mlx, box, ~30 s; logs `/data/jack-logs/mlx/rung13b_imagloss_vq{,_read2}.log`).
 Line `a2e36ed4`, committed before its read: (Q-S) as q2 on the value and policy loss terms, teacher-forced on the
 golden's feats/actions/in_rew/in_con, truth = the variant's f64 function of the port's own logits; control rew
@@ -944,4 +944,12 @@ zeroed; plants slowreg 0, weight without cumprod, actent 0, retnorm LIMIT 0 (the
 - Read 2: port meets V and Q at every call eager+compiled, plants 4/4 — but the control fails to break V at call
   2 (in_rew ~0 there; zeroing it is under the f32 floor). FAIL on that clause, recorded. Next: rule it, then
   repval and the 81 grads via `port_gate`.
+- Ruling `d93487c9`, committed before read 3: a control call/term is NO-OP-AT-PRECISION when the OFFICIAL's (Q-S)
+  quantiles vs the control truth meet (Q-S) vs its quantiles vs the true truth (the reference cannot tell them apart);
+  exempt, printed. Guard: the control must still break V and Q on >= 1 call and on every non-exempt live call.
+- **Read 3 PASS** (log `..._read3.log`): port meets V+Q at calls 1/2/6/8 eager+compiled; C: call 2 V exempt at
+  precision (official 1.0e-7/2.4e-7/7.0e-7 vs 1.0e-7/2.3e-7/6.8e-7; |dtruth| q99 2.5e-7), breaks V 2/2 and Q 3/3
+  non-exempt live calls; plants 4/4. Said plainly: retnorm_limit_0 at call 1 is nan both sides (lo=hi, limit 0 → 0/0)
+  and counts as a break through the finiteness clause, not a measured miss; it breaks calls 2/6/8 by ~1e3x anyway.
+- Not yet: repval, then the 81 gradients via `port_gate`.
 
