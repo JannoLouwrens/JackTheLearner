@@ -1059,6 +1059,13 @@ def main_imagloss_sym(qline=False, ruled=False):
 #   (official q 1.0e-7/2.4e-7/7.0e-7 vs the zeroed truth, = its unzeroed figures): in_rew ~0 at call 2, so zeroing it
 #   moves V's target under the f32 floor. In the first read C broke there only because the port was imprecise. Next:
 #   rule that clause (measured NO-OP-at-precision at call 2, or a control that moves V there), committed before a read.
+# RULING (11-25 22:55, committed BEFORE the third read; said plainly: written after read 2 showed the call-2 V figures,
+#   as q2's disc ruling was): a control is NO-OP-AT-PRECISION on a call/term when the OFFICIAL golden's (Q-S) quantiles
+#   against the control truth meet (Q-S) against its own quantiles vs the true truth — the independent reference
+#   itself cannot tell the two truths apart, so the line has no resolution there. Such a call is exempt, printed with
+#   |dtruth| quantiles, not counted. Guard against a control dead everywhere: rew zeroed must still break (Q-S) on
+#   >= 1 call for V AND for Q, and on EVERY non-exempt live call (unchanged). V's teeth at call 2 are the plants
+#   slowreg 0 and weight without cumprod (both break call 2 by ~1e5x). Thresholds, plants and the line: UNCHANGED.
 def main_imagloss_vq():
     gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
     if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
@@ -1191,6 +1198,7 @@ def main_imagloss_vq():
     true = {c: run(c, make()) for c in CALLS}
     idx = {"V": 0, "Q": 1}
     live_of = lambda c, out, term: not np.array_equal(out[idx[term]], true[c][idx[term]])  # noqa: E731
+    cbreaks = {"V": 0, "Q": 0}
     for c in CALLS:
         out = run(c, make(zero_rew=True))
         r = line(c, out)
@@ -1198,9 +1206,22 @@ def main_imagloss_vq():
             if not live_of(c, out, term):
                 print(f"C  call {c}: rew zeroed: {term} NO-OP, exempt")
                 continue
+            # 22:55 ruling: NO-OP-AT-PRECISION when the OFFICIAL cannot tell the control truth from the true truth
+            off = G[f"c{c}/imagloss/loss/" + ("value" if term == "V" else "policy")]
+            qa, qb = qs(off, out[2 + idx[term]]), qs(off, true[c][2 + idx[term]])
+            dt = qs(out[2 + idx[term]], true[c][2 + idx[term]])
+            if all(max(x / y, y / x) <= 1.25 for x, y in zip(qa, qb)):
+                print(f"C  call {c}: rew zeroed: {term} NO-OP-AT-PRECISION, exempt (official q vs control truth "
+                      + "/".join(f"{x:.1e}" for x in qa) + " vs true truth " + "/".join(f"{x:.1e}" for x in qb)
+                      + "; |dtruth| q " + "/".join(f"{x:.1e}" for x in dt) + ")")
+                continue
             print(f"C  call {c}: rew zeroed: {term} {'breaks (Q-S)' if not r[term][0] else 'MEETS (Q-S) - control dead'}"
                   f" q port {r[term][1]} off {r[term][2]}")
             ok &= not r[term][0]
+            cbreaks[term] += not r[term][0]
+    for term in ("V", "Q"):
+        print(f"C  rew zeroed breaks {term} on {cbreaks[term]} call(s)" + ("" if cbreaks[term] else " - NONE: control dead"))
+        ok &= cbreaks[term] >= 1
     plants = {"slowreg_0": (dict(slowreg=0.0), "V"), "weight_no_cumprod": (dict(cum=False), "V"),
               "actent_0": (dict(actent=0.0), "Q"), "retnorm_limit_0": (dict(limit=0.0), "Q")}
     caught = 0
