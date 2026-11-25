@@ -36,6 +36,20 @@ caught on every other call, and a plant that is a no-op on every call fails the 
 Ours beside theirs: f32 throughout (published bf16 compute); size1m widths; the toy Dummy74 batch.
 
   /data/venvs/jack-mlx/bin/python -I experiments/brain_a/rung13b.py            (ref + port + planted)
+
+SECOND PIECE (11-25, `--losses`, NumPy only): what the port's composed loss must reproduce, read off the
+golden BEFORE any composition is written. agent.py L240: loss = sum_k mean(losses[k]) * scales[k], with
+scales = configs.yaml loss_scales {rec->vector 1, rew 1, con 1, dyn 1, rep 0.1, policy 1, value 1,
+repval 0.3} (rung 9 reads the same line from the pin).
+THE LINE, fixed before the read:
+  (L1) at calls 1/2/6/8 the golden's 8 dumped terms `c<N>/outs/losses/*` (float64 means) composed by L240
+       equal R13's `c<N>/loss/total_scaled` to relative 1e-5 — i.e. the dump holds EVERY term of the loss
+       the 81 gradients were taken of, and the scales are the ones above.
+  (L2) `outs/losses/{policy,value}[b, t]` = the mean over the 15-step horizon of `imagloss/loss/*` row
+       b*64 + t (relative 1e-5 of the term's max): the imagination losses rungs 10-12 checked are the
+       ones the total carries, laid out [B*T, H] -> [B, T].
+  (P)  planted, each must miss L1 on every call: rep scale 1 (for 0.1); repval dropped; repval scale 1;
+       policy+value summed instead of meaned over the horizon is a layout plant on L2.
 """
 from __future__ import annotations
 
@@ -168,7 +182,53 @@ def main_port(data, vec):
     return ok
 
 
+SCALES = dict(vector=1.0, rew=1.0, con=1.0, dyn=1.0, rep=0.1, policy=1.0, value=1.0, repval=0.3)
+LOSS_TOL = 1e-5
+
+
+def compose(terms, scales):
+    return sum(float(np.mean(terms[k])) * s for k, s in scales.items())
+
+
+def main_losses():
+    G, R = np.load(GOLDEN_A), np.load(R13)
+    ok, plants = True, {
+        "rep_scale_1": dict(SCALES, rep=1.0),
+        "repval_dropped": {k: v for k, v in SCALES.items() if k != "repval"},
+        "repval_scale_1": dict(SCALES, repval=1.0),
+    }
+    caught = {n: 0 for n in plants}
+    for c in CALLS:
+        terms = {k: G[f"c{c}/outs/losses/{k}"].astype(np.float64) for k in SCALES}
+        tot = float(R[f"c{c}/loss/total_scaled"])
+        r = abs(compose(terms, SCALES) - tot) / abs(tot)
+        print(f"L1 call {c}: L240 over 8 dumped terms {compose(terms, SCALES):.6f} vs total_scaled "
+              f"{tot:.6f}: rel {r:.2e} of {LOSS_TOL:g}")
+        ok &= r <= LOSS_TOL
+        for n, sc in plants.items():
+            caught[n] += abs(compose(terms, sc) - tot) / abs(tot) > LOSS_TOL
+        for k in ("policy", "value"):
+            a = G[f"c{c}/imagloss/loss/{k}"].astype(np.float64)
+            o = terms[k]
+            scale = np.abs(o).max()
+            rm = np.abs(a.mean(1).reshape(o.shape) - o).max() / scale
+            rs = np.abs(a.sum(1).reshape(o.shape) - o).max() / scale
+            print(f"L2 call {c} {k:6s}: horizon-mean of imagloss vs outs/losses: rel {rm:.2e}; "
+                  f"planted horizon-SUM: rel {rs:.2e}")
+            ok &= rm <= LOSS_TOL
+            caught.setdefault(f"sum_{k}", 0)
+            caught[f"sum_{k}"] += rs > LOSS_TOL
+    for n, k in caught.items():
+        print(f"P  planted {n:15s}: caught {k}/{len(CALLS)}")
+    allp = all(k == len(CALLS) for k in caught.values())
+    print(f"RUNG 13b-losses: target {'HOLDS' if ok and allp else 'FAILS'} "
+          f"(planted {sum(k == len(CALLS) for k in caught.values())}/{len(caught)})")
+    return 0 if ok and allp else 1
+
+
 def main():
+    if "--losses" in sys.argv:
+        return main_losses()
     vec = rebuild_vector()
     data = load()
     r = main_ref(data, vec)

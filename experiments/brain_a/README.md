@@ -845,3 +845,15 @@ calls (worst 8.2e-7).** Ours beside theirs: f32 (published bf16); one vector key
 concat is the identity after symlog. Not yet: the encoder's GRADIENT — it is read inside 13b's whole
 loss (the 9 `enc/` grads among R13's 81). Next piece: the composed whole loss on this batch with the
 file noise at the golden's cursor, its 81 gradients through `port_gate` at calls 1/2/6/8.
+
+### Rung 13b, second piece — the whole loss's TARGET read off the golden: HOLDS (11-25)
+`rung13b.py --losses` (NumPy, box, < 1 s; log `/data/jack-logs/mlx/rung13b_losses.log`). Before composing
+the port's whole loss, what it must equal: (L1) the golden's 8 dumped terms (`outs/losses/{vector, rew,
+con, dyn, rep, policy, value, repval}`) composed by agent.py L240 with the config's scales (rep 0.1,
+repval 0.3, rest 1) equal R13's `loss/total_scaled` — the loss the 81 gradients were taken of — at calls
+1/2/6/8, rel ≤ 1.1e-7 of 1e-5 (58.534781 vs 58.534775 at call 1). So the dump holds EVERY term; nothing
+hidden is in the total. (L2) `outs/losses/{policy,value}[b,t]` = horizon-mean of `imagloss/loss/*` row
+b·64+t (rel ≤ 1.3e-7): rungs 10–12's imagination losses are the ones the total carries. Planted 5/5
+(rep scale 1, repval dropped, repval scale 1, horizon SUM for policy / value). Note: dyn and rep means are
+equal (same KL value, different stop-gradient routing) — the rep plant is caught by its scale only;
+the routing is rung 8a's and is read again by the whole-loss gradients. Next piece: the composed loss.
