@@ -380,8 +380,139 @@ def main_official():
     return 0 if n == len(rows) else 1
 
 
+# ---------------------------------------------------------------- port tests (MLX)
+# `mlx_maths.imag_rollout(P, start, policy, uniforms, cfg, act_spec, length)` -> dict(feat {deter,
+#   stoch, logit} [N, H+1, ...] with the start first (logit 0 there), act {key: [N, H(+1)]}) —
+#   RSSM.imagine + agent.py L194-198; `policy` is a callable on the carry (its last action appended)
+#   or an action dict [N, H] (imagine's array path, no last action).
+# `mlx_maths.imag_return(rew, con, val, contdisc, horizon, lam)` -> dict(ret [N,H], weight [N,H+1])
+# `mlx_maths.repl_return(last, term, rew, val, boot, horizon, lam)` -> dict(ret [B,K-1], weight [B,K])
+# Each test eager AND under mx.compile:
+#   imag_ref / imag_golden  both policy paths vs REF_imagine (f64, golden near-ties) / the official
+#                            dump; 0 sample flips; controls: other actions differ, constant noise flips
+#   ret_ref / ret_golden     imag (contdisc and 1-1/333) + repl vs REF / official; control lam 0 differs
+# No gradient test at this rung: every output is consumed under a stop-gradient in the agent
+# (agent.py L195 sg(imgfeat) with ac_grads False; sg(weight), sg(adv), sg(value target)) — the
+# routing claim belongs to rung 13's whole step.
+ACT_SPEC = {CONT: 0, DISC: DISC_N}
+
+
+def _gold():
+    G = np.load(GOLDEN10)
+    o = {}
+    for tag in ("array", "policy"):
+        o[tag] = dict(feat={k: G[f"{tag}/feat/{k}"] for k in ("deter", "stoch", "logit")},
+                      act={k: G[f"{tag}/act/{k}"] for k in (CONT, DISC)}, U=G[f"{tag}/uniform"])
+    return G, o
+
+
+def policy_mx(mx):
+    def f(c):
+        d, s = c["deter"], c["stoch"].reshape(c["stoch"].shape[0], -1)
+        return {CONT: 2.5 * mx.tanh(4 * d[:, :CONT_DIM] + s[:, :CONT_DIM]),
+                DISC: mx.argmax(d[:, CONT_DIM:CONT_DIM + DISC_N] + s[:, -DISC_N:], -1).astype(mx.int32)}
+    return f
+
+
+def _port_imag(M, mx, P, start, U, acts, compiled):
+    MP = {k: mx.array(v) for k, v in P.items()}
+    st = {k: mx.array(v.astype(np.float32)) for k, v in start.items()}
+    pol = policy_mx(mx) if acts is None else {k: mx.array(v) for k, v in acts.items()}
+    f = lambda p, s, u: M.imag_rollout(p, s, pol, u, TOY, ACT_SPEC, H)  # noqa: E731
+    if compiled:
+        f = mx.compile(f)
+    o = f(MP, st, mx.array(U.astype(np.float32)))
+    return dict(feat={k: np.asarray(v) for k, v in o["feat"].items()},
+                act={k: np.asarray(v) for k, v in o["act"].items()})
+
+
+def t_imag(M, mx, compiled, against):
+    P, start = starts()
+    _, gold = _gold()
+    N = start["deter"].shape[0]
+    acts = action_array(N)
+    rows, nlat = [], N * H * TOY["stoch"]
+    for tag in ("array", "policy"):
+        g = gold[tag]
+        a = acts if tag == "array" else None
+        got = _port_imag(M, mx, P, start, g["U"], a, compiled)
+        tgt = REF_imagine({k: np.float64(v) for k, v in P.items()}, start, g["U"], a, golden=g) \
+            if against == "ref" else g
+        for k in ("deter", "logit"):
+            rows.append(close(f"[{tag}] {k} vs {against.upper()}", got["feat"][k], tgt["feat"][k]))
+        fl = int((got["feat"]["stoch"].argmax(-1) != tgt["feat"]["stoch"].argmax(-1)).sum())
+        rows.append((fl == 0, f"[{tag}] samples vs {against.upper()}: {fl} flips of {nlat}"))
+        rows.append(close(f"[{tag}] continuous actions", got["act"][CONT], tgt["act"][CONT]))
+        rows.append((bool(np.array_equal(got["act"][DISC], tgt["act"][DISC])), f"[{tag}] discrete actions equal"))
+        if tag == "array":
+            o2 = _port_imag(M, mx, P, start, g["U"], action_array(N, seed=5), compiled)
+            d = float(np.abs(o2["feat"]["deter"][:, -1] - got["feat"]["deter"][:, -1]).max())
+            rows.append((d > 1e-2, f"control: other actions -> other deter at H ({d:.3g} > 1e-2)"))
+        else:
+            cn = _port_imag(M, mx, P, start, np.full_like(g["U"], 0.5), None, compiled)
+            fc = int((cn["feat"]["stoch"].argmax(-1) != g["feat"]["stoch"].argmax(-1)).sum())
+            rows.append((fc > nlat // 10, f"control: constant-noise port flips {fc}/{nlat} (> 10%)"))
+    return rows
+
+
+def t_ret(M, mx, compiled, against):
+    G, _ = _gold()
+    R = {k[len("ret_in/"):]: G[k] for k in G.files if k.startswith("ret_in/")}
+    A = lambda x: mx.array(x)  # noqa: E731
+    fr = lambda la, te, r, v, b: M.repl_return(la, te, r, v, b, HORIZON, LAM)  # noqa: E731
+    rows = []
+    run_i = (lambda cd, lam: mx.compile(lambda r, c, v: M.imag_return(r, c, v, cd, HORIZON, lam))) if compiled \
+        else (lambda cd, lam: (lambda r, c, v: M.imag_return(r, c, v, cd, HORIZON, lam)))
+    run_r = mx.compile(fr) if compiled else fr
+    ins = (A(R["rew"]), A(R["con"]), A(R["val"]))
+    outs = {"imag": run_i(True, LAM)(*ins), "imagD": run_i(False, LAM)(*ins),
+            "repl": run_r(A(R["last"]), A(R["term"]), A(R["rrew"]), A(R["rval"]), A(R["rboot"]))}
+    refs = {"imag": REF_imag(R["rew"], R["con"], R["val"]), "imagD": REF_imag(R["rew"], R["con"], R["val"], False),
+            "repl": REF_repl(R["last"], R["term"], R["rrew"], R["rval"], R["rboot"])}
+    for tag, o in outs.items():
+        o = {k: np.asarray(v) for k, v in o.items()}
+        if against == "ref":
+            rows.append(close(f"{tag} ret vs REF", o["ret"], refs[tag]["ret"]))
+            rows.append(close(f"{tag} weight vs REF", o["weight"], refs[tag]["weight"]))
+        else:
+            rows.append(close(f"{tag} ret vs GOLDEN", o["ret"], G[f"{tag}/ret"]))
+            rows.append(close(f"{tag} weight[:, :-1] vs GOLDEN", o["weight"][:, :-1], G[f"{tag}/weight"]))
+    z = np.asarray(run_i(True, 0.0)(*ins)["ret"])
+    d = float(np.abs(z - np.asarray(outs["imag"]["ret"])).max())
+    rows.append((d > 1e-2, f"control: lam 0 differs from lam 0.95 ({d:.3g} > 1e-2)"))
+    return rows
+
+
+TESTS = [("imag_ref", lambda M, mx, c: t_imag(M, mx, c, "ref")),
+         ("imag_golden", lambda M, mx, c: t_imag(M, mx, c, "golden")),
+         ("ret_ref", lambda M, mx, c: t_ret(M, mx, c, "ref")),
+         ("ret_golden", lambda M, mx, c: t_ret(M, mx, c, "golden"))]
+
+
+def main_mlx():
+    mx = rung6._mlx()
+    import mlx_maths as M
+    n = 0
+    for name, t in TESTS:
+        r = {}
+        for mode, c in (("eager", False), ("compiled", True)):
+            try:
+                rows = t(M, mx, c)
+                r[mode] = all(o for o, _ in rows)
+                det = [d for o, d in rows if not o][:4] if not r[mode] else [d for _, d in rows]
+            except Exception as e:  # noqa: BLE001 — a stub or crash is a FAIL, reported
+                r[mode], det = False, [f"{type(e).__name__}: {e}"[:200]]
+            if mode == "eager" or not r[mode]:
+                for d in det:
+                    print(f"    {mode[0]}:", d)
+        n += r["eager"] and r["compiled"]
+        print(f"{name:12s} eager {'PASS' if r['eager'] else 'FAIL'}  compiled {'PASS' if r['compiled'] else 'FAIL'}")
+    print(f"RUNG 10: {n}/{len(TESTS)} tests pass eager AND compiled (mlx {mx.__version__}) -> "
+          f"{'PASS' if n == len(TESTS) else 'FAIL'}")
+    return 0 if n == len(TESTS) else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv:
         sys.exit(main_official())
-    print("port tests not written yet (next slot: committed failing, then mlx_maths)")
-    sys.exit(2)
+    sys.exit(main_mlx())

@@ -506,3 +506,19 @@ def wm_loss(losses, scales):
         term = _wm_mean(losses[k]) * s
         total = term if total is None else total + term
     return total
+
+
+# ---------------------------------------------------------------- rung 10: imagination + returns
+# Contract: `rung10.py` REF_imagine / REF_imag / REF_repl (NumPy float64), checked 36/36 against
+# the official RSSM.imagine + agent.py L194-198 and imag_loss / repl_loss at e01491f by
+# `rung10.py --vs-official` (c0dd858f). Done-test: `rung10.py` exits 0, eager AND compiled.
+def imag_rollout(P, start, policy, uniforms, cfg, act_spec, length):
+    raise NotImplementedError("rung 10 port not written yet")
+
+
+def imag_return(rew, con, val, contdisc, horizon, lam):
+    raise NotImplementedError("rung 10 port not written yet")
+
+
+def repl_return(last, term, rew, val, boot, horizon, lam):
+    raise NotImplementedError("rung 10 port not written yet")
