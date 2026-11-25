@@ -3974,3 +3974,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - My first commit put the clause's two pieces into main_wm and main_imag (string-match landed on earlier functions); two reads crashed before any verdict; fixed in two commits, those functions restored.
 - Read: port PASS — (Q-S) every call eager+compiled, con 0 miss, control 3/3 live, plants 3/3, D 8/8, D-control 3/3 live.
 - Served philosophy 4 (a blind plant replaced by a clause that could fail, not dropped). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
+
+## 2026-11-25 22:07–22:50 UTC · JACK · J25 — rung 13b-imagloss-vq: value/policy loss vs an f64 truth; a real port imprecision found and fixed
+- First act: forge M_g0–g5 home, g4/g6 + g5/g7 rerun watchers alive; ear s2 retry loop alive (Colab 503, Kaggle 0 h) — nothing to harvest. J24 stopped on its ruling; J10 DONE → J25 (box).
+- `--imagloss-vq` line `a2e36ed4` committed before read: (Q-S) on V and Q, teacher-forced; plants slowreg 0, no-cumprod, actent 0, retnorm LIMIT 0 (replaces the NO-OP plant).
+- Read 1: Q meets; V FAILED at calls 2/6/8 (port q99 2.9e-6 vs official 6.8e-7). Cause measured step by step (`rung13b_vq_probe.py`): MLX CPU's `mx.sum` over 255 bins is sequential (1.7e-6); exp/log not the cause.
+- Port fix `_lse_pairwise` in `twohot_loss`; rungs 1, 8b, 9, 11, 13b-wm, 13b-imagloss-q2 all re-PASS. Read 2 `9346c748`: port meets V+Q everywhere, plants 4/4, but control rew-zeroed no longer breaks V at call 2 (it did only because the port was imprecise) → FAIL on that clause; ruling next.
+- Served philosophy 4 (a failed line fixed in the port, not loosened; a control that went dead recorded, not dropped). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
