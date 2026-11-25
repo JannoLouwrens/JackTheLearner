@@ -3865,3 +3865,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Re-run g5+g7 from the SAME pin through a clean worktree at main (forge/gpu/brain_b/env byte-identical to the pin; the job fetches the pin itself): kernel `…617532` RUNNING past the clone.
 - Chain A (g2 running) will meet the same wall at g4, g6: re-run them the same way when its CHAIN DONE says so. Preamble repair → INBOX.
 - Served philosophy 4 (a failure fixed, not filed — the round finishes by its frozen rule) and 6 (free Kaggle CPU, no session wasted on a doomed clone).
+
+## 2026-11-25 15:00–15:12 UTC · SYSTEM · J18 clone-depth repair (ruling 54 ahead of S15)
+- `repo_preamble` cloned 50 commits and checked out the pin with check=True: forge M g5/g7 died in 5 s, pin 51 behind. Now: on checkout failure, fetch that one commit and check out FETCH_HEAD (`a1893299`).
+- Planted `tests/test_gpu_preamble_deep_pin.py` runs the preamble's own text on a local 60-commit repo: deep and shallow pins check out, a bogus sha fails; HEAD's preamble fails the deep pin (exit 128).
+- Chain A's live process still holds the old preamble (imported from its pinned worktree): g4/g6 need the hand re-run once more. S15 (2)/(3) not reached.
+- Served philosophy 5 (the loop loses no more GPU sessions or worker slots to a clone wall).
