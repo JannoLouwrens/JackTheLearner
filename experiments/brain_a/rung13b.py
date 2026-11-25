@@ -1252,6 +1252,17 @@ def main_imagloss_vq():
 # break (Q-S) on >= 1 call and on every non-exempt live call (NO-OP-AT-PRECISION exemption, ruling d93487c9).
 # (P) planted, each must break on every live call: slowreg 0; disc 1.0 (horizon inf, not 1 - 1/333); boot = the
 # port's own val (not the imagined return); lam 1.0. PASS iff the port meets (Q-S) everywhere, C holds, plants 4/4.
+# FIRST READ (11-25 22:39, at `29367744`) FAILED, recorded as is: port meets the truth (q99 2.0e-6/9.6e-6/2.6e-5 at
+#   calls 2/6/8) but the OFFICIAL sits off it (q99 1.1e-3/6.3e-3/9.8e-3; call 1 meets). Cause MEASURED
+#   (`rung13b_repval_probe.py --where`): the official repval is exactly 0 at [0::2, 31] — the golden batch carries
+#   is_last[0::2, EPISODE_START-1] (g1_probe L150), which this piece's input said was all False. An APPARATUS fix
+#   (the teacher-forced input), not a line change: last[0::2, 31] = True for port and truth alike. Line, control,
+#   plants and thresholds UNCHANGED.
+# SECOND READ (11-25 22:40, is_last fixed, line unchanged) FAILED on ONE plant, recorded as is: port meets (Q-S) at
+#   every call eager+compiled (call 8 q 7.9e-7/2.1e-5/2.6e-5 vs official 6.8e-7/2.1e-5/2.6e-5); C breaks 3/3 live calls;
+#   plants slowreg 0, disc 1.0, lam 1.0 break every live call, but boot_is_val MEETS at call 2 (port q99 2.0e-6 vs
+#   official 2.2e-6; early values ~ the imagined returns, and boot enters ret only through (1-cont)·live = 0.05).
+#   Plants caught 3/4 -> FAIL. Next: a measured ruling for that plant/call or a plant that moves boot there, BEFORE a read.
 def main_repval():
     gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
     if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
@@ -1321,6 +1332,7 @@ def main_repval():
         boot = G[f"c{c}/imagloss/outs/ret"][:, 0].reshape(Bq, K)
         rew = bt["reward"][:, 1:]
         last = np.zeros((Bq, K), bool)
+        last[0::2, EPISODE_START - 2] = True  # g1_probe L150: is_last[0::2, start-1]; sliced [:, 1:] (read-1 fix)
         term = np.zeros((Bq, K), bool)
         A = mx.array
         f = mx.compile(f) if compiled else f
