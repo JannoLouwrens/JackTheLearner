@@ -1095,3 +1095,31 @@ Rule `docs/research/prereg/needs_hidden_nh2.md` FROZEN `37dcc858` (the one chang
   * **The cost is decoding** (`torchaudio.load` via main.py's DataLoader, num_workers 0): 79–88% of the epoch; 3.8–5.2 ms a clip on the GPU VM vs 0.22 ms on this box (17–23×). The training step is 10 s of the epoch: the T4 idles ~94% of a seed.
   * Fit (one seed in one session with 20% spare → ≤ 10.0 h in Kaggle's 12 h; Colab ≤ 3 h, `kws_row` has no resume): **authors as written: does NOT fit** (Kaggle's own measured 182 s × 200 + prepare = 10.2 h). Noise on device: Kaggle 182 − 31.7 ≈ 150 s → ≈ **8.4 h — fits, by ESTIMATE** (Colab's saving subtracted from Kaggle's epoch; unmeasured on Kaggle). Neither fits Colab.
   * Not adopted: holding the noise on the device is a wrapper change to this row's frozen "unmodified" rule (like the seeding wrapper, same arithmetic, but not yet ruled). Even with it, 3 seeds + twin ≈ 34 T4-h > one week's 30. Row stays VOID; no seed launched (J14 (c) rule → INBOX).
+
+## Row N7-kws-2 — the ear, re-registered ONCE with plumbing only (ruling 106): **RULE FROZEN 11-25, NOT RUN**
+
+Frozen before any seed (rulings 33, 70, 106). N7-kws stays VOID; this is the one re-registration ruling 70 allows.
+- **Unchanged from N7-kws (`kws_row.py` THE RULE, word for word):** the authors' source `bcresnet@656f947a`
+  sha-pinned; `python main.py --ver 2 --tau 1`; 200 epochs, 5 warm-up, SGD lr 0.1 cosine, momentum 0.9,
+  wd 1e-3, batch 100, noise p 0.8, SpecAugment off; final-epoch model on the official v0.02 test set;
+  score = main.py's `test acc:`; band **96.3 .. 97.5** (published 96.9 ± 2 × 0.30) on the 3-seed mean;
+  seeds 0, 1, 2; ONE extension (a miss at 3 → seeds 3, 4, judged once more at 5, same band); data check
+  36923/4445/4890 or DATA_MISMATCH; control = shuffled-label twin seed 0, must score **≤ 15.0%** or VOID;
+  a cut / crashed / unprinted run is NOT JUDGED, not a zero; our seeding wrapper.
+- **Added — plumbing only (`experiments/kws_plumbing.py`, installed on the authors' classes in-process,
+  their files untouched):** (i) each clip decoded once (`SpeechCommand.__getitem__` keeps
+  `torchaudio.load`'s tensor, returns a clone, their `Padding` after); (ii) `Preprocess.background_noise`
+  moved to the device once after their constructor (their per-clip `.to(device)` becomes a no-op).
+  No RNG call is added, removed or reordered. Cost: ~3 GB host RAM for the cached waveforms (float32).
+- **Admission, before any seed (ruling 106):** `kws_plumbing.admission` — same seed, same 300 clips (30 on
+  the label-0 noise branch), the authors' DataLoader + Preprocess(augment, train) + LogMel, 2 epochs × 3
+  batches, with and without the plumbing: max |Δmel| ≤ 1e-6 on all 6 batches, labels equal, epoch 2 read
+  wholly from the cache. **Box CPU, 11-25: PASS — Δ = 0.0 on 6/6, hits 300 / misses 300**; planted
+  wrong-clip cache caught (epoch 2 Δ > 1e-3, epoch 1 blind — why 2 epochs), planted noise ×(1+1e-3)
+  caught (`tests/test_kws_plumbing.py`, 3/3). **Also required on CUDA**, where (ii) is not a no-op: the
+  timing cell runs the same function on the T4 first and a fail there stops the row (no seed).
+- **Fit, read by the timing cell (unchanged rule):** one seed (200 epochs) fits one session with 20% to
+  spare — Kaggle ≤ 10.0 h, Colab ≤ 2.4 h (`kws_row` has no resume). Estimate only, from the 11-24 Colab
+  stages with decode paid once: (0.25 + 0.014 + 0.28) ms × 36,923 ≈ 20 s an epoch + one decode epoch
+  ≈ 1.2 h a seed. Not a number until the timing cell measures it. No fit → INBOX with the stage table, no seed.
+- Settings that differ from the published protocol: N7-kws's list, plus (i) and (ii) above.
