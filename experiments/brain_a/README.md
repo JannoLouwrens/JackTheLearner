@@ -885,3 +885,18 @@ reset = is_first[:, 1:] — 0 unequal vs the 64 dumped inputs at all 4 calls (A)
   normals), the loss terms on this pass, and the 81 gradients. Next: WM terms (dyn, rep, vector, rew, con)
   from this pass vs `c<N>/outs/losses/*` — reward = the second draw, [:, 1:].
 
+### Rung 13b, fifth piece — the five world-model loss terms on the port's own sampled pass: PASS (11-25)
+`rung13b.py --wm` (jack-mlx, box, ~10 s; log `/data/jack-logs/mlx/rung13b_wm.log`). Port encoder → `rssm_loss`
+(free 1.0, unimix 0.01, file noise at the cursor) → `rewcon_loss` (reward = rebuilt draw 2, [:, 1:]; con
+target (1 − 0)·(1 − 1/333)) + `dec_vec_loss` (obs[:, 1:]) vs golden `c<N>/outs/losses/{dyn,rep,vector,rew,con}`:
+- (W) **0 miss on all 5 terms × [16, 64], calls 1/2/6/8, eager AND compiled (worst 1.2e-6 of 1e-5).**
+- (C) reward from the wrong draw: rew missed 3/3 live calls. (P) planted 5/5: free bits 3, unimix 0, reward
+  unsliced, con without the horizon discount, vector target one step early.
+- Said plainly: the FIRST read FAILED its own C/P clauses (C 3/4, planted 3/5) with W already 0 miss. Causes
+  measured: call 1's reward head is the published zero init (loss = log 255 for any target), and the
+  golden's KL never reaches the 1.0 floor (min 2.15), so `free_bits_0` was the identical function on every
+  call. Re-registered as in 13b-enc ("every call where the plant changes the function"; rew no-op read off
+  the all-zero head weights) and `free_bits_0` → `free_bits_3`. W untouched. **This golden cannot certify
+  the free-bits max**; rung 8a's split RSSM does.
+- Not yet: the imagination's cursor, policy/value/repval on the port, and the 81 gradients via `port_gate`.
+

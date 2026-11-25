@@ -425,7 +425,120 @@ def main_scan():
     return 0 if ok and caught == len(plants) else 1
 
 
+# FIFTH PIECE (11-25, `--wm`): the five world-model loss terms on the port's own free-running pass.
+# Official agent.py L164-181 + L51-58: dyn/rep = rssm.loss over the observe pass (free 1.0, unimix 0.01);
+# vector = dec(repfeat) symlog-MSE vs obs; rew = TwoHot(255 symexp bins) vs reward[:, 1:] (the rebuilt
+# SECOND draw); con = Binary vs (1 - is_terminal[:, 1:]) * (1 - 1/333), is_terminal all False here.
+# THE LINE, fixed before the first read: at calls 1/2/6/8, eager AND compiled, each of dyn, rep, vector,
+#   rew, con [B=16, T=64] from the port vs golden `c<N>/outs/losses/<k>`: every element |d| <= 1e-5 (|ref|+1)
+#   (W). (C) control: rew on the FIRST draw (vector's slot) instead of the reward draw misses rew on
+#   every call. (P) planted, each must miss its term on every call: free bits 0 (dyn/rep), unimix 0
+#   (dyn/rep), reward not sliced [:, :-1] (rew), con target without the horizon discount (con), vector
+#   target obs[:, :-1] (the context step kept, one step early) (vector).
+# RE-REGISTERED after the FIRST READ (which FAILED: C 3/4, planted 3/5; W untouched and 0 miss): (C) and (P)
+#   read "every call where the plant changes the function" — a call where the planted terms equal the
+#   true port's terms bit for bit is NO-OP there, must be caught on every other call, and a plant NO-OP on
+#   every call fails. Cause, measured: at call 1 the reward head is the published zero init, so every rew
+#   loss is log 255 = 5.541263 whatever the target (C and reward_unsliced: no test can see it at call 1);
+#   and the golden's KL never reaches the 1.0 floor (dyn min 2.50/3.18/2.54/2.15 at calls 1/2/6/8), so
+#   free_bits_0 is the identical function on EVERY call — replaced by free_bits_3 (binds at calls 1/6/8; at
+#   call 2 the KL min 3.18 > 3, NO-OP there). Said plainly: this golden cannot certify the free-bits max
+#   itself; rung 8a's split RSSM does. A rew plant is NO-OP where the rew head's kernel
+#   and bias are all exactly 0 (logits constant -> loss target-free; f32 rounding differs, so this is
+#   read off the weights, not off bit-equality); others NO-OP where the terms are bit-equal.
+FREE, HORIZON = 1.0, 333
+WM_TERMS = ("dyn", "rep", "vector", "rew", "con")
+
+
+def main_wm():
+    gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
+    if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
+        os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("TMPDIR", "/data/tmp")
+    sys.path.insert(0, HERE)
+    import mlx.core as mx
+    import mlx_maths as M
+    import rung10  # noqa: F401  (TOY <- SIZE1M)
+    from rung6 import TOY
+    G, R = np.load(GOLDEN_A), np.load(R13)
+    stream = np.random.default_rng(0).random(cursor(CALLS[-1], 64) + 2 * CUR_STEP, dtype=np.float32)
+    bt = rebuild_batch()
+    spec = {"action": 0}
+
+    def terms(c, mix=None, free=FREE, rew_src=None, rew_slice=slice(1, None), horizon=HORIZON,
+              vec_slice=slice(1, None), f=None):
+        pre = f"c{c}/pre/"
+        P = {k[len(pre):]: mx.array(R[k]) for k in R.files if k.startswith(pre)}
+        Pd = {k[len("dyn/"):]: v for k, v in P.items() if k.startswith("dyn/")}
+        cfg = dict(TOY) if mix is None else {**TOY, "unimix": mix}
+        q = f"c{c}/rssm/t000/"
+        rew = (bt["reward"] if rew_src is None else rew_src)[:, rew_slice]
+        vec = bt["vector"][:, vec_slice]
+        term = np.zeros((B, 64), bool)
+
+        def body(d0, s0, obs, act, rs, U, rw, tm, tgt):
+            tok = M.encoder(P, obs, LAYERS, ACT)
+            o = M.rssm_loss(Pd, dict(deter=d0, stoch=s0), tok, {"action": act}, rs, U, cfg, spec, free)
+            rc = M.rewcon_loss(P, o["deter"], o["stoch"], rw, tm, horizon)
+            dv = M.dec_vec_loss(P, o["deter"], o["stoch"], {"vector": tgt}, {"vector": (F,)}, LAYERS)
+            return o["dyn"], o["rep"], dv["vector"], rc["rew"], rc["con"]
+        fn = mx.compile(body) if f == "compiled" else body
+        out = fn(mx.array(G[q + "in_deter"]), mx.array(G[q + "in_stoch"]), mx.array(obs_slice(bt["vector"])),
+                 mx.array(bt["action"][:, :-1]), mx.array(bt["is_first"][:, 1:]), mx.array(uniforms(stream, c)),
+                 mx.array(rew), mx.array(term), mx.array(vec))
+        return dict(zip(WM_TERMS, [np.array(x) for x in out]))
+
+    def gold(c, k):
+        return G[f"c{c}/outs/losses/{k}"]
+
+    ok = True
+    for c in CALLS:
+        for mode in ("eager", "compiled"):
+            got = terms(c, f=mode)
+            parts = []
+            for k in WM_TERMS:
+                n, w = miss(got[k], gold(c, k))
+                parts.append(f"{k} {n}/{w:.1e}")
+                ok &= n == 0
+            print(f"W  call {c} {mode:8s}: miss/worst  " + "  ".join(parts))
+    first = np.random.default_rng(BATCH_SEED).uniform(-1.0, 1.0, (B, T)).astype(np.float32)
+    true = {c: terms(c) for c in CALLS}
+
+    def live_hits(kw, ks):
+        hits, live = [], []
+        for c in CALLS:
+            got = terms(c, **kw)
+            zero_head = all(not R[f"c{c}/pre/rew/head/logits/{w}"].any() for w in ("kernel", "bias"))
+            if all(np.array_equal(got[k], true[c][k]) for k in ks) or (ks == ("rew",) and zero_head):
+                continue                                     # identical function on this call
+            live.append(c)
+            hits.append(any(miss(got[k], gold(c, k))[0] > 0 for k in ks))
+        return hits, live
+
+    hits, live = live_hits(dict(rew_src=first), ("rew",))
+    print(f"C  reward from the wrong draw: rew missed on {sum(hits)}/{len(live)} calls where it changes the "
+          f"function (no-op at {[c for c in CALLS if c not in live]})")
+    ok &= bool(live) and all(hits)
+    plants = {
+        "free_bits_3": (dict(free=3.0), ("dyn", "rep")),
+        "unimix_0": (dict(mix=0.0), ("dyn", "rep")),
+        "reward_unsliced": (dict(rew_slice=slice(0, -1)), ("rew",)),
+        "con_no_discount": (dict(horizon=1e30), ("con",)),
+        "vector_context_kept": (dict(vec_slice=slice(0, -1)), ("vector",)),
+    }
+    caught = 0
+    for name, (kw, ks) in plants.items():
+        hits, live = live_hits(kw, ks)
+        caught += bool(live) and all(hits)
+        print(f"P  planted {name:20s}: caught on {sum(hits)}/{len(live)} calls where it changes the function")
+    good = ok and caught == len(plants)
+    print(f"RUNG 13b-wm: port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(plants)})")
+    return 0 if good else 1
+
+
 def main():
+    if "--wm" in sys.argv:
+        return main_wm()
     if "--scan" in sys.argv:
         return main_scan()
     if "--obs" in sys.argv:
