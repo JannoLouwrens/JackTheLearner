@@ -714,3 +714,8 @@ seed spanning |x| 0.01–300 (both symlog regions).
   Wheel READ 11-25 03:40: **WHEEL PASS** on PyPI mlx 0.32.4 (Kaggle CPU, x86_64, py 3.13.18, glibc 2.39):
   rung 7 size1m / 8a / 8b / 8c each 2/2 eager AND compiled; planted 4/4, 4/4, 6/6, 6/6 caught, unpatched
   port passes. Verdict file `/data/jack-logs/mlx/wheel_s1m.json`. Rung 9 not yet on the wheel.
+  Rung 9 wheel READ 11-25 05:09 (set `9`, `5e98aa3b`, `jack-cpu-1795583306`): **WHEEL PASS** on PyPI mlx
+  0.32.4 (Kaggle CPU, x86_64, py 3.13.18, glibc 2.39): RUNG 9 2/2 eager AND compiled (wm_grad d/d prior
+  1.0 × FD el 2.95e-8, d/d post 0.1 × FD el 4.68e-9, swapped-routing control differs 0.235); planted 5/5
+  caught, unpatched port passes. Verdict file `/data/jack-logs/mlx/wheel_9.json`. Every rung through the
+  full world-model loss now passes on the wheel the Mac will run.

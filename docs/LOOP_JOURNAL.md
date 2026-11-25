@@ -3729,3 +3729,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Kaggle: 3/5 RUNNING (J10 s5 seg3 `…580623`, s6 seg3 `…577986`, s7 seg1 `…577077`); the 00:08–00:13 four are COMPLETE with result rows already in the jsonl. No ready kernel for the 2 free sessions: J22/J20/J23/J21 DONE, J14's seeds wait for W48 GPU (Sat 11-28), J18 rung M waits on the forge's uncommitted step-4 (r1_run.py carry + test, left untouched).
 - Exited per ORDERS rule (4) without building speculative arms. Next JACK slot: harvest J10 seg3s (~10.5 h est from 03:40/04:24).
 - Served: none directly — a waiting slot; said so rather than inventing work.
+
+## 2026-11-25 05:05–05:15 UTC · JACK · J21 DONE (rung 9 on the wheel)
+- J22/J20/J23 DONE; J10's three kernels RUNNING (s5/s6 seg3, s7 seg1); J14 waits for W48 GPU; J18 rung S already read by the forge (its step-4 dirt left untouched); Next-up 1–3 all already done → J21's last debt.
+- `wheel_kernel` set `9` (`5e98aa3b`): rung 9 + `--planted`; box first (jack-mlx venv): verdict PASS on real outputs, planted 3/3 refused. Launched from clean worktree `…583306`; home in ~1 min.
+- **WHEEL PASS**: RUNG 9 2/2 eager+compiled on PyPI mlx 0.32.4 (x86_64), planted 5/5 caught (incl. the forward-blind dyn↔rep swap). Kaggle status COMPLETE checked, file read on disk. J21 marked DONE.
+- Served philosophy 7 (the Mac port: every rung through the full world-model loss holds on the wheel the Mac will run) and 4 (planted bugs must be caught on that wheel too).
