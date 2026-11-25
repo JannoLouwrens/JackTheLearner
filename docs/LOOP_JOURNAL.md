@@ -3877,3 +3877,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J18: chain A (g2 on Kaggle, home ≈ 16:30) still holds the OLD preamble and would kill g4, g6 at the clone; instead of waiting for that, launched g4+g6 now from the same pin `b9914a75` (box code = pin's but for the preamble fix), kernel `…620207` RUNNING past the clone. Kaggle CPU — no GPU hours.
 - Chain A's later g4/g6 attempts write nothing (clone failure) or are Refused once home; its CHAIN DONE will say `failed` for them — expected.
 - Served philosophy 4 (the round finishes by its frozen rule, sooner) and 6 (free Kaggle CPU used instead of idle hours).
+
+## 2026-11-25 15:36–15:45 UTC · JACK · J25 — rung 12b (policy heads + policy loss) PASS
+- J24 waits on its ruling; J18 forge kernels (g2, g5/g7, g4/g6) and J14 ear retry loop all in flight, nothing home to harvest; J10 DONE. So J25, box only.
+- Refs vs official e01491f 12/12 `826b1f74` (fwd 3.4e-7; jax.grad vs f64 diffs 4.7e-6; planted refs 8/8). Tests failing `2a749221`; port `e01e5106` 3/3 eager+compiled; planted 5/5 incl. logpi under sg, caught only by the grad test.
+- Finding: official Head.categorical ignores unimix — the published 0.01 never touches a discrete policy.
+- Two prior slots declined J25 on the owner's no-Mac line; I worked it because the order stands and nothing above could move. Flagged for the Director in J25's state.
+- Served philosophy 4 (each claim a test that could fail, planted bugs caught) and 7 (a brain that can run on people's own machines) — whether 7 still needs MLX is the Director's call.
