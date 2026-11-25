@@ -779,3 +779,13 @@ Tests committed failing `d6e7aeae`; port `mlx_maths.retnorm_perc` / `advantage`:
 `retnorm_ref`, `retnorm_golden` eager+compiled (worst 1.95e-7 / 1.35e-7); `--planted` 5/5.
 No gradient test: every output is under stop-gradient (the officials' sg). Rung 12b (actor heads'
 logp + entropy, the policy loss) still owed.
+
+### Rung 12b — policy heads (bounded_normal + categorical) logp/entropy + policy loss: PASS (11-25)
+`experiments/brain_a/rung12b.py`, official `heads.py` Head.bounded_normal / categorical (Linear layers
+tapped), `outs.py` Normal / Categorical, Agg, `agent.py imag_loss` L412-416. References vs official
+12/12 (`826b1f74`): forward 3.41e-7, grads jax.grad vs f64 diffs 4.69e-6, planted refs 8/8. Finding:
+official `Head.categorical` ignores unimix (only `onehot` uses it) — the published 0.01 never touches a
+discrete policy. Tests committed failing `2a749221`; port `mlx_maths.policy_loss`: tests `policy_ref`,
+`policy_golden`, `policy_grad` eager+compiled (fwd 4.53e-7; grads 4.68e-6 vs official, 3.8e-7 vs f64);
+`--planted` 5/5 incl. logpi under sg (forward-identical, caught only by the grad test). Rung 12 whole;
+wheel kernel then rung 13 owed.

@@ -294,7 +294,47 @@ def main_mlx():
     return 0 if n == len(TESTS) else 1
 
 
+def main_planted():
+    """Each planted bug is patched into the real port; the tests must FAIL."""
+    import rung6
+    mx = rung6._mlx()
+    import mlx_maths as M
+    pl = M.policy_loss
+    sg = mx.stop_gradient
+
+    def logpi_stopped(m, s, lg, ac, ad, adv, w, lo, hi, ae):  # forward identical; grad only via ent
+        full = pl(m, s, lg, ac, ad, adv, w, lo, hi, ae)
+        ent = pl(m, s, lg, ac, ad, mx.zeros_like(adv), w, lo, hi, ae)[0]
+        return sg(full[0] - ent) + ent, full[1]
+
+    def unimix(m, s, lg, *a):
+        p = (1 - UNIMIX) * mx.softmax(lg, axis=-1) + UNIMIX / K
+        return pl(m, s, mx.log(p), *a)
+    bugs = {
+        "logpi under stop-gradient (forward-blind)": logpi_stopped,
+        "unimix 0.01 on the categorical policy": unimix,
+        "minstd 0": lambda m, s, lg, ac, ad, adv, w, lo, hi, ae: pl(m, s, lg, ac, ad, adv, w, 0.0, hi, ae),
+        "entropy sign flipped": lambda m, s, lg, ac, ad, adv, w, lo, hi, ae: pl(m, s, lg, ac, ad, adv, w, lo, hi, -ae),
+        "no +2 stddev shift": lambda m, s, lg, *a: pl(m, s - 2.0, lg, *a),
+    }
+    caught = 0
+    for name, bug in bugs.items():
+        M.policy_loss = bug
+        try:
+            bad = run_tests(M, mx, quiet=True) < len(TESTS)
+        finally:
+            M.policy_loss = pl
+        caught += bad
+        print(f"planted [{name}] -> {'CAUGHT' if bad else 'MISSED'}")
+    ctl = run_tests(M, mx, quiet=True) == len(TESTS)
+    print(f"PLANTED: {caught}/{len(bugs)} caught, unpatched port {'passes' if ctl else 'FAILS'} -> "
+          f"{'OK' if caught == len(bugs) and ctl else 'HARNESS BLIND'}")
+    return 0 if caught == len(bugs) and ctl else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv:
         sys.exit(main_official())
+    if "--planted" in sys.argv:
+        sys.exit(main_planted())
     sys.exit(main_mlx())

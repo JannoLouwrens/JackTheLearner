@@ -660,5 +660,23 @@ def advantage(ret, tarval, scale):
 
 
 def policy_loss(m, s, logits, act_c, act_d, adv, weight, minstd, maxstd, actent):
-    """Rung 12b (stub): policy heads + imag_loss policy term. Not yet ported."""
-    raise NotImplementedError("rung 12b policy_loss")
+    """Rung 12b: the policy heads from their pre-activations + imag_loss's policy term (L412-416).
+    Continuous key: Head.bounded_normal — mean tanh(m), std (maxstd-minstd) sigmoid(s+2) + minstd,
+    Normal logp/entropy, Agg-summed over the action dims. Discrete key: Head.categorical — NO
+    unimix (official only passes it to `onehot`), log_softmax[act], -(p log p).
+    loss = sg(weight[:, :-1]) * -(logpi * sg(adv) + actent * ent), logpi/ent sliced [:, :-1], the
+    actions under sg. Ours beside theirs: f32 compute; one fused function instead of Output objects.
+    -> (loss [N, T-1], dict(logp_c, ent_c, logp_d, ent_d) [N, T])."""
+    sg = mx.stop_gradient
+    mean = mx.tanh(m.astype(f32))
+    std = (maxstd - minstd) * mx.sigmoid(s.astype(f32) + 2.0) + minstd
+    x = sg(act_c.astype(f32))
+    lpc = (-0.5 * mx.square((x - mean) / std) - mx.log(std) - 0.5 * math.log(2 * math.pi)).sum(-1)
+    enc = (0.5 * mx.log(2 * math.pi * mx.square(std)) + 0.5).sum(-1)
+    lsm = logits.astype(f32) - mx.logsumexp(logits.astype(f32), axis=-1, keepdims=True)
+    lpd = mx.take_along_axis(lsm, sg(act_d).astype(mx.int32)[..., None], axis=-1)[..., 0]
+    end = -(mx.exp(lsm) * lsm).sum(-1)
+    logpi = lpc[:, :-1] + lpd[:, :-1]
+    ent = enc[:, :-1] + end[:, :-1]
+    loss = sg(weight[:, :-1]) * -(logpi * sg(adv) + actent * ent)
+    return loss, dict(logp_c=lpc, ent_c=enc, logp_d=lpd, ent_d=end)
