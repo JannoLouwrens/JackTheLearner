@@ -657,3 +657,8 @@ def retnorm_perc(lo, hi, ret, rate, limit, perclo, perchi):
 def advantage(ret, tarval, scale):
     """imag_loss L408: adv = (ret - tarval[:, :-1]) / rscale; advnorm 'none' leaves it as is."""
     return (ret - tarval[:, :-1]) / scale
+
+
+def policy_loss(m, s, logits, act_c, act_d, adv, weight, minstd, maxstd, actent):
+    """Rung 12b (stub): policy heads + imag_loss policy term. Not yet ported."""
+    raise NotImplementedError("rung 12b policy_loss")

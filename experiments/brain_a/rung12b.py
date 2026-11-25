@@ -202,7 +202,99 @@ def main_official():
     return 0 if p == n else 1
 
 
+# ---------------------------------------------------------------- port tests (MLX)
+# `mlx_maths.policy_loss(m, s, logits, act_c, act_d, adv, weight, minstd, maxstd, actent)`
+#   -> (loss [N, T1-1], dict(logp_c, ent_c, logp_d, ent_d) [N, T1]): bounded_normal (summed over
+#   the action dims) + categorical (no unimix) heads from their pre-activations, and imag_loss's
+#   policy term. Each test eager AND under mx.compile:
+#   policy_ref     forward vs REF_policy (float64)
+#   policy_golden  forward vs the official f32 dump
+#   policy_grad    mx.grad of sum(loss) wrt (m, s, logits) vs official jax.grad AND f64 diffs
+
+
+def _fwd(M, mx, compiled, inp):
+    def f(m, s, lg):
+        loss, d = M.policy_loss(m, s, lg, mx.array(inp["act_c"]), mx.array(inp["act_d"]),
+                                mx.array(inp["adv"]), mx.array(inp["weight"]), MINSTD, MAXSTD, ACTENT)
+        return loss, d["logp_c"], d["ent_c"], d["logp_d"], d["ent_d"]
+    f = mx.compile(f) if compiled else f
+    o = f(*(mx.array(inp[k]) for k in ("m", "s", "logits")))
+    return dict(zip(("loss", "logp_c", "ent_c", "logp_d", "ent_d"), (np.asarray(v) for v in o)))
+
+
+def _grad(M, mx, compiled, inp):
+    def tot(m, s, lg):
+        return M.policy_loss(m, s, lg, mx.array(inp["act_c"]), mx.array(inp["act_d"]),
+                             mx.array(inp["adv"]), mx.array(inp["weight"]), MINSTD, MAXSTD,
+                             ACTENT)[0].sum()
+    g = mx.grad(tot, argnums=(0, 1, 2))
+    g = mx.compile(g) if compiled else g
+    o = g(*(mx.array(inp[k]) for k in ("m", "s", "logits")))
+    return dict(zip(("m", "s", "logits"), (np.asarray(v) for v in o)))
+
+
+def _golden():
+    G = np.load(GOLDEN12B)
+    inp = {k[3:]: G[k] for k in G.files if k.startswith("in/")}
+    return inp, {k[4:]: G[k] for k in G.files if k.startswith("out/")}, \
+        {k[5:]: G[k] for k in G.files if k.startswith("grad/")}
+
+
+def t_ref(M, mx, compiled):
+    inp = inputs()
+    w = worst(_fwd(M, mx, compiled, inp), REF_policy(inp))
+    return [(w <= TOL, f"logp/ent/loss vs REF: worst {w:.3g} x(|ref|+1)")]
+
+
+def t_golden(M, mx, compiled):
+    inp, out, _ = _golden()
+    w = worst(_fwd(M, mx, compiled, inp), out)
+    return [(w <= TOL, f"logp/ent/loss vs GOLDEN: worst {w:.3g} x(|ref|+1)")]
+
+
+def t_grad(M, mx, compiled):
+    inp, _, gg = _golden()
+    got = _grad(M, mx, compiled, inp)
+    w1 = worst(got, gg)
+    w2 = worst(got, REF_grads(inp))
+    return [(w1 <= TOL, f"grads vs official jax.grad: worst {w1:.3g}"),
+            (w2 <= TOL, f"grads vs f64 differences: worst {w2:.3g}")]
+
+
+TESTS = [("policy_ref", t_ref), ("policy_golden", t_golden), ("policy_grad", t_grad)]
+
+
+def run_tests(M, mx, tests=TESTS, quiet=False):
+    n = 0
+    for name, t in tests:
+        r = {}
+        for mode, c in (("eager", False), ("compiled", True)):
+            try:
+                rows = t(M, mx, c)
+                r[mode] = all(o for o, _ in rows)
+                det = [d for _, d in rows]
+            except Exception as e:  # noqa: BLE001 — a stub or crash is a FAIL, reported
+                r[mode], det = False, [f"{type(e).__name__}: {e}"[:200]]
+            if not quiet and (mode == "eager" or not r[mode]):
+                for d in det:
+                    print(f"    {mode[0]}:", d)
+        n += r["eager"] and r["compiled"]
+        if not quiet:
+            print(f"{name:15s} eager {'PASS' if r['eager'] else 'FAIL'}  compiled {'PASS' if r['compiled'] else 'FAIL'}")
+    return n
+
+
+def main_mlx():
+    import rung6
+    mx = rung6._mlx()
+    import mlx_maths as M
+    n = run_tests(M, mx)
+    print(f"RUNG 12b: {n}/{len(TESTS)} tests pass eager AND compiled (mlx {mx.__version__}) -> "
+          f"{'PASS' if n == len(TESTS) else 'FAIL'}")
+    return 0 if n == len(TESTS) else 1
+
+
 if __name__ == "__main__":
     if "--vs-official" in sys.argv:
         sys.exit(main_official())
-    print(__doc__)
+    sys.exit(main_mlx())
