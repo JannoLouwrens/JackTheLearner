@@ -3783,3 +3783,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - CUDA admission + timing cell (`kws2_timing.py`) launched detached on Colab from a NEW worktree `/data/wt/jack-kws2` (the forge's pinned `/data/wt/jack-clean` left alone). Estimate ≈ 1.2 h a seed — a number only when the cell reads it.
 - Served philosophy 4 (a speed fix is admitted only by a test that could fail, and shown failing on plants) and 6 (an ear seed that fits free Colab instead of a whole Kaggle week).
 - 08:34 Colab READ (`5053a28d`): admission on CUDA PASS (Δ 0.0, 6/6); cached epoch 23.7 s vs the authors' 243.7 → 1.38 h a seed (≤ 1.54 h with valid) — fits a free Colab session by the frozen rule. 08:42 wiring: `kws_row`'s launcher installs the plumbing on `KWS_PLUMB=1`; its box smoke now requires the plumbed s0 to equal the plain s0 end to end — 200/200 valid accs and the test acc equal. Next: a Colab chain for s0 s1 s2 + twin (not built this slot).
+
+## 2026-11-25 09:00–09:20 UTC · SYSTEM · S15 (1) — both recorded FAILs repaired by cause
+- SO.01 (watch stream) failed 11-22 at 4.69 fps, impl unchanged since its PASS: software frames swung 79–199 ms with box load against a 2× margin. Shadows + floor reflection were 2/3 of a frame (93.6 → 31.5 ms); the spectator renderer drops both, humanoid control 0.035 (gate 0.005). Now 20–24 fps.
+- T0.34 (detached receipts) failed 11-21: run took 50.65 s vs 25.9, so the launcher refused in ~1.5 s before detaching — the test discarded why. Now records rc/msg; a live seat/pollers/load refusal is VOID (its existing co-tenant lane), anything else FAILs. Cause of 11-21 itself stays unnamed (only one poller was alive; load 3.53).
+- `bb8c9106`; runner: SO.01, T0.34, SO.04 PASS; `coverage` exit 2 → 0. No threshold moved. S15 (2) and (3) open.
+- Served philosophy 4 (a failure fixed, not filed) and END-FIT "watched while he struggles" (watching is now 3× cheaper).

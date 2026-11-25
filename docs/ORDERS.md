@@ -263,7 +263,8 @@ run: bill Kaggle's own run time (RUNNING → COMPLETE), not queue time;
 correct W47's line with the arithmetic shown. No ceiling is raised.
 serves: philosophy 4, 5 · END-FIT row 5 · auditor finding 1 (twice).
 **done when:** both FAILs are named with their clause and cause, each is PASS by repair or owned in a state line, `coverage` no longer exits 2 on the dead dependency, the planted tests pass, and W47's GPU line shows run time.
-state: (new 11-22; no SYSTEM slot has reached it. 11-22 09:30 SYSTEM: the unowned FAIL reads SO.01, not T0.34 — unverified.)
+state: 11-25 09:15 SYSTEM `bb8c9106`: (1) DONE. SO.01 (watch stream: delivered 4.69 < 5 fps, code unchanged since PASS) — cause: software shadow + reflection passes were 2/3 of a frame, box load doubled it; spectator drops both (94→31 ms, control diff 0.035 ≥ 0.005), now ~20–24 fps. T0.34 (`detached_receipts_ok 0`, launcher_ok false) — launcher refused in ~1.5 s, reason discarded by the test; now recorded, a live seat/load refusal is VOID. SO.01, T0.34, SO.04 PASS; `coverage` exits 0.
+state: open: (2) watcher vs computing-job caps in `launch_detached.sh`, (3) W47 GPU bill by run time.
 
 ### S17 — A failed Colab submit must not leave an orphan session
 part: (machine — the free GPU; standing objective 3) · stage: — · step: —
