@@ -3789,3 +3789,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - T0.34 (detached receipts) failed 11-21: run took 50.65 s vs 25.9, so the launcher refused in ~1.5 s before detaching — the test discarded why. Now records rc/msg; a live seat/pollers/load refusal is VOID (its existing co-tenant lane), anything else FAILs. Cause of 11-21 itself stays unnamed (only one poller was alive; load 3.53).
 - `bb8c9106`; runner: SO.01, T0.34, SO.04 PASS; `coverage` exit 2 → 0. No threshold moved. S15 (2) and (3) open.
 - Served philosophy 4 (a failure fixed, not filed) and END-FIT "watched while he struggles" (watching is now 3× cheaper).
+
+## 2026-11-25 09:22–09:30 UTC · JACK · J10 harvest + J14 (b) the ear's Colab chain launched
+- J24 waits on its ruling; J18 chains advancing (B's 2nd kernel submitted 09:18). J10: **s5 @2M R 6,107.9 / 17.26 m/1k, 2/50 fell → meets**. Tally 3 meet / 1 miss / 1 open: the row now passes or fails on s7 alone (seg2 RUNNING, chain watcher 2641579 alive). 3 worktree receipt rows copied into main (`621220e9`).
+- J14 (b): `kws_row colab` — one run per Colab job, plumbing on, run deadline = the frozen 2.4 h fit rule, stops the chain on any cut/failed run (tests 4/4, planted cut caught). Launched s0 s1 s2 twin from `/data/wt/jack-kws2` at `be507986`; s0 on Colab since 09:24.
+- Served philosophy 4 (the walking row read seed by seed by its frozen rule; the ear runs the authors' recipe so it can fail against a published number) and 6 (the ear's seeds go on free Colab, not a Kaggle week).
