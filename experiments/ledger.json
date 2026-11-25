@@ -50977,24 +50977,18 @@
     },
     "ME.11.0": {
       "amended": [],
-      "attempt": 21,
-      "commit": "bca9893f",
+      "attempt": 22,
+      "commit": "cad41606",
       "compute_s": null,
       "control_metrics": {
         "leaky_null_recall": 1.0,
         "leaky_null_recall_std": 0.0
       },
       "dirty_files": null,
-      "duration_s": 6.82,
+      "duration_s": 6.85,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "0c1ff06",
-          "message": "",
-          "ran_at": "2026-08-09T12:20:05",
-          "status": "PASS"
-        },
         {
           "commit": "0c1ff06",
           "control_metrics": {
@@ -52034,10 +52028,66 @@
           ],
           "spec_sha": "3c557f073ba01477",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 21,
+          "commit": "bca9893f",
+          "compute_s": null,
+          "control_metrics": {
+            "leaky_null_recall": 1.0,
+            "leaky_null_recall_std": 0.0
+          },
+          "dirty_files": null,
+          "duration_s": 6.82,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "f2ceeeba8721fcf2",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 5 deciding metric(s) reproduced exactly in a fresh process (+5.6s)",
+          "metrics": {
+            "ambiguous_cues": 12.0,
+            "ambiguous_cues_std": 0.0,
+            "events": 5000.0,
+            "events_std": 0.0,
+            "fixture_hash_seed_only": "9c915329f4755c3e",
+            "hash_stable": 1.0,
+            "hash_stable_std": 0.0,
+            "headline_cues": 160.0,
+            "headline_cues_std": 0.0,
+            "lexical_null_recall": 0.0,
+            "lexical_null_recall_std": 0.0,
+            "max_gold_size": 2.0,
+            "max_gold_size_std": 0.0,
+            "min_family_cell": 75.0,
+            "min_family_cell_std": 0.0,
+            "min_register_cues": 40.0,
+            "min_register_cues_std": 0.0,
+            "min_stratum_positives": 52.0,
+            "min_stratum_positives_std": 0.0,
+            "n_certify": 300.0,
+            "n_certify_std": 0.0,
+            "n_tune": 300.0,
+            "n_tune_std": 0.0,
+            "oracle_ceiling": 1.0,
+            "oracle_ceiling_std": 0.0,
+            "overlap_violations": 0.0,
+            "overlap_violations_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 274.1,
+          "preserved_impl": null,
+          "ran_at": "2026-11-24T22:58:00",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "3c557f073ba01477",
+          "status": "PASS"
         }
       ],
       "impl_sha": "f2ceeeba8721fcf2",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 5 deciding metric(s) reproduced exactly in a fresh process (+5.6s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 5 deciding metric(s) reproduced exactly in a fresh process (+5.5s)",
       "metrics": {
         "ambiguous_cues": 12.0,
         "ambiguous_cues_std": 0.0,
@@ -52068,9 +52118,9 @@
         "overlap_violations_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 274.1,
+      "peak_rss_mb": 273.5,
       "preserved_impl": null,
-      "ran_at": "2026-11-24T22:58:00",
+      "ran_at": "2026-11-25T16:52:20",
       "seeds": [
         0,
         1,
@@ -59356,8 +59406,8 @@
     },
     "ME.8": {
       "amended": [],
-      "attempt": 20,
-      "commit": "bca9893f",
+      "attempt": 21,
+      "commit": "cad41606",
       "compute_s": null,
       "control_metrics": {
         "acc_true_cue": 0.0,
@@ -59366,7 +59416,7 @@
         "match_restored_std": 0.0
       },
       "dirty_files": null,
-      "duration_s": 183.02,
+      "duration_s": 131.47,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -60130,10 +60180,53 @@
           ],
           "spec_sha": "21b2fbad6a26bc70",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 20,
+          "commit": "bca9893f",
+          "compute_s": null,
+          "control_metrics": {
+            "acc_true_cue": 0.0,
+            "acc_true_cue_std": 0.0,
+            "match_restored": 1.0,
+            "match_restored_std": 0.0
+          },
+          "dirty_files": null,
+          "duration_s": 183.02,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "f8158d0551bfb841",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+125.4s)",
+          "metrics": {
+            "holdout_acc": 1.0,
+            "holdout_acc_std": 0.0,
+            "killed_frac": 1.0,
+            "killed_frac_std": 0.0,
+            "mean_ckpt_step": 15.373333,
+            "mean_ckpt_step_std": 0.89164,
+            "resume_acc": 1.0,
+            "resume_acc_std": 0.0,
+            "resume_vs_zeroed": 0.895833,
+            "resume_vs_zeroed_std": 0.0589256,
+            "zeroed_acc": 0.104167,
+            "zeroed_acc_std": 0.0589256
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 331.2,
+          "preserved_impl": null,
+          "ran_at": "2026-11-24T22:48:25",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "21b2fbad6a26bc70",
+          "status": "PASS"
         }
       ],
       "impl_sha": "f8158d0551bfb841",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+125.4s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+113.4s)",
       "metrics": {
         "holdout_acc": 1.0,
         "holdout_acc_std": 0.0,
@@ -60149,9 +60242,9 @@
         "zeroed_acc_std": 0.0589256
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 331.2,
+      "peak_rss_mb": 331.6,
       "preserved_impl": null,
-      "ran_at": "2026-11-24T22:48:25",
+      "ran_at": "2026-11-25T16:46:39",
       "seeds": [
         0,
         1,
@@ -98634,7 +98727,7 @@
     "T0.12": {
       "amended": [],
       "attempt": 22,
-      "commit": "3a5e2c91",
+      "commit": "cad41606",
       "compute_s": 7820.0,
       "control_metrics": {
         "affords_within_quota": true,
@@ -98689,123 +98782,10 @@
         "weeks_isolated": false
       },
       "dirty_files": null,
-      "duration_s": 1.72,
-      "gpu_job_id": "stubuser/jack-ladder-1795610741",
+      "duration_s": 1.7,
+      "gpu_job_id": "stubuser/jack-ladder-1795624987",
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "amended": [],
-          "attempt": 22,
-          "commit": "fa92aa0",
-          "compute_s": 7800.0,
-          "control_metrics": {
-            "affords_within_quota": true,
-            "charge_recorded": true,
-            "charged_once": false,
-            "colab_unmetered": true,
-            "concurrent_charge_survives": false,
-            "concurrent_idempotency_reads_disk": false,
-            "distinct_jobs_both_charged": false,
-            "drained_to_exact_ceiling": true,
-            "failed_counts_against_quota": true,
-            "failed_hours_visible": false,
-            "fresh_bills_poll_window": true,
-            "idempotent_across_processes": false,
-            "no_false_overrun": true,
-            "no_receipt_for_skipped_backend": false,
-            "nosession_charges_zero": false,
-            "nosession_fails_inside_5min": false,
-            "overrun_names_the_job": false,
-            "overrun_recorded": false,
-            "push_refusal_fails_at_once": false,
-            "reattach_bills_kernel_window": false,
-            "reattach_missing_log_falls_back_upper_bound": true,
-            "receipt_names_the_job": false,
-            "receipt_names_the_spec": false,
-            "receipt_pairs_attempt_with_result": false,
-            "receipt_survives_all_backends_failing": false,
-            "receipt_written_before_dispatch": false,
-            "recorder_recovers_job_ids": false,
-            "refuses_oversized": true,
-            "refuses_when_exhausted": true,
-            "relabel_does_not_rebill": false,
-            "relabel_files_records_own_week": false,
-            "relabel_moves_hours": false,
-            "relabel_never_demotes": false,
-            "relabel_survives_reload": false,
-            "stale_format_key_isolated": false,
-            "stale_key_collided_with_live": false,
-            "starts_full": true,
-            "submit_buckets_failure_as_waste": false,
-            "submit_charges_metered_window": false,
-            "submit_reattach_is_free": false,
-            "survives_reload": true,
-            "test_key_format_matches_live_code": true,
-            "waste_not_counted_as_work": false,
-            "weeks_isolated": false
-          },
-          "dirty_files": null,
-          "duration_s": 1.53,
-          "gpu_job_id": null,
-          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-          "impl_sha": "242fecee59591271",
-          "message": "",
-          "metrics": {
-            "affords_within_quota": true,
-            "charge_recorded": true,
-            "charged_once": true,
-            "colab_unmetered": true,
-            "concurrent_charge_survives": true,
-            "concurrent_idempotency_reads_disk": true,
-            "distinct_jobs_both_charged": true,
-            "drained_to_exact_ceiling": true,
-            "failed_counts_against_quota": true,
-            "failed_hours_visible": true,
-            "fresh_bills_poll_window": true,
-            "idempotent_across_processes": true,
-            "no_false_overrun": true,
-            "no_receipt_for_skipped_backend": true,
-            "nosession_charges_zero": true,
-            "nosession_fails_inside_5min": true,
-            "overrun_names_the_job": true,
-            "overrun_recorded": true,
-            "push_refusal_fails_at_once": true,
-            "reattach_bills_kernel_window": true,
-            "reattach_missing_log_falls_back_upper_bound": true,
-            "receipt_names_the_job": true,
-            "receipt_names_the_spec": true,
-            "receipt_pairs_attempt_with_result": true,
-            "receipt_survives_all_backends_failing": true,
-            "receipt_written_before_dispatch": true,
-            "recorder_recovers_job_ids": true,
-            "refuses_oversized": true,
-            "refuses_when_exhausted": true,
-            "relabel_does_not_rebill": true,
-            "relabel_files_records_own_week": true,
-            "relabel_moves_hours": true,
-            "relabel_never_demotes": true,
-            "relabel_survives_reload": true,
-            "stale_format_key_isolated": true,
-            "stale_key_collided_with_live": false,
-            "starts_full": true,
-            "submit_buckets_failure_as_waste": true,
-            "submit_charges_metered_window": true,
-            "submit_reattach_is_free": true,
-            "survives_reload": true,
-            "test_key_format_matches_live_code": true,
-            "waste_not_counted_as_work": true,
-            "weeks_isolated": true
-          },
-          "peak_rss_inherited": false,
-          "peak_rss_mb": 289.0,
-          "preserved_impl": null,
-          "ran_at": "2026-11-12T04:43:08",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "2f265adbdfc69245",
-          "status": "PASS"
-        },
         {
           "amended": [],
           "attempt": 22,
@@ -101172,9 +101152,134 @@
           ],
           "spec_sha": "2f265adbdfc69245",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "3a5e2c91",
+          "compute_s": 7820.0,
+          "control_metrics": {
+            "affords_within_quota": true,
+            "busy_session_refused": false,
+            "charge_recorded": true,
+            "charged_once": false,
+            "colab_unmetered": true,
+            "concurrent_charge_survives": false,
+            "concurrent_idempotency_reads_disk": false,
+            "cpu_kernel_charges_zero_gpu_h": false,
+            "cpu_kernel_requests_no_gpu": false,
+            "distinct_jobs_both_charged": false,
+            "drained_to_exact_ceiling": true,
+            "failed_counts_against_quota": true,
+            "failed_hours_visible": false,
+            "fresh_bills_poll_window": true,
+            "idempotent_across_processes": false,
+            "lost_download_delivers": false,
+            "lost_download_says_recovered": false,
+            "no_false_overrun": true,
+            "no_receipt_for_skipped_backend": false,
+            "nosession_charges_zero": false,
+            "nosession_fails_inside_5min": false,
+            "overrun_names_the_job": false,
+            "overrun_recorded": false,
+            "push_refusal_fails_at_once": false,
+            "reattach_bills_kernel_window": false,
+            "reattach_missing_log_falls_back_upper_bound": true,
+            "receipt_names_the_job": false,
+            "receipt_names_the_spec": false,
+            "receipt_pairs_attempt_with_result": false,
+            "receipt_survives_all_backends_failing": false,
+            "receipt_written_before_dispatch": false,
+            "recorder_recovers_job_ids": false,
+            "refuses_oversized": true,
+            "refuses_when_exhausted": true,
+            "relabel_does_not_rebill": false,
+            "relabel_files_records_own_week": false,
+            "relabel_moves_hours": false,
+            "relabel_never_demotes": false,
+            "relabel_survives_reload": false,
+            "saturday_reset_ok": true,
+            "stale_format_key_isolated": false,
+            "stale_key_collided_with_live": false,
+            "starts_full": true,
+            "submit_buckets_failure_as_waste": false,
+            "submit_charges_metered_window": false,
+            "submit_reattach_is_free": false,
+            "survives_reload": true,
+            "test_key_format_matches_live_code": true,
+            "waste_not_counted_as_work": false,
+            "weeks_isolated": false
+          },
+          "dirty_files": null,
+          "duration_s": 1.72,
+          "gpu_job_id": "stubuser/jack-ladder-1795610741",
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "7a16a82af88308fb",
+          "message": "",
+          "metrics": {
+            "affords_within_quota": true,
+            "busy_session_refused": true,
+            "charge_recorded": true,
+            "charged_once": true,
+            "colab_unmetered": true,
+            "concurrent_charge_survives": true,
+            "concurrent_idempotency_reads_disk": true,
+            "cpu_kernel_charges_zero_gpu_h": true,
+            "cpu_kernel_requests_no_gpu": true,
+            "distinct_jobs_both_charged": true,
+            "drained_to_exact_ceiling": true,
+            "failed_counts_against_quota": true,
+            "failed_hours_visible": true,
+            "fresh_bills_poll_window": true,
+            "idempotent_across_processes": true,
+            "lost_download_delivers": true,
+            "lost_download_says_recovered": true,
+            "no_false_overrun": true,
+            "no_receipt_for_skipped_backend": true,
+            "nosession_charges_zero": true,
+            "nosession_fails_inside_5min": true,
+            "overrun_names_the_job": true,
+            "overrun_recorded": true,
+            "push_refusal_fails_at_once": true,
+            "reattach_bills_kernel_window": true,
+            "reattach_missing_log_falls_back_upper_bound": true,
+            "receipt_names_the_job": true,
+            "receipt_names_the_spec": true,
+            "receipt_pairs_attempt_with_result": true,
+            "receipt_survives_all_backends_failing": true,
+            "receipt_written_before_dispatch": true,
+            "recorder_recovers_job_ids": true,
+            "refuses_oversized": true,
+            "refuses_when_exhausted": true,
+            "relabel_does_not_rebill": true,
+            "relabel_files_records_own_week": true,
+            "relabel_moves_hours": true,
+            "relabel_never_demotes": true,
+            "relabel_survives_reload": true,
+            "saturday_reset_ok": true,
+            "stale_format_key_isolated": true,
+            "stale_key_collided_with_live": false,
+            "starts_full": true,
+            "submit_buckets_failure_as_waste": true,
+            "submit_charges_metered_window": true,
+            "submit_reattach_is_free": true,
+            "survives_reload": true,
+            "test_key_format_matches_live_code": true,
+            "waste_not_counted_as_work": true,
+            "weeks_isolated": true
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 297.4,
+          "preserved_impl": null,
+          "ran_at": "2026-11-25T12:45:41",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "2f265adbdfc69245",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "7a16a82af88308fb",
+      "impl_sha": "b1d87c01ca769d83",
       "message": "",
       "metrics": {
         "affords_within_quota": true,
@@ -101229,9 +101334,9 @@
         "weeks_isolated": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 297.4,
+      "peak_rss_mb": 295.3,
       "preserved_impl": null,
-      "ran_at": "2026-11-25T12:45:41",
+      "ran_at": "2026-11-25T16:43:07",
       "seeds": [
         0
       ],
@@ -102841,22 +102946,16 @@
     "T0.14": {
       "amended": [],
       "attempt": 22,
-      "commit": "bca9893f",
+      "commit": "cad41606",
       "compute_s": null,
       "control_metrics": {
         "train_mode_action_drift": 0.634767
       },
       "dirty_files": null,
-      "duration_s": 94.88,
+      "duration_s": 39.92,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "97e34d0",
-          "message": "pre-registered threshold not met",
-          "ran_at": "2026-08-09T13:49:45",
-          "status": "FAIL"
-        },
         {
           "commit": "97e34d0",
           "message": "",
@@ -103425,10 +103524,44 @@
           ],
           "spec_sha": "07f57563b8009584",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "bca9893f",
+          "compute_s": null,
+          "control_metrics": {
+            "train_mode_action_drift": 0.634767
+          },
+          "dirty_files": null,
+          "duration_s": 94.88,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "bf4aedf22e0cb75f",
+          "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (train_mode_action_drift) \u2014 a blemish on numbers nothing gated stands on (+34.8s)",
+          "metrics": {
+            "config_obs_dim": 348,
+            "env_obs_dim": 348,
+            "eval_action_drift": 0.0,
+            "eval_mode_after_rollout": true,
+            "eval_value_drift": 0.0,
+            "n_dropout_modules": 36,
+            "obs_dim_matches": true,
+            "train_mode_after_update": true
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 1867.9,
+          "preserved_impl": null,
+          "ran_at": "2026-11-24T22:44:45",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "07f57563b8009584",
+          "status": "PASS"
         }
       ],
       "impl_sha": "bf4aedf22e0cb75f",
-      "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (train_mode_action_drift) \u2014 a blemish on numbers nothing gated stands on (+34.8s)",
+      "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (train_mode_action_drift) \u2014 a blemish on numbers nothing gated stands on (+30.7s)",
       "metrics": {
         "config_obs_dim": 348,
         "env_obs_dim": 348,
@@ -103440,9 +103573,9 @@
         "train_mode_after_update": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 1867.9,
+      "peak_rss_mb": 1846.7,
       "preserved_impl": null,
-      "ran_at": "2026-11-24T22:44:45",
+      "ran_at": "2026-11-25T16:43:54",
       "seeds": [
         0
       ],
@@ -104274,8 +104407,8 @@
     },
     "T0.16": {
       "amended": [],
-      "attempt": 21,
-      "commit": "bca9893f",
+      "attempt": 22,
+      "commit": "cad41606",
       "compute_s": null,
       "control_metrics": {
         "prefix_max_drift": 1.633701,
@@ -104283,16 +104416,10 @@
         "prefix_untrained_train_mode": true
       },
       "dirty_files": null,
-      "duration_s": 190.43,
+      "duration_s": 38.5,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "commit": "49529e6",
-          "message": "",
-          "ran_at": "2026-08-09T15:14:32",
-          "status": "PASS"
-        },
         {
           "commit": "44c719c",
           "message": "",
@@ -105042,10 +105169,53 @@
           ],
           "spec_sha": "315e60709c332103",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 21,
+          "commit": "bca9893f",
+          "compute_s": null,
+          "control_metrics": {
+            "prefix_max_drift": 1.633701,
+            "prefix_trained_train_mode": true,
+            "prefix_untrained_train_mode": true
+          },
+          "dirty_files": null,
+          "duration_s": 190.43,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "5d8064e13ec06f9e",
+          "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (prefix_max_drift) \u2014 a blemish on numbers nothing gated stands on (+64.0s)",
+          "metrics": {
+            "kernels_scanned": 2,
+            "kernels_using_act_deterministic": 2,
+            "kernels_with_raw_forward": 0,
+            "max_shipped_eval_drift": 0.0,
+            "normaliser_mutated_by_eval": true,
+            "train_mode_after_update": true,
+            "trained_any_train_mode": false,
+            "trained_drift": 0.0,
+            "trained_forwards": 4,
+            "trained_mode_restored": true,
+            "unreadable_kernels": 0,
+            "untrained_any_train_mode": false,
+            "untrained_drift": 0.0,
+            "untrained_forwards": 4,
+            "untrained_mode_restored": true
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 2680.3,
+          "preserved_impl": null,
+          "ran_at": "2026-11-24T22:53:43",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "315e60709c332103",
+          "status": "PASS"
         }
       ],
       "impl_sha": "5d8064e13ec06f9e",
-      "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (prefix_max_drift) \u2014 a blemish on numbers nothing gated stands on (+64.0s)",
+      "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 1 non-deciding metric(s) diverged (prefix_max_drift) \u2014 a blemish on numbers nothing gated stands on (+57.5s)",
       "metrics": {
         "kernels_scanned": 2,
         "kernels_using_act_deterministic": 2,
@@ -105064,9 +105234,9 @@
         "untrained_mode_restored": true
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 2680.3,
+      "peak_rss_mb": 2665.7,
       "preserved_impl": null,
-      "ran_at": "2026-11-24T22:53:43",
+      "ran_at": "2026-11-25T16:49:13",
       "seeds": [
         0
       ],
@@ -108394,7 +108564,7 @@
     "T0.21": {
       "amended": [],
       "attempt": 22,
-      "commit": "bca9893f",
+      "commit": "cad41606",
       "compute_s": null,
       "control_metrics": {
         "commitments": 33.0,
@@ -108408,53 +108578,10 @@
         "properties_failed": 7.0
       },
       "dirty_files": null,
-      "duration_s": 16.25,
+      "duration_s": 14.99,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "amended": [],
-          "attempt": 22,
-          "commit": "416eb18",
-          "compute_s": null,
-          "control_metrics": {
-            "commitments": 29.0,
-            "commitments_uncovered": 0.0,
-            "declared_specs_live": 165.0,
-            "docstring_covers_problems_live": 0.0,
-            "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
-            "malformed_declarations_live": 0.0,
-            "nominated_not_declared": 49.0,
-            "properties_checked": 12.0,
-            "properties_failed": 7.0
-          },
-          "dirty_files": null,
-          "duration_s": 10.97,
-          "gpu_job_id": null,
-          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-          "impl_sha": "0550f8b2a7f00d3a",
-          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+7.5s)",
-          "metrics": {
-            "commitments": 29.0,
-            "commitments_uncovered": 0.0,
-            "declared_specs_live": 165.0,
-            "docstring_covers_problems_live": 0.0,
-            "failed_names": "",
-            "malformed_declarations_live": 0.0,
-            "nominated_not_declared": 49.0,
-            "properties_checked": 12.0,
-            "properties_failed": 0.0
-          },
-          "peak_rss_inherited": false,
-          "peak_rss_mb": 240.7,
-          "preserved_impl": null,
-          "ran_at": "2026-10-26T05:18:00",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "f07d113ad391bfb1",
-          "status": "PASS"
-        },
         {
           "amended": [],
           "attempt": 22,
@@ -109271,10 +109398,53 @@
           ],
           "spec_sha": "f07d113ad391bfb1",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "bca9893f",
+          "compute_s": null,
+          "control_metrics": {
+            "commitments": 33.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 175.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "p3_word_must_not_grant_coverage,p4_declaration_grants_coverage,p5_malformed_declaration_is_reported,p8_kind_decides_what_a_pass_buys,p9_kindless_declaration_is_reported,p10_docstring_covers_match_registry,p11_parked_is_not_coverage",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 57.0,
+            "properties_checked": 12.0,
+            "properties_failed": 7.0
+          },
+          "dirty_files": null,
+          "duration_s": 16.25,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "f5a8b75dbc55cad1",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+11.4s)",
+          "metrics": {
+            "commitments": 33.0,
+            "commitments_uncovered": 0.0,
+            "declared_specs_live": 175.0,
+            "docstring_covers_problems_live": 0.0,
+            "failed_names": "",
+            "malformed_declarations_live": 0.0,
+            "nominated_not_declared": 57.0,
+            "properties_checked": 12.0,
+            "properties_failed": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 295.4,
+          "preserved_impl": null,
+          "ran_at": "2026-11-24T22:55:06",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "f07d113ad391bfb1",
+          "status": "PASS"
         }
       ],
       "impl_sha": "f5a8b75dbc55cad1",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+11.4s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+8.6s)",
       "metrics": {
         "commitments": 33.0,
         "commitments_uncovered": 0.0,
@@ -109287,9 +109457,9 @@
         "properties_failed": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 295.4,
+      "peak_rss_mb": 297.2,
       "preserved_impl": null,
-      "ran_at": "2026-11-24T22:55:06",
+      "ran_at": "2026-11-25T16:50:28",
       "seeds": [
         0
       ],
@@ -109300,7 +109470,7 @@
     "T0.22": {
       "amended": [],
       "attempt": 22,
-      "commit": "3a5e2c91",
+      "commit": "cad41606",
       "compute_s": null,
       "control_metrics": {
         "direct_ledger_reads": 0.0,
@@ -109313,51 +109483,10 @@
         "source_impl_sha": "3274c87d7dbe5d86"
       },
       "dirty_files": null,
-      "duration_s": 2.49,
+      "duration_s": 2.47,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "amended": [],
-          "attempt": 22,
-          "commit": "43f9e16",
-          "compute_s": null,
-          "control_metrics": {
-            "direct_ledger_reads": 0.0,
-            "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p11b_unstamped_changed_blocks_borrow_and_dependency,p12_graph_and_rule_agree_on_the_same_row,p13_runner_output_is_not_code_dirt,p14_unknown_row_key_survives_a_foreign_reader,p15_stamp_and_push_guard_agree_on_the_same_file",
-            "offenders": "",
-            "own_row_readers": "lf_01_life_to_natural_end.py:LF.01",
-            "own_row_reads": 1.0,
-            "properties_checked": 15.0,
-            "properties_failed": 12.0,
-            "source_impl_sha": "fd34401fe44e7ea6"
-          },
-          "dirty_files": null,
-          "duration_s": 2.37,
-          "gpu_job_id": null,
-          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-          "impl_sha": "c91f53e7a51f483b",
-          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+0.9s)",
-          "metrics": {
-            "direct_ledger_reads": 0.0,
-            "failed_names": "",
-            "offenders": "",
-            "own_row_readers": "lf_01_life_to_natural_end.py:LF.01",
-            "own_row_reads": 1.0,
-            "properties_checked": 15.0,
-            "properties_failed": 0.0,
-            "source_impl_sha": "fd34401fe44e7ea6"
-          },
-          "peak_rss_inherited": false,
-          "peak_rss_mb": 215.3,
-          "preserved_impl": null,
-          "ran_at": "2026-10-26T05:15:32",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "036e68742759cafa",
-          "status": "PASS"
-        },
         {
           "amended": [],
           "attempt": 22,
@@ -110136,9 +110265,50 @@
           ],
           "spec_sha": "036e68742759cafa",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "3a5e2c91",
+          "compute_s": null,
+          "control_metrics": {
+            "direct_ledger_reads": 0.0,
+            "failed_names": "p3_changed_source_is_refused,p4_dirty_source_is_refused,p5_unverifiable_source_is_refused,p8_provenance_travels_with_the_number,p9_no_test_reads_another_specs_metrics_directly,p10_stale_dependency_does_not_satisfy,p11_unverifiable_refuses_a_borrow_but_permits_a_dependency,p11b_unstamped_changed_blocks_borrow_and_dependency,p12_graph_and_rule_agree_on_the_same_row,p13_runner_output_is_not_code_dirt,p14_unknown_row_key_survives_a_foreign_reader,p15_stamp_and_push_guard_agree_on_the_same_file",
+            "offenders": "",
+            "own_row_readers": "lf_01_life_to_natural_end.py:LF.01",
+            "own_row_reads": 1.0,
+            "properties_checked": 15.0,
+            "properties_failed": 12.0,
+            "source_impl_sha": "3274c87d7dbe5d86"
+          },
+          "dirty_files": null,
+          "duration_s": 2.49,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "76926235a5546f8b",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+1.0s)",
+          "metrics": {
+            "direct_ledger_reads": 0.0,
+            "failed_names": "",
+            "offenders": "",
+            "own_row_readers": "lf_01_life_to_natural_end.py:LF.01",
+            "own_row_reads": 1.0,
+            "properties_checked": 15.0,
+            "properties_failed": 0.0,
+            "source_impl_sha": "3274c87d7dbe5d86"
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 262.3,
+          "preserved_impl": null,
+          "ran_at": "2026-11-25T12:45:45",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "036e68742759cafa",
+          "status": "PASS"
         }
       ],
-      "impl_sha": "76926235a5546f8b",
+      "impl_sha": "7c667953c7ee95e3",
       "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 3 deciding metric(s) reproduced exactly in a fresh process (+1.0s)",
       "metrics": {
         "direct_ledger_reads": 0.0,
@@ -110151,9 +110321,9 @@
         "source_impl_sha": "3274c87d7dbe5d86"
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 262.3,
+      "peak_rss_mb": 259.8,
       "preserved_impl": null,
-      "ran_at": "2026-11-25T12:45:45",
+      "ran_at": "2026-11-25T16:43:11",
       "seeds": [
         0
       ],
@@ -125506,8 +125676,8 @@
     },
     "T1.05": {
       "amended": [],
-      "attempt": 19,
-      "commit": "bca9893f",
+      "attempt": 20,
+      "commit": "cad41606",
       "compute_s": null,
       "control_metrics": {
         "unprotected_construct_delta": 1.652565,
@@ -125518,7 +125688,7 @@
         "unprotected_train_delta_std": 0.294653
       },
       "dirty_files": null,
-      "duration_s": 120.01,
+      "duration_s": 60.39,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
@@ -126203,10 +126373,51 @@
           ],
           "spec_sha": "6fc0f15cba5cc1e6",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 19,
+          "commit": "bca9893f",
+          "compute_s": null,
+          "control_metrics": {
+            "unprotected_construct_delta": 1.652565,
+            "unprotected_construct_delta_std": 0.294977,
+            "unprotected_std": 0.0176333,
+            "unprotected_std_std": 0.00020548,
+            "unprotected_train_delta": 1.655311,
+            "unprotected_train_delta_std": 0.294653
+          },
+          "dirty_files": null,
+          "duration_s": 120.01,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "53f37ca7e94a5963",
+          "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+31.4s)",
+          "metrics": {
+            "construct_delta": 0.0,
+            "construct_delta_std": 0.0,
+            "expected_std": 0.5,
+            "expected_std_std": 0.0,
+            "sentinel_std": 0.505167,
+            "sentinel_std_std": 0.0157019,
+            "train_delta": 0.0,
+            "train_delta_std": 0.0
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 1423.7,
+          "preserved_impl": null,
+          "ran_at": "2026-11-24T22:57:20",
+          "seeds": [
+            0,
+            1,
+            2
+          ],
+          "spec_sha": "6fc0f15cba5cc1e6",
+          "status": "PASS"
         }
       ],
       "impl_sha": "53f37ca7e94a5963",
-      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+31.4s)",
+      "message": "HASH-SALT DIFFERENTIAL CLEAN (salt 1): 2 deciding metric(s) reproduced exactly in a fresh process (+32.6s)",
       "metrics": {
         "construct_delta": 0.0,
         "construct_delta_std": 0.0,
@@ -126218,9 +126429,9 @@
         "train_delta_std": 0.0
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 1423.7,
+      "peak_rss_mb": 1422.0,
       "preserved_impl": null,
-      "ran_at": "2026-11-24T22:57:20",
+      "ran_at": "2026-11-25T16:51:39",
       "seeds": [
         0,
         1,
