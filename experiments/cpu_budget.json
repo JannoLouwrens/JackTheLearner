@@ -1959,13 +1959,13 @@
         "T0.20": 6.77,
         "T1.13": 3.86,
         "T2.12": 41.25,
-        "detached:launch_j10_2_s3_seg3.log": 32.61,
-        "detached:launch_j10_2_s4_seg3.log": 32.41,
-        "detached:launch_j10_2_s5_seg2.log": 32.24,
-        "detached:launch_j10_2_s6_seg2.log": 32.45,
-        "detached:launch_j10_2_s7_seg0.log": 53.59
+        "detached:launch_j10_2_s3_seg3.log": 160.92,
+        "detached:launch_j10_2_s4_seg3.log": 160.91,
+        "detached:launch_j10_2_s5_seg2.log": 160.39,
+        "detached:launch_j10_2_s6_seg2.log": 150.16,
+        "detached:launch_j10_2_s7_seg0.log": 649.87
       },
-      "used_s": 332.28
+      "used_s": 1431.23
     }
   },
   "last_child_s": {
