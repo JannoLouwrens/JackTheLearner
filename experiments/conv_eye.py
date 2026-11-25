@@ -36,9 +36,9 @@ Ours beside theirs (DrQ, Kostrikov 2020, Table/Appendix; v2 where it differs):
   * pad 4 px + random crop 84 (=+-4)| ours roll +-6 of 128 rays (+-4.7 % of
     the row; the order's number; DrQ's +-4 of 84 = +-4.8 %)
   * K=2 target / M=2 current augs   | ours 1 + 1 (= DrQ-v2, and the order)
-  * critic tau 0.01, encoder tau 0.05 | ours sbx tau 0.005 for everything
+  * critic tau 0.01 (encoder inside) | ours sbx tau 0.005 for everything
     (J17 arm K's setting kept; ONE key changes against J17)
-  * actor lr / critic lr 1e-3, batch 512 (walker 2e-4 v2) | ours J17's 3e-4,
+  * actor lr / critic lr 1e-3, batch 512 | ours J17's 3e-4,
     batch 256, 1 update a decision, gamma 0.995, auto alpha (J17 arm K)
   * obs scaling: pixels / 255       | ours VecNormalize per-input running
     mean/std (J17 arm K), so a roll mixes rays normalised with different
@@ -47,6 +47,12 @@ Ours beside theirs (DrQ, Kostrikov 2020, Table/Appendix; v2 where it differs):
     target params, updated by sbx's soft_update)
   * actor: separate MLP, 1024 wide  | ours sbx's actor, J17's [256, 256]
 An arm of a pilot (ORDERS J22 (3)), one seed, never a claim on its own.
+Read 11-24 (ruling 101): NOT SHOWN -- one seed, 100k, twins 0.31 / 0.87
+late meals a life against sighted 0.56; and a +-6-ray roll of a ring is a
+TURN with the action unmoved (PUBLISHED_PRIORS §27), not DrQ's
+optimality-invariant shift. Never read as "B does not learn from his eye".
+(11-25: two DrQ settings the official config does not have -- an encoder
+tau 0.05 and a walker lr 2e-4 -- were removed from the table above, §27.)
 """
 from __future__ import annotations
 

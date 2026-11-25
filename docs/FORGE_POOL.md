@@ -36,19 +36,20 @@ rung S at 150k for a keep round.
 - **R2** · source: published · wall: reach · change: learned temperature (`ent_coef="auto"`) on arm K · prior: §19 "what the record does not answer" item 2 — fixed 0.1 vs auto on arm K, 5 seeds, 300k (E2c ran it on E-food only) · ready: knob · note: §19 predicted "meals ≥ twin NOT predicted"
 - **R3** · source: published · wall: reach · change: the last 4 observations stacked · prior: §5 — stacking 4 observations equals a GRU on position-only tasks (Ni 2022); "whether the rover needs memory" is §5's listed last-10% race · ready: code · note: an observation wrapper, world untouched
 - **R4** · source: recombine · wall: reach · change: the winner of a keep round, run on arm K · prior: FORGE.md "The machine" 4 (each round starts from the last round's winner); E2c's reading "J11's miss is the eye" · ready: knob · note: EMPTY until a keep round has a survivor — it is here so the seat is not forgotten
+- **R5** · source: published · wall: reach · change: pink (1/f, temporally correlated) action noise, drawn as one sequence per episode, in place of SAC's white Gaussian sample (fixed α 0.1 kept) · prior: §27 (3) C — Eberhard 2023 (T.H.1), SB3 SAC, 20 seeds, 1e6 steps, cartpole-swingup_sparse: white **377**, OU 608, **pink 730**; MountainCarContinuous 0 / 90 / 94 — B-6a's own task, aimed at Fault 6a-s3 (frozen explorer, below) · ready: code · note: needs an SBX port (the package targets SB3) and §27's known-answer check first (SB3 SAC + pink, MountainCarContinuous 0 → 94, box-minutes); §27's prediction on B-6a 5 × 150k: zero seeds 1 → 0 of 5, silent on win-then-lose; differs from the LAB 11-12 DEAD pink/OU arm (a home-made run on his world, 4/3/6 of 40), which priced no published recipe — entered at the next round, added 11-25 by ORDERS Next-up 2
 - **C1** · source: control · wall: keep · change: plain variation, draw 1 — lr log-uniform in [1.5e-4, 6e-4], batch in {128, 256, 512}, tau log-uniform in [0.0025, 0.01], warm-up in {2,500, 5,000, 10,000}; drawn by `random.Random("forge-control-1")`, the drawn values written in the round's spec before its first seed · prior: FORGE.md "The machine" 5; discovery evidence (Gideoni 2026: plain sampling at the same budget matched or beat the search on 4 of 9 and 6 of 9 problems) · ready: knob
 - **C2** · source: control · wall: keep · change: plain variation, draw 2 — the same box, `random.Random("forge-control-2")` · prior: as C1 · ready: knob
 - **C3** · source: control · wall: reach · change: plain variation, draw 3 — the same box on arm K, `random.Random("forge-control-3")` · prior: as C1 · ready: knob
 
 ## Sources, counted
 
-published 11 · recombine 1 (empty until a survivor exists) · inventor 0 · machine 0 (stage 2) ·
+published 12 · recombine 1 (empty until a survivor exists) · inventor 0 · machine 0 (stage 2) ·
 control 3. `inventor` is 0 on purpose: `LAB.md`'s one ALIVE arm (run-and-tumble steer, 14/40
 with the want given) is a hand controller, not a setting of brain B.
 
 ## Not in the pool, and why (so nobody re-invents them)
 
-- **Already lost here:** pink / OU exploration (LAB 11-12 DEAD: 4/3/6 of 40; pilot item 6);
+- **Already lost here:** pink / OU exploration in his world (LAB 11-12 DEAD: 4/3/6 of 40; pilot item 6 — the published recipe on B-6a's sparse task is R5);
   γ 0.99 (LAB DEAD, 1 of 3) and γ 0.999 (pilot 2 arm G: SLIDE); never-negative alive reward
   (arms P, KP: SLIDE); a hand-forager teacher in replay (E2b: the teacher missed its own gate
   5/20); LayerNorm on the critic (already ON in the baseline and lost 10/10).
