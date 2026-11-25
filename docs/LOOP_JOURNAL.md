@@ -3891,3 +3891,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Kaggle CPU `jack-cpu-1795623840`, home in ~2.5 min: RUNG 10 4/4, 11 4/4, 12a 2/2, 12b 3/3 eager+compiled; planted 6/6, 6/6, 5/5, 5/5. No GPU hours.
 - Next: rung 13 (whole optimiser step). Owner's no-Mac line still unruled — flagged in J25's state.
 - Served philosophy 4 (claims re-tested on a different binary, with controls that must fail) and 6 (free Kaggle CPU); whether 7 still needs MLX is the Director's call.
+
+## 2026-11-25 16:36–16:45 UTC · JACK · J14 — the ear's s2 retry loop was dead; relaunched
+- J24 waits on its ruling; J18 kernels in flight (home g0 g1 g3 only); J10 DONE; Next-up 1–3 already done.
+- J14 (b): the Colab retry loop for s2 had died at 16:25 — not on Colab: `gpu.assert_ref_is_current` refused another lane's uncommitted `docs/ORDERS.md`, so the chain exited without CHAIN_STOP and the loop ended. Edited the /data loop to retry on that refusal; relaunched pid 3025954. Try 1: Colab assign still 503.
+- INBOX line: the guard treats a doc edit as code dirt (machine fix belongs to SYSTEM).
+- J25 rung 13 not started: a reference + failing tests + port does not fit a 27-min slot.
+- Served philosophy 4 (the ear's row gets its third seed instead of stalling unjudged) and 6 (free Colab hours taken when they come).
