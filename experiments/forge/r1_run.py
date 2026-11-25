@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import time
@@ -548,21 +549,51 @@ def cell_file(arm: str, seed: int) -> str:
     return f"r1_{arm}_s{seed}.json"
 
 
-def run_parallel(cell_list: list, outdir, rung: str) -> dict:
+def find_carry(root, arm: str, seed: int) -> Path:
+    """The ONE whole carry for (arm, seed) under `root` (a previous segment's
+    kernel output, mounted by Kaggle at a depth never promised — J10 11-19).
+    None found or two found -> Refused: a continuation never starts a run
+    fresh (J10-2's require_carry, here for the forge)."""
+    name = carry_name(arm, seed)
+    hits = sorted(Path(d) for d, _dirs, _f in os.walk(root)
+                  if Path(d).name == name and carry_whole(d))
+    if len(hits) != 1:
+        raise Refused(f"r1: {len(hits)} whole carries named {name} under {root}: "
+                      f"{[str(h) for h in hits]}")
+    return hits[0]
+
+
+def run_parallel(cell_list: list, outdir, rung: str, carry_root=None, resume_root=None,
+                 deadline: float | None = None) -> dict:
     """All cells at once as child processes (pilot_b2.run_pilot_parallel's
     shape): own file, partial file every 10 lives, a timed-out cell is `cut`
-    with the lives it finished."""
+    with the lives it finished.
+
+    `carry_root` (rung M on, J18 step 4): each cell carries in
+    `carry_root/carry_<arm>_s<seed>` and saves itself before `deadline`.
+    `resume_root`: a continuation — every cell's carry is found there FIRST,
+    and one missing carry refuses the whole kernel before any cell runs."""
     from experiments.pilot_b import CHILD_TIMEOUT_S, from_partial, partial_file
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
+    if resume_root is not None and carry_root is None:
+        raise Refused("r1: a continuation needs somewhere to carry to")
+    src = ({c: find_carry(resume_root, *c) for c in map(tuple, cell_list)}
+           if resume_root is not None else {})
     procs = []
     for arm, seed in cell_list:
         f = outdir / cell_file(arm, seed)
+        argv = [sys.executable, "-m", "experiments.forge.r1_run", "cell", "--arm", arm,
+                "--seed", str(seed), "--rung", rung, "--out", str(f),
+                "--partial", str(partial_file(f))]
+        if carry_root is not None:
+            argv += ["--carry-dir", str(Path(carry_root) / carry_name(arm, seed))]
+            if deadline is not None:
+                argv += ["--deadline", repr(float(deadline))]
+            if (arm, seed) in src:
+                argv += ["--resume-from", str(src[(arm, seed)])]
         procs.append((arm, seed, f, subprocess.Popen(
-            [sys.executable, "-m", "experiments.forge.r1_run", "cell", "--arm", arm,
-             "--seed", str(seed), "--rung", rung, "--out", str(f),
-             "--partial", str(partial_file(f))],
-            cwd=REPO, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)))
+            argv, cwd=REPO, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)))
     res, t0 = {}, time.time()
     for arm, seed, f, p in procs:
         try:
@@ -602,7 +633,8 @@ def cells_from_artifacts(artifacts: dict, cell_list: list) -> dict | None:
 
 
 _JOB = r"""
-import subprocess as _s, sys as _y
+import subprocess as _s, sys as _y, time as _t
+_T0 = _t.time()
 _PIN = __PIN__
 if _s.run(["git", "-C", "/tmp/jack", "checkout", "-q", _PIN]).returncode != 0:
     _s.run(["git", "-C", "/tmp/jack", "fetch", "-q", "--depth", "1", "origin", _PIN], check=True)
@@ -616,19 +648,39 @@ os.chdir("/tmp/jack")
 from experiments.forge.r1_run import run_parallel, spec_sha256
 assert spec_sha256() == __SPEC__, "the kernel's spec.json is not the frozen rule"
 from experiments.brain_b import versions
-r = run_parallel(__CELLS__, os.environ["JACK_OUT"], __RUNG__)
+__RUN__
 json.dump({"cells": r, "versions": versions(), "round": "r1", "rung": __RUNG__,
-           "pin": _PIN, "spec_sha256": __SPEC__},
+           "pin": _PIN, "spec_sha256": __SPEC__, "segment": __SEGMENT__},
           open(os.path.join(os.environ["JACK_OUT"], "forge_r1_cells.json"), "w"))
 print("DONE", flush=True)
 """
 
 
-def job_body(cell_list: list, rung: str, pin: str) -> str:
+_RUN_PLAIN = 'r = run_parallel(__CELLS__, os.environ["JACK_OUT"], __RUNG__)'
+# rung M on: carries live in the kernel's OUTPUT (the next segment mounts this
+# kernel); the deadline counts from the job's first line, pip install included.
+_RUN_CARRY = ('from experiments.forge.r1_run import SEG_WALL_S\n'
+              'r = run_parallel(__CELLS__, os.environ["JACK_OUT"], __RUNG__,\n'
+              '                 carry_root=os.path.join(os.environ["JACK_OUT"], "carry"),\n'
+              '                 resume_root=__RESUME__, deadline=_T0 + SEG_WALL_S)')
+
+
+def carries(rung: str) -> bool:
+    """Rung S ran unbroken (one learn call); every rung above it carries."""
+    return rung != "S"
+
+
+def job_body(cell_list: list, rung: str, pin: str, segment: int = 0) -> str:
     from experiments.pilot_b import KERNEL_PINS
     if len(pin) != 40 or any(c not in "0123456789abcdef" for c in pin):
         raise Refused("r1: --pin must be a full 40-hex commit sha")
-    return (_JOB.replace("__CELLS__", repr([tuple(c) for c in cell_list]))
+    if not 0 <= int(segment) < MAX_SEGMENTS or (segment and not carries(rung)):
+        raise Refused(f"r1: segment {segment} of rung {rung} is not allowed "
+                      f"(rung S never carries; at most {MAX_SEGMENTS} kernels a run)")
+    run = (_RUN_CARRY.replace("__RESUME__", repr("/kaggle/input" if segment else None))
+           if carries(rung) else _RUN_PLAIN)
+    return (_JOB.replace("__RUN__", run).replace("__SEGMENT__", repr(int(segment)))
+            .replace("__CELLS__", repr([tuple(c) for c in cell_list]))
             .replace("__PINS__", repr(list(KERNEL_PINS)))
             .replace("__RUNG__", repr(str(rung))).replace("__PIN__", repr(pin))
             .replace("__SPEC__", repr(spec_sha256())))
@@ -644,9 +696,63 @@ def pin_has_rule(pin: str) -> bool:
             and hashlib.sha256(p.stdout).hexdigest() == spec_sha256())
 
 
-def kernel(name: str, rung: str, pin: str, climbers: list | None = None) -> dict:
-    """Submit one group as a Kaggle CPU kernel -> OUT/<rung>_<name>.json (raw)."""
+SEGS = OUT / "segments"   # NOT globbed by the reader (`{rung}_g*.json` in OUT only)
+
+
+def seg_file(rung: str, name: str, segment: int) -> Path:
+    return SEGS / f"{rung}_{name}_seg{segment}.json"
+
+
+def resumable(payload: dict) -> list:
+    """(arm, seed) of the runs a segment saved to carry on."""
+    return [(r["arm"], r["seed"]) for r in payload["cells"].values()
+            if r.get("resumable") and r.get("cut")]
+
+
+def assemble(segs: list) -> dict:
+    """Segment payloads (0, 1, ...) of one group -> the ONE raw file the locked
+    reader reads: each run's record from the last segment that ran it, cost =
+    the SUM of the segments' kernel durations (every run of the group is billed
+    the whole chain — never less than it held). Refuses segments that do not
+    share the round, rung, spec and pin, or that run a cell twice in one."""
+    first = segs[0]
+    for i, p in enumerate(segs):
+        for k in ("round", "rung", "pin", "spec_sha256"):
+            if p.get(k) != first.get(k):
+                raise Refused(f"r1: segment {i} differs on {k}: {p.get(k)} vs {first.get(k)}")
+        if p.get("segment", 0) != i:
+            raise Refused(f"r1: segment {i} says it is segment {p.get('segment')}")
+        if i and set(p["cells"]) != {f"{a}_s{sd}" for a, sd in resumable(segs[i - 1])}:
+            raise Refused(f"r1: segment {i} ran other runs than segment {i - 1} carried")
+    cells = {}
+    for p in segs:
+        cells.update(p["cells"])
+    durs = [(p.get("kernel") or {}).get("duration_s") for p in segs]
+    dur = sum(durs) if all(isinstance(d, (int, float)) for d in durs) else None
+    k0 = first.get("kernel") or {}
+    return {"cells": cells, "versions": first.get("versions"), "round": first["round"],
+            "rung": first["rung"], "pin": first["pin"], "spec_sha256": first["spec_sha256"],
+            "segments": len(segs),
+            "kernel": {"job_id": [(p.get("kernel") or {}).get("job_id") for p in segs],
+                       "duration_s": dur,
+                       "segment_duration_s": durs,
+                       "charge_seconds": [(p.get("kernel") or {}).get("charge_seconds")
+                                          for p in segs],
+                       "name": k0.get("name"), "pin": first["pin"]}}
+
+
+def kernel(name: str, rung: str, pin: str, climbers: list | None = None,
+           segment: int = 0) -> dict:
+    """Submit one group as a Kaggle CPU kernel -> OUT/<rung>_<name>.json (raw).
+
+    Rung S (never carries): one kernel, its payload IS the raw file.
+    Rung M on (J18 step 4): segment n's payload goes to SEGS; segment n > 0
+    mounts segment n-1's kernel and runs ONLY the runs it carried. The raw
+    file is assembled when no run is left to carry or the last allowed segment
+    is home — never before, so the reader sees each run once. Only the summary
+    and the per-cell files are downloaded, never the carries (replay buffers)."""
     from experiments.gpu import build_job, result_json, submit
+    from experiments.pilot_b import partial_file
     spec = load_spec()
     cell_list = groups(spec, rung, climbers)[name]
     if not pin_has_rule(pin):
@@ -654,26 +760,65 @@ def kernel(name: str, rung: str, pin: str, climbers: list | None = None) -> dict
     out = OUT / f"{rung}_{name}.json"
     if out.exists():
         raise Refused(f"r1: {out} is already home — a rung's kernel runs once")
-    body = job_body(cell_list, rung, pin)
+    sources, prior = None, []
+    if carries(rung):
+        if seg_file(rung, name, segment).exists():
+            raise Refused(f"r1: {seg_file(rung, name, segment)} is already home")
+        prior = [json.loads(seg_file(rung, name, i).read_text()) for i in range(segment)
+                 if seg_file(rung, name, i).exists()]
+        if len(prior) != segment:
+            raise Refused(f"r1: segment {segment} of {rung}/{name} needs segments "
+                          f"0..{segment - 1} home")
+        if segment:
+            if prior[-1].get("pin") != pin:
+                raise Refused("r1: a continuation runs the pin its run started on")
+            cell_list = resumable(prior[-1])
+            if not cell_list:
+                raise Refused(f"r1: segment {segment - 1} of {rung}/{name} carried nothing")
+            job = (prior[-1].get("kernel") or {}).get("job_id")
+            if not job or "/" not in str(job):
+                raise Refused(f"r1: segment {segment - 1} names no kernel to mount")
+            sources = [job]
+    elif segment:
+        raise Refused("r1: rung S never carries")
+    body = job_body(cell_list, rung, pin, segment)
+    fetch = ["forge_r1_cells.json"]
+    if carries(rung):
+        fetch += [n for a, sd in cell_list
+                  for n in (cell_file(a, sd), partial_file(Path(cell_file(a, sd))).name)]
     sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=EST_HOURS[rung],
-                 timeout_s=REMOTE_TIMEOUT_S, fetch=["forge_r1_cells.json"])
+                 timeout_s=REMOTE_TIMEOUT_S, fetch=fetch, kernel_sources=sources,
+                 fetch_only=carries(rung))
     if sub.ok and "forge_r1_cells.json" in sub.artifacts:
         r = result_json(sub, "forge_r1_cells.json")
     else:
         r = cells_from_artifacts(sub.artifacts, cell_list)
         if r is None:
             raise RuntimeError(f"forge r1 kernel {rung}/{name}: {sub.message}")
+        r.update(round=spec["round"], rung=rung, pin=pin, spec_sha256=spec_sha256(),
+                 segment=int(segment))
         print(f"forge r1 kernel {rung}/{name}: no summary ({sub.message or 'missing'}); "
               "assembled from per-cell files", flush=True)
     # what the scoreboard's cost line needs, read off the launcher's receipt
     r["kernel"] = {"job_id": sub.job_id, "duration_s": sub.duration_s,
                    "charge_seconds": sub.charge_seconds, "name": name, "pin": pin}
     OUT.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(r, indent=1) + "\n")
     for k, rec in r["cells"].items():
         print(f"{k}: {len(rec['lives'])} lives" + (" (cut)" if rec.get("cut") else "")
+              + (" (carried on)" if rec.get("resumable") else "")
               + (f" ERROR {rec['error']}" if "error" in rec else ""), flush=True)
-    return r
+    if not carries(rung):
+        out.write_text(json.dumps(r, indent=1) + "\n")
+        return r
+    SEGS.mkdir(parents=True, exist_ok=True)
+    seg_file(rung, name, segment).write_text(json.dumps(r, indent=1) + "\n")
+    left = resumable(r)
+    if left and segment + 1 < MAX_SEGMENTS:
+        r["next_segment"] = segment + 1
+        return r
+    raw = assemble(prior + [r])
+    out.write_text(json.dumps(raw, indent=1) + "\n")
+    return raw
 
 
 def chain(names: list, rung: str, pin: str, climbers: list | None = None,
@@ -685,9 +830,16 @@ def chain(names: list, rung: str, pin: str, climbers: list | None = None,
     bypassed."""
     done = {}
     for name in names:
-        for attempt in range(GUARD_RETRIES + 1):
+        seg = 0
+        for attempt in range(GUARD_RETRIES * MAX_SEGMENTS + MAX_SEGMENTS):
             try:
-                kernel(name, rung, pin, climbers)
+                r = kernel(name, rung, pin, climbers, segment=seg) if seg else \
+                    kernel(name, rung, pin, climbers)
+                if isinstance(r, dict) and r.get("next_segment"):
+                    seg = r["next_segment"]         # same session: carry on at once
+                    print(f"{name}: segment {seg - 1} home, carrying "
+                          f"{len(resumable(r))} runs on", flush=True)
+                    continue
                 done[name] = "home"
                 break
             except Refused as e:
@@ -696,7 +848,7 @@ def chain(names: list, rung: str, pin: str, climbers: list | None = None,
             except RuntimeError as e:
                 guard = ("Uncommitted changes" in str(e) or "Untracked experiment" in str(e)
                          or "is not on origin" in str(e))
-                if guard and attempt < GUARD_RETRIES:
+                if guard and attempt < GUARD_RETRIES * MAX_SEGMENTS:
                     print(f"{name}: launcher guard ({str(e).splitlines()[0]}); "
                           f"waiting {GUARD_WAIT_S}s [{attempt + 1}/{GUARD_RETRIES}]", flush=True)
                     sleep(GUARD_WAIT_S)
@@ -723,6 +875,10 @@ def main(argv):
     p.add_argument("--names", nargs="+")
     p.add_argument("--pin")
     p.add_argument("--climbers", nargs="+", default=None)
+    p.add_argument("--carry-dir", default=None)
+    p.add_argument("--resume-from", default=None)
+    p.add_argument("--deadline", type=float, default=None)
+    p.add_argument("--segment", type=int, default=0)
     a = p.parse_args(argv)
     spec = load_spec()
     if a.cmd == "cell":
@@ -734,13 +890,16 @@ def main(argv):
             T, rung = a.decisions, None
         elif a.seed not in spec["rungs"][a.rung]["seeds"]:
             raise Refused(f"r1: seed {a.seed} is not one of rung {a.rung}'s")
-        rec = run_arm(a.arm, a.seed, T, rung, partial_path=a.partial)
+        if rung is not None and carries(rung) and a.carry_dir is None:
+            raise Refused(f"r1: rung {rung} runs carry (J18 step 4): --carry-dir")
+        rec = run_arm(a.arm, a.seed, T, rung, partial_path=a.partial,
+                      carry_dir=a.carry_dir, resume_from=a.resume_from, deadline=a.deadline)
         Path(a.out).write_text(json.dumps(rec) + "\n")
     elif a.cmd == "groups":
         for k, v in groups(spec, a.rung, a.climbers).items():
             print(k, v)
     elif a.cmd == "kernel":
-        kernel(a.name, a.rung, a.pin, a.climbers)
+        kernel(a.name, a.rung, a.pin, a.climbers, segment=a.segment)
     elif a.cmd == "chain":
         chain(a.names, a.rung, a.pin, a.climbers)
 
