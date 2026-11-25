@@ -3806,3 +3806,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - References vs official e01491f: 36/36 HOLD (`c0dd858f`) — both imagine paths, 15 steps from 32 size1m starts, 0 sample flips; returns through the official imag_loss/repl_loss with stubbed heads, plus λ=1 / λ=0 closed forms; 13/13 planted wrong references caught.
 - Tests committed failing (`bfefdd8b`), then the MLX port (`79634fb5`): 4/4 eager AND compiled; returns bit-equal to the official dump; planted 6/6 caught; rungs 1–9 still pass. No gradient test here by reading (every output sits under a stop-gradient in the agent) — owed at rung 13.
 - Served philosophy 3/7 (brain A's road to the Mac, where he is handed to people, one proven-equal piece at a time) and 4 (each piece shown able to fail on planted bugs).
+
+## 2026-11-25 10:22–10:32 UTC · JACK · J25 rung 11 — the critic loss ported, gradients proven equal
+- Nothing to harvest: J24 waits on its ruling; J18 chains A/B alive; J10 s7 seg3 `…600347` running; J14 ear chain pid 2744743 alive (chain.log silent since 09:39 launch, s0 due ≈ 11:20) → J25.
+- References vs official e01491f 25/25 (`22067e03`): real val/slowval heads + real valnorm inside the official imag_loss/repl_loss. My first gradient reference was WRONG (2.6× off): it differentiated through the return target that the official code stops. Held fixed → 2.4e-5; the wrong one stays as a planted reference that must be caught.
+- Tests `4b78ebcd` (1/4 — slow_update already passed, it tests rung 3's function), port `e0791357`: 4/4 eager+compiled, grads 3.3e-6 × max|g| vs official jax.grad; planted 6/6, the no-stop-gradient bug caught only by the gradient test. Rungs 1, 8b, 9, 10 still pass.
+- Noted: the previous journal entry/state say rung 10 "10:08–10:42 / 10:40", but its commits are 10:11–10:14 — times written ahead of the clock.
+- Served philosophy 3/7 (brain A on the Mac, the machine he is handed to people on) and 4 (each piece shown able to fail, a gradient check where the forward value is blind).

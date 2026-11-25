@@ -206,8 +206,8 @@ One wheel kernel (< 1 h, rank 0) after rung 12 and after 13. No training,
 no speed claims.
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7.
 **done when:** rungs 10–13 pass here and on the wheel, test names in `experiments/brain_a/README.md`.
-state: 11-25 10:40 **rung 10 PASS** (imagination rollout + λ-returns, size1m): refs 36/36 vs official `c0dd858f`, tests failing `bfefdd8b`, port `79634fb5` 4/4 eager+compiled (returns EQUAL to the official dump; imagination 2.3e-6, 0 flips); planted 6/6; rungs 1–9 still pass.
-state: NEXT rung 11 the critic loss (two-hot value, slow target, slowreg, valnorm) — reuse rung 10's golden returns as its targets; then 12 → wheel kernel.
+state: 11-25 10:14 rung 10 PASS (imagination + λ-returns, refs 36/36 `c0dd858f`, port `79634fb5` 4/4). 11-25 10:29 **rung 11 PASS** (critic: value + repval, slow target, slowreg, valnorm none): refs 25/25 vs official `22067e03` incl. grads vs f64 differences with targets held (2.4e-5); tests `4b78ebcd` (1/4 — slow_update was rung 3's); port `e0791357` 4/4 eager+compiled, grads 3.3e-6×max|g| vs official jax.grad; planted 6/6 (no-sg caught only by the grad test).
+state: NEXT rung 12 the actor loss (percentile retnorm, advantage, logp + entropy of the toy policy heads) — reuse rung 11's heads/returns; then the wheel kernel (rank 0, < 1 h), then rung 13.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
