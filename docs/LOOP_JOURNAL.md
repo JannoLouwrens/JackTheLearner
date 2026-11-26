@@ -4154,3 +4154,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `test_j24_arms.py` 5/5 under jack-std: older arms byte-identical, blind twin = width with no content over the same world, shuffled twin = the same columns moved (and moved on >90% of looks), each cell runs 600 decisions end to end. Smoke seed 951; 941–943 never stepped.
 - Draft `prereg/eye_bins16.md` (NOT FROZEN) carries the order's arms, seeds, EATS rule and one extension; the freeze is one STATUS line. Still to build: the chain carry for (5).
 - Philosophy served: 4 (both twins built and proven to fail-by-construction before any seed) and 5 (the test is ready, so a ruling turns into a running row the same hour).
+
+## 2026-11-26 13:22–13:40 UTC · JACK · J24 (5) the chain carry — a J24 cell can be cut and carried on
+- Still waiting: J24 (3) and J18's freeze on Director rulings (INBOX 10:14, 10:45, 11:40); J14 on W48. No Kaggle kernel running. Took the piece of J24 (5) needed under a 'proceed' ruling: the carry.
+- `experiments/j24_chain.run_cell_carried`: the J24 learner cell in 20k chunks, saved before a deadline and resumed whole-or-refuse by the forge's own carry (no new save code); the blind/shuffled wrappers and the shuffled twin's RNG travel inside the saved life; the finished record is `run_pilot_cell`'s, so `j17_late_meals` reads it unchanged.
+- `tests/test_j24_chain.py` ALL PASS under jack-std: for all three arms the unbroken run == the same run cut twice, each segment a new process (lives, trace rows, actor weights); a carry that drops the normaliser differs (the test can fail); non-J24 arm and off-boundary chunk refused. Smoke seed 951 only.
+- Still to build for (5): the kernel job body + self-advancing resubmit. Nothing launched, prereg not frozen.
+- Philosophy served: 4 (an identity check with a planted break that must fail) and 5 (a ruling becomes a running row the same hour).
