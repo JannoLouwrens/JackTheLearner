@@ -22,6 +22,7 @@ the launcher's clone, and each record carries the sha it actually ran
 
     python -m experiments.forge.r1_run groups --rung S
     python -m experiments.forge.r1_run chain --rung S --names g0 g2 g4 g6 --pin <sha>
+    python -m experiments.forge.r1_run --round r1L groups --rung L   # another frozen round
 """
 from __future__ import annotations
 
@@ -34,12 +35,14 @@ import time
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent.parent
-SPEC_PATH = Path(__file__).resolve().parent / "rounds" / "r1" / "spec.json"
-OUT = Path("/data/jack-logs/forge/r1/raw")
+ROUNDS = Path(__file__).resolve().parent / "rounds"
+ROUND = "r1"                  # which frozen rule this process runs; `set_round`
+SPEC_PATH = ROUNDS / ROUND / "spec.json"
+OUT = Path("/data/jack-logs/forge") / ROUND / "raw"
 WORLD_ARM = "E-food"          # pilot_b2.E2C_ARMS: arm K + handed 'food', cossin
 PER_KERNEL = 4                # E2c's packing: 4 runs on Kaggle's 4 cores
 REMOTE_TIMEOUT_S = int(9.5 * 3600)
-EST_HOURS = {"S": 4.0, "M": 7.5}
+EST_HOURS = {"S": 4.0, "M": 7.5, "L": 7.5}   # L: every segment runs to SEG_WALL_S
 GUARD_RETRIES, GUARD_WAIT_S = 18, 600   # another lane's dirt: wait, never bypass
 
 # ---- J18 step 4: a run that can be cut and carried on ------------------------
@@ -63,6 +66,29 @@ CARRY_NEEDS = ("model.zip", "replay.pkl", "life.pkl", "key.npy", "carry.pkl",
 
 class Refused(RuntimeError):
     pass
+
+
+def set_round(name: str) -> None:
+    """Run another FROZEN round with this same kernel (J18, round 1-L): the
+    rule, the raw folder, the cell files and the kernel's summary all follow
+    the round's name. Only a round whose `rounds/<name>/spec.json` exists and
+    calls itself `name` is taken; round r1's paths are unchanged."""
+    import re
+    global ROUND, SPEC_PATH, OUT, SEGS
+    if not re.fullmatch(r"r[0-9]+[A-Za-z]?", str(name)):
+        raise Refused(f"r1: {name!r} is not a round name (r<n> or r<n><letter>)")
+    path = ROUNDS / name / "spec.json"
+    if not path.is_file():
+        raise Refused(f"r1: round {name} has no frozen rule at {path}")
+    if json.loads(path.read_text()).get("round") != name:
+        raise Refused(f"r1: {path} does not call itself round {name}")
+    ROUND, SPEC_PATH = name, path
+    OUT = Path("/data/jack-logs/forge") / name / "raw"
+    SEGS = OUT / "segments"
+
+
+def summary_file() -> str:
+    return f"forge_{ROUND}_cells.json"
 
 
 def load_spec(path=None) -> dict:
@@ -546,7 +572,7 @@ def groups(spec: dict, rung: str, climbers: list | None = None) -> dict:
 
 
 def cell_file(arm: str, seed: int) -> str:
-    return f"r1_{arm}_s{seed}.json"
+    return f"{ROUND}_{arm}_s{seed}.json"
 
 
 def find_carry(root, arm: str, seed: int) -> Path:
@@ -583,7 +609,8 @@ def run_parallel(cell_list: list, outdir, rung: str, carry_root=None, resume_roo
     procs = []
     for arm, seed in cell_list:
         f = outdir / cell_file(arm, seed)
-        argv = [sys.executable, "-m", "experiments.forge.r1_run", "cell", "--arm", arm,
+        argv = [sys.executable, "-m", "experiments.forge.r1_run", "cell", "--round", ROUND,
+                "--arm", arm,
                 "--seed", str(seed), "--rung", rung, "--out", str(f),
                 "--partial", str(partial_file(f))]
         if carry_root is not None:
@@ -645,13 +672,14 @@ print("FORGE_PIN", _got, flush=True)
 _s.run([_y.executable, "-m", "pip", "install", "-q"] + __PINS__, check=True)
 import json, os
 os.chdir("/tmp/jack")
-from experiments.forge.r1_run import run_parallel, spec_sha256
+from experiments.forge.r1_run import run_parallel, set_round, spec_sha256, summary_file
+set_round(__ROUND__)
 assert spec_sha256() == __SPEC__, "the kernel's spec.json is not the frozen rule"
 from experiments.brain_b import versions
 __RUN__
-json.dump({"cells": r, "versions": versions(), "round": "r1", "rung": __RUNG__,
+json.dump({"cells": r, "versions": versions(), "round": __ROUND__, "rung": __RUNG__,
            "pin": _PIN, "spec_sha256": __SPEC__, "segment": __SEGMENT__},
-          open(os.path.join(os.environ["JACK_OUT"], "forge_r1_cells.json"), "w"))
+          open(os.path.join(os.environ["JACK_OUT"], summary_file()), "w"))
 print("DONE", flush=True)
 """
 
@@ -683,12 +711,13 @@ def job_body(cell_list: list, rung: str, pin: str, segment: int = 0) -> str:
             .replace("__CELLS__", repr([tuple(c) for c in cell_list]))
             .replace("__PINS__", repr(list(KERNEL_PINS)))
             .replace("__RUNG__", repr(str(rung))).replace("__PIN__", repr(pin))
+            .replace("__ROUND__", repr(ROUND))
             .replace("__SPEC__", repr(spec_sha256())))
 
 
 def pin_has_rule(pin: str) -> bool:
     """The pinned commit must hold THIS frozen spec and this kernel file."""
-    p = subprocess.run(["git", "-C", str(REPO), "show", f"{pin}:experiments/forge/rounds/r1/spec.json"],
+    p = subprocess.run(["git", "-C", str(REPO), "show", f"{pin}:experiments/forge/rounds/{ROUND}/spec.json"],
                        capture_output=True)
     q = subprocess.run(["git", "-C", str(REPO), "cat-file", "-e",
                         f"{pin}:experiments/forge/r1_run.py"], capture_output=True)
@@ -696,7 +725,7 @@ def pin_has_rule(pin: str) -> bool:
             and hashlib.sha256(p.stdout).hexdigest() == spec_sha256())
 
 
-SEGS = OUT / "segments"   # NOT globbed by the reader (`{rung}_g*.json` in OUT only)
+SEGS = OUT / "segments"   # set_round moves it too; NOT globbed by the reader (`{rung}_g*.json` in OUT only)
 
 
 def seg_file(rung: str, name: str, segment: int) -> Path:
@@ -782,15 +811,15 @@ def kernel(name: str, rung: str, pin: str, climbers: list | None = None,
     elif segment:
         raise Refused("r1: rung S never carries")
     body = job_body(cell_list, rung, pin, segment)
-    fetch = ["forge_r1_cells.json"]
+    fetch = [summary_file()]
     if carries(rung):
         fetch += [n for a, sd in cell_list
                   for n in (cell_file(a, sd), partial_file(Path(cell_file(a, sd))).name)]
     sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=EST_HOURS[rung],
                  timeout_s=REMOTE_TIMEOUT_S, fetch=fetch, kernel_sources=sources,
                  fetch_only=carries(rung))
-    if sub.ok and "forge_r1_cells.json" in sub.artifacts:
-        r = result_json(sub, "forge_r1_cells.json")
+    if sub.ok and summary_file() in sub.artifacts:
+        r = result_json(sub, summary_file())
     else:
         r = cells_from_artifacts(sub.artifacts, cell_list)
         if r is None:
@@ -867,6 +896,7 @@ def main(argv):
     p.add_argument("--arm")
     p.add_argument("--seed", type=int)
     p.add_argument("--rung", default="S")
+    p.add_argument("--round", default="r1", help="the frozen rule: rounds/<round>/spec.json")
     p.add_argument("--decisions", type=int, default=None,
                    help="cell: a smoke length; stamped rung=None unless it is the rung's")
     p.add_argument("--out")
@@ -880,6 +910,8 @@ def main(argv):
     p.add_argument("--deadline", type=float, default=None)
     p.add_argument("--segment", type=int, default=0)
     a = p.parse_args(argv)
+    if a.round != ROUND:
+        set_round(a.round)
     spec = load_spec()
     if a.cmd == "cell":
         T = spec["rungs"][a.rung]["decisions"]

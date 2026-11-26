@@ -4141,3 +4141,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - f6, a hand ruler reading only the 16 food bins of the kind paint: 20/20 seeds over the bar, seed means 15.6–30.8 meals a life (mean 25.5; J20's f4 on the old row was 19/20). Control g6, bins shuffled every decision: 0/20, mean 2.6. Floor b4: 0.425.
 - (2) is now fully read: forager PASS, toy K holds, toy C MISS. The step to (3) waits on the Director's ruling on C (INBOX 10:45 + 11:40). No learner seed launched.
 - Philosophy served: 4 (a proof that had a control that must fail; it failed, the proof held, nothing moved) and 1 (his world now shows food the way every published forager's world does — and a plain rule can find it).
+
+## 2026-11-26 12:07–12:35 UTC · JACK · J18 — the forge's runner can run round 1-L
+- No order could take its main step: J24 (3) and J18's freeze wait on Director rulings (INBOX 10:14, 10:45, 11:40), J14 waits on W48 (Sat), J26/J27 done, Next-up 1–3 done. No Kaggle kernel running.
+- J18's runner-side debt, needed under either ruling: `r1_run --round <name>` / `set_round` moves rule, raw folder, cell files, kernel summary, pin check and child `cell` args together; refuses a missing or mis-named round; r1's names are unchanged. 2 new tests; test_forge_r1_run 30/30 under jack-std. `r1_read` untouched (judge-locked).
+- Sizing from rung M's 30 raw cells: 1M decisions ≈ 7.5–18.3 h wall a run = up to 2.44 kernel segments; the 3-segment cap fits with a thin margin.
+- Philosophy served: 5 (the machine made ready so the ruled round launches the hour it is ruled) and 3 (the race that decides his learner can go on to 1M).

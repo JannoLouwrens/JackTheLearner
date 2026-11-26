@@ -166,6 +166,52 @@ def test_job_pins_one_commit_and_the_frozen_spec():
     assert refused(lambda: rr.job_body([], "S", "a" * 39))
 
 
+def test_another_round_moves_every_path_and_r1_keeps_its_own():
+    """J18 round 1-L: `set_round` points the rule, raw folder, cell files and
+    the kernel's summary at rounds/<name>/; a missing, mis-named or
+    self-contradicting round is refused; r1's names are what they were."""
+    keep = (rr.ROUNDS, rr.ROUND, rr.SPEC_PATH, rr.OUT, rr.SEGS)
+    assert (rr.ROUND, rr.cell_file("K1", 1401), rr.summary_file()) == \
+        ("r1", "r1_K1_s1401.json", "forge_r1_cells.json")
+    assert rr.OUT == Path("/data/jack-logs/forge/r1/raw") and rr.SEGS == rr.OUT / "segments"
+    r1_body = rr.job_body(rr.groups(spec(), "S")["g0"], "S", "c" * 40)
+    assert "set_round('r1')" in r1_body and "\"round\": 'r1'" in r1_body
+    root = _tmp()
+    s9 = dict(spec(), round="r9X")
+    (root / "r9X").mkdir()
+    (root / "r9X" / "spec.json").write_text(__import__("json").dumps(s9))
+    (root / "r8").mkdir()
+    (root / "r8" / "spec.json").write_text(__import__("json").dumps(spec()))  # says r1
+    try:
+        rr.ROUNDS = root
+        assert refused(lambda: rr.set_round("r7")), "no frozen rule there"
+        assert refused(lambda: rr.set_round("r8")), "a spec calling itself r1"
+        assert refused(lambda: rr.set_round("../r1")) and refused(lambda: rr.set_round("x"))
+        assert rr.ROUND == "r1", "a refusal moves nothing"
+        rr.set_round("r9X")
+        assert rr.SPEC_PATH == root / "r9X" / "spec.json" and rr.load_spec()["round"] == "r9X"
+        assert rr.OUT == Path("/data/jack-logs/forge/r9X/raw") and rr.SEGS == rr.OUT / "segments"
+        assert rr.cell_file("K1", 1401) == "r9X_K1_s1401.json"
+        assert rr.summary_file() == "forge_r9X_cells.json"
+        body = rr.job_body(rr.groups(s9, "S")["g0"], "S", "c" * 40)
+        ast.parse(body)
+        assert "set_round('r9X')" in body and "\"round\": 'r9X'" in body
+        assert repr(rr.spec_sha256()) in body and body.index("set_round(") < body.index("assert spec_sha256")
+    finally:
+        rr.ROUNDS, rr.ROUND, rr.SPEC_PATH, rr.OUT, rr.SEGS = keep
+
+
+def test_child_cells_are_told_their_round():
+    """run_parallel's children are new processes: they must get --round, or a
+    1-L kernel's cells would read round 1's rule."""
+    import inspect
+    src = inspect.getsource(rr.run_parallel)
+    assert '"--round", ROUND' in src
+    p = subprocess.run([sys.executable, "-m", "experiments.forge.r1_run", "--round", "r0",
+                        "groups"], cwd=REPO, capture_output=True, text=True)
+    assert p.returncode != 0 and "no frozen rule" in p.stderr
+
+
 def test_pin_must_hold_the_rule_and_the_kernel():
     freeze = subprocess.run(["git", "-C", str(REPO), "rev-parse", "594752d0"],
                             capture_output=True, text=True).stdout.strip()
