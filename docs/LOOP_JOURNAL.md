@@ -4187,3 +4187,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - test_gpu_dirt_guard 5/5 with control; dispatch.sh watcher now declares JACK_WATCHER=gpu. test_gpu_accelerator tpu_own_weekly_line still red (pre-existing, Next-up 0).
 - Open: first real submit after a doc edit must be seen admitted. INBOX asks whether ruling 120's wider literal list was meant.
 - Philosophy served: 5, 6 — free GPU hours no longer lost to another lane's prose.
+
+## 2026-11-26 15:22–15:30 UTC · JACK · J24 (4) kernel timing: failed, fixed, relaunched
+- Harvested jack-cpu-1795703939: all 3 cells rc=1, no rate — `chunk_rule` refuses T=5000 (a carried cell runs whole 20k chunks). 5k is also exactly WARMUP: it would have timed zero training even if it ran.
+- Fix `739699fd`: TIMING_T = one chunk (20k, same as the box half's 23.2/s); `timing_body` refuses any other T; test asserts chunk_rule admits it. test_j24_launch 10/10 (jack-std).
+- Relaunched `jack-cpu-1795706606` (pin 739699fd), log `/data/jack-logs/j24/timing_kernel.log`. Failed receipt kept beside it. (3) still waits on the Director's toy-C ruling.
+- Philosophy served: 4 (a failure fixed, not filed), 6 (free compute sized before the 1.5M plan is locked).
