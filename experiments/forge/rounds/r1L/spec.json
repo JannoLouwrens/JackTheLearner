@@ -1,0 +1,250 @@
+{
+ "round": "r1L",
+ "question": "LONG LIFE on E-food: does K1 (periodic full resets, the record's best-supported setting) reach W = 2 consecutive sustained lives sooner than the baseline within 1,000,000 decisions \u2014 and, beside it and deciding nothing by test, which of K1/K2 still learns late in a long life?",
+ "frozen_by": "docs/ORDERS.md J18 (ruling 122 terms; ruling 123 continuation rule in experiments/forge/continuation.py); the commit of this file is the freeze. Round 1's files are untouched.",
+ "parent": {
+  "round": "r1",
+  "lock": "2eb2c0f4",
+  "control_source": "C1/C2 (plain variation, Random('forge-control-1'/'-2')) ran at r1 rungs S and M; rung M read under lock 2eb2c0f4, pin b9914a75 (705ea61f)"
+ },
+ "world": {
+  "arm": "E-food exactly as E2c ran it (experiments/pilot_b2.py E2C_ARMS['E-food'] = pilot arm K + handed_sense 'food', encoding 'cossin', trace on)",
+  "food_floor_only": true,
+  "eye_frame": "body",
+  "motor_frame": "body",
+  "native_substep": true,
+  "lazy_contact_audio": true,
+  "difficulty": 0.75,
+  "reward": "dr100-eat",
+  "life_cap_decisions": 9000,
+  "venue": "Kaggle CPU kernels with E2c's pins (mujoco 3.17.0); no box run is set beside a kernel run (INBOX 11-21 07:32)"
+ },
+ "baseline": "E-food",
+ "baseline_settings": {
+  "algo": "sbx.SAC 0.28",
+  "net_arch": [
+   256,
+   256
+  ],
+  "layer_norm": "critic",
+  "lr": 0.0003,
+  "batch_size": 256,
+  "tau": 0.005,
+  "gamma": 0.995,
+  "learning_starts": 5000,
+  "train_freq": 32,
+  "gradient_steps": 32,
+  "ent_coef": 0.1,
+  "use_sde": true,
+  "n_steps": 1,
+  "buffer": "the whole run",
+  "norm_obs": true
+ },
+ "twins": [
+  "E-food-lr0"
+ ],
+ "twin_settings": {
+  "E-food-lr0": {
+   "lr": 0.0,
+   "note": "the baseline never training, same world, same seeds"
+  }
+ },
+ "candidates": [
+  {
+   "id": "K1",
+   "source": "published",
+   "prior": "PUBLISHED_PRIORS \u00a721 recipe (b), \u00a719 \u2014 Nikishin 2022 (2205.07802) DMC IQM 501 -> 656 with periodic resets; Nauman 2024 (2403.00514) 'the most robust intervention'; r1 rung M (lock 2eb2c0f4): late-half sustained rate 0.84 vs baseline 0.059",
+   "twin": "E-food-lr0",
+   "change": "full network resets every 50,000 decisions, replay and temperature kept",
+   "settings": {
+    "reset_every": 50000,
+    "param_resets": {
+     "L": [
+      50000,
+      100000,
+      150000,
+      200000,
+      250000,
+      300000,
+      350000,
+      400000,
+      450000,
+      500000,
+      550000,
+      600000,
+      650000,
+      700000,
+      750000,
+      800000,
+      850000,
+      900000,
+      950000
+     ]
+    }
+   }
+  },
+  {
+   "id": "K2",
+   "source": "published",
+   "prior": "\u00a721 recipe (c) \u2014 Kuznetsov 2020 (2005.04269): truncation controls overestimation, reduces seed variance; \u00a716 Zoo TQC Humanoid 7,239 vs SAC 6,232; r1 rung M (lock 2eb2c0f4): late-half sustained rate 0.82",
+   "twin": "E-food-lr0",
+   "change": "TQC in place of SAC, 2 top quantiles dropped per net, everything else the baseline",
+   "settings": {
+    "algo": "sbx.TQC",
+    "top_quantiles_to_drop_per_net": 2
+   }
+  }
+ ],
+ "rungs": {
+  "L": {
+   "decisions": 1000000,
+   "seeds": [
+    1421,
+    1422,
+    1423,
+    1424,
+    1425,
+    1426,
+    1427,
+    1428,
+    1429,
+    1430,
+    1431,
+    1432,
+    1433,
+    1434,
+    1435,
+    1436,
+    1437,
+    1438,
+    1439,
+    1440
+   ],
+   "tranches": {
+    "1": [
+     {
+      "arms": [
+       "K1",
+       "E-food"
+      ],
+      "seeds": [
+       1421,
+       1422,
+       1423,
+       1424,
+       1425,
+       1426,
+       1427,
+       1428,
+       1429,
+       1430
+      ]
+     },
+     {
+      "arms": [
+       "K2"
+      ],
+      "seeds": [
+       1421,
+       1422,
+       1423,
+       1424,
+       1425,
+       1426,
+       1427,
+       1428,
+       1429,
+       1430
+      ]
+     },
+     {
+      "arms": [
+       "E-food-lr0"
+      ],
+      "seeds": [
+       1421,
+       1422
+      ]
+     }
+    ],
+    "2": [
+     {
+      "arms": [
+       "K1",
+       "E-food"
+      ],
+      "seeds": [
+       1431,
+       1432,
+       1433,
+       1434,
+       1435,
+       1436,
+       1437,
+       1438,
+       1439,
+       1440
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "outcome": {
+  "metric": "sustained_rate",
+  "requires_eating": true,
+  "late_frac": 0.5,
+  "definition": "share of the run's LATE-half lives (lives ending after half the rung's decisions) that are sustained by the harness mark (ruling 22: reached the life cap AND intake >= basal drain); experiments/forge/metric.py",
+  "tiebreak": "late meals per life (mean over the same late lives), used only to order arms equal on the score",
+  "crash": "a crashed, NaN or cut run scores 0 and counts against its arm",
+  "metric_sha256": "ff3b46358c5b4b738f55cc665fd866a0ece9df780a640623a1b98e238bccc953",
+  "primary": {
+   "test": "experiments.harness.compare(K1, E-food) \u2014 two looks, 10 then 20 runs an arm (LOOKS = (10, 20)), alpha 0.025 each look, permutation log-rank; FUTILE at look 1 when <= 1 run of BOTH arms crosses",
+   "a": "K1",
+   "b": "E-food",
+   "outcome": "experiments.harness.outcome_sustained(lives, W=2, T=1,000,000): decisions until W consecutive sustained lives (ruling 22 mark), censored at T; a crashed/cut run is entered as a crash, never replaced (check #13)",
+   "W": 2,
+   "T": 1000000,
+   "W_source": "unchanged from E2c / pilot 2's frozen rule (e2c3c378, W = 2 on both floor cards, DECISIONS_RESOLVED ruling on the motor frame); the world is E-food exactly as E2c ran it",
+   "look_1": "tranche 1 seeds 1421-1430 of K1 and E-food",
+   "look_2": "plus tranche 2 seeds 1431-1440, launched only if look 1 is neither A_DIFFERS nor FUTILE"
+  },
+  "beside": {
+   "arms": "K2 on 1421-1430, the never-trains twin E-food-lr0 on 1421-1422; decide nothing by test",
+   "readings": [
+    "rung M's late-half sustained rate (experiments/forge/metric.py, the frozen hash below) for every run",
+    "long-life reading: sustained rate over lives ending in (800k, 1M] against lives ending in (300k, 500k], per run"
+   ]
+  }
+ },
+ "keep_rule": "Frozen now (ruling 122): if look 1 or look 2 says K1 differs from the baseline, brain B's keep setting for stage 2 is whichever of K1/K2 has the higher late-half sustained-rate MEAN at 1M over seeds 1421-1430; if the two means are closer than K1's own seed range (max - min of K1's ten late-half rates), K1 (the record's). If K1 does not differ, no keep setting is chosen by this round.",
+ "ladder": {
+  "rule": "none: a continuation round runs rung L once; no climb (experiments/forge/continuation.py)",
+  "readings": "the forge's four readings (INBOX 11-20 14:35) stand, per J18"
+ },
+ "budget": {
+  "core_hours": 1440,
+  "kernel_hours": 360,
+  "tranches": {
+   "1": {
+    "runs": 32,
+    "kernels": 8,
+    "kernel_hours": 180
+   },
+   "2": {
+    "runs": 20,
+    "kernels": 5,
+    "kernel_hours": 180
+   }
+  },
+  "derivation": "rung M's 30 raw cells: 300k took 2.2-5.5 h wall, so 1M = 7.5 / 16.9 / 18.3 h (min/med/max); 4 runs a kernel; tranche 1 = 8 kernels x <= 18.3 h ~ 146 of 180 kernel-h; tranche 2 = 5 kernels, its own 180 kernel-h, only when look 2 is needed. core_hours = 4 x kernel_hours. Over either tranche's line the round stops; it does not borrow."
+ },
+ "machine": {
+  "kaggle_sessions_max": 2,
+  "rank": 2,
+  "box": "no learner run on the box",
+  "launch_order": "tranche 1 kernels g1-0..g1-4 (K1 + E-food only) first, then g1-5..g1-7 (K2, twin)"
+ },
+ "acceptance": "no result row is accepted (written to results.jsonl) before ORDERS S13 (b)'s judge-hash tripwire holds; the verdict waits for S20's reader (r1_read is locked to r1); rates may be printed before it",
+ "forge_filled": "J18/ruling 122 silent on these, filled at the freeze: W = 2 and T = 1,000,000 for the primary outcome (W unchanged from E2c's frozen rule, T = the rung); K1's reset points every 50,000 through 950,000 (the same interval as S and M, 19 resets); core_hours = 4 x kernel_hours as in r1; the long-life window (300k, 500k] vs (800k, 1M] read as 'last 200k against 300k-500k' by lives' END; keep-rule seed range = K1's max - min over 1421-1430."
+}

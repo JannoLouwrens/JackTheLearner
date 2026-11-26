@@ -30,7 +30,41 @@ ONE_NUMBER = REPO / "experiments" / "forge" / "one_number.json"
 OUT = REPO / "docs" / "FORGE_SCOREBOARD.md"
 
 
+def render_continuation(round_dir: Path, *, require_committed: bool = True) -> list:
+    """A continuation round (ruling 123, `parent` in its spec): rung L only, no
+    ladder, so `load_round`/`source_yield` (judge-locked, S-rung rules) cannot
+    read it. Shown as its frozen rule; its rows are read by its own reader,
+    never by the ladder's yield."""
+    from experiments.forge import _committed_and_clean
+    from experiments.forge.continuation import validate_round
+    sp = round_dir / "spec.json"
+    try:
+        if require_committed and not _committed_and_clean(sp):
+            raise Refused(f"{sp} is not committed and clean in git")
+        spec = json.loads(sp.read_text())
+        validate_round(spec)
+    except Refused as e:
+        return [f"### {round_dir.name} — REFUSED", "", f"Not read: {e}", ""]
+    bud, L, par = spec["budget"], spec["rungs"]["L"], spec["parent"]
+    pr = spec["outcome"].get("primary", {})
+    out = [f"### {spec['round']} — {spec['question']}", "",
+           f"Continuation of `{par['round']}` (lock `{par['lock']}`; control: {par['control_source']}). "
+           f"Baseline `{spec['baseline']}` · rung L {L['decisions']:,} decisions × {len(L['seeds'])} seeds"
+           f" · candidates {', '.join(c['id'] for c in spec['candidates'])} · budget "
+           f"{bud['core_hours']:g} core-h, {bud['kernel_hours']:g} kernel-h", ""]
+    if pr:
+        out += [f"Primary: {pr.get('a')} against {pr.get('b')} by `harness.compare`, "
+                f"W = {pr.get('W')}, T = {pr.get('T'):,}.", ""]
+    res = round_dir / "results.jsonl"
+    out += [("Rows present; the verdict is its own reader's, not this board's."
+             if res.is_file() else "Rule frozen; no run read yet."), ""]
+    return out
+
+
 def render_round(round_dir: Path, *, require_committed: bool = True) -> list:
+    sp = round_dir / "spec.json"
+    if sp.is_file() and "parent" in json.loads(sp.read_text()):
+        return render_continuation(round_dir, require_committed=require_committed)
     try:
         spec, rows = load_round(round_dir, require_committed=require_committed)
         y = source_yield(spec, rows)

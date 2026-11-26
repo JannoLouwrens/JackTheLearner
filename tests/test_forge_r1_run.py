@@ -251,6 +251,29 @@ def test_tranched_rung_names_its_own_entrants():
     assert rr.tranches(spec(), "S") is None and rr.tranches(spec(), "M") is None
 
 
+def test_frozen_r1L_is_the_ruled_shape():
+    """The frozen 1-L rule (J18 step 2) has exactly the planted tranche shape,
+    K1 + K2 only, round 1's parent lock, W = 2 / T = 1M primary, and K1's 19
+    reset points; it validates through the continuation rule."""
+    import json as _j
+    from experiments.forge.continuation import validate_round
+    s = _j.loads((REPO / "experiments/forge/rounds/r1L/spec.json").read_text())
+    validate_round(s)
+    want = _r1l_like()
+    assert s["round"] == "r1L" and s["parent"]["round"] == "r1" and s["parent"]["lock"] == "2eb2c0f4"
+    assert s["rungs"] == want["rungs"]
+    assert [c["id"] for c in s["candidates"]] == ["K1", "K2"]
+    assert s["outcome"]["primary"]["W"] == 2 and s["outcome"]["primary"]["T"] == 1_000_000
+    assert (s["outcome"]["primary"]["a"], s["outcome"]["primary"]["b"]) == ("K1", "E-food")
+    k1 = rr.arm_settings(s, "K1")
+    assert rr.learner_call(k1, 1421, 1_000_000, "L")[1]["param_resets"] == list(range(50_000, 1_000_000, 50_000))
+    r1 = _j.loads((REPO / "experiments/forge/rounds/r1/spec.json").read_text())
+    assert s["outcome"]["metric_sha256"] == r1["outcome"]["metric_sha256"]
+    assert s["baseline_settings"] == r1["baseline_settings"] and s["world"] == r1["world"]
+    g = rr.groups(s, "L")
+    assert all({a for a, _ in g[f"g1-{j}"]} == {"K1", "E-food"} for j in range(5))
+
+
 def test_continuation_round_is_validated_on_load_and_cells_obey_tranches():
     """load_spec runs validate_round on a spec with a parent (ruling 123); the
     `cell` command refuses an (arm, seed) outside every tranche before any
