@@ -4103,3 +4103,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `experiments/j26_probe.py` (`f117412e`): worlds, babble, size, four eye forms, the probe, seeds, a permuted-label control and both predictions frozen in the docstring before any look was logged.
 - Box timing: 300 decisions 3.89 CPU-s → 200k ≈ 0.72 CPU-h, under the order's 2 h kernel, so the logger runs on the box detached (`/data/jack-logs/j26/`). Fit step not written yet; next slot.
 - Philosophy served: 3 (nothing assumed — measure whether the old eye row ever could have shown him food before blaming it) and 4 (the prediction and its must-fail control written before the run).
+
+## 2026-11-26 08:07–08:42 UTC · JACK · J26 — the outsider's probe read · Next-up 1+3
+- J24's proofs still running (forager 6/40 cells on box, toy kernel) — not read; slot took J26 per the Order of work.
+- `j26_probe fit` written as the docstring froze it (`54e45611`), logger finished 20/20 worlds 08:14, fit detached 08:14–08:40 (≈ 0.4 CPU-h).
+- Held-out R² on food's bearing: today's row −0.135, one food code −0.013, kind one-hot 0.585, bins16 0.606; permuted-label control −0.0001. P1 HOLDS, P2 MISSED (< 0.80) — both in WORLD_CARD § J17 hunt with raw paths. Side: ~20% of labelled looks see no food at all.
+- Next-up 1 (mac_first_day PARKED line) + 3 (J17 hunt headed NOT SHOWN ON THIS PAINT) done (`445d729d`).
+- Philosophy served: 3 (measured what the old eye could carry instead of assuming) and 4 (a prediction that could fail, and half of it did — written as missed).

@@ -716,6 +716,11 @@ What it says: critic loss is the only signature whose control stays quiet until 
 
 **Read first (ruling 111, 11-26):** every eye row in this section was run on the per-geom paint (each floor food its own texture code, re-dealt per world) and reads NOT SHOWN ON THIS PAINT — not a verdict on the eye or the learner; the kind paint is J24.
 
+**J26 probe (no learner; frozen `f117412e`, fit `54e45611`; read 11-26 08:40).** 200k babble looks (worlds 281–295 train, 296–300 test; 138,111 / 44,422 labelled), the simulator labels the bearing of the nearest floor food in range; MLP 256-256, R² on (cos, sin) in held-out worlds, seeds 941–943:
+today's row **R −0.135** (−0.141 / −0.119 / −0.146) · one food code **C −0.013** · kind one-hot **K 0.585** (0.577 / 0.588 / 0.591) · bins16 **B 0.606** (0.580 / 0.627 / 0.610) · permuted-label control −0.0001 (≤ 0.05: not void).
+**P1 HOLDS** — today's row tells a plain regressor nothing about where food is in a new world (< 10%; the diagnosis behind J24 stands). **P2 MISSED** — K and B read ~0.6, not > 0.80; written as missed, no line moved. C did not land "between": one food code, still interleaved with per-geom textures, read ≈ 0. Unregistered side readings (not the score): 18–23% of labelled looks had no ray on any food (food behind or hidden; the frozen label does not require sight), so no form could reach 1.0; foods carry the same three codes in several worlds (281 and 296 both 0.43/0.49/0.86), so R's failure is not only re-dealing.
+Raw: `/data/jack-logs/j26/looks/w281–w300.npz`, `/data/jack-logs/j26/fit.json` (copy `docs/research/world_card_data/j26/fit.json`), log `/data/jack-logs/j26/fit.log`.
+
 Reader `j17_onset hunt`: Q climb = Q(100k) ÷ Q(50k), Q = −actor_loss; cut points are the MLP groups' own edges (sighted 1.32–1.57, blind 0.92–1.20), not registered thresholds. CURES (ORDERS J17 branch) = the reader does not print RUNS AWAY **and** sighted late meals/life ≥ its blind twin's (late = lives starting ≥ 50k, `pilot_b2.j17_late_meals`).
 
 | arm | the one change (§24) | machine | sighted Q climb | twin Q climb | reader | late meals/life, sighted / twin | cures? |

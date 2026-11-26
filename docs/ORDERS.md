@@ -143,9 +143,8 @@ Result into `WORLD_CARD.md` § J17 hunt: if today's row passes 80% the
 diagnosis is WRONG and it is written so, plainly; it never gates J24.
 serves: M3 · card line 3 (nothing assumed), 4 · it settles how every eye row since 11-14 is to be read.
 **done when:** the four numbers and the control are in `WORLD_CARD.md` with the raw file's path.
-state: 11-26 07:40 probe FROZEN (`f117412e`, `experiments/j26_probe.py`): pilot world, worlds 281–295 train / 296–300 test, held-25 babble, 10k looks a world; forms R (today's row) / C (one food code) / K (kind one-hot) / B (bins16) all built offline from ONE logged look stream; MLP 256-256 R² on the judge's food bearing (cos, sin), seeds 941–943, permuted-label control ≤ 0.05; P1 R < 0.10, P2 K, B > 0.80.
-state: timing 300 decisions 3.89 CPU-s → 200k ≈ 0.72 CPU-h, so the logger runs on the BOX (one worker, nice 19, detached 07:39), not a kernel: `/data/jack-logs/j26/log.txt`, looks → `/data/jack-logs/j26/looks/w<seed>.npz`. Smoke: 100% of looks had a floor food in range.
-state: NEXT: when 20 npz exist, write `j26_probe fit` (the docstring's probe, nothing changed) and run it; write the four numbers + control into WORLD_CARD.md § J17 hunt with the npz path.
+state: DONE 11-26 08:40 (`54e45611` fit, result commit below). Held-out R² (3 seeds): today's row R −0.135, one food code C −0.013, kind one-hot K 0.585, bins16 B 0.606; permuted control −0.0001 (valid). P1 HOLDS (old row tells nothing of where food is); P2 MISSED (K, B ~0.6 not > 0.80) — written so in WORLD_CARD § J17 hunt with raw paths, no line moved.
+state: for the Director: 18–23% of labelled looks had no ray on any food (label needs no sight), a ceiling on every form; C ≈ 0 (not "between"). Never gates J24.
 
 ### J18 — Forge: round 1 is closed at rung M; round 1-L asks who is still learning at 1M
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19, §20, §21, §22; `docs/FORGE.md` (rung L: 1,000,000+ × 10 seeds through `experiments/harness`); rulings 61, 65, 69, 83, 105, 112
