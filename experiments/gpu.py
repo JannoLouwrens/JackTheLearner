@@ -339,7 +339,11 @@ def reaches_vm(path: str, root: Optional[Path] = None) -> bool:
     code and are not read, or this guard's own test would name its fixtures).
     Conservative by construction: a
     false mention keeps the old refusal; only a file no experiment code names
-    (dashboard/*, a status script) stops being fatal."""
+    (dashboard/*, a status script) stops being fatal.
+    Ruling 120 (S18): `docs/**` and `*.md` are outputs, never dirt — a dirty
+    `docs/ORDERS.md` (named by coverage.py) killed the ear's Colab loop 11-25."""
+    if path.startswith("docs/") or path.endswith(".md"):
+        return False
     if not path or path.startswith("experiments/"):
         return True
     global _EXP_TEXT
@@ -359,6 +363,11 @@ def split_dirt(porcelain_lines, root: Optional[Path] = None) -> tuple[list, list
     for ln in offending_dirt(porcelain_lines):
         (fatal if reaches_vm(porcelain_path(ln), root) else foreign).append(ln)
     return fatal, foreign
+
+
+def untracked_code(paths) -> list:
+    """Untracked files the clone would lack: `.py` under experiments/ only."""
+    return [p for p in paths if p.startswith("experiments/") and p.endswith(".py")]
 
 
 def _foreign_dirt() -> list:
@@ -415,7 +424,7 @@ def assert_ref_is_current(ref: str = "main") -> None:
     rc, untracked = git("ls-files", "--others", "--exclude-standard",
                         "--", "experiments")
     if rc == 0 and untracked:
-        new_code = [ln for ln in untracked.splitlines() if ln.endswith(".py")]
+        new_code = untracked_code(untracked.splitlines())
         if new_code:
             raise RuntimeError(
                 "Untracked experiment code -- the VM clones from GitHub, so "

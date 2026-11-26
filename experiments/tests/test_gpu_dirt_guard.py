@@ -11,7 +11,7 @@
 import tempfile
 from pathlib import Path
 
-from experiments.gpu import offending_dirt, split_dirt
+from experiments.gpu import offending_dirt, split_dirt, untracked_code
 
 FOREIGN = [" M dashboard/page.html", " M dashboard/vitals.json",
            " M scripts/dashboard_status.py"]
@@ -32,7 +32,14 @@ def main():
         assert f == [" M foo_mod.py"] and g == [" M bar_mod.py"], (f, g)
     split_dirt([], None)  # reset the cached corpus to the real tree
     assert " M dashboard/page.html" in offending_dirt(FOREIGN), "(d) control"
-    print("PASS test_gpu_dirt_guard: 4/4")
+    # (e) S18 / ruling 120: a doc is never dirt, even one experiment code names
+    # (coverage.py reads docs/ORDERS.md); planted code dirt still refuses.
+    f, _ = split_dirt([" M docs/ORDERS.md", " M experiments/notes.md",
+                       " M experiments/x.py"])
+    assert f == [" M experiments/x.py"], f"(e) docs must admit: {f}"
+    assert " M docs/ORDERS.md" in offending_dirt([" M docs/ORDERS.md"]), "(e) control"
+    assert untracked_code(["docs/foo.md", "experiments/y.py"]) == ["experiments/y.py"]
+    print("PASS test_gpu_dirt_guard: 5/5")
 
 
 if __name__ == "__main__":
