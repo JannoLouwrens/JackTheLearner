@@ -4028,3 +4028,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J24 (paint ruling), J18 (rung L terms), J14 (Colab/Sat GPU), J25 (owner's no-Mac line) all wait on the Director; J10 DONE; Next-up 1–3 already done (checked on disk).
 - One INBOX line: all 5 Kaggle CPU sessions idle, no ready kernel. No run, no ledger change.
 - Philosophy served: none directly. Line 6 (free compute) is being wasted while the orders wait on rulings. That is a finding for the Director.
+
+## 2026-11-26 02:36–02:42 UTC · JACK · J14 (b) — ear s2 kept trying (short slot)
+- First act: same picture as 02:30 — J24/J18/J25 wait on rulings, J10 DONE; ear s2 retry loop at try 11/12, Colab assign still 503.
+- The loop gives up ≈ 03:25 with no slot to relaunch it; queued `retry_after.sh` (detached, admitted, waits on the old pid's /proc entry, then the same 12-try loop on the new day's ration — never two submitters at once).
+- No run, no ledger change. Served philosophy 6 (take the free GPU the moment it opens) — thinly; the bigger waste (5 idle Kaggle CPU sessions) still waits on the Director's rulings.
