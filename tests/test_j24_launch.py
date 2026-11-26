@@ -103,6 +103,47 @@ def test_cell_refuses_without_a_carry_dir():
                                     "--T", "576", "--out", "/dev/null"]))
 
 
+def _dirs(t):
+    jl.OUT, jl.SEGS = Path(t), Path(t) / "segments"
+
+
+def test_kernel_refuses_before_any_submit():
+    real = (jl.OUT, jl.SEGS)
+    with tempfile.TemporaryDirectory() as t:
+        _dirs(t)
+        try:
+            assert refused(lambda: jl.kernel(951, HEAD)), "smoke seed"
+            assert refused(lambda: jl.kernel(941, HEAD, segment=1)), "needs seg 0 home"
+            jl.raw_file(941).write_text("{}")
+            assert refused(lambda: jl.kernel(941, HEAD)), "a seed runs once"
+            jl.SEGS.mkdir()
+            jl.seg_file(942, 0).write_text('{"pin": "%s", "cells": {}}' % ("f" * 40))
+            assert refused(lambda: jl.kernel(942, HEAD, segment=1)), "one pin a run"
+            jl.seg_file(943, 0).write_text('{"pin": "%s", "cells": {}}' % HEAD)
+            assert refused(lambda: jl.kernel(943, HEAD, segment=1)), "carried nothing"
+            assert refused(lambda: jl.kernel(943, HEAD)), "segment 0 already home"
+        finally:
+            jl.OUT, jl.SEGS = real
+
+
+def test_chain_carries_waits_out_the_guard_and_goes_on():
+    calls, slept = [], []
+
+    def fake(seed, pin, seg):
+        calls.append((seed, seg))
+        if seed == 941 and seg < 2:
+            return {"next_segment": seg + 1}
+        if seed == 942 and len([c for c in calls if c[0] == 942]) == 1:
+            raise RuntimeError("Uncommitted changes in experiments/x.py")
+        if seed == 943:
+            raise RuntimeError("kaggle said no")
+        return {}
+    done = jl.chain([941, 942, 943], HEAD, sleep=slept.append, kernel_fn=fake)
+    assert calls == [(941, 0), (941, 1), (941, 2), (942, 0), (942, 0), (943, 0)], calls
+    assert done[941] == "home" and done[942] == "home" and done[943].startswith("failed")
+    assert slept == [rr.GUARD_WAIT_S]
+
+
 if __name__ == "__main__":
     for k, v in list(globals().items()):
         if k.startswith("test_"):

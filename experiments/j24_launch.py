@@ -13,8 +13,10 @@ The freeze guard: a job is built only for a pinned commit whose
 (941–943) never runs on a draft (ORDERS J24 (3): "Freeze BEFORE any learner
 seed"). Smoke seeds never get a job either.
 
-Still to build (next slot): `kernel` / `chain` — submit, fetch, segment files,
-assemble — which `r1_run.kernel` / `chain` do for a round.
+`kernel(seed, pin, segment)` submits one segment (Kaggle CPU), writes its
+payload to OUT/segments, and assembles OUT/j24_s<seed>.json with the forge's
+`r1_run.assemble` once nothing is left to carry or the last segment is home.
+`chain(seeds, pin)` runs each seed's segments back to back in one session.
 """
 import hashlib
 import json
@@ -163,10 +165,128 @@ def job_body(seed: int, pin: str, segment: int = 0, T: int | None = None) -> str
             .replace("__PIN__", repr(pin)))
 
 
+EST_HOURS = 7.5
+SEGS = OUT / "segments"
+
+
+def seg_file(seed: int, segment: int) -> Path:
+    return SEGS / f"j24_s{seed}_seg{segment}.json"
+
+
+def raw_file(seed: int) -> Path:
+    return OUT / f"j24_s{seed}.json"
+
+
+def kernel(seed: int, pin: str, segment: int = 0) -> dict:
+    """One segment of one seed's chain -> SEGS (and OUT/j24_s<seed>.json when done)."""
+    from experiments.gpu import build_job, result_json, submit
+    from experiments.pilot_b import partial_file
+    cl = cells(seed)
+    if raw_file(seed).exists():
+        raise rr.Refused(f"j24_launch: {raw_file(seed)} is already home — a seed runs once")
+    if seg_file(seed, segment).exists():
+        raise rr.Refused(f"j24_launch: {seg_file(seed, segment)} is already home")
+    prior = [json.loads(seg_file(seed, i).read_text()) for i in range(segment)
+             if seg_file(seed, i).exists()]
+    if len(prior) != segment:
+        raise rr.Refused(f"j24_launch: segment {segment} of s{seed} needs 0..{segment - 1} home")
+    sources = None
+    if segment:
+        if prior[-1].get("pin") != pin:
+            raise rr.Refused("j24_launch: a continuation runs the pin its run started on")
+        cl = rr.resumable(prior[-1])
+        if not cl:
+            raise rr.Refused(f"j24_launch: segment {segment - 1} of s{seed} carried nothing")
+        job = (prior[-1].get("kernel") or {}).get("job_id")
+        if not job or "/" not in str(job):
+            raise rr.Refused(f"j24_launch: segment {segment - 1} names no kernel to mount")
+        sources = [job]
+    body = job_body(seed, pin, segment)
+    fetch = [SUMMARY] + [n for a, sd in cl
+                         for n in (cell_file(a, sd), partial_file(Path(cell_file(a, sd))).name)]
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=EST_HOURS,
+                 timeout_s=rr.REMOTE_TIMEOUT_S, fetch=fetch, kernel_sources=sources,
+                 fetch_only=True)
+    if sub.ok and SUMMARY in sub.artifacts:
+        r = result_json(sub, SUMMARY)
+    else:
+        r = _from_artifacts(sub.artifacts, cl)
+        if r is None:
+            raise RuntimeError(f"j24 kernel s{seed} seg{segment}: {sub.message}")
+        r.update(round="j24", rung="J24", pin=pin, segment=int(segment),
+                 spec_sha256=hashlib.sha256(prereg_at(pin)).hexdigest())
+    r["kernel"] = {"job_id": sub.job_id, "duration_s": sub.duration_s,
+                   "charge_seconds": sub.charge_seconds, "name": f"j24_s{seed}", "pin": pin}
+    for k, rec in r["cells"].items():
+        print(f"{k}: {len(rec['lives'])} lives" + (" (cut)" if rec.get("cut") else "")
+              + (" (carried on)" if rec.get("resumable") else "")
+              + (f" ERROR {rec['error']}" if "error" in rec else ""), flush=True)
+    SEGS.mkdir(parents=True, exist_ok=True)
+    seg_file(seed, segment).write_text(json.dumps(r, indent=1) + "\n")
+    if rr.resumable(r) and segment + 1 < rr.MAX_SEGMENTS:
+        r["next_segment"] = segment + 1
+        return r
+    raw = rr.assemble(prior + [r])
+    raw_file(seed).write_text(json.dumps(raw, indent=1) + "\n")
+    return raw
+
+
+def _from_artifacts(artifacts: dict, cl: list) -> dict | None:
+    """No summary: per-cell files, final else partial (cut) else not_found — never invented."""
+    from experiments.pilot_b import from_partial, partial_file
+    res, found = {}, 0
+    for arm, seed in cl:
+        final = cell_file(arm, seed)
+        part = partial_file(Path(final)).name
+        if final in artifacts:
+            rec, found = json.loads(Path(artifacts[final]).read_text()), found + 1
+        elif part in artifacts:
+            rec, found = from_partial(arm, seed, Path(artifacts[part])), found + 1
+        else:
+            rec = from_partial(arm, seed, Path("/nonexistent") / part)
+        rec["from_cell_file"] = True
+        res[f"{arm}_s{seed}"] = rec
+    return {"cells": res, "assembled": True} if found else None
+
+
+def chain(seeds: list, pin: str, sleep=time.sleep, kernel_fn=None) -> dict:
+    """Each seed's segments back to back (one Kaggle session held). A refused or
+    failed seed is logged and the chain goes on; the launcher's guard (dirt,
+    unpushed HEAD) is waited out, never bypassed."""
+    kernel_fn = kernel_fn or kernel
+    done = {}
+    for seed in seeds:
+        seg, waits = 0, 0
+        while True:
+            try:
+                r = kernel_fn(seed, pin, seg)
+                if isinstance(r, dict) and r.get("next_segment"):
+                    seg = r["next_segment"]
+                    print(f"s{seed}: segment {seg - 1} home, carrying on", flush=True)
+                    continue
+                done[seed] = "home"
+            except rr.Refused as e:
+                done[seed] = f"refused: {e}"
+            except RuntimeError as e:
+                guard = ("Uncommitted changes" in str(e) or "Untracked experiment" in str(e)
+                         or "is not on origin" in str(e))
+                if guard and waits < rr.GUARD_RETRIES:
+                    waits += 1
+                    print(f"s{seed}: launcher guard; waiting {rr.GUARD_WAIT_S}s "
+                          f"[{waits}/{rr.GUARD_RETRIES}]", flush=True)
+                    sleep(rr.GUARD_WAIT_S)
+                    continue
+                done[seed] = f"failed: {str(e)[:300]}"
+            break
+        print(f"CHAIN j24 s{seed}: {done[seed]}", flush=True)
+    print("CHAIN DONE", json.dumps({str(k): v for k, v in done.items()}), flush=True)
+    return done
+
+
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "job"])
+    p.add_argument("cmd", choices=["cell", "job", "kernel", "chain"])
     p.add_argument("--arm")
     p.add_argument("--seed", type=int)
     p.add_argument("--T", type=int)
@@ -177,6 +297,7 @@ def main(argv):
     p.add_argument("--deadline", type=float, default=None)
     p.add_argument("--pin")
     p.add_argument("--segment", type=int, default=0)
+    p.add_argument("--seeds", type=int, nargs="+", default=list(SEEDS))
     a = p.parse_args(argv)
     if a.cmd == "cell":
         if a.carry_dir is None:
@@ -187,6 +308,10 @@ def main(argv):
         Path(a.out).write_text(json.dumps(rec) + "\n")
     elif a.cmd == "job":
         print(job_body(a.seed, a.pin, a.segment))
+    elif a.cmd == "kernel":
+        kernel(a.seed, a.pin, a.segment)
+    elif a.cmd == "chain":
+        chain(a.seeds, a.pin)
 
 
 if __name__ == "__main__":
