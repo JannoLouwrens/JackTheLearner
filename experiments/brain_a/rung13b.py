@@ -1427,7 +1427,188 @@ def main_repval():
     return 0 if good else 1
 
 
+# EIGHTH PIECE (11-26, `--grads`): THE WHOLE LOSS's 81 GRADIENTS — the port's own composed agent.loss
+# (agent.py L156-243 at e01491f) differentiated by mx.value_and_grad, against R13's 81 official gradients
+# `c<N>/grad/*` (rung 13a (R): bit-equal to the frozen row-2.1 golden), through `port_gate.gate`.
+# Routing read off the pin BEFORE this line (configs.yaml L86-116): reward_grad True (rew head sees repfeat
+# WITH gradient), ac_grads False (imagination starts sg), repval_grad True (repval's feat = repfeat WITH
+# gradient), slowtar False (tarval = val), contdisc True, valnorm/advnorm 'none'. imag_loss: adv, act, weight,
+# ret targets under sg; so the imagination sends gradient ONLY into pol (logp, entropy) and val (value loss).
+# The composed function, per call N (params = R13 `c<N>/pre/`, the 81 graded names + slowval as constants):
+#   WM, free-running from the rebuilt batch (as `--wm`): encoder -> rssm_loss (file uniforms at cur(N, t),
+#     free 1.0, unimix 0.01) -> rewcon_loss (reward draw 2 [:, 1:], term 0, horizon 333) + dec_vec_loss.
+#   IMAGINATION TEACHER-FORCED (ours beside theirs): feats = golden [imag/start ; imag/feat], actions = golden
+#     imag/act (+ a zero 16th, sliced off by the loss), rew/con = golden imagloss/in_rew, in_con. Every one of
+#     these sits under sg in the official loss (imgfeat sg, act sg, weight/ret sg), so no gradient path is
+#     removed; the port's free-running imagination already matches them (`--imag`, 2.9e-6).
+#     value + policy exactly as `--imagloss-vq` (retnorm from PRE lo/hi, updated by this ret).
+#   REPVAL on the port's OWN repfeat (gradient kept): boot = this pass's imag ret[:, 0] -> [B, K], reward
+#     draw [:, 1:], is_last [0::2, 31] (the read-1 fix of `--repval`), term 0.
+#   total = sum mean(term) * SCALES.
+# THE LINE, fixed before the first read — at calls 1/2/6/8, eager AND compiled:
+#   (L) total vs R13 `c<N>/loss/total_scaled`: relative <= 1e-5.
+#   (G) `port_gate.gate` on the 81 `c<N>/grad/*` tensors PASSES (unchanged: rel 1e-4, `dyn/` 1e-3, cos 0.9999,
+#       a golden-zero tensor must be exactly zero in the port).
+#   (C) control: posterior noise one step late (+2,048) FAILS the gate on every call.
+#   (P) planted, each must FAIL the gate on every call where it changes the gradient (grads not bit-equal to
+#       the true port's; NO-OP on every call fails the clause): no straight-through in the posterior sample;
+#       reward_grad off (sg on the rew head's input); rep scale 1.0; the dyn/rep stop-gradients swapped;
+#       repval_grad off (sg repfeat in repval); slowreg 0 (both value terms); adv not stopped in the policy
+#       loss; policy loss summed over the horizon instead of meaned.
+# Ours beside theirs: f32 (published bf16); one device; imagination teacher-forced as above.
+GRAD_PLANTS = ("no_straight_through", "reward_grad_off", "rep_scale_1", "kl_sg_swapped", "repval_grad_off",
+               "slowreg_0", "adv_not_stopped", "policy_horizon_sum")
+
+
+def main_grads():
+    gxx = "/opt/rh/gcc-toolset-15/root/usr/bin"
+    if os.path.isdir(gxx) and not os.environ.get("PATH", "").startswith(gxx):
+        os.environ["PATH"] = gxx + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("TMPDIR", "/data/tmp")
+    sys.path.insert(0, HERE)
+    import mlx.core as mx
+    import mlx_maths as M
+    import port_gate
+    import rung10  # noqa: F401  (TOY <- SIZE1M)
+    from rung6 import TOY
+    G, R = np.load(GOLDEN_A), np.load(R13)
+    stream = np.random.default_rng(0).random(cursor(CALLS[-1], 64) + 2 * CUR_STEP, dtype=np.float32)
+    bt = rebuild_batch()
+    spec = {"action": 0}
+    b = M.bins(255)
+    sg = mx.stop_gradient
+    A = mx.array
+    names = {c: sorted(k[len(f"c{c}/grad/"):] for k in R.files if k.startswith(f"c{c}/grad/")) for c in CALLS}
+    real_sample = M.sample_onehot
+
+    def sample_no_st(logit, u, mix):
+        return sg(real_sample(logit, u, mix))
+
+    def kl_swapped(post, prior, mix, free):
+        p, q = M.unimix_logits(post, mix), M.unimix_logits(prior, mix)
+        psg, qsg = M.unimix_logits(sg(post), mix), M.unimix_logits(sg(prior), mix)
+        return (mx.maximum(M._cat_kl(p, qsg).sum(-1), free), mx.maximum(M._cat_kl(psg, q).sum(-1), free))
+
+    def inputs(c, shift=0):
+        q = f"c{c}/rssm/t000/"
+        g = f"c{c}/imag/"
+        last = np.zeros((B, 64), bool)
+        last[0::2, EPISODE_START - 2] = True
+        return dict(
+            d0=A(G[q + "in_deter"]), s0=A(G[q + "in_stoch"]), obs=A(obs_slice(bt["vector"])),
+            act=A(bt["action"][:, :-1]), reset=A(bt["is_first"][:, 1:]),
+            U=A(stream[cursor(c) + shift:cursor(c) + shift + 64 * CUR_STEP].reshape(64, B, 32, 4)),
+            rew=A(bt["reward"][:, 1:]), term=A(np.zeros((B, 64), bool)), vec=A(bt["vector"][:, 1:]),
+            idet=A(np.concatenate([G[g + "start/deter"][:, None], G[g + "feat/deter"]], 1)),
+            isto=A(np.concatenate([G[g + "start/stoch"][:, None], G[g + "feat/stoch"]], 1)),
+            iact=A(np.concatenate([G[g + "act/action"], np.zeros_like(G[g + "act/action"][:, :1])], 1)),
+            irew=A(G[f"c{c}/imagloss/in_rew"]), icon=A(G[f"c{c}/imagloss/in_con"]),
+            lo=A(R[f"c{c}/pre/retnorm/lo/value"]).astype(mx.float32),
+            hi=A(R[f"c{c}/pre/retnorm/hi/value"]).astype(mx.float32),
+            last=A(last), rterm=A(np.zeros((B, 64), bool)))
+
+    def make(plant=None):
+        sc = dict(SCALES, rep=1.0) if plant == "rep_scale_1" else SCALES
+        slowreg = 0.0 if plant == "slowreg_0" else 1.0
+
+        def loss(P, S, I):
+            Pd = {k[len("dyn/"):]: v for k, v in P.items() if k.startswith("dyn/")}
+            cfg = dict(TOY)
+            tok = M.encoder(P, I["obs"], LAYERS, ACT)
+            o = M.rssm_loss(Pd, dict(deter=I["d0"], stoch=I["s0"]), tok, {"action": I["act"]}, I["reset"],
+                            I["U"], cfg, spec, FREE)
+            rd, rs = (sg(o["deter"]), sg(o["stoch"])) if plant == "reward_grad_off" else (o["deter"], o["stoch"])
+            rc = M.rewcon_loss(P, rd, rs, I["rew"], I["term"], HORIZON)
+            cn = M.rewcon_loss(P, o["deter"], o["stoch"], I["rew"], I["term"], HORIZON)
+            dv = M.dec_vec_loss(P, o["deter"], o["stoch"], {"vector": I["vec"]}, {"vector": (F,)}, LAYERS)
+            L = dict(dyn=o["dyn"], rep=o["rep"], vector=dv["vector"], rew=rc["rew"], con=cn["con"])
+            # imagination, teacher-forced (all under sg in the official loss)
+            x = M.feat2tensor(I["idet"], I["isto"])
+            lv = M._mlp_head_n(P, "val", x, "logits", 3)
+            val = M.twohot_decode(lv, b)
+            slow = sg(M.twohot_decode(M._mlp_head_n(S, "slowval", x, "logits", 3), b))
+            con = I["icon"]
+            ret = M.lambda_return(mx.zeros_like(con), 1.0 - con, I["irew"], val, val, 1.0, 0.95)
+            w = sg(mx.cumprod(con, 1))
+            tar = sg(mx.concatenate([ret, 0 * ret[:, -1:]], 1))
+            L["value"] = (w * (M.twohot_loss(lv, tar, b) + slowreg * M.twohot_loss(lv, slow, b)))[:, :-1]
+            _, _, _, rsc = M.retnorm_perc(I["lo"], I["hi"], ret, 0.01, 1.0, 5.0, 95.0)
+            adv = M.advantage(ret, val, rsc)
+            m = M._mlp_head_n(P, "pol", x, "action/mean", 3)
+            sd = M._mlp_head_n(P, "pol", x, "action/stddev", 3)
+            z = mx.zeros((*m.shape[:-1], 1), mx.float32)
+            pl, aux = M.policy_loss(m, sd, z, I["iact"], mx.zeros(m.shape[:-1], mx.int32), adv, w, 0.1, 1.0, 3e-4)
+            if plant == "adv_not_stopped":       # same forward value, gradient through adv into val
+                lp = aux["logp_c"][:, :-1] + aux["logp_d"][:, :-1]
+                pl = pl - w[:, :-1] * -(lp * sg(adv)) + w[:, :-1] * -(lp * adv)
+            L["policy"] = pl * IMAG_H if plant == "policy_horizon_sum" else pl
+            # repval on the port's own repfeat (repval_grad True)
+            fd, fs = (sg(o["deter"]), sg(o["stoch"])) if plant == "repval_grad_off" else (o["deter"], o["stoch"])
+            xr = M.feat2tensor(fd, fs)
+            lr = M._mlp_head_n(P, "val", xr, "logits", 3)
+            vr = M.twohot_decode(lr, b)
+            sr = sg(M.twohot_decode(M._mlp_head_n(S, "slowval", xr, "logits", 3), b))
+            boot = sg(ret[:, 0].reshape(B, 64))
+            rr = M.lambda_return(I["last"], I["rterm"], I["rew"], vr, boot, 1.0 - 1.0 / HORIZON, 0.95)
+            rt = sg(mx.concatenate([rr, 0 * rr[:, -1:]], 1))
+            wr = mx.logical_not(I["last"]).astype(mx.float32)
+            L["repval"] = (wr * (M.twohot_loss(lr, rt, b) + slowreg * M.twohot_loss(lr, sr, b)))[:, :-1]
+            return sum(L[k].mean() * s for k, s in sc.items())
+        return loss
+
+    def run(c, plant=None, compiled=False, shift=0):
+        M.sample_onehot = sample_no_st if plant == "no_straight_through" else real_sample
+        keep_kl = M.kl_dyn_rep
+        if plant == "kl_sg_swapped":
+            M.kl_dyn_rep = kl_swapped
+        try:
+            P = {n: A(R[f"c{c}/pre/{n}"]) for n in names[c]}
+            S = {k[len(f"c{c}/pre/"):]: A(R[k]) for k in R.files if k.startswith(f"c{c}/pre/slowval/")}
+            f = mx.value_and_grad(make(plant))
+            f = mx.compile(f) if compiled else f
+            tot, gr = f(P, S, inputs(c, shift))
+            mx.eval(tot, gr)
+            return float(tot), {f"c{c}/grad/{n}": np.array(gr[n]) for n in names[c]}
+        finally:
+            M.sample_onehot, M.kl_dyn_rep = real_sample, keep_kl
+
+    gold = {c: {f"c{c}/grad/{n}": R[f"c{c}/grad/{n}"] for n in names[c]} for c in CALLS}
+    ok, true = True, {}
+    for c in CALLS:
+        for mode in ("eager", "compiled"):
+            tot, gr = run(c, compiled=mode == "compiled")
+            true.setdefault(c, gr)
+            ref = float(R[f"c{c}/loss/total_scaled"])
+            rel = abs(tot - ref) / abs(ref)
+            gp, fails, unch, n = port_gate.gate(gold[c], gr)
+            print(f"L  call {c} {mode:8s}: total {tot:.6f} vs official {ref:.6f} rel {rel:.1e} "
+                  f"({'ok' if rel <= LOSS_TOL else 'FAIL'})")
+            port_gate.report(f"G  call {c} {mode}", gold[c], gr)
+            ok &= rel <= LOSS_TOL and gp
+    hits = [not port_gate.gate(gold[c], run(c, shift=CUR_STEP)[1])[0] for c in CALLS]
+    print(f"C  posterior noise one step late: gate FAILS on {sum(hits)}/{len(CALLS)} calls")
+    ok &= all(hits)
+    caught = 0
+    for name in GRAD_PLANTS:
+        hits, live = [], []
+        for c in CALLS:
+            gr = run(c, plant=name)[1]
+            if all(np.array_equal(gr[k], true[c][k]) for k in gr):
+                continue
+            live.append(c)
+            hits.append(not port_gate.gate(gold[c], gr)[0])
+        caught += bool(live) and all(hits)
+        print(f"P  planted {name:20s}: gate FAILS on {sum(hits)}/{len(live)} calls where it changes the gradient "
+              f"(no-op at {[c for c in CALLS if c not in live]})")
+    good = ok and caught == len(GRAD_PLANTS)
+    print(f"RUNG 13b-grads: port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(GRAD_PLANTS)})")
+    return 0 if good else 1
+
+
+
 def main():
+    if "--grads" in sys.argv:
+        return main_grads()
     if "--repval" in sys.argv:
         return main_repval()
     if "--imagloss-vq" in sys.argv:
