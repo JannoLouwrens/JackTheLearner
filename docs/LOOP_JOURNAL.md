@@ -4161,3 +4161,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `tests/test_j24_chain.py` ALL PASS under jack-std: for all three arms the unbroken run == the same run cut twice, each segment a new process (lives, trace rows, actor weights); a carry that drops the normaliser differs (the test can fail); non-J24 arm and off-boundary chunk refused. Smoke seed 951 only.
 - Still to build for (5): the kernel job body + self-advancing resubmit. Nothing launched, prereg not frozen.
 - Philosophy served: 4 (an identity check with a planted break that must fail) and 5 (a ruling becomes a running row the same hour).
+
+## 2026-11-26 13:37–13:50 UTC · JACK · J24 (5) the chain launcher — the last piece before a 'proceed' becomes running seeds
+- Still waiting: J24 (3) freeze and J18 on Director rulings (INBOX 10:14, 10:45, 11:40). Built the rest of J24 (5) on top of the carry (`ac55fe79`).
+- `experiments/j24_launch.py` (`f39f379b`, `2e869da4`): the Kaggle CPU job for one seed's three cells (sighted / blind / shuffled) as children of `run_cell_carried`, carries in the kernel output, segment n resumes the ONE whole carry of n-1; `kernel` writes segments and assembles `j24_s<seed>.json` with the forge's own `assemble`; `chain` runs a seed's segments back to back, waits out the launcher guard, goes on past a failed seed.
+- Freeze guard: no job is built unless the pinned commit's `prereg/eye_bins16.md` says `STATUS: FROZEN` (today's draft is refused — tested) and the seed is 941–943; the job asserts the prereg's sha on the kernel.
+- `tests/test_j24_launch.py` 8/8 under jack-std (refusals before any submit, fake-kernel chain incl. guard wait). Local 3-child smoke seed 951 at 20k detached → `/data/jack-logs/j24/launch_smoke/summary.json` (next slot: read rc 0 ×3, 20,000 decisions each).
+- Philosophy served: 4 (no learner seed can run on an unfrozen prereg — the machine refuses it) and 5 (a ruling turns into three running chains with one command).
