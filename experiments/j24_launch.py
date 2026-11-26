@@ -232,7 +232,8 @@ def kernel(seed: int, pin: str, segment: int = 0) -> dict:
 
 
 TIMING_SEED = 951
-TIMING_T = 5000
+TIMING_T = 20000   # ONE whole carry chunk (jc.CHUNK). 5k failed on Kaggle 11-26 14:39:
+                   # chunk_rule refuses T < a chunk, and 5k = WARMUP would time no training.
 TIMING_FILE = Path("/data/jack-logs/j24/timing_kernel.json")
 
 
@@ -240,11 +241,15 @@ def timing_body(pin: str, T: int = TIMING_T) -> str:
     """J24 (4)'s kernel half (ruling 99: "one kernel 5k a cell"): the three J24
     cells of the SMOKE seed only, T decisions each, fresh, no carry resumed.
     Needs no frozen prereg because no learner seed (941-943) can run in it —
-    the seed is fixed here, not an argument. It measures speed, not eating."""
+    the seed is fixed here, not an argument. It measures speed, not eating.
+    T is one whole chunk (20k, as the box half ran): the carried cell refuses
+    anything that is not whole chunks, which is what sank the 5k kernel."""
     if len(pin) != 40 or any(c not in "0123456789abcdef" for c in pin):
         raise rr.Refused("j24_launch: --pin must be a full 40-hex commit sha")
-    if not 0 < int(T) <= 20000:
-        raise rr.Refused("j24_launch: a timing cell is 1..20000 decisions")
+    if int(T) != jc.CHUNK:
+        raise rr.Refused(f"j24_launch: a timing cell is exactly one carry chunk ({jc.CHUNK} "
+                         f"decisions): a cell runs in whole chunks, and WARMUP {5000} alone "
+                         f"would time no training")
     from experiments.pilot_b import KERNEL_PINS
     body = _JOB.split('assert hashlib.sha256(open(__PREREG__')[0]
     body += (

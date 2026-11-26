@@ -150,7 +150,9 @@ def test_timing_body_runs_only_the_smoke_seed():
     compile(b, "timing", "exec")
     assert "951" in b and not any(str(s) in b for s in j.SEEDS)
     assert "__" not in b.replace("__name__", "")
-    for bad in (("abc", 5000), ("a" * 40, 0), ("a" * 40, 20001)):
+    assert j.TIMING_T == j.jc.CHUNK and f", {j.jc.CHUNK}," in b
+    j.jc.rr.chunk_rule(j.TIMING_T, j.jc.CHUNK, 32, 5000)   # the rule that sank the 5k kernel
+    for bad in (("abc", 20000), ("a" * 40, 0), ("a" * 40, 5000), ("a" * 40, 20001)):
         try:
             j.timing_body(*bad)
         except j.rr.Refused:
