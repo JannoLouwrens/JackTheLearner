@@ -344,6 +344,67 @@ def test_pilot_b_kernels_cover_the_registered_35_runs_once():
         raise AssertionError("an unknown arm must refuse")
 
 
+# ---- S20 / ruling 123: look 1 read with ten runs home -----------------------
+def _mixed(seed, n, rate):
+    import numpy as np
+    r = np.random.default_rng(seed)
+    return [Outcome(float(r.integers(1000, 50_000)), True) if r.random() < rate
+            else Outcome(float(T * 10), False) for _ in range(n)]
+
+
+def test_s20_look1_p_same_at_10_and_20_runs():
+    from experiments.harness import compare
+    from experiments.harness.looks import compare_looks
+    a, b = _mixed(1, 20, 0.6), _mixed(2, 20, 0.5)
+    full = compare(a, b, n_perm=300, rng=7)
+    for k in (10, 13, 19):
+        v = compare_looks(a[:k], b[:k], n_perm=300, rng=7)
+        assert v.p1 == full.p1 and v.look == 1, (k, v, full)
+    assert compare_looks(a, b, n_perm=300, rng=7) == full   # >= 20: compare itself
+
+
+def test_s20_planted_look1_winner_stops_at_10():
+    from experiments.harness.looks import compare_looks
+    fast = [Outcome(1000.0 + i, True) for i in range(10)]
+    slow = [Outcome(float(T), False) for _ in range(10)]
+    v = compare_looks(fast, slow, n_perm=500, rng=0)
+    assert v.decision == "A_DIFFERS" and v.look == 1 and v.p1 <= 0.025
+    assert compare_looks(slow, list(slow), n_perm=100, rng=0).decision == "FUTILE"
+
+
+def test_s20_null_pair_at_10_needs_look_2_and_under_10_raises():
+    from experiments.harness.looks import compare_looks
+    fast = [Outcome(1000.0 + i, True) for i in range(10)]
+    v = compare_looks(fast, list(fast), n_perm=200, rng=0)
+    assert v.decision == "NEEDS_LOOK_2" and v.look == 1 and math.isnan(v.p2)
+    for k in (0, 9):
+        try:
+            compare_looks(fast[:k], fast, n_perm=50, rng=0)
+        except ValueError:
+            continue
+        raise AssertionError(f"{k} runs an arm took a look")
+
+
+def test_s20_judge_looks_passes_through_and_keeps_refusals():
+    from experiments.harness.looks import judge_looks
+    prereg, d, pre, runs = _prereg_setup()
+    full = prereg.judge(pre, runs, require_committed=False, root=d)
+    assert judge_looks(pre, runs, require_committed=False, root=d) == full
+    ten = {arm: {rid: runs[arm][rid] for rid in list(runs[arm])[:10]} for arm in runs}
+    v = judge_looks(pre, ten, require_committed=False, root=d)
+    assert v.decision == "NEEDS_LOOK_2" and v.p1 == full.p1   # identical arms
+    gap = {arm: dict(r) for arm, r in ten.items()}
+    del gap["B"]["b3"]
+    gap["B"]["b12"] = runs["B"]["b12"]
+    for bad in (gap, {"A": ten["A"], "B": dict(list(ten["B"].items())[:9])},
+                {**ten, "C": {"c0": [(1000, 6)] * 3}}):
+        try:
+            judge_looks(pre, bad, require_committed=False, root=d)
+        except (prereg.Refused, ValueError):
+            continue
+        raise AssertionError(f"judge_looks read an unbalanced look 1: {list(bad)}")
+
+
 if __name__ == "__main__":
     import sys
     fails = 0
