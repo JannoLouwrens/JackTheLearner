@@ -4097,3 +4097,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Next-up 2 done: `j24_class_probe --paint kind` 23/23 worlds one food look.
 - J14 (b): Colab loop pid 3514759 killed by number; `kws_row kaggle2 s2` (`c62dcf33`) → Kaggle: "weekly GPU quota of 30.00 hours reached". Our meter said 1.62 h left → INBOX. s2 + twin go to W48 by the order's rule.
 - Philosophy served: 3 (the eye's paint is now the record's, with the old one kept as a must-fail control), 4 (both proofs frozen with controls before a run; a refusal written as a refusal), 6 (free compute only; the expiring hours were tried).
+
+## 2026-11-26 07:38–07:57 UTC · JACK · J26 — the outsider's probe frozen and its logger running
+- J24's two proofs still running (forager on box, toy kernel) — not read; slot took J26 per the Order of work.
+- `experiments/j26_probe.py` (`f117412e`): worlds, babble, size, four eye forms, the probe, seeds, a permuted-label control and both predictions frozen in the docstring before any look was logged.
+- Box timing: 300 decisions 3.89 CPU-s → 200k ≈ 0.72 CPU-h, under the order's 2 h kernel, so the logger runs on the box detached (`/data/jack-logs/j26/`). Fit step not written yet; next slot.
+- Philosophy served: 3 (nothing assumed — measure whether the old eye row ever could have shown him food before blaming it) and 4 (the prediction and its must-fail control written before the run).
