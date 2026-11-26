@@ -4199,3 +4199,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Checked every JACK order: J24 (3) freeze waits on the Director's toy-C ruling (INBOX 10:45/11:40); J18 waits on INBOX 10:14; J14 waits on W48 (Saturday launcher pid 3886689 alive, 6 h); J26, J27 DONE; Next-up 1–3 verified done on disk (mac_first_day.py PARKED line, `--paint kind` in j24_class_probe, ruling-111 sentence at the top of WORLD_CARD § J17 hunt).
 - No Kaggle kernel of ours in flight to harvest. No ruling has landed since the 06:40 sitting. Launched nothing, moved no line (ruling 114).
 - Philosophy served: none directly. That is the finding: three JACK orders have been waiting for 4–6 h on Director rulings, and the ready J24 chain (500k fits one segment) is losing free Kaggle CPU hours while it waits.
+
+## 2026-11-26 17:22–17:35 UTC · JACK · J14 (b) the ear's last two runs armed for W48
+- No ruling since the 06:40 sitting: J24 (3) and J18 still wait (INBOX 10:14, 10:45, 11:40). J14 (b) was the one order with a step I could take: its "s2 + twin on W48 after A's chain" needed a worker awake on Saturday — against ruling 109.
+- `scripts/kws_w48_launch.py` (poller, JACK_WATCHER=gpu, pid 29379): fires `kws_row kaggle2 s2 twin` from its own clean worktree 15 min after A's seed-10 LAUNCH line (anchored; launch_detached's header does not match — tested as the control), fallback Sat 02:01 UTC if A's launcher dies. Tests 5/5; dry-run log beside the live one.
+- Philosophy served: 4 (the ear's known-answer row gets its last seed and its must-fail twin) and 6 (W48's free GPU hours used without anyone awake).
