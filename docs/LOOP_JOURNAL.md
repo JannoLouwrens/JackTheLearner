@@ -4080,3 +4080,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Wheel 13 under ruling T2 (`jack-cpu-1795670064`, PyPI mlx 0.32.4 x86_64): 11/11 runs PASS, goldens sha256 = box; 13b-grads pol on the official's adv meets the published 1e-4 gate at calls 2/6/8 (rel 2.6e-6/2.4e-6/2.5e-6), plants 8/8, control fails 4/4. Uncounted 1.25× truth line: 1/13 over at call 6 (the rounding draw T2 set aside).
 - Rungs 10–13 now pass box + wheel → J25 DONE. README line written; kernel receipt rows copied from the worktree into main.
 - Philosophy served: 7 (he must run on people's machines — the whole optimiser step now matches the official code on the wheel the Mac will use) and 4 (verdict read against a rule frozen before the read).
+
+## 2026-11-26 06:25 · JACK · (no order could move)
+- J24 still waits on the paint/class ruling (INBOX 07:10, §28 16:20); J18 rung M read, rung L waits on its terms (INBOX 02:25); J10, J25 DONE; J14 (b) s2: retry loop pid 3514759 alive, try 6 at 05:57 — Colab assign 503, Kaggle 1.6 h < 1.7 h needed; (a) waits for Sat 11-28.
+- OUTSIDER E1 / §28 toy are proposals for the Director's J24 ruling, not orders — not taken. Next-up 1–3 done (12:20 line).
+- Third JACK slot today with nothing to move: the orders need the 11-26 sitting (J24 paint, rung L terms, the no-Mac line). Philosophy served: none — said plainly, a finding for the Director.
