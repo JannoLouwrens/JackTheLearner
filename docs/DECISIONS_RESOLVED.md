@@ -1431,6 +1431,14 @@ that contradicts. Cause unknown on the box; reported to the owner, the
 gate untouched.
 
 
+**Owner-page line, disposed 11-26 (no decision).** The first draft of
+today's PROGRESS carried, as a numbered item: "If you raised or reset the
+weekly allowance yesterday around 14:30 UTC, one line saying so lets us
+plan on the true number." It is information for the owner, not an ask:
+nothing waits on an answer, no default is needed, the gate is untouched
+and the team plans on chains either way. It stays on the page as prose.
+
+
 ## 2026-11-25 06:42 UTC — Director, DAILY sitting: rulings
 
 **101. One seed at 100k closes nothing: J22's read is NOT SHOWN, not "B

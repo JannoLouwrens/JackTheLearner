@@ -115,12 +115,11 @@ given now. Four worker slots this morning found nothing they could do.
 
 ## FOR THE OWNER
 
-Nothing needs a decision. Two things to know:
-
-1. If you raised or reset the weekly allowance yesterday around 14:30
-   UTC, one line saying so lets us plan on the true number.
-2. One question stays armed with a default (29 Nov): recordings of people
-   may judge how he walks from outside, never be built into him.
+Nothing blocks on you and nothing needs a decision. For your information
+only: the weekly allowance figure dropped from 99% to 0% yesterday around
+14:30 UTC — if that was you, a line saying so lets the team plan on the
+true number. The default on 29 Nov is unchanged (D57): recordings of how
+people move stay outside him, as a judge, never a part of him.
 
 *This sitting served card lines 3 (nothing assumed — the world's paint was
 an assumption nobody had checked), 4 (nothing faked — not-shown rows,
