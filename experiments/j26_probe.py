@@ -50,7 +50,8 @@ TIMING (box, 11-26 07:38, jack-std, nice 19, load 4.6): 300 decisions
 =============================================================================
 
     PYTHONPATH=. /data/venvs/jack-std/bin/python -m experiments.j26_probe time 300
-    ... j26_probe log OUTDIR [WORLD ...]      # the logger (Kaggle CPU kernel)
+    ... j26_probe log OUTDIR [WORLD ...]      # the logger (box, detached)
+    ... j26_probe fit LOOKS OUT.json          # the probe (20 epochs, all looks)
 """
 import json
 import math
@@ -143,6 +144,102 @@ def log_world(seed: int, n: int, out: str | None):
     return rec
 
 
+# ---- the probe (frozen in the docstring above; nothing here changes it) ----
+
+def load(looks: str, worlds):
+    recs = [dict(np.load(os.path.join(looks, f"w{s}.npz"))) for s in worlds]
+    return recs
+
+
+def forms(rec):
+    """R, C, K, B inputs and labels for one world's labelled decisions."""
+    from experiments import fast_sim as FS
+    ok = np.isfinite(rec["label"][:, 0])
+    d = rec["dist"][ok].astype(np.float32)
+    gid = rec["gid"][ok].astype(np.int64)
+    tex = rec["tex"][ok].astype(np.float32)
+    n = d.shape[0]
+    R = np.stack([d, tex], axis=2).reshape(n, 256)
+    food = np.isin(gid, rec["foods"].astype(np.int64))
+    texc = np.where(food, FOOD_CODE, tex)
+    C = np.stack([d, texc], axis=2).reshape(n, 256)
+    kind = np.zeros((n, 128, FS.N_KINDS), dtype=np.float32)
+    hit = gid >= 0
+    ki = rec["kind_of"].astype(np.int64)[np.where(hit, gid, 0)]
+    ii, jj = np.nonzero(hit)
+    kind[ii, jj, ki[ii, jj]] = 1.0
+    K = np.concatenate([d[:, :, None], kind], axis=2).reshape(n, 128 * (1 + FS.N_KINDS))
+    B = np.stack([FS.bins16(k) for k in K])
+    return dict(R=R, C=C, K=K, B=B), rec["label"][ok].astype(np.float32)
+
+
+def stack(recs):
+    X, Y = {}, []
+    for r in recs:
+        f, y = forms(r)
+        for k, v in f.items():
+            X.setdefault(k, []).append(v)
+        Y.append(y)
+    return {k: np.concatenate(v) for k, v in X.items()}, np.concatenate(Y)
+
+
+def probe(Xtr, Ytr, Xte, Yte, seed: int, epochs: int = 20) -> float:
+    import torch
+    torch.manual_seed(seed)
+    rng = np.random.default_rng(seed)
+    net = torch.nn.Sequential(torch.nn.Linear(Xtr.shape[1], 256), torch.nn.ReLU(),
+                              torch.nn.Linear(256, 256), torch.nn.ReLU(),
+                              torch.nn.Linear(256, 2))
+    opt = torch.optim.Adam(net.parameters(), lr=1e-3)
+    xt, yt = torch.from_numpy(Xtr), torch.from_numpy(Ytr)
+    for _ in range(epochs):
+        order = torch.from_numpy(rng.permutation(len(Xtr)))
+        for i in range(0, len(Xtr), 256):
+            b = order[i:i + 256]
+            loss = torch.nn.functional.mse_loss(net(xt[b]), yt[b])
+            opt.zero_grad(); loss.backward(); opt.step()
+    with torch.no_grad():
+        p = net(torch.from_numpy(Xte)).numpy()
+    sse = ((p - Yte) ** 2).sum()
+    sst = ((Yte - Yte.mean(axis=0)) ** 2).sum()
+    return float(1.0 - sse / sst)
+
+
+def fit(looks: str, out: str, epochs: int = 20, cap: int | None = None):
+    import torch
+    torch.set_num_threads(1)
+    Xtr, Ytr = stack(load(looks, TRAIN))
+    Xte, Yte = stack(load(looks, TEST))
+    if cap:                                   # smoke only; never the reading
+        Xtr = {k: v[:cap] for k, v in Xtr.items()}; Ytr = Ytr[:cap]
+    res = dict(n_train=int(len(Ytr)), n_test=int(len(Yte)), epochs=epochs,
+               cap=cap, r2={}, control_r2=[])
+    for form in ("R", "C", "K", "B"):
+        res["r2"][form] = []
+        for s in SEEDS:
+            t0 = time.process_time()
+            r2 = probe(Xtr[form], Ytr, Xte[form], Yte, s, epochs)
+            res["r2"][form].append(round(r2, 4))
+            print(json.dumps({"form": form, "seed": s, "r2": round(r2, 4),
+                              "cpu_s": round(time.process_time() - t0, 1)}), flush=True)
+    for s in SEEDS:
+        perm = np.random.default_rng(s).permutation(len(Ytr))
+        r2 = probe(Xtr["K"], Ytr[perm], Xte["K"], Yte, s, epochs)
+        res["control_r2"].append(round(r2, 4))
+        print(json.dumps({"form": "K-permuted", "seed": s, "r2": round(r2, 4)}), flush=True)
+    m = {k: float(np.mean(v)) for k, v in res["r2"].items()}
+    res["mean"] = {k: round(v, 4) for k, v in m.items()}
+    res["control_mean"] = round(float(np.mean(res["control_r2"])), 4)
+    res["void"] = bool(max(res["control_r2"]) > 0.05)
+    res["P1_R_below_0.10"] = bool(m["R"] < 0.10)
+    res["P2_K_B_above_0.80"] = bool(m["K"] > 0.80 and m["B"] > 0.80)
+    res["R_passes_0.80_diagnosis_wrong"] = bool(m["R"] > 0.80)
+    with open(out, "w") as f:
+        json.dump(res, f, indent=1)
+    print(json.dumps(res), flush=True)
+    return res
+
+
 def main():
     cmd = sys.argv[1]
     if cmd == "time":
@@ -163,6 +260,8 @@ def main():
                 continue
             log_world(s, PER_WORLD, out)
             print(f"w{s} done", flush=True)
+    elif cmd == "fit":                       # fit LOOKS OUT [EPOCHS CAP] (smoke only)
+        fit(sys.argv[2], sys.argv[3], *(int(x) for x in sys.argv[4:6]))
     else:
         raise SystemExit(f"unknown {cmd!r}")
 
