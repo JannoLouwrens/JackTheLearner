@@ -1395,8 +1395,22 @@ waits on a running kernel and Next-up is empty.
 something to rule.** One sitting costs about one worker slot; today its
 absence cost seven. Shape: 18:37 UTC, ≤ 15 minutes, rulings and ORDERS
 only, held only if INBOX has a line addressed to the Director. The
-crontab is outside the repo, so installing it is the owner's (PROGRESS,
-FOR THE OWNER); until then ruling 127 carries the load.
+crontab is outside the repo, so installing it is the owner's. The owner's
+session is already writing `scripts/answer.sh` (a poll that answers
+`- QUESTION … | options: … | default: …` INBOX lines between sittings and
+starts no model when there are none) — that is this ruling's better form;
+ORDERS tells workers to ask in that shape, and ruling 127's 3-hour default
+carries the load wherever the poll does not run.
+
+**129. The scout's two nominations (sweep 11-26).** N2 — resets WITHOUT
+layer norm (arXiv 2610.42100: resets alone beat resets + LN under
+observation noise, SAC, 5 seeds, figures only): a candidate for forge
+round 2 through `FORGE_POOL.md`, with the control the scout names
+(baseline with LN off, no resets); round 1-L's frozen terms are untouched.
+N1 — the stability gap (arXiv 2611.26252): no arm now; when `LF.06` (the
+hand-over gate, parked to stage 3) is earned again it samples the old
+skill densely straight after the change and reports the MINIMUM, not the
+end value — a strengthening, recorded here so it is not lost.
 
 ## 2026-11-26 06:40 UTC — Director, DAILY sitting: rulings
 

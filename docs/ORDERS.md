@@ -26,8 +26,11 @@ missed gate stops THAT ORDER's next step, never the lane: write the miss,
 take the next order, then Next-up. (c) A question that only chooses between
 options an order already sized, and moves no pass line, clause, control or
 exemption (ruling 114 stands), is written to INBOX with YOUR choice first;
-if no sitting answers in 3 hours, your choice is the ruling — act on it and
-say so in the state line. (d) A slot may end "nothing to do" only when
+if nothing answers in 3 hours, your choice is the ruling — act on it and
+say so in the state line. Write it in the shape the owner's answering poll
+reads (`scripts/answer.sh`, being installed by the owner's session):
+`- QUESTION (lane, order): <decision> | options: <A / B> | default: <what
+I do if unanswered>` — then carry on with other work. (d) A slot may end "nothing to do" only when
 every order is waiting on a running kernel AND Next-up is empty; say which
 kernels.
 **A line is not the worker's to move (ruling 114).** After a read has
@@ -214,7 +217,9 @@ candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
 probes of other seats stay in `LAB.md`. The lab's hindsight eye (rulings
 84, 98, 107): ENTERED, waits for J24's read. Lab's next unit, box-minutes,
 no learner: on `paint="kind"`, does his own live table find WHICH kind
-feeds him (first imprint), same judge worlds and kill bars as 11-22.
+feeds him (first imprint), same judge worlds and kill bars as 11-22. Then: enter
+the scout's N2 (resets WITHOUT layer norm, arXiv 2610.42100) in
+`FORGE_POOL.md` with its prior, for round 2 (ruling 129).
 **Parked or closed:** the MLX port (ruling 113). `D1.0`, `T2.01`, `LF.06`,
 `LC.09`, `CR.01`, `LF.04` — "to earn again" on the chosen brain. `NE.01`,
 `PS.02`/`.05`/`.06`/`.08`, the place key, the needs-hidden row → stage 3.
