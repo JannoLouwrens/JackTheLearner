@@ -11,6 +11,8 @@
 
 ## 1. Which whole brain, and how to test brains fairly (2026-11-15; serves M2, M3, order J1)
 
+> **RE-CHECK IN PROGRESS 2026-11-26 04:10 UTC** (Researcher rule 4, oldest section): against 2024–26 work — (A) model-free vs world model under one config at 100k–1M; (B) survival benchmarks at 1M; (C) Dreamer's cost on free compute now that no Mac is coming. Notes: `/data/jack-research/scratch_sec1r_{A,B,C}/`. The text below is still the 11-15 one.
+
 **Already known**
 - One Dreamer configuration learned 150+ tasks in 8 domains from scratch, incl. Minecraft diamonds from image plus health/hunger scalars (DreamerV3, Nature 2025). DayDreamer learned on real robots in 1–8 h (~57k–72k decisions, inf) where SAC, Rainbow and PPO failed.
 - Replay learners collect food on ray/lidar tasks in ~60k–170k decisions (Banana DQN ~138k, community result; lidar Goal SAC/TD3 ~100k). PPO: 0.8–2M, same tasks. Sparse or homeostatic versions: 2–50M+.
