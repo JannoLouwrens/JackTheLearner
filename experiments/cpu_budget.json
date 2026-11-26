@@ -2100,15 +2100,15 @@
         "detached:launch_M_chainA_rerun.log": 158.6,
         "detached:log.txt": 2064.24,
         "detached:run.log": 15692.07,
-        "detached:sat_launch.log": 26.68,
+        "detached:sat_launch.log": 28.76,
         "detached:timing_kernel.log": 32.95,
-        "detached:w48_launch.log": 3.98,
+        "detached:w48_launch.log": 5.47,
         "detached:wheel_13_launch.log": 73.77,
         "detached:wheel_13p_launch.log": 26.86,
         "detached:wheel_13t2_launch.log": 88.39,
         "detached:wheel_13u_launch.log": 28.23
       },
-      "used_s": 24877.45
+      "used_s": 24881.02
     }
   },
   "last_child_s": {
