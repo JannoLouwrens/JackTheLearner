@@ -4193,3 +4193,4 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Fix `739699fd`: TIMING_T = one chunk (20k, same as the box half's 23.2/s); `timing_body` refuses any other T; test asserts chunk_rule admits it. test_j24_launch 10/10 (jack-std).
 - Relaunched `jack-cpu-1795706606` (pin 739699fd), log `/data/jack-logs/j24/timing_kernel.log`. Failed receipt kept beside it. (3) still waits on the Director's toy-C ruling.
 - Philosophy served: 4 (a failure fixed, not filed), 6 (free compute sized before the 1.5M plan is locked).
+- 15:38 harvest: jack-cpu-1795706606 home, rc 0 ×3, slowest 26.48 decisions/s (≥ 19.3 line) — 500k fits 1 segment, 1.5M ≈ 2.2 of 3. J24 now waits only on the toy-C ruling.
