@@ -1319,10 +1319,13 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
             print(f"!! {job_id}: {fetch_note}", file=sys.stderr, flush=True)
 
     # Kaggle's own run window closes EVERY kernel's bill when its log is
-    # readable (S15 (3)); the polled window stays the fallback.
+    # readable (S15 (3)); the polled window stays the fallback. A FRESH push
+    # cannot have run longer than push -> now, so there the log may only
+    # shorten the bill (S19: T0.12 caught a 2 362 s log billed for a ~0 s run —
+    # a log longer than the watch is another version's, not this kernel's).
     window = _kaggle_log_window(Path(log_path)) if log_path else None
     if window is not None:
-        billable_s = window
+        billable_s = window if reuse else min(window, time.time() - t_meter_open)
     elif reuse:
         # THE 15x SCAR (10th overseer audit, 2026-08-12). With the meter opened
         # at the slug's submission epoch and closed at `time.time()`, a reattach
