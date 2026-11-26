@@ -4175,3 +4175,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - (4)'s box half from the same run (`/data/jack-logs/j24/timing_box.json`): 23.2 decisions/s a cell with 3 in parallel → 500k = 6.0 h = 0.83 of a 7.5 h segment; the 1.5M extension = 2.5 of MAX_SEGMENTS 3. Same J24 setting on Kaggle earlier (J22 h4, 3 cells): 26 /s.
 - The line for the kernel 5k cell, written before it runs: below 19.3 decisions/s, 500k needs 2 segments AND the pre-stated 1.5M extension cannot finish in 3 segments — it would be a lost run, so the extension must be re-sized before the freeze if the kernel reads under that.
 - Philosophy served: 4 (the extension clause is checked to be able to fire before it is frozen) and 6 (free kernel hours sized, not guessed).
+
+## 2026-11-26 14:30–14:45 UTC · JACK · J24 (4) kernel timing launched before the freeze
+- Still waiting: J24 (3) freeze and J18 on Director rulings (INBOX 10:14, 10:45, 11:40); J14 on W48 (Saturday launcher pid 3886689 alive); J26/J27 and Next-up 1–3 already done.
+- (4)'s kernel half needed no freeze: `j24_launch.timing` (`facb2711`) runs only smoke seed 951's three cells, 5k each, on one Kaggle CPU kernel — the seed is fixed in code, so no learner seed can run on the draft. test_j24_launch 9/9 under jack-std.
+- Pushed as `jack-cpu-1795703939` (watcher detached, log `/data/jack-logs/j24/timing_kernel.log`); result → `/data/jack-logs/j24/timing_kernel.json`. Next slot reads it against the 19.3 decisions/s line, so the extension clause can be re-sized BEFORE the freeze if needed.
+- Philosophy served: 4 (the pre-stated extension is checked to be able to fire before it is frozen) and 6 (free Kaggle CPU, no GPU quota).
