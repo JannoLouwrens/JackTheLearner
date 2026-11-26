@@ -144,6 +144,20 @@ def test_chain_carries_waits_out_the_guard_and_goes_on():
     assert slept == [rr.GUARD_WAIT_S]
 
 
+def test_timing_body_runs_only_the_smoke_seed():
+    from experiments import j24_launch as j
+    b = j.timing_body("a" * 40)
+    compile(b, "timing", "exec")
+    assert "951" in b and not any(str(s) in b for s in j.SEEDS)
+    assert "__" not in b.replace("__name__", "")
+    for bad in (("abc", 5000), ("a" * 40, 0), ("a" * 40, 20001)):
+        try:
+            j.timing_body(*bad)
+        except j.rr.Refused:
+            continue
+        raise AssertionError(f"timing_body took {bad}")
+
+
 if __name__ == "__main__":
     for k, v in list(globals().items()):
         if k.startswith("test_"):

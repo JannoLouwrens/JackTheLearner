@@ -231,6 +231,64 @@ def kernel(seed: int, pin: str, segment: int = 0) -> dict:
     return raw
 
 
+TIMING_SEED = 951
+TIMING_T = 5000
+TIMING_FILE = Path("/data/jack-logs/j24/timing_kernel.json")
+
+
+def timing_body(pin: str, T: int = TIMING_T) -> str:
+    """J24 (4)'s kernel half (ruling 99: "one kernel 5k a cell"): the three J24
+    cells of the SMOKE seed only, T decisions each, fresh, no carry resumed.
+    Needs no frozen prereg because no learner seed (941-943) can run in it —
+    the seed is fixed here, not an argument. It measures speed, not eating."""
+    if len(pin) != 40 or any(c not in "0123456789abcdef" for c in pin):
+        raise rr.Refused("j24_launch: --pin must be a full 40-hex commit sha")
+    if not 0 < int(T) <= 20000:
+        raise rr.Refused("j24_launch: a timing cell is 1..20000 decisions")
+    from experiments.pilot_b import KERNEL_PINS
+    body = _JOB.split('assert hashlib.sha256(open(__PREREG__')[0]
+    body += (
+        "from experiments.j24_launch import run_parallel\n"
+        "from experiments.brain_b import versions\n"
+        "_T1 = _t.time()\n"
+        "r = run_parallel(__CELLS__, os.environ['JACK_OUT'], __T__,\n"
+        "                 carry_root=os.path.join(os.environ['JACK_OUT'], 'carry'))\n"
+        "json.dump({'cells': r, 'versions': versions(), 'round': 'j24-timing', 'pin': _PIN,\n"
+        "           'setup_s': _T1 - _T0, 'run_wall_s': _t.time() - _T1, 'nproc': os.cpu_count()},\n"
+        "          open(os.path.join(os.environ['JACK_OUT'], __SUMMARY__), 'w'))\n"
+        "print('DONE', flush=True)\n")
+    body = body.replace("import hashlib, json, os", "import json, os")
+    return (body.replace("__CELLS__", repr([(a, TIMING_SEED) for a in jc.J24_ONLY]))
+            .replace("__T__", repr(int(T)))
+            .replace("__PINS__", repr(list(KERNEL_PINS)))
+            .replace("__SUMMARY__", repr(SUMMARY))
+            .replace("__PIN__", repr(pin)))
+
+
+def timing(pin: str, T: int = TIMING_T) -> dict:
+    """Submit the timing kernel (Kaggle CPU) and write TIMING_FILE."""
+    from experiments.gpu import build_job, result_json, submit
+    if TIMING_FILE.exists():
+        raise rr.Refused(f"j24_launch: {TIMING_FILE} is already home")
+    sub = submit(build_job(timing_body(pin, T)), prefer="kaggle-cpu", est_hours=1.0,
+                 timeout_s=3 * 3600, fetch=[SUMMARY], fetch_only=True)
+    if not (sub.ok and SUMMARY in sub.artifacts):
+        raise RuntimeError(f"j24 timing kernel: {sub.message}")
+    r = result_json(sub, SUMMARY)
+    rates = {k: c.get("decisions_per_s") for k, c in r["cells"].items()}
+    out = {"what": f"J24 (4) kernel half: 3 cells in parallel on one Kaggle CPU kernel, "
+                   f"seed {TIMING_SEED}, {T} decisions each",
+           "pin": pin, "kernel": {"job_id": sub.job_id, "duration_s": sub.duration_s},
+           "setup_s": r.get("setup_s"), "run_wall_s": r.get("run_wall_s"),
+           "nproc": r.get("nproc"), "decisions_per_s": rates,
+           "slowest_decisions_per_s": min(v for v in rates.values() if v) if any(rates.values()) else None,
+           "line_written_before": "below 19.3 decisions/s the 1.5M extension cannot fit 3 segments",
+           "cells": r["cells"]}
+    TIMING_FILE.write_text(json.dumps(out, indent=1) + "\n")
+    print(json.dumps({k: out[k] for k in ("decisions_per_s", "slowest_decisions_per_s", "setup_s")}), flush=True)
+    return out
+
+
 def _from_artifacts(artifacts: dict, cl: list) -> dict | None:
     """No summary: per-cell files, final else partial (cut) else not_found — never invented."""
     from experiments.pilot_b import from_partial, partial_file
@@ -286,7 +344,7 @@ def chain(seeds: list, pin: str, sleep=time.sleep, kernel_fn=None) -> dict:
 def main(argv):
     import argparse
     p = argparse.ArgumentParser()
-    p.add_argument("cmd", choices=["cell", "job", "kernel", "chain"])
+    p.add_argument("cmd", choices=["cell", "job", "kernel", "chain", "timing"])
     p.add_argument("--arm")
     p.add_argument("--seed", type=int)
     p.add_argument("--T", type=int)
@@ -312,6 +370,8 @@ def main(argv):
         kernel(a.seed, a.pin, a.segment)
     elif a.cmd == "chain":
         chain(a.seeds, a.pin)
+    elif a.cmd == "timing":
+        timing(a.pin, a.T or TIMING_T)
 
 
 if __name__ == "__main__":
