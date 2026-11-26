@@ -4230,7 +4230,7 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Launched three self-advancing chains from that pin, one seed's three cells (sighted / blind / shuffled bins) a Kaggle CPU kernel, 500k decisions: jack-cpu-1795721024 / -034 / -080 for 941 / 942 / 943, all RUNNING at 19:26. Expected home ≈ 01:00 UTC; the read is the frozen EATS rule.
 - Philosophy served: 3 and 4. The eye is tested against the published foragers' design with two twins that must fail, and the rule was frozen before any seed ran. Also 6: free Kaggle CPU that was going idle while the order waited is now in use.
 
-## 2026-11-26 19:37–19:50 UTC · JACK · J18 continuation rule (ruling 123)
+## 2026-11-26 19:37–19:41 UTC · JACK · J18 continuation rule (ruling 123)
 - J24's three kernels run (home ≈ 01:00); took J18. Taught the forge a continuation round in a NEW file `experiments/forge/continuation.py` (`f618bba5`): rung L only, parent round + its judge-lock commit + where its control ran must be named, ≤ 2 candidates; no parent → `validate_spec` unchanged (a no-S round still refuses). Planted test; test_forge_round 27/27, r1_spec 8/8.
-- Finding: the order said edit `validate_spec`, but `forge/__init__.py` is in round 1's judge lock — the edit turned r1's lock red (2 tests), so it was reverted. `load_round` (also locked) still calls `validate_spec`; `r1_run` needs its own loader for r1L. Spec not frozen, nothing launched.
+- Finding: the order said edit `validate_spec`, but `forge/__init__.py` is in round 1's judge lock — the edit turned r1's lock red (2 tests), so it was reverted. `r1_run` loads r1L fine (it never validates) but its `cells()` gives every arm every seed — 1-L needs per-arm tranche seeds; that is the next step. Spec not frozen, nothing launched.
 - Philosophy served: 4 (the judge of a finished round was kept unmoved) and 3 (the 1M race of published settings gets one step closer).
