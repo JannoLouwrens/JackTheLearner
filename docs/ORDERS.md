@@ -237,8 +237,26 @@ there was run on the per-geom paint and reads NOT SHOWN ON THIS PAINT
 
 ## SYSTEM — work on the machine (max 3 open)
 
-*Order of work: **S18** → **S17** → **S16**. A fix a RUNNING Jack kernel
+*Order of work: **S19** → **S18** → **S17**. A fix a RUNNING Jack kernel
 needs goes first (ruling 54).*
+
+### S19 — The GPU-hour accounting test went red at 04:43 today: repair by cause
+part: (machine — truthful gates; card line 4 "a failure is fixed, not filed") · stage: — · step: —
+**Do.** `T0.12` was PASS until `fd9c80de` (S15 (3)) changed
+`t0_12_gpu_budget.py`; the regate re-bought it and recorded FAIL — "gpu
+7820.0s metered, recorded in 1.75s", clause a22 (`regate.log` 11-26
+04:43:08). It now stands red in front of `T0.24` and `T0.33`. Read the
+clause FROM THE LEDGER ROW and the diff of `fd9c80de` on the files the
+spec imports (do NOT run the spec to look — running writes the ledger).
+Decide by evidence which is wrong: the new billing (closes from the
+kernel log) feeding the test a figure it rightly rejects, or the test
+measuring something S15 legitimately changed. Fix the cause; a planted
+case for it; only then re-run `T0.12`, then `T0.24`, `T0.33`. No threshold
+moves; a test that is wrong is re-registered by the next sitting, not
+edited (ruling 114) — INBOX line with the evidence.
+serves: philosophy 4, 5 · the GPU meter is what standing objective 3 is read from.
+**done when:** `T0.12` is PASS by repair (or its wrong clause is named in INBOX with evidence), and `T0.24`, `T0.33` are re-bought.
+state: (new 11-26.)
 
 ### S18 — The GPU submit guard must not die on another lane's prose
 part: (machine — the free GPU; standing objective 3) · stage: — · step: —
@@ -269,20 +287,7 @@ serves: philosophy 5, 6.
 **done when:** the planted test passes and the next real Colab submit's log shows no "session busy" refusal after a failed one.
 state: (new 11-25, from INBOX 11-24 18:35.)
 
-### S16 — A slot with nothing to do must cost nothing (ruling 97)
-part: (machine — cheaper; the shared meter is the scarce thing) · stage: — · step: —
-**Do.** Built and wired (`bd43f84b`, slug fix `a426fe45`). Open: the first
-real `SKIPPED-IDLE` line in `ladder.log`. With 5/5 sessions running and
-chains self-advancing, slots between harvests should now skip — if three
-consecutive jack slots RUN with all five sessions RUNNING and no ORDERS
-change, read the pre-check's printed reason and fix that cause (planted
-test for it). Never touch the usage stop, the pace switch or `.paused`.
-serves: philosophy 5, 6 · the machine number "slots lost to budget".
-**done when:** the first real SKIPPED-IDLE line is in `ladder.log`.
-state: 11-24 21:55 SYSTEM `bd43f84b`: `scripts/idle_skip.py` wired into `ladder_loop.sh` after the pace gate, lane jack only; planted 8/8 (the four ordered + free session, finished box job, ORDERS edit, no record). `usage_attribution` counts SKIPPED-IDLE apart (selftest P6c).
-state: 11-25 03:15 SYSTEM `a426fe45`: six jack slots 00:22–01:37 RAN on "unreadable" — the pre-check guessed slug `int(receipt ts)`, but gpu.py's t0 is a moment later (…428 was really …429). Now resolved from `kaggle kernels list --mine` (0–600 s window); planted 10/10, live 4/4 resolve RUNNING. Open: first real SKIPPED-IDLE line in `ladder.log`.
-
-**Next up:** (0) `tests/test_gpu_accelerator.py` FAILs `tpu_own_weekly_line`
+**Next up:** (w) S16 stays wired (`bd43f84b`, `a426fe45`): whoever sees the first real `SKIPPED-IDLE` line in `ladder.log` notes it here; three jack slots RUN with 5/5 sessions RUNNING and no ORDERS change → read the pre-check's reason and fix that cause. (0) `tests/test_gpu_accelerator.py` FAILs `tpu_own_weekly_line`
 on HEAD: fix by cause or name why the test is wrong. (1) S13 (a):
 reproduce `scripts/test_lane_guard.sh`'s FAILs of 11-20 on a clean tree.
 (2) **S9** as written 11-20 (`git show 8fde84f5:docs/ORDERS.md`): left
