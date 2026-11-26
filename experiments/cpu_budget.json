@@ -2094,24 +2094,24 @@
         "W0.PL": 92.93,
         "detached:chain.log": 155.11,
         "detached:chain_retry2.log": 59.64,
-        "detached:chain_s941.log": 24.81,
-        "detached:chain_s942.log": 24.79,
-        "detached:chain_s943.log": 25.06,
+        "detached:chain_s941.log": 48.13,
+        "detached:chain_s942.log": 47.77,
+        "detached:chain_s943.log": 48.25,
         "detached:fit.log": 1544.61,
         "detached:kaggle_s2.log": 14.68,
         "detached:kernel.log": 740.46,
         "detached:launch_M_chainA_rerun.log": 158.6,
         "detached:log.txt": 2064.24,
         "detached:run.log": 15692.07,
-        "detached:sat_launch.log": 29.8,
+        "detached:sat_launch.log": 30.82,
         "detached:timing_kernel.log": 32.95,
-        "detached:w48_launch.log": 7.03,
+        "detached:w48_launch.log": 8.03,
         "detached:wheel_13_launch.log": 73.77,
         "detached:wheel_13p_launch.log": 26.86,
         "detached:wheel_13t2_launch.log": 88.39,
         "detached:wheel_13u_launch.log": 28.23
       },
-      "used_s": 24958.28
+      "used_s": 25029.79
     }
   },
   "last_child_s": {

@@ -201,6 +201,85 @@ def test_another_round_moves_every_path_and_r1_keeps_its_own():
         rr.ROUNDS, rr.ROUND, rr.SPEC_PATH, rr.OUT, rr.SEGS = keep
 
 
+def _r1l_like():
+    """A continuation round shaped as ruling 122 orders 1-L (a planted copy,
+    not the frozen file): 20 seeds an arm, tranche 1 = K1 + baseline on
+    1421-1430 first, K2 beside on the same seeds, the twin on 1421-1422;
+    tranche 2 = K1 + baseline on 1431-1440."""
+    s = dict(spec())
+    s["round"] = "r9L"
+    s["parent"] = {"round": "r1", "lock": "2eb2c0f4", "control_source": "C1/C2 at rungs S, M"}
+    s["candidates"] = [c for c in s["candidates"] if c["id"] in ("K1", "K2")]
+    t1, t2 = list(range(1421, 1431)), list(range(1431, 1441))
+    s["rungs"] = {"L": {"decisions": 1_000_000, "seeds": t1 + t2, "tranches": {
+        "1": [{"arms": ["K1", "E-food"], "seeds": t1}, {"arms": ["K2"], "seeds": t1},
+              {"arms": ["E-food-lr0"], "seeds": [1421, 1422]}],
+        "2": [{"arms": ["K1", "E-food"], "seeds": t2}]}}}
+    return s
+
+
+def test_tranched_rung_names_its_own_entrants():
+    """J18 1-L: per-arm tranche seeds. Tranche 1 = 32 runs = 8 kernels, the
+    primary pair's kernels FIRST and never mixed with the beside-arms; the
+    twin only on 1421-1422; tranche 2 packs alone under its own names."""
+    s = _r1l_like()
+    g = rr.groups(s, "L")
+    t1 = {k: v for k, v in g.items() if k.startswith("g1-")}
+    t2 = {k: v for k, v in g.items() if k.startswith("g2-")}
+    assert len(t1) == 8 and len(t2) == 5 and len(g) == 13
+    f1 = [c for v in t1.values() for c in v]
+    assert len(f1) == 32 and len(set(f1)) == 32
+    assert all({a for a, _ in t1[f"g1-{j}"]} == {"K1", "E-food"} for j in range(5))
+    assert sorted(sd for a, sd in f1 if a == "E-food-lr0") == [1421, 1422]
+    assert sorted(sd for a, sd in f1 if a == "K2") == list(range(1421, 1431))
+    f2 = [c for v in t2.values() for c in v]
+    assert {a for a, _ in f2} == {"K1", "E-food"} and {sd for _, sd in f2} == set(range(1431, 1441))
+    assert all(len(v) <= rr.PER_KERNEL for v in g.values())
+    assert len(rr.cells(s, "L")) == 52
+    assert refused(lambda: rr.groups(s, "L", ["K1", "E-food"])), "two sources of entrants"
+    # planted: each of these must be refused
+    import copy
+    bad = copy.deepcopy(s); bad["rungs"]["L"]["tranches"]["1"][0]["arms"] = ["K9"]
+    assert refused(lambda: rr.groups(bad, "L")), "an arm not of the rule"
+    bad = copy.deepcopy(s); bad["rungs"]["L"]["tranches"]["2"][0]["seeds"] = [1501]
+    assert refused(lambda: rr.groups(bad, "L")), "a seed not of the rung"
+    bad = copy.deepcopy(s); bad["rungs"]["L"]["tranches"]["2"][0]["seeds"] = [1430]
+    assert refused(lambda: rr.groups(bad, "L")), "a cell in two tranches"
+    bad = copy.deepcopy(s); bad["rungs"]["L"]["tranches"] = {"a-b": [{"arms": ["K1"], "seeds": [1421]}]}
+    assert refused(lambda: rr.groups(bad, "L")), "a name that breaks g<t>-<j>"
+    # round 1's rungs are untouched by the new field
+    assert rr.tranches(spec(), "S") is None and rr.tranches(spec(), "M") is None
+
+
+def test_continuation_round_is_validated_on_load_and_cells_obey_tranches():
+    """load_spec runs validate_round on a spec with a parent (ruling 123); the
+    `cell` command refuses an (arm, seed) outside every tranche before any
+    learner starts."""
+    import copy
+    import json as _j
+    keep = (rr.ROUNDS, rr.ROUND, rr.SPEC_PATH, rr.OUT, rr.SEGS)
+    root = _tmp()
+    good = _r1l_like()
+    nolock = copy.deepcopy(good); nolock["round"] = "r8L"; del nolock["parent"]["lock"]
+    for sp in (good, nolock):
+        (root / sp["round"]).mkdir()
+        (root / sp["round"] / "spec.json").write_text(_j.dumps(sp))
+    try:
+        rr.ROUNDS = root
+        rr.set_round("r8L")
+        assert refused(rr.load_spec), "a parent without its lock is refused on load"
+        rr.set_round("r9L")
+        assert rr.load_spec()["round"] == "r9L"
+        out = str(root / "x.json")
+        for arm, sd in (("K2", 1431), ("E-food-lr0", 1425)):
+            assert refused(lambda: rr.main(["cell", "--round", "r9L", "--rung", "L",
+                                            "--arm", arm, "--seed", str(sd), "--out", out,
+                                            "--carry-dir", str(root / "c")])), (arm, sd)
+        assert not Path(out).exists()
+    finally:
+        rr.ROUNDS, rr.ROUND, rr.SPEC_PATH, rr.OUT, rr.SEGS = keep
+
+
 def test_child_cells_are_told_their_round():
     """run_parallel's children are new processes: they must get --round, or a
     1-L kernel's cells would read round 1's rule."""

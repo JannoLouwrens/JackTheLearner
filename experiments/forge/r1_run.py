@@ -92,7 +92,18 @@ def summary_file() -> str:
 
 
 def load_spec(path=None) -> dict:
-    return json.loads(Path(path or SPEC_PATH).read_text())
+    """The frozen rule. A continuation round (one naming a `parent`) is checked
+    by `forge.continuation.validate_round` on every load (ruling 123); round 1's
+    rule is read as it always was (its validator is judge-locked)."""
+    spec = json.loads(Path(path or SPEC_PATH).read_text())
+    if "parent" in spec:
+        from experiments.forge import Refused as SpecRefused
+        from experiments.forge.continuation import validate_round
+        try:
+            validate_round(spec)
+        except SpecRefused as e:      # one refusal type for the runner's callers
+            raise Refused(f"r1: {e}") from e
+    return spec
 
 
 def spec_sha256(path=None) -> str:
@@ -547,11 +558,52 @@ def _code_head() -> str:
 
 
 # ---- packing ---------------------------------------------------------------
+def tranches(spec: dict, rung: str) -> dict | None:
+    """A rung that names its own entrants per tranche (J18 round 1-L, ruling
+    122): `rungs[rung]["tranches"] = {name: [{"arms": [...], "seeds": [...]},
+    ...]}`. -> {name: [(arm, seed), ...]} in the rule's order (each block
+    SEED-major), or None for a rung without tranches. Refused: an arm not of
+    the rule, a seed not of the rung, a cell in two tranches, a bad name."""
+    import re
+    tr = spec["rungs"][rung].get("tranches")
+    if tr is None:
+        return None
+    if not isinstance(tr, dict) or not tr:
+        raise Refused(f"r1: rung {rung}: tranches must name at least one tranche")
+    rung_seeds, known, seen, out = set(spec["rungs"][rung]["seeds"]), set(arms(spec)), set(), {}
+    for name, blocks in tr.items():
+        if not re.fullmatch(r"[0-9A-Za-z]+", str(name)):
+            raise Refused(f"r1: tranche name {name!r} (letters and digits only)")
+        if not isinstance(blocks, list) or not blocks:
+            raise Refused(f"r1: tranche {name}: no blocks")
+        out[name] = []
+        for b in blocks:
+            bad_a = [a for a in b.get("arms", []) if a not in known]
+            bad_s = [x for x in b.get("seeds", []) if x not in rung_seeds]
+            if not b.get("arms") or not b.get("seeds") or bad_a or bad_s:
+                raise Refused(f"r1: tranche {name}: block {b} (arms not of the rule "
+                              f"{bad_a}, seeds not of rung {rung} {bad_s})")
+            for sd in b["seeds"]:
+                for a in b["arms"]:
+                    if (a, sd) in seen:
+                        raise Refused(f"r1: cell ({a}, {sd}) is in two tranches/blocks")
+                    seen.add((a, sd))
+                    out[name].append((a, sd))
+    return out
+
+
 def cells(spec: dict, rung: str, climbers: list | None = None) -> list:
     """(arm, seed) for a rung, SEED-major so no arm sits wholly on one slow
     host. S: all ten arms. Above S the entrants are the ladder's to name
     (`climbers` = the arm ids experiments.forge.climb let through, plus the
-    baseline, twin and yardstick) — there is no default."""
+    baseline, twin and yardstick) — there is no default. A rung with
+    `tranches` names its own entrants per arm and seed: every tranche's cells
+    in the rule's order, and `climbers` is refused (two sources of entrants)."""
+    tr = tranches(spec, rung)
+    if tr is not None:
+        if climbers is not None:
+            raise Refused(f"r1: rung {rung} names its entrants in its tranches")
+        return [c for v in tr.values() for c in v]
     if rung == "S":
         if climbers is not None:
             raise Refused("r1: rung S runs every arm of the rule")
@@ -567,7 +619,18 @@ def cells(spec: dict, rung: str, climbers: list | None = None) -> list:
 
 
 def groups(spec: dict, rung: str, climbers: list | None = None) -> dict:
-    c, n = cells(spec, rung, climbers), PER_KERNEL
+    """Kernels of PER_KERNEL runs. A tranched rung packs each tranche on its
+    own (no kernel spans two tranches: tranche 2 may never run) and names the
+    groups g<tranche>-<j>, so tranche 2's raw files never collide with
+    tranche 1's and still match the reader's `{rung}_g*.json`."""
+    n = PER_KERNEL
+    tr = tranches(spec, rung)
+    if tr is not None:
+        if climbers is not None:
+            raise Refused(f"r1: rung {rung} names its entrants in its tranches")
+        return {f"g{t}-{j}": c[n * j:n * (j + 1)]
+                for t, c in tr.items() for j in range((len(c) + n - 1) // n)}
+    c = cells(spec, rung, climbers)
     return {f"g{j}": c[n * j:n * (j + 1)] for j in range((len(c) + n - 1) // n)}
 
 
@@ -922,6 +985,8 @@ def main(argv):
             T, rung = a.decisions, None
         elif a.seed not in spec["rungs"][a.rung]["seeds"]:
             raise Refused(f"r1: seed {a.seed} is not one of rung {a.rung}'s")
+        elif tranches(spec, a.rung) is not None and (a.arm, a.seed) not in cells(spec, a.rung):
+            raise Refused(f"r1: ({a.arm}, {a.seed}) is in none of rung {a.rung}'s tranches")
         if rung is not None and carries(rung) and a.carry_dir is None:
             raise Refused(f"r1: rung {rung} runs carry (J18 step 4): --carry-dir")
         rec = run_arm(a.arm, a.seed, T, rung, partial_path=a.partial,
