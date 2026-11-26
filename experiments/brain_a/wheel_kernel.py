@@ -98,9 +98,17 @@ for _k, *_ in RUNS_13[1:]:
                   r"RUNG 13b-enc: references HOLD; port PASS" if _k == "rung13b_enc" else
                   rf"RUNG 13b-{re.escape(_k[len('rung13b_'):])}(?: \([^)]*\))?: port PASS \(planted caught (\d+)/(\d+)\)")
 SETS["13"] = (RUNS_13, "wheel_13.json")
+# J25 (11-26 04:30): wheel 13 read FAIL at rung13b_grads ONLY (10/11 runs PASS, sha256 match): pol vs truth at
+# call 2 port 5.80e+01 vs official 3.08e-01 (13/13 over), call 6 1/13 over; on the box call 2 port == official
+# (3.24e-01). Set 13p is a PROBE, not a test (no verdict, writes no ledger): the same regenerated goldens, then
+# rung13b_polgrad_probe.py on the wheel — prints |val32 - val64| and port_gate for adv=port/f64/gret per call,
+# to tell an x86 f32 value-decode rounding difference from a port bug (box: call 2 |val32-val64| 5.7e-04).
+RUNS_13P = [("polgrad_probe", "rung13b_polgrad_probe.py", [], 2400)]
+SETS["13p"] = (RUNS_13P, "wheel_13p.json")
 
 
-def job_body_13() -> str:
+def job_body_13(which: str = "13") -> str:
+    runs, fname = SETS[which]
     from experiments.brain_a import rung13
     s = rung13.job_body()
     old = repr([("A13", ["--seed", "0", "--dump-params"])])
@@ -125,12 +133,12 @@ for key, script, args, tmo in __RUNS__:
     rec["wall_s"] = round(time.time() - t1, 1)
     res["runs13"][key] = rec
     print(key, rec["rc"], rec["wall_s"], flush=True)
-    json.dump(res, open(os.path.join(out, "wheel_13.json"), "w"))
+    json.dump(res, open(os.path.join(out, __FNAME__), "w"))
 for f in ("A.npz", "B.npz", "A13.npz", "R13.npz"):
     if os.path.exists(os.path.join(out, f)): os.remove(os.path.join(out, f))
-json.dump(res, open(os.path.join(out, "wheel_13.json"), "w"))
+json.dump(res, open(os.path.join(out, __FNAME__), "w"))
 print("DONE", flush=True)'''
-    return s.replace("__PIN__", repr(PIN)).replace("__RUNS__", repr(RUNS_13))
+    return s.replace("__PIN__", repr(PIN)).replace("__RUNS__", repr(runs)).replace("__FNAME__", repr(fname))
 
 
 def verdict_13(res: dict) -> dict:
@@ -199,14 +207,15 @@ def verdict(res: dict, which: str = "12") -> dict:
 def kernel(which: str = "12") -> dict:
     from experiments.gpu import build_job, result_json, submit
     fname = SETS[which][1]
-    body = job_body_13() if which == "13" else job_body(which)
-    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=1.0 if which == "13" else 0.3,
+    body = job_body_13(which) if which.startswith("13") else job_body(which)
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=1.0 if which.startswith("13") else 0.3,
                  timeout_s=int(2 * 3600), fetch=[fname])
     if not sub.ok:
         raise RuntimeError(f"wheel_kernel: {sub.message}")
     r = result_json(sub, fname)
     OUT.mkdir(parents=True, exist_ok=True)
-    r["verdict"] = verdict_13(r) if which == "13" else verdict(r, which)
+    r["verdict"] = (verdict_13(r) if which == "13" else
+                    {"PROBE": "no verdict", "sha256": r.get("sha256")} if which == "13p" else verdict(r, which))
     (OUT / fname).write_text(json.dumps(r, indent=1) + "\n")
     print(json.dumps(r["verdict"], indent=1), flush=True)
     return r
