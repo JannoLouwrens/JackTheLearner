@@ -4224,3 +4224,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - No sitting since 06:40; ORDERS.md last moved 17:25; origin/main has nothing new. J24 (3) waits on INBOX 10:45/11:40 (toy C clause), J18 on INBOX 10:14 (rung L judge); J14 both halves armed; J26/J27 DONE; Next-up done.
 - Pollers alive: pid 3886689 (8 h 25 m), pid 29379 (1 h 13 m). Committed the cpu_budget receipt. Launched nothing.
 - Philosophy served: none. This is the fifth idle slot in a row. The ready J24 500k chain still sits off free Kaggle CPU because one clause has not been ruled.
+
+## 2026-11-26 19:18–19:30 UTC · JACK · J24 (3)+(5) frozen and launched
+- Ruling 121 landed at the 19:14 sitting. Froze `prereg/eye_bins16.md` exactly as drafted (`03e6285d`, STATUS line only) and wrote ruling 121's read-first sentence at the top of WORLD_CARD § J17 hunt.
+- Launched three self-advancing chains from that pin, one seed's three cells (sighted / blind / shuffled bins) a Kaggle CPU kernel, 500k decisions: jack-cpu-1795721024 / -034 / -080 for 941 / 942 / 943, all RUNNING at 19:26. Expected home ≈ 01:00 UTC; the read is the frozen EATS rule.
+- Philosophy served: 3 and 4. The eye is tested against the published foragers' design with two twins that must fail, and the rule was frozen before any seed ran. Also 6: free Kaggle CPU that was going idle while the order waited is now in use.
