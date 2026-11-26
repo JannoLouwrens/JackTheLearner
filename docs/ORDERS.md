@@ -124,7 +124,9 @@ eye is raced next sitting. Not shown → the next sitting rules 1.5M / the
 per-ray one-hot arm (§28 A).
 serves: M3 (the earliest unfinished milestone) · PLAN "Learning to eat", "Eye", "His world" · philosophy 1, 3, 4.
 **done when:** (2) is read, `eye_bins16.md` is frozen, and the nine cells run as chains with raw-file paths in a state line.
-state: 11-25 07:10 (1) stopped by its own clause: the ray row carries no class (`experiments/j24_class_probe.py`, 23/23 worlds). 11-26 Director: ruled — the paint changes, step (0) above (ruling 111). Nothing built yet.
+state: 11-26 07:30 (0)+(1) BUILT, proof PASS (`366486d3`, `tests/test_jack_env_paint.py` under jack-std): `paint="geom"` == the pre-option sha 4/4; kind row vs the simulator on 941–943 — every food ray on the food channel, 0 others, other senses byte-equal; `bins16` = 5 kinds × 16 centred bins (80), planted food ahead reads 1 − d/8. Probe `--paint kind`: 23/23 worlds one food look.
+state: (2) BOTH PROOFS FROZEN AND RUNNING, neither read. Hand forager (`j24_bins_forager.py`, `7c6ecbc9`; f6 + shuffled g6, worlds 261–280 × 10 lives, floor = J20's b4): box, detached 07:22, 40 cells ≈ 4–5 h, `/data/jack-logs/j24/bins_forager/`; smoke s153 one life: f6 35 meals, g6 4. Toy (`j24_toy.py`, `ea8b4690`): kernel `jack-cpu-1795677862` (1 of 5 sessions, ≤ 5 h), watcher log `/data/jack-logs/j24/toy/kernel.log`, worktree `/data/wt/jack-j24` (leave it while the watcher lives).
+state: NEXT: `python -m experiments.j24_bins_forager score` and `j24_toy score` (jack-std; copy the toy kernel's result receipt row from `/data/wt/jack-j24` into main). Both PASS → (3) write + freeze `prereg/eye_bins16.md` (the order's text; look up the J22 pilot's settings in `pilot_b2.py` l. 536–620), build the blind / shuffled-bins cells, (4) timing. Either MISS → INBOX line, no learner seed. Meanwhile a waiting slot takes J26's box timing cell, J18, J14 (a).
 
 ### J26 — What could the old row ever have told a learner? (the outsider's probe, no learner)
 part: Eye · stage: 1 · step: 4 · prior: §28 "What the record does NOT answer"; `docs/OUTSIDER.md` E1; ruling 111
@@ -185,7 +187,7 @@ awake on Saturday.
 serves: M3, M5 · PLAN "brain A reproduced"; "Ear" step 3 · standing objective 3 · philosophy 3, 4, 6.
 **done when:** s2 is launched on Kaggle or refused with the reason; the Saturday launcher is alive with its dry-run in a state line; later, N7-kws-2 scored and A's three seeds home.
 state: (a) seeds 10–12 whole on Kaggle from Sat 11-28 00:00, one seed a session (5.0 T4-h a seed, `381b83b9`). Colab-in-pieces CLOSED (`0ac058e1`: sheeprl resume not bit-continuous by design).
-state: (b) N7-kws-2 FROZEN + ADMITTED `b1db7b5d`; timing `5053a28d` 1.38 h a seed. s0 97.137, s1 97.055 home. s2: Colab assign 503 since 11-25 12:41; retry loop pid 3514759 (`/data/jack-logs/kws_row2/chain_retry2.log`) gives up ≈ 09:30.
+state: (b) 11-26 07:26 s2 on Kaggle GPU: REFUSED BY KAGGLE — "Maximum weekly GPU quota of 30.00 hours reached" (our meter said 1.62 h left; `kws_row kaggle2 s2`, `c62dcf33`, log `/data/jack-logs/kws_row2/kaggle_s2.log`); Colab fallback 503 again. Colab retry loop pid 3514759 killed by number first — nothing retries now. s0 97.137, s1 97.055 home. NEXT (the order's rule): s2 + the twin on W48 after A's chain is launched — `kws_row kaggle2 s2 twin` from a clean worktree.
 state: (c) DONE 11-25: `pilot_a.md` carries J24's arms/bar, 0.87 struck. Still a draft.
 
 ### J27 — Stage 2 without a Mac: the race's draft rewritten from the record (text only)
@@ -303,6 +305,7 @@ clauses, `verify` VENUE 266 vs 256. (8) The 4 kept tmp folders (2.8 GB).
 
 ## INBOX — one line each, workers add, the Director empties
 (emptied 2026-11-26 06:40 — every line of 11-25/26 is ruled in 111–120 or became J24, J26, J18, J14, J27, S18 or the lab note.)
+- 11-26 07:30 JACK (machine, for S19): our GPU meter read "kaggle 1.6 h left" for W47 while Kaggle refused a push with "Maximum weekly GPU quota of 30.00 hours reached" (receipt `1795677984117-3712914-kaggle`). The meter under-counts W47 by ≥ 1.62 h (shared account or S15's billing); `budget.afford` passed a job Kaggle would not take. Costless this time; it will mis-size W48's plan if not found.
 - 11-26 06:40 RESEARCH (Director, ruling 119): the walking row passed on Humanoid-v4, which is not his body. For stage 3's "separate, fast walking layer": what does the record say a from-scratch walker on a CUSTOM human-like body costs on ONE free T4 (MJX / Brax / Isaac-class thousands of copies: steps, hours, reward shaping, the published failure modes), and what known-answer row (a published body + number reachable in ≤ 9 T4-h) should our build reproduce first? One §, with "ours beside theirs".
 
 ## DONE (kept one day)

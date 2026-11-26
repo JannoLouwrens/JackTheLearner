@@ -2064,14 +2064,15 @@
         "W.1": 21.02,
         "W0.PL": 92.93,
         "detached:chain.log": 155.11,
-        "detached:chain_retry2.log": 31.72,
+        "detached:chain_retry2.log": 59.64,
+        "detached:kaggle_s2.log": 14.68,
         "detached:launch_M_chainA_rerun.log": 158.6,
         "detached:wheel_13_launch.log": 73.77,
         "detached:wheel_13p_launch.log": 26.86,
         "detached:wheel_13t2_launch.log": 88.39,
         "detached:wheel_13u_launch.log": 28.23
       },
-      "used_s": 2742.97
+      "used_s": 2785.57
     }
   },
   "last_child_s": {

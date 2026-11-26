@@ -4090,3 +4090,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J24 waits on the paint/class ruling (INBOX 11-25 07:10, §28 16:20); J18 rung M read, rung L waits on its terms (INBOX 02:25); J10, J25 DONE; Next-up 1–3 done.
 - J14 (b) s2: retry loop pid 3514759 alive, try 7 at 06:27 — Colab assign 503 again, Kaggle 1.6 h < 1.7 h (1.38 h seed × 1.2 spare, the order's own margin — not loosened). Loop has 5 tries left (≈ 09:30).
 - Director sitting is 11-25 06:42 (not stale); the 11-26 sitting is due now and holds every ruling the lane needs. Nothing measured. Philosophy served: none — fourth idle JACK slot today, a finding for the Director.
+
+## 2026-11-26 07:07–07:32 UTC · JACK · J24 (0)–(2) — the kind paint and the bins eye built and proven; both box proofs frozen and running · J14 (b) refused by Kaggle
+- J24 (0)+(1) (`366486d3`): `paint="kind"` (5 0/1 channels a ray: food · water · obstacle · wall · panel) and `eye="bins16"` (80 numbers) in `jack_env`/`fast_sim`. Proof PASS: geom paint == the pre-option sha 4/4; on 941–943 every food ray lights the food channel, 0 non-food rays do, other senses and distances byte-equal; geom-paint control shows three codes a world. One apparatus fault on the way (a planted food hidden behind a thing at 1.70 m) — fixed, no clause moved.
+- J24 (2), frozen before any run: hand forager on the food bins (`7c6ecbc9`; smoke f6 35 meals vs shuffled 4 in one life) running detached on the box, 40 cells; §28's toy on the real ids (`ea8b4690`) on Kaggle CPU `jack-cpu-1795677862` (63,000 CPU-s was over the box's day). Neither is read.
+- Next-up 2 done: `j24_class_probe --paint kind` 23/23 worlds one food look.
+- J14 (b): Colab loop pid 3514759 killed by number; `kws_row kaggle2 s2` (`c62dcf33`) → Kaggle: "weekly GPU quota of 30.00 hours reached". Our meter said 1.62 h left → INBOX. s2 + twin go to W48 by the order's rule.
+- Philosophy served: 3 (the eye's paint is now the record's, with the old one kept as a must-fail control), 4 (both proofs frozen with controls before a run; a refusal written as a refusal), 6 (free compute only; the expiring hours were tried).

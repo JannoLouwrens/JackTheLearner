@@ -82,5 +82,56 @@ def main() -> None:
           f"{clash}/{len(tabs)}; apple reads {apple}")
 
 
+def main_kind() -> None:
+    """`--paint kind` (ORDERS Next-up 2, after J24 (0)): the same 23 worlds
+    under `paint="kind"` — which channel does each floor food carry, and does
+    any other geom a ray can hit carry it?
+
+    RESULT (2026-11-26, box, jack-std, mujoco 3.17.0): 23 worlds
+    (941-943, 281-300): every floor food (obj0-2) is on the one food channel
+    and no other geom a ray can hit is on it, 23/23; one food look-set where
+    the geom paint had 4. Per world: food 3, water 1, wall 4, panel 1,
+    obstacle 23-27. (This reads the paint's own table; that the ROW carries
+    it and nothing else is tests/test_jack_env_paint.py (b)-(c).)"""
+    from experiments import fast_sim as FS
+    from experiments.pilot_b2 import PILOT_RULE, make_world
+    from experiments.jack_env import JackEnv, NEEDS_S_TRP, SPAWN_CLEAR_R
+    from experiments import pilot_b2 as P
+    good = 0
+    sets = set()
+    for seed in SEEDS:
+        e = JackEnv(seed=seed, difficulty=P.DIFFICULTY, reward=P.REWARD,
+                    random_needs=NEEDS_S_TRP, random_layout=True,
+                    lazy_contact_audio=True, spawn_clear=SPAWN_CLEAR_R,
+                    food_floor_only=PILOT_RULE["food_floor_only"],
+                    eye_frame=PILOT_RULE["eye_frame"],
+                    motor_frame=PILOT_RULE["motor_frame"],
+                    native_substep=PILOT_RULE["native_substep"],
+                    eye="row128", paint="kind")
+        e.reset(seed=seed)
+        w, m = e.w, e.w.model
+        foods = {n: int(g) for n, (g, _) in w.drives._food.items()
+                 if n in e.floor_foods}
+        seen = [g for g in range(m.ngeom) if m.geom_group[g] != 3]
+        fk = {n: FS.KINDS[int(w._kind_of[g])] for n, g in foods.items()}
+        others = [g for g in seen if g not in foods.values()
+                  and FS.KINDS[int(w._kind_of[g])] == "food"]
+        count = collections.Counter(FS.KINDS[int(w._kind_of[g])] for g in seen)
+        ok = set(fk.values()) == {"food"} and not others
+        good += ok
+        sets.add(tuple(sorted(set(fk.values()))))
+        print(f"s{seed} ngeom {m.ngeom} foods "
+              + " ".join(f"{n}={k}" for n, k in fk.items())
+              + f" | non-food geoms on the food channel {len(others)} | "
+              + " ".join(f"{k} {count[k]}" for k in FS.KINDS))
+    print(f"worlds {len(SEEDS)}; every floor food on the one food channel and "
+          f"nothing else on it: {good}/{len(SEEDS)}; distinct food look-sets "
+          f"{len(sets)}")
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    if sys.argv[1:] == ["--paint", "kind"]:
+        main_kind()
+    else:
+        main()
