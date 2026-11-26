@@ -1117,3 +1117,12 @@ Long form, every link, table and the sub-agents' notes: `/data/jack-research/rep
 - Memory that finds food's look inside one life: unpublished under 0.75M, toys only. Stage 3.
 
 **Not verified.** Tancik / Yang numbers: summarising fetch, not the tables. Menzel 1967, Harlow 1949, Cherkin 1969, Regan 2001: secondary sources. IMPALA's frames on DMLab-30; total steps for Harlow and Alchemy; AAI-3 foraging scores (plot only); PettingZoo Waterworld's sensor (404); any RL agent trained on AAI raycasts. More in the long form.
+
+## 29. A from-scratch walker on a custom human-like body, on ONE free GPU: steps, hours, reward terms, failure modes, and the known-answer row to reproduce first (2026-11-26; serves ruling 119, stage 3 "separate, fast walking layer", M4; plan part "Body and movement"; answers INBOX `RESEARCH:` Director 11-26 06:40)
+
+Long form: `/data/jack-research/scratch_sec29A/` (thousands-of-copies results and hardware), `scratch_sec29B/` (reward terms, custom bodies, failure modes), `scratch_sec29C/` (known-answer rows, free-GPU compatibility, off-policy at scale).
+
+**Question.** J10-2 passed on Humanoid-v4 with one-world SAC; that is not his body and not the fast layer. What does the record say a from-scratch walker on a custom human-like body costs on one free T4 with thousands of simulated copies, what shaping it needs, how it fails, and which published body + number (≤ 9 T4-h) our build should reproduce first?
+
+*(skeleton committed 2026-11-26 16:12 UTC; the parts below land in this slot.)*
+
