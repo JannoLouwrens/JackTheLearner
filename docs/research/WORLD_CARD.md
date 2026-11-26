@@ -714,6 +714,8 @@ What it says: critic loss is the only signature whose control stays quiet until 
 
 ### J17 hunt (ruling 77; PILOT — one seed 923, 100k decisions, each arm beside its own blind twin on its own machine; no verdict on eating)
 
+**Read first (ruling 111, 11-26):** every eye row in this section was run on the per-geom paint (each floor food its own texture code, re-dealt per world) and reads NOT SHOWN ON THIS PAINT — not a verdict on the eye or the learner; the kind paint is J24.
+
 Reader `j17_onset hunt`: Q climb = Q(100k) ÷ Q(50k), Q = −actor_loss; cut points are the MLP groups' own edges (sighted 1.32–1.57, blind 0.92–1.20), not registered thresholds. CURES (ORDERS J17 branch) = the reader does not print RUNS AWAY **and** sighted late meals/life ≥ its blind twin's (late = lives starting ≥ 50k, `pilot_b2.j17_late_meals`).
 
 | arm | the one change (§24) | machine | sighted Q climb | twin Q climb | reader | late meals/life, sighted / twin | cures? |

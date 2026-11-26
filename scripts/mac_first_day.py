@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# PARKED 11-26, ruling 113 (no Mac; the MLX port has no slot).
 """mac_first_day.py — the Mac mini's first-day speed test, one command (ORDERS "Next up" 2).
 
 Source of the twelve measurements: PUBLISHED_PRIORS.md §10 "Reproduce first"
