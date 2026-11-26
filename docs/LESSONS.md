@@ -2127,3 +2127,22 @@ name something that has recovered?"*, because there the cost is not a missing
 record but a standing immunity. This sits directly beside the lesson one shelf
 up: a counter that hides an immunity reads safer than nothing at all. Here the
 immunity is granted by a line of bookkeeping nobody owed anyone.
+
+<!-- COUNTED-LESSONS:BEGIN next=L13 -->
+## COUNTED LESSONS
+
+Written by `scripts/lessons.py` (add / up / down / prune); do not edit by hand. One line a lesson: the count goes up when it bites again or saves a run, down when it misleads; at zero it is pruned. Ids are never reused.
+
+- **L01** (n=1, added 2026-11-26, last 2026-11-26) Before a ruling or a frozen rule names a judge, run that judge on the ruled shape (seeds per arm, rung, outcome): terms the judge's own code refuses cost a slot and freeze nothing. — src: J18 11-26: rung L ruled at 10 seeds; harness.compare needs 20 runs an arm and climb refuses L (INBOX 10:14)
+- **L02** (n=1, added 2026-11-26, last 2026-11-26) One world, one physics build: a row is set beside another only if both ran the same simulator version; read the version from the run's record, not from the venv's name. — src: ruling 76: box on mujoco 3.2.3, kernels on 3.17.0; the same seed and actions gave different meals
+- **L03** (n=1, added 2026-11-26, last 2026-11-26) No first launch of a new learner or network shape on a venue without a timing cell there; size the run from the measured rate, never from the estimate. — src: rulings 86, 99: ear seed estimated 1.5 h billed 10.1; SimBa ran 26x slower and 8.5 kernel-h returned nothing readable
+- **L04** (n=1, added 2026-11-26, last 2026-11-26) One seed, or a run shorter than the published need, closes nothing: write NOT SHOWN, never 'does not learn'. — src: ruling 101: J22 was one seed at 100k; its two eyeless twins read 0.31 and 0.87; the verdict was withdrawn
+- **L05** (n=1, added 2026-11-26, last 2026-11-26) After a failed read the worker never moves the pass line, a clause, a control or an exemption: record the miss, write one INBOX line with a proposal, take the next order. — src: ruling 114: rung 13b's pass line was moved six times after failed reads; none ratified
+- **L06** (n=1, added 2026-11-26, last 2026-11-26) A null is a fact about the instrument until a known-answer positive has passed on the same input: before 'he cannot', show a hand ruler or a toy that can. — src: ruling 111: 12 days of 'nothing eats from his eye' were the per-thing paint (0 of 12 published foragers were given it)
+- **L07** (n=1, added 2026-11-26, last 2026-11-26) Before freezing a threshold, trace the number to the run that produced it and check that run was a valid arm, not a control. — src: ruling 103: pilot_a's 0.87 bar was brain B's shuffled twin, an eye with its content destroyed
+- **L08** (n=1, added 2026-11-26, last 2026-11-26) Anything of more than one segment launches as a self-advancing chain and its state line names where the raw results land; nothing may wait for a worker to wake. — src: rulings 100, 109: rung S sat unread two days; the usage stop idled workers while free machines ran
+- **L09** (n=1, added 2026-11-26, last 2026-11-26) Our meters are estimates; the venue's own refusal or status is the truth. Ask the venue itself before planning hours on a shared account. — src: INBOX 11-26 07:30: our meter said 1.62 GPU-h left, Kaggle refused at 30.00 h; ruling 86: queue wait was billed
+- **L10** (n=1, added 2026-11-26, last 2026-11-26) Two rules that bound the same quantity are checked against each other before a run is read by either. — src: ruling 30: brain B's first pilot VOID; its floor clause allowed 1 crossing in 1,198 lives where ruling 22 allows 1 in 200
+- **L11** (n=1, added 2026-11-26, last 2026-11-26) A gate's input can be false: a reading that contradicts itself inside its own window is re-read before it refuses anything, and every refusal logs the reading it acted on. — src: ruling 75: the usage stop refused 46 slots on a figure that later read lower inside the same window
+- **L12** (n=1, added 2026-11-26, last 2026-11-26) A frozen clause cites a multi-seed or published figure; a one-seed pilot number is not a prediction to freeze on. — src: J24 toy 11-26: clause C (<50% recall) came from a one-seed 25-36%; three worlds read 72-85% and the row MISSED on it
+<!-- COUNTED-LESSONS:END -->
