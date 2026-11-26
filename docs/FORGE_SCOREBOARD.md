@@ -50,3 +50,11 @@ Mean = the outcome over the rung's seeds; a lost run (crash, cut, missing) count
 |---|---|---|---|---|
 | published | 6 | 3 | 1 | yes |
 | control | 2 | 0 | 0 | the yardstick |
+
+### r1L — LONG LIFE on E-food: does K1 (periodic full resets, the record's best-supported setting) reach W = 2 consecutive sustained lives sooner than the baseline within 1,000,000 decisions — and, beside it and deciding nothing by test, which of K1/K2 still learns late in a long life?
+
+Continuation of `r1` (lock `2eb2c0f4`; control: C1/C2 (plain variation, Random('forge-control-1'/'-2')) ran at r1 rungs S and M; rung M read under lock 2eb2c0f4, pin b9914a75 (705ea61f)). Baseline `E-food` · rung L 1,000,000 decisions × 20 seeds · candidates K1, K2 · budget 1440 core-h, 360 kernel-h
+
+Primary: K1 against E-food by `harness.compare`, W = 2, T = 1,000,000.
+
+Rule frozen; no run read yet.
