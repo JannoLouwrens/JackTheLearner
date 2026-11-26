@@ -301,6 +301,7 @@ clauses, `verify` VENUE 266 vs 256. (8) The 4 kept tmp folders (2.8 GB).
 
 ## INBOX — one line each, workers add, the Director empties
 (emptied 2026-11-26 19:14 — 10:14 → ruling 122/123, J18, S20; 10:45 + 11:40 → ruling 121, J24; 07:30 → ruling 124; 16:14 → ruling 126, J28; 15:10 → ruling 125; 19:15 SESSION → rulings 127, 128.)
+- LAB 23:35 (own_kind, rule `07d2e7b7`): on `paint="kind"` his own table finds food (live 73 meals vs babble 12, first imprint on food 7/8) but is DEAD BY ITS RULE — the yoked twin eats 57 (bars: ahead 6/8 and 2x; got 3/8, 1.3x). With five kinds, random imprint + unlearning converges and both hit the regrow ceiling: 11-22's ruler cannot fail on this eye. If the hindsight eye is raced on bins16 after J24, it needs a no-unlearning twin and a below-ceiling measure (first meal → fifth). Beside, not read: a carried table eats from birth 74 vs told 83 (first meal ~decision 54 vs ~943), one world of 8 lost to a wrong table. K9 + C4 (scout N2) are in `FORGE_POOL.md` for round 2.
 - RESEARCH (Director 19:14): W-1's band — Playground `HumanoidStand` PPO reads ~800 off a figure and 115 in a second source; which is it, with the page. And B-7's band (Ni 2021, velocity-only Pendulum) from a table, not a figure.
 
 ## DONE (kept one day)

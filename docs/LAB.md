@@ -60,29 +60,13 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   table: 50 meals vs babble 2, yoked 0. **ALIVE, ENTERED** (ruling 84).
   Unrun: the net with the table as its teacher. Philosophy 1–4.
 
-- 11-22 · **The hindsight eye lit from EMPTY, and unlearning a wrong
-  imprint** (Vision encoder, BY DEFAULT; PLAN "Learning to eat" / "His world"
-  right columns; `live_eye.py`, rule first `f3654d00`). Bet: a newborn's
-  table of one meal cannot out-vote a wrong imprint, so (1) from empty it
-  still lights itself after his first babbled meal, and (2) only if a colour
-  he stands at unfed for 80 s leaves the table. Kill: not above babble and a
-  yoked twin (imprint from a look 200–1,000 decisions earlier) on ¾ of
-  worlds and 2× in total. Prior: Rescorla-Wagner 1972 (a table, tens of
-  trials — our size; from memory); no forager on record taught WHICH thing is
-  food by one look at its own mouth. **ALIVE, ENTERED (INBOX).** 8 fresh
-  worlds 1401–1408, meals in the 2,500 decisions after the first meal:
-  **live 70 (9/9/9/8/8/9/9/9) vs babble 12, yoked 27; ahead 8/8 and 6/8
-  (bar 6).** The ceiling is the 50 s regrow clock (~9). **Unlearning NEEDED:**
-  without it 2 of 8 births lock onto a wrong first imprint (1 and 0 meals
-  where live eats 8 and 8). First meal by babble: decision 176–6,424 (median
-  ~950; 2 worlds only after a death) — the wait is the world's, not the
-  eye's. Dev: patience 10 s forgot REAL food 8/8 (eaten food stays in sight
-  while it regrows). Disclosed: the yoked twin ate 9 in 2 worlds — random
-  imprint + unlearning is itself trial-and-error; the "imprint on food"
-  diagnostic undercounts (says 1 of 9 where he ate 8) and is not quoted.
-  Cannot say: a learner uses it (J17); a camera eye; carrying the table
-  between worlds. Unrun: patience learned from his own regrow waits.
-  END-FIT 1, 2, 5. Philosophy 1, 2, 3, 4.
+- 11-22 · **The hindsight eye lit from EMPTY, and unlearning** (Vision
+  encoder; `live_eye.py`; long form in git at `07d2e7b7`) · from an empty
+  table, 8 fresh worlds, meals in the 2,500 decisions after the first:
+  **live 70 vs babble 12, yoked 27; ahead 8/8 and 6/8. ALIVE, ENTERED.**
+  Unlearning NEEDED (2 of 8 births lock on a wrong first imprint); patience
+  10 s forgot real food. First babbled meal: decision 176–6,424. Unrun:
+  patience learned from his own regrow waits. Philosophy 1–4.
 
 - 11-24 · **Fed once, then weaned** (Curriculum, VACANT; `fed_once.py`;
   long form at `a04f095d`) · a parent's hand names food once. **DEAD AT
@@ -98,24 +82,36 @@ Folded 2026-11-12 23:40 (was 20 KB): full text of every entry is in git
   17, babble 10. Lost on one wrong FIRST imprint (own 0, handed 9) and one
   lucky twin. 16 bins cost nothing against 128 rays. Philosophy 2, 3, 4.
 
-- 11-25 · **A first imprint that cannot be wrong: name everything in
-  reach, let going unfed cross names off** (Vision encoder, BY DEFAULT; PLAN
-  "Learning to eat" / "Eye" right columns; `first_imprint.py`, rule first
-  `aa9ea10d`). New reason: a probe of 12 lived worlds — the food he ate is
-  always among the 2-3 nearest things at the bite, not always THE nearest.
-  Bet: imprint every texture within 0.20 of range in his last two looks;
-  it eats as much as the one-name table and eats where that locked out.
-  Kill: not above babble and a yoked twin on 3/4 of worlds, or under 0.9 of
-  the one-name table, or under half the handed class where the nearest ray
-  was wrong. Prior: candidate elimination (Mitchell 1982), cue competition
-  (Rescorla-Wagner 1972) — tens of trials and a table, our size (from
-  memory); §26, §28. **DEAD BY ITS RULE** (the last clause: 6 vs handed 19
-  in the one such world, bar 9.5). 12 fresh worlds 1701-1712, 10 ignited:
-  **set 74, one-name 79, handed 102, yoked 12, babble 19**; over yoked 9/10.
-  The lock-out is repaired (one-name 0 -> set 6; lived 1607: 0 -> 9) and the
-  first set held the food 10/10, but each extra name costs a 400-decision
-  wait: 14 deletions vs 4, two worlds lost meals (2 vs 9, 6 vs 10). Not
-  entered. Return only with a faster strike (a name fed 7 times in sight
-  outvotes one fed once), or in a kind-coloured world where a wrong name
-  costs one wait in a lifetime. Unexplained, twice now: the handed class
-  eating 18-19 where the regrow clock allows ~9. Philosophy 3, 4, 5.
+- 11-25 · **Name everything in reach, let going unfed cross names off**
+  (Vision encoder; `first_imprint.py`; long form in git at `07d2e7b7`) ·
+  **DEAD BY ITS RULE** (6 vs handed 19 in the one wrong-nearest world, bar
+  9.5): set 74, one-name 79, handed 102, yoked 12, babble 19 over 10 worlds.
+  Lock-out repaired (0 → 6) but each extra name costs a 400-decision wait.
+  Unexplained twice: the handed class eating 18–19 where regrow allows ~9.
+  Philosophy 3, 4, 5.
+
+- 11-26 · **Which KIND feeds him: the mouth-taught table on the kind paint,
+  and carried into the next world** (Vision encoder, BY DEFAULT; PLAN
+  "Learning to eat" / "Eye" / "Memory" right columns; ORDERS "Lab's next
+  unit"; `own_kind.py`, rule first `07d2e7b7`). New reason: `paint="kind"`
+  exists — 5 kinds x 16 bins, the same in every world, nothing says which
+  feeds. Bet: (1) from five empty counts his mouth names the kind (11-22's
+  worlds and bars); (2) the table he ends a world with feeds him from birth
+  in the next, as much as a forager told the channel. Kill: 11-22's rule;
+  carry under 0.9 of told. Prior: §28 (the paying class is learned by
+  gradient over 2M+ steps everywhere; bees 1-3 visits), §26, Rescorla-Wagner
+  1972 (from memory) — a table, our size. **DEAD BY ITS RULE: the control
+  did not fail.** Meals after the first, 8 worlds: **live 73, babble 12,
+  yoked 57** (over yoked on 3 of 8, 1.3x; bar 6 and 2x); told 84. With five
+  names, a random imprint plus going unfed finds food inside the window and
+  both sit on the regrow ceiling (~9): the ruler cannot tell the mouth's
+  name from cross-off on this eye. Beside, NOT READ by the rule: first
+  imprint on food 7 of 8; no unlearning 56 (one lock-out); carried from
+  birth 74 vs told 83, twin 55, babble 12 — first meal at decision ~54
+  (median) where babble takes ~943; one world lost whole to a WRONG table
+  carried (the other seven: 74 = told 73). Not entered. Return with a ruler
+  that can fail: a no-unlearning twin and a measure under the ceiling
+  (decisions from first meal to fifth). END-FIT 2, 5. Philosophy 1, 3, 4.
+
+- 11-26 · forge pool: scout N2 entered as **K9** (resets with the critic's
+  layer norm off) + its control **C4**, round 2 only (ruling 129); pool ok 18.

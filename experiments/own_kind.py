@@ -85,6 +85,34 @@ RULE — DECLARED BEFORE ANY JUDGE WORLD IS LIVED ON THIS EYE.
   the hindsight eye's later race); anything about a camera eye; that kinds
   as an adult painted them are the kinds he would carve himself.
 
+RESULT — 2026-11-26 23:32 UTC, rule frozen at `07d2e7b7`, the one judged
+read (`/data/jack-logs/own_kind/judge.json`; 2,179 CPU-s + 340 dev).
+  BET (1) DEAD BY ITS RULE: THE CONTROL DID NOT FAIL. 8 of 8 ignite.
+  Meals in the 2,500 decisions after the first meal:
+    live 73 (9/9/10/9/7/11/9/9)   babble 12   yoked 57 (4/9/9/9/8/0/9/9)
+  Over babble 8 of 8 and 6x: holds. Over yoked 3 of 8 (4 ties, 1 behind),
+  1.3x: FAILS both clauses. `told` 84 (9/9/10/9/19/10/9/9).
+  Why the twin eats: with FIVE names a wrong imprint is struck in one wait
+  (24 strikes, 22 of 65 imprints on food) and the next babbled meal draws
+  again — guess-and-cross-off finds food inside the window in 6 of 8
+  worlds, and 9-10 meals is the regrow ceiling, so both sit on it. On this
+  eye the measure no longer tells "the mouth named it" from "going unfed
+  crossed the others off". On the old paint (one code per object, ~37) the
+  same twin got 27 against 70.
+  Beside, gating nothing (bet 2 and unlearning are NOT READ by the rule):
+  * first imprint on food 7 of 8 (1405: wall); imprints on food 72 of 81.
+  * without unlearning: 56; 1405 locks out (0) and 1406 eats 1.
+  * from birth: carried 74 (10/10/13/10/10/0/11/10), told-birth 83,
+    carried-yoked 55, babble 12. Carried's first meal at decision 121 / 78
+    / 8 / 21 / 25 / never / 547 / 54 (babble's: 505 ... 6,424, median
+    943). The one zero (1406) was handed 1405's table, the world where
+    `live` imprinted the wall first, struck FOOD once, and ended on
+    {obstacle: 2}: a wrong table carried is a whole world lost. On the
+    other seven worlds carried 74 = told 73.
+  Not entered. A return needs a ruler that can fail on this eye: a twin
+  with NO unlearning beside one with, and a measure below the regrow
+  ceiling (decisions from first meal to the fifth; `meal_at` must be kept).
+
     python -m experiments.own_kind dev [workers] [seeds...]
     python -m experiments.own_kind judge [workers]
 """

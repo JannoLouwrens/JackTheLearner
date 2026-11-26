@@ -4262,3 +4262,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Cell 2 `fp16_timing.py` (`07217ae4`): A size S timed twice in one session, only precision moves; a crashed cell reads None, not a speed. Cell 1 `mjx_timing.py` (`2d28314a`): Playground's own HumanoidStand PPO config, cut to 10M steps; GPU kind printed first so a P100 failure is readable.
 - Launcher `scripts/j28_w48_launch.py` (`a52398a9`), tests 2/2, dry-run green. Arming REFUSED by the detached cap (7 gpu pollers, max 6) — not bypassed; next worker arms it after J24's chains end (≈ 01:00).
 - Philosophy served: 3 (body venue and A's GPU bill measured, not assumed) and 6 (W48's free hours get spent on it).
+
+## 2026-11-26 ~23:00–23:40 UTC · LAB · his own table on the kind paint (`own_kind.py`) — DEAD BY ITS RULE
+- Rule first (`07d2e7b7`), 11-22's worlds 1401–1408 and bars, eye = bins16 on `paint="kind"`. Live 73 meals vs babble 12, but the yoked twin 57 (ahead 3/8, 1.3x; bars 6/8, 2x): the control did not fail. Five names + unlearning converge without the mouth; both sit on the regrow ceiling.
+- Beside, not read by the rule: carried table from birth 74 vs told 83 (one world lost to a wrong table carried; first meal ~54 vs babble ~943). 2,519 CPU-s on the box.
+- Scout N2 entered as K9 + control C4 in `FORGE_POOL.md` for round 2 (ruling 129; pool ok 18). INBOX line for the hindsight eye's later race.
+- Philosophy served: 4 (a control that ate is written as a dead ruler, not a win) and 3 (the eye's seat stays raced).
