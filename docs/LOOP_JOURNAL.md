@@ -4008,3 +4008,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Read 3: port meets every call eager+compiled; control 3/3; plants 5/5. Both boot plants exempt at call 2 — the bootstrap is invisible at call 2 in this golden (|Δtruth| q99 3.5e-7); certified at calls 6/8 only, said in README.
 - Next: the 81 gradients via `port_gate`, then the rung-13 wheel kernel.
 - Served philosophy 4 (an exemption only where a measurement shows the reference itself cannot tell, plus a stronger plant added, nothing loosened) and 5/7 (his brain on the machine he is handed on).
+
+## 2026-11-26 00:07–00:25 UTC · JACK · J25 — rung 13b-grads: the whole loss's 81 gradients; a real port bug fixed; PASS at read 3
+- First act: forge M g0–g5 + g7 home, g6 RUNNING (`…638695`); ear s2 retry loop alive (Colab 503). J24 waits on its ruling, J10 DONE → J25 (box).
+- Line `eb21ed16` before read 1: port's composed agent.loss (WM free-running, imagination teacher-forced under its official sg, repval on own repfeat) → `port_gate` on R13's 81 grads, calls 1/2/6/8 eager+compiled, control + 8 plants.
+- Read 1 FAIL: dyn/enc grads 15–24% off — the port's posterior sample had no straight-through. Fixed in `mlx_maths.sample_onehot` (forward unchanged); rungs 7/8a/9/10/13b-scan/wm/imag re-PASS.
+- Read 2: calls 1/2 PASS 81/81; at 6/8 the 13 pol tensors miss. Measured: the OFFICIAL's own policy gradient is rel 0.15/3.1/2.3 from the f64 truth at calls 2/6/8 (value-decode rounding); port 0.15/1.7/1.0. The published gate missed two routing plants at call 2 (5e-5 moves vs port error 5e-6).
+- Ruling `60c6bf04` before read 3 (after read 2's figures, said plainly): pol vs truth at exempt calls, WM clause STRENGTHENED to 1e-5. Read 3 PASS, control 4/4, plants 8/8. Rung 13 complete on the box; next the wheel kernel.
+- Served philosophy 4 (a failure fixed in the port, not filed; a loose gate made stricter, not looser) and 5 (his brain's learning step, checked against the original). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.

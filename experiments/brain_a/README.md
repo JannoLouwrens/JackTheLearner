@@ -967,3 +967,32 @@ ADDED. Read 3 (`/data/jack-logs/mlx/rung13b_repval_read3.log`): port meets every
 official), control 3/3, **plants 5/5**. Said plainly: BOTH boot plants are exempt at call 2 (boot zeroed |Δtruth| q99
 3.5e-7) — this golden cannot test the bootstrap at call 2; it is certified at calls 6/8 only (boot zeroed off q99 1.4e-5 /
 4.5e-5 vs 9.5e-6 / 2.6e-5). Test: `rung13b.py --repval`. Next: the 81 gradients via `port_gate`, then the rung 13 wheel.
+
+### Rung 13b-grads — THE WHOLE LOSS's 81 GRADIENTS through `port_gate`: **PASS at read 3** (reads 1–2 FAILED; 11-26)
+`rung13b.py --grads` (jack-mlx, box, ~4 min; logs `/data/jack-logs/mlx/rung13b_grads_read{1,2,3}.log`). The port's own
+composed `agent.loss` (WM free-running from the rebuilt batch + file noise; imagination teacher-forced on the golden's
+feats/actions/in_rew/in_con — all under sg in the official loss, so no gradient path is removed; repval on the port's
+OWN repfeat with gradient, repval_grad True) under `mx.value_and_grad`, vs R13's 81 official gradients. Line `eb21ed16`
+before read 1; 8 plants (no straight-through, reward_grad off, rep scale 1, dyn/rep sg swapped, repval_grad off,
+slowreg 0, adv not stopped, policy horizon-summed); control: posterior noise one step late.
+- **Read 1 FAIL — a real port bug:** every `dyn/` + `enc/` gradient 15–24% off. `mlx_maths.sample_onehot` had NO
+  straight-through ("no training at this rung"). Fix: `straight_through(idx, log p_unimix)` = outs.py L265-270, forward
+  bit-unchanged; rungs 7, 10, 13b-wm, 13b-imag re-PASS.
+- **Read 2 FAIL:** calls 1/2 PASS all 81 eager+compiled (global rel 3.6e-7 / 4.8e-7). Calls 6/8: the 13 `pol/` tensors
+  miss (cos 0.05–0.3), (L) call 8 rel 1.1e-5, plants 6/8. Measured (`rung13b_polgrad_probe.py`, `--grads-terms`): the
+  policy gradient is linear in sg(adv); adv ~3e-3 while the f32 two-hot decode of the value jumps by up to 0.58, so
+  **the OFFICIAL's own policy gradient sits rel 0.15 / 3.1 / 2.3 from the f64-adv gradient at calls 2/6/8** (the port:
+  0.15 / 1.7 / 1.0 — closer). (L)'s call-8 miss is the policy term alone (+5.6e-4). And the published gate is loose
+  here: the two missed plants move enc/dyn by 5.2e-5–6.6e-5 at call 2, while the port's worst WM error is 5.2e-6.
+- Ruling `60c6bf04` (written after read 2's figures, before read 3 — said plainly): pol at a call where the official
+  is > 1e-4 from the truth is read vs the truth (port ≤ 1.25 × official, per tensor); (L) there reads total minus
+  the policy term; a STRENGTHENING beside the unchanged gate: every enc/dyn/dec/rew/con tensor rel ≤ 1e-5.
+- **Read 3 PASS:** calls 1/2/6/8 eager+compiled — gate 81/81 at call 1, 68/68 + pol-vs-truth 13/13 at 2/6/8; WM worst
+  5.2e-6; (L) ≤ 1.6e-6; control 4/4; plants 8/8 (reward/repval_grad off are true no-ops at call 1: zero-init heads).
+- Said plainly: the logp·adv backward is not compared with the official HERE (adv is exactly 0 at call 1, and at
+  2/6/8 the truth uses the port's own logp path); it is rung 12b's (`policy_grad` vs official jax.grad at the
+  pre-activations), and the MLP backward from there is the one certified on val/rew/con and on pol at call 1.
+  Finding about the official, not the port: at this toy batch the published f32 DreamerV3's policy gradient is
+  mostly value-decode rounding by train call 6 (bf16, the published compute, can only be worse).
+Rung 13 (13a + 13b) is complete on the box. Next: the rung-13 wheel kernel — its goldens (R13 75 MB + golden A
+252 MB) live in /data only, so the kernel must regenerate them (golden_kernel ran in 418 s) or read a dataset.
