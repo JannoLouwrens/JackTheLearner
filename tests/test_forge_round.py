@@ -243,6 +243,34 @@ def test_spec_rules():
     validate_spec(eight)                                   # 8 new + the control is allowed
 
 
+def test_continuation_round_rules():
+    # ruling 123: rung L only, parent round named with its lock and control source.
+    # Lives in experiments/forge/continuation.py: forge/__init__.py is in r1's judge lock.
+    from experiments.forge.continuation import validate_round
+    validate_spec = validate_round   # noqa: N806 — every check below goes through the router
+    cont = spec_of([cand("K1"), cand("K2")])
+    cont["rungs"] = {"L": {"decisions": 1_000_000, "seeds": list(range(21, 41))}}
+    cont["parent"] = {"round": "r1", "lock": "2eb2c0f4", "control_source": "r1 C1/C2 at S, C1 at M"}
+    validate_spec(cont)                                    # no S rung, no control: allowed
+
+    def broken(edit, text):
+        s = copy.deepcopy(cont)
+        edit(s)
+        raises(lambda: validate_spec(s), text)
+
+    broken(lambda s: s.pop("parent"), "no control-source")          # no parent: old rules
+    broken(lambda s: s["parent"].pop("lock"), "parent.lock")
+    broken(lambda s: s["parent"].pop("control_source"), "control_source")
+    broken(lambda s: s["parent"].update(round="t"), "another round")
+    broken(lambda s: s.update(parent="r1"), "parent must name")
+    broken(lambda s: s["rungs"].update(M={"decisions": 300_000, "seeds": [91]}), "rung L only")
+    broken(lambda s: s["candidates"].append(cand("K3")), "at most 2")
+    # a round with no parent and no S rung still refuses
+    noS = spec_of(THREE)
+    noS["rungs"] = {"L": {"decisions": 1_000_000, "seeds": [1]}}
+    raises(lambda: validate_spec(noS), "rungs must be S")
+
+
 def test_source_yield_names_the_source_that_does_not_pay():
     y = source_yield(spec_of(THREE), rows_of({**BASE, "win": 0.6, "null": 0.1, "ctl": 0.1}),
                      code_hash=H)["sources"]
