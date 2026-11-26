@@ -209,7 +209,9 @@ design; PD joint targets hold that seat BY RECORD (ruling 126).
 branches: cell 1 fails on the GPU given → the error text into §29, RESEARCH line "walker venue"; cells 2–3 still run. · quota refused → stop, write it (ruling 124). · ratio 64 holds → `stage2_a_vs_b.md` table re-costed at ratio 64 (draft); misses → written as a miss, the table stays.
 serves: M5 (body), M3 (brain A affordable on free GPU) · standing objective 3 · philosophy 3, 6.
 **done when:** the launcher is alive with its dry-run in a state line and `a2_ratio64.md` is frozen; later the three results are in their files.
-state: (new 11-26 19:14.)
+state: 11-26 21:2x cell 3 prereg **FROZEN `97762429`** `prereg/a2_ratio64.md`: A1 cartpole_balance, size 1m, replay_ratio 0.0625 (= 64), seeds 20–22, twin 20, no extension, HOLDS = 3/3 seeds in A1's band at 100K AND 200K, read on ruling 78's [P−30K, P) (rows.py window beside). Debt said before any seed: A1 at 512 had s2 677 < 690 at 100K → the 100K point cannot separate ratio from noise; 200K can.
+state: arm + kernel + judge built `adae3ce3` (`experiments/brain_a/ratio64.py`, rows.py untouched): `python -m experiments.brain_a.ratio64 kernel 20 --control` / `kernel 21` / `kernel 22`, `… score`. Tests 5/5. Nothing submitted.
+state: NEXT: cells 1 (MJX HumanoidStand timing) and 2 (fp16 on/off timing) kernel bodies, then the W48 launcher (`scripts/j28_w48_launch.py`, modelled on `kws_w48_launch.py`: waits for `kws2_twin.json` or Sun 11-29 00:01 UTC, own worktree, JACK_WATCHER=gpu, dry-run date faked) firing cell 1 → 2 → r64 s20+twin → s21 → s22, stop on a refusal.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;

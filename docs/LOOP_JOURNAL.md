@@ -4250,3 +4250,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Look 1 is now readable with 10–19 runs an arm: `harness/looks.py` (`compare_looks`, `judge_looks`) pads after the real runs and calls the frozen `compare`/`prereg.judge`. It returns A_DIFFERS/FUTILE at look 1, else NEEDS_LOOK_2; with ≥ 20 runs it is `compare` itself. No hashed file was touched (r1 judge lock green, 382cf304 unchanged), so `same_vs_same` cannot move.
 - `forge/r1L_read.py`: K1 vs E-food verdict, check #13 books, rung-M rate per arm; it refuses a spec that differs from the 52033df2 freeze. Planted tests 4/4 (harness) + 4/4 (reader); r1_spec 8/8, r1_read 13/13, round 27/27. Pre-existing HEAD FAIL `test_pilot_b_kernels_cover_the_registered_35_runs_once` left alone.
 - Philosophy served: 4 (the frozen test is unmoved, a null pair cannot read as a verdict) and 5/6 (tranche 2's 180 kernel-h is bought only if look 1 is not terminal).
+
+## 2026-11-26 ~21:20–21:40 UTC · JACK · J28 cell 3 frozen + its kernel built
+- J24 (home ≈ 01:00), J18 tranche 1 and J14's Saturday timers all wait on kernels; took J28 per the order of work.
+- Froze `prereg/a2_ratio64.md` (`97762429`) before any seed: A1's task and band, ratio 64 instead of 512, seeds 20–22, twin 20, HOLDS = 3/3 seeds in band at both points, no extension. Stated beside the rule: A1 itself at 512 had one seed under the 100K band, so a 100K miss here cannot tell ratio from noise; 200K can. Also noted §2 proposed A2 for this, the order chose A1.
+- Built `experiments/brain_a/ratio64.py` (`adae3ce3`): the arm moves exactly one key of A1's config; kernel + frozen judge; tests 5/5 incl. planted mean-in-band-but-one-seed-low → MISSES. rows.py untouched. Nothing submitted (W48, behind the ear).
+- Philosophy served: 3 (the train ratio that sets brain A's GPU bill is tested, not assumed) and 4 (rule and its weakness written before the run); 6 (if 64 holds, A costs an eighth of the free GPU).
