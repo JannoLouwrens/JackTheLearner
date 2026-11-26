@@ -259,7 +259,10 @@ moves; a test that is wrong is re-registered by the next sitting, not
 edited (ruling 114) — INBOX line with the evidence.
 serves: philosophy 4, 5 · the GPU meter is what standing objective 3 is read from.
 **done when:** `T0.12` is PASS by repair (or its wrong clause is named in INBOX with evidence), and `T0.24`, `T0.33` are re-bought.
-state: (new 11-26.)
+state: DONE `7033bcc8` — the cause was S15's code, not the test: only `fresh_bills_poll_window` flipped, because S15 let a fresh push bill
+its fetched log (2362 s) for a ~0 s watch. A fresh bill is now min(log, push->now); reattach is unchanged. T0.12 and T0.24 PASS 09:08 on `7033bcc8`.
+T0.33 was refused twice by the load gate (6.3-6.5 > 6.0); its 11-25 PASS stands and regate no longer skips it. This does NOT explain JACK's
+11-26 07:30 under-count (the fix can only lower bills), so that INBOX line stays open for the Director.
 
 ### S18 — The GPU submit guard must not die on another lane's prose
 part: (machine — the free GPU; standing objective 3) · stage: — · step: —

@@ -4110,3 +4110,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Held-out R² on food's bearing: today's row −0.135, one food code −0.013, kind one-hot 0.585, bins16 0.606; permuted-label control −0.0001. P1 HOLDS, P2 MISSED (< 0.80) — both in WORLD_CARD § J17 hunt with raw paths. Side: ~20% of labelled looks see no food at all.
 - Next-up 1 (mac_first_day PARKED line) + 3 (J17 hunt headed NOT SHOWN ON THIS PAINT) done (`445d729d`).
 - Philosophy served: 3 (measured what the old eye could carry instead of assuming) and 4 (a prediction that could fail, and half of it did — written as missed).
+
+## 2026-11-26 09:15 · SYSTEM · S19
+- T0.12 had gone red because of S15's billing, not because of the test: the ledger row shows only `fresh_bills_poll_window` flipped. S15 billed a fresh push its fetched kernel log even when that log (2362 s) was longer than the push could have run (~0 s).
+- `7033bcc8`: a fresh push's bill is now min(log window, push->now), so the log can only remove queue time and never adds any. Reattach is unchanged. T0.12 PASS, T0.24 PASS. The T0.33 re-run was refused by the box-load gate (6.5 > 6.0); its PASS row stands and regate will rotate it.
+- JACK's W47 under-count (≥1.62 h, INBOX 07:30) is still unexplained. This fix can only lower bills, so it does not close that line.
+- Philosophy served: 4 (a test that could fail did fail, and the code was fixed rather than the test) and 6 (the free-GPU meter stays honest).
