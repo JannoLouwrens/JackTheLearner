@@ -65,8 +65,10 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = Path("/data/jack-logs/mlx/rung13")
-GOLDEN_A = Path("/data/jack-logs/mlx/g1v1/golden_size1m_A.npz")
-NPZ = OUT / "R13.npz"
+# JACK_GOLDEN_A / JACK_R13 (11-26): a wheel kernel that regenerates the goldens points the tests at its
+# copies; unset = the box paths, byte-for-byte the old behaviour.
+GOLDEN_A = Path(os.environ.get("JACK_GOLDEN_A", "/data/jack-logs/mlx/g1v1/golden_size1m_A.npz"))
+NPZ = Path(os.environ.get("JACK_R13", str(OUT / "R13.npz")))
 CALLS = (1, 2, 6, 8)
 LR, AGC, EPS, B1, B2, PMIN = 4e-5, 0.3, 1e-20, 0.9, 0.999, 1e-3
 RATE = 0.02

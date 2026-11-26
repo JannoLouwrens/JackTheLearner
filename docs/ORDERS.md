@@ -212,7 +212,8 @@ serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7
 state: rungs 10–12b PASS box + WHEEL (`cdd0db67`); 13a refs + port PASS (`709fa34e`); 13b pieces enc/losses/obs/scan/wm/imag/imagloss-q2/vq/repval PASS 11-25 (detail + rulings in `experiments/brain_a/README.md`).
 state: 11-26 00:10–00:20 **13b-grads** (line `eb21ed16`): read 1 FAIL — the port's posterior sample had NO straight-through (dyn/enc grads 15–24% off); port fixed (`mlx_maths.sample_onehot`), rungs 7/8a/9/10/13b-scan/wm/imag re-PASS. Read 2: calls 1/2 PASS 81/81; 6/8 pol tensors miss.
 state: measured: the OFFICIAL's own policy gradient sits rel 0.15/3.1/2.3 from the f64-adv truth at calls 2/6/8 (f32 value-decode jumps ≤ 0.58 vs adv ~3e-3); port 0.15/1.7/1.0. Ruling `60c6bf04` before read 3 (pol vs truth at exempt calls, WM clause STRENGTHENED to 1e-5). **Read 3 PASS**: control 4/4, plants 8/8.
-state: **Rung 13 complete on the box.** NEXT: the rung-13 wheel kernel — goldens R13 (75 MB) + golden A (252 MB) are /data-only: regenerate them in the kernel (golden_kernel 418 s) then run rung13 `--port` + rung13b's ten modes on PyPI mlx 0.32.4; < 1 h, rank 0.
+state: **Rung 13 complete on the box.** 11-26 00:45 wheel plumbing: rung13/rung13b read `JACK_GOLDEN_A`/`JACK_R13` (unset = box paths; override checked: 13b-losses PASS via a copy, a wrong path raises). Box sha256: golden A `84d42bb6…`, R13 `8e0ee53f…`.
+state: NEXT: `wheel_kernel` set `13` = golden_kernel run A + rung13's A13 job in one Kaggle CPU kernel, then `pip mlx[cpu]==0.32.4` and rung13 `--port` + 13b's ten modes with the env set; verdict NO-READING unless both regenerated sha256 equal the box's (else the kernel tests a different golden). Launch detached; < 1 h, rank 0.
 state: Owner's no-Mac line (INBOX 11-25 11:58) still awaits the Director; the port's tests cost nothing parked.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a

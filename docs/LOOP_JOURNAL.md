@@ -4016,3 +4016,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Read 2: calls 1/2 PASS 81/81; at 6/8 the 13 pol tensors miss. Measured: the OFFICIAL's own policy gradient is rel 0.15/3.1/2.3 from the f64 truth at calls 2/6/8 (value-decode rounding); port 0.15/1.7/1.0. The published gate missed two routing plants at call 2 (5e-5 moves vs port error 5e-6).
 - Ruling `60c6bf04` before read 3 (after read 2's figures, said plainly): pol vs truth at exempt calls, WM clause STRENGTHENED to 1e-5. Read 3 PASS, control 4/4, plants 8/8. Rung 13 complete on the box; next the wheel kernel.
 - Served philosophy 4 (a failure fixed in the port, not filed; a loose gate made stricter, not looser) and 5 (his brain's learning step, checked against the original). Philosophy 7's need for MLX after the owner's no-Mac line is still the Director's open ruling.
+
+## 2026-11-26 00:37–00:50 UTC · JACK · J25 — rung-13 wheel plumbing (short slot)
+- First act: J24 waits on its ruling; J18 7/8 home (g6 on chain A rerun, `…638695` pushed); J14 s2 still Colab 503 (retry loop alive, Kaggle 0.0 h till Sat). → J25.
+- The rung-13 tests read /data-only goldens; rung13.py / rung13b.py now take `JACK_GOLDEN_A` / `JACK_R13` (unset = unchanged). Checked: 13b-losses PASS via copies, a wrong path raises.
+- Box sha256 recorded in the state line so the kernel can prove it regenerated the SAME goldens (NO-READING otherwise). Kernel not written or launched: a short slot cannot test a composed JAX+MLX job.
+- Served philosophy 5/7 (the port checked on the wheel the Mac runs) — thinly: plumbing only, no reading.

@@ -59,8 +59,9 @@ import sys
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-GOLDEN_A = "/data/jack-logs/mlx/g1v1/golden_size1m_A.npz"
-R13 = "/data/jack-logs/mlx/rung13/R13.npz"
+# env overrides as rung13.py (11-26, for the wheel kernel); unset = the box paths
+GOLDEN_A = os.environ.get("JACK_GOLDEN_A", "/data/jack-logs/mlx/g1v1/golden_size1m_A.npz")
+R13 = os.environ.get("JACK_R13", "/data/jack-logs/mlx/rung13/R13.npz")
 CALLS = (1, 2, 6, 8)
 B, T, F, EPISODE_START, BATCH_SEED = 16, 65, 74, 33, 1234
 LAYERS, ACT, EPS = 3, "silu", 1e-4
