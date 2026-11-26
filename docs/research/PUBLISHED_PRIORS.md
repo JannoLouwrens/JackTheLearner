@@ -1118,11 +1118,45 @@ Long form, every link, table and the sub-agents' notes: `/data/jack-research/rep
 
 **Not verified.** Tancik / Yang numbers: summarising fetch, not the tables. Menzel 1967, Harlow 1949, Cherkin 1969, Regan 2001: secondary sources. IMPALA's frames on DMLab-30; total steps for Harlow and Alchemy; AAI-3 foraging scores (plot only); PettingZoo Waterworld's sensor (404); any RL agent trained on AAI raycasts. More in the long form.
 
-## 29. A from-scratch walker on a custom human-like body, on ONE free GPU: steps, hours, reward terms, failure modes, and the known-answer row to reproduce first (2026-11-26; serves ruling 119, stage 3 "separate, fast walking layer", M4; plan part "Body and movement"; answers INBOX `RESEARCH:` Director 11-26 06:40)
+## 29. A from-scratch walker on a custom human-like body, on ONE free GPU: cost, shaping, failure modes, and the row to reproduce first (2026-11-26; serves ruling 119, stage 3's walking layer, M4; plan part "Body and movement"; answers INBOX `RESEARCH:` Director 11-26 06:40)
 
-Long form: `/data/jack-research/scratch_sec29A/` (thousands-of-copies results and hardware), `scratch_sec29B/` (reward terms, custom bodies, failure modes), `scratch_sec29C/` (known-answer rows, free-GPU compatibility, off-policy at scale).
+Long form (sources, configs, the 15-row reward table): `/data/jack-research/scratch_sec29A/notes.md` (scale, hardware), `scratch_sec29B/notes.md` (reward terms, failure modes), `scratch_sec29C/notes.md` (known-answer rows, software path).
 
-**Question.** J10-2 passed on Humanoid-v4 with one-world SAC; that is not his body and not the fast layer. What does the record say a from-scratch walker on a custom human-like body costs on one free T4 with thousands of simulated copies, what shaping it needs, how it fails, and which published body + number (≤ 9 T4-h) our build should reproduce first?
+**Question.** What does a no-mocap walker on a custom body cost with thousands of copies on one free T4, what shaping does it need, how does it fail, and which published body + number (≤ 9 T4-h) do we reproduce first?
 
-*(skeleton committed 2026-11-26 16:12 UTC; the parts below land in this slot.)*
+**Already known**
+- **Steps: 1.5–2×10^8, PPO, 8,192 copies, net 512-256-128.** MuJoCo Playground ([2502.08844](https://arxiv.org/abs/2502.08844)): Berkeley Humanoid 150M, G1 (29 DoF) / T1 200M; < 15 and < 30 min on two RTX 4090s; 106k–120k steps/s on one A100. **All use PD joint targets at 50 Hz around a standing pose; none uses torques.**
+- **A torque humanoid on a Gym-style reward is faster:** Isaac Gym, 21 DoF, 4,096 copies: reward 5,000 in 4 min, 7,000 in ~17 min on an A100; **256 copies → ~2.7 h**; > 4,096 is slower, with worse gaits ([2108.10470](https://arxiv.org/abs/2108.10470)). MJX tutorial humanoid: 20M steps, 3,072 copies, ~6 min on an A100.
+- **The only free-GPU measurement:** that tutorial on a Colab T4, 13–18 min, 5 runs (mujoco PR #1465) → a T4 is ~2.2–3× an A100's time. So 200M steps ≈ 1–1.6 h on a T4 **(inf)**.
+- **PPO is not a safe default on every humanoid:** Brax's own paper: PPO did not solve its humanoid in 500M steps, SAC did in 5M ([2106.13281](https://arxiv.org/abs/2106.13281)). Playground's DM Control port (5 seeds, curve-read): HumanoidWalk PPO ~470 with seeds 100–720; SAC ~890 (840–920) at 10M; HumanoidStand PPO ~800 (620–870), flat under 100 until ~55M.
+- **A custom body's first failure is memory, not learning:** a user's own humanoid in the tutorial ran out of memory on a T4 (406 possible contacts; fewer copies did not help). Fix: explicit contact pairs, 1 solver iteration (mujoco #2236).
+- **Published failure modes, each with its fix:** velocity tracking alone → hopping on both feet (fix: a single-foot-contact reward or a gait clock; [2404.19173](https://arxiv.org/abs/2404.19173)); no air-time term → too-fast steps; no energy term → "high-frequency tapping" ([2111.01674](https://arxiv.org/abs/2111.01674)); no mirroring → one foot forward, one behind, seed-dependent (2610.08737, a 13-DoF custom body on MJX); torque + velocity reward → "entertaining but visually unsatisfactory gaits", seed-sensitive (Heess 2017).
+- **A reward copied across bodies inverts:** Humanoid-v5's alive bonus (height ≥ 1.1 m) never fires on a 0.79 m body (2611.07679). Per new robot: retune reward weights, PD gains, randomisation ranges (2409.06366).
+- **Off-policy at scale:** FastTD3 beats PPO on G1 flat (~31 vs ~22 at 1 A100-h), but a PPO-tuned reward gave it an unusable gait; FastSAC "unstable" ([2505.22642](https://arxiv.org/abs/2505.22642)).
 
+**Candidates**
+1. **PD-target velocity walker, Playground G1 recipe** — PPO; ~15 reward terms (tracking 1.0/0.75, air time 2.0, foot phase 1.0, pose, slip; 10% zero commands; pushes). Proven on five robots, 150–200M. Strength: takes the brain's command as input. Weakness: needs a PD layer, a default pose, foot sensors; scores are version-sensitive (G1 flat ~16.5 in one paper, ~22 in another). Ours: 1–2 T4-h a seed **(inf)**, if contacts are pruned.
+2. **Torque walker, Gym/Isaac reward** — what his body is today. Proven to 7,000 in 17 A100-min. Weakness: unshaped gait; ~5,000 is standing (§16). Ours: 20–50 T4-min **(inf)**.
+3. **Minimal shaped set on torques** (tracking + alternate-foot term + mirror + energy ramped in): **raced by nobody**.
+
+**Ours beside theirs**
+
+| Setting | Published | Ours | Cost |
+|---|---|---|---|
+| Actuation | PD targets, 50–100 Hz | 17 torque motors (`playground.py:102`) | no "zero action = stand"; add a fixed PD wrap or accept candidate 2's gaits |
+| Integrator / step | Euler or implicitfast, 4–5 ms, CG ≤ 6 iterations | RK4 + PGS, 50 iterations (`assets/humanoid_full.xml:24`; `jack_env.py:353`) | **PGS does not exist in MJX**; RK4 costs several × — the GPU body is a new world (ruling 76 applies) |
+| Contacts | 4–8 explicit pairs | every geom pair | out of memory on a T4 as-is (#2236) |
+| Free GPU | A100 / 4090; T4 once | **Kaggle hands us a P100** (`gpu.py:192`) | see below |
+| Brain rate | 5 Hz over a frozen 50 Hz walker, once (2603.00948) | 5 Hz | no ablation; torques degrade fastest at slow rates (Peng 2017) |
+| Feet | contact sensors per foot | none | air-time/phase terms need them |
+
+**Software path — the first risk.** JAX on a P100 is unproven: jax#33224 (open; read directly) shows `jax[cuda12]` 0.8.0 failing a convolution on a Tesla P100; MLP-only work is unreported. Playground's `main` is now Warp + torch; its JAX form is frozen at `playground==0.2.0`. Warp's PyPI wheel needs sm_75 (T4 yes, P100 no).
+
+**Known-answer check.** Row W-1: Playground DM Control `HumanoidStand`, Brax PPO, config defaults (2,048 copies, nominal 60M — log the true count, the figure runs to ~88M), ≥ 3 seeds. Published ~800, seeds 620–870 (figure-read, ± 30 — the freezer re-reads the figure). Band: every seed ≥ 600 AND < 150 at 40M; control = zero-learning-rate twin. ~40–50 T4-min a seed **(inf)**. Fallback W-2: `HumanoidWalk`, Brax SAC, 128 copies, 10M: every seed ≥ 800; ~1.2–1.5 T4-h **(inf)**. **Before either: a 10-minute cell on the GPU Kaggle actually gives — `jax.devices()`, then a jitted, vmapped `mjx.step` of the humanoid at 2,048 copies, printing steps/s and peak memory.**
+
+**What the record does NOT answer**
+- Does MJX run on a P100 at all, and how fast? (The 10-minute cell. Prediction: MLP + physics run; 0.5–1× a T4.)
+- Candidate 1 vs 2 vs 3 on ONE body: PD wrap vs raw torque, with and without mirror/energy. 9 runs ≈ 9–18 T4-h. Prediction: PD + alternate-foot term walks 3/3; raw torque hops or limps on ≥ 1 seed.
+- A walker under a 5 Hz learned commander: no ablation in print. Prediction: holds.
+
+**Not verified.** Every reward in the DM Control and joystick rows is read by eye from a figure; no paper tabulates a humanoid reward with its spread. An outside benchmark (SLM-Lab) gives PPO HumanoidStand 115 at 100M — it **contradicts** the ~800 and must be settled before W-1's band is frozen. PR #1465 and #2236's fix list: via a summariser. 2610.08737, 2611.07679, 2603.00948: read by one sub-agent, not cross-checked. Heess 2017's step count: not extracted. No P100 number for anything; no T4 run of a joystick task. Gait quality of the torque humanoid at 1e8+ PPO steps: nobody says.
