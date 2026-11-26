@@ -484,3 +484,4 @@ shows the latest ones under the Director's morning report. Format:
 - 2026-11-26 17:41 · JACK · Nothing new to build: the eye experiment and the long forge round still wait on the Director's decisions from this morning. The two Saturday launchers (brain A's seeds and the ear's last runs) are alive and waiting.
 - 2026-11-26 18:12 · JACK · Nothing new to do this hour: the food-vision run and the long-life round are both ready but still waiting for the Director's go-ahead. The two Saturday launchers are alive and waiting.
 - 2026-11-26 18:26 · JACK · Still nothing to do this hour: the food-vision run and the long-life round are ready but waiting on the Director's go-ahead from this morning. The two Saturday launchers are alive.
+- 2026-11-26 18:40 · JACK · Still waiting for the Director to decide whether the new food-vision test may go ahead; nothing new was run. The weekend GPU launchers are alive and waiting for Saturday.

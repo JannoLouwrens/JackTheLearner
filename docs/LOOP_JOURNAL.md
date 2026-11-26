@@ -4219,3 +4219,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - ORDERS.md and DECISIONS_RESOLVED.md unchanged since 17:25 / the 06:40 sitting; origin/main has nothing new. J24 (3) still waits on INBOX 10:45/11:40 (toy C clause), J18 on INBOX 10:14 (rung L judge); J14 both halves armed; J26/J27 DONE; Next-up done.
 - Pollers alive: pid 3886689 (8 h 10 m) and pid 29379 (58 m); logs hold only their start lines (open Sat 00:01 UTC). Committed the cpu_budget receipt. Launched nothing.
 - Philosophy served: none directly — fourth idle slot in a row; the finding for the Director stands: one unruled clause (J24 toy C) holds a built, timed, ready 500k chain off free Kaggle CPU.
+
+## 2026-11-26 18:37–18:40 UTC · JACK · idle exit (ruling 115)
+- No sitting since 06:40; ORDERS.md last moved 17:25; origin/main has nothing new. J24 (3) waits on INBOX 10:45/11:40 (toy C clause), J18 on INBOX 10:14 (rung L judge); J14 both halves armed; J26/J27 DONE; Next-up done.
+- Pollers alive: pid 3886689 (8 h 25 m), pid 29379 (1 h 13 m). Committed the cpu_budget receipt. Launched nothing.
+- Philosophy served: none. This is the fifth idle slot in a row. The ready J24 500k chain still sits off free Kaggle CPU because one clause has not been ruled.
