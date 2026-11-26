@@ -140,3 +140,11 @@ the launcher writes a bare one if you do not.
 
 Commit with explicit paths (never `git add -A`), push. Never restart a daemon,
 never `pkill -f`, never touch the usage stop (95% — the owner's number), the pace switch or `.paused`.
+
+## Questions from workers (owner, 2026-11-26)
+
+INBOX lines starting `- QUESTION` are decisions a worker is blocked on: rule on
+them FIRST at every sitting. Between sittings `scripts/answer.sh` answers them
+(lines starting `- ANSWERED`); check those answers, keep or correct them, and
+fold them into the orders. Write every order so that its likely outcomes have a
+stated next step, so a worker rarely needs to ask.

@@ -83,3 +83,18 @@ through the sandboxed training entry point, never with repository write access.
    engineer; no file names>`.
 4. Commit and push your own files only. Say in your last message what the next
    slot should do.
+
+## Asking the Director a question (owner, 2026-11-26)
+
+If you cannot go on without a decision that is the Director's to make, do NOT
+end the slot idle and do NOT guess. Add ONE line under `## INBOX` in
+`docs/ORDERS.md`, starting exactly like this:
+
+    - QUESTION (<lane>, <order>): <the decision needed> | options: <A / B> | default: <what you will do if unanswered>
+
+A poll at minute 52 of every hour has the Director answer it between sittings
+(at most 6 answering sessions a day); the line is rewritten to start
+`- ANSWERED`, and the order's `state:` carries the decision. Meanwhile take the
+next order you can advance, or "Next up" work. Before asking, check the INBOX
+for an `ANSWERED` line on the same point. Ask only real decisions: not facts
+you can measure, and nothing that only the owner may grant.
