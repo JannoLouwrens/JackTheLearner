@@ -4245,3 +4245,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `forge_scoreboard` showed a parent round as REFUSED (judge-locked `load_round` wants an S rung); it now renders one via `validate_round`. Tests r1_run 31/31 (new frozen-shape test), r1_spec 8/8, round 27/27, read 13/13.
 - Launched tranche 1 from pin `495a766d` on the two free sessions beside J24 (order of work said "the other two"; the earlier state's "wait for 01:00" was wrong): chains A/B, kernels jack-cpu-1795725017 / -031 RUNNING 20:31.
 - Philosophy served: 3 (the record's two best-supported settings raced at the long life the record never reports) and 4 (rule, judge and keep rule frozen before any seed ran). Also 6: all five free Kaggle CPU sessions in use.
+
+## 2026-11-26 ~20:45–21:10 UTC · SYSTEM · S20 (1)+(2) built (`968da0b8`)
+- Look 1 is now readable with 10–19 runs an arm: `harness/looks.py` (`compare_looks`, `judge_looks`) pads after the real runs and calls the frozen `compare`/`prereg.judge`. It returns A_DIFFERS/FUTILE at look 1, else NEEDS_LOOK_2; with ≥ 20 runs it is `compare` itself. No hashed file was touched (r1 judge lock green, 382cf304 unchanged), so `same_vs_same` cannot move.
+- `forge/r1L_read.py`: K1 vs E-food verdict, check #13 books, rung-M rate per arm; it refuses a spec that differs from the 52033df2 freeze. Planted tests 4/4 (harness) + 4/4 (reader); r1_spec 8/8, r1_read 13/13, round 27/27. Pre-existing HEAD FAIL `test_pilot_b_kernels_cover_the_registered_35_runs_once` left alone.
+- Philosophy served: 4 (the frozen test is unmoved, a null pair cannot read as a verdict) and 5/6 (tranche 2's 180 kernel-h is bought only if look 1 is not terminal).

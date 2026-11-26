@@ -264,7 +264,8 @@ baseline, check #13's books, and beside it rung M's rate per arm under the
 frozen metric hash. It refuses a spec whose hash differs from the freeze.
 serves: PLAN stage 1 "the harness passes its own checks" · J18 · philosophy 4, 5.
 **done when:** the planted tests pass, `same_vs_same` is unchanged, and the reader runs on a planted r1L folder.
-state: (new 11-26 19:14, from INBOX 10:14.)
+state: (1)+(2) built `968da0b8`, in a NEW `harness/looks.py`, not by editing `compare`: `__init__.py`/`prereg.py` are hashed by r1's judge lock and every prereg, so editing them would make those results unreadable. `compare_looks` pads AFTER the real runs and calls the frozen `compare`, so look 1 is the hashed code; hash 382cf304 unchanged, so `same_vs_same` cannot move (not re-run: same code, same hash).
+state: Reader `python -m experiments.forge.r1L_read --tranches 1` (JACK runs it when tranche 1 lands, ≈ 01:00); planted 4/4 + 4/4. The spec names no permutation seed: the reader uses n_perm 2000, seed 0, and prints them. Close S20 when JACK's first real read runs.
 
 ### S17 — A failed Colab submit must not leave an orphan session
 part: (machine — the free GPU; standing objective 3) · stage: — · step: —
