@@ -105,6 +105,12 @@ SETS["13"] = (RUNS_13, "wheel_13.json")
 # to tell an x86 f32 value-decode rounding difference from a port bug (box: call 2 |val32-val64| 5.7e-04).
 RUNS_13P = [("polgrad_probe", "rung13b_polgrad_probe.py", [], 2400)]
 SETS["13p"] = (RUNS_13P, "wheel_13p.json")
+# J25 (11-26 04:55): 13p read — at call 2 the wheel's |val32 - val64| is 5.835e-01 (box 5.723e-04), adv=f64 on the
+# port's own graph reads global-rel 8.27e-02 (box 9.25e-02), adv=gret fails like adv=port: the miss is in val32 alone.
+# Box: one ulp on one tail prob swings the decode by 0.226 (bins to 4.85e8, |val| 1.1e-3). Set 13u is a PROBE (no
+# verdict, no ledger): ulp distance of x86 mlx's f32 softmax vs the correctly rounded f64 softmax, per call.
+RUNS_13U = [("softmax_ulp_probe", "rung13b_softmax_ulp_probe.py", [], 1200)]
+SETS["13u"] = (RUNS_13U, "wheel_13u.json")
 
 
 def job_body_13(which: str = "13") -> str:
