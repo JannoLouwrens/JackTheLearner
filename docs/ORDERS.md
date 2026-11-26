@@ -210,9 +210,10 @@ no speed claims.
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7.
 **done when:** rungs 10–13 pass here and on the wheel, test names in `experiments/brain_a/README.md`.
 state: rungs 10–12b PASS box + WHEEL (`cdd0db67`); rung 13 (13a + 13b) complete on the box 11-26 (`experiments/brain_a/README.md`).
-state: 11-26 04:03 **wheel 13 READ: FAIL at rung13b_grads only** (`jack-cpu-1795663575`, receipt `/data/jack-logs/mlx/wheel_13.json`): both regenerated goldens sha256 = box; 10/11 runs PASS. Pol vs f64 truth: call 2 port 5.80e+01 vs official 3.08e-01 (13/13 over 1.25×; box had port = official 3.24e-01), call 6 1/13 (7.81 vs 5.46). WM/enc/dyn all PASS, plants 8/8, control 4/4.
-state: 11-26 04:38 13p READ (`26656dda`): call 2 wheel |val32−val64| 5.835e-01 vs box 5.723e-04; adv=f64 on the port's graph 8.27e-02 (box 9.25e-02); adv=gret fails as adv=port (17.8) → miss is the f32 value decode only, not the policy backward. Box: 1 ulp on one tail prob swings val 0.226 (bins 4.85e8, |val| 1.1e-3).
-state: 11-26 04:40 set `13u` LAUNCHED (softmax ulp probe on the wheel, kernel `jack-cpu-1795668030`), worktree `/data/wt/jack-wheel13u`, log `/data/jack-logs/mlx/wheel_13u_launch.log` → `wheel_13u.json`. NEXT: read it; if x86 softmax mirror-pair errors carry the 0.58, re-register 13b-grads' pol clause (e.g. adv=f64 on the port graph vs truth + a decode-rounding bound) with the reason, BEFORE the re-read; else hunt an x86 port bug.
+state: 11-26 04:03 wheel 13 READ FAIL at rung13b_grads' pol-vs-truth clause only (`jack-cpu-1795663575`, receipt kept as `wheel_13_read1.json`); 13p: port backward same on both machines, miss is the f32 val decode.
+state: 11-26 05:10 13u read: x86 mlx softmax 31 ulp off rounded-f64 (as box); call 2 |val_mlx−val_rounded| 0.584 vs |val_rounded−f64| 1.1e-3 → rounding through an ill-conditioned decode, not the port.
+state: 11-26 05:40 **RE-REGISTERED T2 `872a99af` before the re-read**: at exempt calls pol tensors run on the official's own back-solved adv face the PUBLISHED 1e-4 gate (1.25× truth line printed, not counted). Box PASS: rel 6.3e-7/9.5e-7/9.4e-7 at calls 2/6/8, plants 8/8, control 4/4.
+state: Wheel 13 RE-READ launched: kernel `jack-cpu-1795670064` from `/data/wt/jack-wheel13t2`, log `/data/jack-logs/mlx/wheel_13t2_launch.log` → verdict in `wheel_13.json`. NEXT: read it; PASS → J25 DONE (rungs 10–13 box + wheel); FAIL → chase it, threshold untouched.
 state: Owner's no-Mac line (INBOX 11-25 11:58) still awaits the Director.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a

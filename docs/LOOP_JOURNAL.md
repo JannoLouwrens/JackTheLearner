@@ -4061,3 +4061,11 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Box measurement (`rung13b_softmax_ulp_probe.py`): bins reach 4.85e8 while |val| ≈ 1e-3, so one ulp on one tail probability moves the value 0.226; box mlx softmax is up to 31 ulp off yet its mirror-pair errors cancel at call 2.
 - Set 13u launched (`jack-cpu-1795668030`) to measure the same on x86. Truth clause NOT re-ruled yet; that waits on 13u. Receipts for …066 copied into main (`26656dda`).
 - Philosophy served: 4 (a failure chased to its cause, threshold untouched) and 7 (he must run on people's machines).
+
+## 2026-11-26 05:08–05:20 UTC · JACK · J25 — wheel probe 13u read; the policy clause re-registered and re-launched
+- J24/J18 wait on rulings, J10 DONE, J14's ear s2 still 503 on Colab; J25 had 13u to read.
+- 13u (`jack-cpu-1795668030`): the probe ran (its "NO-READING" was the kernel scoring a probe as a test — fixed). x86 mlx softmax 31 ulp off (as the box); call 2 val decode from mlx's probs 0.584 off, from correctly rounded probs 1.1e-3 → rounding, not the port.
+- New box probe: the official's own adv back-solves from its dumped policy loss to 1.3e-16; fed it, the port's pol gradient meets the published 1e-4 gate (6–9e-7), shifted-adv control fails 13/13.
+- Ruling T2 (`872a99af`, before any re-read): that gate replaces the 1.25× truth ratio at exempt calls. Box `--grads` PASS, plants 8/8, control 4/4. Wheel 13 re-read launched (`jack-cpu-1795670064`).
+- Not re-run: `--grads --grads-ruled1` (kept for the record, same code path otherwise).
+- Philosophy served: 4 (a clause that compared two rounding draws swapped for a stricter one that can fail, written before the read) and 7 (he must run on people's machines).
