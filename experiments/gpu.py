@@ -748,25 +748,29 @@ class Budget:
             os.replace(tmp, self.path)
         return True
 
-    def refund(self, job_id: str, reason: str) -> bool:
-        """Zero the charge of a job that never ran remotely, keeping why.
+    def refund(self, job_id: str, reason: str, keep_hours: float = 0.0) -> bool:
+        """Lower a charge to `keep_hours` (default 0), keeping why.
 
-        `charge` never lowers a bill; this exists for one case only — compute
-        that provably did not exist (S2: a Kaggle push refused on stdout,
-        polled as "queued" and billed its whole timeout). The record keeps
-        the hours it carried as `refunded_hours`. Returns True if it refunded.
+        `charge` never lowers a bill; this exists for compute that provably
+        did not exist (S2: a Kaggle push refused on stdout, polled as
+        "queued" and billed its whole timeout; S15 (3): queue time billed as
+        run time, `keep_hours` = the kernel log's own window). The record
+        keeps the removed hours as `refunded_hours`. True if it refunded.
         """
         lock_path = self.path.with_suffix(self.path.suffix + ".lock")
         with open(lock_path, "w") as lockf:
             fcntl.flock(lockf.fileno(), fcntl.LOCK_EX)
             self.data = self._load()
             rec = self.data["charged_jobs"].get(job_id)
-            if rec is None or "refunded_hours" in rec:
+            if (rec is None or "refunded_hours" in rec
+                    or not 0.0 <= keep_hours < float(rec["hours"])):
                 return False
+            cut = round(float(rec["hours"]) - keep_hours, 4)
             key = rec["backend"] + ("" if rec.get("ok", True) else FAILED_SUFFIX)
             wk = self.data["weeks"].setdefault(rec["week"], {})
-            wk[key] = round(wk.get(key, 0.0) - float(rec["hours"]), 4)
-            rec.update(refunded_hours=rec["hours"], hours=0.0, refund_reason=reason)
+            wk[key] = round(wk.get(key, 0.0) - cut, 4)
+            rec.update(refunded_hours=cut, hours=round(keep_hours, 4),
+                       refund_reason=reason)
             tmp = self.path.with_suffix(self.path.suffix + ".tmp")
             tmp.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n")
             os.replace(tmp, self.path)
@@ -1060,10 +1064,12 @@ def _kaggle_poll(kid: str, timeout_s: float, t_open: float) -> tuple[str, float,
     row ends the poll, so `submit` fails over in minutes instead of polling
     blind to the full timeout (S2: 3.01 h billed for two such kernels). If
     Kaggle never once answered for the kernel it never had a session: bill 0.
-    Otherwise bill up to the last answer.
+    Otherwise bill up to the last answer. The meter opens at the first
+    RUNNING answer, not at push: a kernel QUEUED for a session spends no
+    quota (S15 (3): `…268291` billed 10.02 h, Kaggle ran it 5.09 h).
     """
     deadline = time.time() + timeout_s
-    seen_at, fail_since, note = None, None, ""
+    seen_at, fail_since, note, queued = None, None, "", None
     while time.time() < deadline:
         time.sleep(20)
         rc, s_out, s_err = _run([KAGGLE, "kernels", "status", kid], 120)
@@ -1077,6 +1083,10 @@ def _kaggle_poll(kid: str, timeout_s: float, t_open: float) -> tuple[str, float,
             continue
         fail_since, seen_at = None, time.time()
         low = s_out.lower()
+        if queued is None:                 # first answer: was it waiting?
+            queued = "queued" in low
+        elif queued and "running" in low:
+            queued, t_open = False, seen_at - 20   # started inside the last gap
         if "complete" in low:
             return "complete", time.time() - t_open, ""
         if "error" in low or "cancel" in low:
@@ -1308,7 +1318,12 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
             poll_note = f"{poll_note}; {fetch_note}" if poll_note else fetch_note
             print(f"!! {job_id}: {fetch_note}", file=sys.stderr, flush=True)
 
-    if reuse:
+    # Kaggle's own run window closes EVERY kernel's bill when its log is
+    # readable (S15 (3)); the polled window stays the fallback.
+    window = _kaggle_log_window(Path(log_path)) if log_path else None
+    if window is not None:
+        billable_s = window
+    elif reuse:
         # THE 15x SCAR (10th overseer audit, 2026-08-12). With the meter opened
         # at the slug's submission epoch and closed at `time.time()`, a reattach
         # billed every idle hour between the kernel going terminal and the local
@@ -1318,14 +1333,10 @@ def run_on_kaggle(script: Path, timeout_s: int = 1800,
         # KERNEL exists precisely for the poll that died before charging. Close
         # the window from Kaggle's OWN report of what the kernel ran, never the
         # local clock.
-        window = _kaggle_log_window(Path(log_path)) if log_path else None
-        if window is not None:
-            billable_s = window
-        else:
-            print(f"!! reattach meter: no readable kernel log for {job_id}; "
-                  f"billing the local window {billable_s:.0f}s, an UPPER BOUND "
-                  f"that includes idle time since submission",
-                  file=sys.stderr, flush=True)
+        print(f"!! reattach meter: no readable kernel log for {job_id}; "
+              f"billing the local window {billable_s:.0f}s, an UPPER BOUND "
+              f"that includes idle time since submission",
+              file=sys.stderr, flush=True)
 
     if cpu:
         billable_s = 0.0   # a CPU session spends no GPU-hours (S1)

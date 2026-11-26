@@ -672,8 +672,10 @@
     },
     "jannolouwrens/jack-ladder-1795268291": {
       "backend": "kaggle",
-      "hours": 10.0189,
+      "hours": 5.0862,
       "ok": true,
+      "refund_reason": "S15 (3): billed push->COMPLETE 36068 s incl. queue; Kaggle's own kernel log (kernels output, re-read 11-26) spans 18310.17 s = 5.0862 h; 10.0189 - 5.0862 = 4.9327 h was queue",
+      "refunded_hours": 4.9327,
       "week": "2026-W47"
     },
     "jannolouwrens/jack-ladder-1795268355": {
@@ -1209,6 +1211,12 @@
       "hours": 0.0022,
       "ok": false,
       "week": "2026-W47"
+    },
+    "ladder-1795661709": {
+      "backend": "colab",
+      "hours": 0.0022,
+      "ok": false,
+      "week": "2026-W47"
     }
   },
   "opening_balances": {
@@ -1605,8 +1613,8 @@
     },
     "2026-W47": {
       "colab": 10.725,
-      "colab_failed": 0.1712,
-      "kaggle": 33.1461,
+      "colab_failed": 0.1734,
+      "kaggle": 28.2134,
       "kaggle_failed": 0.1687
     }
   }
