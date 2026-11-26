@@ -378,14 +378,18 @@ def rssm_loss(P, carry, tokens, action, reset, uniforms, cfg, act_spec, free):
 def sample_onehot(logit, u, mix):
     """outs.OneHot(logit, unimix).sample with file noise: argmax(log((1-mix)softmax + mix/C)
     + Gumbel(u)), u clipped to [1e-7, 1-1e-7] as file_noise.py. Ours beside theirs: the
-    official draws Gumbel from jax.random (here from the golden's uniforms); no
-    straight-through gradient (no training at this rung)."""
+    official draws Gumbel from jax.random (here from the golden's uniforms).
+    STRAIGHT-THROUGH (rung 13b-grads read 1, 11-26: without it every `dyn/` gradient of the whole
+    loss sat 15-24% off): outs.py L265-270 `_onehot_with_grad` on Categorical's logits, which
+    under unimix are log((1-mix) softmax + mix/C) — so sg(onehot) + (q - sg(q)), q =
+    softmax(log p). Forward value unchanged (q - sg(q) is exactly 0)."""
     p = mx.softmax(logit.astype(f32), -1)
     if mix:
         p = (1.0 - mix) * p + mix / logit.shape[-1]
+    lp = mx.log(p)
     g = -mx.log(-mx.log(mx.clip(u.astype(f32), 1e-7, 1.0 - 1e-7)))
-    idx = mx.argmax(mx.log(p) + g, -1)
-    return (mx.arange(logit.shape[-1]) == idx[..., None]).astype(f32)
+    idx = mx.argmax(lp + g, -1)
+    return straight_through(idx, lp)
 
 
 _GELU_C = math.sqrt(2.0 / math.pi)

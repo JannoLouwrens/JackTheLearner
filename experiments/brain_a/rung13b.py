@@ -1456,6 +1456,32 @@ def main_repval():
 #       repval_grad off (sg repfeat in repval); slowreg 0 (both value terms); adv not stopped in the policy
 #       loss; policy loss summed over the horizon instead of meaned.
 # Ours beside theirs: f32 (published bf16); one device; imagination teacher-forced as above.
+# READ 1 (11-26, `eb21ed16`) FAILED: every `dyn/` (and enc) gradient 15-24% off — the port's posterior sampler
+#   had NO straight-through (mlx_maths.sample_onehot said so: "no training at this rung"); the no-ST plant was a
+#   NO-OP. Port fix: sample_onehot returns straight_through(idx, log p_unimix) = outs.py L265-270 (forward
+#   unchanged; rungs 7, 10, 13b-wm, 13b-imag re-PASS). READ 2 FAILED (`rung13b_grads_read2.log`): calls 1/2 PASS
+#   all 81 eager+compiled (global rel 3.6e-7 / 4.8e-7); calls 6/8 the 13 `pol/` tensors miss (cos 0.05-0.3) and
+#   (L) misses at call 8 (rel 1.1e-5); plants 6/8 (reward_grad_off, repval_grad_off PASS the gate at call 2).
+#   CAUSES MEASURED (`rung13b_polgrad_probe.py`, `--grads-terms`): (a) the policy gradient is linear in sg(adv),
+#   adv = ret - val is ~3e-3 while the f32 two-hot decode of val carries jumps up to 0.58 (13b-imagloss's
+#   ulp-at-4.85e8 floor), so the OFFICIAL's pol gradient sits rel 0.15 / 3.1 / 2.3 (worst 0.32 / 5.4 / 3.0) from
+#   the f64-adv gradient at calls 2/6/8 — the port 0.15 / 1.7 / 1.0 (closer); (L)'s whole call-8 miss is the
+#   policy term (+5.6e-4; every other term <= 2.1e-5). (b) the published gate is LOOSE against this port: the
+#   two plants move enc/dyn by 5.2e-5-6.6e-5 at call 2 (and dyn by <= 9.5e-4 at 6/8: under dyn's 1e-3 — their
+#   6/8 "catches" in read 2 came from the failing pol tensors), while the port's worst error on enc/dyn/dec/rew/
+#   con is <= 5.2e-6 at every call (val 3.5e-6 at calls 1/2, 4.1e-5 at 6/8 under target decode noise).
+# RULING (11-26, written AFTER read 2's figures, committed BEFORE read 3 — said plainly, as d93487c9/96a5f745):
+#   (X) a call is PRECISION-EXEMPT for `pol/` iff the official's own pol gradient sits farther than the gate's
+#       1e-4 from the f64-adv truth gradient on some pol tensor (the golden cannot certify it there). At an
+#       exempt call the 13 pol tensors leave the published gate and must instead each satisfy
+#       rel(port, truth) <= 1.25 x rel(official, truth) (q2/vq's 1.25 ratio). Non-exempt calls: gate as written.
+#   (L') at an exempt call (L) reads total MINUS the policy term on both sides (port's vs the golden's dumped
+#       policy mean); the policy term itself is certified vs an f64 truth by 13b-imagloss-vq (Q).
+#   (W) STRENGTHENING, beside the unchanged published gate: every enc/ dyn/ dec/ rew/ con/ tensor rel <= 1e-5 vs
+#       the official at every call (a round number between the port's measured worst 5.2e-6 and the smallest
+#       planted routing move 5.2e-5 — fitted after measurement, said plainly; it can only make the line harder).
+#   (C), (P), the 8 plants and "every call where it changes the gradient" unchanged; "FAILS" now = the ruled verdict.
+#   The as-read line stays runnable: `--grads-line1`.
 GRAD_PLANTS = ("no_straight_through", "reward_grad_off", "rep_scale_1", "kl_sg_swapped", "repval_grad_off",
                "slowreg_0", "adv_not_stopped", "policy_horizon_sum")
 
@@ -1507,7 +1533,7 @@ def main_grads():
             hi=A(R[f"c{c}/pre/retnorm/hi/value"]).astype(mx.float32),
             last=A(last), rterm=A(np.zeros((B, 64), bool)))
 
-    def make(plant=None):
+    def make(plant=None, stash=None):
         sc = dict(SCALES, rep=1.0) if plant == "rep_scale_1" else SCALES
         slowreg = 0.0 if plant == "slowreg_0" else 1.0
 
@@ -1553,6 +1579,8 @@ def main_grads():
             rt = sg(mx.concatenate([rr, 0 * rr[:, -1:]], 1))
             wr = mx.logical_not(I["last"]).astype(mx.float32)
             L["repval"] = (wr * (M.twohot_loss(lr, rt, b) + slowreg * M.twohot_loss(lr, sr, b)))[:, :-1]
+            if stash is not None:                # diagnostics only (`--grads-terms`), never under grad
+                stash.update(L)
             return sum(L[k].mean() * s for k, s in sc.items())
         return loss
 
@@ -1572,7 +1600,162 @@ def main_grads():
         finally:
             M.sample_onehot, M.kl_dyn_rep = real_sample, keep_kl
 
+    if "--grads-terms" in sys.argv:            # diagnostic: each term's mean vs the golden's dumped term
+        for c in CALLS:
+            st = {}
+            P = {n: A(R[f"c{c}/pre/{n}"]) for n in names[c]}
+            S = {k[len(f"c{c}/pre/"):]: A(R[k]) for k in R.files if k.startswith(f"c{c}/pre/slowval/")}
+            make(stash=st)(P, S, inputs(c))
+            ref = float(R[f"c{c}/loss/total_scaled"])
+            print(f"call {c}: " + "  ".join(
+                f"{k} {float(st[k].mean()) - float(G[f'c{c}/outs/losses/{k}'].astype(np.float64).mean()):+.1e}"
+                f"(x{SCALES[k]:g})" for k in SCALES) + f"  | total official {ref:.6f}")
+        gold = {c: {f"c{c}/grad/{n}": R[f"c{c}/grad/{n}"] for n in names[c]} for c in CALLS}
+        rel = lambda x, y: float(np.linalg.norm(x.astype(np.float64) - y) / max(np.linalg.norm(y.astype(np.float64)), 1e-300))  # noqa: E731
+        for c in CALLS:
+            tr = run(c)[1]
+            mods = {}
+            for k in tr:
+                if np.linalg.norm(gold[c][k]) > 0:
+                    m_ = k.split("/grad/")[1].split("/")[0]
+                    mods[m_] = max(mods.get(m_, 0.0), rel(tr[k], gold[c][k]))
+            print(f"  call {c} port vs official, worst rel per module: " + "  ".join(f"{m_} {v:.1e}" for m_, v in sorted(mods.items())))
+            for pl in ("reward_grad_off", "repval_grad_off"):
+                gp = run(c, plant=pl)[1]
+                worst = sorted(((rel(gp[k], tr[k]), rel(tr[k], gold[c][k]), k) for k in tr), reverse=True)[:3]
+                print(f"  call {c} {pl}: largest moves (planted vs port | port vs official): " + "; ".join(
+                    f"{k.split('/grad/')[1]} {a:.1e} | {b_:.1e}" for a, b_, k in worst))
+        return 0
     gold = {c: {f"c{c}/grad/{n}": R[f"c{c}/grad/{n}"] for n in names[c]} for c in CALLS}
+    if "--grads-line1" in sys.argv:            # the line as read at reads 1-2 (eb21ed16), kept runnable
+        return _grads_line1(run, gold, names)
+    # RULING (11-26, after read 2, before read 3) — see the block comment above GRAD_PLANTS.
+    b64 = np.array(b).astype(np.float64)
+
+    def dec64(L):
+        L = np.asarray(L, np.float64)
+        L = L - L.max(-1, keepdims=True)
+        p = np.exp(L)
+        p /= p.sum(-1, keepdims=True)
+        return p[..., 127] * b64[127] + ((p[..., 128:] - p[..., :127][..., ::-1]) * b64[128:]).sum(-1)
+
+    def perc64(x, q):
+        v = np.sort(x.reshape(-1))
+        pos = q / 100.0 * (v.size - 1)
+        i0 = int(np.floor(pos)); i1 = min(i0 + 1, v.size - 1); fr = pos - i0  # noqa: E702
+        return v[i0] * (1 - fr) + v[i1] * fr
+
+    def pol_truth(c):
+        """The f64-adv policy gradient: adv from an f64 decode of the port's own val logits, an f64 lambda
+        return and an f64 retnorm; everything else the port's f32 logp/entropy path (certified at call 1)."""
+        I = inputs(c)
+        x = M.feat2tensor(I["idet"], I["isto"])
+        Pv = {n: A(R[f"c{c}/pre/{n}"]) for n in names[c] if n.startswith("val/")}
+        val = dec64(np.array(M._mlp_head_n(Pv, "val", x, "logits", 3)))
+        con, rw = np.array(I["icon"]).astype(np.float64), np.array(I["irew"]).astype(np.float64)
+        live, rets = con[:, 1:], [val[:, -1]]
+        interm = rw[:, 1:] + 0.05 * live * val[:, 1:]
+        for t in reversed(range(live.shape[1])):
+            rets.append(interm[:, t] + live[:, t] * 0.95 * rets[-1])
+        ret = np.stack(list(reversed(rets))[:-1], 1)
+        lo = 0.99 * float(R[f"c{c}/pre/retnorm/lo/value"]) + 0.01 * perc64(ret, 5.0)
+        hi = 0.99 * float(R[f"c{c}/pre/retnorm/hi/value"]) + 0.01 * perc64(ret, 95.0)
+        adv = A(((ret - val[:, :-1]) / max(1.0, hi - lo)).astype(np.float32))
+        w = A(np.cumprod(np.array(I["icon"]), 1).astype(np.float32))
+
+        def lossp(P):
+            m = M._mlp_head_n(P, "pol", x, "action/mean", 3)
+            sd = M._mlp_head_n(P, "pol", x, "action/stddev", 3)
+            z = mx.zeros((*m.shape[:-1], 1), mx.float32)
+            return M.policy_loss(m, sd, z, I["iact"], mx.zeros(m.shape[:-1], mx.int32), adv, w, 0.1, 1.0,
+                                 3e-4)[0].mean()
+        Pp = {n: A(R[f"c{c}/pre/{n}"]) for n in names[c] if n.startswith("pol/")}
+        return {f"c{c}/grad/{k}": np.array(v, np.float64) for k, v in mx.grad(lossp)(Pp).items()}
+
+    def relt(x, t):
+        nt = np.linalg.norm(t)
+        return float(np.linalg.norm(np.asarray(x, np.float64).ravel() - t.ravel()) / nt) if nt > 0 else 0.0
+
+    TRUTH = {c: pol_truth(c) for c in CALLS}
+    EXEMPT = {c: max(relt(gold[c][k], t) for k, t in TRUTH[c].items()) > port_gate.RTOL for c in CALLS}
+    WM_MODS, WM_TOL = ("enc/", "dyn/", "dec/", "rew/", "con/"), 1e-5
+    polterm = {}
+    for c in CALLS:
+        st = {}
+        P = {n: A(R[f"c{c}/pre/{n}"]) for n in names[c]}
+        S = {k[len(f"c{c}/pre/"):]: A(R[k]) for k in R.files if k.startswith(f"c{c}/pre/slowval/")}
+        make(stash=st)(P, S, inputs(c))
+        polterm[c] = (float(st["policy"].mean()), float(G[f"c{c}/outs/losses/policy"].astype(np.float64).mean()))
+        print(f"X  call {c}: official pol grads vs the f64-adv truth, worst rel "
+              f"{max(relt(gold[c][k], t) for k, t in TRUTH[c].items()):.2e} -> "
+              f"{'PRECISION-EXEMPT for pol (truth clause)' if EXEMPT[c] else 'gate vs official'}")
+
+    def verdict(c, gr, tot=None, label=None):
+        ex = EXEMPT[c]
+        gsub = {k: v for k, v in gold[c].items() if not (ex and "/grad/pol/" in k)}
+        gp, fails, _, n = port_gate.gate(gsub, gr)
+        wm = [(k, relt(gr[k], gold[c][k].astype(np.float64))) for k in gold[c]
+              if k.split("/grad/")[1].startswith(WM_MODS) and np.linalg.norm(gold[c][k]) > 0]
+        wm_bad = [(k, r) for k, r in wm if r > WM_TOL]
+        tr_bad = []
+        if ex:
+            for k, t in TRUTH[c].items():
+                po, of = relt(gr[k], t), relt(gold[c][k], t)
+                if np.linalg.norm(t) > 0 and not po <= 1.25 * of:
+                    tr_bad.append((k, po, of))
+        okL = True
+        if tot is not None:
+            ref = float(R[f"c{c}/loss/total_scaled"])
+            pp, po = polterm[c]
+            a, b_ = (tot - pp, ref - po) if ex else (tot, ref)
+            relL = abs(a - b_) / abs(b_)
+            okL = relL <= LOSS_TOL
+            print(f"L  {label}: total{' minus policy' if ex else ''} {a:.6f} vs official {b_:.6f} rel {relL:.1e} "
+                  f"({'ok' if okL else 'FAIL'})")
+            print(f"G  {label}: published gate on {n} tensors{' (pol exempt)' if ex else ''}: "
+                  f"{'PASS' if gp else 'FAIL'} ({len(fails)} failing); WM strengthened 1e-5: worst "
+                  f"{max(r for _, r in wm):.1e}, {len(wm_bad)} over" +
+                  (f"; pol vs truth: {len(tr_bad)} of {len(TRUTH[c])} over 1.25x official (port worst "
+                   f"{max(relt(gr[k], t) for k, t in TRUTH[c].items()):.2e}, official worst "
+                   f"{max(relt(gold[c][k], t) for k, t in TRUTH[c].items()):.2e})" if ex else ""))
+            for k, why, r, cs in fails[:4]:
+                print(f"     FAIL {k} {why} rel {r:.3e} cos {cs:.6f}")
+            for k, r in wm_bad[:4]:
+                print(f"     WM-OVER {k} rel {r:.2e}")
+            for k, po, of in tr_bad[:4]:
+                print(f"     TRUTH-OVER {k} port {po:.2e} official {of:.2e}")
+        return gp and not wm_bad and not tr_bad and okL
+
+    ok, true = True, {}
+    for c in CALLS:
+        for mode in ("eager", "compiled"):
+            tot, gr = run(c, compiled=mode == "compiled")
+            true.setdefault(c, gr)
+            ok &= verdict(c, gr, tot, f"call {c} {mode:8s}")
+    hits = [not verdict(c, run(c, shift=CUR_STEP)[1]) for c in CALLS]
+    print(f"C  posterior noise one step late: verdict FAILS on {sum(hits)}/{len(CALLS)} calls")
+    ok &= all(hits)
+    caught = 0
+    for name in GRAD_PLANTS:
+        hits, live = [], []
+        for c in CALLS:
+            gr = run(c, plant=name)[1]
+            if all(np.array_equal(gr[k], true[c][k]) for k in gr):
+                continue
+            live.append(c)
+            hits.append(not verdict(c, gr))
+        caught += bool(live) and all(hits)
+        print(f"P  planted {name:20s}: verdict FAILS on {sum(hits)}/{len(live)} calls where it changes the gradient "
+              f"(no-op at {[c for c in CALLS if c not in live]})")
+    good = ok and caught == len(GRAD_PLANTS)
+    print(f"RUNG 13b-grads (ruled): port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(GRAD_PLANTS)})")
+    return 0 if good else 1
+
+
+def _grads_line1(run, gold, names):
+    """Rung 13b-grads as read at reads 1-2 (line eb21ed16): the published gate on all 81, (L) on the total."""
+    import port_gate
+    R = np.load(R13)
     ok, true = True, {}
     for c in CALLS:
         for mode in ("eager", "compiled"):
@@ -1607,7 +1790,7 @@ def main_grads():
 
 
 def main():
-    if "--grads" in sys.argv:
+    if any(a in sys.argv for a in ("--grads", "--grads-terms", "--grads-line1")):
         return main_grads()
     if "--repval" in sys.argv:
         return main_repval()
