@@ -4256,3 +4256,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Froze `prereg/a2_ratio64.md` (`97762429`) before any seed: A1's task and band, ratio 64 instead of 512, seeds 20–22, twin 20, HOLDS = 3/3 seeds in band at both points, no extension. Stated beside the rule: A1 itself at 512 had one seed under the 100K band, so a 100K miss here cannot tell ratio from noise; 200K can. Also noted §2 proposed A2 for this, the order chose A1.
 - Built `experiments/brain_a/ratio64.py` (`adae3ce3`): the arm moves exactly one key of A1's config; kernel + frozen judge; tests 5/5 incl. planted mean-in-band-but-one-seed-low → MISSES. rows.py untouched. Nothing submitted (W48, behind the ear).
 - Philosophy served: 3 (the train ratio that sets brain A's GPU bill is tested, not assumed) and 4 (rule and its weakness written before the run); 6 (if 64 holds, A costs an eighth of the free GPU).
+
+## 2026-11-26 ~22:30–22:45 UTC · JACK · J28 cells 1+2 built, W48 launcher built (not armed)
+- J24/J18/J14 all wait on kernels; took J28 per the order of work.
+- Cell 2 `fp16_timing.py` (`07217ae4`): A size S timed twice in one session, only precision moves; a crashed cell reads None, not a speed. Cell 1 `mjx_timing.py` (`2d28314a`): Playground's own HumanoidStand PPO config, cut to 10M steps; GPU kind printed first so a P100 failure is readable.
+- Launcher `scripts/j28_w48_launch.py` (`a52398a9`), tests 2/2, dry-run green. Arming REFUSED by the detached cap (7 gpu pollers, max 6) — not bypassed; next worker arms it after J24's chains end (≈ 01:00).
+- Philosophy served: 3 (body venue and A's GPU bill measured, not assumed) and 6 (W48's free hours get spent on it).
