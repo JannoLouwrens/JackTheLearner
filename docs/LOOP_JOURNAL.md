@@ -4022,3 +4022,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - The rung-13 tests read /data-only goldens; rung13.py / rung13b.py now take `JACK_GOLDEN_A` / `JACK_R13` (unset = unchanged). Checked: 13b-losses PASS via copies, a wrong path raises.
 - Box sha256 recorded in the state line so the kernel can prove it regenerated the SAME goldens (NO-READING otherwise). Kernel not written or launched: a short slot cannot test a composed JAX+MLX job.
 - Served philosophy 5/7 (the port checked on the wheel the Mac runs) — thinly: plumbing only, no reading.
+
+## 2026-11-26 02:22–02:32 UTC · JACK · none — nothing can move, slot exited (rule 5)
+- First act: forge M_g0–g7 all home and read (`705ea61f`); no JACK kernel running; ear s2 retry loop alive, Colab still 503 (try 10/12).
+- J24 (paint ruling), J18 (rung L terms), J14 (Colab/Sat GPU), J25 (owner's no-Mac line) all wait on the Director; J10 DONE; Next-up 1–3 already done (checked on disk).
+- One INBOX line: all 5 Kaggle CPU sessions idle, no ready kernel. No run, no ledger change.
+- Philosophy served: none directly. Line 6 (free compute) is being wasted while the orders wait on rulings. That is a finding for the Director.
