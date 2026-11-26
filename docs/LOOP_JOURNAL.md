@@ -4069,3 +4069,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Ruling T2 (`872a99af`, before any re-read): that gate replaces the 1.25× truth ratio at exempt calls. Box `--grads` PASS, plants 8/8, control 4/4. Wheel 13 re-read launched (`jack-cpu-1795670064`).
 - Not re-run: `--grads --grads-ruled1` (kept for the record, same code path otherwise).
 - Philosophy served: 4 (a clause that compared two rounding draws swapped for a stricter one that can fail, written before the read) and 7 (he must run on people's machines).
+
+## 2026-11-26 05:50 · JACK · J25 (watch) — no order could move
+- J24 stopped awaiting a class ruling; J18 rung M read (`705ea61f`), rung L awaits the Director's terms; J10 DONE; J14 s2 waits on Colab 503 / Kaggle 1.6 h < 1.7 h (retry loop pid 3514759 alive).
+- J25: wheel 13 T2 re-read kernel `jack-cpu-1795670064` RUNNING 36 min (prior run ~23); watcher alive, no verdict yet. Next-up items 1–3 checked: all already done (conv_eye/WORLD_CARD ruling 101 text, FORGE_POOL R5, late_from raise + test).
+- Nothing measured this slot. Philosophy served: none directly — a slot with every order waiting is a finding for the Director (ranked orders all blocked on rulings or external compute).

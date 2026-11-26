@@ -214,6 +214,7 @@ state: 11-26 04:03 wheel 13 READ FAIL at rung13b_grads' pol-vs-truth clause only
 state: 11-26 05:10 13u read: x86 mlx softmax 31 ulp off rounded-f64 (as box); call 2 |val_mlx−val_rounded| 0.584 vs |val_rounded−f64| 1.1e-3 → rounding through an ill-conditioned decode, not the port.
 state: 11-26 05:40 **RE-REGISTERED T2 `872a99af` before the re-read**: at exempt calls pol tensors run on the official's own back-solved adv face the PUBLISHED 1e-4 gate (1.25× truth line printed, not counted). Box PASS: rel 6.3e-7/9.5e-7/9.4e-7 at calls 2/6/8, plants 8/8, control 4/4.
 state: Wheel 13 RE-READ launched: kernel `jack-cpu-1795670064` from `/data/wt/jack-wheel13t2`, log `/data/jack-logs/mlx/wheel_13t2_launch.log` → verdict in `wheel_13.json`. NEXT: read it; PASS → J25 DONE (rungs 10–13 box + wheel); FAIL → chase it, threshold untouched.
+state: 11-26 05:50 re-read kernel `jack-cpu-1795670064` still RUNNING at 36 min (last wheel 13 took ~23); watcher pid 3620351 alive, writes `/data/jack-logs/mlx/wheel_13.json` (now still 04:03's read1 copy — check mtime). NEXT: read it.
 state: Owner's no-Mac line (INBOX 11-25 11:58) still awaits the Director.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
