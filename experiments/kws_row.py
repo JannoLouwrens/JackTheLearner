@@ -474,7 +474,16 @@ def colab_tag(run: str) -> str:
     return "kws2_" + run
 
 
-def colab_chain(args, submit_fn=None, out_dir: str = OUT2) -> int:
+# Ruling 117 (11-26): the row's third seed spends W47's expiring Kaggle GPU hours. A seed is 1.38 h
+# measured (`5053a28d`), <= 1.54 h with validation; the Colab fit rule's 20% spare is about ONE COLAB
+# SESSION's length and does not apply to the weekly quota. Same kernel body, same in-kernel deadline,
+# same torch pin (the body re-pins 2.6.0 itself), same output files and judge: only the venue asked
+# first and the hours asked of the meter differ.
+KAGGLE2_EST_HOURS = 1.54
+
+
+def colab_chain(args, submit_fn=None, out_dir: str = OUT2, prefer: str = "colab",
+                est_hours: float = 1.7) -> int:
     """Submit each run in `args` as its own Colab job, in order. A run whose json is home and
     `complete` is skipped (the chain can be relaunched); a run that comes home stopped/cut/failed
     stops the chain (a person reads why before another session is spent)."""
@@ -483,7 +492,7 @@ def colab_chain(args, submit_fn=None, out_dir: str = OUT2) -> int:
         from experiments.gpu import build_job, result_json, submit
 
         def submit_fn(body, tag):
-            sub = submit(build_job(body), prefer="colab", est_hours=1.7, timeout_s=COLAB_TIMEOUT_S,
+            sub = submit(build_job(body), prefer=prefer, est_hours=est_hours, timeout_s=COLAB_TIMEOUT_S,
                          fetch=[tag + ".json"])
             print("SUBMIT", tag, sub.backend, sub.ok, sub.job_id, sub.message, flush=True)
             if not sub.ok:
@@ -530,6 +539,8 @@ def main(argv) -> int:
         return 0
     if cmd == "colab" and len(argv) > 2:
         return colab_chain(argv[2:])
+    if cmd == "kaggle2" and len(argv) > 2:   # ruling 117: Row N7-kws-2's runs, Kaggle GPU asked first
+        return colab_chain(argv[2:], prefer="kaggle", est_hours=KAGGLE2_EST_HOURS)
     if cmd == "kernel" and len(argv) > 2:
         from experiments.gpu import build_job, result_json, submit
         args = argv[2:]
