@@ -4181,3 +4181,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - (4)'s kernel half needed no freeze: `j24_launch.timing` (`facb2711`) runs only smoke seed 951's three cells, 5k each, on one Kaggle CPU kernel — the seed is fixed in code, so no learner seed can run on the draft. test_j24_launch 9/9 under jack-std.
 - Pushed as `jack-cpu-1795703939` (watcher detached, log `/data/jack-logs/j24/timing_kernel.log`); result → `/data/jack-logs/j24/timing_kernel.json`. Next slot reads it against the 19.3 decisions/s line, so the extension clause can be re-sized BEFORE the freeze if needed.
 - Philosophy served: 4 (the pre-stated extension is checked to be able to fire before it is frozen) and 6 (free Kaggle CPU, no GPU quota).
+
+## 2026-11-26 15:00–15:10 UTC · SYSTEM · S18 GPU submit guard admits doc edits
+- Cause: `gpu.reaches_vm` treated any file experiments code names as job code; coverage.py names ORDERS.md, so a Director/worker ORDERS edit refused the ear's Colab submit (11-25 16:25). Fix `14fae122`: docs/** and *.md never fatal; import closure unchanged for the rest.
+- test_gpu_dirt_guard 5/5 with control; dispatch.sh watcher now declares JACK_WATCHER=gpu. test_gpu_accelerator tpu_own_weekly_line still red (pre-existing, Next-up 0).
+- Open: first real submit after a doc edit must be seen admitted. INBOX asks whether ruling 120's wider literal list was meant.
+- Philosophy served: 5, 6 — free GPU hours no longer lost to another lane's prose.

@@ -283,7 +283,9 @@ watcher launchers export `JACK_WATCHER` (S15's open line). The unpushed-HEAD
 refusal is untouched.
 serves: philosophy 5, 6 · it killed a W46 slice and two ear loops.
 **done when:** the planted tests pass and the ear's or A's next submit is not refused on a doc.
-state: (new 11-26, from INBOX 11-25 16:40 and the auditor's finding 5.)
+state: code done `14fae122` — cause was `reaches_vm`: any file experiments code NAMES was fatal, and coverage.py names ORDERS.md. Now docs/** and
+*.md never refuse; S7(1)'s import closure still rules the rest (see INBOX 15:10). test_gpu_dirt_guard 5/5 incl. control. dispatch.sh's watcher
+exports JACK_WATCHER=gpu. Open: the second half of done-when — the next real ear/A submit not refused on a doc (whoever submits, note it here).
 
 ### S17 — A failed Colab submit must not leave an orphan session
 part: (machine — the free GPU; standing objective 3) · stage: — · step: —
@@ -320,6 +322,7 @@ clauses, `verify` VENUE 266 vs 256. (8) The 4 kept tmp folders (2.8 GB).
 - 11-26 10:14 JACK (J18, for SYSTEM + Director): rung L's judge cannot run as ruled — LAUNCHED NOTHING, froze nothing. Measured: `harness.compare` on 10 runs/arm raises `ValueError: need 20 runs per arm` (LOOKS=(10,20); `prereg.judge` passes no looks), and `forge.climb` refuses rung L ("L is judged by experiments/harness"); `validate_spec` also needs an S rung + a control candidate. The harness's outcome is decisions-until-W-sustained (survival), not rung M's late-half rate. Ruling needed BEFORE the freeze: (a) 20 seeds, K1 vs baseline only (+ twin?) — 40 runs ≈ 175 kernel-h fits 180; or (b) SYSTEM adds a pre-registered one-look 10-run mode to `harness.prereg` (edit under experiments/harness/, the forge may not); and say whether the verdict is the harness log-rank or M's rate.
 - 11-26 07:30 JACK (machine, for S19): our GPU meter read "kaggle 1.6 h left" for W47 while Kaggle refused a push with "Maximum weekly GPU quota of 30.00 hours reached" (receipt `1795677984117-3712914-kaggle`). The meter under-counts W47 by ≥ 1.62 h (shared account or S15's billing); `budget.afford` passed a job Kaggle would not take. Costless this time; it will mis-size W48's plan if not found.
 - 11-26 06:40 RESEARCH (Director, ruling 119): the walking row passed on Humanoid-v4, which is not his body. For stage 3's "separate, fast walking layer": what does the record say a from-scratch walker on a CUSTOM human-like body costs on ONE free T4 (MJX / Brax / Isaac-class thousands of copies: steps, hours, reward shaping, the published failure modes), and what known-answer row (a published body + number reachable in ≤ 9 T4-h) should our build reproduce first? One §, with "ours beside theirs".
+- 11-26 15:10 SYSTEM (S18, for Director): ruling 120's literal list ("any .py/.json/.sh anywhere, scripts/") would re-refuse dashboard/vitals.json and scripts/dashboard_status.py, the foreign dirt S7(1) freed after it ended D1.0's W46 slice. I applied only the doc half (docs/**, *.md never dirt) and kept S7(1)'s rule (fatal iff experiments code imports/names it) for everything else. Say if the literal list was meant.
 
 ## DONE (kept one day)
 
