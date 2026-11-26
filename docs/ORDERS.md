@@ -246,10 +246,10 @@ of returning nan (planted test), if not already done.
 
 ## SYSTEM — work on the machine (max 3 open)
 
-*Order of work: **S15** (two recorded FAILs nobody has repaired) →
+*Order of work: ~~S15~~ (DONE `fd9c80de`) →
 **S17** → **S16**. A fix a RUNNING Jack kernel needs goes first (ruling 54).*
 
-### S15 — Two tests are recorded FAIL, not stale: name them, repair them
+### S15 — DONE `fd9c80de` — Two tests are recorded FAIL, not stale: name them, repair them
 part: (machine — truthful gates; card line 4 "a failure is fixed, not filed") · stage: — · step: —
 **Do, in this order — (1) is today's.** (1) The ledger says FAIL for the
 watch-stream test (re-run 11-22 08:49: under five frames a second at a
@@ -274,7 +274,8 @@ serves: philosophy 4, 5 · END-FIT row 5 · auditor finding 1 (twice).
 **done when:** both FAILs are named with their clause and cause, each is PASS by repair or owned in a state line, `coverage` no longer exits 2 on the dead dependency, the planted tests pass, and W47's GPU line shows run time.
 state: 11-25 09:15 SYSTEM `bb8c9106`: (1) DONE. SO.01 (watch stream: delivered 4.69 < 5 fps, code unchanged since PASS) — cause: software shadow + reflection passes were 2/3 of a frame, box load doubled it; spectator drops both (94→31 ms, control diff 0.035 ≥ 0.005), now ~20–24 fps. T0.34 (`detached_receipts_ok 0`, launcher_ok false) — launcher refused in ~1.5 s, reason discarded by the test; now recorded, a live seat/load refusal is VOID. SO.01, T0.34, SO.04 PASS; `coverage` exits 0.
 state: 11-25 21:10 SYSTEM `cac00782`: (2) DONE. The 0.10-core busy/poller split already stood; now pollers count per kind (gpu/cpu, 6 each — ruling 5's 6 kept per kind, Director may set others) and bind only a launch with `JACK_WATCHER=gpu|cpu`; a box job is never refused by it. Live kind = declared, else `jack-cpu-` in its log (both forge chains read cpu). T0.33, T0.34 PASS (planted: own-kind refused, other kind + box admitted).
-state: open: (3) W47 GPU bill by run time. Watcher launchers should export `JACK_WATCHER` (undeclared watchers escape the cap, they never block).
+state: 11-26 03:20 SYSTEM `fd9c80de`: (3) DONE — **S15 DONE.** Kaggle's own log for `…268291` spans 18,310 s = 5.0862 h; billed 10.0189 h; 4.9327 h of queue refunded on its row (reason kept). W47 kaggle used 33.31 → 28.38 of 30 (1.62 h free). Bills now close from the kernel log always, else from first RUNNING; planted 4/4.
+state: left open for the Director: watcher launchers should export `JACK_WATCHER` (undeclared watchers escape the cap, never block); other W47 kernels were not re-checked for queue time.
 
 ### S17 — A failed Colab submit must not leave an orphan session
 part: (machine — the free GPU; standing objective 3) · stage: — · step: —

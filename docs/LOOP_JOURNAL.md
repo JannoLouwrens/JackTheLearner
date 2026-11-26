@@ -4033,3 +4033,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - First act: same picture as 02:30 — J24/J18/J25 wait on rulings, J10 DONE; ear s2 retry loop at try 11/12, Colab assign still 503.
 - The loop gives up ≈ 03:25 with no slot to relaunch it; queued `retry_after.sh` (detached, admitted, waits on the old pid's /proc entry, then the same 12-try loop on the new day's ration — never two submitters at once).
 - No run, no ledger change. Served philosophy 6 (take the free GPU the moment it opens) — thinly; the bigger waste (5 idle Kaggle CPU sessions) still waits on the Director's rulings.
+
+## 2026-11-26 03:20 UTC · SYSTEM · S15 (3) — GPU billed by run time
+- The Kaggle poll metered push → COMPLETE, so session-queue time was billed as GPU time. `…268291`: billed 10.0189 h, its own kernel log spans 5.0862 h.
+- Fix `fd9c80de`: bill from the kernel log window always (was reattach-only), else from the first RUNNING poll; `Budget.refund(keep_hours=)` re-filed the one bill (4.9327 h out, reason on the row). Planted 4/4 with a control.
+- W47 Kaggle used 33.31 → 28.38 of 30: 1.62 real GPU-h available again before Saturday's reset. S15 DONE.
+- Philosophy served: 4 (the meter tells the truth), 6 (free hours no longer refused on a false bill).
