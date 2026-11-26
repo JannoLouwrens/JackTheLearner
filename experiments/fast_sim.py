@@ -161,16 +161,125 @@ def _row_vision(self) -> np.ndarray:
                self._row_gid, self._row_dist, n)
     dist, gid = self._row_dist, self._row_gid
     miss = (dist < 0) | (dist > W.RAY_MAX_RANGE) | (gid < 0)
-    out = np.empty(2 * n, dtype=np.float32)
     d = np.where(miss, 1.0, dist / W.RAY_MAX_RANGE)
     t = np.where(miss, 0.0, self._tex[np.maximum(gid, 0)])
     if self.panel_gid >= 0:
+        # under paint="kind" the draws are still taken (and thrown away), so
+        # the world's `_rng` stream — the placebo channel — is the geom
+        # paint's, draw for draw.
         for k in np.flatnonzero((~miss) & (gid == self.panel_gid)):
             amp = min(1.0, 2.5 / max(float(dist[k]), 1e-6))
             t[k] = 0.5 + amp * (float(self._rng.uniform()) - 0.5)
+    if self.__dict__.get("_paint_kind"):
+        # J24 (0): [distance, K 0/1 kind channels] per ray. `_kind_of` is set
+        # by set_kind_table; a look before that raises (unknown is not zero).
+        out = np.zeros((n, 1 + N_KINDS), dtype=np.float32)
+        out[:, 0] = d
+        hit = np.flatnonzero(~miss)
+        out[hit, 1 + self._kind_of[gid[hit]]] = 1.0
+        return out.reshape(-1)
+    out = np.empty(2 * n, dtype=np.float32)
     out[0::2] = d
     out[1::2] = t
     return out
+
+
+# ── J24 (0), ruling 111: ONE LOOK PER KIND (a WORLD-PAINT CHANGE, default off)
+# W0 paints every geom with its own code, `((gid * 0.37) % 0.8) + 0.1`
+# (w0.py:225): three floor foods = three codes, re-dealt whenever the world's
+# geom count moves (23/23 worlds, j24_class_probe.py). No published forager
+# was given that (0 of 12, PUBLISHED_PRIORS §28): every one returns a CLASS
+# per ray, the same in every episode. paint="kind": the ray's one texture
+# number is replaced by N_KINDS 0/1 channels, one per KIND of thing the ray
+# HIT, the same in every world, all zero on a miss:
+#   food      a geom registered as FLOOR food in this world's drive layer
+#             (obj0, obj1 + the dial's extras) — every one the same channel
+#   water     `pool_water`
+#   obstacle  every other thing a ray can hit: ramp, stairs, ladder, platform,
+#             the pool's own walls and floor, blocks, the seesaw, floor
+#             objects that are not food in this world, the apple (a food, but
+#             not a FLOOR food; it hangs above the level row), shelters, and
+#             any geom a mutated world adds
+#   wall      the arena's boundary, `wall0`..`wall3`
+#   panel     `noise_panel` (a constant look now; its noise was its texture)
+# It is a property of the thing hit, as texture was: a food that has been
+# eaten and is regrowing keeps its look, as it kept its texture. Nothing says
+# which channel feeds him; no reward, need or position enters. His own body
+# (group 3) is never hit by a ray, as before.
+KINDS = ("food", "water", "obstacle", "wall", "panel")
+N_KINDS = len(KINDS)
+KIND_WALLS = ("wall0", "wall1", "wall2", "wall3")
+PAINTS = ("geom", "kind")
+
+
+def kind_table(w, floor_foods) -> np.ndarray:
+    """geom id -> index into KINDS, for this world as it is built."""
+    import mujoco
+    m = w.model
+    k = np.full(m.ngeom, KINDS.index("obstacle"), dtype=np.int64)
+    for g in range(m.ngeom):
+        name = mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_GEOM, g) or ""
+        if name == "pool_water":
+            k[g] = KINDS.index("water")
+        elif name in KIND_WALLS:
+            k[g] = KINDS.index("wall")
+    if w.panel_gid >= 0:
+        k[w.panel_gid] = KINDS.index("panel")
+    for name in floor_foods:
+        if name in w.drives._food:
+            k[int(w.drives._food[name][0])] = KINDS.index("food")
+    return k
+
+
+def apply_kind_paint(w) -> None:
+    """Mark this W0's ROW eye as kind-painted (call after apply_row_vision).
+    The table itself is set by set_kind_table once the world's floor foods
+    are registered."""
+    if "_row_vec" not in w.__dict__:
+        raise ValueError("paint='kind' is built for the row eye only")
+    w._paint_kind = True
+
+
+def set_kind_table(w, floor_foods) -> None:
+    w._kind_of = kind_table(w, floor_foods)
+
+
+# ── J24 (1): eye="bins16" — closeness bins per kind, from the kind-painted
+# row AND NOTHING ELSE (rllab Gather's readings / Safety Gym's lidar bins,
+# PUBLISHED_PRIORS §27-28). A pure function of the 128 x (1 + N_KINDS) row:
+# per kind, 16 azimuth bins; bin j holds the 8 rays centred on the old eye's
+# ray j (row rays 8j-4 .. 8j+3, so "straight ahead" is the middle of bin 0);
+# its value = max over those rays painted that kind of (1 - distance/range),
+# 0 if none is. Layout: kind-major, [food x16, water x16, obstacle x16,
+# wall x16, panel x16] = 80 numbers.
+BINS = 16
+
+
+def bins16(row: np.ndarray) -> np.ndarray:
+    r = np.asarray(row, dtype=np.float32).reshape(-1, 1 + N_KINDS)
+    n = r.shape[0]
+    per = n // BINS
+    if n % BINS:
+        raise ValueError(f"{n} rays do not fill {BINS} bins")
+    close = (1.0 - r[:, :1]) * r[:, 1:]                  # (n, K); 0 where not hit
+    close = np.roll(close, per // 2, axis=0)             # ray 8j-4 leads bin j
+    return close.reshape(BINS, per, N_KINDS).max(axis=1).T.reshape(-1).astype(np.float32)
+
+
+def apply_bins16(w) -> None:
+    """Wrap this W0's (kind-painted row) observe: vision becomes bins16 of
+    it. Call after apply_row_vision + apply_kind_paint."""
+    if not w.__dict__.get("_paint_kind"):
+        raise ValueError("eye='bins16' needs paint='kind'")
+    inner = w.observe
+
+    def observe(self):
+        o = inner()
+        self._row_last = o["vision"]         # the row it was computed from
+        o["vision"] = bins16(o["vision"])
+        return o
+
+    w.observe = types.MethodType(observe, w)
 
 
 def apply_row_vision(w, eye: str = "row128") -> None:

@@ -280,6 +280,20 @@ experiments/tests/test_jack_env_options.py). Ours beside theirs:
                          the two root velocities in proprio (WORLD x, y) —
                          see motor_frame.
                          Proof: experiments/tests/test_jack_env_eye_frame.py.
+  paint="geom"          J24 (0), ruling 111. "geom" = today: each ray's second
+                         number is W0's per-geom texture (w0.py:225), three
+                         foods = three codes, re-dealt with the world's geom
+                         count. "kind" (row eye only): each ray reads
+                         [distance, food, water, obstacle, wall, panel] — one
+                         0/1 channel per KIND of thing hit, the same in every
+                         world, all zero on a miss (fast_sim.KINDS says what
+                         is what). Vision is 128 x 6 = 768 wide. With
+                         eye="bins16" (J24 (1)) vision is instead 5 kinds x
+                         16 closeness bins = 80, computed from that row and
+                         nothing else (fast_sim.bins16). Every other sense,
+                         the body, the world and its random streams are the
+                         geom paint's exactly.
+                         Proof: experiments/tests/test_jack_env_paint.py.
   motor_frame="world"   J12 (2). "world" = today. "body": action[6:8] is a
                          push (forward, left) along the body's own heading,
                          turned into the world ONCE at the start of each
@@ -337,7 +351,8 @@ SENSES = ("vision", "audio", "touch", "proprio", "needs")
 REWARDS = ("homeo-dr", "dr100-eat", "dr100-eat-pos")
 TERMINAL_OBS = ("reborn", "dying")
 INTEGRATORS = ("shipped", "implicitfast")  # J6(4); shipped = RK4
-EYES = ("rays16", "row128")                 # J12 (1); rays16 = today's eye
+EYES = ("rays16", "row128", "bins16")       # J12 (1); rays16 = today's eye
+PAINTS = ("geom", "kind")                   # J24 (0), ruling 111; geom = today
 EYE_FRAMES = ("world", "body")              # J12 (0), ruling 38; world = today
 MOTOR_FRAMES = ("world", "body")            # J12 (2); world = today
 FLOOR_FOODS = ("obj0", "obj1")
@@ -411,7 +426,8 @@ class JackEnv(gym.Env):
                  eye: str = "rays16",
                  native_substep: bool = False,
                  eye_frame: str = "world",
-                 motor_frame: str = "world"):
+                 motor_frame: str = "world",
+                 paint: str = "geom"):
         # e0: birth AND respawn energy, exactly survival.run_survival's e0.
         if j0 is None or alpha is None:
             c = default_cal()
@@ -471,6 +487,20 @@ class JackEnv(gym.Env):
         if eye not in EYES:
             raise ValueError(f"eye must be one of {EYES}, got {eye!r}")
         self.eye = eye
+        # J24 (0), ruling 111, default "geom" = today's per-geom texture,
+        # nothing patched. "kind": each ray reads [distance, 5 0/1 kind
+        # channels] (experiments/fast_sim.py KINDS); row eye only. J24 (1):
+        # eye="bins16" = 16 closeness bins per kind computed from that row
+        # and nothing else (vision 80 wide), so it needs paint="kind".
+        # Proven in experiments/tests/test_jack_env_paint.py.
+        if paint not in PAINTS:
+            raise ValueError(f"paint must be one of {PAINTS}, got {paint!r}")
+        if paint == "kind" and eye == "rays16":
+            raise ValueError("paint='kind' needs eye='row128' or 'bins16'")
+        if eye == "bins16" and paint != "kind":
+            raise ValueError("eye='bins16' is computed from the kind paint: "
+                             "pass paint='kind'")
+        self.paint = paint
         # J12 (0), ruling 38, default "world" = today (ray k at WORLD azimuth
         # 2*pi*k/n: a free compass). "body": ray azimuths + the body's yaw,
         # for either eye (experiments/fast_sim.py apply_body_frame_eye).
@@ -525,7 +555,13 @@ class JackEnv(gym.Env):
             apply_multiray_vision(self.w)
         if self.eye != "rays16":
             from experiments.fast_sim import apply_row_vision
-            apply_row_vision(self.w, self.eye)
+            apply_row_vision(self.w, "row128")
+            if self.paint == "kind":
+                from experiments.fast_sim import apply_kind_paint
+                apply_kind_paint(self.w)
+            if self.eye == "bins16":
+                from experiments.fast_sim import apply_bins16
+                apply_bins16(self.w)
         if self.eye_frame == "body":
             from experiments.fast_sim import apply_body_frame_eye
             apply_body_frame_eye(self.w)
@@ -543,6 +579,10 @@ class JackEnv(gym.Env):
         if self.difficulty is not None:
             # J2 item 1, food count: extras are food before birth is placed.
             self._add_extra_foods()
+        if self.paint == "kind":
+            # after the dial's extra foods are registered, before any look
+            from experiments.fast_sim import set_kind_table
+            set_kind_table(self.w, self.floor_foods)
         if self.random_layout:
             # J2 item 2: own stream; each food keeps its W0 rest height/pose.
             self._layout_rng = np.random.default_rng([seed, 3])
