@@ -4147,3 +4147,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J18's runner-side debt, needed under either ruling: `r1_run --round <name>` / `set_round` moves rule, raw folder, cell files, kernel summary, pin check and child `cell` args together; refuses a missing or mis-named round; r1's names are unchanged. 2 new tests; test_forge_r1_run 30/30 under jack-std. `r1_read` untouched (judge-locked).
 - Sizing from rung M's 30 raw cells: 1M decisions ≈ 7.5–18.3 h wall a run = up to 2.44 kernel segments; the 3-segment cap fits with a thin margin.
 - Philosophy served: 5 (the machine made ready so the ruled round launches the hour it is ruled) and 3 (the race that decides his learner can go on to 1M).
+
+## 2026-11-26 13:07–13:40 UTC · JACK · J24 (3) made ready to freeze — nothing frozen, nothing launched
+- Every JACK order still waits: J24 (3) and J18's freeze on Director rulings (INBOX 10:14, 10:45, 11:40), J14 on W48 (Saturday launcher pid 3886689 alive); J26/J27 done; no Kaggle kernel running.
+- Built J24's three learner cells so the ruled step launches the hour it is ruled: `pilot_b2.J24_ARMS` (J17's K-row128 setting, only the eye changed to bins16 on the kind paint, obs 122) and `blind_eye.ShuffledBins` (the forager's shuffled-bins control for a learner: the 16 bin columns re-ordered each decision, all kinds together).
+- `test_j24_arms.py` 5/5 under jack-std: older arms byte-identical, blind twin = width with no content over the same world, shuffled twin = the same columns moved (and moved on >90% of looks), each cell runs 600 decisions end to end. Smoke seed 951; 941–943 never stepped.
+- Draft `prereg/eye_bins16.md` (NOT FROZEN) carries the order's arms, seeds, EATS rule and one extension; the freeze is one STATUS line. Still to build: the chain carry for (5).
+- Philosophy served: 4 (both twins built and proven to fail-by-construction before any seed) and 5 (the test is ready, so a ruling turns into a running row the same hour).

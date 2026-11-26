@@ -118,7 +118,8 @@ POOL_DEADLINE_S = int(8.5 * 3600)   # in-kernel stop, leaves pip + queue + fetch
 def make_world(seed: int, move_cost_dial: bool = False,
                food_floor_only: bool = False, reward: str = REWARD,
                eye_frame: str = "world", motor_frame: str = "world",
-               native_substep: bool = False, eye: str | None = None):
+               native_substep: bool = False, eye: str | None = None,
+               paint: str | None = None):
     """The pilot's world. `eye` (J17): None = JackEnv's own default eye, the
     call below unchanged; only J17's arms name one. eye_frame / motor_frame default "world" = the f-card's
     world byte for byte (the floor cards never pass them); the pilot's runs get
@@ -127,6 +128,8 @@ def make_world(seed: int, move_cost_dial: bool = False,
     J6); default off keeps the card cells' code path unchanged."""
     from experiments.jack_env import JackEnv, NEEDS_S_TRP, SPAWN_CLEAR_R
     kw = {} if eye is None else {"eye": eye}
+    if paint is not None:                # J24 arms only; None = the old call
+        kw["paint"] = paint
     return JackEnv(seed=seed, difficulty=DIFFICULTY, reward=reward,
                    random_needs=NEEDS_S_TRP, random_layout=True,
                    lazy_contact_audio=True, spawn_clear=SPAWN_CLEAR_R,
@@ -556,8 +559,29 @@ J17_T = 300_000
 J17_LATE_FROM = J17_T // 2     # ruling 65: the late half = lives STARTING at decision >= 150,000
 
 
+# ---- J24 (3): brain B on the kind paint's binned eye (ORDERS J24) ----------
+# Built 11-26 BEFORE the prereg is frozen; the prereg
+# (docs/research/prereg/eye_bins16.md) names these arms and nothing launches
+# them until it is frozen. Each is J17's K-row128 setting exactly (arm K, the
+# library's flat-MLP SAC, ent_coef auto, trace) with ONLY the eye changed to
+# eye="bins16" on paint="kind" (vision 80 = 5 kinds x 16 bins). Twins:
+#   K-bins16-blind     every bin zero (BlindEye, J17's wrapper unchanged)
+#   K-bins16-shuffled  the 16 bin columns permuted afresh every decision
+#                      (blind_eye.ShuffledBins; the forager's g6 for a learner)
+# A SEPARATE dict, so every older arm dict and group stays byte-identical
+# (tests/test_j24_arms.py).
+J24_ARMS = {
+    "K-bins16": dict(J17_ARMS["K-row128"], eye="bins16", paint="kind"),
+    "K-bins16-blind": dict(J17_ARMS["K-row128-blind"], eye="bins16", paint="kind"),
+    "K-bins16-shuffled": dict(J17_ARMS["K-row128"], eye="bins16", paint="kind",
+                              shuffled="bins"),
+}
+J24_SEEDS = (941, 942, 943)
+J24_T = 500_000
+
+
 def arm_cfg(arm: str) -> dict:
-    for d in (PILOT_ARMS, E2C_ARMS, E2C_AUTO_ARMS, J17_ARMS, J17_HUNT_ARMS):
+    for d in (PILOT_ARMS, E2C_ARMS, E2C_AUTO_ARMS, J17_ARMS, J17_HUNT_ARMS, J24_ARMS):
         if arm in d:
             return d[arm]
     raise KeyError(arm)
@@ -576,7 +600,11 @@ def pilot_world(arm: str, food_floor_only: bool, eye_frame: str = "world",
                          food_floor_only=food_floor_only,
                          reward=c["reward"], eye_frame=eye_frame,
                          motor_frame=motor_frame,
-                         native_substep=native_substep, eye=c.get("eye"))
+                         native_substep=native_substep, eye=c.get("eye"),
+                         paint=c.get("paint"))
+        if c.get("shuffled") == "bins":
+            from experiments.blind_eye import ShuffledBins   # J24's bins twin
+            return ShuffledBins(env, seed)
         if c.get("shuffled"):
             from experiments.blind_eye import ShuffledEye    # J22's width-matched twin
             return ShuffledEye(env, seed)
@@ -617,8 +645,10 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
     rec["eye_frame"], rec["motor_frame"] = eye_frame, motor_frame
     if "eye" in c:                       # J17 arms only; older records carry no key
         rec["eye"], rec["blind"] = c["eye"], bool(c.get("blind"))
-        if c.get("shuffled"):            # J22 only; other records unchanged
-            rec["shuffled"] = True
+        if c.get("shuffled"):            # J22 / J24 only; other records unchanged
+            rec["shuffled"] = True if c["shuffled"] is True else c["shuffled"]
+        if "paint" in c:                 # J24 only
+            rec["paint"] = c["paint"]
     return rec
 
 

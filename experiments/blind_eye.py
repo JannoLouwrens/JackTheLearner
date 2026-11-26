@@ -92,3 +92,27 @@ class ShuffledEye(BlindEye):
         rays = o[:self.n_vision].reshape(-1, self.N_CH)
         o[:self.n_vision] = rays[self.rng.permutation(rays.shape[0])].reshape(-1)
         return o
+
+
+class ShuffledBins(ShuffledEye):
+    """J24's shuffled-bins twin for a LEARNER (ORDERS J24 (3): cells sighted /
+    blind / shuffled-bins), the learner-side form of the hand forager's g6
+    control (j24_bins_forager: food bins permuted by a fresh permutation every
+    decision). The bins16 vision block is kind-major (fast_sim.bins16:
+    N_KINDS rows x 16 azimuth bins, flattened); every observation's 16 bin
+    COLUMNS are re-ordered by one fresh permutation shared by all kinds, so a
+    bin keeps its kind profile (food AND water this near, in one direction)
+    and the per-step multiset of bins is kept; WHICH direction it is in is
+    destroyed. Disclosed: "food is visible somewhere, this near" survives (as
+    in J22's ShuffledEye). Own RNG, never the world's."""
+
+    def _blind(self, o):
+        from experiments.fast_sim import BINS
+        if self.n_vision is None:
+            self.n_vision = int(np.asarray(self.env.w.observe_pure()["vision"]).size)
+            if not 0 < self.n_vision < o.shape[0] or self.n_vision % BINS:
+                raise RuntimeError(f"ShuffledBins: vision width {self.n_vision} vs obs {o.shape[0]}")
+        o = np.array(o, dtype=np.float32, copy=True)
+        b = o[:self.n_vision].reshape(-1, BINS)            # (kinds, 16)
+        o[:self.n_vision] = b[:, self.rng.permutation(BINS)].reshape(-1)
+        return o
