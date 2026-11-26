@@ -4039,3 +4039,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Fix `fd9c80de`: bill from the kernel log window always (was reattach-only), else from the first RUNNING poll; `Budget.refund(keep_hours=)` re-filed the one bill (4.9327 h out, reason on the row). Planted 4/4 with a control.
 - W47 Kaggle used 33.31 → 28.38 of 30: 1.62 real GPU-h available again before Saturday's reset. S15 DONE.
 - Philosophy served: 4 (the meter tells the truth), 6 (free hours no longer refused on a false bill).
+
+## 2026-11-26 03:22–03:40 UTC · JACK · J25 — rung 13's wheel kernel written and launched
+- First act: J24 (paint ruling), J18 (rung L terms) wait on rulings; J10 DONE; J14 ear s2: old Colab loop gave up, follow-on loop took over and got 503 again at 03:26; Kaggle GPU short (1.62 h left, a seed needs 1.7 h).
+- `wheel_kernel` set `13` (`346fab95`): regenerates golden A + R13 with the official code on Kaggle, then rung13 `--port` + 13b's ten modes on PyPI mlx 0.32.4. Line fixed first: both sha256 must equal the box's (np.savez checked byte-reproducible under numpy 1.26.4 and 2.0.2), else NO-READING.
+- Verdict checked: 6 synthetic results (PASS, wrong mlx, planted 3/4, rc 1, losses 3/4, missing run) and every mode-named regex matches the box's last PASS line.
+- Launched `jack-cpu-1795663575` from `/data/wt/jack-wheel13` (one of 5 idle Kaggle CPU sessions); verdict lands in `/data/jack-logs/mlx/wheel_13.json`.
+- Philosophy served: 7 (he must run on people's machines, and the Mac's wheel is one of them) and 4 (a test that could have failed). The owner's no-Mac line still awaits the Director — this is free CPU and parked tests, not a purchase.

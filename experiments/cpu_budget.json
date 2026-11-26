@@ -2052,11 +2052,11 @@
         "VO.01": 145.79,
         "W.1": 21.02,
         "W0.PL": 92.93,
-        "detached:chain.log": 25.57,
-        "detached:chain_retry2.log": 0.42,
+        "detached:chain.log": 155.11,
+        "detached:chain_retry2.log": 1.81,
         "detached:launch_M_chainA_rerun.log": 158.6
       },
-      "used_s": 1520.68
+      "used_s": 1651.61
     }
   },
   "last_child_s": {
