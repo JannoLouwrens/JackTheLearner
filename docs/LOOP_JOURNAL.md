@@ -4054,3 +4054,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Not ruled away: set `13p` (`30e14ddc`) runs the policy-gradient probe on the wheel (kernel `jack-cpu-1795667066`) to tell x86 f32 value-decode rounding from a port bug. Next slot reads it.
 - Receipt row for `…1795663575` copied from the worktree into main (attempt row was already there).
 - Philosophy served: 4 (a test that could fail did fail and is being chased, not filed) and 7 (he must run on people's machines).
+
+## 2026-11-26 04:37–04:45 UTC · JACK · J25 — wheel probe 13p read; the miss is the value decode's rounding
+- J24/J18 wait on rulings/kernels, J10 DONE, J14 waits on Colab/Saturday; J25 had a probe result to read.
+- 13p (`jack-cpu-1795667066`): at call 2 the wheel's f32 value decode is 0.58 from f64 (box 5.7e-4) on byte-identical goldens and the same mlx; with f64 advantages the port's policy gradient reads 0.083 from truth (box 0.093) — the backward is fine, the miss is val32 alone.
+- Box measurement (`rung13b_softmax_ulp_probe.py`): bins reach 4.85e8 while |val| ≈ 1e-3, so one ulp on one tail probability moves the value 0.226; box mlx softmax is up to 31 ulp off yet its mirror-pair errors cancel at call 2.
+- Set 13u launched (`jack-cpu-1795668030`) to measure the same on x86. Truth clause NOT re-ruled yet; that waits on 13u. Receipts for …066 copied into main (`26656dda`).
+- Philosophy served: 4 (a failure chased to its cause, threshold untouched) and 7 (he must run on people's machines).

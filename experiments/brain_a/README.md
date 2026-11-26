@@ -1001,3 +1001,12 @@ Rung 13 (13a + 13b) is complete on the box. Next: the rung-13 wheel kernel — i
   13b-grads: WM worst 5.2e-6, plants 8/8, control 4/4, but pol vs truth at call 2 port 5.80e+01 vs official 3.08e-01
   (13/13 over; the box read port = official 3.24e-01), call 6 1/13 (7.81 vs 5.46). Probe set `13p` launched to
   separate x86 f32 decode rounding from a port bug (receipt `/data/jack-logs/mlx/wheel_13.json`).
+- **Probe 13p read (11-26, `jack-cpu-1795667066`, receipt `wheel_13p.json`):** at call 2 the wheel's
+  |val32 − val64| is 5.835e-01 (box 5.723e-04) on byte-identical goldens and the same mlx 0.32.4; adv=f64 on the port's
+  own graph reads global-rel 8.27e-02 (box 9.25e-02 — the port's policy backward is the same on both); adv=gret fails
+  exactly like adv=port (17.8): the miss lives in the port's f32 value decode alone. Box measurement
+  (`rung13b_softmax_ulp_probe.py`): bins reach 4.85e8 while |val| ≤ 1.1e-3 at call 2, so ONE ulp on one tail prob
+  swings the decode by 0.226; box mlx's softmax is up to 31 ulp off the rounded f64 softmax on 99% of probs, yet at
+  call 2 mirror-pair errors cancel (val_mlx − val_rounded 4.5e-8); at calls 6/8 even correctly rounded probs read 0.58.
+  Set `13u` measures the same on the wheel (`wheel_13u.json`). Said plainly: the truth clause (port ≤ 1.25× official)
+  compares two rounding draws of one f32 decode; it is not yet re-ruled.
