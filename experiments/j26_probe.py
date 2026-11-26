@@ -44,7 +44,7 @@ PREDICTIONS (written before the run; §28, OUTSIDER E1):
   P2  K and B each explain > 80% (mean R^2 > 0.80); C between.
   If R passes 0.80 the diagnosis behind J24 is WRONG, and WORLD_CARD.md
   § J17 hunt says so plainly. Either way the four numbers + control go there.
-TIMING (box, 11-26 07:50, jack-std, nice 19, load 4.6): 300 decisions
+TIMING (box, 11-26 07:38, jack-std, nice 19, load 4.6): 300 decisions
   3.89 CPU-s incl. world build -> 200k ~ 0.72 CPU-h. Under the order's 2 h
   kernel; so the logger runs on the BOX, one worker, detached.
 =============================================================================
