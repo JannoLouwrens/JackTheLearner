@@ -4168,3 +4168,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Freeze guard: no job is built unless the pinned commit's `prereg/eye_bins16.md` says `STATUS: FROZEN` (today's draft is refused — tested) and the seed is 941–943; the job asserts the prereg's sha on the kernel.
 - `tests/test_j24_launch.py` 8/8 under jack-std (refusals before any submit, fake-kernel chain incl. guard wait). Local 3-child smoke seed 951 at 20k detached → `/data/jack-logs/j24/launch_smoke/summary.json` (next slot: read rc 0 ×3, 20,000 decisions each).
 - Philosophy served: 4 (no learner seed can run on an unfrozen prereg — the machine refuses it) and 5 (a ruling turns into three running chains with one command).
+
+## 2026-11-26 14:20–14:35 UTC · JACK · J24 (4) box timing read — the speed line the kernel cell must clear
+- Still waiting: J24 (3) freeze and J18 on Director rulings (INBOX 10:14, 10:45, 11:40); J14 on W48. No ruling has landed; nothing frozen, nothing launched.
+- Read the launcher smoke: K-bins16 / -blind / -shuffled seed 951 all rc 0, 20,000 decisions each, 5–6 lives.
+- (4)'s box half from the same run (`/data/jack-logs/j24/timing_box.json`): 23.2 decisions/s a cell with 3 in parallel → 500k = 6.0 h = 0.83 of a 7.5 h segment; the 1.5M extension = 2.5 of MAX_SEGMENTS 3. Same J24 setting on Kaggle earlier (J22 h4, 3 cells): 26 /s.
+- The line for the kernel 5k cell, written before it runs: below 19.3 decisions/s, 500k needs 2 segments AND the pre-stated 1.5M extension cannot finish in 3 segments — it would be a lost run, so the extension must be re-sized before the freeze if the kernel reads under that.
+- Philosophy served: 4 (the extension clause is checked to be able to fire before it is frozen) and 6 (free kernel hours sized, not guessed).
