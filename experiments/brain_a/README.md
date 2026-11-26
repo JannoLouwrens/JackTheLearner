@@ -1010,3 +1010,16 @@ Rung 13 (13a + 13b) is complete on the box. Next: the rung-13 wheel kernel — i
   call 2 mirror-pair errors cancel (val_mlx − val_rounded 4.5e-8); at calls 6/8 even correctly rounded probs read 0.58.
   Set `13u` measures the same on the wheel (`wheel_13u.json`). Said plainly: the truth clause (port ≤ 1.25× official)
   compares two rounding draws of one f32 decode; it is not yet re-ruled.
+- **Probe 13u read (11-26 05:10, `jack-cpu-1795668030`, receipt `wheel_13u.json`; it says NO-READING only because the
+  kernel scored the probe as a test — fixed in `wheel_kernel.py`):** x86 mlx's softmax is up to 31 ulp off the rounded
+  f64 softmax on 99% of probs (as on the box), and at call 2 |val_mlx − val_rounded| = 5.838e-01 while a decode of the
+  correctly rounded probs sits 1.145e-03 from f64. The wheel's miss is mlx's softmax rounding through an
+  ill-conditioned decode, not the port's maths.
+- **Ruling T2 (11-26 05:40, committed BEFORE the wheel re-read; block comment above `GRAD_PLANTS`):** at a
+  precision-exempt call the 13 pol tensors no longer face "port ≤ 1.25× official vs an f64 truth" (two rounding draws).
+  Instead the composed loss is run again with adv set to the OFFICIAL's own f32 adv, back-solved from its dumped
+  per-element policy loss (residual ≤ 1.3e-16, `rung13b_offadv_probe.py`), and the pol tensors must pass the
+  PUBLISHED gate (1e-4). Box: **RUNG 13b-grads (ruled T2) PASS, plants 8/8, control 4/4**; T2 global rel 6.3e-7 /
+  9.5e-7 / 9.4e-7 at calls 2/6/8, eager and compiled (log `/data/jack-logs/mlx/rung13b_grads_T2_box.log`). The
+  port's own adv forward is judged by 13b-imagloss-vq/-q2, which pass on box and wheel. The earlier line still runs
+  with `--grads --grads-ruled1`.

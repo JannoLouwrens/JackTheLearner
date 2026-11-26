@@ -111,6 +111,10 @@ SETS["13p"] = (RUNS_13P, "wheel_13p.json")
 # verdict, no ledger): ulp distance of x86 mlx's f32 softmax vs the correctly rounded f64 softmax, per call.
 RUNS_13U = [("softmax_ulp_probe", "rung13b_softmax_ulp_probe.py", [], 1200)]
 SETS["13u"] = (RUNS_13U, "wheel_13u.json")
+# 13u READ (11-26 05:10, `jack-cpu-1795668030`; its receipt says NO-READING only because kernel() sent the probe set
+# to the test verdict, which looks in res["runs"] — fixed: 13u is a probe like 13p). Probe rc 0, sha256 = box:
+# softmax ulp vs rounded-f64 max 31 on 99% of probs (as the box); call 2 |val_mlx - val_rounded| 5.838e-01,
+# |val_rounded - val_f64| 1.145e-03 -> mlx's softmax rounding carries the 0.58. Ruling T2 in rung13b.py.
 
 
 def job_body_13(which: str = "13") -> str:
@@ -221,7 +225,7 @@ def kernel(which: str = "12") -> dict:
     r = result_json(sub, fname)
     OUT.mkdir(parents=True, exist_ok=True)
     r["verdict"] = (verdict_13(r) if which == "13" else
-                    {"PROBE": "no verdict", "sha256": r.get("sha256")} if which == "13p" else verdict(r, which))
+                    {"PROBE": "no verdict", "sha256": r.get("sha256")} if which in ("13p", "13u") else verdict(r, which))
     (OUT / fname).write_text(json.dumps(r, indent=1) + "\n")
     print(json.dumps(r["verdict"], indent=1), flush=True)
     return r

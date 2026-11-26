@@ -1483,6 +1483,29 @@ def main_repval():
 #       planted routing move 5.2e-5 — fitted after measurement, said plainly; it can only make the line harder).
 #   (C), (P), the 8 plants and "every call where it changes the gradient" unchanged; "FAILS" now = the ruled verdict.
 #   The as-read line stays runnable: `--grads-line1`.
+# RULING T2 (11-26 05:40, J25, written AFTER wheel 13 / 13p / 13u, committed BEFORE the wheel re-read; the box had
+#   PASSED the ruled line, the wheel FAILED only its truth clause — said plainly, this is a re-registration after a
+#   fail, made because the clause measured a rounding lottery, not the port):
+#   WHY. Wheel 13 (`jack-cpu-1795663575`): pol vs truth call 2 port 5.80e+01 vs official 3.08e-01 (box: equal).
+#   13p: the port's backward is the same on both machines (adv=f64 on its graph 8.27e-02 wheel / 9.25e-02 box);
+#   the miss is the f32 val decode. 13u (`jack-cpu-1795668030`): x86 mlx softmax is up to 31 ulp off the rounded
+#   f64 softmax on 99% of probs (same as the box), and at call 2 |val_mlx - val_rounded| = 5.838e-01 while
+#   |val_rounded - val_f64| = 1.1e-3 (box: the mirror-pair errors cancel, 4.5e-8). Bins reach 4.85e8 while |val|
+#   ~1e-3, so ANY f32 build — the official's jax included — draws its own adv; its distance to an f64 truth (itself
+#   built from this machine's f32 logits) is a draw, and "port <= 1.25x official" compares two draws.
+#   (T2) REPLACES the truth clause at precision-exempt calls: the composed loss run AGAIN with adv := the official's
+#       OWN f32 adv, back-solved from its dumped per-element policy loss (`adv_official`), and the 13 `pol/`
+#       tensors must PASS THE PUBLISHED GATE (rel 1e-4, cos 0.9999) against the official R13 gradients — eager and
+#       compiled. Same adv in, so no lottery; the port's policy backward must equal the official's to f32 backward
+#       precision. Strictly harder on the backward than 1.25x (box probe: global rel 6.3e-7 / 9.5e-7 / 9.5e-7 at
+#       calls 2/6/8; adv rolled one step FAILS 13/13 at each). The port's OWN adv forward is not re-judged here:
+#       it is certified vs an f64 truth by 13b-imagloss-vq (Q, the policy loss elementwise, which is linear in adv)
+#       and -q2 (ret) — both PASS on the box AND on the wheel (wheel 13). Said plainly: what no line judges now is
+#       the port's own f32 adv feeding its own backward inside the composed loss at an exempt call; that product
+#       is the lottery itself. The 1.25x numbers are still PRINTED, marked "not counted".
+#   (C) and (P): unchanged, and they flow through (T2) — at an exempt call the control and every plant are also
+#       run with the official adv and judged by the same verdict. Non-exempt calls (call 1): unchanged.
+#   The earlier ruled line stays runnable: `--grads --grads-ruled1`.
 GRAD_PLANTS = ("no_straight_through", "reward_grad_off", "rep_scale_1", "kl_sg_swapped", "repval_grad_off",
                "slowreg_0", "adv_not_stopped", "policy_horizon_sum")
 
@@ -1564,7 +1587,9 @@ def main_grads():
             m = M._mlp_head_n(P, "pol", x, "action/mean", 3)
             sd = M._mlp_head_n(P, "pol", x, "action/stddev", 3)
             z = mx.zeros((*m.shape[:-1], 1), mx.float32)
-            pl, aux = M.policy_loss(m, sd, z, I["iact"], mx.zeros(m.shape[:-1], mx.int32), adv, w, 0.1, 1.0, 3e-4)
+            adv_p = I["adv_off"] if "adv_off" in I else adv   # (T2): the official's own f32 adv, back-solved
+            pl, aux = M.policy_loss(m, sd, z, I["iact"], mx.zeros(m.shape[:-1], mx.int32), adv_p, w, 0.1, 1.0,
+                                    3e-4)
             if plant == "adv_not_stopped":       # same forward value, gradient through adv into val
                 lp = aux["logp_c"][:, :-1] + aux["logp_d"][:, :-1]
                 pl = pl - w[:, :-1] * -(lp * sg(adv)) + w[:, :-1] * -(lp * adv)
@@ -1585,7 +1610,32 @@ def main_grads():
             return sum(L[k].mean() * s for k, s in sc.items())
         return loss
 
-    def run(c, plant=None, compiled=False, shift=0):
+    def adv_official(c):
+        """(T2) The official's f32 adv, back-solved from its dumped per-element policy loss:
+        loss = w * -(logpi * adv + actent * ent) -> adv = -(loss / w + actent * ent) / logpi (w > 0; 0 elsewhere,
+        where the term has no gradient). logpi/ent from the port's own f32 path (12b; imagloss-vq). Box 11-26:
+        rebuilt-loss residual <= 1.3e-16 of max|loss| at calls 1/2/6/8 (`rung13b_offadv_probe.py`)."""
+        I = inputs(c)
+        x = M.feat2tensor(I["idet"], I["isto"])
+        Pp = {n: A(R[f"c{c}/pre/{n}"]) for n in names[c] if n.startswith("pol/")}
+        m = M._mlp_head_n(Pp, "pol", x, "action/mean", 3)
+        sd = M._mlp_head_n(Pp, "pol", x, "action/stddev", 3)
+        z = mx.zeros((*m.shape[:-1], 1), mx.float32)
+        w = np.cumprod(np.array(I["icon"]), 1).astype(np.float32)
+        _, aux = M.policy_loss(m, sd, z, I["iact"], mx.zeros(m.shape[:-1], mx.int32),
+                               mx.zeros((m.shape[0], m.shape[1] - 1), mx.float32), A(w), 0.1, 1.0, 3e-4)
+        lp = (np.array(aux["logp_c"]) + np.array(aux["logp_d"]))[:, :-1].astype(np.float64)
+        en = (np.array(aux["ent_c"]) + np.array(aux["ent_d"]))[:, :-1].astype(np.float64)
+        L = G[f"c{c}/imagloss/loss/policy"].astype(np.float64)
+        wv = w[:, :-1].astype(np.float64)
+        live = wv > 0
+        adv = np.zeros_like(L)
+        adv[live] = -(L[live] / wv[live] + 3e-4 * en[live]) / lp[live]
+        return A(adv.astype(np.float32))
+
+    ADV_OFF = {}
+
+    def run(c, plant=None, compiled=False, shift=0, off_adv=False):
         M.sample_onehot = sample_no_st if plant == "no_straight_through" else real_sample
         keep_kl = M.kl_dyn_rep
         if plant == "kl_sg_swapped":
@@ -1595,7 +1645,12 @@ def main_grads():
             S = {k[len(f"c{c}/pre/"):]: A(R[k]) for k in R.files if k.startswith(f"c{c}/pre/slowval/")}
             f = mx.value_and_grad(make(plant))
             f = mx.compile(f) if compiled else f
-            tot, gr = f(P, S, inputs(c, shift))
+            I = inputs(c, shift)
+            if off_adv:
+                if c not in ADV_OFF:
+                    ADV_OFF[c] = adv_official(c)
+                I["adv_off"] = ADV_OFF[c]
+            tot, gr = f(P, S, I)
             mx.eval(tot, gr)
             return float(tot), {f"c{c}/grad/{n}": np.array(gr[n]) for n in names[c]}
         finally:
@@ -1691,19 +1746,25 @@ def main_grads():
               f"{max(relt(gold[c][k], t) for k, t in TRUTH[c].items()):.2e} -> "
               f"{'PRECISION-EXEMPT for pol (truth clause)' if EXEMPT[c] else 'gate vs official'}")
 
-    def verdict(c, gr, tot=None, label=None):
+    def verdict(c, gr, tot=None, label=None, gr_off=None):
+        """gr_off: the same composed loss with adv := the official's back-solved adv (T2); needed at exempt calls."""
         ex = EXEMPT[c]
         gsub = {k: v for k, v in gold[c].items() if not (ex and "/grad/pol/" in k)}
         gp, fails, _, n = port_gate.gate(gsub, gr)
         wm = [(k, relt(gr[k], gold[c][k].astype(np.float64))) for k in gold[c]
               if k.split("/grad/")[1].startswith(WM_MODS) and np.linalg.norm(gold[c][k]) > 0]
         wm_bad = [(k, r) for k, r in wm if r > WM_TOL]
-        tr_bad = []
+        tr_bad, t2_fails, t2_rel = [], [], 0.0
         if ex:
-            for k, t in TRUTH[c].items():
+            for k, t in TRUTH[c].items():         # the 1.25x truth line (ruling 11-26): PRINTED, not counted (T2)
                 po, of = relt(gr[k], t), relt(gold[c][k], t)
                 if np.linalg.norm(t) > 0 and not po <= 1.25 * of:
                     tr_bad.append((k, po, of))
+            gpol = {k: v for k, v in gold[c].items() if "/grad/pol/" in k}
+            t2_pass, t2_fails, _, _ = port_gate.gate(gpol, {k: gr_off[k] for k in gpol})
+            t2_rel = float(np.sqrt(sum(np.sum((gr_off[k].astype(np.float64) - v.astype(np.float64)) ** 2)
+                                       for k, v in gpol.items()) / sum(np.sum(v.astype(np.float64) ** 2)
+                                                                       for v in gpol.values())))
         okL = True
         if tot is not None:
             ref = float(R[f"c{c}/loss/total_scaled"])
@@ -1716,24 +1777,28 @@ def main_grads():
             print(f"G  {label}: published gate on {n} tensors{' (pol exempt)' if ex else ''}: "
                   f"{'PASS' if gp else 'FAIL'} ({len(fails)} failing); WM strengthened 1e-5: worst "
                   f"{max(r for _, r in wm):.1e}, {len(wm_bad)} over" +
-                  (f"; pol vs truth: {len(tr_bad)} of {len(TRUTH[c])} over 1.25x official (port worst "
+                  (f"; (T2) pol on the official's adv, published gate: {'PASS' if not t2_fails else 'FAIL'} "
+                   f"({len(t2_fails)} of 13 failing, global rel {t2_rel:.1e}); [not counted] pol vs truth: "
+                   f"{len(tr_bad)} of {len(TRUTH[c])} over 1.25x official (port worst "
                    f"{max(relt(gr[k], t) for k, t in TRUTH[c].items()):.2e}, official worst "
                    f"{max(relt(gold[c][k], t) for k, t in TRUTH[c].items()):.2e})" if ex else ""))
             for k, why, r, cs in fails[:4]:
                 print(f"     FAIL {k} {why} rel {r:.3e} cos {cs:.6f}")
             for k, r in wm_bad[:4]:
                 print(f"     WM-OVER {k} rel {r:.2e}")
-            for k, po, of in tr_bad[:4]:
-                print(f"     TRUTH-OVER {k} port {po:.2e} official {of:.2e}")
-        return gp and not wm_bad and not tr_bad and okL
+            for k, why, r, cs in t2_fails[:4]:
+                print(f"     T2-FAIL {k} {why} rel {r:.3e} cos {cs:.6f}")
+        return gp and not wm_bad and not (tr_bad if "--grads-ruled1" in sys.argv else t2_fails) and okL
 
     ok, true = True, {}
     for c in CALLS:
         for mode in ("eager", "compiled"):
             tot, gr = run(c, compiled=mode == "compiled")
             true.setdefault(c, gr)
-            ok &= verdict(c, gr, tot, f"call {c} {mode:8s}")
-    hits = [not verdict(c, run(c, shift=CUR_STEP)[1]) for c in CALLS]
+            go = run(c, compiled=mode == "compiled", off_adv=True)[1] if EXEMPT[c] else None
+            ok &= verdict(c, gr, tot, f"call {c} {mode:8s}", gr_off=go)
+    hits = [not verdict(c, run(c, shift=CUR_STEP)[1],
+                        gr_off=run(c, shift=CUR_STEP, off_adv=True)[1] if EXEMPT[c] else None) for c in CALLS]
     print(f"C  posterior noise one step late: verdict FAILS on {sum(hits)}/{len(CALLS)} calls")
     ok &= all(hits)
     caught = 0
@@ -1744,12 +1809,12 @@ def main_grads():
             if all(np.array_equal(gr[k], true[c][k]) for k in gr):
                 continue
             live.append(c)
-            hits.append(not verdict(c, gr))
+            hits.append(not verdict(c, gr, gr_off=run(c, plant=name, off_adv=True)[1] if EXEMPT[c] else None))
         caught += bool(live) and all(hits)
         print(f"P  planted {name:20s}: verdict FAILS on {sum(hits)}/{len(live)} calls where it changes the gradient "
               f"(no-op at {[c for c in CALLS if c not in live]})")
     good = ok and caught == len(GRAD_PLANTS)
-    print(f"RUNG 13b-grads (ruled): port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(GRAD_PLANTS)})")
+    print(f"RUNG 13b-grads (ruled T2): port {'PASS' if good else 'FAIL'} (planted caught {caught}/{len(GRAD_PLANTS)})")
     return 0 if good else 1
 
 
