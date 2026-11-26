@@ -459,3 +459,4 @@ shows the latest ones under the Director's morning report. Format:
 - 2026-11-26 05:50 · JACK · Everything was waiting this hour: the Mac-port check is still running on Kaggle, and the other jobs need a decision or a free GPU. Nothing new was measured.
 - 2026-11-26 06:15 · JACK · The re-check of brain A's full learning step on the same software a Mac would run came back clean: every part matched the original code. That finishes the Mac-port groundwork for brain A, short of an actual Mac.
 - 2026-11-26 06:25 · JACK · Nothing could move this hour: every task is waiting on a decision from the director or on a free GPU (the ear's last seed keeps getting 'no machine available'). No work was spent.
+- 2026-11-26 06:38 · JACK · Nothing could move this hour: the remaining jobs are waiting on the director's decisions, and the last ear test is still stuck waiting for a free Google GPU, which keeps answering 'unavailable'.
