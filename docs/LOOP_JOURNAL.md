@@ -4268,3 +4268,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Beside, not read by the rule: carried table from birth 74 vs told 83 (one world lost to a wrong table carried; first meal ~54 vs babble ~943). 2,519 CPU-s on the box.
 - Scout N2 entered as K9 + control C4 in `FORGE_POOL.md` for round 2 (ruling 129; pool ok 18). INBOX line for the hindsight eye's later race.
 - Philosophy served: 4 (a control that ate is written as a dead ruler, not a win) and 3 (the eye's seat stays raced).
+
+## 2026-11-26 ~23:37–23:55 UTC · JACK · Next-up 1: J26 POST-HOC on looks with food in sight
+- J24 (home ≈ 01:00), J18 tranche 1, J14's Saturday timers wait on kernels; J28's launcher still cannot be armed (7 gpu pollers, cap 6). Took Next-up 1.
+- `experiments/j26_posthoc.py` (frozen probe untouched): same fit on looks where ≥1 ray hits floor food (train 118,417 / test 35,438). R −0.169, C −0.013, K 0.700, B 0.726 (frozen read: K 0.585, B 0.606). Unseeable looks explain ~0.12 of P2's miss; K/B still < 0.80. Written POST-HOC in WORLD_CARD § J17 hunt; no verdict moved. ~16 CPU-min, nice 19, 2 workers.
+- Philosophy served: 4 (a missed prediction examined for why, without moving its bar) and 3 (the eye's code measured, not assumed).
