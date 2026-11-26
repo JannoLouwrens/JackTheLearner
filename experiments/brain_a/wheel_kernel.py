@@ -26,7 +26,7 @@ result `wheel_367.json`; same verdict rule (PASS iff all six exit 0 with their
 line, n == m, and mlx 0.32.4 printed by each rung line). Default `kernel` is
 byte-identical to the rung 1/2 run above.
 
-Usage:  python -m experiments.brain_a.wheel_kernel kernel [367|s1m|9|10_12]  (submits; writes OUT/wheel[_367|_s1m].json)
+Usage:  python -m experiments.brain_a.wheel_kernel kernel [367|s1m|9|10_12|13]  (submits; writes OUT/wheel[_367|_s1m].json)
         python -m experiments.brain_a.wheel_kernel verdict FILE [367]
 """
 import json
@@ -78,6 +78,70 @@ EXPECT.update({f"rung{k}_planted": _PL for k in ("10", "11", "12a", "12b")})
 SETS = {"12": (RUNS, "wheel.json"), "367": (RUNS_367, "wheel_367.json"),
         "s1m": (RUNS_S1M, "wheel_s1m.json"), "9": (RUNS_9, "wheel_9.json"),
         "10_12": (RUNS_10_12, "wheel_10_12.json")}
+# J25 (11-26): rung 13 on the wheel. Its goldens live only on /data (golden A 251 MB, R13 75 MB), so the
+# kernel REGENERATES them with the official code (golden_kernel's run A + rung13's A13 --dump-params, the
+# same pins/commit/args) and the reading counts only if both regenerated files equal the box's byte for
+# byte (np.savez is byte-reproducible: checked 11-26 under numpy 1.26.4 and 2.0.2). Then mlx[cpu]==0.32.4
+# from PyPI into the same venv, and rung13 --port + rung13b's ten modes with JACK_GOLDEN_A / JACK_R13 set.
+# LINE (fixed before the run): PASS iff both sha256 equal BOX_SHA, every run rc 0 with its PASS/HOLD line;
+# a sha mismatch or a missing run -> NO-READING (the kernel tested a different golden / died); else FAIL.
+BOX_SHA = {"A.npz": "84d42bb6d0126ab5bf94d6204ceb136e4331fad070ec434b96e14d71352c97f4",
+           "R13.npz": "8e0ee53f93656435ca287fb9e62b420d4230bd883ba1a0c3f6ae687c5d8abf00"}
+MODES_13B = ["", "--losses", "--obs", "--scan", "--wm", "--imag", "--imagloss-q2", "--imagloss-vq",
+             "--repval", "--grads"]
+RUNS_13 = ([("rung13_port", "rung13.py", ["--port"], 1800)]
+           + [("rung13b" + (m.replace("--", "_") if m else "_enc"), "rung13b.py", [m] if m else [], 2400)
+              for m in MODES_13B])
+EXPECT["rung13_port"] = r"RUNG 13a PORT \(mlx ([\w.]+)\) PASS"
+for _k, *_ in RUNS_13[1:]:
+    EXPECT[_k] = (r"RUNG 13b-losses: target HOLDS \(planted (\d+)/(\d+)\)" if _k == "rung13b_losses" else
+                  r"RUNG 13b-enc: references HOLD; port PASS" if _k == "rung13b_enc" else
+                  rf"RUNG 13b-{re.escape(_k[len('rung13b_'):])}(?: \([^)]*\))?: port PASS \(planted caught (\d+)/(\d+)\)")
+SETS["13"] = (RUNS_13, "wheel_13.json")
+
+
+def job_body_13() -> str:
+    from experiments.brain_a import rung13
+    s = rung13.job_body()
+    old = repr([("A13", ["--seed", "0", "--dump-params"])])
+    assert s.count(old) == 1
+    s = s.replace(old, repr([("A", ["--seed", "0"]), ("A13", ["--seed", "0", "--dump-params"])]))
+    tail = s.rindex('print("DONE", flush=True)')
+    s = s[:tail] + r'''res["sha256"] = {f: hashlib.sha256(open(os.path.join(out, f), "rb").read()).hexdigest()
+                 if os.path.exists(os.path.join(out, f)) else None for f in ("A.npz", "R13.npz")}
+_s.run(([_y.executable, "-m", "uv", "pip", "install", "-q", "--python", PY] if PY != _y.executable
+        else [PY, "-m", "pip", "install", "-q"]) + [__PIN__], check=True)
+tmp = "/tmp/jack_mlx_tmp"; os.makedirs(tmp, exist_ok=True)
+env = dict(os.environ, TMPDIR=tmp, JACK_GOLDEN_A=os.path.join(out, "A.npz"), JACK_R13=os.path.join(out, "R13.npz"))
+res["runs13"] = {}
+for key, script, args, tmo in __RUNS__:
+    t1 = time.time()
+    try:
+        p = _s.run([PY, "-I", os.path.join("experiments", "brain_a", script)] + args,
+                   capture_output=True, text=True, timeout=tmo, env=env)
+        rec = {"rc": p.returncode, "stdout_tail": p.stdout[-8000:], "stderr_tail": p.stderr[-3000:]}
+    except _s.TimeoutExpired:
+        rec = {"rc": "TIMEOUT", "timeout_s": tmo}
+    rec["wall_s"] = round(time.time() - t1, 1)
+    res["runs13"][key] = rec
+    print(key, rec["rc"], rec["wall_s"], flush=True)
+    json.dump(res, open(os.path.join(out, "wheel_13.json"), "w"))
+for f in ("A.npz", "B.npz", "A13.npz", "R13.npz"):
+    if os.path.exists(os.path.join(out, f)): os.remove(os.path.join(out, f))
+json.dump(res, open(os.path.join(out, "wheel_13.json"), "w"))
+print("DONE", flush=True)'''
+    return s.replace("__PIN__", repr(PIN)).replace("__RUNS__", repr(RUNS_13))
+
+
+def verdict_13(res: dict) -> dict:
+    sha = res.get("sha256") or {}
+    for f, want in BOX_SHA.items():
+        if sha.get(f) != want:
+            return {"WHEEL": "NO-READING", "why": f"regenerated {f} sha256 {sha.get(f)} != box {want[:8]}"}
+    v = verdict({"runs": res.get("runs13", {})}, "13")
+    v["sha256_match"] = True
+    return v
+
 
 _JOB = r'''
 import subprocess as _s, sys as _y, json, os, platform, time
@@ -118,13 +182,15 @@ def verdict(res: dict, which: str = "12") -> dict:
         if r is None:
             return {"WHEEL": "NO-READING", "why": f"{key} missing (kernel died before it)"}
         m = re.search(EXPECT[key], r.get("stdout_tail", ""))
-        if r.get("rc") != 0 or not m or m.group(1) != m.group(2):
+        n_m = m and m.re.groups >= 2
+        if r.get("rc") != 0 or not m or (n_m and m.group(1) != m.group(2)):
             return {"WHEEL": "FAIL", "first_differing": key, "rc": r.get("rc"),
                     "stdout_tail": r.get("stdout_tail", "")[-1500:],
                     "stderr_tail": r.get("stderr_tail", "")[-800:]}
-        if not key.endswith("_planted") and m.group(3) != VERSION:
+        ver = m.group(3) if m.re.groups >= 3 else (m.group(1) if m.re.groups == 1 else VERSION)
+        if not key.endswith("_planted") and ver != VERSION:
             return {"WHEEL": "FAIL", "first_differing": key,
-                    "why": f"mlx {m.group(3)} ran, not the pinned {VERSION}"}
+                    "why": f"mlx {ver} ran, not the pinned {VERSION}"}
         lines[key] = m.group(0)
     return {"WHEEL": "PASS", "lines": lines, "machine": res.get("machine"),
             "libc": res.get("libc"), "python": res.get("python")}
@@ -133,13 +199,14 @@ def verdict(res: dict, which: str = "12") -> dict:
 def kernel(which: str = "12") -> dict:
     from experiments.gpu import build_job, result_json, submit
     fname = SETS[which][1]
-    sub = submit(build_job(job_body(which)), prefer="kaggle-cpu", est_hours=0.3,
+    body = job_body_13() if which == "13" else job_body(which)
+    sub = submit(build_job(body), prefer="kaggle-cpu", est_hours=1.0 if which == "13" else 0.3,
                  timeout_s=int(2 * 3600), fetch=[fname])
     if not sub.ok:
         raise RuntimeError(f"wheel_kernel: {sub.message}")
     r = result_json(sub, fname)
     OUT.mkdir(parents=True, exist_ok=True)
-    r["verdict"] = verdict(r, which)
+    r["verdict"] = verdict_13(r) if which == "13" else verdict(r, which)
     (OUT / fname).write_text(json.dumps(r, indent=1) + "\n")
     print(json.dumps(r["verdict"], indent=1), flush=True)
     return r
@@ -149,7 +216,8 @@ if __name__ == "__main__":
     if sys.argv[1:2] == ["kernel"]:
         kernel(sys.argv[2] if len(sys.argv) > 2 else "12")
     elif sys.argv[1:2] == ["verdict"]:
-        print(json.dumps(verdict(json.loads(Path(sys.argv[2]).read_text()),
-                                 sys.argv[3] if len(sys.argv) > 3 else "12"), indent=1))
+        _w = sys.argv[3] if len(sys.argv) > 3 else "12"
+        _r = json.loads(Path(sys.argv[2]).read_text())
+        print(json.dumps(verdict_13(_r) if _w == "13" else verdict(_r, _w), indent=1))
     else:
         raise SystemExit(__doc__)
