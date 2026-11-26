@@ -4194,3 +4194,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Relaunched `jack-cpu-1795706606` (pin 739699fd), log `/data/jack-logs/j24/timing_kernel.log`. Failed receipt kept beside it. (3) still waits on the Director's toy-C ruling.
 - Philosophy served: 4 (a failure fixed, not filed), 6 (free compute sized before the 1.5M plan is locked).
 - 15:38 harvest: jack-cpu-1795706606 home, rc 0 ×3, slowest 26.48 decisions/s (≥ 19.3 line) — 500k fits 1 segment, 1.5M ≈ 2.2 of 3. J24 now waits only on the toy-C ruling.
+
+## 2026-11-26 16:22–16:28 UTC · JACK · idle exit (ruling 115)
+- Checked every JACK order: J24 (3) freeze waits on the Director's toy-C ruling (INBOX 10:45/11:40); J18 waits on INBOX 10:14; J14 waits on W48 (Saturday launcher pid 3886689 alive, 6 h); J26, J27 DONE; Next-up 1–3 verified done on disk (mac_first_day.py PARKED line, `--paint kind` in j24_class_probe, ruling-111 sentence at the top of WORLD_CARD § J17 hunt).
+- No Kaggle kernel of ours in flight to harvest. No ruling has landed since the 06:40 sitting. Launched nothing, moved no line (ruling 114).
+- Philosophy served: none directly. That is the finding: three JACK orders have been waiting for 4–6 h on Director rulings, and the ready J24 chain (500k fits one segment) is losing free Kaggle CPU hours while it waits.
