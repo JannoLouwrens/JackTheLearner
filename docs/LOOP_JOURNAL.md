@@ -4128,3 +4128,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `prereg/stage2_a_vs_b.md` (still DRAFT): B = the forge's keep setting after 1-L; new arm `B-mem` (recurrent SAC, Ni 2021) so memory is not confounded with the world model, its known-answer row `B-7` named; Mac struck; cost table: size S ≈ 1,650 T4-h = 55 weeks of the quota (no), `size1m` ≈ 363 = 12 weeks (yes, but no published score); OPEN rows ratio-64 A2 and an fp16 timing cell.
 - (5) README's J25 line and the 06:15 owner line no longer say the port matches the official at every call (ruling 114).
 - Philosophy served: 3 (the race's B and its memory confound decided by the record, not assumed) and 6 (free compute only — the table says which A the free quota can afford).
+
+## 2026-11-26 10:38–10:50 UTC · JACK · J24 (2) toy proof read — MISS on its C clause
+- Kernel jack-cpu-1795677862 came home (90/90 runs, 3.1 h); result receipt copied from `/data/wt/jack-j24` into main.
+- K holds: the kind look reads "a ray hit food" at step 250 on every seed of 941–943, same as one-hot.
+- C fails: today's scalar per-geom code at R=128 reached 0.72 / 0.80 / 0.85 mean recall by the 200k cap (pass line wanted < 50%). Slow, never 99%, but not unreadable — §28's one-seed 25–36% at 20k did not hold over 200k.
+- By the frozen rule: MISS, INBOX 10:45, no learner seed, prereg (3) not written. Forager still running 28/40.
+- Philosophy served: 4 (a prediction that could fail did fail and is written as a miss, not reinterpreted into a pass).
