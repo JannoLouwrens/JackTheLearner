@@ -1,7 +1,7 @@
 # Pre-registration DRAFT — stage 2: brain A against brain B in his world (ORDERS Next-up 4)
 
 **Status: DRAFT, text only, binds nothing.** Written 2026-11-20 by a JACK slot
-(Kaggle 5/5, no order could launch). Revised 2026-11-21 12:45 (ORDERS Next-up 1):
+(Kaggle 5/5, no order could launch). Revised 2026-11-26 (J27: B = forge keep setting, B-mem arm, free-cloud cost table, OPEN rows; the Mac struck). Revised 2026-11-21 12:45 (ORDERS Next-up 1):
 ruling 65 written in (mark, gate, futility and decision table read the LATE
 half; "reached then lost" beside), ruling 68 written in (B's gate lists row 5
 as a named miss), E2c's reading and ruling 64 put into gate 1. No seed of any arm below exists. The
@@ -13,8 +13,8 @@ sections), PUBLISHED_PRIORS §8 (test method) and §9 (battery), PLAN stage 2,
 ## The question (PLAN stage 2)
 
 In his own world, at 1,000,000 decisions, which brain learns to live — A
-(Dreamer-style world model, `experiments/brain_a/`) or B (SAC, the reproduced
-replay learner) — and does each show the advantage the record predicts for it?
+(Dreamer-style world model, `experiments/brain_a/`) or B (the forge's keep setting on the reproduced
+replay learner, J27 (1); B-mem, the same with memory, beside it) — and does each show the advantage the record predicts for it?
 A home-made arm enters only if it passed both rows with one setting (J3,
 ruling 59); none has today.
 
@@ -85,9 +85,10 @@ ruling 59); none has today.
 | arm | role | runs |
 |---|---|---|
 | `A` | candidate | n (pilot sets it; ≥ 20 unless the pilot proves fewer suffice — "fewer runs is not" a shortcut, PLAN) |
-| `B` | candidate | n, same world seeds |
+| `B` | candidate — **the forge's KEEP setting once round 1-L is read** (J27 (1); the BRO / SimBa / MR.Q class, PRIORS §1 "B+"), never plain SAC: on 40 tasks plain SAC reads IQM 0.007 / 0.316 at 100k / 1M vs BRO 0.254 / 0.945 (§1, 2405.16158), and at rung M plain was the ~6% floor vs resets 84% / TQC 82%. `OPEN:` which keep setting, until 1-L's read | n, same world seeds |
+| `B-mem` | candidate — **B's keep setting + a recurrent core** (J27 (2)): A has a GRU and B has none, so A vs B alone confounds memory with the world model. The record's form: recurrent SAC/TD3 (Ni 2021, 2110.05038: LSTM-128, separate actor/critic encoders, whole-episode sequences; PRIORS §5 row 7, §28 "smallest: recurrent TD3/SAC, 64 units"); on Craftax-classic a GRU added +8.1 points at no extra time and beat a 201M DreamerV3 at 1M (55.5 vs 47.2, §1, 2502.01591). Replay stores the recurrent state, burn-in, never crosses a death (§6, R2D2/R2I). **Its known-answer row, named now: `B-7` velocity-only Pendulum, recurrent SAC, Ni's configuration, 51,000 steps** — band from the figure (separate arm ≈ −170 at 50k; the "−168.6 ± 3.5" is UNVERIFIED, §5 row 7 correction), shared-encoder arm the must-be-worse comparison. Not yet a row in `KNOWN_ANSWERS.md`; `B-mem` does not enter until it reproduces | n, same world seeds |
 | `B@A-ratio` | B at A's update ratio — the matched-update control (§8 "World model vs model-free") | 5, reserve, only if A wins |
-| `random`, `statue` (noop), `A-lr0`, `B-lr0` (never-trains twins) | floors — **must fail**: ≤ 1 success in total across them, else VOID | 3 each |
+| `random`, `statue` (noop), `A-lr0`, `B-lr0`, `B-mem-lr0` (never-trains twins) | floors — **must fail**: ≤ 1 success in total across them, else VOID | 3 each |
 | `B-shuffled` | shuffled-input learner — must fail (content, not width) | 5 |
 | `forager-f4` (hand forager, body eye + body motor; WORLD_CARD J12 (2′) 20/20, 7.53 meals/life at d 0.75 — on the row128 eye; no 16-ray body-frame forager row exists, `OPEN:` a ceiling on the race's own eye) | ceiling — **must pass**, else VOID | 3 |
 
@@ -159,13 +160,55 @@ distraction gap needs more).
 ## Settings that differ from the published recipes (to be filled at freeze)
 
 - A: `size1m`-class net, 10–100× below any published Dreamer score (§2);
-  replay ratio as J14's rows ran it. B: `ent_coef` per J15's table (fixed 0.1
-  has no published precedent, §19). World: movement drain 2–3× basal, no
-  published eater lived under it (§13). Each is a reason a miss is weak.
+  replay ratio as J14's rows ran it (512, `rows.py:42`); compute `32-true`
+  where the official is float16. B: the forge's keep setting (1-L), fixed
+  0.1 entropy has no published precedent (§19). B-mem: Ni's LSTM-128 vs
+  Craftax's GRU-256 — `OPEN:` which, raced on `B-7` first. World: movement
+  drain 2–3× basal, no published eater lived under it (§13). Each is a
+  reason a miss is weak.
 
-## Cost (PLAN figures)
+## Cost — FREE CLOUD ONLY (J27 (3), ruling 113: the Mac is parked; every Mac hour struck)
 
-20 full A runs ≈ 160–280 T4-h (5–9 weeks of the free quota) or the Mac. B's
-20 runs: under a week on CPU/Kaggle. `OPEN:` which of PLAN's four shortenings
-(shorter T for all, lower A update ratio, free-running learner, Mac) — never
-fewer runs.
+Free compute = Kaggle GPU, **30 T4-h a week, expiring weekly**, one
+session ≤ 12 h (a longer seed is a carried chain, `save_life`). B and
+B-mem run on Kaggle CPU kernels and the box (forge rung M: 300k × 5 seeds
+inside round 1's 720 core-h; 1M ≈ 3.3× a seed (inf)) — they spend no GPU
+quota. A's per-seed hours are §1's table, inference from two of our
+timings (5.0 T4-h per 100k at size S; `rows.py:46` size1m 25.9 steps/s):
+**1M decisions ≈ 50 T4-h a seed at size S, ≈ 11 T4-h at `size1m`.**
+
+| A arm, 1M decisions | runs | T4-h a run | T4-h total | weeks of the 30 h quota |
+|---|---|---|---|---|
+| size S, ratio 512 — the race (n = 20) | 20 | 50 | 1,000 | **33.3** |
+| size S — `A-lr0` floor (no updates; full cost an upper bound) | 3 | ≤ 50 | ≤ 150 | ≤ 5.0 |
+| size S — A's half of the 20-run pilot | 10 | 50 | 500 | 16.7 |
+| **`size1m`, ratio 512 — the race (n = 20)** | 20 | 11 | 220 | **7.3** |
+| `size1m` — `A-lr0` floor | 3 | ≤ 11 | ≤ 33 | ≤ 1.1 |
+| `size1m` — A's half of the pilot | 10 | 11 | 110 | 3.7 |
+| `size1m` at ratio 64 (only if OPEN 1 holds; ~8× fewer updates, inference) | 20 | ~2–3 | ~40–60 | ~1.5–2 |
+
+**What the quota affords:** size S does NOT — pilot + race + floor ≈ 55
+weeks of the whole quota, and one seed (50 h) is more than a Kaggle week.
+**`size1m` does, barely:** pilot + race + floor ≈ 12 weeks if A takes the
+whole quota and nothing else (ear, A2 rows, forge) spends a GPU hour; at
+half the quota ≈ 24 weeks. The catch: `size1m` has NO published score
+anywhere (§1 "does not answer" 3) — our A1–A3 are the only rows, and A2 at
+the published size S is still open (gate 2). The affordable A is the
+unreproduced A. PLAN's shortenings that survive without the Mac: shorter T
+for all arms, a lower A update ratio (OPEN 1), a free-running learner —
+never fewer runs (§8).
+
+## OPEN — each with the one cheap row that answers it (J27 (4); nothing run)
+
+1. **Does ratio 64 hold A's score on proprio?** No ablation exists (§1
+   "does not answer" 2; Crafter 64 → 16 ≈ −20%, read off a figure). Row:
+   one A2 (cartpole_swingup) row at ratio 64, ~1 T4-h a seed (inf), 5
+   seeds vs the A2-v1S-enc band. Prediction (§1): in band at 500k, a miss
+   at 100k. If it holds, A's race cost falls ~5–8× (table's last line).
+2. **Mixed precision for A on a T4.** sheeprl's maintainers read 114 → 32
+   ms a gradient step on an A100 (issue 336); fp16 on a T4 is unmeasured.
+   Row: a 20-minute timing cell — `rows.py` size S `16-mixed` vs `32-true`,
+   same seed, steps/s and the first 5k losses side by side.
+3. **B-mem reproduces** (`B-7` above): one Kaggle CPU kernel, 5 seeds ×
+   51k steps, before `B-mem` is a candidate.
+4. **Which B keep setting** — round 1-L's read (J18), not this page.

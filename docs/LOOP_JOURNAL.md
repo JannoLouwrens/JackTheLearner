@@ -4122,3 +4122,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J18: the order's own clause fired — the harness cannot judge rung L as ruled: `compare` raises "need 20 runs per arm" on 10, `climb` refuses L, `validate_spec` needs S + a control. Nothing frozen, nothing launched; INBOX 10:14 with two costed options (20 seeds K1 vs baseline ≈ 175 kernel-h, or a one-look 10-run harness mode by SYSTEM).
 - J14 (a) (`4cd8fff2`): `rows enc-kernel SEED [--control]` (twin on seed 10 as the prereg says; the runner had hard-coded seed 0) + `scripts/a2_enc_sat_launch.py`, alive as pid 3886689, wakes Sat 00:01 UTC, own worktree, chain 10→11→12. Test PASS, dry-run logged.
 - Philosophy served: 4 (a judge that cannot run is not worked around — the verdict waits for a ruling) and 6 (W48's free GPU hours start being used the minute they open, no worker awake).
+
+## 2026-11-26 10:20–10:36 UTC · JACK · J27 — stage-2 draft rewritten from the record (text only)
+- J24's proofs still running (forager 22/40 cells, toy kernel RUNNING on Kaggle) — not read; J26 done; J18 waits on its ruling; J14 waits on W48. Slot took J27.
+- `prereg/stage2_a_vs_b.md` (still DRAFT): B = the forge's keep setting after 1-L; new arm `B-mem` (recurrent SAC, Ni 2021) so memory is not confounded with the world model, its known-answer row `B-7` named; Mac struck; cost table: size S ≈ 1,650 T4-h = 55 weeks of the quota (no), `size1m` ≈ 363 = 12 weeks (yes, but no published score); OPEN rows ratio-64 A2 and an fp16 timing cell.
+- (5) README's J25 line and the 06:15 owner line no longer say the port matches the official at every call (ruling 114).
+- Philosophy served: 3 (the race's B and its memory confound decided by the record, not assumed) and 6 (free compute only — the table says which A the free quota can afford).

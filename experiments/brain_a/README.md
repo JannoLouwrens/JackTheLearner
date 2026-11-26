@@ -1031,5 +1031,8 @@ Rung 13 (13a + 13b) is complete on the box. Next: the rung-13 wheel kernel — i
   global rel 2.6e-6 / 2.4e-6 / 2.5e-6, eager and compiled; plants 8/8; control (posterior noise one step late)
   FAILS 4/4. The uncounted 1.25× truth line printed 1/13 over at call 6 (port 7.81 vs official 5.46) — the rounding
   draw T2 set aside. Receipt `/data/jack-logs/mlx/wheel_13.json` (read 1 kept as `wheel_13_read1.json`).
-  **Rungs 10–13 pass here and on the wheel (J25 done).** Same limit as every wheel line: Linux x86_64 wheel of
+  **Rungs 10–13 pass here and on the wheel (J25 done) — NOT "meet the official every call" (J27 (5), rulings
+  113/114): 13 policy tensors were not compared with the official at calls 2/6/8 under the first line; port and
+  official are equally far from a 64-bit truth; lines moved by the worker after reads (R1–R5, T2) are NOT
+  RATIFIED (ruling 114); port PARKED (ruling 113).** Same limit as every wheel line: Linux x86_64 wheel of
   the same version, not the Mac's macOS arm64 binary; no training, no speed claim.

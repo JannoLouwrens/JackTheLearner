@@ -212,7 +212,7 @@ are equally far from a 64-bit truth; lines moved by the worker after
 reads (R1–R5, T2) are NOT RATIFIED (ruling 114); port PARKED (ruling 113)".
 serves: PLAN stage-1 ready-list → stage 2 · card lines 3, 4, 6.
 **done when:** the draft carries (1)–(4) with numbers and sources, and the README says (5).
-state: (new 11-26.)
+state: DONE 11-26 10:35 (commit below), text only, nothing run. `stage2_a_vs_b.md`: (1) B = forge keep setting after 1-L, plain SAC's IQM 0.007/0.316 vs BRO 0.254/0.945 cited; (2) arm `B-mem` (recurrent SAC, Ni 2021) + `B-mem-lr0` floor, known-answer row `B-7` velocity-only Pendulum named (band from figure, ±3.5 unverified; not yet in KNOWN_ANSWERS); (3) Mac struck, table: size S pilot+race+floor ≈ 1,650 T4-h = 55 quota-weeks (unaffordable), size1m ≈ 363 = 12 weeks (affordable, but unreproduced); (4) OPEN rows ratio-64 A2 (~1 T4-h/seed) and fp16 timing cell (20 min). (5) README J25 line + 06:15 owner line corrected per ruling 114.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
