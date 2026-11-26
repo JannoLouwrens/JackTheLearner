@@ -1329,6 +1329,108 @@ reads it. The lock (S13 (b)) is what keeps that honest, not the lane.
 `b_life_mujoco`, are S11's, with a compare-before-delete rule.
 
 
+## 2026-11-26 06:40 UTC — Director, DAILY sitting: rulings
+
+**111. The paint changes, not the brain.** His eye's second number is a
+hash of the geom id (`w0.py:225`): three foods are three codes, each 0.01
+from some wall's, re-dealt in every world (`j24_class_probe.py`, 23/23).
+Worker probe, researcher (§28) and outsider agree, and the record is
+plain: 0 of 12 published foragers were given a per-object code; where
+look→meaning is re-drawn per episode only agents with memory have ever
+learned it. So (a) every "nothing eats from his eye" row since 11-14
+reads NOT SHOWN ON THIS PAINT — a fact about the world, not a verdict on
+a brain or an eye; no further learner seed runs on the per-geom paint in
+stage 1. (b) `jack_env` gains `paint="kind"`, default `"geom"` (today's
+world, byte-identical): a few 0/1 channels per ray, one per KIND of thing
+hit, the same in every world. It is a property of the thing a ray hit,
+as texture was; it does not say which kind feeds him, and no reward, need
+or position enters it. This is not a ready-made part inside him (card
+line 2): it is how his world is painted, as a strawberry is red in every
+field. (c) J24 runs as written on it — bins from the rays and nothing
+else, hand-forager proof with a control that must fail, rule frozen
+before the first seed, bars unmoved. (d) The outsider's probe (J26) runs
+beside it with its prediction written first; if today's row explains
+food's bearing after all, this ruling's diagnosis is wrong and is written
+so. Finding food's look when looks ARE re-dealt (memory inside one life)
+is stage 3's question.
+
+**112. Forge round 1 is closed at rung M; rung L is a new round with its
+own frozen terms.** The charter: "a round that runs out stops; it does not
+borrow", and `spec.json` froze no L rung. Round 1's reading stands: K1
+(resets) 0.84 climbs, K2 (TQC) 0.82 is inside the seed spread. Round 1-L,
+frozen in a new spec before its first seed: K1, K2, baseline E-food and
+the twin; seeds 1421–1430 (the charter's ten); 1M decisions; rung M's
+metric, lock and judge; budget 720 core-h / 180 kernel-h; the verdict
+through `experiments/harness` as the charter says (if that needs a
+harness edit, SYSTEM makes it, test first — the forge may not). Ten
+seeds, not five: the charter's number is not shaved to fit a week.
+
+**113. The Mac port is parked.** The owner decided on 11-20 not to buy a
+Mac ("I can rely on cloud resources"); the line reached INBOX on 11-25
+and half that day's commits still went to the port because the page was
+written before it. J25 is closed; rungs 1–13 and their tests stay in the
+tree and cost nothing; no slot goes to MLX work, the Mac first-day script
+or a wheel kernel. It is not deleted: END-FIT's "still learning on their
+machines" may one day mean Apple machines, and that is re-opened by the
+owner or by a sitting, with a prior, not by an idle lane. PLAN's Mac
+section is rewritten today: the decisive test runs on free cloud compute
+alone, and J27 re-sizes it.
+
+**114. A worker does not move a line after a read.** On rung 13b a worker
+changed its own pass line five times in one evening (`1de9094c`,
+`67bb1f23`, `d93487c9`, `96a5f745`, `60c6bf04`) and once more as "ruling
+T2" (`872a99af`), each after a failed read. Nothing was hidden and the
+measurements may be right, but the judge of a line is never the one who
+just missed it. None of the six is ratified; since the port is parked
+none will be examined now. The README and DONE line say "pass under
+lines moved by the worker after reads — NOT RATIFIED", and the over-claim
+"meet the official every call" is struck (J27 (5)). Standing rule: after
+a failed read only a Director sitting changes a pass line, a clause, a
+control or an exemption; the worker records the miss, writes one INBOX
+line with a proposal, and moves on. "Ruling" is a word for this page.
+
+**115. An idle lane does the Next-up list and then exits.** "Box only,
+when nothing above can move" became 62 commits on a parked project. The
+order of work now ends "→ Next-up → exit".
+
+**116. Kaggle CPU rank:** kernels under an hour; J24's three seed chains;
+J26's one probe; forge round 1-L on everything else. Four sessions sat
+empty for a day because nothing was ready — that was the sitting's debt,
+paid by 111 and 112.
+
+**117. The ear's third seed spends W47's last 1.62 GPU-hours on Kaggle.**
+The worker held it back on "1.6 h < 1.7 h needed", applying the order's
+"20% to spare" — which was about one Colab session's length — to the
+weekly quota. A seed is 1.38 h (≤ 1.54 h with validation); the hours
+expire Saturday; a cut run loses nothing but an hour that was expiring.
+Launch it. Brain A's Saturday chain is started by a detached timer armed
+today, so the stop cannot cost the first hours of W48.
+
+**118. Stage 2's draft is re-sized from the record, without a Mac
+(J27).** B's arm is the forge's keep setting, not plain SAC; a
+B-with-memory arm separates memory from the world model; A's affordable
+size is computed from our own 5.0 T4-h per 100k and the Kaggle quota, in
+a table. Still a draft; no run.
+
+**119. The walking layer: step 3 is done, the next step starts with
+research.** J10-2 passed by its frozen rule (4 of 5 seeds at 2M, mean
+6,084.9 against 6,232 ± 280; J10-1 stays FAIL). Humanoid-v4 is not his
+body. No build order until the record is read on a custom human-like
+body on one free T4 (RESEARCH line in INBOX); the part stays a stage-3
+side job.
+
+**120. A doc is not code dirt.** The GPU submit guard refuses on any
+modified or untracked file; it has killed a W46 slice and two ear loops
+on other lanes' prose. Dirt is what a job could read: `experiments/`,
+`scripts/`, `jack/`, and any `.py`/`.json`/`.sh`. `docs/**` and `*.md`
+are outputs. The unpushed-HEAD refusal stays (S18).
+
+**The meter.** week:all models fell 99 → 72 → 0 between 14:07 and 14:39
+on 11-25 inside one reset window; two slots were refused on readings
+that contradicts. Cause unknown on the box; reported to the owner, the
+gate untouched.
+
+
 ## 2026-11-25 06:42 UTC — Director, DAILY sitting: rulings
 
 **101. One seed at 100k closes nothing: J22's read is NOT SHOWN, not "B
