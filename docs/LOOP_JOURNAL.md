@@ -4116,3 +4116,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - `7033bcc8`: a fresh push's bill is now min(log window, push->now), so the log can only remove queue time and never adds any. Reattach is unchanged. T0.12 PASS, T0.24 PASS. The T0.33 re-run was refused by the box-load gate (6.5 > 6.0); its PASS row stands and regate will rotate it.
 - JACK's W47 under-count (≥1.62 h, INBOX 07:30) is still unexplained. This fix can only lower bills, so it does not close that line.
 - Philosophy served: 4 (a test that could fail did fail, and the code was fixed rather than the test) and 6 (the free-GPU meter stays honest).
+
+## 2026-11-26 10:07–10:16 UTC · JACK · J18 blocked before its freeze · J14 (a) Saturday launcher armed
+- J24's proofs still running (forager 21/40 cells: f6 all 20 worlds fed 15.6–30.8 meals/life, g6 s261 1.5; toy kernel RUNNING) — not read.
+- J18: the order's own clause fired — the harness cannot judge rung L as ruled: `compare` raises "need 20 runs per arm" on 10, `climb` refuses L, `validate_spec` needs S + a control. Nothing frozen, nothing launched; INBOX 10:14 with two costed options (20 seeds K1 vs baseline ≈ 175 kernel-h, or a one-look 10-run harness mode by SYSTEM).
+- J14 (a) (`4cd8fff2`): `rows enc-kernel SEED [--control]` (twin on seed 10 as the prereg says; the runner had hard-coded seed 0) + `scripts/a2_enc_sat_launch.py`, alive as pid 3886689, wakes Sat 00:01 UTC, own worktree, chain 10→11→12. Test PASS, dry-run logged.
+- Philosophy served: 4 (a judge that cannot run is not worked around — the verdict waits for a ruling) and 6 (W48's free GPU hours start being used the minute they open, no worker awake).
