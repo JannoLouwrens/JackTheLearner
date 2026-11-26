@@ -243,5 +243,26 @@ def test_enc_kernel_pins_torch_to_the_kaggle_cells_before_the_head():
     assert R.ENC_TORCH_PIN_LINES not in R.kernel_body_v1s((10,), False)
 
 
+
+
+def test_enc_seed_kernel_runs_the_prereg_arm_with_its_seed_10_twin(tmp_path):
+    """J14 (a): an A2-v1S-enc seed kernel = BASE_V1S + MATCHED_ENC, one seed, the never-trains
+    twin on seed 10 (prereg a2_size_s_enc.md "Control"), the timing cell's compile line and torch
+    pin before the runner. Control: the A2 rows keep their twin on seed 0."""
+    from experiments.brain_a.v1s_diff import MATCHED_ENC
+    t = R.kernel_body_enc([10], True)
+    compile(t, "enc_seed", "exec")
+    assert 0 <= t.find(R.ENC_TORCH_PIN_LINES) < t.find(R.ENC_COMPILE_ENV_LINE) < t.find("_r = run_row(")
+    assert "control=True" in t and "[10]" in t and R.enc_fetch_name([10], True) in t
+    assert "control=False" in R.kernel_body_enc([11], False)
+    r = R.run_row(R.V1S_ROW, [10], str(tmp_path), "cpu", control=True,
+                  cmd_prefix=_fake_runner(tmp_path, 2000), base=R.enc_base(), tag=R.ENC_TAG,
+                  control_seed=R.ENC_CONTROL_SEED)
+    names = [x["name"] for x in r["runs"]]
+    assert names[0] == "A2v1Senc_s10_control", names
+    assert all(k in r["runs"][0]["cmd"] for k in MATCHED_ENC) and "seed=10" in r["runs"][0]["cmd"]
+    assert R.CONTROL_SEED == 0 and R.ENC_SEEDS == (10, 11, 12)
+
+
 if __name__ == "__main__":
     main()

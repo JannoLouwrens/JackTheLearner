@@ -272,15 +272,16 @@ def run_one(row: str, seed: int, control: bool, out_dir: str, device: str = "cud
 
 def run_row(row: str, seeds, out_dir: str, device: str = "cuda", control: bool = True,
             deadline_s: float = ROW_DEADLINE_S, extra: tuple = (), cmd_prefix: tuple = None,
-            base: list = None, tag: str = None) -> dict:
+            base: list = None, tag: str = None, control_seed: int = CONTROL_SEED) -> dict:
     """Control first, then each seed; the file is rewritten after every run.
-    `base`/`tag`: another arm of the same row (A2-v1S) — its own settings and its own file name."""
+    `base`/`tag`: another arm of the same row (A2-v1S) — its own settings and its own file name.
+    `control_seed`: the never-trains twin's seed (A2-v1S-enc's prereg names seed 10, not 0)."""
     t_end = _time.time() + deadline_s
     res = {"row": row, "seeds": list(seeds), "control": control, "runs": [], "stopped": None}
     if tag:
         res["arm"] = tag
     path = _os.path.join(out_dir, f"brain_a_rows_{tag or row}.json")
-    plan = ([(CONTROL_SEED, True)] if control else []) + [(s, False) for s in seeds]
+    plan = ([(control_seed, True)] if control else []) + [(s, False) for s in seeds]
     for seed, ctl in plan:
         if _time.time() > t_end:
             res["runs"].append({"name": f"{tag or row}_s{seed}" + ("_control" if ctl else ""), "row": row,
@@ -486,6 +487,37 @@ def kernel_body_enc_timing() -> str:
     return ENC_TORCH_PIN_LINES + _kernel_head() + _KERNEL_TAIL_ENC_TIMING
 
 
+# The seeds of A2-v1S-enc (J14 (a), prereg "Order": seed 10 -> 11 -> 12, one seed per session, the
+# never-trains twin (seed 10) rides with seed 10). Venue: Kaggle GPU from W48 (timing addendum 11-24:
+# 5.0 T4-h a seed; the twin takes no gradient step). Same pins and compile line as the timing cell.
+ENC_SEEDS = (10, 11, 12)
+ENC_EXTENSION_SEEDS = (13, 14)
+ENC_CONTROL_SEED = 10
+ENC_EST_HOURS = 5.0
+_KERNEL_TAIL_ENC = r"""
+import os
+""" + ENC_COMPILE_ENV_LINE + r"""
+from experiments.brain_a.rows import run_row, enc_base, V1S_ROW, ENC_TAG, ENC_CONTROL_SEED
+_r = run_row(V1S_ROW, __SEEDS__, WORK, "cuda", control=__CONTROL__, base=enc_base(), tag=ENC_TAG,
+             control_seed=ENC_CONTROL_SEED)
+os.replace(os.path.join(WORK, "brain_a_rows_" + ENC_TAG + ".json"), os.path.join(WORK, __FETCH__))
+print("RESULT " + json.dumps({"arm": ENC_TAG, "stopped": _r["stopped"],
+      "runs": [(x["name"], x.get("rc"), x.get("cut"), len(x.get("episodes", []))) for x in _r["runs"]]}), flush=True)
+print("DONE", flush=True)
+"""
+
+
+def enc_fetch_name(seeds, control: bool) -> str:
+    return "brain_a_v1s_enc_" + "_".join(f"s{s}" for s in seeds) + ("_c" if control else "") + ".json"
+
+
+def kernel_body_enc(seeds, control: bool) -> str:
+    """One A2-v1S-enc seed per kernel (the twin first when asked), Kaggle's torch pair pinned."""
+    return ENC_TORCH_PIN_LINES + _kernel_head() + (
+        _KERNEL_TAIL_ENC.replace("__SEEDS__", repr(list(seeds))).replace("__CONTROL__", repr(control))
+        .replace("__FETCH__", repr(enc_fetch_name(seeds, control))))
+
+
 def _kernel_head() -> str:
     from experiments.brain_a import speed
     head = speed._JOB.split("\ndef one(")[0]
@@ -520,6 +552,7 @@ def main(argv) -> int:
     v1s-timing           (arm A2-v1S: the timing cell, Kaggle GPU; rates only, no score)
     enc-timing           (arm A2-v1S-enc: the timing cell, Colab T4, seed 10; rates only, no score)
     v1s-kernel SEED [--control] [--est=H]   (arm A2-v1S: one seed per kernel)
+    enc-kernel SEED [--control]             (arm A2-v1S-enc: one seed per kernel, Kaggle GPU)
     v1s-score            (judge every harvested A2-v1S file by row A2's rule)"""
     _os.makedirs(OUT, exist_ok=True)
     cmd = argv[1] if len(argv) > 1 else ""
@@ -583,6 +616,23 @@ def main(argv) -> int:
             return 1
         open(_os.path.join(OUT, dst), "w").write(_json.dumps(result_json(sub, name)))
         print("WROTE", _os.path.join(OUT, dst), flush=True)
+        return 0
+    if cmd == "enc-kernel":        # A2-v1S-enc seeds 10-12 (J14 (a)), Kaggle GPU from W48
+        from experiments.gpu import build_job, result_json, submit
+        seeds = tuple(int(a) for a in argv[2:] if a.isdigit())
+        control = "--control" in argv
+        if len(seeds) != 1 or seeds[0] not in ENC_SEEDS + ENC_EXTENSION_SEEDS:
+            print("one seed per kernel, from", ENC_SEEDS + ENC_EXTENSION_SEEDS)
+            return 2
+        name = enc_fetch_name(seeds, control)
+        sub = submit(build_job(kernel_body_enc(seeds, control)), prefer="kaggle", est_hours=ENC_EST_HOURS,
+                     timeout_s=REMOTE_TIMEOUT_S, fetch=[name])
+        print("SUBMIT", sub.backend, sub.ok, sub.job_id, sub.message, flush=True)
+        if not sub.ok:
+            return 1
+        dst = _os.path.join(OUT, name.replace("brain_a_", ""))
+        open(dst, "w").write(_json.dumps(result_json(sub, name)))
+        print("WROTE", dst, flush=True)
         return 0
     if cmd == "v1s-score":
         import glob
