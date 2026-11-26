@@ -14,7 +14,7 @@ The current baseline's sustained-life rate at the entry rung, beside its floor.
 
 ### r1 — KEEP on E-food: which published setting keeps brain B eating in the LATE half of a run (the baseline reaches 4/5 and loses it 10/10)?
 
-Baseline `E-food` · outcome `sustained_rate` (requires eating) · cost 71.16 of 270 core-h, 18.66 of 68 kernel-h
+Baseline `E-food` · outcome `sustained_rate` (requires eating) · cost 216.66 of 270 core-h, 56.40 of 68 kernel-h
 
 **Rung S** (150,000 decisions × 3 seeds): 8 in, 3 climb. Baseline 0.03509; plain variation (control mean) 0.1008.
 
@@ -33,7 +33,20 @@ Baseline `E-food` · outcome `sustained_rate` (requires eating) · cost 71.16 of
 
 Mean = the outcome over the rung's seeds; a lost run (crash, cut, missing) counts 0. Tiebreak: late meals per life (mean over the same late lives), used only to order arms equal on the score.
 
+**Rung M** (300,000 decisions × 5 seeds): 3 in, 1 climb. Baseline 0.05926; plain variation (control mean) 0.1843.
+
+| arm | source | mean | tiebreak | runs lost | vs baseline | result |
+|---|---|---|---|---|---|---|
+| `E-food` | baseline | 0.05926 | 4.629 | 0 | +0 | the thing to beat |
+| `E-food-lr0` | never trains | 0.01683 | 1.751 | 0 | -0.04243 | the twin to beat |
+| `K1` | published | 0.8374 | 62.93 | 0 | +0.7781 | CLIMBS |
+| `K2` | published | 0.8164 | 60.56 | 0 | +0.7571 | not in the top third (first below the cut, 0.8164) |
+| `N3` | published | 0.6127 | 43.61 | 0 | +0.5535 | not in the top third (cut 0.8164) |
+| `C2` | control | 0.1843 | 14.36 | 0 | +0.125 | yardstick only |
+
+Mean = the outcome over the rung's seeds; a lost run (crash, cut, missing) counts 0. Tiebreak: late meals per life (mean over the same late lives), used only to order arms equal on the score.
+
 | source | in | reached M | reached L | paying (beats plain variation's yield)? |
 |---|---|---|---|---|
-| published | 6 | 3 | 0 | yes |
+| published | 6 | 3 | 1 | yes |
 | control | 2 | 0 | 0 | the yardstick |

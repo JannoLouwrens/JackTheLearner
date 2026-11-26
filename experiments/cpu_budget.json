@@ -2044,10 +2044,10 @@
         "SO.01": 48.94,
         "SO.04": 161.19,
         "T2.08": 413.74,
-        "detached:chain.log": 8.6,
-        "detached:launch_M_chainA_rerun.log": 64.3
+        "detached:chain.log": 20.38,
+        "detached:launch_M_chainA_rerun.log": 158.6
       },
-      "used_s": 754.06
+      "used_s": 860.14
     }
   },
   "last_child_s": {
