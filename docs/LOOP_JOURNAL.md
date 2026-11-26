@@ -4135,3 +4135,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - C fails: today's scalar per-geom code at R=128 reached 0.72 / 0.80 / 0.85 mean recall by the 200k cap (pass line wanted < 50%). Slow, never 99%, but not unreadable — §28's one-seed 25–36% at 20k did not hold over 200k.
 - By the frozen rule: MISS, INBOX 10:45, no learner seed, prereg (3) not written. Forager still running 28/40.
 - Philosophy served: 4 (a prediction that could fail did fail and is written as a miss, not reinterpreted into a pass).
+
+## 2026-11-26 11:37–11:45 UTC · JACK · J24 (2) forager proof read — PASS
+- The box forager run finished (40/40 cells, bad=0, no process left); scored by its frozen `j24_bins_forager score`, written to `/data/jack-logs/j24/bins_forager/score.json`.
+- f6, a hand ruler reading only the 16 food bins of the kind paint: 20/20 seeds over the bar, seed means 15.6–30.8 meals a life (mean 25.5; J20's f4 on the old row was 19/20). Control g6, bins shuffled every decision: 0/20, mean 2.6. Floor b4: 0.425.
+- (2) is now fully read: forager PASS, toy K holds, toy C MISS. The step to (3) waits on the Director's ruling on C (INBOX 10:45 + 11:40). No learner seed launched.
+- Philosophy served: 4 (a proof that had a control that must fail; it failed, the proof held, nothing moved) and 1 (his world now shows food the way every published forager's world does — and a plain rule can find it).
