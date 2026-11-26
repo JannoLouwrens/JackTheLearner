@@ -1,12 +1,6 @@
 # eye_bins16 — brain B on the kind paint's binned eye (ORDERS J24 (3))
 
-**STATUS: DRAFT, NOT FROZEN (written 2026-11-26 13:30 UTC).** It binds nothing
-and no seed runs on it. J24 (2) read toy K HOLDS, toy C MISS, forager PASS; the
-order says "a miss → INBOX, no learner seed", and the Director has not yet ruled
-whether (3) proceeds on K + the forager (INBOX 10:45, 11:40). If the ruling says
-proceed, the freeze is ONE commit: change STATUS to `FROZEN <date>, ruling <n>`,
-nothing else. If the ruling changes a term, the term is changed here BEFORE the
-freeze, in the same commit, and said so.
+**STATUS: FROZEN 2026-11-26 (ruling 121).** Frozen exactly as drafted 13:30 UTC; no term changed. Ruling 121: the toy row stands (K HOLDS, C MISSED — a wrong prediction about the OLD paint, not a condition on this one); (3) proceeds on toy K + the forager PASS. Seeds 941–943 run on this text only.
 
 ## Question
 Does brain B (the library's flat-MLP SAC) learn to eat FROM HIS EYE when the eye

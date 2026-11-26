@@ -714,7 +714,7 @@ What it says: critic loss is the only signature whose control stays quiet until 
 
 ### J17 hunt (ruling 77; PILOT — one seed 923, 100k decisions, each arm beside its own blind twin on its own machine; no verdict on eating)
 
-**Read first (ruling 111, 11-26):** every eye row in this section was run on the per-geom paint (each floor food its own texture code, re-dealt per world) and reads NOT SHOWN ON THIS PAINT — not a verdict on the eye or the learner; the kind paint is J24.
+**Read first (rulings 111, 121, 11-26):** rows since 11-14 read NOT SHOWN ON THIS PAINT; the toy shows the old code is slow to read, not impossible — whether a brain could read it at 500k+ is untested. (Every eye row in this section was run on the per-geom paint — each floor food its own texture code, re-dealt per world; the kind paint is J24.)
 
 **J26 probe (no learner; frozen `f117412e`, fit `54e45611`; read 11-26 08:40).** 200k babble looks (worlds 281–295 train, 296–300 test; 138,111 / 44,422 labelled), the simulator labels the bearing of the nearest floor food in range; MLP 256-256, R² on (cos, sin) in held-out worlds, seeds 941–943:
 today's row **R −0.135** (−0.141 / −0.119 / −0.146) · one food code **C −0.013** · kind one-hot **K 0.585** (0.577 / 0.588 / 0.591) · bins16 **B 0.606** (0.580 / 0.627 / 0.610) · permuted-label control −0.0001 (≤ 0.05: not void).
