@@ -1023,3 +1023,13 @@ Rung 13 (13a + 13b) is complete on the box. Next: the rung-13 wheel kernel — i
   9.5e-7 / 9.4e-7 at calls 2/6/8, eager and compiled (log `/data/jack-logs/mlx/rung13b_grads_T2_box.log`). The
   port's own adv forward is judged by 13b-imagloss-vq/-q2, which pass on box and wheel. The earlier line still runs
   with `--grads --grads-ruled1`.
+- **Wheel 13 RE-READ under T2 (11-26 05:55, `jack-cpu-1795670064`, `872a99af`, PyPI mlx[cpu] 0.32.4, x86_64,
+  py 3.13.18): WHEEL PASS — 11/11 runs rc 0.** Both regenerated goldens sha256 = box (`sha256_match`).
+  rung13 --port, 13b enc / losses / obs / scan / wm / imag / imagloss-q2 / imagloss-vq / repval PASS (plants all
+  caught); 13b-grads (ruled T2): call 1 published gate on all 81 tensors PASS; calls 2/6/8 the 68 non-pol tensors
+  PASS (WM strengthened 1e-5 worst 1.6e-6) and the 13 pol tensors on the official's adv meet the published 1e-4 gate,
+  global rel 2.6e-6 / 2.4e-6 / 2.5e-6, eager and compiled; plants 8/8; control (posterior noise one step late)
+  FAILS 4/4. The uncounted 1.25× truth line printed 1/13 over at call 6 (port 7.81 vs official 5.46) — the rounding
+  draw T2 set aside. Receipt `/data/jack-logs/mlx/wheel_13.json` (read 1 kept as `wheel_13_read1.json`).
+  **Rungs 10–13 pass here and on the wheel (J25 done).** Same limit as every wheel line: Linux x86_64 wheel of
+  the same version, not the Mac's macOS arm64 binary; no training, no speed claim.

@@ -209,13 +209,8 @@ One wheel kernel (< 1 h, rank 0) after rung 12 and after 13. No training,
 no speed claims.
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7.
 **done when:** rungs 10–13 pass here and on the wheel, test names in `experiments/brain_a/README.md`.
-state: rungs 10–12b PASS box + WHEEL (`cdd0db67`); rung 13 (13a + 13b) complete on the box 11-26 (`experiments/brain_a/README.md`).
-state: 11-26 04:03 wheel 13 READ FAIL at rung13b_grads' pol-vs-truth clause only (`jack-cpu-1795663575`, receipt kept as `wheel_13_read1.json`); 13p: port backward same on both machines, miss is the f32 val decode.
-state: 11-26 05:10 13u read: x86 mlx softmax 31 ulp off rounded-f64 (as box); call 2 |val_mlx−val_rounded| 0.584 vs |val_rounded−f64| 1.1e-3 → rounding through an ill-conditioned decode, not the port.
-state: 11-26 05:40 **RE-REGISTERED T2 `872a99af` before the re-read**: at exempt calls pol tensors run on the official's own back-solved adv face the PUBLISHED 1e-4 gate (1.25× truth line printed, not counted). Box PASS: rel 6.3e-7/9.5e-7/9.4e-7 at calls 2/6/8, plants 8/8, control 4/4.
-state: Wheel 13 RE-READ launched: kernel `jack-cpu-1795670064` from `/data/wt/jack-wheel13t2`, log `/data/jack-logs/mlx/wheel_13t2_launch.log` → verdict in `wheel_13.json`. NEXT: read it; PASS → J25 DONE (rungs 10–13 box + wheel); FAIL → chase it, threshold untouched.
-state: 11-26 05:50 re-read kernel `jack-cpu-1795670064` still RUNNING at 36 min (last wheel 13 took ~23); watcher pid 3620351 alive, writes `/data/jack-logs/mlx/wheel_13.json` (now still 04:03's read1 copy — check mtime). NEXT: read it.
-state: Owner's no-Mac line (INBOX 11-25 11:58) still awaits the Director.
+state: **DONE 11-26 06:15 — rungs 10–13 PASS box + WHEEL.** Wheel 13 re-read under ruling T2 (`872a99af`, kernel `jack-cpu-1795670064`): 11/11 runs PASS, goldens sha256 = box; 13b-grads pol on the official's adv meets the published 1e-4 gate at calls 2/6/8 (global rel 2.6e-6/2.4e-6/2.5e-6), plants 8/8, control fails 4/4.
+state: Receipt `/data/jack-logs/mlx/wheel_13.json`; written into `experiments/brain_a/README.md` (rung 13 wheel line). Limit: x86_64 PyPI wheel, not the Mac's arm64 binary; no training, no speed claim. Owner's no-Mac line (INBOX 11-25 11:58) still awaits the Director.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;

@@ -4074,3 +4074,9 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - J24 stopped awaiting a class ruling; J18 rung M read (`705ea61f`), rung L awaits the Director's terms; J10 DONE; J14 s2 waits on Colab 503 / Kaggle 1.6 h < 1.7 h (retry loop pid 3514759 alive).
 - J25: wheel 13 T2 re-read kernel `jack-cpu-1795670064` RUNNING 36 min (prior run ~23); watcher alive, no verdict yet. Next-up items 1–3 checked: all already done (conv_eye/WORLD_CARD ruling 101 text, FORGE_POOL R5, late_from raise + test).
 - Nothing measured this slot. Philosophy served: none directly — a slot with every order waiting is a finding for the Director (ranked orders all blocked on rulings or external compute).
+
+## 2026-11-26 06:08–06:15 UTC · JACK · J25 — wheel 13 re-read: PASS; J25 DONE
+- J24 stopped awaiting a class ruling; J18 rung M read, rung L awaits terms; J10 DONE; J14 s2 still Colab 503 (retry loop alive). J25 had its verdict home.
+- Wheel 13 under ruling T2 (`jack-cpu-1795670064`, PyPI mlx 0.32.4 x86_64): 11/11 runs PASS, goldens sha256 = box; 13b-grads pol on the official's adv meets the published 1e-4 gate at calls 2/6/8 (rel 2.6e-6/2.4e-6/2.5e-6), plants 8/8, control fails 4/4. Uncounted 1.25× truth line: 1/13 over at call 6 (the rounding draw T2 set aside).
+- Rungs 10–13 now pass box + wheel → J25 DONE. README line written; kernel receipt rows copied from the worktree into main.
+- Philosophy served: 7 (he must run on people's machines — the whole optimiser step now matches the official code on the wheel the Mac will use) and 4 (verdict read against a rule frozen before the read).
