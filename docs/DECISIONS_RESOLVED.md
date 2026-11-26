@@ -1329,6 +1329,75 @@ reads it. The lock (S13 (b)) is what keeps that honest, not the lane.
 `b_life_mujoco`, are S11's, with a compare-before-delete rule.
 
 
+## 2026-11-26 19:14 UTC — Director, second DAILY sitting (called by the owner's session): rulings
+
+**121. J24's toy: C is a miss, and the learner run proceeds.** The toy's
+frozen line had two clauses. K held (kind look read at step 250, 45/45
+runs). C — "today's scalar code stays under 50% recall" — MISSED: 0.72 /
+0.80 / 0.85 at 200k. The row is recorded as a MISS and the line is not
+moved. But C was a prediction about the OLD paint; whether a learner on
+the NEW paint is a sound test rests on K and on the hand forager (20/20,
+control 0/20), and both passed their frozen lines. So step (3) freezes and
+launches. Ruling 111's phrase "a fact about the paint, not about a brain"
+is narrowed: the old rows read NOT SHOWN ON THIS PAINT; the paint is about
+800× slower to read in the toy and tells nothing of food's bearing (J26,
+R² −0.135), but "unreadable" is withdrawn — untested at 500k+. A draft
+row for that test is on JACK's Next-up; no geom-paint seed until a sitting
+orders it.
+
+**122. Round 1-L runs on the harness's design, not a ten-run exception.**
+Ruling 112 said "ten seeds through the harness"; the harness's test is two
+looks at 10 and 20 runs an arm, 0.025 each (ruling 19). My order was
+wrong, not the judge. Round 1-L pre-registers 20 seeds an arm (1421–1440);
+tranche 1 is seeds 1421–1430. Primary: K1 against baseline by
+`harness.compare` on the harness's own outcome. K2 (10 seeds) and the twin
+(2) run beside it and decide nothing by test; rung M's late-half rate and
+the long-life reading are printed for every run. Keep rule frozen before
+the seeds: if K1 differs from baseline, the higher late-half mean of K1/K2
+at 1M is B's keep setting, K1 on a tie inside K1's seed range. Tranche 1's
+budget 180 kernel-h (≈ 140 needed); tranche 2 only if look 1 is not
+terminal, with its own 180.
+
+**123. Reading look 1 with ten runs home is the same test.** `compare`
+refusing fewer than 20 runs is a plumbing limit, not part of the design:
+look 1 was always computed on the first 10. S20 lets it return look 1's
+terminal verdicts or `NEEDS_LOOK_2`; alpha, permutation test, futility
+rule and the 20-run behaviour are unchanged and `same_vs_same` must not
+move. The forge's own `validate_spec` may learn a continuation round
+(rung L only, parent round named); the harness and `r1_read` are not the
+forge's to edit.
+
+**124. Kaggle's refusal is the GPU meter.** The account is shared; our
+meter counts our jobs only (28.38 h of W47 when Kaggle said 30 were gone).
+A quota refusal closes that week for planning; no retry loop. W48 is
+planned at 22 of 30 h. W47: no free hour expired by Kaggle's own count.
+
+**125. S18 as built is what was meant.** `docs/**` and `*.md` are never
+code dirt; for everything else S7(1)'s rule (fatal only if experiments
+code imports or names it) stands. Ruling 120's literal list is withdrawn.
+
+**126. The walker: PD joint targets BY RECORD; no build now.** Every
+published natural walk drives PD targets; raw torques may challenge at
+step 4 with its own prior. His GPU body is a new world (ruling 76) and a
+stage-3 design. Now: one 10-minute MJX cell on the GPU Kaggle actually
+gives (J28), and the researcher settles W-1's band (800 or 115) before any
+row is frozen.
+
+**127. Nobody idles on a question.** Seven JACK slots ended "waiting on
+the Director" on 11-26. From now: every order carries `branches:` for its
+likely outcomes; a missed gate stops that order's next step, not the
+lane; a question that only chooses between options an order already sized
+and touches no line (ruling 114 stands) becomes the worker's own stated
+choice after 3 hours unanswered; a slot ends idle only when every order
+waits on a running kernel and Next-up is empty.
+
+**128. A short afternoon sitting is worth its cost — when there is
+something to rule.** One sitting costs about one worker slot; today its
+absence cost seven. Shape: 18:37 UTC, ≤ 15 minutes, rulings and ORDERS
+only, held only if INBOX has a line addressed to the Director. The
+crontab is outside the repo, so installing it is the owner's (PROGRESS,
+FOR THE OWNER); until then ruling 127 carries the load.
+
 ## 2026-11-26 06:40 UTC — Director, DAILY sitting: rulings
 
 **111. The paint changes, not the brain.** His eye's second number is a
