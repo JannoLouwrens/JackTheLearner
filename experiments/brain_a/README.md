@@ -996,3 +996,8 @@ slowreg 0, adv not stopped, policy horizon-summed); control: posterior noise one
   mostly value-decode rounding by train call 6 (bf16, the published compute, can only be worse).
 Rung 13 (13a + 13b) is complete on the box. Next: the rung-13 wheel kernel — its goldens (R13 75 MB + golden A
 252 MB) live in /data only, so the kernel must regenerate them (golden_kernel ran in 418 s) or read a dataset.
+- **Wheel 13 (11-26, `jack-cpu-1795663575`, PyPI mlx[cpu] 0.32.4, x86_64, py 3.13): FAIL at 13b-grads only.**
+  Both regenerated goldens sha256 = box; rung13 --port + 13b enc/losses/obs/scan/wm/imag/imagloss-q2/vq/repval PASS.
+  13b-grads: WM worst 5.2e-6, plants 8/8, control 4/4, but pol vs truth at call 2 port 5.80e+01 vs official 3.08e-01
+  (13/13 over; the box read port = official 3.24e-01), call 6 1/13 (7.81 vs 5.46). Probe set `13p` launched to
+  separate x86 f32 decode rounding from a port bug (receipt `/data/jack-logs/mlx/wheel_13.json`).

@@ -209,11 +209,11 @@ One wheel kernel (< 1 h, rank 0) after rung 12 and after 13. No training,
 no speed claims.
 serves: M3 · PLAN "the decisive test … on the Mac mini" · philosophy 5, 6, 7.
 **done when:** rungs 10–13 pass here and on the wheel, test names in `experiments/brain_a/README.md`.
-state: rungs 10–12b PASS box + WHEEL (`cdd0db67`); 13a refs + port PASS (`709fa34e`); 13b pieces enc/losses/obs/scan/wm/imag/imagloss-q2/vq/repval PASS 11-25 (detail + rulings in `experiments/brain_a/README.md`).
-state: 11-26 00:10–00:20 **13b-grads** (line `eb21ed16`): read 1 FAIL — the port's posterior sample had NO straight-through (dyn/enc grads 15–24% off); port fixed (`mlx_maths.sample_onehot`), rungs 7/8a/9/10/13b-scan/wm/imag re-PASS. Read 2: calls 1/2 PASS 81/81; 6/8 pol tensors miss. **Read 3 PASS** under ruling `60c6bf04`: control 4/4, plants 8/8.
-state: **Rung 13 complete on the box.** 11-26 03:26 wheel set `13` (`346fab95`): kernel regenerates golden A + R13 with the official code, then rung13 `--port` + 13b's ten modes on PyPI `mlx[cpu]==0.32.4` with `JACK_GOLDEN_A`/`JACK_R13` set. Line fixed first: PASS iff both sha256 = box (`84d42bb6…`/`8e0ee53f…`; np.savez checked byte-reproducible) and every run rc 0 with its mode-named line, planted n==m; else NO-READING/FAIL.
-state: LAUNCHED `jack-cpu-1795663575` from worktree `/data/wt/jack-wheel13` (log `/data/jack-logs/mlx/wheel_13_launch.log`, verdict → `/data/jack-logs/mlx/wheel_13.json`). NEXT: read the verdict (`wheel_kernel verdict FILE 13`), copy the worktree's receipt into main, README line; PASS = J25 DONE.
-state: Owner's no-Mac line (INBOX 11-25 11:58) still awaits the Director; the port's tests cost nothing parked.
+state: rungs 10–12b PASS box + WHEEL (`cdd0db67`); rung 13 (13a + 13b) complete on the box 11-26 (`experiments/brain_a/README.md`).
+state: 11-26 04:03 **wheel 13 READ: FAIL at rung13b_grads only** (`jack-cpu-1795663575`, receipt `/data/jack-logs/mlx/wheel_13.json`): both regenerated goldens sha256 = box; 10/11 runs PASS. Pol vs f64 truth: call 2 port 5.80e+01 vs official 3.08e-01 (13/13 over 1.25×; box had port = official 3.24e-01), call 6 1/13 (7.81 vs 5.46). WM/enc/dyn all PASS, plants 8/8, control 4/4.
+state: 11-26 04:24 PROBE launched (`30e14ddc`, set `13p`, not a test): `rung13b_polgrad_probe.py` on the wheel, kernel `jack-cpu-1795667066` from `/data/wt/jack-wheel13p`, log `/data/jack-logs/mlx/wheel_13p_launch.log` → `wheel_13p.json`. Question: is x86 mlx's f32 value decode (|val32−val64|, box 5.7e-4 at call 2) much noisier, or is the port wrong there?
+state: NEXT: read `runs13.polgrad_probe.stdout_tail`. If adv=gret/adv=port PASS vs official on the wheel but |val32−val64| ≫ box → a platform-rounding reading, rule the truth clause (it compares two noise magnitudes) BEFORE any re-read; if adv=gret also fails → port bug on x86, fix it. J25 not DONE.
+state: Owner's no-Mac line (INBOX 11-25 11:58) still awaits the Director.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;

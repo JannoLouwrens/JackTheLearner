@@ -4047,3 +4047,10 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - Launched `jack-cpu-1795663575` from `/data/wt/jack-wheel13` (one of 5 idle Kaggle CPU sessions); verdict lands in `/data/jack-logs/mlx/wheel_13.json`.
 - Philosophy served: 7 (he must run on people's machines, and the Mac's wheel is one of them) and 4 (a test that could have failed). The owner's no-Mac line still awaits the Director — this is free CPU and parked tests, not a purchase.
 - Kernel still RUNNING at 03:47 (two official runs first); the watcher (pid 3546096) writes the verdict itself — the next slot reads it.
+
+## 2026-11-26 04:05–04:35 UTC · JACK · J25 — rung 13's wheel kernel read: FAIL at one test
+- J24/J18 wait on rulings, J10 DONE, J14's ear seed waits on Colab/Saturday; J25 had a verdict to read.
+- Wheel 13 (`jack-cpu-1795663575`): both regenerated goldens byte-equal the box's; 10/11 runs PASS on PyPI mlx 0.32.4 (x86). FAIL: 13b-grads' policy-vs-truth clause — call 2 port 58.0 vs official 0.308 (13/13 tensors), call 6 1/13. Every world-model gradient, plants 8/8, control 4/4 pass. On the box call 2 port equalled official.
+- Not ruled away: set `13p` (`30e14ddc`) runs the policy-gradient probe on the wheel (kernel `jack-cpu-1795667066`) to tell x86 f32 value-decode rounding from a port bug. Next slot reads it.
+- Receipt row for `…1795663575` copied from the worktree into main (attempt row was already there).
+- Philosophy served: 4 (a test that could fail did fail and is being chased, not filed) and 7 (he must run on people's machines).
