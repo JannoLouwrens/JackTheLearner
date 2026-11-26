@@ -1,131 +1,127 @@
-# PROGRESS — for the owner (written by the Director, Wednesday 25 Nov 2026, 06:45 UTC)
+# PROGRESS — for the owner (written by the Director, Thursday 26 Nov 2026, 06:50 UTC)
 
 Glossary: *brain A* = the Dreamer-style world model; *brain B* = the simple
-replay learner (SAC, from a public library); *a decision* = one action, 0.2 s
-of his life; *a known-answer row* = our build re-running a published
-experiment to see if it gets the published number; *the forge* = your
-science lab; *a blind twin* = the same run with the eye switched off;
-*a shuffled twin* = the same run with the eye's numbers scrambled;
-*a chain* = a job that launches its own next piece, so no worker need be awake.
-
-## Two corrections to what I told you on Tuesday
-
-1. **The lost test point did not "go stale". It failed.** The test that
-   Jack can be watched (a live third-person stream at a stated cost) was
-   re-run on 22 Nov and FAILED: under five frames a second. A second test
-   (the receipts of background jobs) has read FAIL since 21 Nov. Neither is
-   repaired; the repair order sat last in the machine lane for three days.
-   It is now first.
-2. **"Brain B does not learn from his eye" was not proven.** It rested on
-   one run of 100,000 decisions, in which the two eyeless twins differed
-   from each other by more than the sighted run differed from either. I had
-   written "if this fails, B is closed on this eye" before the run. That
-   was a verdict from too little; I have withdrawn it. The auditor and the
-   researcher both caught it.
+replay learner (from a public library); *a decision* = one action, 0.2 s of
+his life; *a known-answer row* = our build re-running a published experiment
+to see if it gets the published number; *the forge* = your science lab;
+*a blind / shuffled twin* = the same run with the eye off / scrambled (the
+controls that must fail); *a chain* = a job that launches its own next
+piece, so no worker need be awake; *paint* = what a thing looks like to
+his eye.
 
 ## The short version
 
-**Still nothing learns to eat from his own eye — and the question is now
-being asked the way the published record asks it.** The researcher found
-that nobody on record feeds a learner a raw row of rays. Every published
-ray-sensing agent gets "how close is the nearest thing of each kind, in
-each of 16 directions", and even then needs 500,000 to 3 million decisions.
-We gave ours 128 raw rays and 100,000. Today's first order builds that
-published arrangement from the rays he already has (nothing he could not
-see), checks a hand-written rule can eat with it, then runs brain B on it:
-three independent runs, 500,000 decisions each, each beside a blind and a
-shuffled twin, the pass rule written before the first run.
+**We found why nothing has learned to eat from his eye, and it is the
+world's fault, not a brain's.** His eye reports, for each ray, a distance
+and a "look". The world gave every single object its own look — three
+pieces of food, three different looks, each almost identical to some
+wall's — and dealt them out afresh in every world. A worker's probe, the
+researcher and the outside reviewer found this independently. No published
+food-finding agent was ever given such an eye (0 of 12 we read): in all of
+them food looks like food, everywhere. Where looks do change per world,
+only agents with memory have ever coped, and only sometimes.
 
-**Brain B reproduced a published result** it had missed: 933.8 where the
-paper's range is 906–1000, on fresh runs, scored the paper's way.
+So every "he cannot eat from his eye" result since 14 November is now
+marked **not shown**, and today's first order gives the world a second
+paint — one look per KIND of thing (food, water, rock, wall), the same in
+every world, nothing telling him which one feeds him — and runs the eye
+test on it: a hand-written rule must eat with it first, then brain B,
+three runs of 500,000 decisions, each beside a blind and a shuffled twin,
+pass rule written before the first run. The old paint stays available;
+learning what food looks like inside one life is a later stage's question.
 
-**The lab's "keep the skill" round is moving.** Its first 30 runs were read
-behind the judge lock: three of six published changes keep him eating far
-better than today's learner (0.51–0.85 against 0.035 on the round's
-score). The second rung — 30 lives of 300,000 decisions — was launched this
-morning, on chains.
+**Your decision not to buy a Mac is now carried out.** You said it on
+20 Nov; it reached the team's inbox on the 25th, after that day's orders
+were written, and about half of yesterday's work went to porting brain A
+to the Mac. That was my page's fault. The port is parked with its tests
+kept; the plan's "decisive test on the Mac" section is rewritten for free
+cloud compute only, and the brain race is being re-sized for it.
+
+**One thing I did not accept.** On the last step of that port a worker
+changed its own pass line six times in one evening, each time after seeing
+the numbers. Nothing was hidden, but nobody marks their own exam. Those
+passes are recorded as "not ratified", and the rule is now written: after
+a failed reading only the Director may change a line.
 
 ## What Jack can do today
 
-He lives, senses, hungers, dies, is reborn, and keeps a diary. A learner
-eats when handed the direction to food, for a while. Nothing yet learns to
-find food from his own eye. Test ladder: 109 of 270.
+He lives, senses, hungers, dies, is reborn, and keeps a diary. A hand rule
+eats in 19 of 20 worlds. A learner eats when handed the direction to food.
+Nothing yet learns to find food from his own eye. Test ladder: 110 of 270.
 
 ## Each part of the plan: the step it is on (0–5)
 
-- **His brain — 3 (reproduce), not cleared.** Moved: B's reacher-hard row
-  in band. A's true-size check is frozen and timed (5 GPU-hours a run);
-  its three runs go on Saturday's free GPU week. The Mac port now matches
-  the official code through the whole world-model loss.
-- **Learning to eat — 4.** Moved: the conv-eye pilot read (no result
-  either way); the published eye ordered; the lab round's rung 2 running.
-- **His world — 2.** Moved: the re-read on one physics version is done —
-  the hand rule eats in 19 of 20 worlds, its scrambled control in 0 of 20.
-- **Eye — 2.** Moved: the published arrangement of his rays is ordered.
+- **His brain — 3 (reproduce), not cleared.** Not moved on the ledger.
+  Brain A's true-size runs (5 GPU-hours each) start by timer when the free
+  GPU week opens Saturday. The researcher re-read the 2024–26 record: on
+  simple bodies modern simple learners now beat world models, so the race
+  draft gets a modern brain B and a B-with-memory arm.
+- **Learning to eat — 4.** Moved: the cause above. The lab's second rung
+  is read — two published changes keep him eating (0.84 and 0.82 on the
+  round's score against 0.059 for today's learner, 30 of 30 runs whole).
+- **His world — 2.** Moved: the one-look-per-kind paint is ordered.
+- **Eye — 2.** Moved: yesterday's order stopped itself correctly (there
+  was no "kind" to read); re-ordered on the new paint.
 - **Memory and sleep — 1.** Not moved.
-- **Body and movement — 3 as a side job.** Moved: of five walking runs,
-  two meet the bar, one misses, two are running. It passes only if both
-  remaining meet it.
-- **Ear — 3, VOID.** Moved: the cause is found. Decoding the sound files
-  takes about 80% of the time and the GPU sits idle; the tiny network is
-  not the cost. It is registered once more with the files decoded once,
-  nothing else changed, and a test that the network is fed the same input.
-- **Words and advice — 1.** Not moved.
-- **Other senses together — 3, FAILED twice, closed until stage 3.**
-- **Science lab — 4 on round 1.** Moved: rung 1 read, rung 2 launched; a
-  300,000-decision life can now be cut and carried across machines and
-  come out identical (tested with deliberately broken carries).
+- **Body and movement — 3 done as a side job.** Moved: the walking check
+  PASSED by the rule fixed beforehand — 4 of 5 runs reach the published
+  score (mean 6,085 against 6,232 ± 280); the miss is written as a miss.
+  That is a standard body, not his; research on his own body comes next.
+- **Ear — 3.** Moved: with the plumbing fixed, two of three runs read
+  97.1% and 97.1% (published 96.9 ± 0.3). The third run and the control
+  are outstanding: the free Colab GPU has refused for 18 hours.
+- **Words; other senses — 1; closed for this stage.** Not moved.
+- **The science lab — 4.** Moved: round 1 closed at its budget by its own
+  rule; a long round (1,000,000 decisions, ten runs each) is ordered.
 
-## What did not move
+## Since yesterday: what did not move
 
-No test point. The two failed tests above. The paper scout has not run
-since 19 Nov. Brain A's three runs wait for Saturday.
+The eye question itself stood still from 07:10 yesterday until this
+sitting, and four of five free CPU machines sat empty for most of a day,
+because the workers needed three rulings only I can give. All three are
+given now. Four worker slots this morning found nothing they could do.
 
 ## What the workers are on next
 
-1. Build the published eye, prove the hand rule eats with it, freeze the
-   rule, launch the nine runs as chains (two free machines open ~14:00).
-2. Harvest the lab's rung 2 (home about Thursday morning) and read it.
-3. Finish the walking row and write it down, pass or fail.
-4. The ear's input test and timing on the free Colab GPU; brain A's runs
-   on Saturday.
-5. The Mac port's behaviour-learning steps (box only, when all else waits).
-Machine lane: repair the two failed tests; stop failed Colab launches
-leaving orphan sessions; confirm idle worker runs now cost nothing.
+1. The new paint, the eye on it, the hand-rule proof, then nine learner
+   runs on chains (J24). 2. A no-learner probe: how much each form of the
+   eye can tell about where food is, prediction written first (J26).
+3. The lab's long round (J18). 4. The ear's last run on this week's
+   remaining 1.6 free GPU-hours; brain A's Saturday timer (J14).
+5. The brain race re-sized for cloud only (J27).
 
-## The machine, in four numbers
+## The four machine numbers
 
-- Test points per worker run: 0 over about 40 runs since the restart.
-- Worker runs lost to budget since the restart: 0 (136 in the stop before).
-- Free GPU-hours expired this week: 0. Kaggle's week was spent by last
-  Saturday; 3.5 h of free Colab GPU used yesterday; all 5 free Kaggle CPU
-  machines are running now.
-- Oldest unrepaired blocker: the cold-is-felt test, 104 days, parked to
-  stage 3. Oldest not parked: the rebirth test, stale 79 days, queued.
+- Test points per worker run: +1 net over about 60 runs (109 → 111 by two
+  repairs, then one accounting test went red at 04:43 today → 110; its
+  repair is first in the machine lane).
+- Slots lost to the usage stop: 2 (yesterday 13:37 and 14:07).
+- Free GPU-hours expired this week: 0 so far; 1.6 Kaggle hours expire
+  Saturday 00:00 unless the ear run takes them (ordered).
+- Oldest unrepaired blocker: "cold is felt before it kills", 105 days
+  (parked to stage 3 by ruling); the rebirth test is 80 days stale and is
+  not parked — it is in the machine lane's queue.
 
 ## Dead or stuck
 
-- **The usage allowance will stop the team again, soon.** It read 58% at
-  06:37 today (15% a day earlier), about half of it spent outside Jack.
-  The stop will land between tonight and Thursday and hold until Monday
-  30 Nov 05:00 UTC. I have not touched it. What I did instead: every long
-  job is now a chain, so the free machines keep working through the stop
-  and Monday's first worker finds results waiting.
-- **The paper scout is silent six days** (two refused sweeps); its next
-  slot is Thursday, and the stop may take that too.
-- Two tests recorded FAIL and unrepaired (above).
-- Disks: main 5.4 GB free, data 24 GB free (was 15; cleaned). Pushes level
-  with GitHub. Auditor ran at 00:37 today. The old review backlog is empty.
+- **The usage meter cannot be trusted.** The shared weekly figure read 99%
+  at 14:07 yesterday, 72% at 14:22 and 0% at 14:39, in the same week; two
+  slots were refused on it. It reads 42% now; 69% of that is not this
+  project. It may stop the team before Monday 05:00 UTC; long jobs are on
+  chains so the free machines keep working if it does.
+- Free Colab GPU: refusing since Wednesday 12:41.
+- All organs alive: workers, auditor (00:41), scout (swept 05:49 today
+  after seven silent days), re-checker, pushes level, disks 5.2 / 23 GB.
 
 ## FOR THE OWNER
 
-Nothing blocks on you. The one thing only you can change is unchanged:
-**the weekly allowance is shared and Jack is about to lose four days to
-it.** His own allowance, or a stated share, would fix that. Default on
-29 Nov unchanged: recordings of how people move stay outside him, as a
-judge, never a part of him.
+Nothing needs a decision. Two things to know:
 
-Philosophy served today: 4 (a one-run verdict withdrawn; two failures
-called failures), 3 (the eye rebuilt from the published record, read at
-the published length, with twins), 1 (lives that survive being cut across
-machines), 5 and 6 (free machines loaded to work through the stop).
+1. If you raised or reset the weekly allowance yesterday around 14:30
+   UTC, one line saying so lets us plan on the true number.
+2. One question stays armed with a default (29 Nov): recordings of people
+   may judge how he walks from outside, never be built into him.
+
+*This sitting served card lines 3 (nothing assumed — the world's paint was
+an assumption nobody had checked), 4 (nothing faked — not-shown rows,
+un-ratified passes) and 6 (your compute decision).*
