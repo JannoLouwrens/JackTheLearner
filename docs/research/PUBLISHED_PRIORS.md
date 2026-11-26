@@ -9,49 +9,51 @@
 > **(inf)** = arithmetic or reasoning from published numbers, measured by nobody.
 > `$N` = `/data/jack-research/research_notes/Published evidence for building Jack`.
 
-## 1. Which whole brain, and how to test brains fairly (2026-11-15; serves M2, M3, order J1)
+## 1. Which whole brain, and how to test brains fairly (re-checked 2026-11-26 against 2024–26 work; written 11-15; serves M3 stage 2, `prereg/stage2_a_vs_b.md`, J14, J18)
 
-> **RE-CHECK IN PROGRESS 2026-11-26 04:10 UTC** (Researcher rule 4, oldest section): against 2024–26 work — (A) model-free vs world model under one config at 100k–1M; (B) survival benchmarks at 1M; (C) Dreamer's cost on free compute now that no Mac is coming. Notes: `/data/jack-research/scratch_sec1r_{A,B,C}/`. The text below is still the 11-15 one.
+Long form: `/data/jack-research/reports/sec1_recheck_which_brain_2026-11-26.md` — it holds the whole 11-15 text (its findings stand unless corrected here) and the three parts' notes.
+
+**Question.** Does the 11-15 advice — world model A the main brain, replay learner B "the cheap control", A 10–200× more sample-efficient — survive what was published since? What does A cost with no Mac?
 
 **Already known**
-- One Dreamer configuration learned 150+ tasks in 8 domains from scratch, incl. Minecraft diamonds from image plus health/hunger scalars (DreamerV3, Nature 2025). DayDreamer learned on real robots in 1–8 h (~57k–72k decisions, inf) where SAC, Rainbow and PPO failed.
-- Replay learners collect food on ray/lidar tasks in ~60k–170k decisions (Banana DQN ~138k, community result; lidar Goal SAC/TD3 ~100k). PPO: 0.8–2M, same tasks. Sparse or homeostatic versions: 2–50M+.
-- At 25–50k steps Crafter agents eat in 2–9% of episodes; at 40–50k steps Animal-AI agents sit in the random range. **40,000 decisions is below every published foraging budget, for any design.**
-- Avalon (3-D survival): with a curriculum 0.716, without 0.001: larger than any architecture gap on record.
-- Tiny or no replay: SAC/PPO score 0.04–0.07 of normal over 50 tasks. White vs correlated action noise on the closest sparse action-cost task (MountainCarContinuous, PPO): 0 vs ~94.
-- Drive-before-minus-drive-after is the published homeostatic reward, best of five forms in the one comparison; only the discount separates eating from not eating, so a 4 s horizon leaves almost no signal.
-- A one-SD difference takes ~20 seeds; two rank nothing.
-- No large from-scratch result for active inference, predictive coding or curiosity-only agents. Naively bigger networks get worse (BBF, AdA).
+- **CORRECTED: on vector-input control, modern model-free beats both world models under one setting.** DMC proprio, 28 tasks, 500k agent steps: MR.Q 835, TD-MPC2 783, TD7 566, DreamerV3 530, PPO 254; dog-run DreamerV3 4, MR.Q 569 (MR.Q 2025, proprio table, arxiv.org/abs/2501.16142).
+- DMC-Hard (dog, humanoid), 1M, IQM: DreamerV3 0.008, SAC 0.069, TD-MPC2 0.464, BRO 0.772, SimbaV2 0.808. DMC-Easy: DreamerV3 0.813, SimbaV2 0.933 (arxiv.org/abs/2502.15280).
+- **Plain SAC is not that learner.** 40 tasks, IQM at 100k / 1M: SAC 0.007 / 0.316, TD-MPC2 0.204 / 0.842, BRO 0.254 / 0.945 (BRO 2024, arxiv.org/abs/2405.16158). The gap is closed by layer norm, residual blocks, a ~5M critic, resets, 2–10 updates a step: no world model.
+- Cost, HalfCheetah: MR.Q 4.1M params 49 training steps/s; DreamerV3 9.7M, 18; TD-MPC2 5.5M, 14 (MR.Q).
+- Survival at 1M (Craftax-classic, pixels; arxiv.org/abs/2502.01591 Table 1, Fig. 4): PPO 4.0M, no memory, 47.4% reward; a bigger net WITHOUT memory 41.8; bigger + GRU 55.5 in 15 min; DreamerV3 201M 47.2 in 2,100 min; best transformer world model 67.4–69.7 in 759–2,749 min, 8 H100 (human 65.0). That world model imagining from step 0: 33.5; without real data mixed in: 55.0, the model-free score.
+- Crafter's own episode files: Eat Cow in 1.5–6.5% of episodes at 0–50k, 15–37% at 1M; Collect Drink 24% → 64% by 100k and 90% at 1M (DreamerV2). Still water is learned ~10× sooner than moving food.
+- Where memory IS the task Dreamer's line still leads (R2I beats 13 model-free baselines on POPGym, at 400M steps, arxiv.org/abs/2403.04253).
+- One life, no resets: DQN, PPO, SAC all fail at 160M frames (AgarCL 2025, arxiv.org/abs/2505.18347).
+- DreamerV3 sizes with a score: 12M (v2: proprio 871 at 500k, 0.3 A100-days) and 18M size S (v1) — not "8M". `size1m` is the official proprio default, at train ratio 1024: still no published score. Dreamer 4 (2025) learns from 2,541 h of video: pretrained, ruled out.
+- Unchanged from 11-15: curriculum beats architecture (Avalon 0.716 vs 0.001); correlated noise; drive-difference reward; ~20 seeds per SD; 40k is under every foraging budget.
 
 **Candidates**
-- **A. Dreamer-style recurrent world model — recommended main brain.** One encoder per sense into one GRU state, trained mostly to predict its next sensations; actor and critic learn in imagined 15-step futures. Strengths: broadest from-scratch record; uses extra senses and words where model-free agents get worse (Dynalang); scales without retuning; replay built in. Weak at: compute per step (~2,100 min vs 15 for tuned PPO at 1M steps on Craftax-classic); long memory; high-joint bodies; small details. Needs: action-conditioned dynamics, imagination, a large replay trained hundreds of times per step, the robustness kit (symlog, two-hot, KL balance, scale-down-only return normalisation). Smallest published: `size1m` preset (no published score), 8M/12M with scores. **Our nets are 10–100× smaller than any published Dreamer score, and nobody has published its speed on a T4, a CPU or Apple silicon.** Expect on the rover: first meals in 10^4–10^5 decisions, regular foraging by 10^5–10^6 (inf).
-- **B. Replay-based model-free actor-critic (SAC family, LayerNorm, optional small GRU) — the cheap control.** Most direct evidence on our task. Needs: §5's settings. Weak at: sample efficiency vs world models (10–200×), getting worse with added senses. Expect on the rover: improvement by 10k–50k, reliable by 100k–200k (inf).
-- **C. Decoder-free latent world model (TD-MPC2 lineage) — for the human-like body later.** Best published efficiency on Humanoid/Dog; no discrete actions, no memory, needs informative reward; not a whole-creature candidate today.
-- Watch list: transformer world models (best Crafter numbers, too costly).
+- **B+ — a normalised, residual, resettable replay learner (BRO / SimBa / MR.Q class). Now the best-supported learner on vector inputs at ≤ 1M.** Proven on 40–118 tasks, one setting, ~5M params. Weak at: never raced on sparse reward, memory or survival; no memory. Smallest: SimbaV2's 0.3M critic (figure only). Expect: the forge's keep setting is this class already (rung M: resets 84%, cautious critic 82% late-eating lives vs ~6% plain; owner line 11-26 02:25) — that B, not plain SAC, is the fair stage-2 arm.
+- **A — DreamerV3.** Now the weakest general agent on proprio control and behind a recurrent PPO on survival at 1M (47.2 vs 55.5) at 140× the minutes; its edge is memory and many or large senses. Nothing published supports A beating a B with memory at 1M.
+- **B+ with a small GRU.** +8.1 points on Craftax-classic at no extra time; a bigger net without it LOSES 5.6. Needs state stored in replay (§5).
+- **Dyna: B's backbone, plus a world model after 200k real steps.** The only way a world model won at 1M (+11.9 points, 50× the time, 58M params). No small version published.
 
 **Ours beside theirs**
 
-| setting | published | ours on 11-15 | verdict |
+| setting | published | ours | verdict |
 |---|---|---|---|
-| experience per arm | 10^5–10^6+ | 40k (15 lives) | a pilot, not a race |
-| seeds | 5–20, sized by a pilot | 2 | cannot rank |
-| replay | whole run; batch 256; ~1 update/decision | 256 slots, batch 16, 1 per 4–8 | largest learner-side cost |
-| exploration | pink noise per life, or held actions | white noise per 0.2 s | all-or-nothing on nearest task |
-| discount | 0.99–0.997 (20–67 s at 0.2 s) | 0.95 (4 s) | meal 10 s away keeps 7.7% |
-| reward | ×100 drive difference; pay on the eating event | ×1; 0.0025 at energy 0.95 | too small; nothing when sated |
-| advantage scale | whole batch or running, scale-down only | per 64-decision segment | amplifies noise |
-| world-model arms | action input + imagination | neither | not world models |
-| memory | state carried, stored with replay | GRU zeroed each step | no memory was tested |
-| start state | energy randomised | always full | early life has no hunger |
-| curriculum | food close first, moved out on success | none | largest published effect class |
+| B's net | LN, residual, ~5M critic, resets | MLP [256, 256] (`brain_b.py:39-40`); SimBa option `pilot_b2.py:492` | plain SAC is the record's floor |
+| B's memory | GRU-256 | none | stage 2 would confound memory with the world model |
+| A size / ratio | 12M / 512 (paper); 1m / 1024 (code) | size S / 512, compile on, `32-true` (`rows.py:42,354`) | same; official is float16 |
+| A's cost | 0.3 A100-days per 500k | 5.0 T4-h per 100k (S); size1m 25.9 steps/s (`rows.py:46`) | 1M decisions ≈ 50 T4-h (S), ≈ 11 (1m) a seed (inf) |
+| race | 1M, 10 seeds | 1M, seeds OPEN (`prereg/stage2_a_vs_b.md`) | at size S one seed > a Kaggle week |
+| imagination starts | after 200k real steps | at once | unknown at our size |
 
-**Known-answer checks** (before an arm may race): the five probe environments (seconds each); CartPole-v1 500 in 50–100k steps; §5's Pendulum and MountainCar rows (not the one-run −157); bsuite deep_sea / umbrella_length / memory_len (< 30 CPU-min each). A Dreamer arm has no published small score: its gate is matching a model-free learner on the same tasks and the official code's outputs on one seed.
+**Known-answer check.** B+: dog-run or humanoid-walk at 1M (MR.Q 569 / 662, SimbaV2 class; plain SAC near 0) — the row that tells B+ from B; cost unmeasured on a 4-core kernel, timing cell first. A: §2. Mixed precision: sheeprl's maintainers read 114 → 32 ms a gradient step on an A100 (issue 336); fp16 on a T4 is unmeasured — a 20-minute cell.
 
-**Learnable?** Not yet shown. Three checks: a hand-written forager using only his senses; a behaviour clone of it into the learner's own network and inputs (closed loop, DAgger); a "cheat" learner given the vector to food. Nothing in print says if 16 undifferentiated rays can tell food from a wall.
+**What the record does NOT answer**
+1. A against B+ on sparse reward, memory or survival: published by nobody. That IS stage 2. Prediction (inf): B+ ≥ A unless the task needs memory.
+2. Does A at train ratio 64 match 512 on proprio by 500k? No ablation exists (Crafter, 64 → 16: about −20%, read off a figure). One A2 row at ratio 64, ~1 T4-h a seed (inf): predict in band at 500k, a miss at 100k.
+3. Any score for `size1m`: rows A1–A3 are the only ones anywhere.
+4. JAX on a Kaggle TPU: no public run found; `jax.devices()` smoke first.
+5. A hunger/thirst reward learned from scratch with step counts: still none found.
 
-**What the record does NOT answer** (E0–E9; long form): E0 pure-noise exploration probe (CPU minutes); E1 known-answer gate per learner; E2 learnability; E3 Dreamer `size1m` speed on T4 and Mac; E4 the first fair race, B vs A at 10^6 decisions; E5 distance-to-food curriculum; E6 reward and horizon ablation; E7 memory across death; E8 adding a sense; E9 plasticity watch. **Do not spend on:** more 40k races; curiosity bonuses while persistent noise reaches food; an active-inference or predictive-coding stack; bigger networks without stabilisers.
-
-**Not verified** (long form): Yoshida et al. 2024 full text (setup from abstract and code; see §13); R2D2 and D'Oro second-hand; Banana Collector is a community report; Food Collector steps rest on an inferred unit conversion; T4-vs-A100 speed assumed; "2.5–4× more food contacts" for persistent noise is a toy sum. No paper ablates our settings jointly (the ranking is a synthesis); no published system combines all of Jack's requirements.
+**Not verified:** MR.Q's hardware; which Craftax timings are one A100 (†) and which 8 H100; SimbaV2's DreamerV3 column is copied from MR.Q (500k agent steps, labelled 1M); values read off figures (SimbaV2 0.3M, DreamerV3 Fig. 6); EVAAA (2025 homeostatic benchmark, DQN/PPO/DreamerV3 baselines): README only; TD7 and CrossQ from rivals' tables; T4-hour sums are inference from our two timings; the 11-15 list (long form).
 
 ## 2. Building brain A (a Dreamer-style world model) correctly (2026-11-15; serves order J3, M3; plan part "His brain")
 
