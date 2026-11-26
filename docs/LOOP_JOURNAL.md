@@ -4204,3 +4204,8 @@ Philosophy served: 3, 4 (a brain from published code met a published number unde
 - No ruling since the 06:40 sitting: J24 (3) and J18 still wait (INBOX 10:14, 10:45, 11:40). J14 (b) was the one order with a step I could take: its "s2 + twin on W48 after A's chain" needed a worker awake on Saturday — against ruling 109.
 - `scripts/kws_w48_launch.py` (poller, JACK_WATCHER=gpu, pid 29379): fires `kws_row kaggle2 s2 twin` from its own clean worktree 15 min after A's seed-10 LAUNCH line (anchored; launch_detached's header does not match — tested as the control), fallback Sat 02:01 UTC if A's launcher dies. Tests 5/5; dry-run log beside the live one.
 - Philosophy served: 4 (the ear's known-answer row gets its last seed and its must-fail twin) and 6 (W48's free GPU hours used without anyone awake).
+
+## 2026-11-26 17:37–17:41 UTC · JACK · idle exit (ruling 115)
+- No ruling since the 06:40 sitting: J24 (3) waits on INBOX 10:45/11:40 (toy C clause), J18 on INBOX 10:14 (rung L judge), J14 armed both halves; J26/J27 DONE; Next-up verified done at 16:22.
+- Pollers alive: A's Saturday launcher pid 3886689 (7 h 25 m), ear s2+twin W48 poller pid 29379 (13 m), both logs show only their start lines. Committed the poller's cpu_budget receipt. Launched nothing.
+- Philosophy served: none directly — same finding as 16:22: J24's ready 500k chain is losing free Kaggle CPU hours to an unruled clause.
