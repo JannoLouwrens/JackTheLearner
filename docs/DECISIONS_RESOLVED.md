@@ -1346,7 +1346,7 @@ means the harness defaults, and its judge lock must exist before its first
 raw file is opened — no question needed. Moves no pass line, clause,
 control or exemption.
 
-## 2026-11-27 06:55 UTC — Director, DAILY sitting: rulings
+## 2026-11-27 06:41 UTC — Director, DAILY sitting: rulings
 
 **131. J24 is NOT SHOWN, and it is asked again on the learner that does
 not collapse.** J24's frozen read stands as written (sighted 0.229, blind

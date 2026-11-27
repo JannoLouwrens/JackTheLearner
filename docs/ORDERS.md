@@ -1,11 +1,11 @@
 # ORDERS — what the workers do. Written by the Director.
-Director sitting: 2026-11-27 06:55 UTC
+Director sitting: 2026-11-27 06:41 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5, **each ≤ 4 lines of text — replace,
 do not append; history is in git**). One state+journal commit per slot.
 Machine problems go under INBOX, one line each. Rulings 131–136 cited here
-are in `docs/DECISIONS_RESOLVED.md` under 2026-11-27 06:55; 121–130 under
+are in `docs/DECISIONS_RESOLVED.md` under 2026-11-27 06:41; 121–130 under
 11-26 19:14.
 
 **`docs/PLAN.md` binds every order (owner, 11-15).** Research → combine →
@@ -122,7 +122,7 @@ at `eye_bins16.md`. (5) Read once, when all nine are whole:
 branches: EATS → row in `WORLD_CARD.md` + `KNOWN_ANSWERS.md`, the bar copied into `pilot_a.md`, INBOX one line (the hindsight eye is raced next sitting under ruling 134). · ≥ 2/3 above both, not EATS → launch the 1.5M carry yourself from the same pin. · else → write NOT SHOWN AT 500k ON K1 with the nine numbers and the 50k window table (did the collapse go away or not — say which); launch nothing; the sitting chooses between size (1.5M) and the eye. · a kernel dies → relaunch that seed's chain once from its last whole carry; twice → INBOX with the log path.
 serves: M3 (the earliest unfinished milestone) · PLAN "Learning to eat", "Eye" · philosophy 1, 3, 4 (a failure fixed, not filed).
 **done when:** the prereg is frozen, three chains run with raw-file paths in a state line; then the read by the frozen rule.
-state: 11-27 06:55 ORDERED. Built and proven by 05:40–07:20 slots: reset knob `42fff23c`, chain + launcher + carry `2bcd197d`, reader `b2afeb75`. Nothing frozen or launched yet.
+state: 11-27 06:41 ORDERED. Built and proven by 05:40–07:20 slots: reset knob `42fff23c`, chain + launcher + carry `2bcd197d`, reader `b2afeb75`. Nothing frozen or launched yet.
 
 ### J18 — Forge round 1-L: who still learns at 1M — on the harness's own two looks
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19–§22; `docs/FORGE.md`; rulings 61, 65, 69, 83, 105, 112, 122, 123
@@ -191,7 +191,7 @@ extension. (5) Run it: box if
 branches: no library installs cleanly → vendor the authors' recurrent actor/critic as code with its licence line, say so in the note. · B-7 in band → row written; `stage2_a_vs_b.md` (draft) names the arm. · miss → a miss, written; the arm is a suspect — INBOX with the curve, the sitting rules. · the twin passes → the task is not a memory test as built: stop, INBOX.
 serves: M3 (stage-2 ready-list: "a control brain that has a memory arm") · philosophy 3, 4.
 **done when:** the design note and timing are in a state line; then B-7 frozen; then its four seeds and twin read.
-state: 11-27 06:55 ORDERED. B-7's band is drafted (JACK 00:20, `experiments/b7_digitize.py`); nothing built.
+state: 11-27 06:41 ORDERED. B-7's band is drafted (JACK 00:20, `experiments/b7_digitize.py`); nothing built.
 
 ### J14 — Brain A at the published size, and the ear's last seed
 part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `prereg/a2_size_s_enc.md` (FROZEN + timing addendum `381b83b9`); `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws-2; rulings 67, 78, 79, 86, 96, 103, 106, 117
@@ -306,7 +306,7 @@ nothing" on five specs?
 branches: still > 5.0 s on the fastest of three → it is a real slow import: find what `UnifiedBrain` does at import and fix THAT, by cause. · the planted sleeper passes → the change is wrong; revert.
 serves: philosophy 4 (a red root test repaired by cause, not by retry), 5.
 **done when:** planted tests pass, `T0.01` is re-bought with its load in the row, and `coverage` no longer prints FAIL-UNOWNED for it.
-state: 11-27 06:55 ORDERED.
+state: 11-27 06:41 ORDERED.
 
 ### S20 — The harness reads its first look when ten runs are home; round 1-L gets a reader
 part: (machine — the judge of stage 1 and 2; card line 4) · stage: 1 · step: —
@@ -358,7 +358,7 @@ clauses, `verify` VENUE 266 vs 256. (8) The 4 kept tmp folders (2.8 GB).
 ---
 
 ## INBOX — one line each, workers add, the Director empties
-(emptied 2026-11-27 06:55 — LAB 23:35 → ruling 134; RESEARCH 04:11 → ruling 133, Next-up 1 (cell 1 already fixed `54e0a7dc`); JACK 00:15 → PROGRESS, for the owner; JACK 00:20 → J29; ANSWERED 02:55 → kept, ruling 130 stands; JACK 05:40–07:20 → ruling 131, J30.)
+(emptied 2026-11-27 06:41 — LAB 23:35 → ruling 134; RESEARCH 04:11 → ruling 133, Next-up 1 (cell 1 already fixed `54e0a7dc`); JACK 00:15 → PROGRESS, for the owner; JACK 00:20 → J29; ANSWERED 02:55 → kept, ruling 130 stands; JACK 05:40–07:20 → ruling 131, J30.)
 
 ## DONE (kept one day)
 
