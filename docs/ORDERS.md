@@ -120,7 +120,9 @@ chains, one seed's three cells a kernel. (4) (the two expired launcher tests: DO
 branches: EATS → row in `WORLD_CARD.md` + `KNOWN_ANSWERS.md`, the bar copied into `pilot_a.md`, INBOX one line (the hindsight eye is raced next sitting under ruling 134). · ≥ 2/3 above both, not EATS → launch the 1.5M carry yourself from the same pin. · else → write NOT SHOWN AT 500k ON K1 with the nine numbers and the 50k window table (did the collapse go away or not — say which); launch nothing; the sitting chooses between size (1.5M) and the eye. · a kernel dies → relaunch that seed's chain once from its last whole carry; twice → INBOX with the log path.
 serves: M3 (the earliest unfinished milestone) · PLAN "Learning to eat", "Eye" · philosophy 1, 3, 4 (a failure fixed, not filed).
 **done when:** the prereg is frozen, three chains run with raw-file paths in a state line; then the read by the frozen rule.
-state: 11-27 06:41 ORDERED. Built and proven by 05:40–07:20 slots: reset knob `42fff23c`, chain + launcher + carry `2bcd197d`, reader `b2afeb75`. Nothing frozen or launched yet.
+state: 11-27 07:23 **(1) KEPT `5bda4a6e`**: life rows on the kind paint carry BESIDE `touch` {food, water, obstacle, wall, panel} = decisions ending in contact (`pilot_b.PilotLives._count_touch`, read-only; same cell before/after has identical actor, trace, rows). J24's three K identities, K1 carry, reset 3/3, launcher 10/10, reader 3/3 re-PASS; `tests/test_j30_touch.py` (forager that ate → food 3883; still body → 0).
+state: **(2) FROZEN `21a45857`** (`eye_bins16_k1.md`, STATUS line only, committed alone, pushed). **(3) LAUNCHED 07:21–07:23** from worktree `/data/wt/jack-j30` at that pin, JACK_WATCHER=cpu: s941 pid 1149300 kernel jack-cpu-1795764111 · s942 pid 1149715 -1795764132 · s943 pid 1150532 -1795764177, all RUNNING per Kaggle 07:23 (5/5 sessions with J18's two). Logs `/data/jack-logs/j24k1/chains/chain_s94{1,2,3}.log`; raw → `/data/jack-logs/j24k1/chains/j24k1_s94{1,2,3}.json`. One segment each, ≈ 5–7.5 h → home ≈ 12:30–15:00 UTC.
+state: NEXT (5): when all three raw files exist, ONCE: `/data/venvs/jack-std/bin/python -m experiments.j24_read --variant k1 --pin 21a45857f644e9920599def71ad9d07cb6a2d0f2`, then the branch. Harvest: the three attempt receipts are already in main's `gpu_submissions.jsonl`; copy only the worktree's RESULT rows. Beside the read: `j24_collapse_diag` per raw file (window table) and the `touch` columns. Do not remove the worktree while a watcher lives.
 
 ### J18 — Forge round 1-L: who still learns at 1M — on the harness's own two looks
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19–§22; `docs/FORGE.md`; rulings 61, 65, 69, 83, 105, 112, 122, 123
@@ -357,6 +359,8 @@ clauses, `verify` VENUE 266 vs 256. (8) The 4 kept tmp folders (2.8 GB).
 
 ## INBOX — one line each, workers add, the Director empties
 (emptied 2026-11-27 06:41 — LAB 23:35 → ruling 134; RESEARCH 04:11 → ruling 133, Next-up 1 (cell 1 already fixed `54e0a7dc`); JACK 00:15 → PROGRESS, for the owner; JACK 00:20 → J29; ANSWERED 02:55 → kept, ruling 130 stands; JACK 05:40–07:20 → ruling 131, J30.)
+- JACK 07:23 (J30): `/data` is at 15.06 GB free — 62 MB above the 15 GB floor. J30's worktree cost 49 MB and its raw files are MBs; the growth is not ours (as 00:15), but the next harvest of any size will cross the floor unless something outside this repo is cleared — the owner's.
+- JACK 07:23 (machine, no change made): the forge's chains A/B declare `JACK_WATCHER=gpu` though they poll `jack-cpu-` kernels, so the gpu poller count read 5 of 6 and three more gpu-declared chains would have been refused. J30's three are declared `cpu` (what `cpu_budget` itself calls a jack-cpu poller). Also `tests/test_j24k1_resets.py` cannot be run by path (no sys.path line; ran it with `PYTHONPATH=.`).
 
 ## DONE (kept one day)
 
