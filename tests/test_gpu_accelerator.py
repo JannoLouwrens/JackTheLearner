@@ -119,9 +119,15 @@ def main() -> int:
                                   and meta.get("enable_gpu") is False
                                   and meta.get("id", "").startswith("stubuser/jack-tpu-"))
     checks["tpu_no_torch_fix"] = body == b"print('job')\n"
-    checks["tpu_own_weekly_line"] = (res.ok and b.used_hours("kaggle-tpu") > 0
-                                     and b.used_hours("kaggle") == 0.0
-                                     and b.remaining("kaggle-tpu") < 20.0)
+    # read on the stub clock the charge was filed with: on the wall clock the
+    # check went red once the real week left EPOCH's W46 (failed from 11-21)
+    real_time, gpu.time = gpu.time, _Clock()
+    try:
+        checks["tpu_own_weekly_line"] = (res.ok and b.used_hours("kaggle-tpu") > 0
+                                         and b.used_hours("kaggle") == 0.0
+                                         and b.remaining("kaggle-tpu") < 20.0)
+    finally:
+        gpu.time = real_time
     checks["tpu_never_fails_over"] = len(p) == 1 and not colab
 
     # refused when the TPU line is spent: no push at all

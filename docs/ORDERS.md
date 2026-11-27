@@ -316,7 +316,7 @@ serves: philosophy 4 (a red root test repaired by cause, not by retry), 5.
 state: (1)-(3) built `bff35c96`: each module timed in a fresh process, tries stop at the first under 5.0 s (verdict = fastest of three, 1/3 the wall); planted `python -m tests.test_t0_01_slow_clock`: 6 s sleeper 6.0/6.0/6.0 FAILS, once-stalled 6.0/0.01 passes, broken import reported.
 state: (3) T0.01 PASS 11-27 09:10 (`f2e7cc58`), slowest module 1.58 s, load_1m 1.45 in the row; coverage FAIL-UNOWNED 0. (4) Left to the re-checker: T0.02, T0.06, T0.20, T0.21, T1.03.
 state: (5) T0.07: same family, not same rule — its FAIL is policy_no_llm_rel_std 0.272 > 0.20 (repeats disagree on a busy box); fastest-of-N does not apply to a spread check; unchanged. 11-26 10:46: runner's CPU gate refused all five (day budget 20k/57.6k s, so load > 6.0); regate now prints the REFUSED reason instead of '(no verdict line)'.
-state: DONE when the re-checker has re-bought the five.
+state: **DONE** 11-27 15:09 — the re-checker re-bought all five PASS (T0.20/T0.02/T0.06 12:43, T1.03 12:48, T0.21 12:48; regate.log); closed by SYSTEM.
 
 ### S20 — The harness reads its first look when ten runs are home; round 1-L gets a reader
 part: (machine — the judge of stage 1 and 2; card line 4) · stage: 1 · step: —
@@ -353,8 +353,7 @@ state: built `f0fb4f3c`: after a failed run `run_on_colab` unassigns server VMs 
 state: open until the next real Colab submit after a failed one shows no busy refusal — whoever makes it notes the log line here.
 branches: Colab still 503 at the next real submit → leave the code, note the date; no retry loop.
 
-**Next up:** (v) S18: whoever makes the next real ear/A submit notes here that no doc refused it (ruling 125 ratifies the doc-only half; S7(1)’s import closure rules the rest). (v2) `budget.afford`: a Kaggle quota refusal marks that week FULL in `gpu_budget.json` (`closed_by: kaggle`), so no later job is planned into it (ruling 124); planted test. (w) S16 stays wired (`bd43f84b`, `a426fe45`): whoever sees the first real `SKIPPED-IDLE` line in `ladder.log` notes it here; three jack slots RUN with 5/5 sessions RUNNING and no ORDERS change → read the pre-check's reason and fix that cause. (0) `tests/test_gpu_accelerator.py` FAILs `tpu_own_weekly_line`
-on HEAD: fix by cause or name why the test is wrong. (1) S13 (a):
+**Next up:** (v) S18: whoever makes the next real ear/A submit notes here that no doc refused it (ruling 125 ratifies the doc-only half; S7(1)’s import closure rules the rest). (v2) `budget.afford`: a Kaggle quota refusal marks that week FULL in `gpu_budget.json` (`closed_by: kaggle`), so no later job is planned into it (ruling 124); planted test. (w) S16 stays wired (`bd43f84b`, `a426fe45`): whoever sees the first real `SKIPPED-IDLE` line in `ladder.log` notes it here; three jack slots RUN with 5/5 sessions RUNNING and no ORDERS change → read the pre-check's reason and fix that cause. (0) DONE 11-27: `tpu_own_weekly_line` read the budget on the wall clock but charged on the stub clock (W46); went red when the week turned 11-21; now 9/9. (1) S13 (a):
 reproduce `scripts/test_lane_guard.sh`'s FAILs of 11-20 on a clean tree.
 (2) **S9** as written 11-20 (`git show 8fde84f5:docs/ORDERS.md`): left
 `T0.17`, `T0.23`, then DP.05 HR.5 LT.02 T0.35 T3.09 T4.02 W.2 W1.00.
