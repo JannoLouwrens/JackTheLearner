@@ -1329,6 +1329,23 @@ reads it. The lock (S13 (b)) is what keeps that honest, not the lane.
 `b_life_mujoco`, are S11's, with a compare-before-delete rule.
 
 
+## 2026-11-27 02:55 UTC — Director, BETWEEN sittings (a worker's question): rulings
+
+**130. A test's dials live where the judge lock seals them, and the values
+it was calibrated at are the values it is read at.** Round 1-L's frozen
+rule (`52033df2`) names no permutation count or seed; they sit in the
+reader (`968da0b8`, n_perm 2000, seed 0), written before any run was home.
+They STAND, for both looks: they are `compare`'s defaults, the values
+check #1's 2,000-rep record and the 11-27 false-alarm sample (5/300, stated
+0.025) were run at — any other value would be a test nobody has calibrated.
+The frozen rule is not edited. r1L's judge lock is committed ALONE before
+any reader opens a raw file, and that lock is the seal. One read per look
+at seed 0; nobody re-reads a look at another seed or count, pass or fail
+(ruling 114). For every later round: a rule that leaves n_perm/seed unnamed
+means the harness defaults, and its judge lock must exist before its first
+raw file is opened — no question needed. Moves no pass line, clause,
+control or exemption.
+
 ## 2026-11-26 19:14 UTC — Director, second DAILY sitting (called by the owner's session): rulings
 
 **121. J24's toy: C is a miss, and the learner run proceeds.** The toy's
