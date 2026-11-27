@@ -833,8 +833,59 @@ def assemble(segs: list) -> dict:
                        "name": k0.get("name"), "pin": first["pin"]}}
 
 
+# ---- ruling 135: a second chain may take names a running chain also lists ----
+# The claim IS the group's segment-0 file, written before any kernel runs. A
+# chain started before claims existed (chains A/B, code e99c1b78) refuses any
+# name whose segment-0 file exists ("already home"), so it honours a claim
+# without being restarted; a claiming chain runs only names it claimed itself,
+# and its real segment-0 payload replaces the claim when it comes home. A claim
+# whose kernel fails is never re-run by anyone: its runs are lost (check #13).
+CLAIM_KEY = "claimed_by"
+
+
+def is_claim(payload: dict) -> bool:
+    return CLAIM_KEY in payload and "cells" not in payload
+
+
+def claim(names: list, rung: str, owner: str, pin: str) -> list:
+    """Claim every name or none: refused if the rung does not carry, a name is
+    not one of the rung's groups, or any name already has a raw file or a
+    segment-0 file (home, running or claimed). Each file is created O_EXCL, so
+    two claimers racing for one name cannot both win."""
+    import os
+    import re
+    if not carries(rung):
+        raise Refused(f"r1: rung {rung} does not carry; a claim needs segment files")
+    if not re.fullmatch(r"[0-9A-Za-z]+", str(owner)):
+        raise Refused(f"r1: claim owner {owner!r} (letters and digits only)")
+    known = groups(load_spec(), rung)
+    bad = [n for n in names if n not in known]
+    if bad or len(set(names)) != len(names) or not names:
+        raise Refused(f"r1: cannot claim {names} (not groups of rung {rung}: {bad})")
+    taken = [n for n in names if (OUT / f"{rung}_{n}.json").exists()
+             or seg_file(rung, n, 0).exists()]
+    if taken:
+        raise Refused(f"r1: already home, running or claimed: {taken}")
+    SEGS.mkdir(parents=True, exist_ok=True)
+    made = []
+    try:
+        for n in names:
+            fd = os.open(seg_file(rung, n, 0), os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+            made.append(n)
+            with os.fdopen(fd, "w") as f:
+                f.write(json.dumps({CLAIM_KEY: owner, "name": n, "rung": rung, "pin": pin,
+                                    "round": ROUND,
+                                    "iso": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())})
+                        + "\n")
+    except FileExistsError:
+        for n in made:
+            seg_file(rung, n, 0).unlink()
+        raise Refused(f"r1: lost a claim race on {names[len(made)]}; nothing claimed")
+    return names
+
+
 def kernel(name: str, rung: str, pin: str, climbers: list | None = None,
-           segment: int = 0) -> dict:
+           segment: int = 0, owner: str | None = None) -> dict:
     """Submit one group as a Kaggle CPU kernel -> OUT/<rung>_<name>.json (raw).
 
     Rung S (never carries): one kernel, its payload IS the raw file.
@@ -854,10 +905,19 @@ def kernel(name: str, rung: str, pin: str, climbers: list | None = None,
         raise Refused(f"r1: {out} is already home — a rung's kernel runs once")
     sources, prior = None, []
     if carries(rung):
-        if seg_file(rung, name, segment).exists():
-            raise Refused(f"r1: {seg_file(rung, name, segment)} is already home")
+        f0 = seg_file(rung, name, segment)
+        if f0.exists():
+            mine = segment == 0 and owner is not None and \
+                json.loads(f0.read_text()).get(CLAIM_KEY) == owner and \
+                is_claim(json.loads(f0.read_text()))
+            if not mine:
+                raise Refused(f"r1: {f0} is already home (or claimed by another chain)")
+        elif segment == 0 and owner is not None:
+            raise Refused(f"r1: {rung}/{name} is not claimed by {owner}; claim before running")
         prior = [json.loads(seg_file(rung, name, i).read_text()) for i in range(segment)
                  if seg_file(rung, name, i).exists()]
+        if any(is_claim(p) for p in prior):
+            raise Refused(f"r1: segment 0 of {rung}/{name} is a claim, not home")
         if len(prior) != segment:
             raise Refused(f"r1: segment {segment} of {rung}/{name} needs segments "
                           f"0..{segment - 1} home")
@@ -914,7 +974,7 @@ def kernel(name: str, rung: str, pin: str, climbers: list | None = None,
 
 
 def chain(names: list, rung: str, pin: str, climbers: list | None = None,
-          sleep=time.sleep) -> dict:
+          sleep=time.sleep, owner: str | None = None) -> dict:
     """Kernels one after another = ONE Kaggle session held. A kernel that fails
     is logged and the chain goes on (its cells stay missing — a missing run is
     the reader's to count, never refilled silently). The launcher's guard
@@ -925,8 +985,9 @@ def chain(names: list, rung: str, pin: str, climbers: list | None = None,
         seg = 0
         for attempt in range(GUARD_RETRIES * MAX_SEGMENTS + MAX_SEGMENTS):
             try:
-                r = kernel(name, rung, pin, climbers, segment=seg) if seg else \
-                    kernel(name, rung, pin, climbers)
+                kw = {"owner": owner} if owner is not None else {}
+                r = kernel(name, rung, pin, climbers, segment=seg, **kw) if seg else \
+                    kernel(name, rung, pin, climbers, **kw)
                 if isinstance(r, dict) and r.get("next_segment"):
                     seg = r["next_segment"]         # same session: carry on at once
                     print(f"{name}: segment {seg - 1} home, carrying "
@@ -972,6 +1033,9 @@ def main(argv):
     p.add_argument("--resume-from", default=None)
     p.add_argument("--deadline", type=float, default=None)
     p.add_argument("--segment", type=int, default=0)
+    p.add_argument("--claim", default=None,
+                   help="chain: claim every --names group as this owner first (all or "
+                        "none), then run only those (ruling 135)")
     a = p.parse_args(argv)
     if a.round != ROUND:
         set_round(a.round)
@@ -998,7 +1062,10 @@ def main(argv):
     elif a.cmd == "kernel":
         kernel(a.name, a.rung, a.pin, a.climbers, segment=a.segment)
     elif a.cmd == "chain":
-        chain(a.names, a.rung, a.pin, a.climbers)
+        if a.claim is not None:
+            claim(a.names, a.rung, a.claim, a.pin)
+            print(f"CLAIMED {a.rung} {a.names} as {a.claim}", flush=True)
+        chain(a.names, a.rung, a.pin, a.climbers, owner=a.claim)
 
 
 if __name__ == "__main__":
