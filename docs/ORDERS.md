@@ -308,7 +308,10 @@ nothing" on five specs?
 branches: still > 5.0 s on the fastest of three → it is a real slow import: find what `UnifiedBrain` does at import and fix THAT, by cause. · the planted sleeper passes → the change is wrong; revert.
 serves: philosophy 4 (a red root test repaired by cause, not by retry), 5.
 **done when:** planted tests pass, `T0.01` is re-bought with its load in the row, and `coverage` no longer prints FAIL-UNOWNED for it.
-state: 11-27 06:41 ORDERED.
+state: (1)-(3) built `bff35c96`: each module timed in a fresh process, tries stop at the first under 5.0 s (verdict = fastest of three, 1/3 the wall); planted `python -m tests.test_t0_01_slow_clock`: 6 s sleeper 6.0/6.0/6.0 FAILS, once-stalled 6.0/0.01 passes, broken import reported.
+state: (3) T0.01 PASS 11-27 09:10 (`f2e7cc58`), slowest module 1.58 s, load_1m 1.45 in the row; coverage FAIL-UNOWNED 0. (4) Left to the re-checker: T0.02, T0.06, T0.20, T0.21, T1.03.
+state: (5) T0.07: same family, not same rule — its FAIL is policy_no_llm_rel_std 0.272 > 0.20 (repeats disagree on a busy box); fastest-of-N does not apply to a spread check; unchanged. 11-26 10:46: runner's CPU gate refused all five (day budget 20k/57.6k s, so load > 6.0); regate now prints the REFUSED reason instead of '(no verdict line)'.
+state: DONE when the re-checker has re-bought the five.
 
 ### S20 — The harness reads its first look when ten runs are home; round 1-L gets a reader
 part: (machine — the judge of stage 1 and 2; card line 4) · stage: 1 · step: —
