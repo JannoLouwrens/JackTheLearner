@@ -1,0 +1,134 @@
+{
+ "10000": {
+  "mean": -269.7,
+  "band_hi": -206.1,
+  "band_lo": -393.9,
+  "shared_mean": -1069.7
+ },
+ "12000": {
+  "mean": -213.6,
+  "band_hi": -187.9,
+  "band_lo": -257.6,
+  "shared_mean": -984.8
+ },
+ "14000": {
+  "mean": -693.6,
+  "band_hi": -172.7,
+  "band_lo": -1333.3,
+  "shared_mean": -1059.1
+ },
+ "16000": {
+  "mean": -690.2,
+  "band_hi": -163.6,
+  "band_lo": -1333.3,
+  "shared_mean": -917.7
+ },
+ "18000": {
+  "mean": -186.4,
+  "band_hi": -178.8,
+  "band_lo": -197.0,
+  "shared_mean": -380.3
+ },
+ "20000": {
+  "mean": -180.3,
+  "band_hi": -166.7,
+  "band_lo": -197.0,
+  "shared_mean": -484.8
+ },
+ "22000": {
+  "mean": -165.2,
+  "band_hi": -151.5,
+  "band_lo": -181.8,
+  "shared_mean": -704.5
+ },
+ "24000": {
+  "mean": -177.3,
+  "band_hi": -157.6,
+  "band_lo": -197.0,
+  "shared_mean": -521.2
+ },
+ "26000": {
+  "mean": -184.8,
+  "band_hi": -172.7,
+  "band_lo": -200.0,
+  "shared_mean": -469.7
+ },
+ "28000": {
+  "mean": -180.3,
+  "band_hi": -172.7,
+  "band_lo": -197.0,
+  "shared_mean": -519.7
+ },
+ "30000": {
+  "mean": -174.2,
+  "band_hi": -160.6,
+  "band_lo": -190.9,
+  "shared_mean": -292.4
+ },
+ "32000": {
+  "mean": -165.2,
+  "band_hi": -145.5,
+  "band_lo": -184.8,
+  "shared_mean": -539.4
+ },
+ "34000": {
+  "mean": -171.2,
+  "band_hi": -154.5,
+  "band_lo": -187.9,
+  "shared_mean": -550.0
+ },
+ "36000": {
+  "mean": -168.2,
+  "band_hi": -154.5,
+  "band_lo": -187.9,
+  "shared_mean": -675.8
+ },
+ "38000": {
+  "mean": -168.2,
+  "band_hi": -157.6,
+  "band_lo": -181.8,
+  "shared_mean": -634.8
+ },
+ "40000": {
+  "mean": -175.8,
+  "band_hi": -166.7,
+  "band_lo": -190.9,
+  "shared_mean": -493.9
+ },
+ "42000": {
+  "mean": -168.2,
+  "band_hi": -160.6,
+  "band_lo": -178.8,
+  "shared_mean": -409.1
+ },
+ "44000": {
+  "mean": -165.2,
+  "band_hi": -154.5,
+  "band_lo": -178.8,
+  "shared_mean": -350.0
+ },
+ "46000": {
+  "mean": -168.2,
+  "band_hi": -160.6,
+  "band_lo": -178.8,
+  "shared_mean": -400.0
+ },
+ "48000": {
+  "mean": -174.2,
+  "band_hi": -169.7,
+  "band_lo": -184.8,
+  "shared_mean": -427.3
+ },
+ "50000": {
+  "mean": -171.2,
+  "band_hi": -166.7,
+  "band_lo": -181.8,
+  "shared_mean": -515.2
+ },
+ "49000": {
+  "mean": -168.2,
+  "band_hi": -160.6,
+  "band_lo": -178.8,
+  "shared_mean": -468.2
+ }
+}
