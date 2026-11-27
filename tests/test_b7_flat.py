@@ -11,6 +11,14 @@ def test_same_task_as_mem_arm():
     assert abs(e.unwrapped.last_u - 2.0) < 1e-6                         # a=1 -> torque 2, as B7mem
 
 
+def test_full_obs_known_positive_env():
+    e = f.PendulumFullUnit(); o, _ = e.reset(seed=1)
+    assert o.shape == (3,)                                              # cos, sin, velocity
+    e.step(np.array([1.0], np.float32))
+    assert abs(e.unwrapped.last_u - 2.0) < 1e-6                         # same action scaling
+    assert f.make_flat(0, obs="full").observation_space.shape == (3,)
+
+
 def test_recipe_is_brain_b_ours():
     m = f.make_flat(0)
     assert m.learning_rate == 1e-3 and m.policy_kwargs.get("layer_norm") is True

@@ -38,13 +38,28 @@ class PendulumVUnit(gym.Wrapper):
         self.observation_space = self.env.observation_space
 
 
-def make_flat(seed, **over):
+class PendulumFullUnit(gym.Wrapper):
+    """KNOWN-POSITIVE apparatus check (beside B-7, decides nothing): the same Pendulum-v1,
+    same [-1,1] -> torque 2a scaling, but the FULL observation (cos, sin, velocity). The
+    twin's learner must solve this, or its failure on Pendulum-V says nothing about memory."""
+    def __init__(self):
+        super().__init__(gym.make("Pendulum-v1"))
+        self.action_space = gym.spaces.Box(-1.0, 1.0, (1,), np.float32)
+
+    def step(self, a):
+        return self.env.step(2.0 * np.asarray(a))
+
+
+ENVS = {"v": PendulumVUnit, "full": PendulumFullUnit}
+
+
+def make_flat(seed, obs="v", **over):
     os.environ.setdefault("JAX_PLATFORMS", "cpu")
     from sbx import SAC
     from stable_baselines3.common.monitor import Monitor
     kw = dict(learning_rate=1e-3, seed=seed, policy_kwargs=dict(layer_norm=True))
     kw.update(over)
-    return SAC("MlpPolicy", Monitor(PendulumVUnit()), **kw)
+    return SAC("MlpPolicy", Monitor(ENVS[obs]()), **kw)
 
 
 def evaluate(model, env, n):
@@ -58,10 +73,10 @@ def evaluate(model, env, n):
     return float(np.mean(rets))
 
 
-def run_seed(seed, out=None, steps=STEPS, every=EVAL_EVERY, start=EVAL_FROM, eps=EVAL_EPS, **over):
+def run_seed(seed, out=None, steps=STEPS, every=EVAL_EVERY, start=EVAL_FROM, eps=EVAL_EPS, obs="v", **over):
     from stable_baselines3.common.callbacks import BaseCallback
-    model = make_flat(seed, **over)
-    ev_env = PendulumVUnit(); ev_env.reset(seed=10_000 + seed)
+    model = make_flat(seed, obs=obs, **over)
+    ev_env = ENVS[obs](); ev_env.reset(seed=10_000 + seed)
     evals, t0 = [], time.process_time()
 
     class Marks(BaseCallback):
@@ -70,19 +85,20 @@ def run_seed(seed, out=None, steps=STEPS, every=EVAL_EVERY, start=EVAL_FROM, eps
             if n >= start and n % every == 0:
                 evals.append(dict(step=n, ret=evaluate(self.model, ev_env, eps),
                                   cpu_s=round(time.process_time() - t0, 1)))
-                _write(out, seed, False, evals)
+                _write(out, seed, False, evals, obs)
             return True
 
     model.learn(total_timesteps=steps, callback=Marks())
-    _write(out, seed, True, evals)
+    _write(out, seed, True, evals, obs)
     return evals
 
 
-def _write(out, seed, complete, evals):
+def _write(out, seed, complete, evals, obs="v"):
     if not out:
         return
     import sbx, stable_baselines3
-    rec = dict(arm="B7flat", seed=seed, recipe="brain_b ours: SBX SAC lr 1e-3 layer_norm, PendulumV",
+    rec = dict(arm="B7flat" if obs == "v" else "B7flat-full", seed=seed,
+               recipe="brain_b ours: SBX SAC lr 1e-3 layer_norm, " + ("PendulumV" if obs == "v" else "Pendulum full obs"),
                sbx=sbx.__version__, sb3=stable_baselines3.__version__, complete=complete, evals=evals)
     if complete and evals:
         rec["seed_score"] = b7_seed_score(evals)
@@ -92,5 +108,6 @@ def _write(out, seed, complete, evals):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, required=True); ap.add_argument("--out", default=None)
+    ap.add_argument("--obs", choices=sorted(ENVS), default="v")
     a = ap.parse_args()
-    run_seed(a.seed, a.out)
+    run_seed(a.seed, a.out, obs=a.obs)
