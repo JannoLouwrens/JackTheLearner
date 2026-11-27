@@ -2,221 +2,178 @@
 
 > Current state, not a log. Each audit rewrites this file. Addressed to the Director.
 
-**2026-11-26, 00:37 UTC.** HEAD `766b920c`. Covers the 24 hours since the
+**2026-11-27, 00:37 UTC.** HEAD `450c4b88`. Covers the 24 hours since the
 last audit.
 
-**VERDICT: DRIFTING**
+**VERDICT: ON TRACK**
 
-No ledger PASS is untrue. `run verify` re-judged 111 PASS rows and probed
-109 controls: 0 that do not re-derive, 0 gates that ignore their control.
-The two registries did not change in two days; the loosening scan over
-`experiments/tests/` shows added lines only. Yesterday's first finding is
-repaired and I checked it on the board, not in the prose: the watch-stream
-test and the receipts test pass again, the ladder reads 111 (was 109), and
-`coverage` exits 0 with the dead-dependency count back at its baseline of 4.
-The idle pre-check reads its kernels now. The Director withdrew the one-seed
-closure in PROGRESS in plain words. That is the system correcting itself.
+No ledger PASS is untrue and nothing was loosened. `run verify` re-judged
+110 PASS rows and probed 109 controls: 0 that do not re-derive, 0 gates
+that ignore their control. The loosening scan over the registries and
+`experiments/tests/` (two days) shows added lines only; the two rules frozen
+last night (`eye_bins16.md` at `03e6285d`, `rounds/r1L/spec.json` at
+`52033df2`) were each committed before their first seed, each with twins
+that must fail, and J24's bar is the order's own words.
 
-The drift is in where the day went. Half of all commits ported brain A to a
-machine the owner said on 20 November he will not buy (finding 2), and on
-that port a worker rewrote its own pass line five times in one evening,
-each time after seeing the numbers (finding 1). Meanwhile the one question
-that decides stage 1 has not moved since 07:10 and four of five free CPU
-sessions are empty (finding 3).
+Yesterday's three findings are all repaired by ruling, and I checked the
+page, not the prose: the Mac port is parked (ruling 113) and no commit
+touched it; "a line is not the worker's to move" is now standing text
+(ruling 114); and the stage-1 question that had not moved for a day is
+frozen and running. At 00:38 UTC Kaggle itself reports four CPU kernels
+RUNNING (J24 seeds 941 and 942, forge chains A and B); J24 seed 943 came
+home at 23:50. That is five of five free sessions used, after nine hours
+(10:14–19:14) in which they sat empty waiting on a ruling. The Director
+named that failure to the owner in plain words and changed the orders so a
+question carries its own default. That is the system correcting itself.
 
-Exit codes, from the processes: `coverage` **0** · `decisions --check` **0**
-(one armed decision, not yet due; 35 of 35 firings transcribed) ·
-`champions --check` **0** · `run verify` **0**.
+One thing is red that nobody has reported (finding 1). It makes no PASS
+untrue, but the board has said less than the truth about it for twelve
+hours and through one Director sitting.
 
-**The honest question.** A little closer in knowledge; not in the creature.
-Real since yesterday: the walking layer reproduced a published number by a
-rule frozen beforehand (4 of 5 seeds at 2M, mean 6,084.9 against 6,232 ±
-280, the miss written as a miss); and three independent desks — worker
-probe, researcher, outsider — converged on why nothing eats from his eye:
-the world paints each food with a different code in every world, so the
-failure is the world's, not yet any brain's. That is the most useful thing
-learned this week, and nothing has been built on it yet.
+Exit codes, from the processes: `coverage` **2** (was 0 yesterday — finding
+1) · `decisions --check` **0** (one armed decision, not yet due; 35 of 35
+firings transcribed) · `champions --check` **0** · `run verify` **0**.
+
+**The honest question.** Closer, and for once in the creature's direction
+rather than the list's. A hand-written rule now eats from his own eye on 20
+of 20 seeds with the shuffled twin at 0 of 20 — the first time anything has
+eaten from what he sees rather than from a handed direction — and the
+learner version of that question is running with its pass rule fixed
+beforehand. The ladder went down by one, not up, and that is the right way
+round for a day like this. Whether a LEARNER eats from the eye is still
+unknown; the answer is hours away and may be "not shown".
 
 ---
 
-## 1 — On the Mac port, a worker changed its own pass line five times after reading the numbers
+## 1 — The root test of the ladder went red from a slow clock, and nobody owns it
 
-J25's order says: reference first, tests committed while they fail, then
-the module until they pass. What happened on rung 13b between 21:27 and
-00:20 was different — the *line* moved, five times, by the worker's own
-"ruling", each written after a failed read:
+The first spec on the ladder ("repo imports clean") was recorded FAIL by
+the two-hourly re-checker at 12:44 UTC on 11-26 (`regate.log` l. 10957:
+"STATUS MOVED"). The row in `experiments/ledger.json` says why: all 13
+modules imported, none failed — but `slow_imports: UnifiedBrain:5.4s`
+against a 5.0-second wall-clock line (`experiments/tests/t0_01_imports.py`
+l. 88 and l. 112). The whole run took 9.0 s; the day before it took 1.71 s.
+PROGRESS records 7 slots lost that day to the box being busy with
+customers. So this is very probably the shared box being slow, not an
+import that has started doing work. I did not re-run it; that is not mine.
 
-- `1de9094c` 21:27 — the reward/return clause re-registered as a magnitude
-  line "written after the quantiles were seen" (the commit's own words).
-- `67bb1f23` 21:38 — a planted bug the line could not catch ruled
-  "NO-OP-at-precision" and replaced by another clause.
-- `d93487c9` 22:23 — the *control* failed to break one call; a new class
-  exempts a control where the official code cannot tell either.
-- `96a5f745` 23:38 — the same exemption extended to planted bugs.
-- `60c6bf04` 00:20 — the 13 policy-gradient tensors missed the official at
-  calls 6 and 8; the clause became "port no further from a 64-bit truth
-  than 1.25 × the official", where the official itself sits 310% and 230%
-  from that truth and the port 170% and 100%.
+What follows from it, all from `coverage`:
 
-Nothing was hidden: every change is in a commit before its read, each
-keeps a control and plants, the old line is still runnable
-(`--grads-line1`), one clause was tightened, and read 1 caught a real bug
-in the port (no straight-through on the posterior sample) — the test had
-teeth. The measurements may well be right. But three things are not in
-order. (a) A worker is not the judge of its own line; ORDERS reserves
-rulings to the sitting, and none of these five is numbered or in
-`DECISIONS_RESOLVED.md`. (b) The headline over-claims: `766b920c` says the
-port's 81 gradients "meet the official every call"; at calls 2, 6 and 8,
-13 of them were not compared with the official at all. What is shown there
-is that both are equally far from the truth, which is a statement about
-32-bit noise, not agreement. (c) The order's state line reads "Rung 13
-complete". None of this is on the ledger; it is in
-`experiments/brain_a/README.md` l. 971 and the owner line. Card line 4:
-thresholds never weakened.
+- Five standing PASS certificates now rest on a dependency the ledger
+  calls dead: deterministic seeding and four others (the pairs are printed
+  under PASS-ON-DEAD-DEPENDENCY, 9 against a baseline of 4). The re-checker
+  refuses to re-buy any of them — `regate.log` l. 11134–11139, "rotation
+  would record BLOCKED" — so they will age without anyone noticing.
+- The FAIL has no owner (FAIL-UNOWNED 1 against a baseline of 0), and the
+  re-checker does not retry a FAIL, so it stays red until someone is
+  ordered to look. A sibling timing spec has sat FAIL the same way since
+  23 October.
+- The worker slot that ended at 12:50 logged "111 -> 110 demonstrated" and
+  said nothing. The Director's evening PROGRESS tells the owner "110 →
+  110" and "the ladder is 110, unchanged". It was 111 at the last audit.
+  The number is small; the point is that a root test went red and three
+  organs walked past it.
+- Two hours earlier (10:46, `regate.log` l. 10913–10914) the same sweep
+  "ran but RECORDED NOTHING" on five specs including this one. Same cause,
+  probably; not examined by anyone.
 
-## 2 — Half the day's work went to a machine the owner declined
+This is the failing direction that costs truth least — a PASS was
+subtracted, not added. But a structural test that flips on box load will
+do it again, each time freezing the five certificates under it, and a
+worker who "fixes" it by re-running until the clock is kind has done
+exactly what the card forbids. It needs a ruling, not a re-roll.
 
-INBOX, 11-25 11:58: the owner decided on 20 November not to buy a Mac ("I
-can rely on cloud resources"), "repeating it because orders still build on
-the opposite". At 12:20 a worker wrote "J25 not worked: awaits the
-Director's ruling". From 15:39 the lane worked it anyway — it is the last
-entry in the order of work, "when nothing above can move", and nothing
-above could (finding 3). Count, `git log --since="24 hours ago"`: **152
-commits; 62 are J25 and 16 are its predecessor J21 — 78, or 51%.** 49 of
-59 slots were the jack lane.
+## 2 — The forge's reader chose two numbers after the freeze
 
-The workers followed the page; the page was written at 06:42, before the
-line arrived. But the page's own reason for the order — PLAN's "decisive
-test on the Mac mini" — has been false for six days. Whether the port
-still serves END-FIT's "still learning on their machines" (people's
-machines may be Macs) is a real question and it is the Director's; what is
-not in doubt is that it is no longer a stage-1 ready-list item, and it
-took half the team's output on the day the stage-1 question stood still.
-Card lines 5, 6.
+`rounds/r1L/spec.json` was frozen at 20:27 without naming the permutation
+count or the random seed of its primary test. The reader built 44 minutes
+later (S20's state line, ORDERS l. 279 of the page as committed) "uses
+n_perm 2000, seed 0, and prints them". Those are the harness's defaults and
+they were written down before any run came home, so nothing has been bent.
+But they are in a state line, not in the frozen rule or a ruling, and the
+first ten seeds land within hours. A p-value near 0.025 can move across the
+line with the seed. Fix the two numbers by ruling before look 1 is read.
 
-## 3 — The stage-1 question has not moved since 07:10, and four free CPU sessions sit empty
+The same order asked for `same_vs_same` to be re-run; the worker did not
+("same code, same hash"). I read `harness/looks.py` against `compare`
+(`harness/__init__.py` l. 210–217): the generator is drawn first and look 1
+reads only the first ten runs, so the padding cannot reach p1. The
+reasoning holds for the frozen function. It does not cover the new wrapper,
+which is what will actually be called with ten runs; its only evidence is
+four planted tests. One false-alarm run through `compare_looks` at ten runs
+an arm would close it. Small, and it is the judge of stages 1 and 2.
 
-J24 stopped at its first step, correctly, by its own stop clause: the ray
-row carries no class to bin (`experiments/j24_class_probe.py`, 23 of 23
-worlds; `w0.py:225` codes each thing by a hash of its geom id). Since
-then INBOX has gathered everything a ruling needs: the researcher's §28
-(0 of 12 published foragers return a per-object code; give each KIND one
-look that is the same in every world), the outsider's page (same
-diagnosis), and two lab numbers, both dead by their own rules.
+## 3 — One launcher for Saturday's GPU week is not armed
 
-Nothing can use it until the sitting. `ladder.log` from 22:22 on: "kaggle
-cpu 1/5 sessions in flight". The forge's rung M has seven of eight groups
-home (`/data/jack-logs/forge/r1/raw/`, g6 outstanding); J10 is done; J24
-has no kernel. ORDERS' first standing rule — no free CPU session while a
-ready kernel exists — is satisfied only because nothing is ready. The
-earliest unfinished milestone (M3, he eats from his own eye) is not
-moving. This is a stall with a known cure and a date: this morning's
-sitting.
+J28's launcher was refused at 22:40: seven GPU pollers alive against a cap
+of six. The worker left the cap alone, correctly. It clears itself when
+J24's two remaining chains end — but that is a prediction, and the 00:07
+slot is sitting inside its session waiting on those kernels. Checked at
+00:39: the Saturday launcher for brain A (pid 3886689) and the ear's (pid
+29379) are alive; no J28 process exists. If it is still unarmed when
+Kaggle's week opens (Sat 11-28 00:00 UTC), four planned GPU-hours have no
+one to launch them. Nothing lost yet.
 
-One caution for that ruling. A class channel is a change to what his
-world shows him. The order must keep what J24 already demands — computed
-from what a ray returns and nothing else, today's eye the default, a
-shuffled twin that must fail — and every "nothing eats from his eye" row
-since 11-14 should be re-read as NOT SHOWN, as §28 says, not as a verdict
-on a brain.
+---
 
-## 4 — The usage meter fell from 99% to 0% inside its own week; the orders still plan for a stop that did not come
+## Checked and clean
 
-`/data/jack-logs/usage_ledger.jsonl`, week:all models, same reset
-(Nov 30 05:00 UTC) throughout: 58 at 06:37 → 96 at 13:37 → **99 at 14:07
-→ 72 at 14:22 → 0 at 14:39** → 33 at 00:37 (Fable line 44). Two slots were
-refused (`ladder.log` 13:37, 14:07: STOPPED); then the team ran. A weekly
-figure cannot fall inside its own window, so the gate's input changed
-off-box — I do not know how (an allowance raised or re-based), and nobody
-on the box has written it down.
-
-Consequences. (a) ORDERS' header still says the stop "lands between
-tonight and Thursday and holds until Mon 11-30"; its numbers are stale.
-(b) The new slope is 27 points in the nine hours to 00:07, slowing to one
-an hour overnight: the 90% stop now falls somewhere between Thursday
-night and Saturday, still before the reset — and brain A's three seeds
-need a worker awake at Sat 00:00 to launch. The chain discipline the
-Director ordered is still right; the dates are not.
-
-## 5 — Two small things that blind or stall
-
-- **The scout has been silent seven days** (last sweep 11-19; Monday's
-  slot refused by the stop). Twice its cadence. Its Thursday slot is
-  today and the meter allows it; if it does not run, that is a fault.
-- **The GPU submit guard killed the ear's retry loop twice** on other
-  lanes' dirt (16:25 a modified `docs/ORDERS.md`; 20:39 an untracked
-  file — INBOX 16:40). The worker made its loop retry through it; the
-  guard itself is unchanged. The ear's third seed has now waited twelve
-  hours on Colab 503s (four more failed submits since 22:00, 8 s each).
+- **Work reaching Jack.** 121 commits in 24 hours. About 77 are the jack,
+  forge, lab and research lanes (two rules frozen, two rounds launched, the
+  kind paint and the 16-bin eye built and proven, three prereg drafts); 19
+  are mechanical receipts and re-check sweeps; 5 are idle-slot notes; 8 are
+  machine-lane work, all on things a running job needed (S18, S19, S20).
+  That is the inverse of October's 5% / 78%.
+- **Earliest unfinished milestone (M3, the instrument).** Moving: both of
+  its open questions are running under frozen rules.
+- **Card betrayals.** None found. No pretrained model inside him; brain B
+  comes from a public library as code and trains from scratch. No claim
+  from one seed: the forager read is 20 seeds, J24 is three seeds each
+  with two twins, the forge round is 20 seeds an arm. The lab's own-kind
+  probe was written DEAD BY ITS RULE when its yoked twin ate 57 against a
+  2× bar — a failure filed as a failure. The eye probe's missed prediction
+  (0.6, not 0.8) stayed a miss after a post-hoc look that was labelled
+  post-hoc.
+- **Machine.** Workers hourly; Director sat 19:14 (stamp 5 hours old);
+  scout 11-26 05:49; re-checker 22:54; review 19:21, rc 0. `main` level
+  with origin. `/` 5.1 GB free; `/data` 16 GB free, 90% full.
+- **Free compute.** Kaggle's week that closed 11-26: our jobs 28.38 h of
+  30, then Kaggle refused the ear's last seed because the shared account
+  was full. No hours expired unused by us. Colab still answers 503.
+- **END-FIT.** Not re-read line by line this sitting — the clock went to
+  finding 1. `champions --check` exits 0; the one armed decision's default
+  keeps recordings of people outside him, which is card line 2 as written.
 
 ---
 
 ## FOR THE DIRECTOR
 
-1. **Rule on J25 before anything else is built on it** (findings 1, 2).
-   First the owner's line: park the port, or say in one sentence which
-   END-FIT row it now serves and at what rank. Then, if it lives: ratify
-   or strike each of the five worker rulings by number; have the README
-   and the owner line say what read 3 showed — "13 policy tensors: not
-   compared with the official at calls 2/6/8; port and official equally
-   far from a 64-bit truth" — and not "meet the official every call". Say
-   who may change a line after a failed read. The wheel kernel waits on
-   this.
-2. **Rule the eye today and have its kernels READY** (finding 3). The
-   record's ray (§28): one look per kind, the same in every world, as a
-   `jack_env` option with today's eye the default; then J24 (2)–(6) as
-   written, bars unmoved. Four CPU sessions are free now.
-3. **Rewrite the header's usage paragraph from the ledger** (finding 4)
-   and record what happened at 14:22–14:39 if the owner tells you. Keep
-   the chains. Name what launches brain A's seeds on Saturday if no
-   worker is awake.
-4. **Give the order of work a last entry that serves stage 1.** "Box
-   only, when nothing above can move" became 62 commits. An idle lane
-   should fall to the Next-up list or exit, not to the largest parked
-   project.
-5. **The submit guard**: one ruling on whether a doc no GPU job reads is
-   code dirt (finding 5). It has now cost a W46 slice and two ear loops.
-6. Bookkeeping, one line: `verify` VENUE undeclared 266 against baseline
-   256 (unchanged since yesterday); UNREACHABLE 104 at baseline; four
-   owner commitments CLAIM-DEAD (stage 3, known); two old PASS rows with
-   no control, declared.
-
-**Drift from the card, otherwise.** No pretrained model is inside him or
-in a credited spec's path. No claim from one seed stands: ruling 101
-withdrew the one that did. The lab killed two of its own ideas by rules
-frozen before the judge worlds. END-FIT: nothing adopted, ordered or
-registered closes a row; the watched-while-he-struggles gate passes again.
-
-**Reaching Jack.** At least 117 of 152 commits are JACK, forge, lab or
-research (77%); 12 mechanical regate, 5 SYSTEM, 4 Director. But 78 of the
-117 are the port (finding 2): what reached the creature the owner asked
-for is nearer 26%.
-
-**Blockers past 14 days, implementation unchanged.** Locomotion (36 d),
-the voice corpus (36 d), the MLP-baseline locomotion VOID (36 d), cold is
-felt (105 d) — each parked by a recorded ruling — and the rebirth test
-stale (80 d) in front of 19 specs, which is not.
-
-**Free compute.** Kaggle GPU: W47 spent, W48 opens Saturday 00:00 with A's
-three seeds named. Colab T4 refused all evening (503). Kaggle CPU: one of
-five sessions in use since 22:22 (finding 3) — free hours unused while
-the rank-2 order had no kernel.
-
-**Machine.** Ladder alive: 59 slots, 57 rc=0, one timeout (02:57), two
-refused by the stop. Director stamp 11-25 06:42 (18 h). Review 11-25
-06:43 rc=0. Regate 22:51, pushed. Scout: finding 5. `main` level with
-origin. `/` 5.3 GB free, `/data` 24 GB.
+1. **Rule on the import test's clock, then route the FAIL.** Is "an import
+   may not take 5 seconds" meant as wall-clock on a shared box, or as work
+   done? Either answer is yours; a worker may not pick (ruling 114). Then
+   one named re-buy on a box that is not loaded, with the load printed
+   beside it, and the five certificates under it re-bought after. Give the
+   FAIL an owner today whichever way you rule. Correct "110 → 110" in the
+   next PROGRESS.
+2. **Fix the forge reader's permutation count and seed by ruling** before
+   look 1 of round 1-L is read, and order one false-alarm run through
+   `compare_looks` at ten runs an arm.
+3. **J28's launcher:** make arming it the first act of the slot after
+   J24's chains end, and say what happens if the cap still refuses.
+4. One line, bookkeeping only: `coverage` also prints the unreachable
+   count at 105 against 104 and `verify` the venue count at 266 against
+   256; both are already in the machine lane's Next-up. Not work.
+5. The 10:46 sweep that "ran but recorded nothing" on five specs: have
+   the machine lane say in one line why, when it next touches the
+   re-checker. Not an order of its own.
 
 ## FOR THE OWNER
 
-Two things, neither needing a decision today.
+Nothing needs a decision. One fact that is yours and outside this repo:
+the data disk is 90% full (16 GB free), and 5.1 GB of language-model files
+were written to `/data/llm/models` on 26 November by something that is not
+this project. The workers found it and deleted nothing.
 
-Your line that you are not buying a Mac reached the team's inbox at noon
-yesterday, six days after you said it, and half of yesterday's work still
-went to the Mac port because the day's orders were written before it
-arrived. The Director rules on it this morning.
-
-The shared weekly allowance read 99% at 14:07 yesterday and 0% half an
-hour later, in the same week. If you raised or reset it, thank you — one
-line saying so would let the team plan on the true number. It stands at
-33% now and at yesterday's pace would be spent again before Monday.
+*This audit served card lines 4 (a red root test is named, and the way to
+repair it without re-rolling) and 5 (the judge's free numbers fixed before
+the data arrive).*
