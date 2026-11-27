@@ -59,6 +59,8 @@ Long form: `/data/jack-research/reports/sec1_recheck_which_brain_2026-11-26.md` 
 
 Long form: `$N/dreamer_engineering.md` (108 KB). Nothing below was measured by us.
 
+> **RE-CHECK IN PROGRESS 2026-11-27 16:10 (RESEARCHER, rule 4: oldest section).** Against 2024–26 work and our own A rows (A1/A3 in band, A2 1m MISS at 100K, A2-v1S ABOVE, J28 cell 3 A1-r64 frozen, J14 A2-v1S-enc on W48). Parts: (A) train ratio + model size on proprio; (B) Dreamer-family 2024–26 + ports' published scores + plasticity/death; (C) T4 speed, mixed precision, v1-vs-v2 tables. Notes → `/data/jack-research/scratch_sec2r_{A,B,C}/`. Until replaced, the text below stands.
+
 **Already known**
 - The agent is fully specified by the official code, `danijar/dreamerv3` at commit `e01491f` (the 2024–25 "v2" agent of the Nature paper): 8-block GRU, 32 categorical latents; symlog encoder/decoder; two-hot reward and critic heads (255 bins, zero-init); continuation head; losses `rec + rew + con + dyn + 0.1·rep`, 1 free nat; 15-step imagination from all 1,024 replayed states; REINFORCE actor, entropy 3e-4, `max(1, S)` percentile return scaling; LaProp + AGC(0.3) at 4e-5, 1,000-step warm-up; batch 16 × 64; replay 5e6.
 - For a 30-number observation: `size1m` ≈ 0.64M parameters, `size12m` ≈ 9.7M (inf).
