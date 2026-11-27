@@ -1,11 +1,17 @@
-"""J28 cell 1: does MuJoCo Playground's HumanoidStand + Brax PPO at 8,192 copies RUN on the GPU Kaggle
+"""J28 cell 1: does MuJoCo Playground's HumanoidStand + Brax PPO at the config's 2,048 copies RUN on the GPU Kaggle
 gives, and how fast? A TIMING CELL — no verdict, no learner of Jack's, nothing kept but three numbers
 (does JAX run / env steps a second / peak device memory) for PUBLISHED_PRIORS.md §29 "ours".
 
-Published recipe, code only (no weights): `mujoco_playground` from PyPI, its own
+Published recipe, code only (no weights): PyPI `playground==0.2.0` (imports as `mujoco_playground`;
+the PyPI name `mujoco_playground` is a 404 — RESEARCH 11-27 04:11, re-checked 11-27 against the
+0.2.0 wheel; 0.2.0 is the last JAX release, 1.x moved to Warp/torch), its own
 `dm_control_suite_params.brax_ppo_config("HumanoidStand")` with ONE change: `num_timesteps` cut to
 TIMESTEPS (a timing cell, not a training run) and `num_evals` to 6 so progress is timestamped.
-`num_envs` = the config's own (8,192 expected; printed). Known risk (§29): JAX fails on a P100
+Settings that differ from the published recipe: num_timesteps, num_evals, and the env's `impl`
+forced to "jax" via `registry.load(..., config_overrides={"impl": "jax"})` — 0.2.0's humanoid
+defaults to impl="warp" (MJX-Warp), which is not the JAX/MJX path this cell times and needs a GPU
+a P100 may not be. `num_envs` = the config's own (2,048 in 0.2.0's file, not the 8,192 §29 read
+off the paper; printed). Known risk (§29): JAX fails on a P100
 convolution (jax#33224) — so the GPU kind is printed first and a failure's text is the reading.
 
     python -m experiments.body.mjx_timing kernel     # writes /data/jack-logs/body/mjx_timing.json
@@ -31,7 +37,7 @@ def sh(cmd, tmo):
         return {"rc": "TIMEOUT", "wall_s": round(time.time() - t0, 1)}
 def save(): json.dump(res, open(os.path.join(out, __FETCH__), "w"), indent=1)
 res["gpu"] = sh(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader"], 60); save()
-res["install"] = sh([_y.executable, "-m", "pip", "install", "-q", "jax[cuda12]", "mujoco_playground"], 1800); save()
+res["install"] = sh([_y.executable, "-m", "pip", "install", "-q", "jax[cuda12]", "playground==0.2.0"], 1800); save()
 PROBE = r"""
 import functools, json, time, jax
 from mujoco_playground import registry, wrapper
@@ -39,7 +45,10 @@ from mujoco_playground.config import dm_control_suite_params
 from brax.training.agents.ppo import train as ppo, networks as ppo_networks
 print("JAX", jax.__version__, jax.devices(), flush=True)
 name = "HumanoidStand"
-env = registry.load(name)
+env = registry.load(name, config_overrides={"impl": "jax"})
+from importlib import metadata as _md
+print("VERSIONS " + json.dumps({k: _md.version(k) for k in ("playground", "jax", "brax", "mujoco", "mujoco-mjx")}), flush=True)
+print("IMPL", env.mjx_model.impl, flush=True)
 p = dm_control_suite_params.brax_ppo_config(name)
 p.num_timesteps = __STEPS__; p.num_evals = 6
 kw = dict(p)
