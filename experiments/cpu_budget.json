@@ -2166,19 +2166,19 @@
         "detached:b7flat_chain_s1s3.log": 2020.06,
         "detached:b7flat_full_s0.log": 1101.21,
         "detached:b7flat_full_s1.log": 1098.46,
-        "detached:chain_A.log": 1234.91,
-        "detached:chain_B.log": 1232.05,
-        "detached:chain_C.log": 295.42,
-        "detached:chain_s01.log": 283.61,
-        "detached:chain_s23.log": 283.6,
+        "detached:chain_A.log": 1257.42,
+        "detached:chain_B.log": 1254.86,
+        "detached:chain_C.log": 329.37,
+        "detached:chain_s01.log": 317.45,
+        "detached:chain_s23.log": 317.56,
         "detached:chain_s941.log": 806.18,
         "detached:chain_s942.log": 732.56,
         "detached:chain_s943.log": 802.07,
-        "detached:sat_launch.log": 52.73,
-        "detached:w48_launch.log": 96.8,
+        "detached:sat_launch.log": 53.72,
+        "detached:w48_launch.log": 98.72,
         "forge:looks_fa": 759.36
       },
-      "used_s": 15106.5
+      "used_s": 15256.48
     }
   },
   "last_child_s": {
