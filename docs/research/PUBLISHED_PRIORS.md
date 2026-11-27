@@ -55,45 +55,39 @@ Long form: `/data/jack-research/reports/sec1_recheck_which_brain_2026-11-26.md` 
 
 **Not verified:** MR.Q's hardware; which Craftax timings are one A100 (†) and which 8 H100; SimbaV2's DreamerV3 column is copied from MR.Q (500k agent steps, labelled 1M); values read off figures (SimbaV2 0.3M, DreamerV3 Fig. 6); EVAAA (2025 homeostatic benchmark, DQN/PPO/DreamerV3 baselines): README only; TD7 and CrossQ from rivals' tables; T4-hour sums are inference from our two timings; the 11-15 list (long form).
 
-## 2. Building brain A (a Dreamer-style world model) correctly (2026-11-15; serves order J3, M3; plan part "His brain")
+## 2. Building brain A (a Dreamer-style world model) correctly (re-checked 2026-11-27 against 2024–26 work and our rows A1–A3, A2-v1S; written 11-15; serves J14, J28 cell 2+3, M3; plan part "His brain")
 
-Long form: `$N/dreamer_engineering.md` (108 KB). Nothing below was measured by us.
+Long form: `$N/dreamer_engineering.md` (108 KB); the 11-15 text whole: `/data/jack-research/sec2_as_of_2026-11-15.md` (every finding there stands unless struck below); re-check notes `/data/jack-research/scratch_sec2r_{A,B,C}/notes.md` (configs, TeX, score files, PDFs under `dl/`). Nothing below was measured by us unless it says "ours".
 
-> **RE-CHECK IN PROGRESS 2026-11-27 16:10 (RESEARCHER, rule 4: oldest section).** Against 2024–26 work and our own A rows (A1/A3 in band, A2 1m MISS at 100K, A2-v1S ABOVE, J28 cell 3 A1-r64 frozen, J14 A2-v1S-enc on W48). Parts: (A) train ratio + model size on proprio; (B) Dreamer-family 2024–26 + ports' published scores + plasticity/death; (C) T4 speed, mixed precision, v1-vs-v2 tables. Notes → `/data/jack-research/scratch_sec2r_{A,B,C}/`. Until replaced, the text below stands.
+**Already known (new or corrected 11-27)**
+- **Our bands are the 2023 v1 agent, not v2.** The official proprio score file (`423291a9` 2023 → `2411f7d1` 2024, renamed) is the same 90 runs, max difference 5e-11 over 4,165 points; v1 TeX says those runs used backprop through dynamics for continuous actions, size S 18M, 4 envs, V100. The author's "all results use reinforce" (dreamerv3 #168, 2024-12) does not fit the proprio file; the vision file WAS re-run. The 11-15 "unresolved" is resolved: v1 recipe.
+- **An independent re-run of the v2 code scores lower.** MR.Q (Fujimoto, ICLR 2025, arXiv 2501.16142, Table 5; official code `251910d`, 10 seeds, 500K agent steps = 1M frames): cartpole_swingup **736 [591, 838]** (v1 file 853 ± 13), walker_walk 898, ball_in_cup 968, reacher_easy 966, swingup_sparse 702, balance 998; dog 4–22, humanoid 0–5; 28-task mean 530 (TD-MPC2 783, MR.Q 835).
+- **The official preset moved.** Since `f8817c4` (2024-12-07) `dmc_proprio` = **size1m, train_ratio 1024, dmc repeat 1** = 1.0 gradient step per env frame; the paper and ours (512, repeat 2) = 0.25. Ours pairs the 1m size with the paper's ratio: a hybrid nobody published. No score exists for size1m at any ratio; smallest published DreamerV3 score is 8M (v1 XS, not DMC). `e01491f` (2026-10-04) is still the head: no default changed after our pin.
+- **No train-ratio ablation exists on DMC/proprio.** v1/v2 scaling figures sweep ratio 1–64 on Atari, Crafter, DMLab only (more = better). One user report (#140, 2024-06, 12M): walker_walk at 32 → 200–300 at 500K vs 900–1000 (unverified as a measurement). DreamerV2 port, 20 DMC tasks, 1M (2310.15017 app. C.1): raising the model update ratio HURT, IQM 687 → 617 (5×) → 534 (10×).
+- **Resets: the world model, not the actor.** Same paper: resetting MBPO's actor/critic hurts; an EMA reset of DreamerV2's dynamics layer (α 0.8, every 2e5 steps) lifts IQM 762 → 783 at the best ratio but LOWERS it at default (687 → 633). 2607.19749 (abstract only): Dreamer agents across tasks keep the world model and lose the **actor**. No paper shows single-task late collapse of DreamerV3.
+- **Survival with needs:** EVAAA (NeurIPS 2025 D&B) ran sheeprl `dreamerv3S` (v1, S), termination when a need leaves range: Dreamer survived longest, falls from level 3-2, and **learned to end the episode after failed search** (confirms 11-15). Craftax-Classic 1M: DreamerV3 re-run 47.2 ± 3.9% (2502.01591).
+- **Compute, published:** v1 proprio < 1 V100-day a run (S); v2 0.3 A100-day (12M, 16 envs). sheeprl #336 (A100, S, one gradient step): fp32 214 ms, +compile 114, **bf16-mixed+compile 32 ms**; uncompiled bf16 is SLOWER than fp32 (249). No T4/P100 timing anywhere. Official precision: float16 in 2023 (Atari100k forced float32), **bfloat16 since 2024-04**; fp16 NaNs reported with images (#91). sheeprl 0.8.5 carries the low-precision resume fix (#392).
 
-**Already known**
-- The agent is fully specified by the official code, `danijar/dreamerv3` at commit `e01491f` (the 2024–25 "v2" agent of the Nature paper): 8-block GRU, 32 categorical latents; symlog encoder/decoder; two-hot reward and critic heads (255 bins, zero-init); continuation head; losses `rec + rew + con + dyn + 0.1·rep`, 1 free nat; 15-step imagination from all 1,024 replayed states; REINFORCE actor, entropy 3e-4, `max(1, S)` percentile return scaling; LaProp + AGC(0.3) at 4e-5, 1,000-step warm-up; batch 16 × 64; replay 5e6.
-- For a 30-number observation: `size1m` ≈ 0.64M parameters, `size12m` ≈ 9.7M (inf).
-- Load-bearing parts, by the paper's ablations: KL balance + free bits (no learning without them on Reacher Hard); return scaling with the `max(1, ·)` floor (sparse swing-up 850 → 200 without it); two-hot regression; reconstruction gives most of the learning signal (100 → 27 without it).
-- The published small-scale scores are 2023 runs of the v1 agent at size S (train ratio 512, action repeat 2, 4 environments): 18-task proprioceptive DMC mean 442 / 626 / 757 at 100K / 200K / 500K env steps. **No score exists for `size1m`, nor for any port's v2 agent.**
-- Fails at: directed exploration (BSuite exploration 0.01, deep_sea 0.00, with the 200M model); long memory (BSuite memory 0.62); shrinking (12M needs 38M Crafter steps for what 400M reaches at 7M).
-- Train ratio (gradient work per decision): more is better up to the largest published setting, 1024. Cutting 512 → 32 on Walker Walk cost about two thirds of the score (one user report).
-- **Death.** Only the v2 REINFORCE actor learns from termination. The v1 actor for continuous actions (backprop through the dynamics; the default in sheeprl's `dreamer_v3` and in dreamerv3-torch) cannot: InvertedPendulum stayed at return 4. The environment must mark true death and cut-offs differently.
-- A needs-based precedent (EVAAA; termination when a need leaves range): Dreamer survived longest, agents without the needs inputs did not learn, and **some agents learned to end the episode when food could not be found** (reward: §13).
-- Ports' silent bugs: terminated/truncated confused (broke CartPole), 1.6% of replayed actions corrupted, resume regressions, a README timing from a different agent.
-- Speed is published nowhere for a T4, P100, CPU or Apple silicon. Arithmetic, ±2×: T4 `size1m` 20–50 gradient steps/s, T4 `size12m` 2–5, 4-core CPU `size1m` 0.5–2.
+**Candidates** (unchanged): official `e01491f` as reference; sheeprl 0.8.5 `dreamer_v3` (v1, the agent the bands come from) and `dreamer_v3_5` (v2). sheeprl is maintained (0.8.5 2026-10-27; Oct fixes "match official"); dreamerv3-torch is self-declared outdated → NM512/r2dreamer (no score table). No port has published DMC proprio scores.
 
-**Take as-is** (code and designs, never weights)
-- Reference: the official repo at `e01491f` (its `configs.yaml`, `agent.py`, `rssm.py`, `scores/*.json.gz`). Runner: **sheeprl 0.8.5 `dreamer_v3_5`** with `algo=dreamer_v3_5_1M` or `_12M`: the only maintained port with the v2 agent, a CPU default, and resume with replay (`buffer.checkpoint=True`, `checkpoint.resume_from`). Six weeks old, no published scores: trusted only through the checks below.
-- For him: every published value unchanged; one environment; action repeat 1 (a decision is 0.2 s); train ratio as high as the hardware sustains (≤ 1024), logged; `terminated` only on true death; a meal reward of order 1; needs, touch and rays as one vector; the REINFORCE actor; a 5,000–10,000-decision prefill; DayDreamer's arrangement (one process acts, one learns, shared replay).
-- Later parts existing as code: R2-Dreamer's decoder-free loss (eye), R2I's memory core, Dynalang's one-token-per-step input (words), a Plan2Explore-style bonus or Curious Replay if exploration stalls.
+**Ours beside theirs**
+| setting | published | ours | costs |
+|---|---|---|---|
+| agent behind the bands | v1, backprop actor | A1–A3: v2 REINFORCE (`rows.py:3`); A2-v1S: v1 | A1–A3 compare a different actor to the band; v2 re-run reads swingup 736, so A2-1m's 100K miss (393) is not proof of a bug |
+| size | S 18M (v1); 1m only with ratio 1024, repeat 1 | 1m at 512, repeat 2 (`rows.py:74-78`) | unpublished pairing; ¼ the official 1m preset's gradient work |
+| gradient steps by 200K frames | 50,000 (512) | A1-r64: 6,250 (`ratio64.py:26`) | = ratio-512 at 25K frames, where balance reads 227–371 |
+| precision | fp16 2023 / bf16 now | 32-true; cell 2 tests 16-mixed (`fp16_timing.py:26`) | fp16 = the 2023 choice; speed gain needs compile |
+| speed | none for T4 | ours: 1m 25.9 grad-steps/s compiled, S 2.76, box CPU 0.19 | first T4 numbers anywhere |
 
-**Reproduce first.** Published protocol: v1 agent, size S, ratio 512, repeat 2, 4 environments, 5 seeds; pass = our mean within ~2 SD at each point (official per-seed score file).
+**Known-answer check** — unchanged rows (A1–A3 bands); add beside, deciding nothing, MR.Q's v2 per-task numbers as the v2 agent's independent reference.
 
-| task (proprioceptive DMC) | env steps | published mean ± SD |
-|---|---|---|
-| cartpole_balance | 100K / 200K | 794 ± 52 / 966 ± 17 |
-| cartpole_swingup | 100K / 200K / 500K | 478 ± 20 / 778 ± 19 / 853 ± 13 |
-| ball_in_cup_catch (sparse) | 200K | 949 ± 9; 5 of 5 seeds > 900 by 150K |
-| reacher_easy | 200K / 500K | 929 ± 19 / 964 ± 7 |
-| walker_walk | 200K / 500K | 799 ± 87 / 925 ± 34 |
-| cartpole_swingup_sparse | 500K | 492 ± 368: ~3 of 5 seeds near 800, none above 50 before 100K |
+**What the record does NOT answer**
+1. **A1-r64 (J28 cell 3, frozen).** Prediction: **MISSES at both points**; 3-seed mean ~420 (340–540) at 100K, ~500 (370–630) at 200K; P(3/3 in band) ≤ 10% / ≤ 15%. Basis: gradient-matched point 227–371, #140 read 10–20% of the way to data-matched. A hold = balance is data-limited at 1m (new).
+2. **The official 1m preset as published** (ratio 1024, repeat 1) on A2: is the 100K miss the pairing? ~4× A2's gradient cost ≈ 2–3 T4-h a seed (inf). Prediction: in band or above at 100K.
+3. **fp16 on a T4** (cell 2): prediction ≤ 1.5× and only compiled (inf from #336; T4 has fp16 tensor cores, not bf16). NaNs possible.
+4. Dynamics-only reset if brain A collapses in his world; never copy B's actor reset.
 
-Controls that must come out low: walker_walk at train ratio 32 (200–300 at 500K); BSuite deep_sea (0.00). Step-0 check from the code (v2, continuous actions): reward and value loss 5.541, `dyn` = `rep` = 1.0, actor std 0.893, predicted reward and value exactly 0. **Cost: the first three rows at 200K × 3 seeds were estimated at 25–60 T4-hours (one to two free-GPU weeks); a CPU cannot do it at the published train ratio.**
-
-**The last 10%** (costs and predictions in the long form): (1) gradient steps per second on our hardware; (2) does a ~1M model reproduce the published S-model curves; (3) what train ratio the rover needs, and whether free-running the learner is safe; (4) can entropy-only Dreamer find food 3.8 m away in a 3,000-decision life (predicted: about half the seeds, more with near-first food or a disagreement bonus); (5) REINFORCE vs dynamics-backprop when death ends the life; (6) reward scale under `max(1, S)` (0.01 predicted to stay near random); (7) exact resume across 12-hour sessions; (8) a small Dreamer on BSuite's memory and credit tasks; (9) a life longer than any published run.
-
-**Not verified:** the Nature article (arXiv v2 stands in); every speed figure (arithmetic); whether the paper's v2 tables are the 2023 runs (score files bit-identical, the author says v2 uses REINFORCE: unresolved).
+**Not verified:** #140 (one user, seeds unknown); the Nature methods text (arXiv v2 read instead); 2607.19749 beyond its abstract; 2310.15017 read via a summariser; EVAAA step budgets; r2dreamer's "5× faster"; sheeprl #336's date stamp.
 
 ## 3. His world, needs and staging: how worlds that taught agents were built (2026-11-15; serves J5, J7, M2; need clocks, fire, cooking, shelter)
 
