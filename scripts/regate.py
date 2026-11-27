@@ -436,9 +436,12 @@ def main(argv: list[str]) -> int:
         after[sid] = _ledger_triple(sid)
         # The stdout line is DISPLAY ONLY — the move judgement reads the
         # ledger (status_moves' docstring carries the scar).
+        # REFUSED (S21): a runner refusal (load ceiling, day budget) prints
+        # `ERROR ... REFUSED before start: <reason>`; without the word, 11-26
+        # 10:46 logged five of them as a bare "(no verdict line)".
         tail = (p.stdout or "").strip().splitlines()
-        verdict = next((l for l in reversed(tail)
-                        if any(w in l for w in ("PASS", "FAIL", "VOID"))), "(no verdict line)")
+        verdict = next((l for l in reversed(tail) if any(w in l for w in (
+            "PASS", "FAIL", "VOID", "REFUSED"))), "(no verdict line)")
         rec = ("recorded nothing" if after[sid] == before[sid] else
                f"recorded {after[sid][0]} a{after[sid][1]}")
         print(f"  {sid:9s} [{lane}] was {status:8s} -> {verdict.strip()[:96]}"

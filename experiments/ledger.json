@@ -95164,39 +95164,14 @@
     "T0.01": {
       "amended": [],
       "attempt": 22,
-      "commit": "9b3b340a",
+      "commit": "bff35c96",
       "compute_s": null,
       "control_metrics": {},
       "dirty_files": null,
-      "duration_s": 9.0,
+      "duration_s": 22.7,
       "gpu_job_id": null,
       "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
       "history": [
-        {
-          "amended": [],
-          "attempt": 10,
-          "commit": "4abd917",
-          "compute_s": null,
-          "control_metrics": {},
-          "duration_s": 1.52,
-          "gpu_job_id": null,
-          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
-          "impl_sha": "d7af65c339695aa3",
-          "message": "",
-          "metrics": {
-            "failed": "none",
-            "modules_imported": 13,
-            "modules_total": 13,
-            "slow_imports": "none"
-          },
-          "preserved_impl": null,
-          "ran_at": "2026-09-02T16:12:15",
-          "seeds": [
-            0
-          ],
-          "spec_sha": "64f564bba0a5a202",
-          "status": "PASS"
-        },
         {
           "amended": [],
           "attempt": 11,
@@ -95806,30 +95781,85 @@
           ],
           "spec_sha": "64f564bba0a5a202",
           "status": "PASS"
+        },
+        {
+          "amended": [],
+          "attempt": 22,
+          "commit": "9b3b340a",
+          "compute_s": null,
+          "control_metrics": {},
+          "dirty_files": null,
+          "duration_s": 9.0,
+          "gpu_job_id": null,
+          "hardware": "aarch64/Linux/torch2.8.0+cpu/cpu",
+          "impl_sha": "273c9129dc6d19b5",
+          "message": "pre-registered threshold not met",
+          "metrics": {
+            "declared_deps": 13,
+            "declared_deps_unresolved": "none",
+            "deps_cover_live_modules": 1.0,
+            "failed": "none",
+            "live_modules_unhashed": "none",
+            "modules_imported": 13,
+            "modules_total": 13,
+            "slow_imports": "UnifiedBrain:5.4s"
+          },
+          "peak_rss_inherited": false,
+          "peak_rss_mb": 297.4,
+          "preserved_impl": null,
+          "ran_at": "2026-11-26T12:44:45",
+          "seeds": [
+            0
+          ],
+          "spec_sha": "64f564bba0a5a202",
+          "status": "FAIL"
         }
       ],
-      "impl_sha": "273c9129dc6d19b5",
-      "message": "pre-registered threshold not met",
+      "impl_sha": "6d0734ce5974346f",
+      "message": "HASH-SALT DIFFERENTIAL (salt 1): all DECIDING metrics reproduced exactly; 2 non-deciding metric(s) diverged (fastest_import_max_s, load_1m) \u2014 a blemish on numbers nothing gated stands on (+21.1s)",
       "metrics": {
         "declared_deps": 13,
         "declared_deps_unresolved": "none",
         "deps_cover_live_modules": 1.0,
         "failed": "none",
+        "fastest_import_max_s": 1.58,
         "live_modules_unhashed": "none",
+        "load_1m": 1.45,
         "modules_imported": 13,
         "modules_total": 13,
-        "slow_imports": "UnifiedBrain:5.4s"
+        "retried_imports": "none",
+        "slow_imports": "none"
       },
       "peak_rss_inherited": false,
-      "peak_rss_mb": 297.4,
+      "peak_rss_mb": 261.1,
       "preserved_impl": null,
-      "ran_at": "2026-11-26T12:44:45",
+      "ran_at": "2026-11-27T09:10:10",
       "seeds": [
         0
       ],
       "spec_id": "T0.01",
       "spec_sha": "64f564bba0a5a202",
-      "status": "FAIL"
+      "status": "PASS",
+      "supersedes_fail": {
+        "commit": "9b3b340a",
+        "dirty": false,
+        "impl_changed": true,
+        "impl_sha": "273c9129dc6d19b5",
+        "metrics": {
+          "declared_deps": 13,
+          "declared_deps_unresolved": "none",
+          "deps_cover_live_modules": 1.0,
+          "failed": "none",
+          "live_modules_unhashed": "none",
+          "modules_imported": 13,
+          "modules_total": 13,
+          "slow_imports": "UnifiedBrain:5.4s"
+        },
+        "ran_at": "2026-11-26T12:44:45",
+        "spec_changed": false,
+        "spec_sha": "64f564bba0a5a202",
+        "status": "FAIL"
+      }
     },
     "T0.02": {
       "amended": [],
