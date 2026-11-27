@@ -2135,17 +2135,18 @@
         "T0.16": 87.28,
         "T0.22": 4.71,
         "T0.25": 9.78,
+        "T0.28": 151.38,
         "T1.05": 55.66,
-        "detached:chain_A.log": 670.33,
-        "detached:chain_B.log": 668.53,
-        "detached:chain_s941.log": 428.17,
-        "detached:chain_s942.log": 415.33,
-        "detached:chain_s943.log": 182.89,
-        "detached:sat_launch.log": 28.08,
-        "detached:w48_launch.log": 48.28,
+        "detached:chain_A.log": 691.85,
+        "detached:chain_B.log": 690.2,
+        "detached:chain_s941.log": 450.01,
+        "detached:chain_s942.log": 436.93,
+        "detached:chain_s943.log": 215.38,
+        "detached:sat_launch.log": 29.44,
+        "detached:w48_launch.log": 50.56,
         "forge:looks_fa": 759.36
       },
-      "used_s": 4049.22
+      "used_s": 4323.36
     }
   },
   "last_child_s": {
@@ -2200,7 +2201,7 @@
     "T0.24": 6.65,
     "T0.25": 9.78,
     "T0.26": 234.41,
-    "T0.28": 147.87,
+    "T0.28": 151.38,
     "T0.29": 161.36,
     "T0.30": 44.35,
     "T0.31": 4.47,
