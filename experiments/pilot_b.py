@@ -294,7 +294,7 @@ class PilotLives(_Wrapper):
 def make_b(venv, seed: int, T: int, lr: float = 3e-4, use_sde: bool = True,
            gamma: float | None = None, ent_coef=0.1, policy: str = "MlpPolicy",
            policy_kwargs: dict | None = None, optimizer: str | None = None,
-           critic: str | None = None):
+           critic: str | None = None, param_resets: list | None = None):
     """Brain B with §1/§5's settings (table above). lr=0 is the floor arm;
     use_sde=False is the item-6 exploration arms' plain SAC sampling.
     gamma=None is GAMMA (J8's 0.995); J11's arm G passes another discount.
@@ -310,7 +310,11 @@ def make_b(venv, seed: int, T: int, lr: float = 3e-4, use_sde: bool = True,
     critic (11-22, J17 hunt h2): None = sbx's own VectorCritic, unchanged; "ofn"
     = experiments.ofn_critic's unit-ball output feature normalisation (Hussing
     2024), handed as policy_kwargs["vector_critic_class"]. "conv" (11-24, J22
-    h4) = experiments.conv_eye: actor + critic classes AND its SAC subclass."""
+    h4) = experiments.conv_eye: actor + critic classes AND its SAC subclass.
+    param_resets (11-27, J24 follow-up draft `prereg/eye_bins16_k1.md`): None =
+    unchanged (no key handed to sbx); a list of absolute decision counts is
+    handed to sbx's own `param_resets` (full net reset, replay + temperature
+    kept) -- the same path forge K1 uses (`forge/r1_run.py`)."""
     from sbx import SAC
     if policy_kwargs is None:
         policy_kwargs = dict(layer_norm=True, net_arch=[256, 256])
@@ -329,7 +333,9 @@ def make_b(venv, seed: int, T: int, lr: float = 3e-4, use_sde: bool = True,
                learning_starts=WARMUP,
                train_freq=TRAIN_FREQ, gradient_steps=TRAIN_FREQ, ent_coef=ent_coef,
                use_sde=use_sde, seed=seed, verbose=0,
-               policy_kwargs=policy_kwargs)
+               policy_kwargs=policy_kwargs,
+               **({} if param_resets is None
+                  else {"param_resets": [int(x) for x in param_resets]}))
 
 
 # ---- J8 item 6: two REPORTED-ONLY exploration arms (ruling 28) -------------
@@ -440,7 +446,8 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
           world=None, gamma: float | None = None, partial_path=None,
           trace: bool = False, ent_coef=0.1, policy: str = "MlpPolicy",
           policy_kwargs: dict | None = None, use_sde: bool | None = None,
-          optimizer: str | None = None, critic: str | None = None) -> dict:
+          optimizer: str | None = None, critic: str | None = None,
+          param_resets: list | None = None) -> dict:
     """One learning run of T decisions; returns the per-life log + timing.
     arm "bwhite"/"bpink" = the item-6 exploration arms (block above).
 
@@ -474,7 +481,7 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
     sde = (arm not in EXPLORE_ARMS) if use_sde is None else bool(use_sde)
     model = make_b(venv, seed, T, lr, use_sde=sde, gamma=gamma,
                    ent_coef=ent_coef, policy=policy, policy_kwargs=policy_kwargs,
-                   optimizer=optimizer, critic=critic)
+                   optimizer=optimizer, critic=critic, param_resets=param_resets)
     if arm == "bpink":
         _pink_selection(model, seed)
     t_wall, t_cpu = time.time(), time.process_time()
@@ -503,6 +510,9 @@ def run_b(seed: int, T: int, lr: float = 3e-4, arm: str = "b",
                else {"policy": policy, "policy_kwargs": policy_kwargs, "use_sde": sde}),
             **({} if optimizer is None else {"optimizer": optimizer}),
             **({} if critic is None else {"critic": critic}),
+            **({} if param_resets is None else
+               {"param_resets": [int(x) for x in param_resets],
+                "param_resets_done": int(getattr(model, "reset_idx", 0))}),
             "lives": lives}
 
 

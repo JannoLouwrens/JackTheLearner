@@ -1,6 +1,6 @@
 # eye_bins16_k1 — J24's nine cells again, on the forge's reset learner (K1)
 
-**STATUS: DRAFT 2026-11-27 05:40 UTC — NOT FROZEN, NOTHING RUN, NO CODE BUILT.**
+**STATUS: DRAFT 2026-11-27 05:40 UTC — NOT FROZEN, NOTHING RUN; reset knob + arms built 11-27 (§ Owed).**
 J24's branch on NOT SHOWN says "nothing more is launched; the sitting rules the
 next ask"; its last state names two: the per-ray one-hot arm, and/or "the same
 nine cells on round 1-L's winning learner, pre-registered fresh". This is the
@@ -61,9 +61,13 @@ nothing if K2 wins (one line changes before the freeze).**
 - A cell not home whole is re-run from its last whole carry; never read short.
 
 ## Owed before a freeze (build, not judge)
-- `pilot_b2.run_pilot_cell` takes no `param_resets` today; the forge's
-  `r1_run.py:176` passes it to the learner. The build reuses that path, with a
-  planted test that a K1 cell resets at 50k and a J24 cell does not.
+- ~~`pilot_b2.run_pilot_cell` takes no `param_resets`~~ BUILT 11-27 ~05:50:
+  `pilot_b.make_b/run_b(param_resets=)` hands sbx's own `param_resets` (forge
+  K1's path; None = unchanged, no key), `pilot_b2.J24K1_ARMS` (K1-bins16,
+  -blind, -shuffled = J24's dicts + resets 50k…450k; J24_ARMS byte-identical).
+  Planted `tests/test_j24k1_resets.py` 3/3 under jack-std (reset fires at the
+  named count, a no-reset twin does not). Declared stale-cost 0 certificates.
+  Still owed: chain/launcher wiring for these arms and the carry check below.
 - A timing cell (ruling 99): a reset re-initialises the nets, not the buffer —
   expected ≈ J24's 26.5 decisions/s, so 500k ≈ 5.2 h = 1 segment; to be measured.
 - The carry (`brain_b.save_life`) must keep the reset schedule's position.

@@ -579,9 +579,18 @@ J24_ARMS = {
 J24_SEEDS = (941, 942, 943)
 J24_T = 500_000
 
+# ---- J24 follow-up DRAFT (prereg/eye_bins16_k1.md, NOT frozen) -------------
+# J24's three arms with ONLY forge K1's change: full net resets every 50k
+# decisions (replay + temperature kept), 50k..450k in a 500k cell. A SEPARATE
+# dict; J24_ARMS byte-identical. Nothing launches these until a freeze.
+J24K1_RESETS = tuple(range(50_000, J24_T, 50_000))
+J24K1_ARMS = {"K1-" + a[2:]: dict(c, param_resets=list(J24K1_RESETS))
+              for a, c in J24_ARMS.items()}
+
 
 def arm_cfg(arm: str) -> dict:
-    for d in (PILOT_ARMS, E2C_ARMS, E2C_AUTO_ARMS, J17_ARMS, J17_HUNT_ARMS, J24_ARMS):
+    for d in (PILOT_ARMS, E2C_ARMS, E2C_AUTO_ARMS, J17_ARMS, J17_HUNT_ARMS, J24_ARMS,
+              J24K1_ARMS):
         if arm in d:
             return d[arm]
     raise KeyError(arm)
@@ -633,7 +642,8 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
             kw["trace"] = True
         if "ent_coef" in c:
             kw["ent_coef"] = c["ent_coef"]
-        for k in ("policy", "policy_kwargs", "use_sde", "optimizer", "critic"):  # J17_HUNT_ARMS only
+        for k in ("policy", "policy_kwargs", "use_sde", "optimizer", "critic",
+                  "param_resets"):  # J17_HUNT_ARMS / J24K1_ARMS only
             if k in c:
                 kw[k] = c[k]
         rec = run_b(seed, T, world=world, gamma=c["gamma"],
