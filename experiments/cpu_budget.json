@@ -2093,27 +2093,40 @@
         "W.1": 42.06,
         "W0.PL": 186.27,
         "detached:chain.log": 155.11,
-        "detached:chain_A.log": 152.25,
-        "detached:chain_B.log": 152.13,
+        "detached:chain_A.log": 217.84,
+        "detached:chain_B.log": 217.68,
         "detached:chain_retry2.log": 59.64,
-        "detached:chain_s941.log": 231.94,
-        "detached:chain_s942.log": 232.85,
-        "detached:chain_s943.log": 232.67,
+        "detached:chain_s941.log": 296.98,
+        "detached:chain_s942.log": 298.33,
+        "detached:chain_s943.log": 664.67,
         "detached:fit.log": 1544.61,
         "detached:kaggle_s2.log": 14.68,
         "detached:kernel.log": 740.46,
         "detached:launch_M_chainA_rerun.log": 158.6,
         "detached:log.txt": 2064.24,
         "detached:run.log": 15692.07,
-        "detached:sat_launch.log": 38.71,
+        "detached:sat_launch.log": 41.56,
         "detached:timing_kernel.log": 32.95,
-        "detached:w48_launch.log": 15.75,
+        "detached:w48_launch.log": 18.55,
         "detached:wheel_13_launch.log": 73.77,
         "detached:wheel_13p_launch.log": 26.86,
         "detached:wheel_13t2_launch.log": 88.39,
-        "detached:wheel_13u_launch.log": 28.23
+        "detached:wheel_13u_launch.log": 28.23,
+        "lab:own_kind_dev": 192.91,
+        "lab:own_kind_judge": 1128.69
       },
-      "used_s": 27402.19
+      "used_s": 29423.1
+    },
+    "2026-11-27": {
+      "by_spec": {
+        "detached:chain_A.log": 53.2,
+        "detached:chain_B.log": 53.12,
+        "detached:chain_s941.log": 42.46,
+        "detached:chain_s942.log": 42.93,
+        "detached:sat_launch.log": 2.32,
+        "detached:w48_launch.log": 1.82
+      },
+      "used_s": 195.85
     }
   },
   "last_child_s": {
