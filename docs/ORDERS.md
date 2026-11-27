@@ -115,9 +115,7 @@ test all re-pass; otherwise revert and go on without it. (2) Set
 `eye_bins16_k1.md` STATUS to FROZEN, exactly as drafted (rule § unchanged),
 commit that file alone, push. (3) `launch_detached.sh … python -m
 experiments.j24_launch --variant k1 chain --pin <freeze sha>` — three
-chains, one seed's three cells a kernel. (4) Fix the two expired tests in
-`tests/test_j24_launch.py` by pointing them at a planted draft file, not
-at `eye_bins16.md`. (5) Read once, when all nine are whole:
+chains, one seed's three cells a kernel. (4) (the two expired launcher tests: DONE `8924b588`.) (5) Read once, when all nine are whole:
 `python -m experiments.j24_read --variant k1 --pin <sha>`.
 branches: EATS → row in `WORLD_CARD.md` + `KNOWN_ANSWERS.md`, the bar copied into `pilot_a.md`, INBOX one line (the hindsight eye is raced next sitting under ruling 134). · ≥ 2/3 above both, not EATS → launch the 1.5M carry yourself from the same pin. · else → write NOT SHOWN AT 500k ON K1 with the nine numbers and the 50k window table (did the collapse go away or not — say which); launch nothing; the sitting chooses between size (1.5M) and the eye. · a kernel dies → relaunch that seed's chain once from its last whole carry; twice → INBOX with the log path.
 serves: M3 (the earliest unfinished milestone) · PLAN "Learning to eat", "Eye" · philosophy 1, 3, 4 (a failure fixed, not filed).
