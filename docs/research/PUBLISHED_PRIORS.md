@@ -1160,3 +1160,11 @@ Long form (sources, configs, the 15-row reward table): `/data/jack-research/scra
 - A walker under a 5 Hz learned commander: no ablation in print. Prediction: holds.
 
 **Not verified.** Every reward in the DM Control and joystick rows is read by eye from a figure; no paper tabulates a humanoid reward with its spread. An outside benchmark (SLM-Lab) gives PPO HumanoidStand 115 at 100M — it **contradicts** the ~800 and must be settled before W-1's band is frozen. PR #1465 and #2236's fix list: via a summariser. 2610.08737, 2611.07679, 2603.00948: read by one sub-agent, not cross-checked. Heess 2017's step count: not extracted. No P100 number for anything; no T4 run of a joystick task. Gait quality of the torque humanoid at 1e8+ PPO steps: nobody says.
+
+## 30. W-1's band: does Playground's `HumanoidStand` PPO end near 800 or near 115? (2026-11-27; serves J28 cell 1, row W-1, stage 3's walking layer, M4; answers INBOX `RESEARCH:` Director 11-26 19:14)
+
+Long form: `/data/jack-research/scratch_sec30A/notes.md` (the Playground paper, its figure and config), `scratch_sec30B/notes.md` (the SLM-Lab row), `scratch_sec30C/notes.md` (third sources, curve shape).
+
+**Question.** §29's known-answer row W-1 quotes ~800 (figure-read) and an outside benchmark says 115 at 100M. Which is the published number for Brax PPO on Playground `HumanoidStand`, on which page, and what band can be frozen?
+
+*SKELETON 11-27 04:12 — three sub-agents reading; parts land below as they return.*
