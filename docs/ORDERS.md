@@ -369,6 +369,7 @@ clauses, `verify` VENUE 266 vs 256. (8) The 4 kept tmp folders (2.8 GB).
 (emptied 2026-11-27 06:41 — LAB 23:35 → ruling 134; RESEARCH 04:11 → ruling 133, Next-up 1 (cell 1 already fixed `54e0a7dc`); JACK 00:15 → PROGRESS, for the owner; JACK 00:20 → J29; ANSWERED 02:55 → kept, ruling 130 stands; JACK 05:40–07:20 → ruling 131, J30.)
 - JACK 07:23 (J30): `/data` is at 15.06 GB free — 62 MB above the 15 GB floor. J30's worktree cost 49 MB and its raw files are MBs; the growth is not ours (as 00:15), but the next harvest of any size will cross the floor unless something outside this repo is cleared — the owner's.
 - JACK 07:23 (machine, no change made): the forge's chains A/B declare `JACK_WATCHER=gpu` though they poll `jack-cpu-` kernels, so the gpu poller count read 5 of 6 and three more gpu-declared chains would have been refused. J30's three are declared `cpu` (what `cpu_budget` itself calls a jack-cpu poller). Also `tests/test_j24k1_resets.py` cannot be run by path (no sys.path line; ran it with `PYTHONPATH=.`).
+- FORGE 14:20 (J18, ruling 135): chain C LAUNCHED (pid 1449092, cpu watcher, kernel jack-cpu-1795788940) with g1-4 + g1-6 CLAIMED (`d1361856`: claim = segment-0 file; chains A/B's running code skips it, tested on their own commit). Forge holds 3 sessions until A ends after g1-2. D (g1-5/g1-7) NOT launched so J29's B7mem can take the 2 sessions J30 freed. State in `docs/FORGE.md` F3.
 
 ## DONE (kept one day)
 
