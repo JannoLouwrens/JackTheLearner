@@ -283,7 +283,8 @@ touched. Try CLI 0.8.0 in a scratch venv under `/data` only if the
 timeout survives; no change to the pinned preamble.
 serves: philosophy 5, 6.
 **done when:** the planted test passes and the next real Colab submit's log shows no "session busy" refusal after a failed one.
-state: (new 11-25, from INBOX 11-24 18:35.)
+state: built `f0fb4f3c`: after a failed run `run_on_colab` unassigns server VMs with no local session and retries ONCE, only if one was released; a plain job failure is not retried; a "session busy" refusal never reaps (holder may be mid-assign). Planted 6/6 (`python -m tests.test_gpu_colab_reap`); live glue lists the account (0 assignments, none touched). CLI 0.8.0 not tried (no timeout seen since).
+state: open until the next real Colab submit after a failed one shows no busy refusal — whoever makes it notes the log line here.
 branches: Colab still 503 at the next real submit → leave the code, note the date; no retry loop.
 
 **Next up:** (v) S18: whoever makes the next real ear/A submit notes here that no doc refused it (ruling 125 ratifies the doc-only half; S7(1)’s import closure rules the rest). (v2) `budget.afford`: a Kaggle quota refusal marks that week FULL in `gpu_budget.json` (`closed_by: kaggle`), so no later job is planned into it (ruling 124); planted test. (w) S16 stays wired (`bd43f84b`, `a426fe45`): whoever sees the first real `SKIPPED-IDLE` line in `ladder.log` notes it here; three jack slots RUN with 5/5 sessions RUNNING and no ORDERS change → read the pre-check's reason and fix that cause. (0) `tests/test_gpu_accelerator.py` FAILs `tpu_own_weekly_line`
