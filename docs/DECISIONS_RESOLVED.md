@@ -1346,6 +1346,73 @@ means the harness defaults, and its judge lock must exist before its first
 raw file is opened — no question needed. Moves no pass line, clause,
 control or exemption.
 
+## 2026-11-27 06:55 UTC — Director, DAILY sitting: rulings
+
+**131. J24 is NOT SHOWN, and it is asked again on the learner that does
+not collapse.** J24's frozen read stands as written (sighted 0.229, blind
+0.887, shuffled 2.338 late meals a life; above both 0/3) and is never
+re-read. Beside it, every sighted cell ate early and then unlearned it —
+the collapse plain SAC shows in the forge's rung M (4/5) and resets (K1)
+and TQC (K2) do not (0/5); PRIORS §21 is the published form of it. The
+re-ask is a NEW row, `prereg/eye_bins16_k1.md`: J24's seeds, size, twins
+and bar unchanged, K1's resets every 50k on all three cells. K1 rather
+than waiting a day for round 1-L's keep rule: the rule's tie goes to K1,
+and three free sessions were standing empty. Not ordered: the per-ray
+one-hot arm (J26 measured it — it tells no more about food than the bins,
+0.585 against 0.606, so it cannot be the cure) and the old paint's 500k
+cell (`eye_geom_500k.md` stays a draft; ruling 111 stands until J30 is
+read). Moves no pass line: the bar is J24's.
+
+**132. The import test's five seconds are about work done, not about the
+neighbours.** `T0.01` failed on 11-26 because one module took 5.4 s to
+import on a box busy with customers (the whole run took five times
+yesterday's). The line's own comment says what it is for: "a slow import
+is a side effect: model download, dataset scan". The 5.0 s line stays.
+The measurement is repaired: each import is timed three times in fresh
+processes and the fastest is judged, with the load average recorded — an
+import that really does five seconds of work is slow all three times, a
+busy neighbour is not. Planted both ways before the re-buy (S21). Nobody
+re-runs it until the clock is kind; that would be choosing the result.
+This is a re-registration with its reason, not a loosening: the planted
+sleeper must still fail.
+
+**133. The body's known-answer row is banded on WalkerWalk, not
+HumanoidStand.** The researcher (§30) found the paper's HumanoidStand
+number (795.5 at 88M steps) is reproduced by nobody outside its authors on
+the public training script (about 50; issue closed won't-fix). Two
+independent programs agree on WalkerWalk PPO (about 968 and 945, every
+seed over 900). A band nobody else can hit cannot tell a broken build from
+a hard task. W-1 is drafted on WalkerWalk; the humanoid runs beside it
+unbanded; a sitting freezes it after J28's timing cell shows the simulator
+runs on Kaggle's GPU.
+
+**134. The hindsight eye's race needs a ruler that can fail.** The lab
+showed (own_kind, DEAD BY ITS RULE) that on the kind eye a random imprint
+with unlearning also converges and both arms hit the regrow ceiling. When
+the hindsight eye is raced it carries a no-unlearning twin and a
+below-ceiling measure (first meal to fifth). It waits for J30's read; the
+lab builds and proves the ruler meanwhile.
+
+**135. A free session is a finding, and a worker may fill it.** Three of
+the five free Kaggle CPU sessions stood empty from 02:45 to this sitting
+while four worker slots built the re-ask and waited for a sitting to
+freeze it. Ruling 127 let a worker choose between options an order had
+sized; it did not cover freezing the lane's own draft. From today: when a
+session is free and the lane holds a draft whose arms, seeds, bar and
+twins are an existing J-order's unchanged and whose prior is written in
+the file, the worker writes the INBOX question with its choice, and after
+three hours unanswered freezes and launches it. Ruling 114 is untouched:
+no line, clause, control or exemption moves that way. Also: round 1-L's
+later kernels may move onto free sessions only behind a claim both chains
+honour, with a planted test — one run a seed, never a choice between two.
+
+**136. Brain B's memory arm is built and reproduced before stage 2 is
+frozen.** The race's draft names it (`B-mem`) and its known-answer row
+(B-7, velocity-only Pendulum, Ni's recurrent SAC); the band is read off
+the paper's figure by pixel because no table carries it, and the row says
+so. Step 2 then step 3, on the box or one CPU kernel (J29). A memoryless
+twin must fail the same row, or the row is not a memory test.
+
 ## 2026-11-26 19:14 UTC — Director, second DAILY sitting (called by the owner's session): rulings
 
 **121. J24's toy: C is a miss, and the learner run proceeds.** The toy's
