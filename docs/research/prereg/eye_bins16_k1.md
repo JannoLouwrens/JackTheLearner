@@ -81,8 +81,10 @@ nothing if K2 wins (one line changes before the freeze).**
   under the first reset): one reset costs ≈ 9 s once (1000-decision chunks
   21.2–22.2 s without, 30.3–30.9 s with a reset; Pendulum, one core) → 9
   resets ≈ 80 s on a ≈ 5.2 h cell, < 0.5 %. 500k stays 1 segment.
-- Read: `j24_read` is J24's; a K1 read needs it pointed at `j24k1` (owed at
-  the freeze, judge text unchanged).
+- Read: `python -m experiments.j24_read --variant k1 --pin <this file's freeze
+  sha>` — J24's `verdict()` unchanged, arms `K1-bins16*`, raw
+  `/data/jack-logs/j24k1/chains/j24k1_s<seed>.json`; refuses unless this file is
+  FROZEN at the pin and every raw file carries it (`tests/test_j24_read_k1.py`).
 
 ## Compute
 3 Kaggle CPU kernels × ~1 segment ≈ 16–21 kernel-h, no GPU; queued behind J18's
