@@ -27,6 +27,14 @@ from experiments.forge import r1_run as rr  # noqa: E402
 HEAD = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"],
                       capture_output=True, text=True).stdout.strip()
 FROZEN = b"# eye_bins16\n\n**STATUS: FROZEN 2026-11-26, ruling 999.**\n"
+DRAFT = b"# eye_bins16\n\n**STATUS: DRAFT, NOT FROZEN (planted).**\n"
+# Real history, not a plant: eye_bins16 was frozen at 03e6285d; its parent
+# holds the DRAFT text. (Until 11-26 these tests read HEAD as the draft;
+# that premise expired at the freeze, so the guard is now checked on the
+# real pre-freeze commit and on a planted draft.)
+FREEZE_SHA = "03e6285d"
+PRE_FREEZE = subprocess.run(["git", "-C", str(REPO), "rev-parse", FREEZE_SHA + "^"],
+                            capture_output=True, text=True).stdout.strip()
 
 
 def refused(f):
@@ -48,14 +56,18 @@ def with_prereg(text, f):
 
 def test_frozen_reads_the_status_line():
     assert not jl.frozen(None) and not jl.frozen(b"")
-    assert not jl.frozen(jl.prereg_at(HEAD)), "today's prereg is a draft"
+    assert not jl.frozen(jl.prereg_at(PRE_FREEZE)), "pre-freeze prereg is a draft"
+    assert jl.frozen(jl.prereg_at(HEAD)), "eye_bins16 is frozen since 03e6285d"
+    assert not jl.frozen(DRAFT)
     assert jl.frozen(FROZEN)
     assert not jl.frozen(b"**STATUS: DRAFT, NOT FROZEN**\n**STATUS: FROZEN x**\n"), \
         "only the first STATUS line counts"
 
 
 def test_no_job_on_a_draft():
-    assert refused(lambda: jl.job_body(941, HEAD)), "HEAD's prereg is not frozen"
+    assert refused(lambda: jl.job_body(941, PRE_FREEZE)), "the pre-freeze prereg is a draft"
+    assert refused(lambda: with_prereg(DRAFT, lambda: jl.job_body(941, HEAD))), \
+        "a planted draft at any pin gets no job"
 
 
 def test_refusals():
@@ -168,8 +180,8 @@ def test_k1_variant_own_prereg_files_and_cells():
     try:
         jl.set_variant("k1")
         assert jl.PREREG == "docs/research/prereg/eye_bins16_k1.md"
-        assert not jl.frozen(jl.prereg_at(HEAD)), "the K1 prereg is a draft today"
-        assert refused(lambda: jl.job_body(941, HEAD)), "no K1 job on a draft"
+        assert refused(lambda: with_prereg(DRAFT, lambda: jl.job_body(941, HEAD))), \
+            "no K1 job on a draft (planted, so this survives the K1 freeze)"
         assert jl.cells(941) == [(a, 941) for a in jc.J24K1_ONLY]
         b = with_prereg(FROZEN, lambda: jl.job_body(941, HEAD))
         ast.parse(b)
