@@ -1159,12 +1159,46 @@ Long form (sources, configs, the 15-row reward table): `/data/jack-research/scra
 - Candidate 1 vs 2 vs 3 on ONE body: PD wrap vs raw torque, with and without mirror/energy. 9 runs ≈ 9–18 T4-h. Prediction: PD + alternate-foot term walks 3/3; raw torque hops or limps on ≥ 1 seed.
 - A walker under a 5 Hz learned commander: no ablation in print. Prediction: holds.
 
-**Not verified.** Every reward in the DM Control and joystick rows is read by eye from a figure; no paper tabulates a humanoid reward with its spread. An outside benchmark (SLM-Lab) gives PPO HumanoidStand 115 at 100M — it **contradicts** the ~800 and must be settled before W-1's band is frozen. PR #1465 and #2236's fix list: via a summariser. 2610.08737, 2611.07679, 2603.00948: read by one sub-agent, not cross-checked. Heess 2017's step count: not extracted. No P100 number for anything; no T4 run of a joystick task. Gait quality of the torque humanoid at 1e8+ PPO steps: nobody says.
+**Not verified.** Every reward in the DM Control and joystick rows is read by eye from a figure; no paper tabulates a humanoid reward with its spread. An outside benchmark (SLM-Lab) gives PPO HumanoidStand 115 at 100M — it **contradicts** the ~800 and must be settled before W-1's band is frozen (**settled 11-27 in §30: read it before W-1**). PR #1465 and #2236's fix list: via a summariser. 2610.08737, 2611.07679, 2603.00948: read by one sub-agent, not cross-checked. Heess 2017's step count: not extracted. No P100 number for anything; no T4 run of a joystick task. Gait quality of the torque humanoid at 1e8+ PPO steps: nobody says.
 
 ## 30. W-1's band: does Playground's `HumanoidStand` PPO end near 800 or near 115? (2026-11-27; serves J28 cell 1, row W-1, stage 3's walking layer, M4; answers INBOX `RESEARCH:` Director 11-26 19:14)
 
-Long form: `/data/jack-research/scratch_sec30A/notes.md` (the Playground paper, its figure and config), `scratch_sec30B/notes.md` (the SLM-Lab row), `scratch_sec30C/notes.md` (third sources, curve shape).
+Long form: `/data/jack-research/scratch_sec30A/notes.md` (paper, figure vertices, configs by version), `scratch_sec30B/notes.md` (the SLM-Lab row and spec), `scratch_sec30C/notes.md` (third sources; issue plot in `img/`), `scratch_sec30_extra/panels_final.txt` (all 25 panels, rough).
 
-**Question.** §29's known-answer row W-1 quotes ~800 (figure-read) and an outside benchmark says 115 at 100M. Which is the published number for Brax PPO on Playground `HumanoidStand`, on which page, and what band can be frozen?
+**Question.** §29's row W-1 quotes ~800 (eye-read) and an outside benchmark says 115 at 100M. Which is the published number, on which page, and can a band be frozen?
 
-*SKELETON 11-27 04:12 — three sub-agents reading; parts land below as they return.*
+**Answer.** Both are real and they are different programs. The paper's number is **795.5 at 88.47M steps** (Fig. 9, p. 14). The 115 is another PPO implementation that never learned. **But nobody outside the authors has reproduced the 795, and three have tried** — so W-1 as written is not a safe known-answer row.
+
+**Already known**
+- **The paper: mean 795.5 at 88,473,600 steps; seed lines end 625.8 – 851.1** ([2502.08844](https://arxiv.org/abs/2502.08844) v1, Fig. 9 p. 14 — a vector figure, vertices read from the PDF stream, axis fit residual 0; no table of rewards exists anywhere in the paper). Caption says 5 seeds; the panel draws 7 lines.
+- **The curve is a late jump.** Mean by eval (M steps → reward): 9.8 → 36, 19.7 → 46, 39.3 → 60, 49.2 → 70, **59.0 → 99** (seeds 71–125), 68.8 → 262, 78.6 → 629, 88.5 → 796. At the nominal 60M it is still under 100.
+- **"60M" runs 88.47M** because the config's `num_resets_per_eval=10` makes Brax round up (9 × 10 × 983,040) **(inf)**. That key is absent from v0.0.4/v0.0.5 and from the paper's Table XII (p. 37), present from v0.1.0. Without it the same config stops at 61.9M — on the plateau.
+- **The 115** (SLM-Lab `docs/BENCHMARKS.md` l. 802, run 2026-03-14): 114.86 = mean of 4 sessions (95–162) over the last ~10M of 100M frames, training-rollout returns. Flat all life (95 at 5M, 110 at 100M), policy entropy rising. Its own PPO: 1 unroll per update (61k transitions) where Brax uses 16 (983k), clip 0.2 vs 0.3, other nets, value normalisation, grad clip. Same code scores WalkerWalk 945, CartpoleBalance 968, CheetahRun 883; HumanoidWalk 47, HumanoidRun 19.
+- **Playground's OWN script does not reproduce it.** Issue [#171](https://github.com/google-deepmind/mujoco_playground/issues/171) (closed, won't fix): `learning/train_jax_ppo.py`, 100M, 5 seeds, H100 → HumanoidStand **~50 at 105M**, smooth, no jump. Maintainer: the paper used `brax/training/learner.py`, which "repros locally" (no number posted); he could not find the difference. Issue #265: HumanoidWalk via a custom `ppo.train` → 20 where ~800 was expected, 10× the steps no help.
+- **On-policy on this task has no other record:** original DM Control, A3C humanoid-stand **6.0 ± 0.1** at 1e8 (15 seeds); D4PG 946.5 (Tassa 2018, [1801.00690](https://arxiv.org/abs/1801.00690), table at 10^8).
+- **Same paper, SAC:** 882.7 at 5M (seeds 776–928); 5,893 steps/s against PPO's 91,927 (Table IV p. 16).
+- **Packaging (checked on PyPI 11-27):** `mujoco_playground` is **not a PyPI name (404)**. The package is `playground`; latest 1.1.0 (11-23) is Warp + torch, Python ≥ 3.12 — no `registry`, no `dm_control_suite_params`. The last JAX/Brax release is **`playground==0.2.0`**, whose humanoid defaults to `impl="warp"` (`humanoid.py:45`); the JAX path needs `config_overrides={"impl": "jax"}`.
+
+**Candidates for the known-answer row**
+1. **W-1 as written (HumanoidStand, Brax PPO).** One source, a figure; outcome hangs on an unidentified difference between two scripts and on a jump that starts after 59M. Expect at our budget: **~50 by `ppo.train` + Playground wrapper (#171), not 800.** A miss would not tell us whether our GPU path is wrong.
+2. **W-1b: `WalkerWalk`, Brax PPO, same config.** Paper ~968, seeds 966–972 (rough read, `panels_final.txt`); SLM-Lab's different PPO 945 — two independent programs agree. Throughput higher than humanoid. Proposed band: every seed ≥ 900.
+3. **W-2: `HumanoidWalk`/`Stand`, Brax SAC** (§29): 883–893 at 5M, tight seeds — but Brax SAC NaNs on DMC humanoids (issues #81, #153; open), ~5 h a seed on a T4 **(inf)**.
+
+**Ours beside theirs**
+
+| Setting | Published | Ours (`experiments/body/mjx_timing.py`) | Cost |
+|---|---|---|---|
+| Install | `playground==0.2.0` | `pip install … mujoco_playground` (:34) | **404 — the armed cell dies at install** |
+| Backend | MJX `impl="jax"` (flag default in `train_jax_ppo.py:77`) | `registry.load(name)` (:42) → default `warp` | Warp needs sm_75: fails on a P100 |
+| Trainer | `brax/training/learner.py` | `ppo.train` + `wrap_for_brax_training` (:54–55) | this is #171's path: ~50, not 796 |
+| Copies | 2,048 (config) | config's own; J28's text says 8,192 | text only |
+| Steps | 88.47M real | 10M (:19) — timing only | reward at 10M ≈ 25–36: says nothing |
+
+**Known-answer check.** W-1b: `playground==0.2.0`, `impl=jax`, WalkerWalk, config defaults, 3 seeds, log true step count; band every seed ≥ 900; control = zero-learning-rate twin. ≈ 30–45 T4-min a seed **(inf: 60–88M at a T4's 1/2.5 of an A100)**. HumanoidStand is then run BESIDE it, unbanded.
+
+**What the record does NOT answer**
+- Which script difference makes the humanoid learn (`learner.py` vs `ppo.train`). 2 runs to 88M ≈ 1.5–2 T4-h. Prediction: `learner.py` jumps after ~60M on ≥ 1 seed; `ppo.train` stays < 100.
+- Whether the jump survives 8,192 copies or a T4: nothing found.
+- Fraction of seeds that never jump: 0 of 7 in one figure is all there is.
+
+**Not verified.** The 88.47M arithmetic and "7 lines, mean of 7" are one reader's; my own rough pass over the same vertices found 5 HumanoidStand seed lines (625.8–841.0), so the seed count is open — the mean and the low seed agree. Other panels' values are that rough pass (axis frames not cleaned). #171's ~50 is read off a plot; the maintainer's "repros" has no number. DreamerV3, TD-MPC2, BRO, SimbaV2, FastSAC per-task tables: not opened. `learner.py` itself: not read.
