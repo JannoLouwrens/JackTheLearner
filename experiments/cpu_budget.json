@@ -2135,15 +2135,16 @@
         "T0.22": 4.71,
         "T0.25": 9.78,
         "T1.05": 55.66,
-        "detached:chain_A.log": 478.48,
-        "detached:chain_B.log": 476.53,
-        "detached:chain_s941.log": 234.17,
-        "detached:chain_s942.log": 221.91,
-        "detached:sat_launch.log": 20.42,
-        "detached:w48_launch.log": 32.3,
+        "detached:chain_A.log": 489.25,
+        "detached:chain_B.log": 487.25,
+        "detached:chain_s941.log": 246.47,
+        "detached:chain_s942.log": 233.91,
+        "detached:chain_s943.log": 11.99,
+        "detached:sat_launch.log": 20.85,
+        "detached:w48_launch.log": 33.58,
         "forge:looks_fa": 759.36
       },
-      "used_s": 3026.7
+      "used_s": 3086.19
     }
   },
   "last_child_s": {
