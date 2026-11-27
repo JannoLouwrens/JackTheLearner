@@ -207,9 +207,62 @@ def timing(seed, updates):
     print(json.dumps(out)); return out
 
 
+def evaluate(b, env, n):
+    return float(np.mean([b.rollout(env, deterministic=True, learn=False)[0] for _ in range(n)]))
+
+
+def run_seed(seed, out=None, c=CFG, log_interval=5):
+    """One B-7 seed, their learner.train() loop order (policies/learner.py l.350-405):
+    init_eps random episodes, then ONE update per env step taken so far (1,000 at their size),
+    then per iteration: 1 rollout, 200 updates, and a 20-episode deterministic eval whenever
+    steps // 200 is a new multiple of log_interval (= every 1,000 steps from 2,000 to 51,000).
+    The eval curve is rewritten to `out` after every eval point (a cut run still reports)."""
+    env, eval_env, b = PendulumV(), PendulumV(), BrainBMem(seed, c)
+    steps, evals, t0 = 0, [], time.process_time()
+    for _ in range(c["init_eps"]):
+        steps += b.rollout(env, random=True)[1]
+    for _ in range(int(steps * 1.0)):
+        b.update()
+    total, last = c["ep_len"] * (c["init_eps"] + c["iters"]), 0
+    while steps < total:
+        n = b.rollout(env)[1]; steps += n
+        for _ in range(int(np.ceil(1.0 * n))):
+            b.update()
+        it = steps // c["ep_len"]
+        if it != last and it % log_interval == 0:
+            last = it
+            evals.append(dict(step=steps, ret=evaluate(b, eval_env, c["eval_eps"]),
+                              cpu_s=round(time.process_time() - t0, 1)))
+            _write(out, seed, c, False, evals)
+    _write(out, seed, c, True, evals)
+    return evals
+
+
+def _write(out, seed, c, complete, evals):
+    if not out:
+        return
+    rec = dict(arm="B7mem", seed=seed, cfg={k: list(v) if isinstance(v, tuple) else v for k, v in c.items()},
+               threads=torch.get_num_threads(), torch=torch.__version__, complete=complete, evals=evals)
+    tmp = out + ".tmp"; json.dump(rec, open(tmp, "w"), indent=1)
+    __import__("os").replace(tmp, out)
+
+
+def b7_seed_score(evals, lo=40000, hi=50000):
+    """Frozen rule (KNOWN_ANSWERS B-7, c848d888): mean eval return over eval points in [40k, 50k]."""
+    pts = [e["ret"] for e in evals if lo <= e["step"] <= hi]
+    if len(pts) != (hi - lo) // 1000 + 1:
+        raise ValueError(f"B-7 window needs {(hi - lo) // 1000 + 1} eval points, got {len(pts)}")
+    return float(np.mean(pts))
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["timing"]); ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("cmd", choices=["timing", "run"]); ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--updates", type=int, default=40)
+    ap.add_argument("--out", default=None); ap.add_argument("--threads", type=int, default=1)
     a = ap.parse_args()
-    timing(a.seed, a.updates)
+    torch.set_num_threads(a.threads)
+    if a.cmd == "timing":
+        timing(a.seed, a.updates)
+    else:
+        run_seed(a.seed, a.out)
