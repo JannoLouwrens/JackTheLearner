@@ -189,6 +189,36 @@ def colab_busy() -> str:
         return ""
     return "; ".join(ln.strip() for ln in out.splitlines() if "| Hardware:" in ln)
 
+def colab_reap(client, local_endpoints) -> list:
+    """Unassign every server-side Colab VM that has no local session; return their
+    endpoints. `colab run`'s assign POST can time out at 120 s while the server
+    assigns the VM anyway (3 of 5 submits on 2026-11-24): that orphan is never
+    recorded locally, so nothing stops it and every later submit is refused as
+    "session busy". A recorded (live) session is never touched. Self-contained:
+    its source also runs inside the colab venv (colab_reap_orphans)."""
+    gone = []
+    for a in client.list_assignments():
+        if a.endpoint not in local_endpoints:
+            client.unassign(a.endpoint)
+            gone.append(a.endpoint)
+    return gone
+
+
+def colab_reap_orphans() -> list:
+    """colab_reap against the real account, run in the colab CLI's own venv."""
+    import inspect
+    src = (inspect.getsource(colab_reap) + "import json\n"
+           "from colab_cli.common import State\nfrom colab_cli.auth import AuthProvider\n"
+           "s = State(); s.auth_provider = AuthProvider.ADC\n"
+           "print(json.dumps(colab_reap(s.client, "
+           "{v.endpoint for v in s.store.list().values()})))\n")
+    try:
+        rc, out, _ = _run([str(Path(COLAB).with_name("python")), "-c", src], 180)
+        return json.loads(out.strip().splitlines()[-1]) if rc == 0 else []
+    except Exception:
+        return []
+
+
 # Kaggle assigns a Tesla P100 (sm_60) regardless of the accelerator requested —
 # nvidiaTeslaT4 and gpuT4x2 both return P100 — while its preinstalled
 # torch 2.10+cu128 ships kernels for sm_70 and above only. Every CUDA op then
@@ -795,8 +825,26 @@ def _run(cmd: list[str], timeout: int) -> tuple[int, str, str]:
 
 
 def run_on_colab(script: Path, gpu: str = "T4", timeout_s: int = 900,
-                 fetch: Optional[list[str]] = None) -> JobResult:
-    """Provision a fresh Colab VM, run the script, retrieve files, release the VM."""
+                 fetch: Optional[list[str]] = None, _retry: bool = True) -> JobResult:
+    """Provision a fresh Colab VM, run the script, retrieve files, release the VM.
+    A failed run that left an orphan VM (colab_reap) releases it and retries ONCE;
+    a plain job failure (nothing to reap) is not retried."""
+    res = _run_on_colab_once(script, gpu, timeout_s, fetch)
+    # A busy refusal ran nothing of ours: the holder may be another process
+    # mid-assign (not yet recorded locally), so it is never reaped from here.
+    if res.ok or not _retry or res.message.startswith("session busy"):
+        return res
+    gone = colab_reap_orphans()
+    if not gone:
+        return res
+    again = run_on_colab(script, gpu, timeout_s, fetch, _retry=False)
+    again.message = (f"retried after releasing orphan VM(s) {gone} left by a failed "
+                     f"run ({res.message[:200]})" + (" | " + again.message if again.message else ""))
+    return again
+
+
+def _run_on_colab_once(script: Path, gpu: str, timeout_s: int,
+                       fetch: Optional[list[str]]) -> JobResult:
     t0 = time.time()
     session = f"ladder-{int(t0)}"
     busy = colab_busy()
