@@ -94,8 +94,29 @@ def test_carry_is_bit_equal():
     assert not all(torch.equal(a, b) for a, b in zip(w0, w2)), "planted RNG drop not caught"
 
 
+def test_deadline_cut_is_bit_equal():
+    """A wall-clock deadline cut (already past: cuts at the first boundary, steps 200) and resumed
+    equals the unbroken seed; a deadline cut without a carry path refuses."""
+    import os, tempfile, json
+    from experiments import brain_b_mem as m
+    c = dict(m.CFG, obs_emb=4, act_emb=2, rew_emb=2, rnn=4, layers=(4, 4), batch=2,
+             init_eps=1, iters=10, eval_eps=1)
+    ev0 = m.run_seed(0, None, c)
+    with tempfile.TemporaryDirectory() as d:
+        cp = os.path.join(d, "c.pt")
+        part = m.run_seed(0, None, c, carry=cp, deadline=0.0)
+        st = torch.load(cp, weights_only=False)
+        assert st["steps"] == 200 and part == [], (st["steps"], part)
+        ev1 = m.run_seed(0, None, c, carry=cp)
+    assert [e["ret"] for e in ev0] == [e["ret"] for e in ev1] and len(ev0) == 2
+    try:
+        m.run_seed(0, None, c, deadline=0.0); raise AssertionError("cut without carry accepted")
+    except ValueError:
+        pass
+
+
 if __name__ == "__main__":
     for f in [test_obs_is_velocity_only, test_separate_encoders_and_update_moves_both, test_policy_rollout_bounded,
               test_run_loop_schedule_matches_theirs, test_b7_score_window,
-              test_carry_is_bit_equal]:
+              test_carry_is_bit_equal, test_deadline_cut_is_bit_equal]:
         f(); print("PASS", f.__name__)

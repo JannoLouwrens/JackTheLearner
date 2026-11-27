@@ -227,7 +227,7 @@ def evaluate(b, env, n):
     return float(np.mean([b.rollout(env, deterministic=True, learn=False)[0] for _ in range(n)]))
 
 
-def run_seed(seed, out=None, c=CFG, log_interval=5, carry=None, stop_at=None):
+def run_seed(seed, out=None, c=CFG, log_interval=5, carry=None, stop_at=None, deadline=None):
     """One B-7 seed, their learner.train() loop order (policies/learner.py l.350-405):
     init_eps random episodes, then ONE update per env step taken so far (1,000 at their size),
     then per iteration: 1 rollout, 200 updates, and a 20-episode deterministic eval whenever
@@ -236,7 +236,9 @@ def run_seed(seed, out=None, c=CFG, log_interval=5, carry=None, stop_at=None):
     CARRY: if `carry` exists the run resumes from it; with `stop_at`, the run stops at the
     first iteration boundary with steps >= stop_at and saves everything (nets, target, alpha,
     optimisers, replay, numpy + torch RNG, counters, curve) to `carry`. A cut-and-resumed run
-    equals the unbroken run bit for bit (tests.test_brain_b_mem)."""
+    equals the unbroken run bit for bit (tests.test_brain_b_mem). `deadline` (epoch seconds,
+    wall clock) cuts the same way at the first iteration boundary past it — for a Kaggle
+    segment, whose speed is not known in advance; where the cut falls does not move the run."""
     env, eval_env, b = PendulumV(), PendulumV(), BrainBMem(seed, c)
     import os
     if carry and os.path.exists(carry):
@@ -251,7 +253,9 @@ def run_seed(seed, out=None, c=CFG, log_interval=5, carry=None, stop_at=None):
     t0 = time.process_time()
     total = c["ep_len"] * (c["init_eps"] + c["iters"])
     while steps < total:
-        if stop_at is not None and steps >= stop_at:
+        if (stop_at is not None and steps >= stop_at) or (deadline is not None and time.time() >= deadline):
+            if not carry:
+                raise ValueError("a cut run needs --carry")
             st = b.state(); st.update(steps=steps, last=last, evals=evals)
             torch.save(st, carry + ".tmp"); os.replace(carry + ".tmp", carry)
             _write(out, seed, c, False, evals)
@@ -292,9 +296,10 @@ if __name__ == "__main__":
     ap.add_argument("--updates", type=int, default=40)
     ap.add_argument("--out", default=None); ap.add_argument("--threads", type=int, default=1)
     ap.add_argument("--carry", default=None); ap.add_argument("--stop-at", type=int, default=None)
+    ap.add_argument("--deadline", type=float, default=None)
     a = ap.parse_args()
     torch.set_num_threads(a.threads)
     if a.cmd == "timing":
         timing(a.seed, a.updates)
     else:
-        run_seed(a.seed, a.out, carry=a.carry, stop_at=a.stop_at)
+        run_seed(a.seed, a.out, carry=a.carry, stop_at=a.stop_at, deadline=a.deadline)
