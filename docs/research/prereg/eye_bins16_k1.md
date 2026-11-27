@@ -1,6 +1,6 @@
 # eye_bins16_k1 — J24's nine cells again, on the forge's reset learner (K1)
 
-**STATUS: DRAFT 2026-11-27 05:40 UTC — NOT FROZEN, NOTHING RUN; reset knob + arms built 11-27 (§ Owed).**
+**STATUS: FROZEN 2026-11-27 UTC by ORDERS J30 / ruling 131, before any seed — exactly as drafted (05:40): K1, not K2; J24's seeds, size, twins and bar. Nothing below this line was changed at the freeze. Life rows also carry BESIDE `touch` columns (per-kind contact counts, J30 (1)); they decide nothing.**
 J24's branch on NOT SHOWN says "nothing more is launched; the sitting rules the
 next ask"; its last state names two: the per-ray one-hot arm, and/or "the same
 nine cells on round 1-L's winning learner, pre-registered fresh". This is the
