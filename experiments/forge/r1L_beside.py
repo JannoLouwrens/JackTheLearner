@@ -40,7 +40,7 @@ import json
 import math
 import sys
 
-from experiments.forge import Refused
+from experiments.forge import Refused, check_lock
 from experiments.forge import r1L_read as R
 from experiments.harness import sustained_life
 from experiments.harness.looks import NEEDS_LOOK_2
@@ -128,6 +128,7 @@ def main(argv=None) -> int:
     tr = [int(x) for x in ap.parse_args(argv).tranches.split(",")]
     sp = R.ROUND / "spec.json"
     try:
+        check_lock(R.ROUND)   # ruling 130: no raw file is opened before the lock
         out = read(json.loads(sp.read_text()),
                    {f.name: json.loads(f.read_text()) for f in sorted(R.RAW.glob("L_g*.json"))},
                    tr, spec_sha=hashlib.sha256(sp.read_bytes()).hexdigest(),

@@ -28,7 +28,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from experiments.forge import Refused
+from experiments.forge import Refused, check_lock
 from experiments.forge.metric import metric_hash
 from experiments.forge.r1_read import _WORLD, rule_settings, score_run
 from experiments.harness import check_runs_accounted, outcome_sustained
@@ -128,6 +128,7 @@ def main(argv=None) -> int:
     tr = [int(x) for x in ap.parse_args(argv).tranches.split(",")]
     sp = ROUND / "spec.json"
     try:
+        check_lock(ROUND)   # ruling 130: no raw file is opened before the lock
         out = read(json.loads(sp.read_text()),
                    {f.name: json.loads(f.read_text()) for f in sorted(RAW.glob("L_g*.json"))},
                    tr, spec_sha=hashlib.sha256(sp.read_bytes()).hexdigest(),
