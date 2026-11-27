@@ -2119,14 +2119,14 @@
     },
     "2026-11-27": {
       "by_spec": {
-        "detached:chain_A.log": 53.2,
-        "detached:chain_B.log": 53.12,
-        "detached:chain_s941.log": 42.46,
-        "detached:chain_s942.log": 42.93,
-        "detached:sat_launch.log": 2.32,
-        "detached:w48_launch.log": 1.82
+        "detached:chain_A.log": 74.32,
+        "detached:chain_B.log": 74.28,
+        "detached:chain_s941.log": 74.35,
+        "detached:chain_s942.log": 74.73,
+        "detached:sat_launch.log": 3.23,
+        "detached:w48_launch.log": 3.19
       },
-      "used_s": 195.85
+      "used_s": 304.1
     }
   },
   "last_child_s": {
