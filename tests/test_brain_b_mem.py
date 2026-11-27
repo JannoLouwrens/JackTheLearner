@@ -60,7 +60,42 @@ def test_b7_score_window():
         pass
 
 
+def test_carry_is_bit_equal():
+    """A seed cut twice and resumed from its carry file (fresh objects each time) equals the
+    unbroken seed exactly: same curve, same final weights. Planted: resuming with the torch RNG
+    state dropped must differ (the check can fail)."""
+    import os, tempfile
+    from experiments import brain_b_mem as m
+    c = dict(m.CFG, obs_emb=4, act_emb=2, rew_emb=2, rnn=4, layers=(4, 4), batch=2,
+             init_eps=1, iters=10, eval_eps=1)
+    def final(seed, carry=None, cuts=(), drop_torch_rng=False):
+        for s in cuts:
+            m.run_seed(seed, None, c, carry=carry, stop_at=s)
+            if drop_torch_rng:
+                st = torch.load(carry, weights_only=False); st["torch_rng"] = torch.manual_seed(999).get_state()
+                torch.save(st, carry)
+        holder = {}
+        orig = m.BrainBMem.__init__
+        def spy(self, *a, **k):
+            orig(self, *a, **k); holder["b"] = self
+        m.BrainBMem.__init__ = spy
+        try:
+            ev = m.run_seed(seed, None, c, carry=carry)
+        finally:
+            m.BrainBMem.__init__ = orig
+        return ev, [p.detach().clone() for p in holder["b"].actor.parameters()]
+    ev0, w0 = final(0)
+    with tempfile.TemporaryDirectory() as d:
+        ev1, w1 = final(0, os.path.join(d, "c.pt"), cuts=(600, 1400))
+    assert [e["ret"] for e in ev0] == [e["ret"] for e in ev1] and len(ev0) == 2, (ev0, ev1)
+    assert all(torch.equal(a, b) for a, b in zip(w0, w1))
+    with tempfile.TemporaryDirectory() as d:
+        ev2, w2 = final(0, os.path.join(d, "c.pt"), cuts=(600,), drop_torch_rng=True)
+    assert not all(torch.equal(a, b) for a, b in zip(w0, w2)), "planted RNG drop not caught"
+
+
 if __name__ == "__main__":
     for f in [test_obs_is_velocity_only, test_separate_encoders_and_update_moves_both, test_policy_rollout_bounded,
-              test_run_loop_schedule_matches_theirs, test_b7_score_window]:
+              test_run_loop_schedule_matches_theirs, test_b7_score_window,
+              test_carry_is_bit_equal]:
         f(); print("PASS", f.__name__)

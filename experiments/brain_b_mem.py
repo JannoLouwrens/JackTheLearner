@@ -140,6 +140,22 @@ class BrainBMem:
         self.oal = torch.optim.Adam([self.log_alpha], c["alpha_lr"])
         self.eps = []   # each: dict of (T+1,1,dim) pa/r/o and (T,1,1) a, done
 
+    _MODS = ("actor", "critic", "critic_t", "oa", "oc", "oal")
+
+    def state(self):
+        return dict({k: getattr(self, k).state_dict() for k in self._MODS},
+                    log_alpha=self.log_alpha.detach().clone(), eps=self.eps,
+                    np_rng=self.rng.bit_generator.state, torch_rng=torch.get_rng_state())
+
+    def load_state(self, st):
+        for k in ("actor", "critic", "critic_t"):
+            getattr(self, k).load_state_dict(st[k])
+        with torch.no_grad():
+            self.log_alpha.copy_(st["log_alpha"])
+        for k in ("oa", "oc", "oal"):           # after log_alpha: the optimiser holds the same tensor
+            getattr(self, k).load_state_dict(st[k])
+        self.eps = st["eps"]; self.rng.bit_generator.state = st["np_rng"]; torch.set_rng_state(st["torch_rng"])
+
     def update(self):
         """One SAC update on a batch of whole episodes (their policy_rnn.forward, misalignment kept)."""
         idx = self.rng.integers(len(self.eps), size=self.c["batch"])
@@ -211,20 +227,35 @@ def evaluate(b, env, n):
     return float(np.mean([b.rollout(env, deterministic=True, learn=False)[0] for _ in range(n)]))
 
 
-def run_seed(seed, out=None, c=CFG, log_interval=5):
+def run_seed(seed, out=None, c=CFG, log_interval=5, carry=None, stop_at=None):
     """One B-7 seed, their learner.train() loop order (policies/learner.py l.350-405):
     init_eps random episodes, then ONE update per env step taken so far (1,000 at their size),
     then per iteration: 1 rollout, 200 updates, and a 20-episode deterministic eval whenever
     steps // 200 is a new multiple of log_interval (= every 1,000 steps from 2,000 to 51,000).
-    The eval curve is rewritten to `out` after every eval point (a cut run still reports)."""
+    The eval curve is rewritten to `out` after every eval point (a cut run still reports).
+    CARRY: if `carry` exists the run resumes from it; with `stop_at`, the run stops at the
+    first iteration boundary with steps >= stop_at and saves everything (nets, target, alpha,
+    optimisers, replay, numpy + torch RNG, counters, curve) to `carry`. A cut-and-resumed run
+    equals the unbroken run bit for bit (tests.test_brain_b_mem)."""
     env, eval_env, b = PendulumV(), PendulumV(), BrainBMem(seed, c)
-    steps, evals, t0 = 0, [], time.process_time()
-    for _ in range(c["init_eps"]):
-        steps += b.rollout(env, random=True)[1]
-    for _ in range(int(steps * 1.0)):
-        b.update()
-    total, last = c["ep_len"] * (c["init_eps"] + c["iters"]), 0
+    import os
+    if carry and os.path.exists(carry):
+        st = torch.load(carry, weights_only=False)
+        b.load_state(st); steps, last, evals = st["steps"], st["last"], st["evals"]
+    else:
+        steps, last, evals = 0, 0, []
+        for _ in range(c["init_eps"]):
+            steps += b.rollout(env, random=True)[1]
+        for _ in range(int(steps * 1.0)):
+            b.update()
+    t0 = time.process_time()
+    total = c["ep_len"] * (c["init_eps"] + c["iters"])
     while steps < total:
+        if stop_at is not None and steps >= stop_at:
+            st = b.state(); st.update(steps=steps, last=last, evals=evals)
+            torch.save(st, carry + ".tmp"); os.replace(carry + ".tmp", carry)
+            _write(out, seed, c, False, evals)
+            return evals
         n = b.rollout(env)[1]; steps += n
         for _ in range(int(np.ceil(1.0 * n))):
             b.update()
@@ -260,9 +291,10 @@ if __name__ == "__main__":
     ap.add_argument("cmd", choices=["timing", "run"]); ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--updates", type=int, default=40)
     ap.add_argument("--out", default=None); ap.add_argument("--threads", type=int, default=1)
+    ap.add_argument("--carry", default=None); ap.add_argument("--stop-at", type=int, default=None)
     a = ap.parse_args()
     torch.set_num_threads(a.threads)
     if a.cmd == "timing":
         timing(a.seed, a.updates)
     else:
-        run_seed(a.seed, a.out)
+        run_seed(a.seed, a.out, carry=a.carry, stop_at=a.stop_at)
