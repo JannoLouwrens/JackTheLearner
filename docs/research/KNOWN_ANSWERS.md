@@ -69,6 +69,7 @@ For B, a row counts for `ours` (SBX SAC + LayerNorm) only when `lib` (the unmodi
 | A | A2-v1S-enc | DMC cartpole_swingup, size S with the matched encoder (4 keys, 53/56 settings same), seeds 10–12 | same bands | — (frozen `877faac4`; timing 5.0 T4-h a seed `381b83b9`; no seed yet) | **not run** — seeds on Kaggle GPU from 11-28 |
 | A | A3 | DMC ball_in_cup_catch, size 1m, 3 seeds | 200K 931–967 | 956.1 | **in band** |
 | A | smoke | his world, 20k, 1 seed | — (no published number) | (1)–(4) hold | not a record row — a smoke |
+| B+K1 | J30 | his world, kind eye `bins16`, 500k, seeds 941–943, sighted vs blind + shuffled-bin twins | — (no published number; J24's EATS bar: above both twins 3/3 AND mean ≥ 2× higher twin) | sighted 27.41 / blind 3.34 / shuffled 2.36 (3/3 above both) | **EATS** — his own known answer, not a record row (`WORLD_CARD.md` § J30); J24 plain SAC 0.229 stays NOT SHOWN beside it |
 
 **B in one line:** reproduces on Pendulum (1b), MountainCarContinuous (3/3b), reacher-easy (B-6b) and reacher-hard on
 the reference's test (B-6c-2, 11-25); three named misses on DMC stay (B-5, B-6a, B-6c), of which 6c was mostly our
@@ -1164,3 +1165,8 @@ Frozen before any seed (rulings 33, 70, 106). N7-kws stays VOID; this is the one
   - **Cuts:** a seed may be cut and carried across kernels only by a carry proven bit-equal to an unbroken run (as J24's); a seed that cannot be completed makes the row VOID — it is never replaced by another seed number.
   - **Debts carried from above, unchanged:** (i) the band is a 95 % CI of a 4-seed mean — our 4-seed mean is the matching quantity, single seeds are not judged; (ii) ± 6 pixel error on every reading; (iii) raw curves still 404.
 
+## Row J30 — his world: brain B with K1 resets EATS on the kind eye (11-27 14:25, Kaggle CPU `jack-cpu-1795764111/-132/-177`)
+- Not a record row (no published number): his own known answer, held to J24's frozen bar unchanged (`prereg/eye_bins16_k1.md`, FROZEN `21a45857`, read once by `j24_read --variant k1`).
+- Late meals a life (lives starting ≥ 250k), sighted / blind / shuffled-bin: s941 32.03 / 3.43 / 2.59 · s942 17.74 / 4.84 / 1.78 · s943 32.45 / 1.75 / 2.70; means **27.41** / 3.34 / 2.36 → above both 3/3, 27.41 ≥ 6.68 → **EATS**.
+- Beside it, unchanged: J24 (same eye, world, seeds, twins, plain SAC) 0.229 / 0.887 / 2.338 → NOT SHOWN AT 500k. The one difference is the resets — the record's cure for a learner that stops learning (Nikishin 2022; Nauman 2024) reproduces its direction here.
+- Debts: 500k only; the blind twin also climbs late (2.6–8.0 meals a life by 450k); per-geom paint untested (ruling 111). Window table and touch counts: `WORLD_CARD.md` § J30.

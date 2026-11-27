@@ -14,6 +14,13 @@ anywhere below. **That eye does not exist yet:** J24 (1) stopped by its own stop
 the row128 ray row carries no class signal (`experiments/j24_class_probe.py`: material = a hash of
 the geom ID, `w0.py:225`), so per-class bins cannot be computed from the rays. Until a ruling gives
 the eye a class channel, this draft has no eye to run on, and gate 5 below is not met.
+**Bar copied 2026-11-27 (ORDERS J30 branch EATS).** The eye exists (`paint="kind"`, `eye="bins16"`)
+and brain B met the bar on it under K1 resets (`prereg/eye_bins16_k1.md`, read 14:25 UTC). The bar A
+must clear, verbatim from that frozen rule (J24's, unchanged): **EATS = sighted above BOTH twins
+(blind, shuffled bins) on 3/3 seeds AND sighted mean ≥ 2 × the higher twin mean**, score = late meals
+a life (lives starting ≥ 250k), seeds 941–943, 500k decisions; extension ≥ 2/3 above both → 1.5M,
+read at lives starting ≥ 750k. B's numbers beside, NOT a bar: B+K1 sighted 27.41 / blind 3.34 /
+shuffled 2.36; plain B (J24) 0.229 / 0.887 / 2.338. Still a draft; a sitting freezes it.
 Sources: PUBLISHED_PRIORS §2 (building brain A), §12 (his eye), §24 (one big block of inputs);
 `WORLD_CARD.md` § J17 + hunt; KNOWN_ANSWERS "A's smoke in his world"; `prereg/a2_size_s_enc.md`;
 rulings 62, 65, 67, 86, 92, 96, 99. Nothing new was read from the field for this draft.

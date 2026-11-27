@@ -790,3 +790,41 @@ What the row is, beside it (decides nothing): the sighted cell is not merely slo
 | 450k | 0.11 (19) | 0.05 (19) | 0.28 (18) | 0.44 (18) | 0.81 (16) | 1.12 (16) | 2.67 (12) | 3.27 (11) | 1.93 (14) |
 
 Read plainly: all three sighted cells eat most in the first 100k (3.6–8.8 a life at their best) and are under 0.6 from 250k on; no blind or shuffled cell shows that fall. J30 asks the same nine cells again with resets every 50k; its life rows also count what he touches (`touch`, per kind), which these files cannot say.
+
+### J30 — the same nine cells with K1's resets every 50k (`paint="kind"`, `eye="bins16"`, brain B + resets): **EATS** (rule FROZEN `21a45857`, `prereg/eye_bins16_k1.md`; read 2026-11-27 14:25 UTC)
+
+J24's seeds, size, twins and bar, unchanged; the ONLY change is K1 (network resets every 50k decisions) on all three cells (ruling 131). Nine cells whole at 500,000 decisions, pin `21a45857`, three Kaggle CPU chains (`jack-cpu-1795764111/-132/-177`, 6.0–6.7 h each, none cut); raw `/data/jack-logs/j24k1/chains/j24k1_s94{1,2,3}.json`; read once, `python -m experiments.j24_read --variant k1 --pin 21a45857…` (output `/data/jack-logs/j24k1/read.json`). Score = late meals a life (lives starting ≥ 250k), as J24.
+
+| seed | sighted | blind | shuffled bins |
+|---|---|---|---|
+| 941 | 32.03 | 3.43 | 2.59 |
+| 942 | 17.74 | 4.84 | 1.78 |
+| 943 | 32.45 | 1.75 | 2.70 |
+| mean | **27.41** | 3.34 | 2.36 |
+
+Sighted above both twins on **3/3** seeds AND mean 27.41 ≥ 2 × 3.34 = 6.68 → **EATS.** J24's NOT SHOWN row stands untouched beside it (ruling 131): the same eye and world that read 0.229 under plain SAC read 27.41 with resets — J24's miss was the learner's collapse, not the eye. What this row does NOT say: anything past 500k, on another paint (per-geom stays stopped, ruling 111), or that the blind twin learns nothing (below).
+
+**BESIDE (decides nothing): floor meals a life by 50k-decision window, all nine cells** (`j24_collapse_diag.py`; life counted in the window it ENDS in; lives in brackets; `/data/jack-logs/j24k1/diag_s94{1,2,3}.txt`).
+
+| window from | sighted 941 | sighted 942 | sighted 943 | blind 941 | blind 942 | blind 943 | shuffled 941 | shuffled 942 | shuffled 943 |
+|---|---|---|---|---|---|---|---|---|---|
+| 0k | 4.89 (9) | 6.78 (9) | 8.12 (8) | 0.79 (14) | 0.93 (14) | 0.93 (14) | 2.00 (11) | 1.54 (13) | 2.18 (11) |
+| 50k | 12.50 (8) | 4.15 (13) | 7.00 (11) | 0.65 (17) | 0.75 (16) | 1.13 (15) | 3.90 (10) | 1.92 (12) | 3.11 (9) |
+| 100k | 13.57 (7) | 8.56 (9) | 19.83 (6) | 0.50 (16) | 1.33 (15) | 1.29 (14) | 2.73 (11) | 1.77 (13) | 2.50 (12) |
+| 150k | 13.50 (8) | 10.12 (8) | 15.56 (9) | 1.00 (15) | 1.31 (13) | 0.73 (15) | 3.70 (10) | 1.62 (13) | 2.75 (12) |
+| 200k | 23.86 (7) | 9.10 (10) | 19.29 (7) | 1.36 (14) | 1.47 (15) | 1.86 (14) | 2.83 (12) | 3.73 (11) | 1.36 (14) |
+| 250k | 19.57 (7) | 15.29 (7) | 34.80 (5) | 1.67 (12) | 2.89 (9) | 1.21 (14) | 2.00 (12) | 2.50 (12) | 3.18 (11) |
+| 300k | 30.00 (6) | 9.11 (9) | 25.29 (7) | 2.45 (11) | 2.73 (11) | 0.67 (15) | 2.45 (11) | 1.43 (14) | 1.50 (14) |
+| 350k | 34.83 (6) | 18.12 (8) | 37.50 (6) | 4.90 (10) | 5.70 (10) | 2.17 (12) | 1.36 (14) | 1.62 (13) | 2.67 (12) |
+| 400k | 30.80 (5) | 20.67 (6) | 31.50 (6) | 3.22 (9) | 6.11 (9) | 2.31 (13) | 3.91 (11) | 1.82 (11) | 3.89 (9) |
+| 450k | 39.29 (7) | 23.86 (7) | 29.14 (7) | 4.64 (11) | 8.00 (8) | 2.64 (11) | 3.90 (10) | 2.12 (16) | 2.75 (12) |
+
+**BESIDE: what he touches, late lives (start ≥ 250k), mean decisions ending in contact a life** (`touch` columns, J30 (1)):
+
+| cell | 941 food / obstacle / wall | 942 | 943 |
+|---|---|---|---|
+| sighted | 1799 / 458 / 2670 | 2270 / 215 / 4930 | 2260 / 539 / 3723 |
+| blind | 54 / 304 / 2304 | 103 / 422 / 2304 | 13 / 198 / 2003 |
+| shuffled | 9 / 234 / 1853 | 9 / 141 / 2027 | 10 / 245 / 1734 |
+
+(water 0 and panel ≤ 26 in every cell.) Read plainly: with resets, no sighted cell collapses — every one climbs from 5–8 meals a life to 24–39 by 450k, where under plain SAC all three fell below 0.6 from 250k. Sighted lives are ~1.3–2.1× longer late than either twin and spend ~22–33% of decisions touching food. Two things the bar does not settle, said so they are not lost: (a) the **blind twin climbs too** (0.8–0.9 → 2.6–8.0) while the shuffled twin stays flat — blind eats more than shuffled late on 2/3 seeds, so the shuffled-bin row may be a harder handicap than no eye (it feeds confident wrong directions); (b) the sighted cell is still climbing at 450k on all seeds — the row says nothing about where it levels off.
