@@ -773,3 +773,20 @@ Nine cells, all whole at 500,000 decisions, pin `03e6285d`, Kaggle CPU chains; r
 
 Sighted above both twins on **0/3** seeds (EATS needs 3/3 and mean ≥ 2 × 2.338) → not the extension (needs ≥ 2/3) → **NOT SHOWN AT 500k — a row, not a door.** Nothing more is launched from this pin; the sitting rules the per-ray one-hot arm (§28 A).
 What the row is, beside it (decides nothing): the sighted cell is not merely slow — it is the WORST of the three late, below the blind twin on every seed. s943's windows (`j24_collapse_diag.py`) show it eating 3.60 meals a life early and unlearning to ~0 by mid-run, drain flat (lost intake, not dying for profit); s941 and s942 now show the same shape (02:50 read, same tool): sighted meals/life by 50k window 4.89 → **8.78** → 1.93 → 0.11 (s941) and 6.78 → 4.83 → 4.00 → 1.29 → … → 0.05 (s942) — early, the sighted cell out-eats every twin window of the run (shuffled peaks 3.73, blind 2.33), then it unlearns; the twins stay flat. The same no-reset SAC collapses 4/5 on forge r1 rung M (old paint) while K1 (resets every 50k) and K2 (TQC) do not (`j24_collapse_vs_forge.py`). So the named suspect is the LEARNER, not the eye: the honest re-ask is these same nine cells on round 1-L's winning learner, pre-registered fresh — never a re-read of these numbers.
+
+**BESIDE (decides nothing; Next-up 4, 11-27): floor meals a life by 50k-decision window, all nine J24 cells** (`python -m experiments.j24_collapse_diag <raw file>`; a life is counted in the window it ENDS in; lives in brackets). The frozen read above is untouched.
+
+| window from | sighted 941 | sighted 942 | sighted 943 | blind 941 | blind 942 | blind 943 | shuffled 941 | shuffled 942 | shuffled 943 |
+|---|---|---|---|---|---|---|---|---|---|
+| 0k | 4.89 (9) | 6.78 (9) | 3.60 (10) | 0.79 (14) | 0.93 (14) | 1.00 (13) | 2.00 (11) | 1.54 (13) | 1.91 (11) |
+| 50k | 8.78 (9) | 4.83 (12) | 1.47 (15) | 1.50 (14) | 2.00 (14) | 1.27 (15) | 1.77 (13) | 1.21 (14) | 3.00 (11) |
+| 100k | 1.93 (14) | 4.00 (12) | 1.13 (15) | 0.44 (16) | 1.43 (14) | 0.73 (15) | 3.73 (11) | 2.73 (11) | 2.25 (12) |
+| 150k | 0.11 (18) | 1.29 (14) | 0.29 (17) | 1.54 (13) | 2.33 (12) | 1.43 (14) | 2.17 (12) | 2.15 (13) | 2.08 (12) |
+| 200k | 0.35 (17) | 0.82 (17) | 0.06 (18) | 0.93 (15) | 0.35 (17) | 2.00 (14) | 2.00 (13) | 2.15 (13) | 2.00 (13) |
+| 250k | 0.29 (17) | 0.59 (17) | 0.18 (17) | 0.56 (16) | 0.69 (16) | 1.00 (15) | 2.00 (12) | 1.92 (13) | 2.64 (11) |
+| 300k | 0.18 (17) | 0.35 (17) | 0.06 (18) | 1.38 (13) | 1.33 (15) | 1.43 (14) | 2.33 (12) | 2.18 (11) | 2.27 (11) |
+| 350k | 0.47 (17) | 0.28 (18) | 0.00 (18) | 0.62 (16) | 0.81 (16) | 0.47 (17) | 2.08 (12) | 2.00 (13) | 3.09 (11) |
+| 400k | 0.17 (18) | 0.41 (17) | 0.18 (17) | 0.69 (16) | 1.33 (15) | 0.67 (15) | 3.45 (11) | 2.55 (11) | 1.85 (13) |
+| 450k | 0.11 (19) | 0.05 (19) | 0.28 (18) | 0.44 (18) | 0.81 (16) | 1.12 (16) | 2.67 (12) | 3.27 (11) | 1.93 (14) |
+
+Read plainly: all three sighted cells eat most in the first 100k (3.6–8.8 a life at their best) and are under 0.6 from 250k on; no blind or shuffled cell shows that fall. J30 asks the same nine cells again with resets every 50k; its life rows also count what he touches (`touch`, per kind), which these files cannot say.

@@ -187,6 +187,11 @@ except ImportError:  # pragma: no cover
     _Wrapper = object
 
 
+def _kinds() -> tuple:
+    from experiments.fast_sim import KINDS
+    return KINDS
+
+
 class PilotLives(_Wrapper):
     """One episode = one life; cap -> truncated + new body in the same world.
 
@@ -219,6 +224,33 @@ class PilotLives(_Wrapper):
         self.rew = 0.0
         self.t0 = None
         self.ate0 = None
+        # J30 (1), BESIDE: decisions of this life that ENDED with his body
+        # touching a thing of each kind (fast_sim.KINDS). Only on a
+        # kind-painted world (None elsewhere = no key, the row unchanged).
+        self.touch = None
+
+    def _count_touch(self) -> None:
+        """Read-only look at the contact list the decision's last sub-step
+        left: one count per kind touched (ground and his own body are not
+        things). Changes nothing in the world, draws no random number."""
+        w = self.env.w
+        kind_of = w.__dict__.get("_kind_of")
+        if kind_of is None:
+            return
+        if getattr(self, "touch", None) is None:
+            self.touch = [0] * len(_kinds())
+        d, seen = w.data, set()
+        for i in range(int(d.ncon)):
+            con = d.contact[i]
+            g1, g2 = int(con.geom1), int(con.geom2)
+            mine = (g1 in w.body_gids, g2 in w.body_gids)
+            if mine[0] == mine[1]:
+                continue
+            o = g2 if mine[0] else g1
+            if o not in w.ground_gids:
+                seen.add(int(kind_of[o]))
+        for k in seen:
+            self.touch[k] += 1
 
     def _meal_sizes(self) -> dict:
         from experiments.drives import NU_APPLE
@@ -258,13 +290,17 @@ class PilotLives(_Wrapper):
                 "cause": cause, "intake": round(intake, 4),
                 "basal_drain": round(drain, 4),
                 "sustained": bool(cause == "capped" and intake >= drain),
-                "reward": round(self.rew, 3)}
+                "reward": round(self.rew, 3),
+                **({} if getattr(self, "touch", None) is None else
+                   {"touch": dict(zip(_kinds(), map(int, self.touch)))})}
 
     def step(self, action):
         o, r, term, trunc, info = self.env.step(action)
         self.n += 1
         self.total_decisions += 1
         self.rew += float(r)
+        if not term:            # on a death step the world already holds the reborn body
+            self._count_touch()
         if not term and self.n >= self.cap:
             trunc = True
         if term:
