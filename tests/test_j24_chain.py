@@ -8,6 +8,11 @@
   planted   a carry that drops the observation normaliser must NOT be
             identical (else identity proves nothing).
   refusals  a non-J24 arm; a chunk off the train/trace boundary.
+  k1        (J24 follow-up DRAFT, prereg/eye_bins16_k1.md) a K1 cell (resets
+            moved to 160 / 300 / 420 so one fires in EACH of the 3 segments)
+            carried == unbroken, 3 resets done in both; planted: the unbroken
+            K1 cell's actor != the K cell's (the resets did something), and a
+            carry whose reset count is rewritten to 0 is REFUSED.
 
 Short runs (T 576 = 3 chunks of 192, warm-up 150, trace window 64, smoke seed
 951 — never 941–943): they say nothing about eating. Under the box's budget:
@@ -41,9 +46,15 @@ def _flat(model):
         [np.asarray(l, dtype=np.float64).ravel() for l in leaves])]
 
 
+K1_SHORT = [160, 300, 420]
+
+
 def _child(argv):
     """child <unbroken|carried> <arm> <seed> <carry|-> <max_chunks|-> <out> [plant]"""
     _short()
+    if argv[1].startswith("K1-"):
+        from experiments import pilot_b2
+        pilot_b2.J24K1_ARMS[argv[1]]["param_resets"] = list(K1_SHORT)
     mode, arm, seed, carry, mc, out = argv[:6]
     plant = tuple(argv[6:])
     keep = {}
@@ -116,6 +127,30 @@ def test_identity_and_planted():
     print("planted no_norm differs", flush=True)
 
 
+def test_k1_identity_and_planted():
+    work = Path(tempfile.mkdtemp(prefix="j24k1chain_", dir="/data/tmp" if Path("/data/tmp").is_dir() else None))
+    arm = "K1-bins16-shuffled"
+    u = _seg("unbroken", arm, SEED, "-", "-", work / f"u_{arm}.json")
+    c = _carried(work, arm)
+    assert u["param_resets"] == c["param_resets"] == K1_SHORT, (u.get("param_resets"), c.get("param_resets"))
+    assert u["param_resets_done"] == c["param_resets_done"] == 3
+    assert _strip(u) == _strip(c), f"{arm}: carried K1 cell is not the unbroken one"
+    assert u["_actor"] == c["_actor"], f"{arm}: K1 actor weights differ"
+    print(f"identity {arm}: {len(u['lives'])} lives, resets done 3 in both", flush=True)
+    k = _seg("unbroken", "K-bins16-shuffled", SEED, "-", "-", work / "u_K.json")
+    assert k["_actor"] != u["_actor"], "planted: K1's resets changed nothing"
+    d = work / "carry_tamper"
+    _seg("carried", arm, SEED, d, 1, work / "t_0.json")
+    m = json.loads((d / "carry.json").read_text())
+    assert m["param_resets_done"] == 1, m.get("param_resets_done")
+    m["param_resets_done"] = 0
+    (d / "carry.json").write_text(json.dumps(m) + "\n")
+    p = subprocess.run([sys.executable, __file__, "child", "carried", arm, str(SEED), str(d),
+                        "-", str(work / "t_1.json")], cwd=REPO, capture_output=True, text=True)
+    assert p.returncode != 0 and "lost its reset schedule" in p.stderr, p.stderr[-800:]
+    print("planted: K differs from K1; a rewritten reset count is refused", flush=True)
+
+
 def test_refusals():
     _short()
     from experiments.forge.r1_run import Refused
@@ -138,5 +173,6 @@ if __name__ == "__main__":
         _child(sys.argv[2:])
     else:
         test_refusals()
+        test_k1_identity_and_planted()
         test_identity_and_planted()
         print("ALL PASS", flush=True)

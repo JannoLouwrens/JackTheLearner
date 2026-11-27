@@ -160,6 +160,32 @@ def test_timing_body_runs_only_the_smoke_seed():
         raise AssertionError(f"timing_body took {bad}")
 
 
+def test_k1_variant_own_prereg_files_and_cells():
+    """J24 follow-up DRAFT: --variant k1 reads ITS prereg (a draft today, so
+    no job), holds the K1 arms, writes under its own folder/label; switching
+    back restores J24's exact names."""
+    j24 = (jl.PREREG, jl.ARMS, jl.OUT, jl.SEGS, jl.TAG, jl.TIMING_FILE)
+    try:
+        jl.set_variant("k1")
+        assert jl.PREREG == "docs/research/prereg/eye_bins16_k1.md"
+        assert not jl.frozen(jl.prereg_at(HEAD)), "the K1 prereg is a draft today"
+        assert refused(lambda: jl.job_body(941, HEAD)), "no K1 job on a draft"
+        assert jl.cells(941) == [(a, 941) for a in jc.J24K1_ONLY]
+        b = with_prereg(FROZEN, lambda: jl.job_body(941, HEAD))
+        ast.parse(b)
+        assert repr([(a, 941) for a in jc.J24K1_ONLY]) in b and "'j24k1'" in b
+        assert "K-bins16" not in b.replace("K1-bins16", "")
+        assert jl.raw_file(941) == Path("/data/jack-logs/j24k1/chains/j24k1_s941.json")
+        assert jl.seg_file(941, 1).parent == Path("/data/jack-logs/j24k1/chains/segments")
+        assert refused(lambda: jl.set_variant("nope"))
+    finally:
+        jl.set_variant("j24")
+    assert (jl.PREREG, jl.ARMS, jl.OUT, jl.SEGS, jl.TAG, jl.TIMING_FILE) == j24
+    assert jl.raw_file(941) == Path("/data/jack-logs/j24/chains/j24_s941.json")
+    b = with_prereg(FROZEN, lambda: jl.job_body(941, HEAD))
+    assert "'j24'" in b and "K1-" not in b
+
+
 if __name__ == "__main__":
     for k, v in list(globals().items()):
         if k.startswith("test_"):

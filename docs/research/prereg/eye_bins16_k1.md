@@ -67,10 +67,22 @@ nothing if K2 wins (one line changes before the freeze).**
   -blind, -shuffled = J24's dicts + resets 50k…450k; J24_ARMS byte-identical).
   Planted `tests/test_j24k1_resets.py` 3/3 under jack-std (reset fires at the
   named count, a no-reset twin does not). Declared stale-cost 0 certificates.
-  Still owed: chain/launcher wiring for these arms and the carry check below.
-- A timing cell (ruling 99): a reset re-initialises the nets, not the buffer —
-  expected ≈ J24's 26.5 decisions/s, so 500k ≈ 5.2 h = 1 segment; to be measured.
-- The carry (`brain_b.save_life`) must keep the reset schedule's position.
+- ~~chain/launcher wiring~~ BUILT 11-27 ~06:50: `j24_chain` runs the K1 arms
+  (resets handed to `make_b`, `param_resets_done` in carry + record, a carry
+  whose count disagrees with the model is refused); `j24_launch --variant k1`
+  = this file's freeze guard, K1 arms, `/data/jack-logs/j24k1/chains`, label
+  `j24k1`; default `j24` unchanged (`tests/test_j24_launch.py` new test PASS).
+- ~~The carry must keep the reset schedule's position~~ PROVEN 11-27: K1-bins16-
+  shuffled with resets moved to 160/300/420 (one per segment), cut + carried in
+  3 processes == unbroken (every life row, trace row, actor weight; 3 resets
+  in both); planted: K's actor ≠ K1's, a carry rewritten to 0 resets REFUSED
+  (`tests/test_j24_chain.py`; J24's three K identities re-PASS on the edit).
+- Timing (ruling 99), box-measured, not a kernel (J24's timing kernel is 20k,
+  under the first reset): one reset costs ≈ 9 s once (1000-decision chunks
+  21.2–22.2 s without, 30.3–30.9 s with a reset; Pendulum, one core) → 9
+  resets ≈ 80 s on a ≈ 5.2 h cell, < 0.5 %. 500k stays 1 segment.
+- Read: `j24_read` is J24's; a K1 read needs it pointed at `j24k1` (owed at
+  the freeze, judge text unchanged).
 
 ## Compute
 3 Kaggle CPU kernels × ~1 segment ≈ 16–21 kernel-h, no GPU; queued behind J18's

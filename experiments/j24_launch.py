@@ -34,12 +34,35 @@ PREREG = "docs/research/prereg/eye_bins16.md"
 SEEDS = (941, 942, 943)
 SUMMARY = "j24_summary.json"
 OUT = Path("/data/jack-logs/j24/chains")
+ARMS = jc.J24_ONLY
+TAG = "j24"          # round label + file prefix of segments/raw files
+
+# J24 follow-up DRAFT (prereg/eye_bins16_k1.md, NOT frozen): the same chains
+# for the K1 cells, under their OWN prereg (the freeze guard reads it), own
+# folder and own labels. `set_variant("j24")` (the default) changes nothing.
+VARIANTS = {
+    "j24": {"prereg": PREREG, "arms": jc.J24_ONLY, "out": OUT, "tag": "j24",
+            "timing": Path("/data/jack-logs/j24/timing_kernel.json")},
+    "k1": {"prereg": "docs/research/prereg/eye_bins16_k1.md", "arms": jc.J24K1_ONLY,
+           "out": Path("/data/jack-logs/j24k1/chains"), "tag": "j24k1",
+           "timing": Path("/data/jack-logs/j24k1/timing_kernel.json")},
+}
+
+
+def set_variant(name: str) -> None:
+    global PREREG, ARMS, OUT, SEGS, TAG, TIMING_FILE
+    if name not in VARIANTS:
+        raise rr.Refused(f"j24_launch: no variant {name!r} (have {sorted(VARIANTS)})")
+    v = VARIANTS[name]
+    PREREG, ARMS, OUT, TAG, TIMING_FILE = (v["prereg"], v["arms"], v["out"], v["tag"],
+                                           v["timing"])
+    SEGS = OUT / "segments"
 
 
 def cells(seed: int) -> list:
     if int(seed) not in SEEDS:
         raise rr.Refused(f"j24_launch: seed {seed} is not one of the prereg's {SEEDS}")
-    return [(a, int(seed)) for a in jc.J24_ONLY]
+    return [(a, int(seed)) for a in ARMS]
 
 
 def cell_file(arm: str, seed: int) -> str:
@@ -132,7 +155,7 @@ from experiments.brain_b import versions
 r = run_parallel(__CELLS__, os.environ["JACK_OUT"], __T__,
                  carry_root=os.path.join(os.environ["JACK_OUT"], "carry"),
                  resume_root=__RESUME__, deadline=_T0 + SEG_WALL_S)
-json.dump({"cells": r, "versions": versions(), "round": "j24", "rung": "J24",
+json.dump({"cells": r, "versions": versions(), "round": __ROUND__, "rung": "J24",
            "pin": _PIN, "spec_sha256": __PREREG_SHA__, "segment": __SEGMENT__},
           open(os.path.join(os.environ["JACK_OUT"], __SUMMARY__), "w"))
 print("DONE", flush=True)
@@ -162,6 +185,7 @@ def job_body(seed: int, pin: str, segment: int = 0, T: int | None = None) -> str
             .replace("__PREREG__", repr(PREREG))
             .replace("__PREREG_SHA__", repr(hashlib.sha256(text).hexdigest()))
             .replace("__SUMMARY__", repr(SUMMARY))
+            .replace("__ROUND__", repr(TAG))
             .replace("__PIN__", repr(pin)))
 
 
@@ -170,11 +194,11 @@ SEGS = OUT / "segments"
 
 
 def seg_file(seed: int, segment: int) -> Path:
-    return SEGS / f"j24_s{seed}_seg{segment}.json"
+    return SEGS / f"{TAG}_s{seed}_seg{segment}.json"
 
 
 def raw_file(seed: int) -> Path:
-    return OUT / f"j24_s{seed}.json"
+    return OUT / f"{TAG}_s{seed}.json"
 
 
 def kernel(seed: int, pin: str, segment: int = 0) -> dict:
@@ -213,10 +237,10 @@ def kernel(seed: int, pin: str, segment: int = 0) -> dict:
         r = _from_artifacts(sub.artifacts, cl)
         if r is None:
             raise RuntimeError(f"j24 kernel s{seed} seg{segment}: {sub.message}")
-        r.update(round="j24", rung="J24", pin=pin, segment=int(segment),
+        r.update(round=TAG, rung="J24", pin=pin, segment=int(segment),
                  spec_sha256=hashlib.sha256(prereg_at(pin)).hexdigest())
     r["kernel"] = {"job_id": sub.job_id, "duration_s": sub.duration_s,
-                   "charge_seconds": sub.charge_seconds, "name": f"j24_s{seed}", "pin": pin}
+                   "charge_seconds": sub.charge_seconds, "name": f"{TAG}_s{seed}", "pin": pin}
     for k, rec in r["cells"].items():
         print(f"{k}: {len(rec['lives'])} lives" + (" (cut)" if rec.get("cut") else "")
               + (" (carried on)" if rec.get("resumable") else "")
@@ -263,7 +287,7 @@ def timing_body(pin: str, T: int = TIMING_T) -> str:
         "          open(os.path.join(os.environ['JACK_OUT'], __SUMMARY__), 'w'))\n"
         "print('DONE', flush=True)\n")
     body = body.replace("import hashlib, json, os", "import json, os")
-    return (body.replace("__CELLS__", repr([(a, TIMING_SEED) for a in jc.J24_ONLY]))
+    return (body.replace("__CELLS__", repr([(a, TIMING_SEED) for a in ARMS]))
             .replace("__T__", repr(int(T)))
             .replace("__PINS__", repr(list(KERNEL_PINS)))
             .replace("__SUMMARY__", repr(SUMMARY))
@@ -341,7 +365,7 @@ def chain(seeds: list, pin: str, sleep=time.sleep, kernel_fn=None) -> dict:
                     continue
                 done[seed] = f"failed: {str(e)[:300]}"
             break
-        print(f"CHAIN j24 s{seed}: {done[seed]}", flush=True)
+        print(f"CHAIN {TAG} s{seed}: {done[seed]}", flush=True)
     print("CHAIN DONE", json.dumps({str(k): v for k, v in done.items()}), flush=True)
     return done
 
@@ -361,7 +385,9 @@ def main(argv):
     p.add_argument("--pin")
     p.add_argument("--segment", type=int, default=0)
     p.add_argument("--seeds", type=int, nargs="+", default=list(SEEDS))
+    p.add_argument("--variant", default="j24", choices=sorted(VARIANTS))
     a = p.parse_args(argv)
+    set_variant(a.variant)
     if a.cmd == "cell":
         if a.carry_dir is None:
             raise rr.Refused("j24_launch: a J24 cell always carries: --carry-dir")

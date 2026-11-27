@@ -29,6 +29,12 @@ CHUNK = rr.CHUNK                 # 20,000 = lcm(train_freq 32, trace window 5,00
 SEG_WALL_S = rr.SEG_WALL_S
 CHUNK_MARGIN = rr.CHUNK_MARGIN
 J24_ONLY = ("K-bins16", "K-bins16-blind", "K-bins16-shuffled")
+# J24 follow-up DRAFT (prereg/eye_bins16_k1.md, NOT frozen): the same three
+# cells with forge K1's resets. sbx keeps `param_resets` / `reset_idx` on the
+# model, and SB3's save/load carries both (tests/test_j24_chain.py proves a
+# carried K1 cell IS the unbroken one, a reset in every segment).
+J24K1_ONLY = ("K1-bins16", "K1-bins16-blind", "K1-bins16-shuffled")
+CARRIED_ARMS = J24_ONLY + J24K1_ONLY
 
 
 def carry_name(arm: str, seed: int) -> str:
@@ -42,7 +48,8 @@ def _learner_kw(c: dict) -> dict:
         kw["trace"] = True
     if "ent_coef" in c:
         kw["ent_coef"] = c["ent_coef"]
-    for k in ("policy", "policy_kwargs", "use_sde", "optimizer", "critic"):
+    for k in ("policy", "policy_kwargs", "use_sde", "optimizer", "critic",
+              "param_resets"):
         if k in c:
             kw[k] = c[k]
     return kw
@@ -55,8 +62,8 @@ def run_cell_carried(arm: str, seed: int, T: int, *, carry_dir, resume_from=None
     `carry_dir`) if there is one; when the next chunk would not fit before
     `deadline` (epoch s), saves to `carry_dir` and returns a `cut` record.
     `max_chunks` / `plant` exist for the tests only."""
-    if arm not in J24_ONLY:
-        raise rr.Refused(f"j24_chain: {arm} is not a J24 arm {J24_ONLY}")
+    if arm not in CARRIED_ARMS:
+        raise rr.Refused(f"j24_chain: {arm} is not a J24 arm {CARRIED_ARMS}")
     from experiments import pilot_b as pb
     from experiments.pilot_b2 import PILOT_RULE, arm_cfg, pilot_world
     c = arm_cfg(arm)
@@ -64,6 +71,7 @@ def run_cell_carried(arm: str, seed: int, T: int, *, carry_dir, resume_from=None
     lr = kw.pop("lr", 3e-4)
     trace = kw.pop("trace", False)
     ent_coef = kw.pop("ent_coef", 0.1)
+    param_resets = kw.pop("param_resets", None)
     if set(kw):                                  # J24 arms set none of these
         raise rr.Refused(f"j24_chain: learner options {sorted(kw)} are not carried")
     trace_every = pb.TRACE_EVERY if trace else pb.TRAIN_FREQ
@@ -82,12 +90,15 @@ def run_cell_carried(arm: str, seed: int, T: int, *, carry_dir, resume_from=None
     if src is None:
         venv.seed(seed)
         model = pb.make_b(venv, seed, T, lr, use_sde=True, gamma=c["gamma"],
-                          ent_coef=ent_coef)
+                          ent_coef=ent_coef, param_resets=param_resets)
         tr, meta = [], dict(want, wall_s=0.0, cpu_s=0.0, segments=[])
     else:
         model, tr, meta = rr._carry_load(src, venv, SAC, want, plant=plant)
         if int(model.num_timesteps) != meta["decisions"] or meta["decisions"] % chunk:
             raise rr.Refused(f"j24_chain: the carry at {src} does not sit on a chunk boundary")
+        if (list(getattr(model, "param_resets", None) or []) != list(param_resets or [])
+                or int(getattr(model, "reset_idx", 0)) != meta.get("param_resets_done", 0)):
+            raise rr.Refused(f"j24_chain: the carry at {src} lost its reset schedule")
     w = model.env.envs[0]
     w.partial_path = None if partial_path is None else Path(partial_path)
     if trace:
@@ -118,7 +129,10 @@ def run_cell_carried(arm: str, seed: int, T: int, *, carry_dir, resume_from=None
     if model.num_timesteps < T:
         rr._carry_save(carry_dir, model, venv, tr,
                        dict(want, decisions=int(model.num_timesteps), wall_s=wall, cpu_s=cpu,
-                            segments=segs), plant=plant)
+                            segments=segs,
+                            **({} if param_resets is None else
+                               {"param_resets_done": int(model.reset_idx)})),
+                       plant=plant)
         return {"arm": "b", "pilot_arm": arm, "seed": int(seed), "T": int(T), "cut": True,
                 "resumable": True, "decisions": int(model.num_timesteps),
                 "lives": lives, "carry": carry_name(arm, seed), "wall_s": round(wall, 1),
@@ -137,6 +151,9 @@ def run_cell_carried(arm: str, seed: int, T: int, *, carry_dir, resume_from=None
            "world": pb._world_stamp(w.env),
            **({"trace": tr, "trace_every": pb.TRACE_EVERY} if trace else {}),
            **({} if ent_coef == 0.1 else {"ent_coef_setting": str(ent_coef)}),
+           **({} if param_resets is None else
+              {"param_resets": [int(x) for x in param_resets],
+               "param_resets_done": int(getattr(model, "reset_idx", 0))}),
            "lives": lives}
     # ... + what run_pilot_cell adds for a J24 arm
     rec["pilot_arm"] = arm
