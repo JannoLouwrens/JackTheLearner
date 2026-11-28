@@ -55,7 +55,7 @@ def sighted_with(n_above: int, at_bar=0) -> dict:
 
 def test_refuses_a_draft_and_a_bad_pin():
     refuses(lambda: R.main([]), "needs --pin")
-    refuses(lambda: R.check_pin("HEAD"), "not FROZEN")       # pilot_b20.md is a DRAFT
+    refuses(lambda: R.check_pin("521f15eb"), "not FROZEN")   # the reader's own commit: still a DRAFT (HEAD freezes)
     refuses(lambda: R.check_pin("e797d367"), "not FROZEN")   # the real draft commit
     refuses(lambda: R.check_pin("deadbeef" * 5), "not a commit")
 
