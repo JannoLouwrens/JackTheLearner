@@ -2247,15 +2247,15 @@
         "T1.13": 3.87,
         "T2.12": 41.97,
         "detached:chain_A.log": 379.62,
-        "detached:chain_B.log": 853.22,
-        "detached:chain_C.log": 842.35,
-        "detached:chain_D.log": 213.31,
+        "detached:chain_B.log": 865.39,
+        "detached:chain_C.log": 864.58,
+        "detached:chain_D.log": 235.56,
         "detached:chain_s01.log": 380.99,
         "detached:chain_s23.log": 409.13,
-        "detached:sat_launch.log": 2012.36,
+        "detached:sat_launch.log": 2034.24,
         "detached:w48_launch.log": 2958.71
       },
-      "used_s": 10944.97
+      "used_s": 11023.5
     }
   },
   "last_child_s": {
