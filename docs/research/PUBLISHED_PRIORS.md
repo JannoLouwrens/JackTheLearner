@@ -1205,3 +1205,7 @@ Long form: `/data/jack-research/scratch_sec30A/notes.md` (paper, figure vertices
 - Fraction of seeds that never jump: 0 of 7 in one figure is all there is.
 
 **Not verified.** The 88.47M arithmetic and "7 lines, mean of 7" are one reader's; my own rough pass over the same vertices found 5 HumanoidStand seed lines (625.8–841.0), so the seed count is open — the mean and the low seed agree. Other panels' values are that rough pass (axis frames not cleaned). #171's ~50 is read off a plot; the maintainer's "repros" has no number. DreamerV3, TD-MPC2, BRO, SimbaV2, FastSAC per-task tables: not opened. `learner.py` itself: not read.
+
+## 31. Brain A's ceilings for lifelong growth, and the published fix for each (2026-11-28; serves the owner's SESSION question of 11-28, the forge's brain A rounds, M3, M7; answers INBOX `RESEARCH:` SESSION 11-28)
+
+Long form: `/data/jack-research/sec31_ceilings/` (one notes file per part). IN PROGRESS — parts (1) memory span + (7) language, (2) horizon/hierarchy + (6) curiosity, (3) objective, (4) capacity + (5) plasticity being researched 16:10–16:35 UTC.
