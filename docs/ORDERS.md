@@ -267,7 +267,7 @@ say the blind twin does to eat 3 meals a life (walls? chance contact?).
 
 ## SYSTEM — work on the machine (max 3 open)
 
-*Order of work: **S20** (closes with J18's read) → **S22** → **S17** → Next-up. A fix a RUNNING
+*Order of work: **S20** (closes with J18's read) → **S17** → Next-up. A fix a RUNNING
 Jack kernel needs goes first (ruling 54).*
 
 ### S20 — The harness reads its first look when ten runs are home; round 1-L gets a reader
@@ -288,26 +288,6 @@ serves: PLAN stage 1 "the harness passes its own checks" · J18 · philosophy 4,
 **done when:** the planted tests pass, `same_vs_same` is unchanged, and the reader runs on a planted r1L folder.
 state: (1)+(2) built `968da0b8`, in a NEW `harness/looks.py`, not by editing `compare`: `__init__.py`/`prereg.py` are hashed by r1's judge lock and every prereg, so editing them would make those results unreadable. `compare_looks` pads AFTER the real runs and calls the frozen `compare`, so look 1 is the hashed code; hash 382cf304 unchanged, so `same_vs_same` cannot move (not re-run: same code, same hash).
 state: Reader `python -m experiments.forge.r1L_read --tranches 1` (JACK runs it when tranche 1 lands, ≈ 01:00); planted 4/4 + 4/4. The spec names no permutation seed: the reader uses n_perm 2000, seed 0, and prints them. Close S20 when JACK's first real read runs.
-
-### S22 — The usage meter stopped every agent for 8.5 hours on a reading that contradicts itself: record it, do not touch the stop
-part: (machine — slots lost to budget; card line 5) · stage: — · step: —
-**Why.** 11-27 06:41 the gating line read 15% (resets Dec 2 12:00). At
-11-28 00:37 it read 100% with the SAME reset; at 09:07 it read 13% with a
-reset of Dec 3 09:00 — a week that "reset" four days before the date it
-printed. Nine slots, the audit and the 06:37 sitting were refused; four
-results sat unread. `usage_attribution`'s METER-NON-MONOTONE only fires
-when the percentage falls inside one printed reset window; this fell
-across a window that moved.
-**Do.** (1) In `scripts/usage_attribution.py` (reporting only): also flag a
-reading that falls by > 20 points while the earlier reading's own printed
-reset time is still in the future, whatever the new window says; count
-the slots refused between. Planted test: the 11-28 sequence fires, an
-honest reset at its printed time does not. (2) One paragraph in
-`docs/OWNER_UPDATES.md` with the three readings and the slots lost.
-**Never** touch the stop (95%, the owner's), the pace switch or `.paused`.
-branches: the log shows the 100% was a real cap on the shared account (other projects) → say that with the lines; (1) still lands.
-serves: philosophy 5, 6 (the loop's lost hours are counted truthfully).
-**done when:** the planted test passes and the owner paragraph is written.
 
 ### S17 — A failed Colab submit must not leave an orphan session
 part: (machine — the free GPU; standing objective 3) · stage: — · step: —
@@ -351,6 +331,7 @@ clauses, `verify` VENUE 266 vs 256. (8) The 4 kept tmp folders (2.8 GB).
 
 ## DONE (kept one day)
 
+- **S22** (`b4de7ce0`): `usage_attribution` now flags METER-WINDOW-MOVED (a > 20-point fall while the earlier reading's own reset is still ahead), planted 11-28 shape fires / honest reset does not. Live: 6 such falls in 5 weeks. The 11-27/28 100% was a real cap: the meter climbed steadily 16 → 100 over 11-27 (69% of this week's points not this project), then the account's week restarted 4 days early; 41 slots refused 11-27 20:07 → 11-28 08:37. Owner paragraph written.
 - **J29** (`054a7ce1`): **B-7 REPRODUCES** — brain B's memory arm (port of Ni's recurrent SAC) −172.63 on velocity-only Pendulum (seeds −174.14 / −170.45 / −162.05 / −183.88; band −190.9…−154.5); memoryless twin −1490.23 fails as required. `B-mem` is a stage-2 arm.
 - **J14 ear** (`054a7ce1`): **N7-kws-2 PASS** — mean 96.946, sd 0.263 (s2 96.646), published 96.9 ± 0.30; twin 8.569%. The ear's architecture reproduces; his own ear (no labels) is stage 3.
 - **J28** (`44e5c6f6`): ratio 64 **MISSES** (200K: 282.3 / 275.9 / 316.1 vs band 932; twin 288.2) — predicted by the record; MJX cell failed at install (→ J33 cell 0); fp16 crashed (closed unrun); fp32 165.3 s per 1k decisions.
