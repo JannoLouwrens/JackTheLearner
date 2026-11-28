@@ -44,6 +44,13 @@ if str(REPO) not in sys.path:
 from experiments.pilot_b import _Wrapper  # noqa: E402  (gymnasium.Wrapper)
 
 MODES = ("food", "random_point", "zero")
+# death_extra (ruling 138, ORDERS Next-up 2): what the handed channel says on
+# the step a death ends. "reborn" (default, today's — r1L's lock reads this):
+# the channel is read after W0 respawned the body inside step(), so it is the
+# REBORN body's even under terminal_obs="dying". "dying": the channel is read
+# at the moment of respawn, before the body moves — the dying body's, to sit
+# beside JackEnv's dying needs/proprio. No run uses "dying" yet.
+DEATH_EXTRA = ("reborn", "dying")
 ENCODINGS = ("radpi", "cossin")
 DIST_SCALE = 10.0
 
@@ -82,11 +89,16 @@ def encode(target_xy, body_xy, yaw: float, encoding: str) -> np.ndarray:
 
 class HandedSense(_Wrapper):
     def __init__(self, env, mode: str = "food", encoding: str = "radpi",
-                 seed: int = 0):
+                 seed: int = 0, death_extra: str = "reborn"):
         if mode not in MODES or encoding not in ENCODINGS:
             raise ValueError(f"mode {mode!r} / encoding {encoding!r}")
+        if death_extra not in DEATH_EXTRA:
+            raise ValueError(f"death_extra must be one of {DEATH_EXTRA}, "
+                             f"got {death_extra!r}")
         super().__init__(env)
         self.mode, self.encoding = mode, encoding
+        self.death_extra = death_extra
+        self._dying_extra = None
         self.n_extra = 2 if encoding == "radpi" else 3
         self._rng = np.random.RandomState(int(seed) + 7919)
         self.point = None
@@ -141,8 +153,27 @@ class HandedSense(_Wrapper):
             self._draw_point()
         return np.concatenate([o, self.extra()]).astype(np.float32), info
 
+    def _hook_respawn(self):
+        w = self.env.w
+        if getattr(w, "_handed_hooked_by", None) is self:
+            return
+        orig = w.respawn
+        me = self
+
+        def respawn(*a, **kw):
+            me._dying_extra = me.extra().copy()
+            return orig(*a, **kw)
+        w.respawn = respawn
+        w._handed_hooked_by = self
+
     def step(self, action):
+        if self.death_extra == "dying":
+            self._hook_respawn()
+            self._dying_extra = None
         o, r, term, trunc, info = self.env.step(action)
         # a death: the reborn body's sense is read by reset(); this o is the
         # transition's own (dying or reborn, as JackEnv hands it)
-        return np.concatenate([o, self.extra()]).astype(np.float32), r, term, trunc, info
+        x = self.extra()
+        if self.death_extra == "dying" and self._dying_extra is not None:
+            x = self._dying_extra
+        return np.concatenate([o, x]).astype(np.float32), r, term, trunc, info
