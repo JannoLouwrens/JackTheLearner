@@ -119,7 +119,7 @@ def make_world(seed: int, move_cost_dial: bool = False,
                food_floor_only: bool = False, reward: str = REWARD,
                eye_frame: str = "world", motor_frame: str = "world",
                native_substep: bool = False, eye: str | None = None,
-               paint: str | None = None):
+               paint: str | None = None, terminal_obs: str | None = None):
     """The pilot's world. `eye` (J17): None = JackEnv's own default eye, the
     call below unchanged; only J17's arms name one. eye_frame / motor_frame default "world" = the f-card's
     world byte for byte (the floor cards never pass them); the pilot's runs get
@@ -130,6 +130,8 @@ def make_world(seed: int, move_cost_dial: bool = False,
     kw = {} if eye is None else {"eye": eye}
     if paint is not None:                # J24 arms only; None = the old call
         kw["paint"] = paint
+    if terminal_obs is not None:         # J32 arms only (ruling 138); None = the old call
+        kw["terminal_obs"] = terminal_obs
     return JackEnv(seed=seed, difficulty=DIFFICULTY, reward=reward,
                    random_needs=NEEDS_S_TRP, random_layout=True,
                    lazy_contact_audio=True, spawn_clear=SPAWN_CLEAR_R,
@@ -587,10 +589,23 @@ J24K1_RESETS = tuple(range(50_000, J24_T, 50_000))
 J24K1_ARMS = {"K1-" + a[2:]: dict(c, param_resets=list(J24K1_RESETS))
               for a, c in J24_ARMS.items()}
 
+# ---- J32 DRAFT (prereg/pilot_b20.md, NOT frozen) ----------------------------
+# J30's sighted cell and its blind twin exactly, at 1M decisions: K1's resets
+# every 50k (50k..950k, 19), plus terminal_obs="dying" (ruling 138). SEPARATE
+# dicts; J24_ARMS / J24K1_ARMS byte-identical. Nothing launches these until a
+# freeze.
+B20_T = 1_000_000
+B20_RESETS = tuple(range(50_000, B20_T, 50_000))
+B20_SEEDS = tuple(range(2001, 2021))
+B20_BLIND_SEEDS = tuple(range(2001, 2006))
+PILOT_B20_ARMS = {"B20-" + a[3:]: dict(J24K1_ARMS[a], param_resets=list(B20_RESETS),
+                                        terminal_obs="dying")
+                  for a in ("K1-bins16", "K1-bins16-blind")}
+
 
 def arm_cfg(arm: str) -> dict:
     for d in (PILOT_ARMS, E2C_ARMS, E2C_AUTO_ARMS, J17_ARMS, J17_HUNT_ARMS, J24_ARMS,
-              J24K1_ARMS):
+              J24K1_ARMS, PILOT_B20_ARMS):
         if arm in d:
             return d[arm]
     raise KeyError(arm)
@@ -610,7 +625,7 @@ def pilot_world(arm: str, food_floor_only: bool, eye_frame: str = "world",
                          reward=c["reward"], eye_frame=eye_frame,
                          motor_frame=motor_frame,
                          native_substep=native_substep, eye=c.get("eye"),
-                         paint=c.get("paint"))
+                         paint=c.get("paint"), terminal_obs=c.get("terminal_obs"))
         if c.get("shuffled") == "bins":
             from experiments.blind_eye import ShuffledBins   # J24's bins twin
             return ShuffledBins(env, seed)
@@ -659,6 +674,8 @@ def run_pilot_cell(arm: str, seed: int, food_floor_only: bool,
             rec["shuffled"] = True if c["shuffled"] is True else c["shuffled"]
         if "paint" in c:                 # J24 only
             rec["paint"] = c["paint"]
+    if "terminal_obs" in c:              # J32 only; older records carry no key
+        rec["terminal_obs"] = c["terminal_obs"]
     return rec
 
 

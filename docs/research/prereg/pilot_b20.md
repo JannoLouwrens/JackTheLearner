@@ -82,13 +82,21 @@ look 1 (≈ 11-29 08:00) ≈ 1.2 days. No GPU. Kaggle CPU only (ruling 85,
 rank 2, behind J18).
 
 ## Owed before the freeze (build, not judge)
-- Arms: `PILOT_B20_ARMS` beside J24K1's (byte-identical) with resets
-  50k…950k and `terminal_obs="dying"`; `pilot_world` must hand
-  `terminal_obs` to the world (today it does not — `make_world` has no such
-  argument), default unchanged.
-- The death-step check (J32 branch): one short K1-bins16 cell with
-  `reborn` vs `dying` — whether the trace differs beyond the death step; the
-  answer is written here, and the arm stays `dying` either way.
+- ~~Arms~~ BUILT 11-28 ~10:30: `pilot_b2.PILOT_B20_ARMS` (`B20-bins16`,
+  `B20-bins16-blind`) = J30's K1 dicts with resets 50k…950k and
+  `terminal_obs="dying"`; `make_world(terminal_obs=)` / `pilot_world` hand it
+  to `JackEnv` (None = the old call, no key); records carry `terminal_obs`.
+  J24K1_ARMS unchanged. `tests/test_pilot_b20_arms.py` 4/4 under jack-std; a
+  mutant that drops the pass-through is caught.
+- ~~The death-step check~~ RUN 11-28 10:10 on the box (jack-std, seed 2001,
+  6,000 decisions, `/data/jack-logs/pilot_b20/deathcheck/`): K1-bins16
+  (`reborn`) vs B20-bins16 (`dying`) — one death (energy) at 2,868 in both;
+  every life row and the 0–5k action-trace row IDENTICAL; ~1,000 decisions of
+  training after warm-up (5k) with the death transition in replay did not
+  change the second life. So on this cell `dying` changes nothing past the
+  death step (SAC does not bootstrap a terminal step). Short: one death, one
+  trace row — a pilot check, not a proof. The arm stays `dying` either way.
+  Box speed beside: 67 decisions per CPU-s.
 - Launcher: a `j24_launch` variant (own folder `/data/jack-logs/pilot_b20/`,
   own freeze guard on THIS file, seeds 2001–2020, 1M, mixed sighted/blind
   packing) with a planted test that it refuses this file while DRAFT.
