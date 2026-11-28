@@ -1117,7 +1117,7 @@ Rule `docs/research/prereg/needs_hidden_nh2.md` FROZEN `37dcc858` (the one chang
   * Fit (one seed in one session with 20% spare → ≤ 10.0 h in Kaggle's 12 h; Colab ≤ 3 h, `kws_row` has no resume): **authors as written: does NOT fit** (Kaggle's own measured 182 s × 200 + prepare = 10.2 h). Noise on device: Kaggle 182 − 31.7 ≈ 150 s → ≈ **8.4 h — fits, by ESTIMATE** (Colab's saving subtracted from Kaggle's epoch; unmeasured on Kaggle). Neither fits Colab.
   * Not adopted: holding the noise on the device is a wrapper change to this row's frozen "unmodified" rule (like the seeding wrapper, same arithmetic, but not yet ruled). Even with it, 3 seeds + twin ≈ 34 T4-h > one week's 30. Row stays VOID; no seed launched (J14 (c) rule → INBOX).
 
-## Row N7-kws-2 — the ear, re-registered ONCE with plumbing only (ruling 106): **RULE FROZEN 11-25, NOT RUN**
+## Row N7-kws-2 — the ear, re-registered ONCE with plumbing only (ruling 106): **RULE FROZEN 11-25; READ 11-28 — PASS (in band)**
 
 Frozen before any seed (rulings 33, 70, 106). N7-kws stays VOID; this is the one re-registration ruling 70 allows.
 - **Unchanged from N7-kws (`kws_row.py` THE RULE, word for word):** the authors' source `bcresnet@656f947a`
@@ -1146,6 +1146,8 @@ Frozen before any seed (rulings 33, 70, 106). N7-kws stays VOID; this is the one
 - Settings that differ from the published protocol: N7-kws's list, plus (i) and (ii) above.
 - **CUDA admission + timing cell READ 11-25 08:34** (`experiments/kws2_timing.py`, Colab Tesla T4, torch 2.6.0+cu126, source pins held, prepare 202 s; raw `/data/jack-logs/speech_commands/kws2_timing.json`). **Admission on CUDA: PASS** — max |Δmel| 0.0 on 6/6 batches, labels equal, epoch 2 cache hits 300/300. Timing, plumbed, 5,000 word clips, batch 0 dropped, 4,900 counted, ms a clip (decode / augment / mel / step): pass 1 (decoding) **5.64 / 0.26 / 0.014 / 0.29** → 229 s an epoch; pass 2 (cache) **0.15 / 0.25 / 0.012 / 0.24** → **23.7 s an epoch** (authors as written on Colab 11-24: 243.7 s). Seed = 229 + 199 × 23.7 s = **1.38 h train, ≤ 1.54 h with valid** (upper bound) → **FITS Colab (≤ 2.4 h) and Kaggle (≤ 10 h)** by the frozen fit rule. Next by the rule: seeds 0, 1, 2 + the shuffled twin, one per Colab job, as a chain.
 
+- **READ 11-28 09:30 — PASS (in band)** (`python -m experiments.kws_row score2`, the frozen judge; output `/data/jack-logs/kws_row2/score2_1128.json`). Seeds 0 / 1 / 2: 97.137 / 97.055 / **96.646** (s2 on Kaggle GPU `jack-ladder-1795825269`, W48, fired by `scripts/kws_w48_launch.py` 00:21); **mean 96.946, sd 0.263, n 3** — inside 96.3 … 97.5 (published 96.9 ± 0.30). Twin (shuffled labels, seed 0, `jack-ladder-1795830285`): **8.569 % ≤ 15.0 %**, the control holds. No extension due. Source `bcresnet@656f947a` held on both runs.
+
 ## Row B-7 — velocity-only Pendulum, recurrent SAC (Ni, Eysenbach & Salakhutdinov 2022, arXiv 2110.05038): **RULE FROZEN 11-27 09:40 (ORDERS J29 (4), ruling 136) before any seed; band read off a figure by pixel** (draft 11-27 00:20, Next-up 2)
 - **Why this row:** brain B with memory (`stage2_a_vs_b.md`'s B-with-memory arm) has no reproduced number yet; this is the smallest published recurrent-SAC task, and Jack's world will need in-episode memory (PUBLISHED_PRIORS l.1089).
 - **Task:** Pendulum-V = gym Pendulum with angle/position entries removed (observation = angular velocity only; appendix.tex l.195). 200-step episodes.
@@ -1164,6 +1166,10 @@ Frozen before any seed (rulings 33, 70, 106). N7-kws stays VOID; this is the one
   - **Beside, deciding nothing:** the shared-encoder arm (Ni's worse arm, ≈ −438 by pixel), seeds 0–3 if budget allows; expected below the separate arm. Not built yet; its absence does not delay the read.
   - **Cuts:** a seed may be cut and carried across kernels only by a carry proven bit-equal to an unbroken run (as J24's); a seed that cannot be completed makes the row VOID — it is never replaced by another seed number.
   - **Debts carried from above, unchanged:** (i) the band is a 95 % CI of a 4-seed mean — our 4-seed mean is the matching quantity, single seeds are not judged; (ii) ± 6 pixel error on every reading; (iii) raw curves still 404.
+- **READ 11-28 09:23 — REPRODUCES** (`python -m experiments.b7_read`, reader sealed `127a6bc4` before any seed; pin `4caae6c3`, row FROZEN there; output `/data/jack-logs/j29/b7mem/b7_read.json`). Kaggle CPU kernels `jack-cpu-1795789543/-1795812142` (s0, s1) and `-1795789578/-1795809660` (s2, s3), each one segment 0 → 51,000 COMPLETE, none lost.
+  - `B7mem` seed scores (40k–50k, 11 points): s0 −174.14 · s1 −170.45 · s2 −162.05 · s3 −183.88 → **arm −172.63**, inside −190.9 … −154.5 (paper's pixel mean −170.1).
+  - Twin `B7flat` (memoryless B): −1490.06 / −1483.27 / −1495.15 / −1492.46 → −1490.23, fails as required (not VOID).
+  - Beside, not run: the shared-encoder arm (expected ≈ −438) — its absence does not change the read. Debts (i)–(iii) above stand.
 
 ## Row J30 — his world: brain B with K1 resets EATS on the kind eye (11-27 14:25, Kaggle CPU `jack-cpu-1795764111/-132/-177`)
 - Not a record row (no published number): his own known answer, held to J24's frozen bar unchanged (`prereg/eye_bins16_k1.md`, FROZEN `21a45857`, read once by `j24_read --variant k1`).

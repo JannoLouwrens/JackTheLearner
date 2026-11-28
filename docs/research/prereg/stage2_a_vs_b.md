@@ -86,7 +86,7 @@ ruling 59); none has today.
 |---|---|---|
 | `A` | candidate | n (pilot sets it; ≥ 20 unless the pilot proves fewer suffice — "fewer runs is not" a shortcut, PLAN) |
 | `B` | candidate — **the forge's KEEP setting once round 1-L is read** (J27 (1); the BRO / SimBa / MR.Q class, PRIORS §1 "B+"), never plain SAC: on 40 tasks plain SAC reads IQM 0.007 / 0.316 at 100k / 1M vs BRO 0.254 / 0.945 (§1, 2405.16158), and at rung M plain was the ~6% floor vs resets 84% / TQC 82%. `OPEN:` which keep setting, until 1-L's read | n, same world seeds |
-| `B-mem` | candidate — **B's keep setting + a recurrent core** (J27 (2)): A has a GRU and B has none, so A vs B alone confounds memory with the world model. The record's form: recurrent SAC/TD3 (Ni 2021, 2110.05038: LSTM-128, separate actor/critic encoders, whole-episode sequences; PRIORS §5 row 7, §28 "smallest: recurrent TD3/SAC, 64 units"); on Craftax-classic a GRU added +8.1 points at no extra time and beat a 201M DreamerV3 at 1M (55.5 vs 47.2, §1, 2502.01591). Replay stores the recurrent state, burn-in, never crosses a death (§6, R2D2/R2I). **Its known-answer row, named now: `B-7` velocity-only Pendulum, recurrent SAC, Ni's configuration, 51,000 steps** — band from the figure (separate arm ≈ −170 at 50k; the "−168.6 ± 3.5" is UNVERIFIED, §5 row 7 correction), shared-encoder arm the must-be-worse comparison. Not yet a row in `KNOWN_ANSWERS.md`; `B-mem` does not enter until it reproduces | n, same world seeds |
+| `B-mem` | candidate — **B's keep setting + a recurrent core** (J27 (2)): A has a GRU and B has none, so A vs B alone confounds memory with the world model. The record's form: recurrent SAC/TD3 (Ni 2021, 2110.05038: LSTM-128, separate actor/critic encoders, whole-episode sequences; PRIORS §5 row 7, §28 "smallest: recurrent TD3/SAC, 64 units"); on Craftax-classic a GRU added +8.1 points at no extra time and beat a 201M DreamerV3 at 1M (55.5 vs 47.2, §1, 2502.01591). Replay stores the recurrent state, burn-in, never crosses a death (§6, R2D2/R2I). **Its known-answer row, named now: `B-7` velocity-only Pendulum, recurrent SAC, Ni's configuration, 51,000 steps** — band from the figure (separate arm ≈ −170 at 50k; the "−168.6 ± 3.5" is UNVERIFIED, §5 row 7 correction), shared-encoder arm the must-be-worse comparison. Row `B-7` in `KNOWN_ANSWERS.md` **REPRODUCES** (11-28: arm −172.6, twin −1490.2) — the recurrent core is `experiments/brain_b_mem.py` | n, same world seeds |
 | `B@A-ratio` | B at A's update ratio — the matched-update control (§8 "World model vs model-free") | 5, reserve, only if A wins |
 | `random`, `statue` (noop), `A-lr0`, `B-lr0`, `B-mem-lr0` (never-trains twins) | floors — **must fail**: ≤ 1 success in total across them, else VOID | 3 each |
 | `B-shuffled` | shuffled-input learner — must fail (content, not width) | 5 |
@@ -211,4 +211,9 @@ never fewer runs (§8).
    same seed, steps/s and the first 5k losses side by side.
 3. **B-mem reproduces** (`B-7` above): one Kaggle CPU kernel, 5 seeds ×
    51k steps, before `B-mem` is a candidate.
+   **DONE 11-28 (J29):** B-7 REPRODUCES — `experiments/brain_b_mem.py`
+   (port of `pomdp-baselines@e7c19c32`, separate LSTM-128 SAC), 4 seeds,
+   arm −172.6 in −190.9…−154.5; memoryless twin −1490.2. `B-mem`'s
+   recurrent core is that file; it enters as a candidate (draft — a sitting
+   freezes this page).
 4. **Which B keep setting** — round 1-L's read (J18), not this page.
