@@ -2199,6 +2199,7 @@
       "by_spec": {
         "AT.01": 48.42,
         "DP.00": 220.78,
+        "HR.7": 410.27,
         "LC.01": 56.67,
         "LG.00": 2.53,
         "LG.13": 5.09,
@@ -2245,24 +2246,25 @@
         "T1.03": 249.52,
         "T1.05": 97.18,
         "T1.13": 3.87,
+        "T2.08": 440.37,
         "T2.12": 41.97,
         "detached:chain_A.log": 379.62,
-        "detached:chain_B.log": 865.39,
-        "detached:chain_C.log": 864.58,
-        "detached:chain_D.log": 235.56,
+        "detached:chain_B.log": 989.67,
+        "detached:chain_C.log": 989.53,
+        "detached:chain_D.log": 349.65,
         "detached:chain_s01.log": 380.99,
         "detached:chain_s23.log": 409.13,
-        "detached:sat_launch.log": 2034.24,
+        "detached:sat_launch.log": 2158.41,
         "detached:w48_launch.log": 2958.71
       },
-      "used_s": 11023.5
+      "used_s": 12361.63
     }
   },
   "last_child_s": {
     "AT.01": 48.42,
     "BA.01": 765.11,
     "DP.00": 220.78,
-    "HR.7": 385.25,
+    "HR.7": 410.27,
     "LC.00": 74.7,
     "LC.01": 56.67,
     "LC.02": 648.36,
@@ -2320,7 +2322,7 @@
     "T1.03": 249.52,
     "T1.05": 97.18,
     "T1.13": 3.87,
-    "T2.08": 434.71,
+    "T2.08": 440.37,
     "T2.12": 41.97,
     "T6.03": 1185.78,
     "TA.01": 635.46,
