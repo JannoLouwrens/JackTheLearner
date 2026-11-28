@@ -1,6 +1,6 @@
 # pilot_b20 — twenty lives-long runs of brain B on his own eye, 1M decisions (J32)
 
-**STATUS: DRAFT 2026-11-28 UTC (JACK, ORDERS J32 (1)) — NOT frozen; nothing run. Every term below is ORDERS J32 / ruling 141's; the worker chose none of them. Freeze under ruling 135 (INBOX line, 3 h) only after the build owed below exists. 11-28 12:35: every owed build EXISTS; freeze-intent INBOX line posted 12:35 with the reader's four handling choices (below) — freezable by a JACK slot from 15:35 UTC if unanswered.**
+**STATUS: FROZEN 2026-11-28 15:35 UTC (JACK, ORDERS J32 (3), ruling 135/127(c): freeze-intent INBOX line 12:35, unanswered at 15:35). Arms, seeds, T, twins, the bar and outputs are ORDERS J32 / ruling 141's; the reader's four handling choices (§ Reader) are adopted as posted. Reader sha256 `983a9d84…` (below). Nothing in this file changes after this commit; a change is a new pre-registration. Was: DRAFT 2026-11-28 (J32 (1)), builds owed → all BUILT by 12:35.**
 
 This is a **sizing pilot** (ruling 141). It seats nothing; no arm "wins". It
 answers the two things PLAN stage 2 needs before any long race: the spread of
