@@ -1,6 +1,6 @@
 # pilot_b20 — twenty lives-long runs of brain B on his own eye, 1M decisions (J32)
 
-**STATUS: DRAFT 2026-11-28 UTC (JACK, ORDERS J32 (1)) — NOT frozen; nothing run. Every term below is ORDERS J32 / ruling 141's; the worker chose none of them. Freeze under ruling 135 (INBOX line, 3 h) only after the build owed below exists.**
+**STATUS: DRAFT 2026-11-28 UTC (JACK, ORDERS J32 (1)) — NOT frozen; nothing run. Every term below is ORDERS J32 / ruling 141's; the worker chose none of them. Freeze under ruling 135 (INBOX line, 3 h) only after the build owed below exists. 11-28 12:35: every owed build EXISTS; freeze-intent INBOX line posted 12:35 with the reader's four handling choices (below) — freezable by a JACK slot from 15:35 UTC if unanswered.**
 
 This is a **sizing pilot** (ruling 141). It seats nothing; no arm "wins". It
 answers the two things PLAN stage 2 needs before any long race: the spread of
@@ -102,9 +102,31 @@ rank 2, behind J18).
   three a kernel. Was: a `j24_launch` variant (own folder `/data/jack-logs/pilot_b20/`,
   own freeze guard on THIS file, seeds 2001–2020, 1M, mixed sighted/blind
   packing) with a planted test that it refuses this file while DRAFT.
-- Reader: `pilot_b20_read` computing outputs 1–6 once, refusing a pin where this
-  file is not FROZEN or a raw file that does not carry the pin; planted tests
-  for HOLDS / NOT HELD / a lost seed.
+- ~~Reader~~ BUILT 11-28 12:30: `experiments/pilot_b20_read.py`, sha256
+  `983a9d84341c824ebac32c97e4a11ec5fbe156ad4f829c273a4fff35bfd503f1` (harness
+  check #11: the freeze carries this hash; a moved reader is a different read).
+  `python -m experiments.pilot_b20_read --pin <freeze> [--lost ARM_sSEED …] --out
+  /data/jack-logs/pilot_b20/read.json` (refuses an existing out file: read ONCE).
+  Refuses: a non-commit pin; this file not FROZEN at the pin (checked on the real
+  draft `e797d367`); a raw file with another pin; a cell missing or not whole and
+  not declared lost; declaring lost a run that IS home whole.
+  `tests/test_pilot_b20_read.py` 4/4 (jack-std): planted HOLDS (15/20), NOT HELD
+  (14 above + one exactly AT 2 × B̄ — the bar is strict), a lost eater (refused
+  until `--lost`, then counted not-above → 14 → NOT HELD), wrong pin; exact
+  Boschloo equals SciPy's `boschloo_exact` to < 1e-5 (harness check #12's
+  4/15 vs 0/15 → 0.0433) and power at n = 8 equals SciPy's table by table;
+  a `>=`-for-`>` mutant is caught.
+- **The reader's own handling — the choices the freeze adopts (none is in
+  the order; each is the conservative one):** (i) a lost run is declared on
+  the command line after its chain's one relaunch, counts NOT above, and
+  is left out of the spread (n printed); (ii) a sighted run with no finished
+  life starting ≥ 500k (late meals nan) counts NOT above; (iii) B̄ is the
+  mean over the blind runs home with a late life (n printed); none → the
+  reader refuses; (iv) output 5's n = the smallest per-arm n ≤ 150 with
+  exact power ≥ 80 % (exact power saw-tooths in n; "> 150" if none); the
+  nuisance sup on a 2001-point grid, Boschloo two-sided as SciPy defines it
+  (twice the smaller one-sided p). Today's grid: p̂ = 0.75 → n = 41 / 24 / 15
+  at gaps 0.3 / 0.4 / 0.5; p̂ = 1.0 → 21 / 13 / 10.
 
 ## Settings that differ from the published foragers
 One environment, not many; our body and world; 1M decisions, the low end of the
