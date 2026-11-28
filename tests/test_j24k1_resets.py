@@ -3,6 +3,11 @@
 Planted: a K1 learner resets its nets at the named decision count and a J24
 learner does not; J24's arms stay byte-identical; K1 arms differ only by
 param_resets. Run under /data/venvs/jack-std (sbx)."""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import gymnasium as gym
 import jax
 import numpy as np
