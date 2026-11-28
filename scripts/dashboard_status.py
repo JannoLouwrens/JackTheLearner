@@ -527,7 +527,7 @@ def team() -> dict:
     worker_alive = _alive("scripts/ladder_loop.sh")
     day_ago = NOW - dt.timedelta(hours=24)
 
-    default_model = {"jack": "opus", "system": "opus", "lab": "fable", "outsider": "fable", "research": "fable"}
+    default_model = {"jack": "opus", "system": "opus", "lab": "opus", "outsider": "opus", "research": "opus", "forge": "opus"}
 
     def runs_text(n: int) -> str:
         return "No runs in the last day" if not n else f"{n} run{'s' if n != 1 else ''} in the last day"

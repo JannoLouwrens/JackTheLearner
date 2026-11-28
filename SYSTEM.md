@@ -56,7 +56,7 @@ task.
 
 ## WHO DOES WHAT — managers, workers, and the lane that works on the machine
 
-Owner ruling, 2026-11-11: *"managers being fable 5.2 and workers opus 5.5 … as
+Owner, 2026-11-28: every desk and lane now runs on **opus (Opus 5.5)** except the **Director** (sittings and answers), which stays on fable. Owner ruling, 2026-11-11: *"managers being fable 5.2 and workers opus 5.5 … as
 long as some agents work on the system itself."* The models are written in ONE
 place, `scripts/models.env`; nothing else names a model.
 
