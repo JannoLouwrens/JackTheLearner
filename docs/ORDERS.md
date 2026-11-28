@@ -172,6 +172,8 @@ chains on the free sessions behind J18's rank, own worktree, `cpu` watcher.
 branches: `terminal_obs="dying"` changes the J30 cell's trace beyond the death step (check on one short cell) → say so in the prereg; it stays `dying`. · J18 names K2 as keep before the freeze → still K1 here (J30's cell); K2 is a stage-2 draft matter. · a kernel dies → relaunch that chain once from its last whole carry; a lost seed is entered lost.
 serves: M3 (stage 2 sized by evidence), M7 · philosophy 1, 3, 4, 6.
 **done when:** `pilot_b20.md` is frozen and chains run with paths in a state line; then the one read.
+state: 11-28 10:35 (JACK) (1)+(2) DRAFT `docs/research/prereg/pilot_b20.md` (`e797d367`, NOT frozen): only the order's terms; outputs 1–6 incl. the n table (Boschloo 80 %, gaps 0.3/0.4/0.5). Timing from J30's kernels (21.7–24.1 ks at 500k, 3 cells) → 2 segments/run, 9 kernels, ≈ 110–125 kernel-h. Arms BUILT (`ccf6ed24`): `PILOT_B20_ARMS` + `terminal_obs` pass-through, test 4/4, mutant caught. Death-step check (branch): reborn vs dying on s2001 6k IDENTICAL past the death (1 death) — stays `dying`.
+state: NEXT: a `j24_launch` variant `b20` (own folder, freeze guard on pilot_b20.md, seeds 2001–2020 + blind 2001–2005, 1M in 2 carried segments, 3 cells a kernel) + planted refuse-while-DRAFT test; then the reader; then freeze (ruling 135 INBOX line) and launch on the 2 free sessions (Kaggle 3/5 running: J18 B/C/D).
 
 ### J33 — Brain A at the authors' OWN current preset: one known-answer row on W48's spare GPU
 part: His brain (A) + Body and movement (cell 0) · stage: 1 · step: 3 (reproduce) · prior: §2 as re-checked 11-27 16:12 (`fde24942`) — read it first; `KNOWN_ANSWERS.md` A2; rulings 86, 96, 124, 139
