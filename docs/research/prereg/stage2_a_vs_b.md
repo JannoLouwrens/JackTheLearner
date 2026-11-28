@@ -1,7 +1,7 @@
 # Pre-registration DRAFT — stage 2: brain A against brain B in his world (ORDERS Next-up 4)
 
 **Status: DRAFT, text only, binds nothing.** Written 2026-11-20 by a JACK slot
-(Kaggle 5/5, no order could launch). Revised 2026-11-26 (J27: B = forge keep setting, B-mem arm, free-cloud cost table, OPEN rows; the Mac struck). Revised 2026-11-21 12:45 (ORDERS Next-up 1):
+(Kaggle 5/5, no order could launch). Revised 2026-11-28 (J31 (1)+(3): ruling 137's verdict clause written into the decision table — no seat on the visible-food race alone, the battery's memory and delayed-reward rows and B-mem read beside it; ruling 138's death observation written into the arms). Revised 2026-11-26 (J27: B = forge keep setting, B-mem arm, free-cloud cost table, OPEN rows; the Mac struck). Revised 2026-11-21 12:45 (ORDERS Next-up 1):
 ruling 65 written in (mark, gate, futility and decision table read the LATE
 half; "reached then lost" beside), ruling 68 written in (B's gate lists row 5
 as a named miss), E2c's reading and ruling 64 put into gate 1. No seed of any arm below exists. The
@@ -92,6 +92,14 @@ ruling 59); none has today.
 | `B-shuffled` | shuffled-input learner — must fail (content, not width) | 5 |
 | `forager-f4` (hand forager, body eye + body motor; WORLD_CARD J12 (2′) 20/20, 7.53 meals/life at d 0.75 — on the row128 eye; no 16-ray body-frame forager row exists, `OPEN:` a ceiling on the race's own eye) | ceiling — **must pass**, else VOID | 3 |
 
+**Death observation, every arm (ruling 138).** Every arm's world passes
+`terminal_obs="dying"`: the death step carries the dying body's needs and
+proprio, not the reborn body's (`tests/test_death_interface.py`; the control
+`reborn` fails). Where the world hands a sense (`pilot_b2`'s `handed`
+cells), `HandedSense(death_extra="dying")` too (`tests/test_handed_death.py`).
+J30 and round 1-L ran `reborn` (harmless to SAC's terminal-masked target, not
+to a world model that learns from the death step); no arm here does.
+
 Fresh seeds, never used in pilot or tuning (§8 Selection: 4–5× worse on
 fresh seeds). No seed replaced; NaN and crashes are outcomes. Runs analysed
 = runs launched.
@@ -142,6 +150,17 @@ distraction gap needs more).
 
 ## Decision table (PLAN, verbatim in effect)
 
+**Ruling 137 (owner, 11-28) — binds every line below.** No brain takes the
+seat on the visible-food race alone. The verdict reads, in the SAME report
+and the same sitting: the eating race (primary above), the battery's memory
+rows (memory_len / memory_size) and delayed-reward rows (umbrella_length /
+discounting_chain), and the race world's own memory condition (`OPEN:` its
+form — J31 (2), drafted with its prior and a memoryless arm that must FAIL
+it by sight). `B-mem` is read beside `B` on every one of them, so a win by A
+on memory is not credited to the world model when a recurrent B matches it.
+A brain that wins the eating race and loses every memory row is NOT seated
+on eating; the line below that applies is the one the memory rows select.
+
 "Eats" below = eats in the late half (ruling 65) everywhere.
 
 - A passes known answers + eats within budget + shows memory/delayed-reward
@@ -185,7 +204,7 @@ timings (5.0 T4-h per 100k at size S; `rows.py:46` size1m 25.9 steps/s):
 | **`size1m`, ratio 512 — the race (n = 20)** | 20 | 11 | 220 | **7.3** |
 | `size1m` — `A-lr0` floor | 3 | ≤ 11 | ≤ 33 | ≤ 1.1 |
 | `size1m` — A's half of the pilot | 10 | 11 | 110 | 3.7 |
-| `size1m` at ratio 64 (only if OPEN 1 holds; ~8× fewer updates, inference) | 20 | ~2–3 | ~40–60 | ~1.5–2 |
+| ~~`size1m` at ratio 64~~ STRUCK — OPEN 1 MISSED 11-28 (only if OPEN 1 holds; ~8× fewer updates, inference) | 20 | ~2–3 | ~40–60 | ~1.5–2 |
 
 **What the quota affords:** size S does NOT — pilot + race + floor ≈ 55
 weeks of the whole quota, and one seed (50 h) is more than a Kaggle week.
@@ -205,6 +224,11 @@ never fewer runs (§8).
    one A2 (cartpole_swingup) row at ratio 64, ~1 T4-h a seed (inf), 5
    seeds vs the A2-v1S-enc band. Prediction (§1): in band at 500k, a miss
    at 100k. If it holds, A's race cost falls ~5–8× (table's last line).
+   **READ 11-28 (J28, `prereg/a2_ratio64.md` § READ, frozen judge): MISSES.**
+   A1 cartpole at ratio 64, 200K: s20/21/22 282.3 / 275.9 / 316.1 vs band 932;
+   never-trains twin 288.2 — no measurable learning in ≈ 6k updates. The cost
+   table stays at ratio 512; its `size1m` ratio-64 line is struck (its
+   condition failed).
 2. **Mixed precision for A on a T4.** sheeprl's maintainers read 114 → 32
    ms a gradient step on an A100 (issue 336); fp16 on a T4 is unmeasured.
    Row: a 20-minute timing cell — `rows.py` size S `16-mixed` vs `32-true`,

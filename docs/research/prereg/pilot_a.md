@@ -109,6 +109,7 @@ arm K's reward `dr100-eat`, random needs, d 0.75, life cap as `pilot_b`), with `
 | eye | 64×64 image through a CNN | 256 ray numbers in the vector, through the MLP encoder | the record has no 1-D-row recipe; a Conv1d encoder for A is a changed runner = a later raced arm |
 | senses as keys | one decoder head per input | `OPEN:` flat (one key, the rows' form) vs `keys="per_sense"` (five heads, runner unedited, smoke (1)–(3) hold). Default **flat** | either way vision is 256/298 = **86 %** of the reconstruction loss and needs are 2 % (§18, §24: the loss is summed by width). Printed beside every reading; width-normalising is a changed runner |
 | episode end | `terminated` only on true death | death = terminated; the life cap = truncated | §2's silent-bug list — checked by a planted test (debt 3) |
+| death observation | (no published convention for a respawning body) | `terminal_obs="dying"` (ruling 138): the death step carries the dying body's needs + proprio; a handed sense, if any, `HandedSense(death_extra="dying")` | the default `reborn` hands a world model the reborn body's state as the last frame of a life (`tests/test_death_interface.py`, control fails) |
 | replay | 5e6 | the run's length (500k) — cannot bind | — |
 
 ## Venue and cost — arithmetic, to be replaced by the timing cell
