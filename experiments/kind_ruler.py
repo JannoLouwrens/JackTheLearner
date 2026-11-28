@@ -31,8 +31,10 @@ ceiling reads the name. Where a name shows is a world he has NOT lived:
   NAMINGS (the rule that writes the table at each meal, in world prev):
     live    the kind of the closest lit bin in the look before the bite
             (the hindsight eye; `own_kind`'s live)
-    yoked   the closest kind in one of his OWN looks 200-1,000 decisions
-            earlier (own_kind's yoke stream)
+    yoked   the closest kind in one of his OWN looks drawn uniformly from
+            those BEFORE his first meal in that world (up to 1,100 of them,
+            looks with nothing lit skipped;
+            v2, see below): what he sees, without what his mouth said
     yoked2  the same with a second, independent stream (the self-check)
     oracle  KNOWN POSITIVE: food (simulator truth) at every meal
     chance  MUST FAIL: one of the five kinds uniformly at every meal
@@ -40,6 +42,16 @@ ceiling reads the name. Where a name shows is a world he has NOT lived:
   bins are rolled by a fresh random offset every decision — the right
   name, direction destroyed (J30's note: sight must be separated from
   living and moving), and `babble` = held8's own first meal in world s.
+
+RE-REGISTERED v2 (11-28, before any validation world; v1 at `8ae32ad4`).
+  v1's yoke (own_kind's: a look 200-1,000 decisions earlier) read RULER
+  BLIND on dev 1101-1102: he sits on the regrowing food for most of the
+  window, so earlier looks show food closest too — the yoked end table in
+  1101 was {food: 7} and tied the oracle exactly (F 14 = 14). A twin that
+  holds the answer is not a control. v2 draws the yoke from his looks
+  before he ever ate in that world. Nothing else moved: arms, worlds,
+  pins, 6 of 8, 1.5x. Dev v1 numbers: oracle F 48 / 14, babble 2500 / 76,
+  chance-noext 2500 / 2500, told-blind 2500 / 2500.
 
 RULE OF THE RULER — DECLARED BEFORE ANY VALIDATION WORLD IS LIVED.
   X BEATS Y on a form iff F_X < F_Y on >= 6 of the 8 worlds AND
@@ -121,6 +133,7 @@ def live_cell(naming: str, form: str, seed: int, table0: dict | None = None,
     unfed: dict[int, int] = {}
     hist: list = []
     last, t1 = int(info["meals"]), None
+    pre: list = []
     meal_at: list[int] = []
     imprints = on_food = ext_n = ext_food = deaths = 0
     t0, i = time.process_time(), 0
@@ -149,12 +162,13 @@ def live_cell(naming: str, form: str, seed: int, table0: dict | None = None,
             meal_at.append(i)
             if t1 is None:
                 t1 = i
+                pre = [k for k in hist[:-1] if k is not None]   # looks before the bite-look
             if naming == "oracle":
                 c = FOOD
             elif naming == "chance":
                 c = int(ch.randint(K))
             elif naming in ("yoked", "yoked2"):
-                c = hist[max(0, len(hist) - 1 - int(yoke.randint(200, 1001)))]
+                c = pre[int(yoke.randint(len(pre)))] if pre else None
             elif naming == "live":
                 c = hist[-1]
             else:                           # told-blind / babble: no imprint
