@@ -80,3 +80,13 @@ ratio, not as A2's open 1m miss. That choice is the order's and is kept.
   `[o if not o.startswith("algo.replay_ratio=") else "algo.replay_ratio=0.0625" for o in rows.BASE]`
   passed as `base`; the kernel body is J28's launcher's to build. `rows.py`'s frozen A1–A3 rule is not
   edited.
+
+## READ 11-28 09:35 — MISSES (`python -m experiments.brain_a.ratio64 score`, the frozen judge; raw `/data/jack-logs/brain_a/rows/a1r64_s2{0_c,1,2}.json`, output `/data/jack-logs/j28/r64_score_1128.json`)
+
+| point | band | s20 | s21 | s22 | in band | twin (s20, never trains) | A1 at 512 (beside) |
+|---|---|---|---|---|---|---|---|
+| 100K | 690–898 | 297.7 | 288.7 | 287.3 | 0/3 | 313.0 | 826.3 / 843.5 / 677.0 |
+| 200K | 932–1000 | 282.3 | 275.9 | 316.1 | 0/3 | 288.2 | 973.8 / 994.1 / 984.3 |
+
+- **Ratio 64 does not hold A1's band — a miss, written as a miss; the stage-2 table stays at ratio 512.**
+- Beside, deciding nothing: all three seeds sit at the never-trains twin's level (≈ 275–316 vs 288–313) — not "slower", **no measurable learning in ≈ 6k gradient steps** ((100K − starts) × 0.0625; A1 at 512 ≈ 49k). The raw keeps only the FIRST losses (step 5000: world-model 17.6, `Params/replay_ratio` 0.0496), so whether the world model was still fitting or the actor never moved cannot be told from these files. Kaggle wall: s21 1,045 s.

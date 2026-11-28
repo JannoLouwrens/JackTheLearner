@@ -209,6 +209,14 @@ never fewer runs (§8).
    ms a gradient step on an A100 (issue 336); fp16 on a T4 is unmeasured.
    Row: a 20-minute timing cell — `rows.py` size S `16-mixed` vs `32-true`,
    same seed, steps/s and the first 5k losses side by side.
+   **READ 11-28 (J28 cell 2, Kaggle `jack-ladder-1795836553`, raw
+   `/data/jack-logs/brain_a/rows/fp16_timing.json`):** `32-true` A2-v1S-enc
+   s10 = **165.3 s per 1k decisions** (sps_train 3.04; 4.55 h a seed
+   projected). `16-mixed` **crashed at the first update**: Lightning
+   `amp.py unscale_gradients` → `NotImplementedError: Gradient clipping is
+   not implemented for optimizers handling the unscaling` (sheeprl's
+   world-model `clip_gradients`). fp16 is unmeasured, not slower; the table
+   stays at fp32. Billed 0.66 h vs 0.5 declared.
 3. **B-mem reproduces** (`B-7` above): one Kaggle CPU kernel, 5 seeds ×
    51k steps, before `B-mem` is a candidate.
    **DONE 11-28 (J29):** B-7 REPRODUCES — `experiments/brain_b_mem.py`

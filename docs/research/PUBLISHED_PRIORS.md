@@ -1157,6 +1157,13 @@ Long form (sources, configs, the 15-row reward table): `/data/jack-research/scra
 
 **Not verified.** Every reward in the DM Control and joystick rows is read by eye from a figure; no paper tabulates a humanoid reward with its spread. An outside benchmark (SLM-Lab) gives PPO HumanoidStand 115 at 100M — it **contradicts** the ~800 and must be settled before W-1's band is frozen (**settled 11-27 in §30: read it before W-1**). PR #1465 and #2236's fix list: via a summariser. 2610.08737, 2611.07679, 2603.00948: read by one sub-agent, not cross-checked. Heess 2017's step count: not extracted. No P100 number for anything; no T4 run of a joystick task. Gait quality of the torque humanoid at 1e8+ PPO steps: nobody says.
 
+**Ours — J28 cell 1 (Kaggle `jack-ladder-1795835472`, 11-28 03:11–03:29; raw `/data/jack-logs/body/mjx_timing.json`). FAILED before a step — no steps/s, no memory number.**
+- GPU given: **2 × Tesla T4, 15,360 MiB** each. Versions installed: playground 0.2.0, **jax 0.11.1**, brax 0.14.2, mujoco/mujoco-mjx 4.0.1; IMPL `Impl.JAX`. **JAX does see both T4s** (`[CudaDevice(id=0), CudaDevice(id=1)]`).
+- Error 1 (logged, non-fatal): `JaxRuntimeError: ALREADY_EXISTS: PJRT_Api already exists for device type cuda` — Kaggle's image ships a CUDA plugin and pip added a second (`xla_cuda12`).
+- Error 2 (fatal): `brax/training/agents/ppo/train.py:756` → `AttributeError: jax.device_put_replicated is deprecated; use jax.device_put instead` — **brax 0.14.2 calls an API jax 0.11.1 has removed.** A version-pin mismatch of ours (unpinned jax), not a GPU limit. Next try: pin jax to the release brax 0.14.2 / playground 0.2.0 were tested on (their own requirements), one 10-minute cell.
+- `RESEARCH:` walker venue — which jax/brax/playground triple installs on Kaggle's T4 image (CUDA plugin already present) and runs Playground PPO.
+
+
 ## 30. W-1's band: does Playground's `HumanoidStand` PPO end near 800 or near 115? (2026-11-27; serves J28 cell 1, row W-1, stage 3's walking layer, M4; answers INBOX `RESEARCH:` Director 11-26 19:14)
 
 Long form: `/data/jack-research/scratch_sec30A/notes.md` (paper, figure vertices, configs by version), `scratch_sec30B/notes.md` (the SLM-Lab row and spec), `scratch_sec30C/notes.md` (third sources; issue plot in `img/`), `scratch_sec30_extra/panels_final.txt` (all 25 panels, rough).
