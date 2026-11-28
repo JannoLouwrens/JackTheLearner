@@ -22,9 +22,9 @@ more results came home; three were read at 09:24–09:26: **B-7 REPRODUCES**
 −1490), **the ear's row PASSES** (96.946, twin 8.6%), **ratio 64 MISSES**
 (brain A at an eighth of the training: 282 / 276 / 316 against a band of
 932 — as the record predicted), and the body's MJX cell and the fp16 cell
-did not run (install faults, named). **Still unread: round 1-L's look 1
-(J18) — read it first.** Then fill the three Kaggle CPU sessions standing
-empty (J32).
+did not run (install faults, named). Round 1-L's look 1 is NOT read: its sealed reader waits for the beside
+arms, and the seal holds (ruling 142). **First: bring g1-7 forward (J18),
+then fill the other Kaggle CPU sessions standing empty (J32).**
 **Never idle on a question (ruling 127).** (a) Every order carries
 `branches:` — what to do on each likely outcome; do it, do not ask. (b) A
 missed gate stops THAT ORDER's next step, never the lane: write the miss,
@@ -100,12 +100,12 @@ by name.
 
 ## JACK — build the creature, his world and his curriculum (max 7 open, ranked)
 
-*Order of work: **J18** (read look 1 — the runs are home) → **J32** (fill
+*Order of work: **J18** (launch chain D for g1-7; the read waits) → **J32** (fill
 the empty CPU sessions) → **J33** (GPU, behind A's seed 12) → **J14**
 (score when seed 12 is home) → **J31** (text) → Next-up → exit. A slot
 waiting on a kernel advances the next order.*
 
-### J18 — Forge round 1-L: READ LOOK 1 NOW — g1-0…g1-4 are whole
+### J18 — Forge round 1-L: look 1 waits for the beside arms — bring g1-7 forward, then read once
 part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19–§22; `docs/FORGE.md`; rulings 61, 65, 69, 83, 105, 112, 122, 123, 130, 135
 prior: rung M (300k, 5 seeds, lock `2eb2c0f4`): K1 resets 0.84, K2 TQC 0.82, baseline 0.059, twin 0.017. Record: resets + LN critic best-supported (Nauman 2024); nobody has published a small agent still improving at the end of a long life (§20). J30 beside: K1 on his own eye still climbing at 450k.
 **Frozen (do not reopen):** rule `rounds/r1L/spec.json` `52033df2`; judge
@@ -114,17 +114,23 @@ baseline E-food on `outcome_sustained` W = 2, T = 1M, two looks at 10 and
 20 runs an arm, 0.025 each; KEEP RULE: if a look says K1 differs, B's keep
 setting is whichever of K1/K2 has the higher late-half mean at 1M, closer
 than K1's own seed range → K1. A lost run is a crash, never replaced.
-**Do.** (1) `python -m experiments.forge.r1L_read --tranches 1` ONCE
-(jack-std), `L_g1-0…g1-4.json` in `/data/jack-logs/forge/r1L/raw/` (last
-home 11-28 08:48). (2) Write the verdict, check #13's books and the beside
-rates into `docs/FORGE.md` and the scoreboard. (3) Chains B (pid 237409,
-g1-5 → g1-7) and C (pid 1449092, g1-6) keep running: K2 and the twin are
-BESIDE and are read when home.
-branches: A_DIFFERS → the keep setting by the frozen rule goes into `stage2_a_vs_b.md` and J32's draft; if K2's runs are not home yet the keep rule waits for them and J32 uses K1 meanwhile (the tie rule's own answer). · FUTILE → written as read; B's stage-2 setting stays K1 BY RECORD + J30; INBOX one line. · NEEDS_LOOK_2 → launch tranche 2 (seeds 1431–1440, K1 + baseline) yourself from pin `495a766d` on free sessions, claim files as chain C's, `JACK_WATCHER=cpu`. · the reader refuses (lock, hash, a missing run) → the refusal text into the state line and INBOX; do not edit the reader or the lock.
+**Ruled (142, the worker's QUESTION 09:26 — answer A, and shorten the
+wait).** The sealed reader refuses look 1 until the BESIDE arms (K2 ×10,
+twin ×2: g1-5, g1-6, g1-7) are home. The seal was set before any raw file
+(ruling 130) and five raw files are now home: nobody unlocks or edits the
+reader, S20 or the lock. Look 1 waits.
+**Do.** (1) Shorten it: g1-7 sits BEHIND g1-5 in chain B. Launch chain D
+for g1-7 alone on a free session NOW, exactly as chain C was launched
+(`--claim D`, claim = the segment-0 file chain B's running code skips,
+`d1361856`; pin `495a766d`; `JACK_WATCHER=cpu`). Not certain B will skip
+it → do not launch; a seed run twice is worse than a day's wait. (2) When
+g1-5…g1-7 are whole: `python -m experiments.forge.r1L_read --tranches 1`
+ONCE (jack-std). (3) Verdict, check #13's books and the beside rates into
+`docs/FORGE.md` and the scoreboard.
+branches: A_DIFFERS → the keep setting by the frozen rule goes into `stage2_a_vs_b.md` and J32's draft; if K2's runs are not home yet the keep rule waits for them and J32 uses K1 meanwhile (the tie rule's own answer). · FUTILE → written as read; B's stage-2 setting stays K1 BY RECORD + J30; INBOX one line. · NEEDS_LOOK_2 → launch tranche 2 (seeds 1431–1440, K1 + baseline) yourself from pin `495a766d` on free sessions, claim files as chain C's, `JACK_WATCHER=cpu`. · the reader refuses for any OTHER reason (lock, hash) → the refusal text into the state line and INBOX; do not edit the reader or the lock.
 serves: M3, M7 ("he keeps learning") · philosophy 1, 3, 4.
 **done when:** look 1's verdict is in `FORGE.md`; then tranche 2 runs or the round is closed with the keep setting named.
-state: 11-28 09:25 **look 1 REFUSED by the sealed reader**: g1-0…g1-4 all whole (K1+E-food 1421–1430), but `r1L_read --tranches 1` wants the WHOLE tranche — missing E-food-lr0 1421–1422 and K2 1421–1430 (g1-5…g1-7; B and C chains RUNNING, wrap pids 237409/1449092; chain A done, its g1-4/g1-6 refused as claimed). Reader locked → not edited; INBOX QUESTION. Raw not opened, no rates printed. Output `/data/jack-logs/forge/r1L/reads/look1.txt`.
-state: 11-28 09:26 (Director) g1-0…g1-4 WHOLE (13:59, 12:53, 03:32, 05:41, 08:48), raw not opened. Chain A ended after g1-2; B and C alive per `pgrep`. 3 of 5 CPU sessions free.
+state: 11-28 09:28 (Director) QUESTION ruled A (142). 09:26 the reader refused: primary g1-0…g1-4 whole and UNOPENED; g1-5 (chain B, pid 237409) and g1-6 (chain C, pid 1449092) RUNNING, g1-7 queued behind g1-5. 3 of 5 CPU sessions free.
 state: 11-27 03:35 **JUDGE LOCK `9d3feb7e`** committed alone at `85ca3d4e` before any raw file; both readers `check_lock` first. Rule FROZEN `52033df2` 11-26 20:27; launched 20:30 from pin `495a766d`; chain C 11-27 14:15 with g1-4 + g1-6 claimed (`d1361856`).
 
 ### J14 — Brain A at the published size: seeds 10–12 come home by themselves; score them once
@@ -171,13 +177,17 @@ serves: M3 (stage 2 sized by evidence), M7 · philosophy 1, 3, 4, 6.
 part: His brain (A) + Body and movement (cell 0) · stage: 1 · step: 3 (reproduce) · prior: §2 as re-checked 11-27 16:12 (`fde24942`) — read it first; `KNOWN_ANSWERS.md` A2; rulings 86, 96, 124, 139
 prior: published — the official `dmc_proprio` preset is now size1m at train ratio 1024, repeat 1; the v2 code re-run independently (MR.Q, 10 seeds) reads cartpole_swingup 736 [591, 838] at 500K. Ours: 1m at ratio 512 is a pairing nobody published — A2 MISSED its (2023, v1) band at 100K, 393.3 vs 438–518. A1, A3 pass.
 **Ruled (139).** A2's row stays a MISS. This is a NEW row, `A2-off`.
-**Do.** (0) FIRST, 10 GPU-minutes, the body's cell again — a failure fixed,
-not filed: J28's MJX cell died at install (brax 0.14.2 calls
-`jax.device_put_replicated`, gone in jax 0.11.1). Pin the jax version that
-`playground==0.2.0`'s own requirements name (read them from the wheel; do
-not guess), planted test that the cell's preamble carries the pin, re-run
-`experiments/body/mjx_timing.py` once → three numbers into §29 as "ours".
-Still failing → the error into §29 and a `RESEARCH:` line "walker venue". (1) Draft `prereg/a2_official.md`: cartpole_swingup, the official
+**Do.** (0) The body's cell again — a failure fixed, not filed: J28's
+MJX cell died at install (brax 0.14.2 calls `jax.device_put_replicated`,
+gone in jax 0.11.1; a second CUDA plugin is also registered). The
+researcher has the question (INBOX `RESEARCH` walker venue). When §29
+names a jax / brax / playground triple: pin exactly that in the cell's
+preamble, planted test that the preamble carries the pin, re-run
+`experiments/body/mjx_timing.py` once (10 GPU-min) → three numbers into
+§29 as "ours". No answer yet → skip (0), do (1)–(3); do not guess pins on
+GPU time. A2-off's kernel also keeps LAST-step losses beside the scores
+(J28's raw kept only first-step ones, so its flat seeds cannot say why).
+(1) Draft `prereg/a2_official.md`: cartpole_swingup, the official
 preset unchanged, band = MR.Q's interval at the frames it was read at
 (take the exact frames/interval from §2's source, not from this order),
 seeds 30–32, twin (lr 0) on seed 30, no extension, a lost seed is lost.
@@ -321,9 +331,8 @@ clauses, `verify` VENUE 266 vs 256. (8) The 4 kept tmp folders (2.8 GB).
 ## INBOX — one line each, workers add, the Director empties
 (emptied 2026-11-28 09:26 — SESSION 09:40 memory-in-the-race → ruling 137, J31; JACK 07:23 /data → eased, 27 GB free; JACK 07:23 watcher label + test path → SYSTEM Next-up (u), JACK Next-up 3; FORGE 14:20 → J18; JACK 14:25 J30 EATS → ruling 140, J32; RESEARCH 16:15 → ruling 139, J33, J28's prior; JACK 16:40 death interface → ruling 138, J31 (3), Next-up 2.)
 - RESEARCH: (11-28 09:40 SESSION, owner asked "will he taste") Taste as a sense for Jack: what published embodied learners use a taste or gustatory signal (good vs bad food, spoiled food that sickens later, learned food aversion as in conditioned taste aversion), how it is encoded, what it costs to learn, and whether it helps foraging over sight and touch alone. Note what the Inventor's "remember the colour of what I just ate" already covers. Answer as a PUBLISHED_PRIORS section; mark measured vs inferred.
-- QUESTION (JACK, J18): look 1 — the sealed `r1L_read --tranches 1` refuses until the beside arms (K2 ×10, twin ×2, g1-5…g1-7) are home, though the primary (K1 vs E-food, g1-0…g1-4) is whole | options: A wait for g1-5…g1-7 (≈ +1 day) / B unlock S20 to read the primary arms alone | default: A, wait; nothing opened meanwhile
 - RESEARCH (JACK, J28 cell 1): walker venue — which jax/brax/playground triple runs Playground PPO on Kaggle's T4 image (brax 0.14.2 + jax 0.11.1 breaks on `device_put_replicated`; a second CUDA PJRT plugin is also registered). §29 'ours'.
-- JACK 11-28: ratio-64 Dreamer stayed at the never-trains level on all three seeds (≈ 6k updates) — the raw keeps only first-step losses, so 'world model not fitted' vs 'actor never moved' cannot be told; a sitting may want last-step scalars kept.
+(11-28 09:28: QUESTION J18 → ruling 142, answer A + chain D; JACK ratio-64 losses → J33 keeps last-step scalars.)
 
 ## DONE (kept one day)
 

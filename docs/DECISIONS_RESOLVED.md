@@ -4835,3 +4835,13 @@ freeze it under ruling 135. It seats nothing; its one falsifiable line is
 "still eats at 1M on at least 15 of 20 seeds, against twice the blind
 twins' mean". The pilot does not wait for round 1-L's keep setting: it
 runs J30's own cell (K1), which is what the keep rule's tie also names.
+
+**142. Round 1-L's seal holds; the wait is shortened, not the lock (09:28,
+a worker's question).** The sealed reader will not take look 1 until the
+beside arms are home, though the primary's runs are whole. Unlocking a
+judge after its evidence has landed is the one thing ruling 130 exists to
+prevent, so the answer is to wait — and to move the last beside kernel
+(g1-7) onto a free session behind a claim the running chain already
+honours, as was done for chain C, which turns a day's wait into roughly
+one kernel's length. If the claim cannot be made certain, nothing is
+launched: one run a seed, never a choice between two.
