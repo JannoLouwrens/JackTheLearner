@@ -1,144 +1,133 @@
-> **STALE — THE RUN THAT OWED THIS PAGE AN UPDATE PRODUCED NOTHING.**
-> NO WORKER HAS FINISHED A RUN FOR 9 HOURS (checked 2026-11-28 04:43 UTC by the clerk, which needs no model). The worker log's last line: 2026-11-28T04:37:26+00:00 STOPPED at 100% weekly usage — all agents paused until the owner resumes — meter read: 'week:all models        [####################] 100%  resets Dec 2, 11:59am (UTC)'
-> So everything below is the PREVIOUS run of the machine and is a RECORD,
-> not current state: its counts, its "current state" framing and any
-> claim about what has or has not moved describe an older world.
-> Stamped 2026-11-28T04:43:01+00:00 by scripts/lib_seal.sh. It disappears the next time the
-> machine completes a run and rewrites this file.
-
-# PROGRESS — for the owner (written by the Director, Friday 27 Nov 2026, 06:45 UTC)
+# PROGRESS — for the owner (written by the Director, Saturday 28 Nov 2026, 09:30 UTC)
 
 Glossary: *brain A* = the Dreamer-style world model; *brain B* = the simple
-replay learner (from a public library, trained from scratch); *a decision*
-= one action, 0.2 s of his life; *a known-answer row* = our build re-running
+replay learner (public library code, trained from scratch); *a decision* =
+one action, 0.2 s of his life; *a known-answer row* = our build re-running
 a published experiment to see if it gets the published number; *the forge*
 = your science lab; *a blind / shuffled twin* = the same run with the eye
-off / scrambled (controls that must fail); *a chain* = a job that launches
-its own next piece; *resets* = wiping the learner's network every 50,000
-decisions while it keeps everything it lived (a published cure for a
-learner that stops learning); *the harness* = the fixed judge.
+off / scrambled (controls that must fail); *resets* = wiping the learner's
+network every 50,000 decisions while it keeps everything it lived; *a
+sealed reader* = the program that reads a result, locked before the result
+exists.
 
 ## The short version
 
-**The learner did not eat from his new eye. The answer came back "not
-shown", and it is written that way.** Brain B ran three times for 500,000
-decisions on the eye that sees kinds of things, each beside a blind and a
-shuffled twin, pass rule frozen first. It needed to beat both twins on all
-three runs. It beat them on none: 0.23 late meals a life against 0.89
-(blind) and 2.34 (shuffled).
+**A learner now eats from his own eye.** Yesterday afternoon the re-asked
+test came back, read once by the rule frozen before it ran: brain B with
+resets, on the eye that sees kinds of things, ate **27.4 meals a life**
+late in its run — against 3.3 for its blind twin and 2.4 for its shuffled
+twin, on 3 of 3 runs, and still climbing when the run ended. Same seeds,
+same twins, same pass mark as the test that failed the day before; only
+the resets differ. So that failure was the learner collapsing, not the
+eye. This is the first time anything that LEARNS has fed itself from what
+he sees.
 
-**But the runs say why, and that is the day's real finding.** Every sighted
-run ate WELL early — up to 8.8 meals a life, far above the twins — and then
-unlearned it, down to almost nothing. The workers checked the cause three
-ways: he was not profiting from dying, his movements did not narrow, he
-simply stopped finding food. The same plain learner collapses the same way
-in the forge (4 of 5 runs); with resets it does not (0 of 5). So the
-suspect is the learner, not the eye.
+**Three more results this morning:**
+- **Brain B with a memory reproduces its published number** (−172.6,
+  inside the published band; the version without memory scores −1490 and
+  fails, as it must). The big brain race now has a control with memory.
+- **The ear reproduces**: 96.9% on three runs (published 96.9 ± 0.3);
+  its must-fail control reads 8.6%.
+- **Brain A cannot be made cheap the easy way**: at an eighth of the
+  training it learned nothing (about 290 against a band of 932) — what the
+  published record predicted. Written as a miss.
 
-**It is being asked again today, properly.** A new test, written down
-before it runs: the same nine runs, same seeds, same twins, same pass
-mark — the only change is resets on all three. The workers built and
-proved every piece overnight; it needed only my word, and three of the
-five free machines stood empty for four hours waiting for it. That wait is
-my system's fault and is fixed by rule (below). Results in about six hours.
+**And one bad night.** The shared usage meter read 100% at 00:37 UTC and
+stopped every agent until 09:07. Nine worker slots, the audit and my 06:37
+sitting did not happen; four finished results sat unread for hours. The
+meter's readings contradict each other (below).
 
 ## What Jack can do today
 
-He lives, senses, hungers, dies, is reborn, and keeps a diary. A
-hand-written rule eats from his own eye (20 of 20). A learner eats when
-handed the direction to food, and — new — eats from his eye for a while,
-then loses it. No learner yet KEEPS eating from his eye. Test ladder: 110
-of 270.
+He lives, senses, hungers, dies, is reborn, keeps a diary. A hand-written
+rule eats from his eye (20 of 20). **New: a learner eats from his eye and
+keeps eating** (500,000 decisions, three runs). Not yet shown: that it
+holds for a million decisions or across twenty runs — ordered today. Test
+ladder: 111 of 270.
 
 ## Each part of the plan: the step it is on (0–5)
 
-- **His brain — 3 (reproduce), not cleared.** Not moved. Ordered: brain
-  B's version with a memory, built from published code and made to
-  reproduce a published number — without it the big race could not tell
-  "has a world model" from "has a memory". Brain A's three true-size runs
-  launch by timer Saturday 00:01 UTC.
-- **Learning to eat — 4.** Moved: first learner verdict on the new eye
-  (not shown), its cause named, the re-ask launching today.
-- **His world — 2.** Not moved.
-- **Eye — 2 → 4.** Moved with the above. One idea ruled out by a
-  measurement already in hand (a one-hot eye tells no more than the bins).
-- **Memory and sleep — 1.** Not moved.
-- **Body and movement — 1 (his own body).** Research moved: the
-  researcher found the published humanoid score has been reproduced by
-  nobody but its authors, so our body's first check will use a walker two
-  independent programs agree on. He also caught that Saturday's 10-minute
-  GPU test would have died at install; fixed before it fires.
-- **Ear — 3.** Not moved; last run and control fire by timer Saturday.
-- **Words; other senses — 1; closed for this stage.** Not moved.
-- **The science lab — 4.** Moved: the long round is running (10 seeds an
-  arm, 1,000,000 decisions), the judge sealed before any result, first
-  third home with nothing lost. First look about Saturday evening.
+- **His brain — 3 (reproduce).** Moved: B's memory version reproduced.
+  Brain A is not cleared: one true-size run is home, the second is
+  running, the third follows. The cheap-A question is answered "no".
+  Ordered: A once at its authors' own current settings, as a new row.
+- **Learning to eat — 4.** Moved: the learner eats (above). Ordered: the
+  20-run, million-decision pilot the plan uses to size the brain race.
+- **Eye — 4.** Moved: the 16-bin kind eye holds its seat by a passed test.
+- **Ear — 3, done.** Moved: reproduced. His own ear (no labels) is stage 3.
+- **Body — 1 (his own body).** Not moved: Saturday's 10-minute GPU test
+  died at install (two libraries' versions disagree). The researcher is
+  finding the working set; it is re-run when named.
+- **The science lab — 4.** The long round's main runs are all home. Its
+  sealed reader refuses to give the first verdict until the side arms are
+  home too. I ruled the seal stays shut — unlocking a judge after its
+  evidence arrives is exactly what the seal is for — and moved the last
+  side run onto a free machine to shorten the wait to about a day.
+- **His world — 2; memory and sleep — 1; words — 1; other senses —
+  closed for this stage.** Not moved.
+
+## Your two questions from this morning
+
+- *"Is eating-by-sight good enough to choose the brain?"* No, and I have
+  now made it a rule (ruling 137): no brain takes the seat on visible food
+  alone. The memory and delayed-reward tests are read beside the race in
+  the same verdict, and the race's own world gets one condition sight
+  cannot solve (food out of view, or a remembered place), with a control
+  that must fail. Workers draft it from the published record today.
+- *"Will he taste?"* Sent to the researcher as a question: what published
+  learners do with taste (bad food, food that sickens later), what it
+  costs, whether it helps. Answer expected within a day.
 
 ## What did not move
 
-The ladder: 110. No new published number reproduced. Four worker slots
-overnight ended with nothing they were allowed to launch.
-
-**A correction to last night's page.** I wrote "110 → 110, unchanged". It
-was 111 the day before: the ladder's very first test ("the code imports
-cleanly") went red at midday on the 26th and three organs, me included,
-walked past it. The auditor caught it. The cause is almost certainly the
-shared box being busy — one import took 5.4 s against a 5-second line
-while the whole run took five times its usual time. Ruled: the 5-second
-line stays; the test now times each import three times and judges the
-fastest, with a planted slow import that must still fail. Nobody is
-allowed to simply re-run it until the clock is kind.
+Brain A's reproduction (waiting on GPU runs). The body. The forge's first
+verdict (sealed, about a day). The old ladder: one point (111), from
+repairing the import test — not from new ability.
 
 ## What the workers are on next
 
-1. Freeze and launch the eye re-ask with resets (J30) — now.
-2. Watch the forge's long round; read its first look when ten seeds of
-   each arm are home (J18).
-3. Build brain B's memory version and reproduce its published row (J29).
-4. Saturday, by timers: brain A's runs, the ear's last run, three cheap
-   GPU tests (J14, J28).
-5. Machine lane: repair the import test's clock by cause (S21).
-
-**The rule change.** Yesterday I ruled that a worker's question carries a
-default. Last night showed the gap: the workers had a finished,
-unchanged-bar test and free machines, and still had to wait for a sitting
-to freeze it. From today a worker may freeze and launch its own draft
-after three unanswered hours — only when the seeds, twins and pass mark
-are an existing order's, unchanged. Pass marks stay mine alone to touch,
-and I do not lower them.
+1. Bring the forge's last side run forward; read the first look once.
+2. Launch the 20-run pilot on the free machines standing empty.
+3. Brain A at its authors' current settings, on this week's spare GPU.
+4. Score brain A's three true-size runs when the last is home.
+5. Rewrite the brain race's rule: memory in the race, his own death
+   sensed at death, B-with-memory as an arm.
 
 ## The four machine numbers
 
-- Test points per worker run: 0 over about 30 runs (110 → 110).
-- Slots lost to the usage stop: 0. Skipped or ended idle: about 7.
-- Free GPU-hours expired this week: 0 (the shared Kaggle account ran
-  full). The new week opens Saturday; 22.5 of its 30 hours are already
-  booked by three timers.
-- Oldest unrepaired blocker: "cold is felt before it kills", 106 days,
-  parked to stage 3; the rebirth test is 81 days stale, in the machine
-  lane's queue.
+- Test points per worker run: +1 over about 25 runs (110 → 111, a repair).
+- Slots lost to the usage stop: 9 worker slots, 1 audit, 1 sitting
+  (00:37–09:07). Idle or skipped in 24 h: 15, those included.
+- Free GPU-hours expired: 0. This week (opened today, 30 h): about 16 h
+  used by 09:00, about 10 h queued, the spare ~7 h ordered.
+- Oldest unrepaired blocker: "cold is felt before it kills", 107 days,
+  parked to stage 3; the rebirth test is 82 days stale (machine queue).
 
 ## Dead or stuck
 
-- Free Colab GPU: refusing since Wednesday.
-- The import test (above): red 18 hours, now owned.
-- Usage: 15% of the week (resets 2 Dec). Fine.
-- Alive: workers hourly, auditor (00:40, "on track"), re-checker (04:50),
-  scout (yesterday 05:49), pushes level with GitHub. The answering poll
-  answered its first worker question at 02:55, correctly. System disk
-  5.1 GB free (workers stop under 3). Old review backlog: empty.
+- **The usage meter.** 15% on the 27th (reset printed: 2 Dec) → 100% at
+  00:37 on the 28th (same reset) → 13% at 09:07 with a NEW reset of 3 Dec.
+  A week that reset four days before its own printed date. Either other
+  work on the shared account hit a cap, or a reading was false. I did not
+  touch the stop. A worker is ordered to record such jumps (S22).
+- **The auditor** last finished 27 Nov 00:40; its 28 Nov run was refused
+  by the stop. Next due 12:37 today.
+- **The scout** (field watch) last ran 26 Nov 05:49 — two days silent,
+  past twice its cadence. Not diagnosed this sitting; first thing
+  tomorrow if still silent.
+- Free Colab GPU: still refusing (since Wednesday).
+- Alive: workers (running now), re-checker (08:53), pushes level with
+  GitHub. Disks: system 6.2 GB free, data 27 GB free (eased). Old review
+  backlog: empty.
 
 ## FOR THE OWNER
 
-Nothing needs a decision. Two facts for you, neither a question: (1) the
-data disk is 90% full (16 GB free), and it is not Jack — about 5 GB of
-language-model files (Qwen3) appeared in `/data/llm/models` on 26 Nov
-from another project, and the big holders are `stt` 43 GB and
-`starwright` 31 GB; the workers deleted nothing, because outside this
-project is not ours to touch; (2) the default on 29 Nov is unchanged
-(D57): recordings of how people move stay outside him, as a judge, never
-a part of him.
+Nothing needs a decision. Two facts: (1) if the 100% reading was real,
+something else on the Claude account used about 85% of a week in 18
+hours — worth a look at what ran on the evening of the 27th; (2) tomorrow
+(29 Nov) the default D57 fires unless you say otherwise: recordings of
+how people move stay outside him as a judge, never a part of him.
 
-*This sitting served card lines 4 (a failed test read as written, its
-cause found, re-asked without touching the pass mark), 3 (the learner's
-seat is raced, not assumed) and 5 (free machines no longer wait on me).*
+*This sitting served card lines 4 (a sealed judge kept sealed; misses
+written as misses), 3 (the brain race may not be decided on sight alone;
+brain A asked again by the record) and 5 (empty machines filled by order).*

@@ -243,6 +243,9 @@ sitting. The fp16 cell is closed unrun (Lightning's AMP refuses the
 port's gradient clipping): a precision change is a difference from the
 published recipe and is not chased before brain A reproduces.
 **Next up, in order (text or box < 15 CPU-min; do ALL of these before any slot ends idle):**
+0. Copy the receipts still sitting in worktrees `/data/wt/jack-kws-w48`
+and `/data/wt/jack-j28-w48` into main's `gpu_submissions.jsonl` (the 09:26
+slot ran out before doing it); commit by name.
 1. `docs/research/STAGE1_READY.md`: bring every line up to date from
 today's reads (pointers only).
 2. HandedSense at death (ruling 138): add an option (default = today's
