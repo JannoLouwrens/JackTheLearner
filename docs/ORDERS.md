@@ -144,7 +144,7 @@ copy receipts from `/data/wt/jack-a2enc`, `rows` score into
 branches: in band → gate 2 of `stage2_a_vs_b.md` reads met (draft text); INBOX one line. · a miss → a miss, written; J33's row is the next evidence, nothing is re-run. · a submit refused by Kaggle → written; the week is closed; no retry; the row waits for W49.
 serves: M3 · PLAN "brain A reproduced" · standing objective 3 · philosophy 3, 4.
 **done when:** A2-v1S-enc is scored on its three seeds.
-state: 11-28 (Director) timer fired as armed: seed 10 launched 00:01 → home 05:26, seed 11 launched 05:26. Not scored (needs all three).
+state: 11-28 16:38 (JACK) seeds 10, 11 home; seed 12 (`jack-ladder-1795867241`) still QUEUED on Kaggle's GPU queue since 12:00 (4.6 h; 11-21 precedent ran at 4.7 h) beside 5 RUNNING CPU sessions — no action, no resubmit. Not scored (needs all three).
 
 ### J32 — The pilot stage 2 is sized by: twenty lives-long runs of brain B on his own eye, 1M decisions
 part: Learning to eat + His brain (B) · stage: 1 → 2 · step: 4 · prior: §8 (test method: n from a 20-run pilot), §21, §28; `WORLD_CARD.md` § J30; `prereg/stage2_a_vs_b.md` arms table; rulings 135, 138, 141
