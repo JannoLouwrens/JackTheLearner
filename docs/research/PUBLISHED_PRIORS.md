@@ -1208,4 +1208,40 @@ Long form: `/data/jack-research/scratch_sec30A/notes.md` (paper, figure vertices
 
 ## 31. Brain A's ceilings for lifelong growth, and the published fix for each (2026-11-28; serves the owner's SESSION question of 11-28, the forge's brain A rounds, M3, M7; answers INBOX `RESEARCH:` SESSION 11-28)
 
-Long form: `/data/jack-research/sec31_ceilings/` (one notes file per part). IN PROGRESS — parts (1) memory span + (7) language, (2) horizon/hierarchy + (6) curiosity, (3) objective, (4) capacity + (5) plasticity being researched 16:10–16:35 UTC.
+Long form: `/data/jack-research/sec31_ceilings/part{1_memory_language,2_horizon_curiosity,3_objective,4_capacity_plasticity}.md` (PDFs beside them). See also §6, §7, §2. Nothing measured by us. Short answer: four ceilings are measured (memory window, replay eviction, camera reconstruction under distractors, language without pretraining); two are weak (horizon, curiosity); lifetime capacity is unmeasured anywhere.
+
+**Already known**
+- **(1) Memory window is a cliff, not a slope.** R2I (2403.04253, Fig. 22): trained on 64-step sequences, episodes > 64 steps score **zero**; 256 robust; Memory Maze rises 64→128→1024 (Fig. 23). DreamerV3 learns BSuite memory gaps ≤ ~30 steps (R2I Fig. 3). TBTT (carried state), nearly free: Memory Maze 9/11/13/15 at 100M, 28.2/20.4/11.6/4.1 → 33.2/31.4/21.4/5.6 (2210.13383 Tab. 3; deter 2048); IMPALA beats both on big mazes. R2I (S5, 1024-step): 33.6/52.0/58.1/40.9 at 1.2–13.8 A100-days, MIT code; its actor went unstable on the drifting state.
+- **(7) Language from scratch is out of reach at our size.** Dynalang (2308.01399, Tab. I.3): one-hot words from scratch only in HomeGrid (281M params, 50M steps, 3.75 A100-days) and LangRoom (vocab 15); Messenger/VLN-CE used **frozen T5** (pretrained: excluded). One-hot < T5 (Fig. 10); 10k vocab "fails to learn" (Fig. 9); the agent's own text pretraining (TinyStories) beat T5.
+- **(3) Reconstruction IS Dreamer's learning signal; its cost is distractors.** DreamerV3 Fig. 6b: stopping reconstruction gradients collapses it. Natural-video DMC: DreamerV3 **83.6**, MuDreamer 517.0 (2405.15083 Tab. 2). R2-Dreamer (2603.18202): decoder-free, reward-free, ≈ DreamerV3, 4.4 vs 7.0 h a 1M run. Decoder-free needs an anti-collapse guard (MuDreamer w/o BN 689.5) and leans on reward heads (w/o: 505.4); MR.Q/TD-MPC2 lean on TD.
+- **(5) Forgetting in Dreamer is the replay buffer and the actor.** Continual-Dreamer (2211.15944): FIFO forgets early tasks by 2–4M steps; reservoir "robustly mitigates"; bigger memory leaves hard tasks unsolved. ARROW (2603.11395, DreamerV3): short FIFO + long reservoir, less forgetting, some transfer cost. 2607.19749 (abstract): the model keeps, the actor loses.
+- **(5) Plasticity:** only model-free evidence at 10^7–10^8: PPO on slippery-Ant 100M "degraded rapidly", continual backprop "minimal drop", L2 / shrink-and-perturb better (2306.13812, Fig. C.11). ReDo > resets ≈ weight decay (2302.12902); resets cause "brief collapses" (Nikishin). No DreamerV3 run past ~10^8 steps with plasticity metrics exists.
+- **(4) Capacity:** DreamerV3 12M→400M "increases monotonically" and larger needs less data (Fig. 6c/d) — single-task. Progressive nets freeze (excluded). Plasticity injection (2305.15555): zero-output branch at 50M of 200M frames, +20% Atari. No world model has been grown.
+- **(2) Horizon/hierarchy:** Director (2206.04114) solves Pinpad 6 where flat Dreamer fails, +20% compute; fails most MiniHack (THICK supp. F.3). THICK (ICLR 2024) ≥ flat Dreamer, gain grows with horizon. No DreamerV3 horizon ablation found. γ 0.997 already sees ~330 steps via the critic.
+- **(6) Curiosity:** Crafter 1M: DreamerV2 10.0, Plan2Explore alone 2.1 (2109.06780). **Curious Replay** (2306.15934; priority = count + model loss, not a reward): DreamerV3 **19.4 ± 1.6 vs 14.5 ± 1.6**, 10 seeds; hurts sparse swingup. As a reward bonus: helps Crafter, hurts Minigrid (2503.21047). Needs + curiosity in a Dreamer: no numbers anywhere.
+
+**Candidates** (ranked by evidence ÷ cost at our budget)
+1. **Lifetime replay:** short FIFO + long reservoir, deaths/meals kept (§6). No gradient cost; aims at the measured failure. Risk: slower new learning if the long share is large.
+2. **TBTT + window 64 → 256:** carry the GRU state across chunks; cost ≈ linear in length.
+3. **Curious Replay:** reuses the model loss; +34% on Crafter; untested on a changing buffer.
+4. **Continuous plasticity guard** (weight decay / ReDo / actor-only slow-copy reset), never a full reset of A's model.
+Deferred: R2I (A100-days), Director/THICK, R2-Dreamer (only once the eye is pixels), growth (new research), Dynalang (pretraining or 10^8 steps).
+
+**Ours beside theirs**
+| setting | published | ours | costs |
+|---|---|---|---|
+| training window | 256–1024 for memory > 64 | 16 × 64 (`brain_a/rows.py:42`) | any dependency > 64 steps unlearnable |
+| recurrent state | 1024 (smallest official), 2048 Memory Maze | 256 in `cores.py:87` dreamer-xs | 4–8× less memory capacity |
+| replay | 2M FIFO forgets; reservoir fixes | in-world FIFO = run length (`in_world.py:173`) | no lifetime store yet |
+| observation | camera + recon | 74-dim vector (`in_world.py:31-37`) | (3) not yet binding |
+
+**Known-answer check.** Window: BSuite memory_len 30 vs 100 at window 64 — succeeds ≤ 30, fails 100 (R2I Fig. 3); CPU-minutes a length. Curious Replay: Crafter 1M 14.5 → 19.4 is GPU-days a seed — too dear; read at 200k vs our uniform twin, unbanded.
+
+**What the record does NOT answer** (worth our compute)
+- Does a 64-step window cap A in HIS world (e.g. remembered water out of view > 64 decisions)? 64 vs 256 + TBTT, 3 seeds: no difference until recall > 64 is needed, then 64 ≈ 0.
+- Reservoir vs FIFO in a changing world: reservoir keeps an early skill FIFO loses by > 2M decisions.
+- Needs + Curious Replay: sign unknown. Lifetime capacity: unmeasured anywhere; wait for the above.
+
+**Forge lines (for FORGE_POOL.md, brain A; the Director enters them):** A-M1 replay short FIFO + reservoir (Kessler/ARROW) · A-M2 TBTT + window 256 (R2I Fig. 22, Pasukonis Tab. 3) · A-M3 Curious Replay priority (2306.15934) · A-M4 actor-only slow-copy reset (Hare & Tortoise; 2607.19749) · control: window 64 uniform FIFO, same seeds.
+
+**Not verified:** Nature version of Dohare; LED-WM, LEXA, Choreographer, Dreaming, TIA, Iso-Dream and four others beyond abstracts (list in long form); R2-/NE-Dreamer figure-only; sheeprl 1m recurrent width not read; every "Expect" is inference.
