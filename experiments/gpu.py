@@ -628,7 +628,32 @@ class Budget:
                "kaggle-tpu": KAGGLE_TPU_WEEKLY_HOURS}.get(backend)
         if cap is None:
             return float("inf")
+        if self.full(backend):
+            return 0.0   # ruling 124: Kaggle said the week is spent
         return max(0.0, cap - self.used_hours(backend))
+
+    def full(self, backend: str) -> bool:
+        return f"{self._week()}:{backend}" in self.data.get("full_weeks", {})
+
+    def close_week(self, backend: str, said: str) -> None:
+        """Ruling 124: the account is shared, so Kaggle's own quota refusal is
+        the meter. Mark this week FULL (`closed_by: kaggle`) so no later job
+        is planned into it; nothing here reopens it (the week key does)."""
+        lock_path = self.path.with_suffix(self.path.suffix + ".lock")
+        with open(lock_path, "w") as lockf:
+            fcntl.flock(lockf.fileno(), fcntl.LOCK_EX)
+            self.data = self._load()
+            self.data.setdefault("full_weeks", {}).setdefault(
+                f"{self._week()}:{backend}",
+                {"closed_by": "kaggle", "said": said[:200],
+                 "at": time.strftime("%Y-%m-%dT%H:%M:%S")})
+            self._write()
+
+    def _write(self) -> None:
+        # tmp + os.replace so a SIGKILL mid-write cannot truncate the record.
+        tmp = self.path.with_suffix(self.path.suffix + ".tmp")
+        tmp.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n")
+        os.replace(tmp, self.path)
 
     def unattributable_hours(self, backend: str) -> float:
         """This week's productive hours that no `charged_jobs` row accounts for.
@@ -659,7 +684,7 @@ class Budget:
         real GPU time. Anyone RATIONING against the number should see the
         range, not the floor presented as a fact."""
         lo = self.remaining(backend)
-        if backend != "kaggle":
+        if backend != "kaggle" or self.full(backend):
             return lo, lo
         gap = self.unattributable_hours(backend)
         excess = round(gap - self.labelled_opening_balance(backend), 4)
@@ -728,9 +753,7 @@ class Budget:
                     wk_rec[failed_key] = round(wk_rec.get(failed_key, 0.0) - hrs, 4)
                     wk_rec[bk] = round(wk_rec.get(bk, 0.0) + hrs, 4)
                     rec["ok"] = True
-                    tmp = self.path.with_suffix(self.path.suffix + ".tmp")
-                    tmp.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n")
-                    os.replace(tmp, self.path)
+                    self._write()
                     print(f"GPU CHARGE RE-LABELLED: {job_id} ok False->True — "
                           f"{hrs:.4f}h moved {failed_key} -> {bk} in "
                           f"{rec['week']}; no new hours billed",
@@ -780,11 +803,7 @@ class Budget:
                       f"{KAGGLE_WEEKLY_HOURS}h this week ({self._week()}) — "
                       f"the ceiling is not being enforced, only observed",
                       file=sys.stderr, flush=True)
-            # tmp + os.replace so a SIGKILL mid-write cannot truncate the
-            # accounting record (the T0.05 pattern).
-            tmp = self.path.with_suffix(self.path.suffix + ".tmp")
-            tmp.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n")
-            os.replace(tmp, self.path)
+            self._write()   # the T0.05 pattern
         return True
 
     def refund(self, job_id: str, reason: str, keep_hours: float = 0.0) -> bool:
@@ -810,9 +829,7 @@ class Budget:
             wk[key] = round(wk.get(key, 0.0) - cut, 4)
             rec.update(refunded_hours=cut, hours=round(keep_hours, 4),
                        refund_reason=reason)
-            tmp = self.path.with_suffix(self.path.suffix + ".tmp")
-            tmp.write_text(json.dumps(self.data, indent=2, sort_keys=True) + "\n")
-            os.replace(tmp, self.path)
+            self._write()
         return True
 
     def afford(self, backend: str, est_hours: float) -> bool:
@@ -1653,6 +1670,8 @@ def submit(script: Path, prefer: str = "colab", est_hours: float = 0.1,
         # Charge the metered window, labelled by outcome, once per remote job.
         # All three of those qualifiers were missing until 2026-08-09.
         if backend != "kaggle-cpu":   # S1: CPU kernels draw no GPU-hours
+            if res.message.startswith("push failed") and "quota" in res.message.lower():
+                budget.close_week(backend, res.message)   # ruling 124
             budget.charge(backend, res.charge_seconds, ok=res.ok, job_id=res.job_id,
                           est_hours=est_hours)
         if res.ok:
