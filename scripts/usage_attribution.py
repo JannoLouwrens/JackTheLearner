@@ -52,38 +52,18 @@ import json
 import re
 import sys
 import time
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 LEDGER = Path("/data/jack-logs/usage_ledger.jsonl")
 LADDER_LOG = Path("/data/jack-logs/ladder.log")
 
-#: `iteration start — ...` / `iteration end rc=N — ...`. The ONLY lines in
-#: `ladder.log` the loop writes about a slot that actually attempted to run.
-#: PRIVATE TO `classify` — read nowhere else (Review ruling 2026-09-30). The
-#: dark-slot walk used to test `line[:4].isdigit()` instead, and every
-#: timestamped non-slot line (`PACE-SKIP NOTICE:`, `LIVE NOTICE:`,
-#: `STOPPED at ...`) read as a healthy slot: the counter printed 0 through
-#: the 26-slot 2026-09-22/23 blackout it existed to report.
+#: `iteration start/end` lines: the only lines about a slot that ran. PRIVATE TO `classify`.
 _SLOT_RE = re.compile(r"^(\S+)\s+iteration (start|end)\b(?:\s+rc=(\d+))?")
 
-#: A slot the loop DECLINED to run: `pace_gate`'s `PACING:` skip, the hard
-#: usage stop's `STOPPED at N% weekly usage`, or a pre-launch `ABORT:` (the
-#: loop's own guards refusing to start — disk, load, unreadable meter; all
-#: three wordings in the real log share the prefix). `ABORT:` was taught
-#: 2026-10-01 (134th audit RANK 3): the 2026-09-30T19:07 slot died on
-#: `ABORT: only 2GB free on /data (need 3GB)`, which matched neither regex,
-#: and `dark_slots` read 0 through a lost slot ONE DAY after this classifier
-#: shipped — the outcome its own docstring had named as the original bug.
-#: Anchored to the char after the timestamp so prose QUOTING any marker (a
-#: notice line, a session's final message echoed into the log) cannot count
-#: as a skip — `lib_credits.sh`'s start-anchor rule, one surface over.
-#: PRIVATE TO `classify`, like _SLOT_RE.
-#: KNOWN STILL-INVISIBLE refusal wordings, swept 2026-10-01 and left in
-#: NOT-A-SLOT deliberately: `previous iteration still running — skipping`
-#: (x2 — the system is actively working, a dark streak through it would lie
-#: in the other direction) and the owner-pause lines `paused (remove ...)` /
-#: `PAUSED — all agents stopped` (x13 — an owner pause is a different kind
-#: of dark; teaching it DECLINED is a desk call, not a builder default).
+#: A slot the loop DECLINED: `PACING:`, `STOPPED at N%`, or pre-launch `ABORT:`, anchored
+#: after the timestamp so quoting prose cannot count. PRIVATE TO `classify`. Deliberately
+#: NOT-A-SLOT: "previous iteration still running" and owner-pause lines (history: git log).
 _SKIP_RE = re.compile(r"^\S+\s+(?:PACING:|STOPPED at |ABORT: )")
 
 #: S16 / ruling 97: a jack slot the launcher skipped because nothing could
@@ -226,13 +206,33 @@ def _same_window(a: str, b: str) -> bool:
     return abs(ea - eb) <= WINDOW_FLUTTER_S
 
 
+def _reset_at(resets: str, ts: str) -> int | None:
+    """The printed reset instant, its year anchored to the READING's own date
+    (`reset_epoch` anchors to now, which mis-years a replayed old row)."""
+    e = _reset_epoch(resets)
+    if e is None:
+        return None
+    ref = datetime.fromisoformat(ts)
+    t = datetime.fromtimestamp(e, timezone.utc)
+    for y in (ref.year, ref.year + 1):
+        c = t.replace(year=y)
+        if c > ref - timedelta(days=3):
+            return int(c.timestamp())
+    return None
+
+
+MOVED_FALL = 20   # S22: points a reading may fall while its predecessor's reset is still ahead
+
+
 def meter_non_monotone(rows: list[dict]) -> list[dict]:
     """METER-NON-MONOTONE (154th audit B2): readings that prove themselves false.
 
-    A weekly cumulative pct may never FALL inside one reset window, so a falling
-    pair with the same window (parsed epoch, `_same_window`) proves one reading
-    false. Rows without `resets` (pre-B1) are skipped; a fall across a CHANGED
-    window is the weekly reset. Reporting-only: gates nothing (D26 default iv).
+    kind `same-window`: a weekly cumulative pct FELL inside one reset window
+    (parsed epoch, `_same_window`). kind `window-moved` (S22, 11-28): it fell by
+    > MOVED_FALL while the EARLIER reading's own printed reset was still in the
+    future, whatever the new window says — the week "reset" before its date.
+    `refused` counts refused/skipped rows of the old window above the new pct.
+    Rows without `resets` (pre-B1) are skipped. Reporting-only: gates nothing.
     """
     events: list[dict] = []
     prev: tuple[str, int, str] | None = None
@@ -241,13 +241,20 @@ def meter_non_monotone(rows: list[dict]) -> list[dict]:
         pct, resets = r.get("pct"), r.get("resets")
         if not isinstance(pct, int) or not isinstance(resets, str):
             continue
-        if prev is not None and _same_window(resets, prev[2]) and pct < prev[1]:
-            # S14: slots refused/skipped on a reading this one contradicts —
-            # same window, earlier, higher pct (the meter cannot fall).
+        kind = None
+        if prev is not None and pct < prev[1]:
+            if _same_window(resets, prev[2]):
+                kind = "same-window"
+            elif prev[1] - pct > MOVED_FALL:
+                due = _reset_at(prev[2], prev[0])
+                if due is not None and due - WINDOW_FLUTTER_S > \
+                        datetime.fromisoformat(r["ts"]).timestamp():
+                    kind = "window-moved"
+        if kind:
             n = sum(1 for q in seen if q.get("phase") in ("refused", "skipped")
-                    and q["pct"] > pct and _same_window(q["resets"], resets))
-            events.append({"from_ts": prev[0], "from_pct": prev[1],
-                           "to_ts": r["ts"], "to_pct": pct,
+                    and q["pct"] > pct and _same_window(q["resets"], prev[2]))
+            events.append({"kind": kind, "from_ts": prev[0], "from_pct": prev[1],
+                           "to_ts": r["ts"], "to_pct": pct, "from_resets": prev[2],
                            "resets": resets, "refused": n})
         seen.append(r)
         prev = (r["ts"], pct, resets)
@@ -484,15 +491,17 @@ def line(a: dict) -> str:
     dark += "; " + _failed_phrase(a)
     if a.get("idle_slots"):
         dark += f"; {a['idle_slots']} slot(s) skipped idle in 24 h (not dark: nothing could start)"
-    mnm = a.get("meter_non_monotone")
-    if mnm:
-        last = mnm[-1]
-        dark += (f"; !! METER-NON-MONOTONE x{len(mnm)}: the gating meter read "
-                 f"{last['from_pct']}% at {last['from_ts']} then "
-                 f"{last['to_pct']}% at {last['to_ts']} inside the SAME reset "
-                 f"window ('{last['resets']}'), {last['refused']} slot(s) "
-                 f"refused on a reading it contradicts — at least one reading "
-                 f"is false (reporting-only; the gates still act on what they read)")
+    mnm = a.get("meter_non_monotone") or []
+    for kind, tag in (("same-window", "NON-MONOTONE"), ("window-moved", "WINDOW-MOVED")):
+        ev = [e for e in mnm if e["kind"] == kind]
+        if ev:
+            e = ev[-1]
+            where = (f"inside the SAME reset window ('{e['resets']}')" if kind == "same-window"
+                     else f"while its own reset ('{e['from_resets']}') was still ahead")
+            dark += (f"; !! METER-{tag} x{len(ev)}: the gating meter read "
+                     f"{e['from_pct']}% at {e['from_ts']} then {e['to_pct']}% at "
+                     f"{e['to_ts']} {where}, {e['refused']} slot(s) refused on the "
+                     f"earlier reading (reporting-only; the gates act on what they read)")
     if not a["known"]:
         return f"attribution unreadable (this project's own share unknown, NOT zero); {dark}"
     t = a["total"] or 0
@@ -619,10 +628,7 @@ def _selftest() -> int:
         fails.append(f"idle: expected 1 dark + 2 idle, got dark={a['dark_slots']} "
                      f"idle={a.get('idle_slots')}")
 
-    # P6b — THE OUTAGE, REPLAYED. This is the real 2026-09-20/21 shape: dead
-    # slots with paced skips interleaved. `dark_slots` reads 1 — TRUE, and
-    # useless. The two new readings must both fire, and the printed line must
-    # SAY the launcher is dying rather than leaving a reader to infer it.
+    # P6b — the 2026-09-20/21 outage replayed: both readings fire and the line says the launcher is dying.
     log = ("2026-09-20T06:07:00+00:00 iteration end rc=0 — 109 -> 109\n"
            "2026-09-20T07:07:00+00:00 iteration end rc=126 — 109 -> 109\n"
            "2026-09-20T08:07:00+00:00 iteration end rc=126 — 109 -> 109\n"
@@ -663,13 +669,7 @@ def _selftest() -> int:
     if "unknown" not in _failed_phrase({"failed_slots": None}):
         fails.append("no-log: the printed line must say failed slots unknown")
 
-    # P6d — THE BLINDNESS, REPLAYED (1^12 item 2; 109th-audit shape). In the
-    # real log every `PACING:` line is FOLLOWED by timestamped `PACE-SKIP
-    # NOTICE:` lines, and a hard-stop blackout writes `STOPPED at N%` lines —
-    # 26 consecutive dark slots on 2026-09-22/23 that the old walk counted as
-    # 0, because each notice/STOPPED line started with a digit and "ended the
-    # streak". A slot line is an `iteration start/end` line; nothing else may
-    # end it, and prose QUOTING the markers must not extend it.
+    # P6d — notice/STOPPED lines never end a dark streak; only `iteration start/end` lines are slots.
     log = ("2026-09-22T06:07:00+00:00 iteration start — 109/253 demonstrated\n"
            "2026-09-22T06:49:00+00:00 iteration end rc=0 — 109 -> 109\n"
            "2026-09-22T07:07:00+00:00 PACING: acting on 'week:all models'\n"
@@ -700,14 +700,7 @@ def _selftest() -> int:
         fails.append(f"blind: a slot RUNNING RIGHT NOW (trailing `iteration "
                      f"start`) must end the streak — got {a['dark_slots']}")
 
-    # P6e — THE CLASS, NOT THE INSTANCES (Review ruling 2026-09-30). P6d
-    # proves the KNOWN notice lines are transparent; this proves an
-    # UNRECOGNISED one is. The scar: a new timestamped line type had to be
-    # taught to two walkers, and teaching it to one blinded the other with
-    # nothing failing. Under the one-classifier design a line type nobody
-    # has heard of lands in NOT-A-SLOT, so BOTH readers must be unchanged by
-    # its arrival — if this fixture ever fails, a fourth kind of line has
-    # been taught to something other than `classify`.
+    # P6e — an UNRECOGNISED timestamped line is NOT-A-SLOT and moves neither reader.
     base = ("2026-09-24T06:07:00+00:00 iteration start — 110/254\n"
             "2026-09-24T06:49:00+00:00 iteration end rc=0 — 110 -> 110\n"
             "2026-09-24T07:07:00+00:00 PACING: acting on 'week:all models'\n"
@@ -736,14 +729,7 @@ def _selftest() -> int:
         fails.append("novel: an UNRECOGNISED timestamped line type changed "
                      "slot_outcomes — the classifier is not the one reader")
 
-    # P6f — THE PRE-LAUNCH DEATH, REPLAYED (134th audit RANK 3). The real
-    # 2026-09-30 shape, exact bytes from ladder.log: the 18:07 slot ends
-    # rc=0, the 19:07 slot dies on a disk ABORT before `iteration start` is
-    # ever written, the 20:07 slot runs. On 2026-09-30 the counter read 0
-    # through the ABORT — one day after this classifier shipped, in the
-    # failure direction its own docstring names as the original bug. A slot
-    # that dies before launch is DECLINED in substance: the loop refused to
-    # start. All three historical ABORT wordings must classify alike.
+    # P6f — a pre-launch ABORT is DECLINED; all three historical wordings classify alike.
     k, _, _ = classify("2026-09-30T19:07:01+00:00 ABORT: only 2GB free on "
                        "/data (need 3GB)")
     if k != DECLINED:
@@ -773,12 +759,7 @@ def _selftest() -> int:
         fails.append(f"abort: a recovered loop reads 0 dark / 0 failed — got "
                      f"{a['dark_slots']}/{a['failed_slots']}")
 
-    # P7 — METER-NON-MONOTONE (154th audit B2), the 2026-10-19/20 shape
-    # REPLAYED: 95% then 0% inside the SAME `resets` window. A weekly
-    # cumulative meter cannot fall in its own window, so the pair proves at
-    # least one reading false. Both timestamps and both values must be in the
-    # event, because "the meter was wrong" with no receipt is the prose this
-    # reading exists to replace.
+    # P7 — 95% then 0% inside one `resets` window: one event carrying both timestamps and values.
     W = "Oct 26, 4:59am (UTC)"
     doc = "\n".join([
         row("builder",  "2026-10-19T16:07:00+00:00", 95, "refused", W),
@@ -827,14 +808,25 @@ def _selftest() -> int:
                      f"the weekly reset, not an event — got "
                      f"{a['meter_non_monotone']}")
 
-    # P7d — RENDERING FLUTTER IS NOT A WINDOW CHANGE (155th audit RANK 1,
-    # verbatim live shape): the CLI printed `Oct 26, 4:59am (UTC)` and
-    # `Oct 26, 5am (UTC)` for ONE reset instant, 7 and 5 times respectively,
-    # in the twelve rows after B1 shipped — so `==` on the string exempted
-    # 45% of consecutive pairs from the invariant inside a single real week.
-    # A fall across the flutter boundary must be an EVENT, not a reset. This
-    # is exactly the 95%->0% transition the reading was built for, landing on
-    # the one place the old comparison was blind.
+    # P7f — S22, the 11-28 shape replayed: 100% refused (resets Dec 2 12pm)
+    # then 11% on 11-28 09:07 under "Dec 3, 9am" — four days early. Fires as
+    # window-moved with the refusals counted; an honest reset AT its printed
+    # time (Dec 2 12:05, same fall) does not.
+    D2, D3 = "Dec 2, 12pm (UTC)", "Dec 3, 9am (UTC)"
+    rows = [row("builder", f"2026-11-28T0{h}:07:00+00:00", 100, "refused", D2)
+            for h in range(3)]
+    ev = attribution("\n".join(rows + [row("builder", "2026-11-28T09:07:00+00:00",
+                                            11, "start", D3)]), log_text="")
+    ev = ev["meter_non_monotone"]
+    if [(e["kind"], e["refused"]) for e in ev] != [("window-moved", 3)]:
+        fails.append(f"window-moved: the 11-28 fall must be one event, 3 refused — got {ev}")
+    ok = attribution("\n".join(rows + [row("builder", "2026-12-02T12:05:00+00:00",
+                                            1, "start", "Dec 9, 12pm (UTC)")]), log_text="")
+    if ok["meter_non_monotone"] != []:
+        fails.append(f"window-moved: a reset at its printed time is honest — got "
+                     f"{ok['meter_non_monotone']}")
+
+    # P7d — rendering flutter (4:59am vs 5am, one instant) is the SAME window: the fall is an event.
     doc = "\n".join([
         row("builder", "2026-10-19T23:37:00+00:00", 95, "refused",
             "Oct 26, 4:59am (UTC)"),
@@ -849,10 +841,7 @@ def _selftest() -> int:
                      f"must be exactly one event — got {ev}. The window is "
                      f"compared by reset_epoch, never by the rendered string.")
 
-    # P7c — UNKNOWN IS NOT ZERO, and pre-B1 history is not evidence. Rows with
-    # no `resets` field (every row before 2026-10-20) carry no window id, so
-    # they can prove nothing and must not be compared; an unreadable ledger
-    # reports None, never [].
+    # P7c — rows with no `resets` (pre-B1) prove nothing; an empty readable ledger is [].
     doc = "\n".join([
         row("builder", "2026-10-19T16:07:00+00:00", 95, "end"),
         row("builder", "2026-10-20T06:07:00+00:00", 0, "start"),
