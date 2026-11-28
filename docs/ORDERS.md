@@ -1,26 +1,27 @@
 # ORDERS — what the workers do. Written by the Director.
-Director sitting: 2026-11-27 06:41 UTC
+Director sitting: 2026-11-28 09:26 UTC
 
 Workers: take the FIRST open order in your lane that you can advance. Update
 only your order's `state:` lines (≤ 5, **each ≤ 4 lines of text — replace,
 do not append; history is in git**). One state+journal commit per slot.
-Machine problems go under INBOX, one line each. Rulings 131–136 cited here
-are in `docs/DECISIONS_RESOLVED.md` under 2026-11-27 06:41; 121–130 under
-11-26 19:14.
+Machine problems go under INBOX, one line each. Rulings 137–141 cited here
+are in `docs/DECISIONS_RESOLVED.md` under 2026-11-28 09:26; 131–136 under
+11-27 06:41.
 
 **`docs/PLAN.md` binds every order (owner, 11-15).** Research → combine →
 reproduce → test the last 10% → put it in him. We are in **stage 1: the
 instrument.** `docs/research/PUBLISHED_PRIORS.md` is the reference — read
 your order's section (only that section) at the start of every slot.
-**Where stage 1 stands (11-27 morning).** J24 is read by its frozen rule:
-**NOT SHOWN AT 500k** — the learner on the kind eye ate LESS than its blind
-and shuffled twins (0.23 vs 0.89 vs 2.34 late meals a life, 0/3 seeds).
-Beside it: every sighted cell ate well early (up to 8.8 meals a life) and
-then unlearned it — the same collapse plain SAC shows in the forge's rung
-M (4/5), which resets (K1) and TQC (K2) do not (0/5). So the suspect is
-the learner, and the re-ask is built and one freeze from launch. **Ruled
-(131): J30 freezes and launches it NOW on the three Kaggle CPU sessions
-that have stood empty since 02:45.** J24's row stays NOT SHOWN.
+**Where stage 1 stands (11-28 morning).** **J30 READ: EATS** — brain B
+with resets on the kind eye ate 27.41 late meals a life against its blind
+and shuffled twins' 3.34 / 2.36, 3 of 3 seeds: a learner eats from his own
+eye for the first time, and J24's miss was the learner's collapse, not the
+eye. **Four more results came home overnight and nobody has read them**
+(every agent was stopped by the usage gate 00:37–09:07): round 1-L's first
+five kernels (J18 look 1), B-7's four memory seeds (J29), the ear's third
+seed and twin (J14), J28's three GPU cells. **Read them FIRST, each once,
+by its sealed reader** — then fill the three Kaggle CPU sessions standing
+empty (J32).
 **Never idle on a question (ruling 127).** (a) Every order carries
 `branches:` — what to do on each likely outcome; do it, do not ask. (b) A
 missed gate stops THAT ORDER's next step, never the lane: write the miss,
@@ -40,8 +41,8 @@ by the worker under ruling 127(c) (INBOX line with the choice, 3 hours).
 **A line is not the worker's to move (ruling 114).** After a read has
 failed, nobody but a Director sitting changes a pass line, a clause, a
 control or an exemption.
-**Usage.** The shared weekly meter reads 15% all models (resets Wed 12-02
-12:00 UTC). Every multi-segment job stays a SELF-ADVANCING CHAIN (ruling
+**Usage.** The shared weekly meter reads 13% all models (resets Thu 12-03
+09:00 UTC); it read 100% from 11-28 00:37 to 09:07 and stopped every agent. Every multi-segment job stays a SELF-ADVANCING CHAIN (ruling
 109); raw results land where the next slot can read them and the state
 line says where.
 **One world (ruling 76): mujoco 3.17.0.** Every row about his world runs in
@@ -53,7 +54,8 @@ line says where.
 reads the LATE half of the run (ruling 65). An eye row is read by eating —
 late meals a life against its own blind and shuffled twins, seed by seed;
 critic rulers are printed beside it and decide nothing (ruling 102).
-Learner runs in his world only through J30 and the forge's frozen rounds.
+Learner runs in his world only through J32 and the forge's frozen rounds;
+every NEW run in his world passes `terminal_obs="dying"` (ruling 138).
 **Stopped (rulings 10, 20, 23, 36, 59, 80, 92, 101, 107, 111, 113, 131):**
 home-made learners; forager cells on the 16-ray compass eye; world-rule
 races; `D1.0`, `T2.01`, smell runs; the needs-hidden row; ANY learner seed
@@ -62,24 +64,25 @@ than the bins, 0.585 vs 0.606); a learner residual on the hand reflex; the
 MLX port; new specs with no published prior. A question with no prior is a
 `RESEARCH:` line in INBOX.
 **Kaggle CPU: 5 sessions IN ALL (ruling 85).** Rank: (0) any kernel
-< 1 h; (1) J30's three seed chains; (2) J18 round 1-L. Launch from a clean
+< 1 h; (1) J18 round 1-L (tranche 1's last kernels, then tranche 2 if
+look 1 asks for it); (2) J32's pilot chains. Launch from a clean
 worktree ff'd to a PUSHED commit (its own worktree per job, `JACK_REPO=`);
 copy its receipts into main's `gpu_submissions.jsonl` on harvest; do not
 remove a worktree while a watcher lives. Every JACK slot's first act:
 `/data/venvs/kaggle/bin/kaggle kernels status` on each running slug —
 harvest what is home, refill what is free.
 **GPU (rulings 96, 124).** The Kaggle account is shared: OUR meter counts
-only our jobs, and **Kaggle's refusal is the truth.** W48 opens Sat 11-28
-00:00 UTC with 30 h; three timers are armed for ≈ 22.5 of them (pids
-3886689 A's seeds, 29379 ear, 688795 J28). A refusal ends that week's GPU
-plan; nothing retries in a loop. Free Colab T4 answers 503 since 11-25 —
-one try per job, no loop. No first launch of a GPU job or of a NEW learner
-shape on a CPU kernel without a timing cell (rulings 86, 99).
+only our jobs, and **Kaggle's refusal is the truth** (a refusal now closes
+the week in `gpu_budget.json`, `59160055`). W48 (30 h, ends Sat 12-05
+00:00 UTC): the ear and J28's cells are home, A's seed 10 is home, 11 is
+running, 12 follows by itself (pid 3886689) — about 23 h in all; the
+spare ≈ 7 h is J33's. A refusal ends the week's GPU plan; nothing retries
+in a loop. Colab: one try per job, no loop. No first launch of a GPU job or
+of a NEW learner shape on a CPU kernel without a timing cell (rulings 86, 99).
 **The box (rulings 32, 53).** Day ceiling 57,600 CPU-s, ≤ 2 computing
 detached jobs. < 15 CPU-min → box, nice 19. The box is shared (never touch
 other projects). `pgrep -af` the same command line before launching.
-**Disks:** `/` 5.1 GB free (workers refuse under 3); `/data` 16 GB free,
-90% full — the growth is other projects' (11-27 00:15), not ours. Scratch,
+**Disks:** `/` 6.2 GB free (workers refuse under 3); `/data` 27 GB free. Scratch,
 clones, caches under `/data` only; the slot that harvests a round deletes
 its worktree's caches (not raw results) once the receipts are copied.
 **World files** (`w0.py`, `needs.py`, `survival.py`, `drives.py`): changed
@@ -94,229 +97,179 @@ by name.
 
 ## JACK — build the creature, his world and his curriculum (max 7 open, ranked)
 
-*Order of work: **J30** (freeze + launch NOW, three sessions) → **J18**
-(watch; look 1 when g1-0…g1-4 are whole) → **J29** (box and text, no
-kernel) → **J14** / **J28** (harvest when Saturday's timers fire) →
-Next-up → exit. A slot waiting on a kernel advances the next order.*
+*Order of work: the four reads, each once, in ONE slot if they fit —
+**J18** (look 1) → **J29** (B-7) → **J14** (ear score, A's seed 10) →
+**J28** (harvest) — then **J32** (fill the empty CPU sessions) → **J33**
+(GPU, behind A's seed 12) → **J31** (text) → Next-up → exit. A slot
+waiting on a kernel advances the next order.*
 
-### J30 — J24 asked again on the learner that does not collapse: freeze `eye_bins16_k1`, launch the nine cells
-part: Learning to eat + Eye · stage: 1 · step: 4 (test the last 10%) · prior: `docs/research/prereg/eye_bins16_k1.md` § Prior (read it first); §21 (win-then-lose), §28; `WORLD_CARD.md` § J24; rulings 121, 131
-prior: published — resets are the record's best-supported cure for a learner that stops learning (Nikishin 2022, DMC IQM 501 → 656; Nauman 2024); the record's foragers eat at 1e6–3e6 steps (§28), ours asks at 500k with one stated extension to 1.5M.
-prior: ours beside theirs — rung M (old eye, 300k, 5 seeds): K1 resets 0.84, plain SAC 0.059 and collapsing 4/5, K1 0/5. J24 (plain SAC, kind eye): sighted eats early (s941 8.78 meals a life) then unlearns to ≈ 0. B reproduced (reacher-hard 933.8). Learnable by a plain rule: hand forager on the food bins 20/20.
-**Ruled (131).** J24's row stays NOT SHOWN AT 500k — nothing about it is
-re-read. This is a NEW row with J24's seeds, size, twins and bar
-unchanged; the only change is K1's resets every 50k on ALL three cells.
-K1, not K2: the keep rule's tie goes to K1 and look 1 is a day away.
-**Do.** (1) In this slot only, bounded 45 minutes: add per-kind contact
-counts (touches of food / each other kind per life) to the life row as
-BESIDE columns — J24's collapse could not say what he approaches instead.
-Keep it only if J24's three K identities, the carry test and the reset
-test all re-pass; otherwise revert and go on without it. (2) Set
-`eye_bins16_k1.md` STATUS to FROZEN, exactly as drafted (rule § unchanged),
-commit that file alone, push. (3) `launch_detached.sh … python -m
-experiments.j24_launch --variant k1 chain --pin <freeze sha>` — three
-chains, one seed's three cells a kernel. (4) (the two expired launcher tests: DONE `8924b588`.) (5) Read once, when all nine are whole:
-`python -m experiments.j24_read --variant k1 --pin <sha>`.
-branches: EATS → row in `WORLD_CARD.md` + `KNOWN_ANSWERS.md`, the bar copied into `pilot_a.md`, INBOX one line (the hindsight eye is raced next sitting under ruling 134). · ≥ 2/3 above both, not EATS → launch the 1.5M carry yourself from the same pin. · else → write NOT SHOWN AT 500k ON K1 with the nine numbers and the 50k window table (did the collapse go away or not — say which); launch nothing; the sitting chooses between size (1.5M) and the eye. · a kernel dies → relaunch that seed's chain once from its last whole carry; twice → INBOX with the log path.
-serves: M3 (the earliest unfinished milestone) · PLAN "Learning to eat", "Eye" · philosophy 1, 3, 4 (a failure fixed, not filed).
-**done when:** the prereg is frozen, three chains run with raw-file paths in a state line; then the read by the frozen rule.
-state: 11-27 07:23 **(1) KEPT `5bda4a6e`**: life rows on the kind paint carry BESIDE `touch` {food, water, obstacle, wall, panel} = decisions ending in contact (`pilot_b.PilotLives._count_touch`, read-only; same cell before/after has identical actor, trace, rows). J24's three K identities, K1 carry, reset 3/3, launcher 10/10, reader 3/3 re-PASS; `tests/test_j30_touch.py` (forager that ate → food 3883; still body → 0).
-state: **(2) FROZEN `21a45857`** (`eye_bins16_k1.md`, STATUS line only, committed alone, pushed). **(3) LAUNCHED 07:21–07:23** from worktree `/data/wt/jack-j30` at that pin, JACK_WATCHER=cpu: s941 pid 1149300 kernel jack-cpu-1795764111 · s942 pid 1149715 -1795764132 · s943 pid 1150532 -1795764177, all RUNNING per Kaggle 07:23 (5/5 sessions with J18's two). Logs `/data/jack-logs/j24k1/chains/chain_s94{1,2,3}.log`; raw → `/data/jack-logs/j24k1/chains/j24k1_s94{1,2,3}.json`. One segment each, ≈ 5–7.5 h → home ≈ 12:30–15:00 UTC.
-state: 11-27 14:25 **(5) READ — EATS** (`e406b65f`), all nine whole (s941 14:04, s942 13:24, s943 13:39). Late meals/life sighted/blind/shuffled: s941 32.03/3.43/2.59 · s942 17.74/4.84/1.78 · s943 32.45/1.75/2.70; means **27.41**/3.34/2.36 → 3/3 above both, 27.41 ≥ 6.68. Output `/data/jack-logs/j24k1/read.json`.
-state: Branch EATS done: `WORLD_CARD.md` § J30 (+ 50k window table all nine, touch table), `KNOWN_ANSWERS.md` row J30 + standing line, bar copied into `pilot_a.md`, INBOX line (hindsight eye, ruling 134). Beside: no sighted collapse (5–8 → 24–39 meals/life by 450k); blind twin climbs too (→ 2.6–8.0); late food touches sighted 1.8–2.3k/life vs twins 9–103. Receipts harvested. Worktree `/data/wt/jack-j30` may be removed (no watcher).
-state: **DONE `e406b65f`** — nothing further is launched from this order.
-
-### J18 — Forge round 1-L: who still learns at 1M — on the harness's own two looks
-part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19–§22; `docs/FORGE.md`; rulings 61, 65, 69, 83, 105, 112, 122, 123
-prior: rung M (300k, 5 seeds, lock `2eb2c0f4`): K1 resets 0.84, K2 TQC 0.82, baseline 0.059, twin 0.017. Record: resets + LN critic best-supported (Nauman 2024); TQC; nobody has published a small agent still improving at the end of a long life (§20). Both arms reproduce in the library; rung M shows the task learnable.
-**Ruled (122).** The judge is NOT bent to ten runs. The harness's design is
-two looks, 10 then 20 runs an arm, 0.025 each; round 1-L pre-registers
-**20 seeds an arm (1421–1440)** and runs them in two tranches.
-**Do.** Freeze `experiments/forge/rounds/r1L/spec.json` before the first
-seed (round 1's files untouched):
-- PRIMARY: **K1 against baseline E-food**, `harness.compare`, its own
-  outcome (decisions until W sustained), unchanged. Tranche 1 = seeds
-  1421–1430 of both arms, 1M decisions.
-- BESIDE IT, deciding nothing by test: **K2** on seeds 1421–1430 and the
-  **never-trains twin** on 1421–1422; for every run rung M's late-half
-  rate (`metric.py`, the lock) and the long-life reading (rate in the last
-  200k against 300k–500k).
-- KEEP RULE, frozen now: if look 1 or 2 says K1 differs from baseline, B's
-  keep setting for stage 2 is whichever of K1/K2 has the higher late-half
-  mean at 1M; closer than K1's own seed range → K1 (the record's).
-- Budget, its own: tranche 1 = 32 runs = 8 kernels ≈ 140 of 180 kernel-h.
-  Tranche 2 (seeds 1431–1440, K1 + baseline, 180 kernel-h) only if look 1
-  is neither A_DIFFERS nor FUTILE.
-`validate_spec` (the forge's own file, not the judge): teach it a
-continuation round — rung L only, `parent: r1` with the parent's lock and
-control source named — with planted tests (a round with no parent and no S
-rung still refuses). You may do that; you may NOT edit
-`experiments/harness/` or `r1_read` (S20 does). The launch does not wait
-for S20; the read does. Launch from ONE pushed pin as self-advancing
-chains on the two free sessions, K1 + baseline kernels first.
-branches: look 1 A_DIFFERS or FUTILE → the round is read; write the scoreboard and the keep setting into `stage2_a_vs_b.md` (draft). · needs look 2 → launch tranche 2 yourself. · a run lost → it is entered as a crash, never replaced (check #13). · S20 not landed when the runs are home → rates are printed, the verdict waits for S20; take the next order.
+### J18 — Forge round 1-L: READ LOOK 1 NOW — g1-0…g1-4 are whole
+part: Learning to eat + The science lab · stage: 1 · step: 4 · prior: §19–§22; `docs/FORGE.md`; rulings 61, 65, 69, 83, 105, 112, 122, 123, 130, 135
+prior: rung M (300k, 5 seeds, lock `2eb2c0f4`): K1 resets 0.84, K2 TQC 0.82, baseline 0.059, twin 0.017. Record: resets + LN critic best-supported (Nauman 2024); nobody has published a small agent still improving at the end of a long life (§20). J30 beside: K1 on his own eye still climbing at 450k.
+**Frozen (do not reopen):** rule `rounds/r1L/spec.json` `52033df2`; judge
+lock `9d3feb7e` (n_perm 2000, seed 0, ruling 130); PRIMARY K1 against
+baseline E-food on `outcome_sustained` W = 2, T = 1M, two looks at 10 and
+20 runs an arm, 0.025 each; KEEP RULE: if a look says K1 differs, B's keep
+setting is whichever of K1/K2 has the higher late-half mean at 1M, closer
+than K1's own seed range → K1. A lost run is a crash, never replaced.
+**Do.** (1) `python -m experiments.forge.r1L_read --tranches 1` ONCE
+(jack-std), `L_g1-0…g1-4.json` in `/data/jack-logs/forge/r1L/raw/` (last
+home 11-28 08:48). (2) Write the verdict, check #13's books and the beside
+rates into `docs/FORGE.md` and the scoreboard. (3) Chains B (pid 237409,
+g1-5 → g1-7) and C (pid 1449092, g1-6) keep running: K2 and the twin are
+BESIDE and are read when home.
+branches: A_DIFFERS → the keep setting by the frozen rule goes into `stage2_a_vs_b.md` and J32's draft; if K2's runs are not home yet the keep rule waits for them and J32 uses K1 meanwhile (the tie rule's own answer). · FUTILE → written as read; B's stage-2 setting stays K1 BY RECORD + J30; INBOX one line. · NEEDS_LOOK_2 → launch tranche 2 (seeds 1431–1440, K1 + baseline) yourself from pin `495a766d` on free sessions, claim files as chain C's, `JACK_WATCHER=cpu`. · the reader refuses (lock, hash, a missing run) → the refusal text into the state line and INBOX; do not edit the reader or the lock.
 serves: M3, M7 ("he keeps learning") · philosophy 1, 3, 4.
-**Added 11-27 (ruling 135).** Look 1 needs g1-0…g1-4 whole; g1-4 sits
-third in chain A (≈ Sat evening). When J30's three sessions come free
-(≈ 6 h after its launch): read `r1_run chain` — if a second chain can
-take g1-4 → g1-6 and g1-5 → g1-7 with NO chance that chain A/B also
-launches them (a claim file both chains honour, planted test: a claimed
-name is skipped, an unclaimed one is not), build that and launch chains
-C and D from the same pin `495a766d`. If it cannot be made certain in one
-slot, leave the chains as they are — a seed run twice is worse than a
-day's wait (check #13: one run a seed, never a choice between two).
-**done when:** `r1L/spec.json` is frozen and tranche 1's chains run with log paths in a state line; then the harness verdict at look 1.
-state: 11-27 19:25 watch: g1-0 (13:59) + g1-1 (12:53) WHOLE in `r1L/raw/`; g1-2 (A, jack-cpu-1795787976), g1-3 (B, -1795783993), g1-4 (C, -1795788940, claimed) all RUNNING per Kaggle 19:25, wrap pids 237214/237409/1449092 alive. Raw not opened. NEXT unchanged: g1-0…g1-4 whole → `r1L_read --tranches 1` once.
-state: 11-27 03:35 **JUDGE LOCK `9d3feb7e`** (ruling 130), committed alone at `85ca3d4e` before any raw file: harness incl. looks.py (__init__ 382cf304 unchanged), registry, forge __init__/metric, spec 52033df2, r1L_read, r1L_beside, continuation, r1_read. Both readers now `check_lock` before opening raw (tests 4/4, 10/10, looks_fa 6/6). Kernels A/B RUNNING (Kaggle status 03:40, 7h08m; wrap pids 237214/237409 alive), no raw file home.
-state: 11-26 20:12 per-arm tranche seeds in `r1_run` (`e99c1b78`; rule `f618bba5` in `forge/continuation.py`, out of judge-locked `forge/__init__.py`). 11-26 20:27 **(2) FROZEN `52033df2`** `rounds/r1L/spec.json`: parent r1 lock 2eb2c0f4, K1+K2, tranches exactly `_r1l_like()`, PRIMARY `harness.compare(K1, E-food)` on `outcome_sustained` **W = 2** (E2c's frozen W, unchanged) T = 1M, K1 resets 50k…950k (19), keep rule + 180 kernel-h a tranche. `forge_scoreboard` renders a parent round via `validate_round` (board re-rendered). Tests: r1_run (new frozen-shape test), r1_spec 8/8, round 27/27, read 13/13.
-state: (3) LAUNCHED 11-26 20:30 tranche 1 from pin `495a766d` (rule `52033df2`), beside J24's three (order of work: "the other two"): chain A g1-0→g1-2→g1-4→g1-6 (pid 237214, kernel jack-cpu-1795725017), chain B g1-1→g1-3→g1-5→g1-7 (pid 237409, jack-cpu-1795725031), both RUNNING 20:31; JACK_WATCHER=gpu. Logs `/data/jack-logs/forge/r1L/chains/chain_{A,B}.log`, raw → `/data/jack-logs/forge/r1L/raw/`. A kernel ≈ 7.5–18.3 h (≤ 3 segments); K1+baseline (g1-0…g1-4) home first ≈ 3 kernels deep a chain. NEXT: watch chains (a lost run = a crash, never replaced); when g1-0…g1-4 are home → look 1 needs a 1-L reader (S20; `r1_read` locked) — print rates meanwhile.
+**done when:** look 1's verdict is in `FORGE.md`; then tranche 2 runs or the round is closed with the keep setting named.
+state: 11-28 09:25 **look 1 REFUSED by the sealed reader**: g1-0…g1-4 all whole (K1+E-food 1421–1430), but `r1L_read --tranches 1` wants the WHOLE tranche — missing E-food-lr0 1421–1422 and K2 1421–1430 (g1-5…g1-7; B and C chains RUNNING, wrap pids 237409/1449092; chain A done, its g1-4/g1-6 refused as claimed). Reader locked → not edited; INBOX QUESTION. Raw not opened, no rates printed. Output `/data/jack-logs/forge/r1L/reads/look1.txt`.
+state: 11-28 09:26 (Director) g1-0…g1-4 WHOLE (13:59, 12:53, 03:32, 05:41, 08:48), raw not opened. Chain A ended after g1-2; B and C alive per `pgrep`. 3 of 5 CPU sessions free.
+state: 11-27 03:35 **JUDGE LOCK `9d3feb7e`** committed alone at `85ca3d4e` before any raw file; both readers `check_lock` first. Rule FROZEN `52033df2` 11-26 20:27; launched 20:30 from pin `495a766d`; chain C 11-27 14:15 with g1-4 + g1-6 claimed (`d1361856`).
 
-### J29 — Brain B with a memory: the control stage 2 needs, from published code
-part: His brain (B) · stage: 1 · step: 2 (combine) → 3 (reproduce) · prior: §5 row 7 (read it first), §6; `KNOWN_ANSWERS.md` draft row B-7 (`38d88ade`); `prereg/stage2_a_vs_b.md` row `B-mem`; ruling 136
-prior: published — Ni et al. (arXiv 2110.05038, "Recurrent model-free RL can be a strong baseline"; LSTM-128, separate actor/critic encoders, whole-episode sequences): LSTM-SAC on velocity-only Pendulum reaches about −170 by 40k–50k steps (4 seeds, band read off the appendix figure by pixel: −154.5…−190.9); a memoryless SAC cannot solve it. Ours: no recurrent arm exists; B (memoryless) reproduces reacher-hard.
-**Why.** Stage 2 races a world model (A) against B. Without a B that has a
-memory, "A wins" could mean only "A remembers". The arm must exist and
-reproduce a published number before the race is frozen.
-**Do.** (1) Name the published code to build from (the authors'
-`pomdp-baselines`, or a maintained library's recurrent SAC — check what
-installs under jack-std; code only, no weights) and write the design note
-in the module docstring with the "ours beside theirs" table. (2) Build
-`experiments/brain_b_mem.py` beside `brain_b` (B untouched). (3) Time one
-cell on the box (velocity-only Pendulum, 2k steps, nice 19) and write
-seconds per 1k steps and the cost of 50k. (4) Freeze row B-7 in
-`KNOWN_ANSWERS.md` BEFORE the first seed: Ni's configuration, 51,000
-steps, seeds 0–3, pass = mean over 40k–50k inside the pixel-read band;
-twin = memoryless B on the same task must end outside it; the
-shared-encoder arm beside it, expected worse (decides nothing); no
-extension. (5) Run it: box if
-4 seeds fit the day ceiling, else one Kaggle CPU kernel at rank (0)/(2).
-branches: no library installs cleanly → vendor the authors' recurrent actor/critic as code with its licence line, say so in the note. · B-7 in band → row written; `stage2_a_vs_b.md` (draft) names the arm. · miss → a miss, written; the arm is a suspect — INBOX with the curve, the sitting rules. · the twin passes → the task is not a memory test as built: stop, INBOX.
+### J29 — Brain B with a memory: READ B-7 NOW — the four seeds are home
+part: His brain (B) · stage: 1 · step: 3 (reproduce) · prior: §5 row 7, §6; `KNOWN_ANSWERS.md` row B-7 (FROZEN `c848d888`); `prereg/stage2_a_vs_b.md` row `B-mem`; ruling 136
+prior: published — Ni et al. (arXiv 2110.05038): LSTM-SAC on velocity-only Pendulum ≈ −170 by 40k–50k steps (band −190.9…−154.5, 4 seeds); memoryless SAC cannot solve it. Ours: twin `B7flat` −1490.2 (fails as required); same learner with the full observation −148 / −143 (the twin's miss is the missing memory).
+**Do.** `python -m experiments.b7_read` ONCE (reader sealed `127a6bc4`;
+`b7mem_s{0..3}.json` in `/data/jack-logs/j29/b7mem/`, home 11-27 20:00 –
+11-28 01:59). Row into `KNOWN_ANSWERS.md` B-7 exactly as read; copy the
+receipts (the chains ran from MAIN's tree).
+branches: REPRODUCES → `stage2_a_vs_b.md` (draft) names `B-mem` = this arm; INBOX one line. · MISS → a miss, written with the four seed scores and the curve; the arm is a suspect, NOT a stage-2 arm; INBOX — the sitting rules (no extension exists). · VOID (a seed LOST) → written VOID with the segment log; INBOX; nothing is re-bought by a worker.
 serves: M3 (stage-2 ready-list: "a control brain that has a memory arm") · philosophy 3, 4.
-**done when:** the design note and timing are in a state line; then B-7 frozen; then its four seeds and twin read.
-state: 11-27 08:45 **(1)+(2) BUILT `befb7848`** `brain_b_mem.py`: torch/gymnasium PORT of `pomdp-baselines@e7c19c32` recurrent SAC (MIT; no library has one), Ni's config, ours-beside-theirs table in the docstring. **(3) TIMED** box 1 thread 1.62 CPU-s/update ≈ 22.5 CPU-h a 51k seed (does not fit the box); 2 threads same CPU-s, wall 0.9 s/update (`/data/jack-logs/j29/timing_box*.json`).
-state: 11-27 09:30 **(4) B-7 RULE FROZEN `c848d888`** (before any seed): seeds 0–3, 51k, arm score = 4-seed mean of eval returns at 40k–50k (11 points), REPRODUCES iff in −190.9…−154.5; twin `B7flat` = memoryless Brain B (`brain_b.py` ours, Zoo Pendulum settings) on the same Pendulum-V, VOID if ≥ −190.9; shared arm beside; no extension; a lost seed = VOID, never replaced. Run loop in their learner order (`19036ff0`) + bit-equal carry (`8b98a469`), tests 6/6.
-state: 11-27 11:42 **twin `B7flat` (`7a08e7cc`) HOME, 4/4 complete:** seed scores −1490.1 / −1483.3 / −1495.1 / −1492.5, mean **−1490.2** (flat 2k→51k) — far below −190.9, so the twin FAILS as B-7 requires (not VOID; the row is read only with B7mem's four). Known-positive beside, decides nothing (`--obs full`, `d7b1a3ae`): same learner, full observation → s0 −148.4, s1 −143.0 at 40k–50k (solves by 4k), so the twin's miss is the missing memory, not a broken learner. Raw `/data/jack-logs/j29/b7flat{,_full}_s*.json`.
-state: 11-27 13:30 **launcher BUILT `e0f5ea7e`** `experiments/b7mem_launch.py`: one seed = a chain of Kaggle CPU segments, each `brain_b_mem run --threads 4 --carry --deadline T0+7.5h`, segment n copies the ONE carry mounted from n-1; job only at a pin whose B-7 row is FROZEN (c848d888^ refused), seeds 0–3, ≤ 4 segments; stalled/crashed/incomplete-at-4 → raw written LOST, never re-bought. Tests 7/7 (`tests/test_b7mem_launch.py`, jack-std). Nothing submitted: Kaggle 5/5 busy (J30 ×3, J18 ×2).
-state: 11-27 14:26 **(5) LAUNCHED** at pin `4caae6c3` (B-7 FROZEN there; job body accepted), JACK_WATCHER=cpu, the 2 sessions J30 freed (forge left them, F3): chain s0→s1 pid 1462351 kernel jack-cpu-1795789543 · chain s2→s3 pid 1462938 -1795789578, both RUNNING per Kaggle 14:28. Logs `/data/jack-logs/j29/b7mem/chain_s{01,23}.log`; raw → `b7mem_s{0..3}.json`, segments in `segments/`. NOTE: run from MAIN's tree (JACK_REPO unset; worktree `/data/wt/jack-b7mem` made but unused) — receipts land in main; later segment submits face main's dirt guard (waits ≤ 3 h, then 'failed' without a raw file: segments stay, resumable).
-state: 11-27 17:50 **READER SEALED `127a6bc4`** `experiments/b7_read.py` (frozen rule only; refuses a non-FROZEN pin, mixed pins, a missing seed; lost seed or twin ≥ −190.9 → VOID), planted tests 7/7. Chains s01/s23 wrap pids 1462351/1462938 alive, no segment home yet; main's dirt = `cpu_budget.json` only, `offending_dirt` empty (segment submits not blocked). NEXT: when `b7mem_s{0..3}.json` are home → `python -m experiments.b7_read` ONCE (writes `/data/jack-logs/j29/b7mem/b7_read.json`) → row per branch.
+**done when:** B-7's row is written from the sealed read.
+state: 11-28 09:23 **(6) READ — REPRODUCES, DONE `054a7ce1`**: B7mem s0/s1/s2/s3 −174.14/−170.45/−162.05/−183.88, arm **−172.63** in −190.9…−154.5; twin −1490.23 fails. Row B-7 written in KNOWN_ANSWERS; `stage2_a_vs_b.md` (draft) names `brain_b_mem.py` as B-mem's core. Shared arm not run (beside, decides nothing). Output `/data/jack-logs/j29/b7mem/b7_read.json`.
+state: 11-28 09:26 (Director) all four raw files present, unread. Built `befb7848` (port of `pomdp-baselines@e7c19c32`, MIT), launcher `e0f5ea7e`, launched 11-27 14:26 at pin `4caae6c3`.
 
-### J14 — Brain A at the published size, and the ear's last seed
-part: His brain (A) + Ear · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `prereg/a2_size_s_enc.md` (FROZEN + timing addendum `381b83b9`); `KNOWN_ANSWERS.md` rows A1–A3, A2-v1S, N7-kws-2; rulings 67, 78, 79, 86, 96, 103, 106, 117
-prior: A1 PASS, A3 PASS, A2 MISS under band. A2-v1S-enc: 5.0 T4-h a seed. Ear: BC-ResNet-1 published 96.9 ± 0.30; N7-kws-2 s0 97.137, s1 97.055 (band 96.3–97.5), s2 and the twin (control) outstanding.
-**Do.** (b) **Ear s2 goes on KAGGLE GPU now** (ruling 117): W47 has 1.62 h
-that expire Sat 00:00; a seed is 1.38 h (≤ 1.54 h with valid). The "20% to
-spare" in the old order was about one Colab session's length, not the
-weekly quota — it does not apply. Stop the Colab retry loop first (`kill`
-its pid by number, never `pkill -f`), so there is no double submit. A
-quota refusal or a cut run costs nothing: then s2 + the twin run on W48
-after A's chain is launched. When s2 and the twin are home: `score2` by
-the frozen rule into `KNOWN_ANSWERS.md` N7-kws-2 — a miss is a miss.
-(a) **A's seeds 10–12: arm the launcher TODAY.** A detached script (a
-poller, not a computing job; `JACK_WATCHER=gpu`; chdir + sys.path pinned)
-that sleeps until Sat 11-28 00:01 UTC, ff's `/data/wt/jack-clean` to
-origin, and launches ONE self-advancing chain: seed 10 → 11 → 12, one a
-session (`rows.py` A2-v1S-enc). Dry-run its launch line today with the
-date faked; log `/data/jack-logs/a2_enc/sat_launch.log`. No worker need be
-awake on Saturday.
-serves: M3, M5 · PLAN "brain A reproduced"; "Ear" step 3 · standing objective 3 · philosophy 3, 4, 6.
-**done when:** s2 is launched on Kaggle or refused with the reason; the Saturday launcher is alive with its dry-run in a state line; later, N7-kws-2 scored and A's three seeds home.
-state: (a) ARMED 11-26 10:12 (`4cd8fff2`): `scripts/a2_enc_sat_launch.py` pid 3886689 (JACK_WATCHER=gpu) sleeps to Sat 11-28 00:01 UTC, makes its OWN worktree `/data/wt/jack-a2enc` at origin/main (jack-clean has the forge's receipt dirt), then `rows enc-kernel 10 --control` → 11 → 12, one Kaggle GPU session each, stops on a refusal. New: twin on seed 10 per the prereg (`control_seed`; A2 rows keep 0), test PASS. Dry-run (date faked) `/data/jack-logs/a2_enc/sat_launch_dryrun.log`; live log `sat_launch.log`. Harvest: `rows` files `v1s_enc_s1{0,1,2}*.json` in `/data/jack-logs/brain_a/rows/`, copy receipts from the worktree.
-state: (b) REFUSED 11-26 07:26 by Kaggle (W47 quota full; meter said 1.62 h; log `/data/jack-logs/kws_row2/kaggle_s2.log`); Colab retry pid 3514759 killed. s0 97.137, s1 97.055 home. ARMED 17:24 (commit below): `scripts/kws_w48_launch.py` pid 29379 (JACK_WATCHER=gpu, log `/data/jack-logs/kws_row2/w48_launch.log`) fires `kws_row kaggle2 s2 twin` from its own worktree `/data/wt/jack-kws-w48` 15 min after A's seed-10 LAUNCH line in `sat_launch.log`, or Sat 02:01 UTC at the latest; test 5/5, dry-run `w48_launch_dryrun.log`. NEXT: harvest `kws2_s2.json`/`kws2_twin.json` in `/data/jack-logs/kws_row2/`, copy the worktree's receipts, `score2` by the frozen rule into KNOWN_ANSWERS N7-kws-2.
-state: (c) DONE 11-25: `pilot_a.md` carries J24's arms/bar, 0.87 struck. Still a draft.
-branches: a Saturday timer's submit is refused → write the refusal; the other timer still fires; nothing retries (ruling 124). · s2 + twin home → `score2` by the frozen rule, a miss is a miss. · A's seed home → `rows` score into KNOWN_ANSWERS A2-v1S-enc; the chain goes on by itself.
+### J14 — The ear's row is complete: SCORE IT; brain A's seeds at the published size come home by themselves
+part: Ear + His brain (A) · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `prereg/a2_size_s_enc.md` (FROZEN + addendum `381b83b9`); `KNOWN_ANSWERS.md` rows A2-v1S-enc, N7-kws-2; rulings 67, 78, 79, 96, 124
+prior: Ear: BC-ResNet-1 published 96.9 ± 0.30 (band 96.3–97.5); ours s0 97.137, s1 97.055. A: A1, A3 PASS, A2 MISS under band; A2-v1S-enc is the arm at the published size, 5.0 T4-h a seed.
+**Do.** (1) Ear: `kws2_s2.json` (01:44) and `kws2_twin.json` (03:06) are
+in `/data/jack-logs/kws_row2/`. Copy the receipts from worktree
+`/data/wt/jack-kws-w48`; `score2` by the frozen rule into
+`KNOWN_ANSWERS.md` N7-kws-2 — a miss is a miss, and the twin must fail.
+(2) A: `v1s_enc_s10_c.json` is home (05:26); seed 11 runs (kernel
+jack-ladder-1795843580, home ≈ 10:30), seed 12 follows from pid 3886689.
+When all three are home: copy receipts from `/data/wt/jack-a2enc`, `rows`
+score into `KNOWN_ANSWERS.md` A2-v1S-enc by the frozen rule, once.
+(3) Note under SYSTEM Next-up (v) that no doc refused these submits.
+branches: ear in band on 3/3 and twin fails → the ear's row REPRODUCES; PLAN "Ear" goes to step 4 at the next sitting — INBOX one line. · any other ear read → written as read. · A in band → gate 2 of `stage2_a_vs_b.md` reads met (draft text). · A misses → a miss; J33's row is the next evidence, nothing is re-run. · a seed's submit refused by Kaggle → written; the week is closed; no retry.
+serves: M3, M5 · PLAN "brain A reproduced", "Ear" step 3 · standing objective 3 · philosophy 3, 4.
+**done when:** N7-kws-2 is scored; A2-v1S-enc is scored on its three seeds.
+state: 11-28 09:30 **(b) N7-kws-2 READ — PASS** (`054a7ce1`): s0/s1/s2 97.137/97.055/96.646, mean 96.946 sd 0.263 in 96.3–97.5; twin 8.569% ≤ 15. (a) A's seed 10 (+twin) HOME 05:26 `v1s_enc_s10_c.json`, seed 11 RUNNING (jack-ladder-1795843580), pid 3886689 alive. NEXT: when s10–s12 home → `rows` score into A2-v1S-enc (s10 not yet scored).
+state: 11-28 09:26 (Director) timers fired as armed: A seed 10 00:01 → home 05:26, seed 11 launched 05:26; ear chain done 03:06 (`w48_launch.log`). Nothing scored.
 
-### J28 — Spend W48's spare GPU on three cheap cells the record left open
-part: Body and movement (cell 1) + His brain (cells 2, 3) · stage: 1 · step: 1 → 3 · prior: §29 (walkers; RESEARCHER 11-26 16:14), §1–§2, `prereg/stage2_a_vs_b.md` "OPEN"; rulings 119, 124, 126
-prior: published walkers — 150–200M PPO steps on 8,192 copies with PD joint targets, ≈ 1–2 h a seed on a T4 (inferred from one T4 figure); JAX fails on a P100 convolution (jax#33224); MJX has no PGS solver. Dreamer at training ratio 64 on proprio: no published number at our size — ours to find out; A2 at ratio 512 MISSED its band, A1/A3 passed.
-**Do.** Text and prereg today, cells behind the ear on W48 (one launcher
-that waits for `kws2_twin.json` or Sun 11-29 00:01 UTC, modelled on
-`scripts/kws_w48_launch.py`, own worktree, `JACK_WATCHER=gpu`, dry-run
-with the date faked):
-1. **MJX timing cell, 10 minutes:** on the GPU Kaggle gives (ask T4; print
-   what came), Playground `HumanoidStand`, PPO, 8,192 copies — does JAX
-   run, steps a second, memory. No verdict; three numbers into
-   `PUBLISHED_PRIORS.md` §29 as "ours".
-2. **fp16 timing cell, 20 minutes:** brain A size S with mixed precision
-   on/off — seconds per 1k decisions, both.
-3. **Ratio-64 row:** freeze `prereg/a2_ratio64.md` BEFORE the run — task
-   and band are A1's (the row A already passes), ratio 64 instead of 512,
-   seeds 20–22, no extension; "holds" = in A1's band on 3/3. ≈ 1 T4-h a
-   seed.
-No walker is built: his GPU body is a new world (ruling 76) and a stage-3
-design; PD joint targets hold that seat BY RECORD (ruling 126).
-branches: cell 1 fails on the GPU given → the error text into §29, RESEARCH line "walker venue"; cells 2–3 still run. · quota refused → stop, write it (ruling 124). · ratio 64 holds → `stage2_a_vs_b.md` table re-costed at ratio 64 (draft); misses → written as a miss, the table stays.
+### J28 — The three cheap GPU cells ran: HARVEST them
+part: Body and movement (cell 1) + His brain (cells 2, 3) · stage: 1 · step: 1 → 3 · prior: §29, §2 (RESEARCH 11-27 16:12: A1 at ratio 64 predicted to MISS at both points, ≈ 420 / ≈ 500); `prereg/a2_ratio64.md` FROZEN `97762429`; rulings 119, 124, 126
+**Do.** `/data/jack-logs/j28/w48_launch.log` says the chain ended rc 0 at
+08:18 (mjx → fp16 → r64 s20+twin → s21 → s22). Copy receipts from
+`/data/wt/jack-j28-w48`. (1) MJX cell: did JAX run on the GPU Kaggle
+gave, steps a second, memory → §29 as "ours" (or the error text). (2)
+fp16: seconds per 1k decisions, both → §2 as "ours". (3)
+`python -m experiments.brain_a.ratio64 score` ONCE → the row as read.
+branches: cell 1 ran → INBOX "walkerwalk: JAX runs" (the sitting freezes `w1_walkerwalk.md`); failed → error into §29 + a `RESEARCH:` line "walker venue". · ratio 64 HOLDS → re-cost `stage2_a_vs_b.md`'s table at ratio 64 (draft). · MISSES → written as a miss beside the record's prediction; the table stays; brain A's affordable size is then J33's question.
 serves: M5 (body), M3 (brain A affordable on free GPU) · standing objective 3 · philosophy 3, 6.
-**done when:** the launcher is alive with its dry-run in a state line and `a2_ratio64.md` is frozen; later the three results are in their files.
-state: 11-26 21:2x cell 3 prereg **FROZEN `97762429`** `prereg/a2_ratio64.md`: A1 cartpole_balance, size 1m, replay_ratio 0.0625 (= 64), seeds 20–22, twin 20, no extension, HOLDS = 3/3 seeds in A1's band at 100K AND 200K, read on ruling 78's [P−30K, P) (rows.py window beside). Debt said before any seed: A1 at 512 had s2 677 < 690 at 100K → the 100K point cannot separate ratio from noise; 200K can.
-state: arm + kernel + judge built `adae3ce3` (`experiments/brain_a/ratio64.py`, rows.py untouched): `python -m experiments.brain_a.ratio64 kernel 20 --control` / `kernel 21` / `kernel 22`, `… score`. Tests 5/5. Nothing submitted.
-state: 11-26 22:40 cells 1+2 BUILT: `experiments/body/mjx_timing.py` (`2d28314a`, Playground's own HumanoidStand PPO config, 10M steps, GPU kind printed first) and `experiments/brain_a/fp16_timing.py` (`07217ae4`, A2-v1S-enc s10, only `fabric.precision` 32-true→16-mixed, sec/1k decisions). Launcher `scripts/j28_w48_launch.py` (`a52398a9`): twin home or Sun 00:01 → mjx → fp16 → r64 s20+twin → s21 → s22, refusal stops (not cell 1). Tests 3+1+2 PASS; dry-run `/data/jack-logs/j28/w48_launch_dryrun.log`.
-state: **ARMED 11-27 02:39** (J24's chains ended, cap freed): `scripts/j28_w48_launch.py` pid 688795 (wrap 688785, JACK_WATCHER=gpu), log `/data/jack-logs/j28/w48_launch.log` — opens Sat 11-28 00:01, waits for `kws2_twin.json` or Sun 11-29 00:01, then mjx → fp16 → r64 s20+twin → s21 → s22. NEXT: harvest the three results into §29 / `a2_ratio64` score.
-state: 11-27 04:25 cell 1 FIXED `54e0a7dc` (RESEARCH 04:11, re-checked on the 0.2.0 wheel): `mujoco_playground` is a PyPI 404 → installs `playground==0.2.0`; env forced `config_overrides={"impl": "jax"}` (0.2.0 humanoid defaults to warp); num_envs = config's 2,048, not 8,192. Prints VERSIONS + IMPL. Planted test fails on old body; launcher pid 688795 alive, ff's to origin at fire → picks it up.
+**done when:** the three results are in their files.
+state: 11-28 09:35 **DONE `44e5c6f6`**, all three home. Cell 3 ratio 64 **MISSES** (200K 282.3/275.9/316.1 vs 932; twin 288.2 — no learning seen in ≈ 6k grad steps), `a2_ratio64.md` READ. Cell 1 FAILED: 2×T4 seen by jax 0.11.1, but brax 0.14.2 calls removed `jax.device_put_replicated` → §29 'ours' + RESEARCH line. Cell 2: fp32 165.3 s/1k; 16-mixed crashed (Lightning AMP vs sheeprl grad clipping) → `stage2_a_vs_b.md` item 2.
+state: 11-28 09:26 (Director) chain done 08:18, `a1r64_s2{0,1,2}.json` in `/data/jack-logs/brain_a/rows/`; nothing harvested.
+
+### J32 — The pilot stage 2 is sized by: twenty lives-long runs of brain B on his own eye, 1M decisions
+part: Learning to eat + His brain (B) · stage: 1 → 2 · step: 4 · prior: §8 (test method: n from a 20-run pilot), §21, §28; `WORLD_CARD.md` § J30; `prereg/stage2_a_vs_b.md` arms table; rulings 135, 138, 141
+prior: published — foragers eat at 1e6–3e6 steps (§28); resets keep a replay learner learning (Nikishin 2022; Nauman 2024); no small agent is published still improving at the end of a long life (§20). Ours: B+K1 on the kind eye at 500k EATS 3/3 (27.41 vs 3.34 / 2.36), still climbing at 450k; B reproduces reacher-hard; hand forager 20/20.
+**Why.** PLAN stage 2: "the number of runs is set by a 20-run pilot", and
+"we should know whether anything learns to eat before the long runs
+start". J30 says something does, at 500k on 3 seeds. Nobody knows the
+spread over 20 seeds or whether it holds to 1M — and three free sessions
+stand empty.
+**Ruled (141).** This is a SIZING pilot: it seats nothing and no arm
+"wins". Fixed here, not the worker's to move: arm = J30's sighted cell
+exactly (B, `ent_coef="auto"`, K1 resets every 50k, `paint="kind"`,
+`eye="bins16"`, entry rung d0) with `terminal_obs="dying"`; 1M decisions;
+seeds 2001–2020; the blind twin on seeds 2001–2005. Outputs: late meals a
+life per seed (lives starting ≥ 500k), the 50k window table, the share of
+seeds above twice the blind twins' mean, and from that share the n a race
+needs (§8's formula) — plus ONE falsifiable line: **"B+K1 still eats at
+1M" holds iff ≥ 15 of 20 seeds end above twice the blind-twin mean**;
+fewer is written NOT HELD AT 1M and stage 2's B is in question.
+**Do.** (1) Draft `prereg/pilot_b20.md` from the lines above + the prior
+(no other choice in it). (2) Timing: J30's cells are the timing cell (same
+learner shape) — say kernels and hours. (3) Freeze under ruling 135 (your
+INBOX line; this order IS the arms/seeds/bar). (4) Launch self-advancing
+chains on the free sessions behind J18's rank, own worktree, `cpu` watcher.
+branches: `terminal_obs="dying"` changes the J30 cell's trace beyond the death step (check on one short cell) → say so in the prereg; it stays `dying`. · J18 names K2 as keep before the freeze → still K1 here (J30's cell); K2 is a stage-2 draft matter. · a kernel dies → relaunch that chain once from its last whole carry; a lost seed is entered lost.
+serves: M3 (stage 2 sized by evidence), M7 · philosophy 1, 3, 4, 6.
+**done when:** `pilot_b20.md` is frozen and chains run with paths in a state line; then the one read.
+
+### J33 — Brain A at the authors' OWN current preset: one known-answer row on W48's spare GPU
+part: His brain (A) · stage: 1 · step: 3 (reproduce) · prior: §2 as re-checked 11-27 16:12 (`fde24942`) — read it first; `KNOWN_ANSWERS.md` A2; rulings 86, 96, 124, 139
+prior: published — the official `dmc_proprio` preset is now size1m at train ratio 1024, repeat 1; the v2 code re-run independently (MR.Q, 10 seeds) reads cartpole_swingup 736 [591, 838] at 500K. Ours: 1m at ratio 512 is a pairing nobody published — A2 MISSED its (2023, v1) band at 100K, 393.3 vs 438–518. A1, A3 pass.
+**Ruled (139).** A2's row stays a MISS. This is a NEW row, `A2-off`.
+**Do.** (1) Draft `prereg/a2_official.md`: cartpole_swingup, the official
+preset unchanged, band = MR.Q's interval at the frames it was read at
+(take the exact frames/interval from §2's source, not from this order),
+seeds 30–32, twin (lr 0) on seed 30, no extension, a lost seed is lost.
+If one seed to the band's frame count costs more than 3 T4-h, read at the
+EARLIEST frame count the source tabulates and say so before any seed.
+(2) Timing cell ≤ 15 min (ruling 86) once A's seed 12 has launched or
+finished. (3) Freeze (ruling 135, INBOX line), then one chain, seeds
+30 → 31 → 32, stopping at Kaggle's refusal.
+branches: the source tabulates no interval at an affordable frame count → do not invent a band: `RESEARCH:` line, order waits. · timing says 3 seeds exceed the spare → run what fits in seed order; the row is read only when 3 are home (next week finishes it). · refused → written; no retry.
+serves: M3 (PLAN "brain A reproduced") · standing objective 3 · philosophy 3, 4, 6.
+**done when:** `a2_official.md` is frozen with its timing and the chain runs or is refused.
+
+### J31 — Stage 2's rule made freezable: memory in the race, his own death, and every OPEN line closed or priced
+part: His brain · stage: 1 (ready-list: "the rule of the race written down, sized for the cloud") · step: 4 (pre-registration text; nothing runs) · prior: §8, §9 (battery; memory rows A 0.65 / 0.59 vs B 0.04 / 0.00), §6; rulings 137, 138
+**Ruled (137, owner's question 11-28).** Eating food he can see does not
+choose his brain on its own. The verdict section of
+`prereg/stage2_a_vs_b.md` must say: (a) no brain takes the seat on the
+visible-food race alone — the battery's memory and delayed-reward rows are
+read BESIDE it in the same verdict, with B-mem beside B; (b) the race's
+own world carries ONE memory condition, drafted with its prior and a
+control that must fail (a memoryless arm must not pass it by sight).
+**Do (text).** (1) Write (a) into the verdict rule. (2) Draft (b): pick
+the form the record supports best from §6/§9 (food that goes out of
+sight behind a wall; a remembered place across a life; a delay between
+cue and meal), with the published number for each brain class, the
+must-fail control, and its cost in kernels. No published form fits his
+world → a `RESEARCH:` line, and say so. (3) `terminal_obs="dying"` for
+every arm, in the draft and in `pilot_a.md` (ruling 138). (4) Fill what
+today's reads settle: B's keep setting (J18), `B-mem` (J29), ratio (J28),
+gate 2 (J14). (5) List every remaining `OPEN:` with the one cheap row that
+answers it. Still a DRAFT — a sitting freezes it.
+branches: a read is not home → leave that OPEN, named. · (b) needs a new world option → name the `jack_env.py` option and its default (today's world), build nothing.
+serves: M3 · philosophy 3, 4, 7 (the brain he keeps must carry memory and words, not only eat).
+**done when:** the draft carries (a), (b), `dying`, and a short OPEN list.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
-probes of other seats stay in `LAB.md`. The lab's hindsight eye: ENTERED,
-waits for J30's read; when raced it carries a no-unlearning twin and a
-below-ceiling measure (first meal → fifth) — the 11-22 ruler cannot fail
-on the kind eye (ruling 134). Lab's next unit, box-minutes, no learner:
-build that below-ceiling ruler on `paint="kind"` and show it CAN fail (a
-yoked twin must lose on it, a random-imprint table must not pass).
+probes of other seats stay in `LAB.md`. **The hindsight eye (ruling 140):**
+bins16 holds the eye's stage-1 seat BY VERDICT (J30); the hindsight eye is
+raced against it only when the lab's below-ceiling ruler exists on
+`paint="kind"` and has been shown able to FAIL (a yoked twin loses on it,
+a random-imprint table does not pass) — ruling 134 stands. That ruler is
+the lab's next unit (box-minutes, no learner). Note for it: J30's blind
+twin also climbs late (2.6–8.0 meals a life) — the ruler must separate
+sight from that.
 **Parked or closed:** the MLX port (ruling 113). `D1.0`, `T2.01`, `LF.06`,
 `LC.09`, `CR.01`, `LF.04` — "to earn again" on the chosen brain. `NE.01`,
 `PS.02`/`.05`/`.06`/`.08`, the place key, the needs-hidden row → stage 3.
-`W1.04` → Sunday's sitting. `prereg/eye_geom_500k.md` stays a draft: any
-learner seed on the per-geom paint is stopped (ruling 111) until J30 is
-read.
+`W1.04` → Sunday's sitting. `prereg/eye_geom_500k.md` stays a draft
+(ruling 111). `prereg/w1_walkerwalk.md` waits for J28's cell 1 and a
+sitting.
 **Next up, in order (text or box < 15 CPU-min; do ALL of these before any slot ends idle):**
-1. Draft (text, NOT frozen) `prereg/w1_walkerwalk.md` (ruling 133): the
-body's known-answer row is banded on Playground `WalkerWalk` PPO (paper
-≈ 968, SLM-Lab 945, every seed ≥ 900 — §30), humanoid beside it unbanded;
-seeds, steps, the one extension, the twin. A sitting freezes it after
-J28's cell 1 says JAX runs on Kaggle's GPU.
-2. Stage-1 ready-list, one page `docs/research/STAGE1_READY.md`: each
-line of PLAN's ready-list with the commit, row or file that proves it, or
-"NOT YET — what is missing". No new claims; pointers only.
-3. "The interface correct at death" (ready-list): one planted box test —
-the observation returned on the dying step is the dying body's, not the
-reborn one's — for the wrapper J30 and the forge use. If it exists, name
-it in item 2 and skip.
-4. `WORLD_CARD.md` § J24: add the 50k window table for all nine cells
-(from `j24_collapse_diag.py`), marked BESIDE.
+1. `docs/research/STAGE1_READY.md`: bring every line up to date from
+today's reads (pointers only).
+2. HandedSense at death (ruling 138): add an option (default = today's
+behaviour, so r1L's lock is untouched) under which the handed food channel
+on the dying step is the dying body's; planted test beside
+`tests/test_death_interface.py`. No run uses it yet.
+3. `tests/test_j24k1_resets.py`: add the sys.path line so it runs by path.
+4. `WORLD_CARD.md` § J30: one paragraph, BESIDE — what the touch columns
+say the blind twin does to eat 3 meals a life (walls? chance contact?).
 
 ---
 
 ## SYSTEM — work on the machine (max 3 open)
 
-*Order of work: **S21** → **S20** → **S17** → Next-up. A fix a RUNNING
+*Order of work: **S20** (closes with J18's read) → **S22** → **S17** → Next-up. A fix a RUNNING
 Jack kernel needs goes first (ruling 54).*
-
-### S21 — The ladder's root test went red from a slow clock: measure the import, not the neighbours
-part: (machine — the ledger's truth; card line 4) · stage: — · step: —
-**Why.** `T0.01` ("repo imports clean") has been FAIL since 11-26 12:44:
-all 13 modules import, but `UnifiedBrain` took 5.4 s against the 5.0 s
-line while the whole run took 9.0 s (1.71 s the day before) — the shared
-box was busy. Five PASS rows now rest on a dead dependency and the
-re-checker will not re-buy them. Nobody owned it (OVERSIGHT 11-27 § 1).
-**Ruled (132).** The 5.0 s line does not move and nobody re-rolls until
-the clock is kind. The line exists to catch an import that DOES WORK
-(a download, a scan). So: each module's import is timed in a fresh
-process THREE times and the FASTEST is judged against 5.0 s; the 1-minute
-load average is recorded in the row.
-**Do.** (1) Change `experiments/tests/t0_01_imports.py` so. (2) Planted
-tests first: a module that sleeps 6 s at import FAILS (all three are
-slow); one slowed once by a planted stall passes with all three times
-printed. (3) One named run, load printed. (4) If it passes, let the
-re-checker re-buy the five rows under it (name them in the state line).
-(5) One line each, no change: is `T0.07` (CPU throughput, FAIL since
-10-23) the same cause? why did the 11-26 10:46 sweep "run but record
-nothing" on five specs?
-branches: still > 5.0 s on the fastest of three → it is a real slow import: find what `UnifiedBrain` does at import and fix THAT, by cause. · the planted sleeper passes → the change is wrong; revert.
-serves: philosophy 4 (a red root test repaired by cause, not by retry), 5.
-**done when:** planted tests pass, `T0.01` is re-bought with its load in the row, and `coverage` no longer prints FAIL-UNOWNED for it.
-state: (1)-(3) built `bff35c96`: each module timed in a fresh process, tries stop at the first under 5.0 s (verdict = fastest of three, 1/3 the wall); planted `python -m tests.test_t0_01_slow_clock`: 6 s sleeper 6.0/6.0/6.0 FAILS, once-stalled 6.0/0.01 passes, broken import reported.
-state: (3) T0.01 PASS 11-27 09:10 (`f2e7cc58`), slowest module 1.58 s, load_1m 1.45 in the row; coverage FAIL-UNOWNED 0. (4) Left to the re-checker: T0.02, T0.06, T0.20, T0.21, T1.03.
-state: (5) T0.07: same family, not same rule — its FAIL is policy_no_llm_rel_std 0.272 > 0.20 (repeats disagree on a busy box); fastest-of-N does not apply to a spread check; unchanged. 11-26 10:46: runner's CPU gate refused all five (day budget 20k/57.6k s, so load > 6.0); regate now prints the REFUSED reason instead of '(no verdict line)'.
-state: **DONE** 11-27 15:09 — the re-checker re-bought all five PASS (T0.20/T0.02/T0.06 12:43, T1.03 12:48, T0.21 12:48; regate.log); closed by SYSTEM.
 
 ### S20 — The harness reads its first look when ten runs are home; round 1-L gets a reader
 part: (machine — the judge of stage 1 and 2; card line 4) · stage: 1 · step: —
@@ -337,6 +290,26 @@ serves: PLAN stage 1 "the harness passes its own checks" · J18 · philosophy 4,
 state: (1)+(2) built `968da0b8`, in a NEW `harness/looks.py`, not by editing `compare`: `__init__.py`/`prereg.py` are hashed by r1's judge lock and every prereg, so editing them would make those results unreadable. `compare_looks` pads AFTER the real runs and calls the frozen `compare`, so look 1 is the hashed code; hash 382cf304 unchanged, so `same_vs_same` cannot move (not re-run: same code, same hash).
 state: Reader `python -m experiments.forge.r1L_read --tranches 1` (JACK runs it when tranche 1 lands, ≈ 01:00); planted 4/4 + 4/4. The spec names no permutation seed: the reader uses n_perm 2000, seed 0, and prints them. Close S20 when JACK's first real read runs.
 
+### S22 — The usage meter stopped every agent for 8.5 hours on a reading that contradicts itself: record it, do not touch the stop
+part: (machine — slots lost to budget; card line 5) · stage: — · step: —
+**Why.** 11-27 06:41 the gating line read 15% (resets Dec 2 12:00). At
+11-28 00:37 it read 100% with the SAME reset; at 09:07 it read 13% with a
+reset of Dec 3 09:00 — a week that "reset" four days before the date it
+printed. Nine slots, the audit and the 06:37 sitting were refused; four
+results sat unread. `usage_attribution`'s METER-NON-MONOTONE only fires
+when the percentage falls inside one printed reset window; this fell
+across a window that moved.
+**Do.** (1) In `scripts/usage_attribution.py` (reporting only): also flag a
+reading that falls by > 20 points while the earlier reading's own printed
+reset time is still in the future, whatever the new window says; count
+the slots refused between. Planted test: the 11-28 sequence fires, an
+honest reset at its printed time does not. (2) One paragraph in
+`docs/OWNER_UPDATES.md` with the three readings and the slots lost.
+**Never** touch the stop (95%, the owner's), the pace switch or `.paused`.
+branches: the log shows the 100% was a real cap on the shared account (other projects) → say that with the lines; (1) still lands.
+serves: philosophy 5, 6 (the loop's lost hours are counted truthfully).
+**done when:** the planted test passes and the owner paragraph is written.
+
 ### S17 — A failed Colab submit must not leave an orphan session
 part: (machine — the free GPU; standing objective 3) · stage: — · step: —
 **Do.** `gpu.run_on_colab`: after a run that failed before a session was
@@ -353,7 +326,7 @@ state: built `f0fb4f3c`: after a failed run `run_on_colab` unassigns server VMs 
 state: open until the next real Colab submit after a failed one shows no busy refusal — whoever makes it notes the log line here.
 branches: Colab still 503 at the next real submit → leave the code, note the date; no retry loop.
 
-**Next up:** (v) S18: whoever makes the next real ear/A submit notes here that no doc refused it (ruling 125 ratifies the doc-only half; S7(1)’s import closure rules the rest). (v2) DONE 11-28 `59160055`: a Kaggle quota refusal marks the week FULL in `gpu_budget.json` (`full_weeks`, `closed_by: kaggle`); remaining/afford read 0 until the week turns; planted 3/3 `python -m tests.test_gpu_week_full`; T0.12/T0.22 re-bought PASS. (w) S16 stays wired (`bd43f84b`, `a426fe45`): whoever sees the first real `SKIPPED-IDLE` line in `ladder.log` notes it here; three jack slots RUN with 5/5 sessions RUNNING and no ORDERS change → read the pre-check's reason and fix that cause. (0) DONE 11-27: `tpu_own_weekly_line` read the budget on the wall clock but charged on the stub clock (W46); went red when the week turned 11-21; now 9/9. (1) S13 (a):
+**Next up:** (u) the forge's chain B declares `JACK_WATCHER=gpu` while polling a `jack-cpu-` kernel (INBOX 11-27 07:23): make `r1_run chain` default to `cpu`; running chains untouched. (v) S18: whoever makes the next real ear/A submit notes here that no doc refused it (ruling 125 ratifies the doc-only half; S7(1)’s import closure rules the rest). (w) S16 stays wired (`bd43f84b`, `a426fe45`): whoever sees the first real `SKIPPED-IDLE` line in `ladder.log` notes it here; three jack slots RUN with 5/5 sessions RUNNING and no ORDERS change → read the pre-check's reason and fix that cause. (1) S13 (a):
 reproduce `scripts/test_lane_guard.sh`'s FAILs of 11-20 on a clean tree.
 (2) **S9** as written 11-20 (`git show 8fde84f5:docs/ORDERS.md`): left
 `T0.17`, `T0.23`, then DP.05 HR.5 LT.02 T0.35 T3.09 T4.02 W.2 W1.00.
@@ -367,19 +340,14 @@ clauses, `verify` VENUE 266 vs 256. (8) The 4 kept tmp folders (2.8 GB).
 ---
 
 ## INBOX — one line each, workers add, the Director empties
-- 11-28 09:40 SESSION (owner asked whether the eating-by-sight test is good enough to choose the brain): it is not on its own, and PLAN says so. For the Director: make sure the decisive race world contains at least one condition that needs memory (food out of sight, a remembered place, a delay between cue and reward), so brain A's published memory strength (battery §9 memory rows: A ~0.6 vs B ~0.0) can show; and that the battery rows sit beside the race in the verdict. A win on visible-food eating alone must not decide the seat.
+(emptied 2026-11-28 09:26 — SESSION 09:40 memory-in-the-race → ruling 137, J31; JACK 07:23 /data → eased, 27 GB free; JACK 07:23 watcher label + test path → SYSTEM Next-up (u), JACK Next-up 3; FORGE 14:20 → J18; JACK 14:25 J30 EATS → ruling 140, J32; RESEARCH 16:15 → ruling 139, J33, J28's prior; JACK 16:40 death interface → ruling 138, J31 (3), Next-up 2.)
 - RESEARCH: (11-28 09:40 SESSION, owner asked "will he taste") Taste as a sense for Jack: what published embodied learners use a taste or gustatory signal (good vs bad food, spoiled food that sickens later, learned food aversion as in conditioned taste aversion), how it is encoded, what it costs to learn, and whether it helps foraging over sight and touch alone. Note what the Inventor's "remember the colour of what I just ate" already covers. Answer as a PUBLISHED_PRIORS section; mark measured vs inferred.
-(emptied 2026-11-27 06:41 — LAB 23:35 → ruling 134; RESEARCH 04:11 → ruling 133, Next-up 1 (cell 1 already fixed `54e0a7dc`); JACK 00:15 → PROGRESS, for the owner; JACK 00:20 → J29; ANSWERED 02:55 → kept, ruling 130 stands; JACK 05:40–07:20 → ruling 131, J30.)
-- JACK 07:23 (J30): `/data` is at 15.06 GB free — 62 MB above the 15 GB floor. J30's worktree cost 49 MB and its raw files are MBs; the growth is not ours (as 00:15), but the next harvest of any size will cross the floor unless something outside this repo is cleared — the owner's.
-- JACK 07:23 (machine, no change made): the forge's chains A/B declare `JACK_WATCHER=gpu` though they poll `jack-cpu-` kernels, so the gpu poller count read 5 of 6 and three more gpu-declared chains would have been refused. J30's three are declared `cpu` (what `cpu_budget` itself calls a jack-cpu poller). Also `tests/test_j24k1_resets.py` cannot be run by path (no sys.path line; ran it with `PYTHONPATH=.`).
-- FORGE 14:20 (J18, ruling 135): chain C LAUNCHED (pid 1449092, cpu watcher, kernel jack-cpu-1795788940) with g1-4 + g1-6 CLAIMED (`d1361856`: claim = segment-0 file; chains A/B's running code skips it, tested on their own commit). Forge holds 3 sessions until A ends after g1-2. D (g1-5/g1-7) NOT launched so J29's B7mem can take the 2 sessions J30 freed. State in `docs/FORGE.md` F3.
-- 11-27 14:25 JACK J30: READ **EATS** (`e406b65f`) — B+K1 on the kind eye 27.41 vs twins 3.34/2.36, 3/3 seeds; J24's miss was the collapse. Per branch: the hindsight eye is raced next sitting (ruling 134). Note for that race: the blind twin also climbs late (2.6–8.0 meals/life at 450k) and beats shuffled on 2/3 seeds.
-- RESEARCH 16:15 (§2 re-checked, rule 4; no order touched): (a) A1–A3's bands are the 2023 **v1** agent (backprop actor, size S) — the proprio score file is unchanged since 2023 to 5e-11; the v2 code re-run independently (MR.Q, 10 seeds) reads cartpole_swingup 736 [591, 838] at 500K, so A2-1m's 100K miss is not evidence of a bug. (b) The official `dmc_proprio` preset is now size1m at train ratio **1024, repeat 1** (4x our gradient work per frame); our 1m-at-512 is an unpublished pairing — worth one A2 cell at the official preset (~2–3 T4-h a seed, inf). (c) Prior for J28 cell 3: A1-r64 predicted to MISS at both points (mean ~420 / ~500; it gets 6,250 gradient steps by 200K = ratio-512's at 25K frames). (d) If brain A ever collapses, reset its dynamics, not its actor (2310.15017).
-- JACK 16:40 (Next-up 3, `b429ad87`): death-interface test `tests/test_death_interface.py` on the runs' own worlds through PilotLives — `terminal_obs="dying"` hands the dying body's needs+proprio (J30 K1-bins16 and forge E-food, 2/2 deaths each); the default `reborn` fails the check, and J30 + r1L were RUN on `reborn` (harmless to SAC: terminated, no bootstrap; not to a world model / brain A). FINDING: forge's HandedSense food channel on the death step is the REBORN body's even under `dying` (`extra()` reads the world after respawn) — no fix made (E-food is r1L's locked world). STAGE1_READY item 2 → PARTLY. Next-up 4 was already done in `5bda4a6e`. For the sitting: make `dying` the default for stage 2's worlds + fix HandedSense, or rule it stage-2 work.
+- QUESTION (JACK, J18): look 1 — the sealed `r1L_read --tranches 1` refuses until the beside arms (K2 ×10, twin ×2, g1-5…g1-7) are home, though the primary (K1 vs E-food, g1-0…g1-4) is whole | options: A wait for g1-5…g1-7 (≈ +1 day) / B unlock S20 to read the primary arms alone | default: A, wait; nothing opened meanwhile
+- RESEARCH (JACK, J28 cell 1): walker venue — which jax/brax/playground triple runs Playground PPO on Kaggle's T4 image (brax 0.14.2 + jax 0.11.1 breaks on `device_put_replicated`; a second CUDA PJRT plugin is also registered). §29 'ours'.
+- JACK 11-28: ratio-64 Dreamer stayed at the never-trains level on all three seeds (≈ 6k updates) — the raw keeps only first-step losses, so 'world model not fitted' vs 'actor never moved' cannot be told; a sitting may want last-step scalars kept.
 
 ## DONE (kept one day)
 
-- **J24** (`2758215c`): **NOT SHOWN AT 500k** by its frozen rule — late meals a life sighted 0.229, blind 0.887, shuffled 2.338; above both 0/3. Beside: sighted eats early (up to 8.78) then unlearns; plain SAC collapses the same way in rung M. Re-asked on K1 as J30.
-- **J26** (`54e45611`): held-out R² — old row −0.135, kind one-hot 0.585, bins16 0.606; P1 HOLDS, P2 MISSED. Post-hoc on looks with food in sight: 0.700 / 0.726, still under 0.80.
-- **J27** (11-26): `stage2_a_vs_b.md` re-drafted for cloud only.
-- Auditor 11-27 § 2 (permutation count and seed): ruling 130, judge lock `9d3feb7e` before any raw file. § 3 (J28 launcher): armed 02:39.
+- **J30** (`e406b65f`): **EATS** — B+K1 resets on the kind eye, late meals a life sighted 27.41 / blind 3.34 / shuffled 2.36, 3/3 seeds above both; same seeds, twins and bar as J24 (which stays NOT SHOWN AT 500k for plain SAC). Rows in `WORLD_CARD.md` § J30, `KNOWN_ANSWERS.md` J30.
+- **S21** (`bff35c96`, `f2e7cc58`): `T0.01` judged on the fastest of three fresh-process imports, line unmoved; PASS; its five dependents re-bought.
+- SYSTEM Next-up v2 (`59160055`): a Kaggle quota refusal closes the week in `gpu_budget.json`.

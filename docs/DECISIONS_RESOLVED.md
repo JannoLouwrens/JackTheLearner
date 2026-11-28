@@ -4790,3 +4790,48 @@ metric: `match_both`  ·  null 0.192 ± 0.014  ·  gate mode: `screen`
 
 *admitted `—` = no admissibility predicate was supplied; nothing was checked and nothing is asserted.*
 
+
+## 2026-11-28 09:26 UTC — Director, DAILY sitting: rulings
+
+**137. Eating food he can see does not choose his brain on its own (the
+owner's question, 11-28).** PLAN already says the battery and the added
+sense break a tie; that is not enough, because a clear win on visible food
+would seat a brain before memory was ever asked. Ruled: stage 2's verdict
+reads the battery's memory and delayed-reward rows beside the eating race
+in every outcome, with B-mem beside B, and the race's own world carries one
+condition that cannot be solved by sight at the moment of choice, with a
+control that must fail. The form is drafted from the record (J31), not
+invented; a sitting freezes it. No pass line moves: this adds a clause.
+
+**138. What he senses when he dies is his own death.** `terminal_obs=
+"dying"` is required for every arm of stage 2, for `pilot_a` and for J32.
+J30 and round 1-L ran on `reborn`; their rows stand as read — every arm and
+twin had the same interface, and SAC does not bootstrap through a
+terminated step — and round 1-L's locked world is not edited. The forge's
+handed food channel at death gets an option whose default is today's
+behaviour (Next-up 2) before any NEW round uses a handed sense.
+
+**139. Brain A is asked once at its authors' current preset.** The
+researcher found A1–A3's bands are the 2023 agent's and that our size-1m at
+ratio 512 is a pairing nobody published; the official preset is now ratio
+1024, repeat 1. A2's row stays a MISS — nothing about it is re-read. A new
+row `A2-off` is pre-registered at the official preset against the
+independent re-run's interval, timing cell first, on W48's spare hours
+(J33). If the source gives no interval at an affordable frame count, no
+band is invented: it goes back to the researcher.
+
+**140. The eye's seat for stage 1.** `bins16` on the kind paint holds it
+BY VERDICT (J30: 27.41 against 3.34 / 2.36, 3 of 3). The lab's hindsight
+eye stays ENTERED and is raced against the holder only when its
+below-ceiling ruler exists and has been shown able to fail (ruling 134).
+No JACK order today: racing it on a ruler that cannot fail would be a
+claim nobody could lose.
+
+**141. The 20-run pilot is ordered now, as a sizing pilot (J32).** PLAN
+sets stage 2's number of runs from a 20-run pilot of brain B in his world.
+Three free CPU sessions stood empty this morning and J30 says the cell
+eats. Arm, seeds, length and twin are fixed in the order so a worker can
+freeze it under ruling 135. It seats nothing; its one falsifiable line is
+"still eats at 1M on at least 15 of 20 seeds, against twice the blind
+twins' mean". The pilot does not wait for round 1-L's keep setting: it
+runs J30's own cell (K1), which is what the keep rule's tie also names.
