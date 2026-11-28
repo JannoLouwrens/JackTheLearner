@@ -46,22 +46,49 @@ VARIANTS = {
     "k1": {"prereg": "docs/research/prereg/eye_bins16_k1.md", "arms": jc.J24K1_ONLY,
            "out": Path("/data/jack-logs/j24k1/chains"), "tag": "j24k1",
            "timing": Path("/data/jack-logs/j24k1/timing_kernel.json")},
+    # J32 DRAFT (prereg/pilot_b20.md): 25 cells (B20-bins16 on 2001-2020, its
+    # blind twin on 2001-2005) packed 3 a kernel in order -> 9 kernel UNITS
+    # (8 x 3 + 1 x 1). A unit id stands where a seed stands in j24/k1; files
+    # are b20_s<unit>*. T = 1M (pilot_b2.B20_T).
+    "b20": {"prereg": "docs/research/prereg/pilot_b20.md", "arms": jc.B20_ONLY,
+            "out": Path("/data/jack-logs/pilot_b20/chains"), "tag": "b20",
+            "timing": Path("/data/jack-logs/pilot_b20/timing_kernel.json")},
 }
 
 
+def b20_pack() -> dict:
+    """{unit: [(arm, seed), ...]} — sighted 2001-2020 then blind 2001-2005, 3 a unit."""
+    from experiments.pilot_b2 import B20_BLIND_SEEDS, B20_SEEDS
+    flat = ([("B20-bins16", s) for s in B20_SEEDS]
+            + [("B20-bins16-blind", s) for s in B20_BLIND_SEEDS])
+    return {i // 3 + 1: flat[i:i + 3] for i in range(0, len(flat), 3)}
+
+
+PACK = None          # {unit: cells} for a packed variant; None = one seed's ARMS a kernel
+RUN_T = None         # the variant's decisions a cell; None = pilot_b2.J24_T
+
+
 def set_variant(name: str) -> None:
-    global PREREG, ARMS, OUT, SEGS, TAG, TIMING_FILE
+    global PREREG, ARMS, OUT, SEGS, TAG, TIMING_FILE, SEEDS, PACK, RUN_T
     if name not in VARIANTS:
         raise rr.Refused(f"j24_launch: no variant {name!r} (have {sorted(VARIANTS)})")
     v = VARIANTS[name]
     PREREG, ARMS, OUT, TAG, TIMING_FILE = (v["prereg"], v["arms"], v["out"], v["tag"],
                                            v["timing"])
     SEGS = OUT / "segments"
+    if name == "b20":
+        from experiments.pilot_b2 import B20_T
+        PACK, RUN_T = b20_pack(), B20_T
+        SEEDS = tuple(sorted(PACK))
+    else:
+        PACK, RUN_T, SEEDS = None, None, (941, 942, 943)
 
 
 def cells(seed: int) -> list:
     if int(seed) not in SEEDS:
         raise rr.Refused(f"j24_launch: seed {seed} is not one of the prereg's {SEEDS}")
+    if PACK is not None:
+        return [tuple(c) for c in PACK[int(seed)]]
     return [(a, int(seed)) for a in ARMS]
 
 
@@ -180,7 +207,7 @@ def job_body(seed: int, pin: str, segment: int = 0, T: int | None = None) -> str
     return (_JOB.replace("__RESUME__", repr("/kaggle/input" if segment else None))
             .replace("__SEGMENT__", repr(int(segment)))
             .replace("__CELLS__", repr([tuple(c) for c in cl]))
-            .replace("__T__", repr(int(T or J24_T)))
+            .replace("__T__", repr(int(T or RUN_T or J24_T)))
             .replace("__PINS__", repr(list(KERNEL_PINS)))
             .replace("__PREREG__", repr(PREREG))
             .replace("__PREREG_SHA__", repr(hashlib.sha256(text).hexdigest()))
@@ -384,7 +411,7 @@ def main(argv):
     p.add_argument("--deadline", type=float, default=None)
     p.add_argument("--pin")
     p.add_argument("--segment", type=int, default=0)
-    p.add_argument("--seeds", type=int, nargs="+", default=list(SEEDS))
+    p.add_argument("--seeds", type=int, nargs="+", default=None)  # None = the variant's
     p.add_argument("--variant", default="j24", choices=sorted(VARIANTS))
     a = p.parse_args(argv)
     set_variant(a.variant)
@@ -400,7 +427,7 @@ def main(argv):
     elif a.cmd == "kernel":
         kernel(a.seed, a.pin, a.segment)
     elif a.cmd == "chain":
-        chain(a.seeds, a.pin)
+        chain(a.seeds or list(SEEDS), a.pin)
     elif a.cmd == "timing":
         timing(a.pin, a.T or TIMING_T)
 

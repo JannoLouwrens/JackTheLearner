@@ -34,7 +34,10 @@ J24_ONLY = ("K-bins16", "K-bins16-blind", "K-bins16-shuffled")
 # model, and SB3's save/load carries both (tests/test_j24_chain.py proves a
 # carried K1 cell IS the unbroken one, a reset in every segment).
 J24K1_ONLY = ("K1-bins16", "K1-bins16-blind", "K1-bins16-shuffled")
-CARRIED_ARMS = J24_ONLY + J24K1_ONLY
+# J32 DRAFT (prereg/pilot_b20.md): J30's sighted K1 cell and its blind twin at
+# 1M with terminal_obs="dying" (pilot_b2.PILOT_B20_ARMS). Same carry path.
+B20_ONLY = ("B20-bins16", "B20-bins16-blind")
+CARRIED_ARMS = J24_ONLY + J24K1_ONLY + B20_ONLY
 
 
 def carry_name(arm: str, seed: int) -> str:

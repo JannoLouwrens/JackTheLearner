@@ -198,6 +198,43 @@ def test_k1_variant_own_prereg_files_and_cells():
     assert "'j24'" in b and "K1-" not in b
 
 
+B20_DRAFT_SHA = "e797d367"   # real history: pilot_b20.md drafted, NOT frozen
+
+
+def test_b20_variant_packs_25_cells_at_1m_and_refuses_a_draft():
+    """J32: --variant b20 reads pilot_b20.md (DRAFT at its own drafting commit
+    and as a plant -> no job), packs sighted 2001-2020 + blind 2001-2005 three a
+    kernel into 9 units, runs 1M decisions, own folder; back to j24 restores."""
+    from experiments.pilot_b2 import PILOT_B20_ARMS
+    j24 = (jl.PREREG, jl.ARMS, jl.OUT, jl.SEGS, jl.TAG, jl.SEEDS, jl.PACK, jl.RUN_T)
+    try:
+        jl.set_variant("b20")
+        assert jl.PREREG == "docs/research/prereg/pilot_b20.md"
+        assert set(jc.B20_ONLY) == set(PILOT_B20_ARMS) and set(jc.B20_ONLY) <= set(jc.CARRIED_ARMS)
+        draft_pin = subprocess.run(["git", "-C", str(REPO), "rev-parse", B20_DRAFT_SHA],
+                                   capture_output=True, text=True).stdout.strip()
+        assert not jl.frozen(jl.prereg_at(draft_pin)), "pilot_b20 was drafted as a DRAFT"
+        assert refused(lambda: jl.job_body(1, draft_pin)), "no b20 job on the real draft"
+        assert refused(lambda: with_prereg(DRAFT, lambda: jl.job_body(1, HEAD))), \
+            "no b20 job on a planted draft"
+        assert jl.SEEDS == tuple(range(1, 10))
+        flat = [c for u in jl.SEEDS for c in jl.cells(u)]
+        assert [len(jl.cells(u)) for u in jl.SEEDS] == [3] * 8 + [1]
+        assert sorted(s for a, s in flat if a == "B20-bins16") == list(range(2001, 2021))
+        assert sorted(s for a, s in flat if a == "B20-bins16-blind") == list(range(2001, 2006))
+        assert len(set(flat)) == 25, "no cell twice"
+        assert refused(lambda: jl.cells(10)) and refused(lambda: jl.cells(2001))
+        b = with_prereg(FROZEN, lambda: jl.job_body(7, HEAD))
+        ast.parse(b)
+        assert repr(jl.cells(7)) in b and "'b20'" in b and "1000000" in b and "500000" not in b
+        assert jl.raw_file(9) == Path("/data/jack-logs/pilot_b20/chains/b20_s9.json")
+        assert jl.seg_file(9, 1) == Path("/data/jack-logs/pilot_b20/chains/segments/b20_s9_seg1.json")
+    finally:
+        jl.set_variant("j24")
+    assert (jl.PREREG, jl.ARMS, jl.OUT, jl.SEGS, jl.TAG, jl.SEEDS, jl.PACK, jl.RUN_T) == j24
+    assert jl.cells(941) == [(a, 941) for a in jc.J24_ONLY]
+
+
 if __name__ == "__main__":
     for k, v in list(globals().items()):
         if k.startswith("test_"):
