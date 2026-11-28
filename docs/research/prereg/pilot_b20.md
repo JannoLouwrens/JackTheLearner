@@ -97,7 +97,9 @@ rank 2, behind J18).
   death step (SAC does not bootstrap a terminal step). Short: one death, one
   trace row — a pilot check, not a proof. The arm stays `dying` either way.
   Box speed beside: 67 decisions per CPU-s.
-- Launcher: a `j24_launch` variant (own folder `/data/jack-logs/pilot_b20/`,
+- ~~Launcher~~ BUILT 11-28 11:05 (`d1c326c9`): `j24_launch --variant b20`,
+  units 1–9 = the 25 cells in order (sighted 2001–2020, then blind 2001–2005)
+  three a kernel. Was: a `j24_launch` variant (own folder `/data/jack-logs/pilot_b20/`,
   own freeze guard on THIS file, seeds 2001–2020, 1M, mixed sighted/blind
   packing) with a planted test that it refuses this file while DRAFT.
 - Reader: `pilot_b20_read` computing outputs 1–6 once, refusing a pin where this
