@@ -16,11 +16,14 @@ your order's section (only that section) at the start of every slot.
 with resets on the kind eye ate 27.41 late meals a life against its blind
 and shuffled twins' 3.34 / 2.36, 3 of 3 seeds: a learner eats from his own
 eye for the first time, and J24's miss was the learner's collapse, not the
-eye. **Four more results came home overnight and nobody has read them**
-(every agent was stopped by the usage gate 00:37–09:07): round 1-L's first
-five kernels (J18 look 1), B-7's four memory seeds (J29), the ear's third
-seed and twin (J14), J28's three GPU cells. **Read them FIRST, each once,
-by its sealed reader** — then fill the three Kaggle CPU sessions standing
+eye. Overnight (every agent was stopped by the usage gate 00:37–09:07) four
+more results came home; three were read at 09:24–09:26: **B-7 REPRODUCES**
+(brain B's memory arm −172.63, in the published band; its memoryless twin
+−1490), **the ear's row PASSES** (96.946, twin 8.6%), **ratio 64 MISSES**
+(brain A at an eighth of the training: 282 / 276 / 316 against a band of
+932 — as the record predicted), and the body's MJX cell and the fp16 cell
+did not run (install faults, named). **Still unread: round 1-L's look 1
+(J18) — read it first.** Then fill the three Kaggle CPU sessions standing
 empty (J32).
 **Never idle on a question (ruling 127).** (a) Every order carries
 `branches:` — what to do on each likely outcome; do it, do not ask. (b) A
@@ -97,10 +100,9 @@ by name.
 
 ## JACK — build the creature, his world and his curriculum (max 7 open, ranked)
 
-*Order of work: the four reads, each once, in ONE slot if they fit —
-**J18** (look 1) → **J29** (B-7) → **J14** (ear score, A's seed 10) →
-**J28** (harvest) — then **J32** (fill the empty CPU sessions) → **J33**
-(GPU, behind A's seed 12) → **J31** (text) → Next-up → exit. A slot
+*Order of work: **J18** (read look 1 — the runs are home) → **J32** (fill
+the empty CPU sessions) → **J33** (GPU, behind A's seed 12) → **J14**
+(score when seed 12 is home) → **J31** (text) → Next-up → exit. A slot
 waiting on a kernel advances the next order.*
 
 ### J18 — Forge round 1-L: READ LOOK 1 NOW — g1-0…g1-4 are whole
@@ -125,50 +127,18 @@ state: 11-28 09:25 **look 1 REFUSED by the sealed reader**: g1-0…g1-4 all whol
 state: 11-28 09:26 (Director) g1-0…g1-4 WHOLE (13:59, 12:53, 03:32, 05:41, 08:48), raw not opened. Chain A ended after g1-2; B and C alive per `pgrep`. 3 of 5 CPU sessions free.
 state: 11-27 03:35 **JUDGE LOCK `9d3feb7e`** committed alone at `85ca3d4e` before any raw file; both readers `check_lock` first. Rule FROZEN `52033df2` 11-26 20:27; launched 20:30 from pin `495a766d`; chain C 11-27 14:15 with g1-4 + g1-6 claimed (`d1361856`).
 
-### J29 — Brain B with a memory: READ B-7 NOW — the four seeds are home
-part: His brain (B) · stage: 1 · step: 3 (reproduce) · prior: §5 row 7, §6; `KNOWN_ANSWERS.md` row B-7 (FROZEN `c848d888`); `prereg/stage2_a_vs_b.md` row `B-mem`; ruling 136
-prior: published — Ni et al. (arXiv 2110.05038): LSTM-SAC on velocity-only Pendulum ≈ −170 by 40k–50k steps (band −190.9…−154.5, 4 seeds); memoryless SAC cannot solve it. Ours: twin `B7flat` −1490.2 (fails as required); same learner with the full observation −148 / −143 (the twin's miss is the missing memory).
-**Do.** `python -m experiments.b7_read` ONCE (reader sealed `127a6bc4`;
-`b7mem_s{0..3}.json` in `/data/jack-logs/j29/b7mem/`, home 11-27 20:00 –
-11-28 01:59). Row into `KNOWN_ANSWERS.md` B-7 exactly as read; copy the
-receipts (the chains ran from MAIN's tree).
-branches: REPRODUCES → `stage2_a_vs_b.md` (draft) names `B-mem` = this arm; INBOX one line. · MISS → a miss, written with the four seed scores and the curve; the arm is a suspect, NOT a stage-2 arm; INBOX — the sitting rules (no extension exists). · VOID (a seed LOST) → written VOID with the segment log; INBOX; nothing is re-bought by a worker.
-serves: M3 (stage-2 ready-list: "a control brain that has a memory arm") · philosophy 3, 4.
-**done when:** B-7's row is written from the sealed read.
-state: 11-28 09:23 **(6) READ — REPRODUCES, DONE `054a7ce1`**: B7mem s0/s1/s2/s3 −174.14/−170.45/−162.05/−183.88, arm **−172.63** in −190.9…−154.5; twin −1490.23 fails. Row B-7 written in KNOWN_ANSWERS; `stage2_a_vs_b.md` (draft) names `brain_b_mem.py` as B-mem's core. Shared arm not run (beside, decides nothing). Output `/data/jack-logs/j29/b7mem/b7_read.json`.
-state: 11-28 09:26 (Director) all four raw files present, unread. Built `befb7848` (port of `pomdp-baselines@e7c19c32`, MIT), launcher `e0f5ea7e`, launched 11-27 14:26 at pin `4caae6c3`.
-
-### J14 — The ear's row is complete: SCORE IT; brain A's seeds at the published size come home by themselves
-part: Ear + His brain (A) · stage: 1 · step: 3 (reproduce) · prior: §2, §7; `prereg/a2_size_s_enc.md` (FROZEN + addendum `381b83b9`); `KNOWN_ANSWERS.md` rows A2-v1S-enc, N7-kws-2; rulings 67, 78, 79, 96, 124
-prior: Ear: BC-ResNet-1 published 96.9 ± 0.30 (band 96.3–97.5); ours s0 97.137, s1 97.055. A: A1, A3 PASS, A2 MISS under band; A2-v1S-enc is the arm at the published size, 5.0 T4-h a seed.
-**Do.** (1) Ear: `kws2_s2.json` (01:44) and `kws2_twin.json` (03:06) are
-in `/data/jack-logs/kws_row2/`. Copy the receipts from worktree
-`/data/wt/jack-kws-w48`; `score2` by the frozen rule into
-`KNOWN_ANSWERS.md` N7-kws-2 — a miss is a miss, and the twin must fail.
-(2) A: `v1s_enc_s10_c.json` is home (05:26); seed 11 runs (kernel
-jack-ladder-1795843580, home ≈ 10:30), seed 12 follows from pid 3886689.
-When all three are home: copy receipts from `/data/wt/jack-a2enc`, `rows`
-score into `KNOWN_ANSWERS.md` A2-v1S-enc by the frozen rule, once.
-(3) Note under SYSTEM Next-up (v) that no doc refused these submits.
-branches: ear in band on 3/3 and twin fails → the ear's row REPRODUCES; PLAN "Ear" goes to step 4 at the next sitting — INBOX one line. · any other ear read → written as read. · A in band → gate 2 of `stage2_a_vs_b.md` reads met (draft text). · A misses → a miss; J33's row is the next evidence, nothing is re-run. · a seed's submit refused by Kaggle → written; the week is closed; no retry.
-serves: M3, M5 · PLAN "brain A reproduced", "Ear" step 3 · standing objective 3 · philosophy 3, 4.
-**done when:** N7-kws-2 is scored; A2-v1S-enc is scored on its three seeds.
-state: 11-28 09:30 **(b) N7-kws-2 READ — PASS** (`054a7ce1`): s0/s1/s2 97.137/97.055/96.646, mean 96.946 sd 0.263 in 96.3–97.5; twin 8.569% ≤ 15. (a) A's seed 10 (+twin) HOME 05:26 `v1s_enc_s10_c.json`, seed 11 RUNNING (jack-ladder-1795843580), pid 3886689 alive. NEXT: when s10–s12 home → `rows` score into A2-v1S-enc (s10 not yet scored).
-state: 11-28 09:26 (Director) timers fired as armed: A seed 10 00:01 → home 05:26, seed 11 launched 05:26; ear chain done 03:06 (`w48_launch.log`). Nothing scored.
-
-### J28 — The three cheap GPU cells ran: HARVEST them
-part: Body and movement (cell 1) + His brain (cells 2, 3) · stage: 1 · step: 1 → 3 · prior: §29, §2 (RESEARCH 11-27 16:12: A1 at ratio 64 predicted to MISS at both points, ≈ 420 / ≈ 500); `prereg/a2_ratio64.md` FROZEN `97762429`; rulings 119, 124, 126
-**Do.** `/data/jack-logs/j28/w48_launch.log` says the chain ended rc 0 at
-08:18 (mjx → fp16 → r64 s20+twin → s21 → s22). Copy receipts from
-`/data/wt/jack-j28-w48`. (1) MJX cell: did JAX run on the GPU Kaggle
-gave, steps a second, memory → §29 as "ours" (or the error text). (2)
-fp16: seconds per 1k decisions, both → §2 as "ours". (3)
-`python -m experiments.brain_a.ratio64 score` ONCE → the row as read.
-branches: cell 1 ran → INBOX "walkerwalk: JAX runs" (the sitting freezes `w1_walkerwalk.md`); failed → error into §29 + a `RESEARCH:` line "walker venue". · ratio 64 HOLDS → re-cost `stage2_a_vs_b.md`'s table at ratio 64 (draft). · MISSES → written as a miss beside the record's prediction; the table stays; brain A's affordable size is then J33's question.
-serves: M5 (body), M3 (brain A affordable on free GPU) · standing objective 3 · philosophy 3, 6.
-**done when:** the three results are in their files.
-state: 11-28 09:35 **DONE `44e5c6f6`**, all three home. Cell 3 ratio 64 **MISSES** (200K 282.3/275.9/316.1 vs 932; twin 288.2 — no learning seen in ≈ 6k grad steps), `a2_ratio64.md` READ. Cell 1 FAILED: 2×T4 seen by jax 0.11.1, but brax 0.14.2 calls removed `jax.device_put_replicated` → §29 'ours' + RESEARCH line. Cell 2: fp32 165.3 s/1k; 16-mixed crashed (Lightning AMP vs sheeprl grad clipping) → `stage2_a_vs_b.md` item 2.
-state: 11-28 09:26 (Director) chain done 08:18, `a1r64_s2{0,1,2}.json` in `/data/jack-logs/brain_a/rows/`; nothing harvested.
+### J14 — Brain A at the published size: seeds 10–12 come home by themselves; score them once
+part: His brain (A) · stage: 1 · step: 3 (reproduce) · prior: §2; `prereg/a2_size_s_enc.md` (FROZEN + addendum `381b83b9`); `KNOWN_ANSWERS.md` row A2-v1S-enc; rulings 67, 78, 79, 96, 124
+prior: A1, A3 PASS, A2 MISS under band; A2-v1S-enc is the arm at the published size, 5.0 T4-h a seed. (The ear half of this order is DONE — see DONE.)
+**Do.** `v1s_enc_s10_c.json` is home (05:26); seed 11 runs (kernel
+jack-ladder-1795843580, home ≈ 10:30), seed 12 follows from pid 3886689
+(log `/data/jack-logs/a2_enc/sat_launch.log`). When all three are home:
+copy receipts from `/data/wt/jack-a2enc`, `rows` score into
+`KNOWN_ANSWERS.md` A2-v1S-enc by the frozen rule, ONCE.
+branches: in band → gate 2 of `stage2_a_vs_b.md` reads met (draft text); INBOX one line. · a miss → a miss, written; J33's row is the next evidence, nothing is re-run. · a submit refused by Kaggle → written; the week is closed; no retry; the row waits for W49.
+serves: M3 · PLAN "brain A reproduced" · standing objective 3 · philosophy 3, 4.
+**done when:** A2-v1S-enc is scored on its three seeds.
+state: 11-28 (Director) timer fired as armed: seed 10 launched 00:01 → home 05:26, seed 11 launched 05:26. Not scored (needs all three).
 
 ### J32 — The pilot stage 2 is sized by: twenty lives-long runs of brain B on his own eye, 1M decisions
 part: Learning to eat + His brain (B) · stage: 1 → 2 · step: 4 · prior: §8 (test method: n from a 20-run pilot), §21, §28; `WORLD_CARD.md` § J30; `prereg/stage2_a_vs_b.md` arms table; rulings 135, 138, 141
@@ -198,10 +168,16 @@ serves: M3 (stage 2 sized by evidence), M7 · philosophy 1, 3, 4, 6.
 **done when:** `pilot_b20.md` is frozen and chains run with paths in a state line; then the one read.
 
 ### J33 — Brain A at the authors' OWN current preset: one known-answer row on W48's spare GPU
-part: His brain (A) · stage: 1 · step: 3 (reproduce) · prior: §2 as re-checked 11-27 16:12 (`fde24942`) — read it first; `KNOWN_ANSWERS.md` A2; rulings 86, 96, 124, 139
+part: His brain (A) + Body and movement (cell 0) · stage: 1 · step: 3 (reproduce) · prior: §2 as re-checked 11-27 16:12 (`fde24942`) — read it first; `KNOWN_ANSWERS.md` A2; rulings 86, 96, 124, 139
 prior: published — the official `dmc_proprio` preset is now size1m at train ratio 1024, repeat 1; the v2 code re-run independently (MR.Q, 10 seeds) reads cartpole_swingup 736 [591, 838] at 500K. Ours: 1m at ratio 512 is a pairing nobody published — A2 MISSED its (2023, v1) band at 100K, 393.3 vs 438–518. A1, A3 pass.
 **Ruled (139).** A2's row stays a MISS. This is a NEW row, `A2-off`.
-**Do.** (1) Draft `prereg/a2_official.md`: cartpole_swingup, the official
+**Do.** (0) FIRST, 10 GPU-minutes, the body's cell again — a failure fixed,
+not filed: J28's MJX cell died at install (brax 0.14.2 calls
+`jax.device_put_replicated`, gone in jax 0.11.1). Pin the jax version that
+`playground==0.2.0`'s own requirements name (read them from the wheel; do
+not guess), planted test that the cell's preamble carries the pin, re-run
+`experiments/body/mjx_timing.py` once → three numbers into §29 as "ours".
+Still failing → the error into §29 and a `RESEARCH:` line "walker venue". (1) Draft `prereg/a2_official.md`: cartpole_swingup, the official
 preset unchanged, band = MR.Q's interval at the frames it was read at
 (take the exact frames/interval from §2's source, not from this order),
 seeds 30–32, twin (lr 0) on seed 30, no extension, a lost seed is lost.
@@ -230,8 +206,9 @@ cue and meal), with the published number for each brain class, the
 must-fail control, and its cost in kernels. No published form fits his
 world → a `RESEARCH:` line, and say so. (3) `terminal_obs="dying"` for
 every arm, in the draft and in `pilot_a.md` (ruling 138). (4) Fill what
-today's reads settle: B's keep setting (J18), `B-mem` (J29), ratio (J28),
-gate 2 (J14). (5) List every remaining `OPEN:` with the one cheap row that
+today's reads settle: B's keep setting (J18), `B-mem` = the B-7 arm
+(REPRODUCES), ratio 64 MISSES so the cost table stays at ratio 512,
+gate 2 (J14 / J33). (5) List every remaining `OPEN:` with the one cheap row that
 answers it. Still a DRAFT — a sitting freezes it.
 branches: a read is not home → leave that OPEN, named. · (b) needs a new world option → name the `jack_env.py` option and its default (today's world), build nothing.
 serves: M3 · philosophy 3, 4, 7 (the brain he keeps must carry memory and words, not only eat).
@@ -251,8 +228,10 @@ sight from that.
 `LC.09`, `CR.01`, `LF.04` — "to earn again" on the chosen brain. `NE.01`,
 `PS.02`/`.05`/`.06`/`.08`, the place key, the needs-hidden row → stage 3.
 `W1.04` → Sunday's sitting. `prereg/eye_geom_500k.md` stays a draft
-(ruling 111). `prereg/w1_walkerwalk.md` waits for J28's cell 1 and a
-sitting.
+(ruling 111). `prereg/w1_walkerwalk.md` waits for J33's cell 0 and a
+sitting. The fp16 cell is closed unrun (Lightning's AMP refuses the
+port's gradient clipping): a precision change is a difference from the
+published recipe and is not chased before brain A reproduces.
 **Next up, in order (text or box < 15 CPU-min; do ALL of these before any slot ends idle):**
 1. `docs/research/STAGE1_READY.md`: bring every line up to date from
 today's reads (pointers only).
@@ -348,6 +327,9 @@ clauses, `verify` VENUE 266 vs 256. (8) The 4 kept tmp folders (2.8 GB).
 
 ## DONE (kept one day)
 
+- **J29** (`054a7ce1`): **B-7 REPRODUCES** — brain B's memory arm (port of Ni's recurrent SAC) −172.63 on velocity-only Pendulum (seeds −174.14 / −170.45 / −162.05 / −183.88; band −190.9…−154.5); memoryless twin −1490.23 fails as required. `B-mem` is a stage-2 arm.
+- **J14 ear** (`054a7ce1`): **N7-kws-2 PASS** — mean 96.946, sd 0.263 (s2 96.646), published 96.9 ± 0.30; twin 8.569%. The ear's architecture reproduces; his own ear (no labels) is stage 3.
+- **J28** (`44e5c6f6`): ratio 64 **MISSES** (200K: 282.3 / 275.9 / 316.1 vs band 932; twin 288.2) — predicted by the record; MJX cell failed at install (→ J33 cell 0); fp16 crashed (closed unrun); fp32 165.3 s per 1k decisions.
 - **J30** (`e406b65f`): **EATS** — B+K1 resets on the kind eye, late meals a life sighted 27.41 / blind 3.34 / shuffled 2.36, 3/3 seeds above both; same seeds, twins and bar as J24 (which stays NOT SHOWN AT 500k for plain SAC). Rows in `WORLD_CARD.md` § J30, `KNOWN_ANSWERS.md` J30.
 - **S21** (`bff35c96`, `f2e7cc58`): `T0.01` judged on the fastest of three fresh-process imports, line unmoved; PASS; its five dependents re-bought.
 - SYSTEM Next-up v2 (`59160055`): a Kaggle quota refusal closes the week in `gpu_budget.json`.
