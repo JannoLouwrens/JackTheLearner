@@ -227,8 +227,8 @@ answers it. Still a DRAFT — a sitting freezes it.
 branches: a read is not home → leave that OPEN, named. · (b) needs a new world option → name the `jack_env.py` option and its default (today's world), build nothing.
 serves: M3 · philosophy 3, 4, 7 (the brain he keeps must carry memory and words, not only eat).
 **done when:** the draft carries (a), (b), `dying`, and a short OPEN list.
-state: 11-28 12:45 (JACK) (1)+(3) DONE `bdc21d5a`: ruling 137's clause heads the draft's decision table (no seat on eating alone; memory_len/size + umbrella_length/discounting_chain + the world's memory condition in the same verdict, B-mem beside B); `terminal_obs="dying"` (+ `HandedSense(death_extra="dying")` on handed cells) for every arm and in `pilot_a.md`'s recipe table.
-state: (4) part: OPEN 1 filled — ratio 64 MISSES, `size1m` r64 cost line struck. Still OPEN: B's keep (J18), gate 2 (J14 seed 12). NEXT: (2) the memory condition — read §6/§9 for the three forms, pick by record, must-fail memoryless arm, kernel cost; then (5) the OPEN list.
+state: 11-28 13:15 (JACK) **DONE** `5b0b1e73` (+ `bdc21d5a`): (2) memory condition = the dark-eye probe — Animal-AI L7 lights-out on the passive T-Maze's one axis (D 8/16/32/64); wall form and remembered-place form rejected by record (POPGym MLP wins navigation; Mirowski weights carry fixed places). Must-fail floor: memoryless B must not beat a keep-heading script at D ≥ 16, else VOID. Option `eye_blackout` NAMED, not built; validation row ≈ 20 kernel-h.
+state: (5) the OPEN table at the draft's end: 10 lines, each with its one row; still open by reads not home — B's keep (J18), gate 2 (J14 seed 12). Still a DRAFT; a sitting freezes it.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
