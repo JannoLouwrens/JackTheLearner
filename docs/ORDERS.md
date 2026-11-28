@@ -227,6 +227,8 @@ answers it. Still a DRAFT — a sitting freezes it.
 branches: a read is not home → leave that OPEN, named. · (b) needs a new world option → name the `jack_env.py` option and its default (today's world), build nothing.
 serves: M3 · philosophy 3, 4, 7 (the brain he keeps must carry memory and words, not only eat).
 **done when:** the draft carries (a), (b), `dying`, and a short OPEN list.
+state: 11-28 12:45 (JACK) (1)+(3) DONE `bdc21d5a`: ruling 137's clause heads the draft's decision table (no seat on eating alone; memory_len/size + umbrella_length/discounting_chain + the world's memory condition in the same verdict, B-mem beside B); `terminal_obs="dying"` (+ `HandedSense(death_extra="dying")` on handed cells) for every arm and in `pilot_a.md`'s recipe table.
+state: (4) part: OPEN 1 filled — ratio 64 MISSES, `size1m` r64 cost line struck. Still OPEN: B's keep (J18), gate 2 (J14 seed 12). NEXT: (2) the memory condition — read §6/§9 for the three forms, pick by record, must-fail memoryless arm, kernel cost; then (5) the OPEN list.
 
 **Lane `forge`** reads `docs/FORGE.md`; its work is J18. Lane `lab`: a
 candidate for brain B enters through `docs/FORGE_POOL.md` with its prior;
