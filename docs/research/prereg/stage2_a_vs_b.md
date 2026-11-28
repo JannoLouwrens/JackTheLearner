@@ -1,7 +1,7 @@
 # Pre-registration DRAFT — stage 2: brain A against brain B in his world (ORDERS Next-up 4)
 
 **Status: DRAFT, text only, binds nothing.** Written 2026-11-20 by a JACK slot
-(Kaggle 5/5, no order could launch). Revised 2026-11-28 (J31 (1)+(3): ruling 137's verdict clause written into the decision table — no seat on the visible-food race alone, the battery's memory and delayed-reward rows and B-mem read beside it; ruling 138's death observation written into the arms). Revised 2026-11-26 (J27: B = forge keep setting, B-mem arm, free-cloud cost table, OPEN rows; the Mac struck). Revised 2026-11-21 12:45 (ORDERS Next-up 1):
+(Kaggle 5/5, no order could launch). Revised 2026-11-28 13:15 (J31 (2)+(5): the race world's memory condition — a dark-eye probe with a keep-heading floor memoryless B must not beat; every OPEN listed with its one row). Revised 2026-11-28 (J31 (1)+(3): ruling 137's verdict clause written into the decision table — no seat on the visible-food race alone, the battery's memory and delayed-reward rows and B-mem read beside it; ruling 138's death observation written into the arms). Revised 2026-11-26 (J27: B = forge keep setting, B-mem arm, free-cloud cost table, OPEN rows; the Mac struck). Revised 2026-11-21 12:45 (ORDERS Next-up 1):
 ruling 65 written in (mark, gate, futility and decision table read the LATE
 half; "reached then lost" beside), ruling 68 written in (B's gate lists row 5
 as a named miss), E2c's reading and ruling 64 put into gate 1. No seed of any arm below exists. The
@@ -148,15 +148,82 @@ of that task with the seed count §8's power table needs for the published gap.
 `OPEN:` seeds per battery task (the memory gap 0.65 vs 0.04 is large; the
 distraction gap needs more).
 
+## The race world's memory condition (ruling 137 (b), J31 (2) — DRAFT; nothing built or run)
+
+**Three forms weighed against the record (PRIORS §6, §9; long form
+`$N/capability_battery.md` §3, `$N/memory_sleep_continual.md`):**
+- *Food that goes behind a wall* — REJECTED: on POPGym "the MLP received
+  the highest score on almost all navigation tasks, beating all memory
+  models", because wall-following covers a maze without memory (2303.01859);
+  the memoryless arm is expected to PASS by search, so no control would fail.
+  It also needs new walls in the locked world files.
+- *A remembered place across a life* — REJECTED: with places fixed, weights
+  trained from replay carry "where the tree was" and a recurrent agent with no
+  store reaches human level (Mirowski 2017, 1611.03673) — a memoryless arm
+  passes by weights; with `random_layout=True` (every race run) the layout is
+  re-drawn every life, so nothing across lives is rememberable, and with 16
+  rays and no heading re-localising after rebirth has no published example.
+- *A cue, a delay, then the meal* — CHOSEN, in the in-world form the record
+  names: Animal-AI's level 7, "acting through lights-out periods"
+  (2312.11414: Dreamer-v3 above chance on it, PPO "at or near to chance",
+  25M pixel steps, text only, no number), built on the passive T-Maze's
+  single axis (memory length D with credit length 1; best memoryless return
+  0.5 by construction, Ni 2023, 2307.03864).
+
+**The form.** During the race's own training and evaluation, at random
+decisions (rate ρ a decision, `OPEN:` ρ; inference 1/500) the eye reads
+DARK — every eye channel set to its no-hit value — for D decisions;
+needs, proprio, touch and the mouth stay on. The cue is the food seen at
+onset. D is a difficulty axis, never one pass mark (the battery rule,
+`$N/capability_battery.md` l.705/726): D ∈ {8, 16, 32, 64}, drawn per
+blackout. World option, NAMED NOT BUILT: `jack_env.py`
+`eye_blackout: Optional[tuple[float, tuple[int, ...]]] = None` (ρ, D set);
+`None` = today's world byte for byte (the option rule; a planted test that
+the default equals today's stream comes with it).
+
+**Score (per blackout begun with a floor food inside ray range).** Distance
+closed to THAT food over the dark window, divided by its onset distance
+(1 = reached it in the dark; ≤ 0 = moved away). Per run, the mean over
+blackouts in the LATE half (ruling 65), by D.
+
+**The floor that must not be beaten by sight-free motion (the must-fail
+control).** `keep-heading`: a script with no memory that, from the dark
+step on, repeats the last lit action. Memoryless `B` must NOT beat it at
+D ≥ 16 (per-run means, B's late half vs the script on the same frozen
+onsets): if it does, motion state carries the cue and the condition is
+VOID — it then measures momentum, not memory. A second floor: each brain's
+`-lr0` twin.
+
+**Published number for each class (memory length it should hold):**
+| arm | record | predicted here |
+|---|---|---|
+| `A` (GRU-RSSM, 64-step training chunks) | bsuite memory_len 0.65 = success to ~25 steps; R2I: DreamerV3 learns dependencies "up to 30 environment steps"; chunks shorter than the dependency give zero (R2I, 2403.04253) | beats keep-heading at D 8–32, not at 64 |
+| `B` (no core) | memory_len 0.04, memory_size 0.00 | ties keep-heading at every D ≥ 16 (that tie IS the control) |
+| `B-mem` (LSTM-128, Ni) | recurrent A2C memory_len 0.70 (30-step window); LSTM falters at T-Maze 250; recurrent SAC Key-to-Door 0.996 at 4M (2110.05038); ours B-7 REPRODUCES | as A at D ≤ 32, IF its replay chunk ≥ D — `OPEN:` B-mem's port trains on whole 200-step Pendulum episodes; his lives run 10^3–10^4 decisions, so chunked stored-state replay with burn-in (§6, R2D2 40 of 80) must be built and pass B-7 again first |
+
+Read beside the battery's memory rows, in the same verdict (ruling 137):
+an arm "holds the dark" at D iff its late-half score beats keep-heading's
+in ≥ the share §8's power table needs for the gap the pilot measures
+(`OPEN:` that share, from the validation row below).
+
+**Cost.** The probe rides the race's own runs: no extra training run; the
+eye is dark ≈ ρ·E[D] ≈ 6% of decisions at ρ 1/500 (inference), which lowers
+every arm's eating alike. Before the race, ONE validation row that can
+fail: J30's sighted cell + `eye_blackout`, memoryless B vs keep-heading, 3
+seeds × 500k ≈ 3 kernels × 6.5 h ≈ 20 kernel-h (J30's timing), and
+B-mem the same 3 seeds once its chunked replay passes B-7 (timing cell
+first, ruling 86). If memoryless B beats keep-heading there, the form is
+re-drawn before any race seed (VOID before evidence, not after).
+
 ## Decision table (PLAN, verbatim in effect)
 
 **Ruling 137 (owner, 11-28) — binds every line below.** No brain takes the
 seat on the visible-food race alone. The verdict reads, in the SAME report
 and the same sitting: the eating race (primary above), the battery's memory
 rows (memory_len / memory_size) and delayed-reward rows (umbrella_length /
-discounting_chain), and the race world's own memory condition (`OPEN:` its
-form — J31 (2), drafted with its prior and a memoryless arm that must FAIL
-it by sight). `B-mem` is read beside `B` on every one of them, so a win by A
+discounting_chain), and the race world's own memory condition (§ "The
+race world's memory condition" above — the dark-eye probe, with its
+must-fail floor). `B-mem` is read beside `B` on every one of them, so a win by A
 on memory is not credited to the world model when a recurrent B matches it.
 A brain that wins the eating race and loses every memory row is NOT seated
 on eating; the line below that applies is the one the memory rows select.
@@ -249,3 +316,21 @@ never fewer runs (§8).
    recurrent core is that file; it enters as a candidate (draft — a sitting
    freezes this page).
 4. **Which B keep setting** — round 1-L's read (J18), not this page.
+
+### Every `OPEN:` still on this page, with the one row that answers it (J31 (5), 11-28)
+
+| # | open line (where) | the one cheap row | cost | waits on |
+|---|---|---|---|---|
+| 4 | B's keep setting (Arms `B`) | round 1-L look 1, the frozen keep rule (J18) | 0 new (running) | g1-5/6/7, ≈ 11-29 |
+| 5 | gate 2: A at the published size (Gate 2) | A2-v1S-enc seeds 10–12, scored once (J14) | 0 new (seed 12 queued) | seed 12 |
+| 6 | the ceiling on the race's own eye (Arms `forager-f4`) | the hand forager on `bins16`/kind paint, body frames, 3 seeds × 1 life-set — a box row, no learner | < 15 CPU-min (inf) | nothing |
+| 7 | θ_late, and SUSTAINED vs 5 meals/life (Primary) | `pilot_b20` (J32) gives the late-meal spread and the blind-twin floor; floors' late-half rate computed BEFORE, as `pilot_b2 rule-inputs` did | in J32 | J32's freeze + run |
+| 8 | permutation on the share vs Boschloo on runs that eat (Test) | none to run: a choice for the sitting; `pilot_b20_read` already carries an exact Boschloo equal to SciPy's | text | sitting |
+| 9 | the added sense: task and must-fail control (Battery) | none on record (PRIORS §9 "last 10%" design is inference): one draft row, the switch-on design with a same-shape noise channel as the must-fail twin | text | the eye's stage-1 seat (J30, held) |
+| 10 | seeds per battery task (Battery) | §8's power table on each published gap (memory 0.65 vs 0.04 large; distraction 0.74 vs 0.30) — arithmetic, no run | text | nothing |
+| 11 | B-mem core: Ni's LSTM-128 vs GRU-256 (Settings) | race both on `B-7` (velocity-only Pendulum, 4 seeds, 51k) — the GRU arm only; LSTM is home | 1 Kaggle CPU kernel | a free session |
+| 12 | B-mem in his world: chunked stored-state replay + burn-in (Memory condition) | build it, re-pass `B-7` with chunk 64 / burn-in 32 on the same frozen band | 1 kernel after build | the build |
+| 13 | ρ and the "holds the dark" share (Memory condition) | the validation row: J30's cell + `eye_blackout`, memoryless B vs keep-heading, 3 seeds × 500k | ≈ 20 kernel-h | `eye_blackout` built + its default test |
+
+Rows 1–3 above are closed (1 MISSES, 2 unmeasured — fp16 crashed, fp32
+stands; 3 DONE). Cheapest first: 10, 8 (text), 6 (box), then 11, 12, 13.
